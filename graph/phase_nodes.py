@@ -56,6 +56,16 @@ except ImportError:
     print("Warning: Sub-agents not available, using mock data")
     USE_LLM = False
 
+# MCP 서버 임포트
+try:
+    from services.mcp_server import get_mcp_server
+    MCP_SERVER = get_mcp_server()
+    USE_MCP = True
+except ImportError:
+    print("Warning: MCP Server not available")
+    MCP_SERVER = None
+    USE_MCP = False
+
 
 # ═══ PHASE 1: RESEARCH NODE ═══
 
@@ -103,6 +113,21 @@ async def phase_1_research_node(state: PhasedSupervisorState) -> Dict[str, Any]:
             **MOCK_PHASE1_RESULT,
         }
         content_msg = f"[Phase 1 완료] RFP 파싱: {MOCK_PHASE1_RESULT['parsed_rfp']['title']} (Mock)"
+
+    # ── MCP: 유사한 과거 제안서 검색 ──
+    similar_proposals = []
+    if USE_MCP:
+        try:
+            rfp_title = working_state.get("rfp_title", "")
+            similar_proposals = await MCP_SERVER.search_similar_proposals(rfp_title)
+            if similar_proposals:
+                working_state["similar_proposals"] = [
+                    {"title": p["title"], "client": p["client"], "year": p["year"], "status": p["status"]}
+                    for p in similar_proposals[:3]
+                ]
+                content_msg += f" (참고: 유사 제안서 {len(similar_proposals)}건 검색됨)"
+        except Exception as e:
+            print(f"    MCP search error: {e}")
 
     # ── Phase 1 완료 상태 업데이트 ──
     return {
@@ -294,6 +319,36 @@ async def phase_3_plan_node(state: PhasedSupervisorState) -> Dict[str, Any]:
             **MOCK_PHASE3_RESULT,
         }
         content_msg = "[Phase 3 완료] 전략 수립 완료 (Mock)"
+
+    # ── MCP: 인력 배정 및 참고자료 검색 ──
+    if USE_MCP:
+        try:
+            # 전략 기반 필요 기술 목록 추출
+            win_themes = working_state.get("win_themes", [])
+            required_skills = [theme.split()[0] for theme in win_themes[:3]] if win_themes else []
+            
+            # 인력 배정
+            team = await MCP_SERVER.get_team_for_project(required_skills, 5)
+            working_state["allocated_personnel"] = [
+                {"name": m["name"], "role": m["role"], "expertise": m["expertise"]}
+                for m in team
+            ]
+            
+            # 참고자료 검색 (전략별로)
+            references = []
+            for theme in win_themes[:2]:
+                refs = await MCP_SERVER.search_references(theme, top_k=2)
+                references.extend(refs)
+            
+            if references:
+                working_state["rag_references"] = [
+                    {"title": r["title"], "topics": r["topics"]}
+                    for r in references[:5]
+                ]
+            
+            content_msg += f" (팀: {len(team)}명, 참고자료: {len(references)}건)"
+        except Exception as e:
+            print(f"    MCP lookup error: {e}")
 
     return {
         "current_phase": "phase_3_plan",
@@ -536,6 +591,7 @@ async def phase_5_finalize_node(state: PhasedSupervisorState) -> Dict[str, Any]:
     Phase 5c: Finalize (최종 완성)
     
     M-3: Executive Summary를 여기서 생성 (수정 완료 후)
+    MCP: DocumentStore에 최종 DOCX 저장
     """
 
     print("🎯 Phase 5c: Finalize (최종 편집 & 변환)")
@@ -544,6 +600,42 @@ async def phase_5_finalize_node(state: PhasedSupervisorState) -> Dict[str, Any]:
     working_state = state.get("phase_working_state", {})
     working_state["final_document_path"] = MOCK_PHASE5_RESULT["export_path"]
     working_state["executive_summary"] = "본 제안서는 마이크로서비스 기반 현대적 클라우드 아키텍처로 디지털 전환을 실현합니다."
+
+    # ── MCP: DocumentStore에 최종 문서 저장 ──
+    content_msg = f"[Phase 5 완료] 최종 문서: {MOCK_PHASE5_RESULT['export_path']}"
+    
+    if USE_MCP:
+        try:
+            # 제안서 정보
+            rfp_title = state.get("proposal_state", {}).get("rfp_title", "Proposal")
+            client_name = state.get("proposal_state", {}).get("client_name", "Client")
+            
+            # 최종 DOCX 바이너리 (실제로는 python-docx로 생성된 바이너리)
+            doc_id = f"prop_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            filename = f"{rfp_title.replace(' ', '_')}_{client_name}.docx"
+            
+            # Mock 바이너리 데이터 (실제로는 DOCX 바이너리)
+            doc_content = b"[DOCX Binary Content - Python-docx generated]"
+            
+            # DocumentStore에 저장
+            saved_path = await MCP_SERVER.save_document(
+                doc_id=doc_id,
+                filename=filename,
+                content=doc_content,
+                metadata={
+                    "rfp_title": rfp_title,
+                    "client": client_name,
+                    "pages": working_state.get("total_pages", 0),
+                    "quality_score": working_state.get("quality_score", 0),
+                    "revision_rounds": working_state.get("revision_rounds", 0),
+                }
+            )
+            
+            working_state["document_store_path"] = saved_path
+            content_msg += f" (저장됨: {filename})"
+            
+        except Exception as e:
+            print(f"    MCP document save error: {e}")
 
     return {
         "current_phase": "phase_5_finalize",
@@ -556,9 +648,7 @@ async def phase_5_finalize_node(state: PhasedSupervisorState) -> Dict[str, Any]:
             *state.get("messages", []),
             {
                 "role": "system",
-                "content": "[Phase 5 완료] 최종 문서: {}".format(
-                    MOCK_PHASE5_RESULT["export_path"]
-                ),
+                "content": content_msg,
             },
         ],
     }

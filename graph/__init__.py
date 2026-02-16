@@ -1,6 +1,6 @@
 """LangGraph 그래프 모듈
 
-v3.1.1 (Phased Supervisor) 지원
+v3.1.1 (Phased Supervisor) 지원 + MCP 통합
 """
 
 # v3.1.1 Phased Supervisor (현재)
