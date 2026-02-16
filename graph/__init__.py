@@ -3,6 +3,9 @@
 v3.1.1 (Phased Supervisor) 지원 + MCP 통합
 """
 
+# v3.0 Supervisor (레거시)
+from .supervisor import build_supervisor_graph, SupervisorNode
+
 # v3.1.1 Phased Supervisor (현재)
 from .phased_supervisor import build_phased_supervisor_graph
 from .phase_nodes import (

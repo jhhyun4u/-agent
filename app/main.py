@@ -16,9 +16,9 @@ import logging
 
 from app.config import settings
 from app.api.routes import router
-from app.graph import build_supervisor_graph
-from app.tools import create_default_registry
-from app.config.claude_optimizer import TokenUsageTracker
+from graph import build_supervisor_graph
+from tools import create_default_registry
+from config.claude_optimizer import TokenUsageTracker
 
 # 로깅 설정
 logging.basicConfig(level=settings.log_level)
@@ -66,7 +66,7 @@ async def lifespan(app: FastAPI):
     if token_tracker and settings.log_token_usage:
         report = token_tracker.report()
         logger.info(f"📊 토큰 사용 총계: {report['total_tokens']} 토큰, "
-                   f"컬 {report['total_cost_usd']} USD")
+                   f"총 {report['total_cost']} USD")
         for rec in token_tracker.recommend_optimizations():
             logger.warning(rec)
     logger.info("✅ 시스템 종료 완료")

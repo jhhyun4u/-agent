@@ -14,8 +14,8 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, START, END
 
-from app.state import SupervisorState, WorkflowPlan, initialize_supervisor_state
-from app.prompts.supervisor import (
+from state import SupervisorState, WorkflowPlan, initialize_supervisor_state
+from prompts.supervisor import (
     SUPERVISOR_PLANNING_PROMPT,
     SUPERVISOR_ROUTING_PROMPT,
     SUPERVISOR_ERROR_RECOVERY_PROMPT,
@@ -297,11 +297,15 @@ async def hitl_final_gate(state: SupervisorState) -> dict:
 
 
 # Supervisor 그래프 빌더
-def build_supervisor_graph(subgraphs: dict | None = None) -> any:
+def build_supervisor_graph(subgraphs: dict | None = None, checkpointer=None) -> any:
     """
     Supervisor 메인 그래프 구축.
-    
+
     설계: Part II.4.3 - Supervisor 메인 그래프
+
+    Args:
+        subgraphs: Sub-agent 그래프 딕셔너리 (optional)
+        checkpointer: 메모리 체크포인터 (optional)
     """
 
     supervisor = SupervisorNode()
@@ -370,4 +374,8 @@ def build_supervisor_graph(subgraphs: dict | None = None) -> any:
     builder.add_edge("hitl_personnel", "route_next")
     builder.add_edge("hitl_final", "route_next")
 
-    return builder.compile()
+    # 체크포인터가 제공되면 사용, 아니면 일반 컴파일
+    if checkpointer:
+        return builder.compile(checkpointer=checkpointer)
+    else:
+        return builder.compile()

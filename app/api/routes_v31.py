@@ -36,8 +36,12 @@ async def generate_proposal_v31(
     - status: 처리 상태
     - phases: 진행 단계
     """
+    logger.info(f"[DEBUG] Function called: rfp_title={rfp_title}, client_name={client_name}")
+
     from graph import build_phased_supervisor_graph
     from state.phased_state import initialize_phased_supervisor_state
+
+    logger.info(f"[DEBUG] Imports successful")
 
     proposal_id = f"prop_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
@@ -60,7 +64,7 @@ async def generate_proposal_v31(
 
         # State 초기화 (v3.1.1)
         state = initialize_phased_supervisor_state(
-            rfp_ref=proposal_id,
+            rfp_document_ref=proposal_id,
             company_profile=company_profile,
             express_mode=express_mode,
         )
