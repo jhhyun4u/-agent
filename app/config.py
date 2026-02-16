@@ -3,12 +3,13 @@ from typing import Literal
 
 
 class Settings(BaseSettings):
-    """애플리케이션 설정 (v3.0 Multi-Agent)"""
+    """애플리케이션 설정"""
 
     # API 키
     anthropic_api_key: str = ""
 
-    # 모델 선택
+    # 모델 선택 (일관된 필드명)
+    claude_model: str = "claude-sonnet-4-5-20250929"
     supervisor_model: str = "claude-sonnet-4-5-20250929"
     default_model: str = "claude-sonnet-4-5-20250929"
 
@@ -35,6 +36,13 @@ class Settings(BaseSettings):
     proposal_db_url: str = "postgresql://localhost/proposal_db"
     personnel_db_url: str = "postgresql://localhost/personnel_db"
     vector_db_path: str = "./data/vectors"
+    
+    # 파일 업로드 설정
+    max_file_size_mb: int = 10
+    allowed_file_extensions: list[str] = [".pdf", ".docx", ".hwp", ".txt"]
+    
+    # 출력 디렉토리
+    output_dir: str = "output"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

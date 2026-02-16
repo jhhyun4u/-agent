@@ -33,3 +33,6 @@ output/
 
 # uv
 uv.lock
+.claude/
+.serena/
+app/api/routes_old.py
