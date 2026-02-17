@@ -34,6 +34,10 @@ class SupabaseClient:
             raise RuntimeError("Supabase client not initialized. Check SUPABASE_URL and SUPABASE_KEY in .env")
         return self._client
 
+    def is_available(self) -> bool:
+        """Supabase 클라이언트 사용 가능 여부"""
+        return self._client is not None
+
     async def get_proposals(self, filters: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """제안서 목록 조회
 
@@ -43,6 +47,9 @@ class SupabaseClient:
         Returns:
             제안서 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             query = self.client.table("proposals").select("*")
 
@@ -65,6 +72,9 @@ class SupabaseClient:
         Returns:
             검색된 제안서 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             # Supabase의 텍스트 검색 기능 사용
             response = (
@@ -87,6 +97,9 @@ class SupabaseClient:
         Returns:
             생성된 제안서 ID
         """
+        if not self.is_available():
+            return None
+
         try:
             response = self.client.table("proposals").insert(proposal).execute()
             if response.data:
@@ -105,6 +118,9 @@ class SupabaseClient:
         Returns:
             인력 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             query = self.client.table("personnel").select("*")
 
@@ -127,6 +143,9 @@ class SupabaseClient:
         Returns:
             검색된 인력 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             # PostgreSQL의 배열 검색 기능 사용
             response = (
@@ -149,6 +168,9 @@ class SupabaseClient:
         Returns:
             참고 자료 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             query = self.client.table("references").select("*")
 
@@ -172,6 +194,9 @@ class SupabaseClient:
         Returns:
             검색된 참고 자료 목록
         """
+        if not self.is_available():
+            return []
+
         try:
             response = (
                 self.client.table("references")
@@ -194,6 +219,9 @@ class SupabaseClient:
         Returns:
             생성된 문서 ID
         """
+        if not self.is_available():
+            return None
+
         try:
             response = self.client.table("documents").insert(doc_data).execute()
             if response.data:
@@ -212,6 +240,9 @@ class SupabaseClient:
         Returns:
             문서 데이터
         """
+        if not self.is_available():
+            return None
+
         try:
             response = (
                 self.client.table("documents")

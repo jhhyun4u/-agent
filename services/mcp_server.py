@@ -40,6 +40,11 @@ class ProposalDB:
         self.use_supabase = use_supabase and SUPABASE_AVAILABLE
         self.supabase_client = get_supabase_client() if self.use_supabase else None
 
+        # Supabase 클라이언트가 실제로 사용 가능한지 확인
+        if self.supabase_client and not self.supabase_client.is_available():
+            self.use_supabase = False
+            self.supabase_client = None
+
         # 폴백용 메모리 데이터
         self.proposals = {
             "prop_001": {
@@ -126,6 +131,11 @@ class PersonnelDB:
     def __init__(self, use_supabase: bool = True):
         self.use_supabase = use_supabase and SUPABASE_AVAILABLE
         self.supabase_client = get_supabase_client() if self.use_supabase else None
+
+        # Supabase 클라이언트가 실제로 사용 가능한지 확인
+        if self.supabase_client and not self.supabase_client.is_available():
+            self.use_supabase = False
+            self.supabase_client = None
 
         # 폴백용 메모리 데이터
         self.personnel = {
@@ -234,6 +244,11 @@ class RAGServer:
         self.use_supabase = use_supabase and SUPABASE_AVAILABLE
         self.supabase_client = get_supabase_client() if self.use_supabase else None
 
+        # Supabase 클라이언트가 실제로 사용 가능한지 확인
+        if self.supabase_client and not self.supabase_client.is_available():
+            self.use_supabase = False
+            self.supabase_client = None
+
         # 폴백용 메모리 데이터
         self.references = {
             "ref_001": {
@@ -312,6 +327,11 @@ class DocumentStore:
     def __init__(self, base_path: Optional[Path] = None, use_supabase: bool = True):
         self.use_supabase = use_supabase and SUPABASE_AVAILABLE
         self.supabase_client = get_supabase_client() if self.use_supabase else None
+
+        # Supabase 클라이언트가 실제로 사용 가능한지 확인
+        if self.supabase_client and not self.supabase_client.is_available():
+            self.use_supabase = False
+            self.supabase_client = None
 
         self.base_path = base_path or Path("/tmp/proposal_documents")
         self.base_path.mkdir(parents=True, exist_ok=True)
@@ -400,13 +420,13 @@ class MCPServer:
     
     async def search_similar_proposals(self, query: str) -> List[Dict[str, Any]]:
         """유사 제안서 검색 (Phase 1에서 사용)"""
-        return self.proposal_db.search(query)
+        return await self.proposal_db.search(query)
     
     # ─────── Personnel DB Methods ───────
     
     async def get_team_for_project(self, required_skills: List[str], team_size: int = 5) -> List[Dict[str, Any]]:
         """프로젝트용 팀 구성 (Phase 3에서 사용)"""
-        return self.personnel_db.get_team_for_skills(required_skills, team_size)
+        return await self.personnel_db.get_team_for_skills(required_skills, team_size)
     
     async def search_personnel_by_skill(self, skill: str) -> List[Dict[str, Any]]:
         """기술별 인력 검색"""
@@ -416,7 +436,7 @@ class MCPServer:
     
     async def search_references(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         """참고 자료 검색 (Phase 3에서 RAG 사전 수집)"""
-        return self.rag_server.search(query, top_k)
+        return await self.rag_server.search(query, top_k)
     
     async def search_references_by_topic(self, topic: str) -> List[Dict[str, Any]]:
         """토픽별 참고 자료"""
@@ -424,10 +444,10 @@ class MCPServer:
     
     # ─────── Document Store Methods ───────
     
-    async def save_document(self, doc_id: str, filename: str, content: bytes, 
+    async def save_document(self, doc_id: str, filename: str, content: bytes,
                            metadata: Dict[str, Any] = None) -> str:
         """최종 문서 저장 (Phase 5 후)"""
-        return self.document_store.save(doc_id, filename, content, metadata)
+        return await self.document_store.save(doc_id, filename, content, metadata)
     
     async def get_document(self, doc_id: str) -> Optional[Dict[str, Any]]:
         """저장된 문서 조회"""
