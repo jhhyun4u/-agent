@@ -2,10 +2,10 @@
 MCP (Model Context Protocol) 서버 통합
 
 4가지 주요 서비스:
-1. ProposalDB: 과거 제안서 저장소
-2. PersonnelDB: 인력 정보 관리
-3. RAGServer: 참고 자료 검색 (Semantic)
-4. DocumentStore: 생성된 문서 저장소
+1. ProposalDB: 과거 제안서 저장소 (Supabase)
+2. PersonnelDB: 인력 정보 관리 (Supabase)
+3. RAGServer: 참고 자료 검색 (Supabase + Semantic)
+4. DocumentStore: 생성된 문서 저장소 (Supabase Storage)
 """
 
 import sys
@@ -21,15 +21,26 @@ from datetime import datetime
 import json
 from abc import ABC, abstractmethod
 
+try:
+    from app.utils.supabase_client import get_supabase_client
+    SUPABASE_AVAILABLE = True
+except Exception as e:
+    print(f"[Warning] Supabase 클라이언트 로드 실패: {e}")
+    SUPABASE_AVAILABLE = False
+
 
 # ═══════════════════════════════════════════
 # 1. PROPOSAL DATABASE
 # ═══════════════════════════════════════════
 
 class ProposalDB:
-    """과거 제안서 저장소"""
-    
-    def __init__(self):
+    """과거 제안서 저장소 (Supabase 통합)"""
+
+    def __init__(self, use_supabase: bool = True):
+        self.use_supabase = use_supabase and SUPABASE_AVAILABLE
+        self.supabase_client = get_supabase_client() if self.use_supabase else None
+
+        # 폴백용 메모리 데이터
         self.proposals = {
             "prop_001": {
                 "id": "prop_001",
@@ -61,8 +72,16 @@ class ProposalDB:
             },
         }
     
-    def search(self, query: str) -> List[Dict[str, Any]]:
+    async def search(self, query: str) -> List[Dict[str, Any]]:
         """키워드로 제안서 검색"""
+        # Supabase 사용 시도
+        if self.use_supabase and self.supabase_client:
+            try:
+                return await self.supabase_client.search_proposals(query)
+            except Exception as e:
+                print(f"[ProposalDB] Supabase 검색 실패, 메모리 폴백: {e}")
+
+        # 메모리 폴백
         results = []
         for prop in self.proposals.values():
             if (query.lower() in prop["title"].lower() or
@@ -79,8 +98,18 @@ class ProposalDB:
         """연도별 제안서 목록"""
         return [p for p in self.proposals.values() if p["year"] == year]
     
-    def add_proposal(self, proposal: Dict[str, Any]) -> str:
+    async def add_proposal(self, proposal: Dict[str, Any]) -> str:
         """새 제안서 추가"""
+        # Supabase 사용 시도
+        if self.use_supabase and self.supabase_client:
+            try:
+                prop_id = await self.supabase_client.add_proposal(proposal)
+                if prop_id:
+                    return prop_id
+            except Exception as e:
+                print(f"[ProposalDB] Supabase 추가 실패, 메모리 폴백: {e}")
+
+        # 메모리 폴백
         prop_id = f"prop_{len(self.proposals) + 1:03d}"
         proposal["id"] = prop_id
         self.proposals[prop_id] = proposal
@@ -92,9 +121,13 @@ class ProposalDB:
 # ═══════════════════════════════════════════
 
 class PersonnelDB:
-    """인력 정보 관리"""
-    
-    def __init__(self):
+    """인력 정보 관리 (Supabase 통합)"""
+
+    def __init__(self, use_supabase: bool = True):
+        self.use_supabase = use_supabase and SUPABASE_AVAILABLE
+        self.supabase_client = get_supabase_client() if self.use_supabase else None
+
+        # 폴백용 메모리 데이터
         self.personnel = {
             "emp_001": {
                 "id": "emp_001",
@@ -138,8 +171,16 @@ class PersonnelDB:
         """역할로 인력 검색"""
         return [p for p in self.personnel.values() if p["role"] == role]
     
-    def search_by_expertise(self, skill: str) -> List[Dict[str, Any]]:
+    async def search_by_expertise(self, skill: str) -> List[Dict[str, Any]]:
         """기술로 인력 검색"""
+        # Supabase 사용 시도
+        if self.use_supabase and self.supabase_client:
+            try:
+                return await self.supabase_client.search_personnel_by_skill(skill)
+            except Exception as e:
+                print(f"[PersonnelDB] Supabase 검색 실패, 메모리 폴백: {e}")
+
+        # 메모리 폴백
         return [
             p for p in self.personnel.values()
             if any(skill.lower() in e.lower() for e in p.get("expertise", []))
@@ -157,21 +198,28 @@ class PersonnelDB:
             return True
         return False
     
-    def get_team_for_skills(self, required_skills: List[str], team_size: int = 5) -> List[Dict[str, Any]]:
+    async def get_team_for_skills(self, required_skills: List[str], team_size: int = 5) -> List[Dict[str, Any]]:
         """필요 기술을 갖춘 팀 구성"""
-        team = []
-        pool = self.get_available()
-        
+        # Supabase 사용 시 모든 인력 가져오기
+        if self.use_supabase and self.supabase_client:
+            try:
+                pool = await self.supabase_client.get_personnel({"available": True})
+            except Exception as e:
+                print(f"[PersonnelDB] Supabase 조회 실패, 메모리 폴백: {e}")
+                pool = self.get_available()
+        else:
+            pool = self.get_available()
+
         # 기술별 매칭 점수로 정렬
         scored = []
         for person in pool:
-            score = sum(1 for skill in required_skills 
+            score = sum(1 for skill in required_skills
                        if any(skill.lower() in e.lower() for e in person.get("expertise", [])))
             if score > 0:
                 scored.append((score, person))
-        
+
         scored.sort(reverse=True)
-        
+
         return [p for _, p in scored[:team_size]]
 
 
@@ -180,9 +228,13 @@ class PersonnelDB:
 # ═══════════════════════════════════════════
 
 class RAGServer:
-    """참고 자료 검색 (간단한 벡터 매칭)"""
-    
-    def __init__(self):
+    """참고 자료 검색 (Supabase 통합)"""
+
+    def __init__(self, use_supabase: bool = True):
+        self.use_supabase = use_supabase and SUPABASE_AVAILABLE
+        self.supabase_client = get_supabase_client() if self.use_supabase else None
+
+        # 폴백용 메모리 데이터
         self.references = {
             "ref_001": {
                 "id": "ref_001",
@@ -210,11 +262,19 @@ class RAGServer:
             },
         }
     
-    def search(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
+    async def search(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         """쿼리 관련 참고 자료 검색"""
+        # Supabase 사용 시도
+        if self.use_supabase and self.supabase_client:
+            try:
+                return await self.supabase_client.search_references(query, top_k)
+            except Exception as e:
+                print(f"[RAGServer] Supabase 검색 실패, 메모리 폴백: {e}")
+
+        # 메모리 폴백
         query_lower = query.lower()
         scored = []
-        
+
         for ref in self.references.values():
             score = 0
             # 제목 매칭
@@ -227,10 +287,10 @@ class RAGServer:
             for topic in ref["topics"]:
                 if query_lower in topic.lower():
                     score += 2
-            
+
             if score > 0:
                 scored.append((score, ref))
-        
+
         scored.sort(reverse=True)
         return [ref for _, ref in scored[:top_k]]
     
@@ -247,23 +307,27 @@ class RAGServer:
 # ═══════════════════════════════════════════
 
 class DocumentStore:
-    """생성된 문서 저장소"""
-    
-    def __init__(self, base_path: Optional[Path] = None):
+    """생성된 문서 저장소 (Supabase Storage 통합)"""
+
+    def __init__(self, base_path: Optional[Path] = None, use_supabase: bool = True):
+        self.use_supabase = use_supabase and SUPABASE_AVAILABLE
+        self.supabase_client = get_supabase_client() if self.use_supabase else None
+
         self.base_path = base_path or Path("/tmp/proposal_documents")
         self.base_path.mkdir(parents=True, exist_ok=True)
-        
+
+        # 메모리 메타데이터 (Supabase 사용 시에도 로컬 캐시로 사용)
         self.documents = {}
     
-    def save(self, doc_id: str, filename: str, content: bytes, metadata: Dict[str, Any] = None) -> str:
+    async def save(self, doc_id: str, filename: str, content: bytes, metadata: Dict[str, Any] = None) -> str:
         """문서 저장"""
         file_path = self.base_path / filename
-        
-        # 이진 데이터 저장
+
+        # 로컬 파일 시스템에 저장 (항상)
         file_path.write_bytes(content)
-        
-        # 메타데이터 기록
-        self.documents[doc_id] = {
+
+        # 메타데이터
+        doc_meta = {
             "id": doc_id,
             "filename": filename,
             "path": str(file_path),
@@ -271,7 +335,17 @@ class DocumentStore:
             "created_at": datetime.now().isoformat(),
             "metadata": metadata or {},
         }
-        
+
+        # Supabase에 메타데이터 저장 시도
+        if self.use_supabase and self.supabase_client:
+            try:
+                await self.supabase_client.save_document(doc_meta)
+            except Exception as e:
+                print(f"[DocumentStore] Supabase 저장 실패, 로컬만 유지: {e}")
+
+        # 로컬 캐시에도 저장
+        self.documents[doc_id] = doc_meta
+
         return str(file_path)
     
     def get(self, doc_id: str) -> Optional[Dict[str, Any]]:
@@ -299,21 +373,27 @@ class DocumentStore:
 # ═══════════════════════════════════════════
 
 class MCPServer:
-    """MCP 통합 서버
-    
+    """MCP 통합 서버 (Supabase 통합)
+
     모든 외부 서비스에 대한 단일 진입점
     """
-    
-    def __init__(self):
-        self.proposal_db = ProposalDB()
-        self.personnel_db = PersonnelDB()
-        self.rag_server = RAGServer()
-        self.document_store = DocumentStore()
-        
+
+    def __init__(self, use_supabase: bool = True):
+        self.use_supabase = use_supabase and SUPABASE_AVAILABLE
+
+        self.proposal_db = ProposalDB(use_supabase=self.use_supabase)
+        self.personnel_db = PersonnelDB(use_supabase=self.use_supabase)
+        self.rag_server = RAGServer(use_supabase=self.use_supabase)
+        self.document_store = DocumentStore(use_supabase=self.use_supabase)
+
         print("[MCP Server] 초기화 완료")
-        print("  - ProposalDB: 과거 제안서 2건")
-        print("  - PersonnelDB: 인력 4명")
-        print("  - RAGServer: 참고 자료 4건")
+        if self.use_supabase:
+            print("  - 모드: Supabase 통합 (폴백: 메모리)")
+        else:
+            print("  - 모드: 메모리 전용")
+        print("  - ProposalDB: 과거 제안서 2건 (메모리 폴백)")
+        print("  - PersonnelDB: 인력 4명 (메모리 폴백)")
+        print("  - RAGServer: 참고 자료 4건 (메모리 폴백)")
         print("  - DocumentStore: 준비 완료")
     
     # ─────── Proposal DB Methods ───────
@@ -330,7 +410,7 @@ class MCPServer:
     
     async def search_personnel_by_skill(self, skill: str) -> List[Dict[str, Any]]:
         """기술별 인력 검색"""
-        return self.personnel_db.search_by_expertise(skill)
+        return await self.personnel_db.search_by_expertise(skill)
     
     # ─────── RAG Server Methods ───────
     

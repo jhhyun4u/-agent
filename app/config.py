@@ -32,9 +32,10 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_token_usage: bool = True
 
-    # 데이터베이스 (MCP 서버용)
-    proposal_db_url: str = "postgresql://localhost/proposal_db"
-    personnel_db_url: str = "postgresql://localhost/personnel_db"
+    # Supabase 설정 (MCP 서버용)
+    supabase_url: str = ""
+    supabase_key: str = ""
+    supabase_service_role_key: str = ""  # 서버 사이드 작업용
     vector_db_path: str = "./data/vectors"
     
     # 파일 업로드 설정

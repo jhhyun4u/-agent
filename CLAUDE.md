@@ -6,6 +6,7 @@ RFP(제안요청서) 문서를 업로드하거나 프로젝트 정보를 직접 
 ## 기술 스택
 - Python 3.11+ / FastAPI
 - Anthropic Claude API (claude-sonnet-4-5-20250929)
+- Supabase (PostgreSQL 호환 데이터베이스)
 - PyPDF2, python-docx, python-pptx
 - 패키지 관리: uv
 
