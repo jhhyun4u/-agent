@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS proposals (
 );
 
 -- 제안서 검색을 위한 인덱스
-CREATE INDEX IF NOT EXISTS idx_proposals_title ON proposals USING GIN (to_tsvector('korean', title));
-CREATE INDEX IF NOT EXISTS idx_proposals_client ON proposals USING GIN (to_tsvector('korean', client));
+CREATE INDEX IF NOT EXISTS idx_proposals_title ON proposals USING GIN (to_tsvector('simple', title));
+CREATE INDEX IF NOT EXISTS idx_proposals_client ON proposals USING GIN (to_tsvector('simple', client));
 CREATE INDEX IF NOT EXISTS idx_proposals_year ON proposals (year);
 CREATE INDEX IF NOT EXISTS idx_proposals_status ON proposals (status);
 
@@ -73,9 +73,9 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================
--- 3. 참고 자료 테이블 (references)
+-- 3. 참고 자료 테이블 (reference_materials)
 -- ============================================
-CREATE TABLE IF NOT EXISTS references (
+CREATE TABLE IF NOT EXISTS reference_materials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title TEXT NOT NULL,
     content TEXT,
@@ -85,12 +85,12 @@ CREATE TABLE IF NOT EXISTS references (
 );
 
 -- 참고 자료 검색을 위한 인덱스
-CREATE INDEX IF NOT EXISTS idx_references_title ON references USING GIN (to_tsvector('korean', title));
-CREATE INDEX IF NOT EXISTS idx_references_content ON references USING GIN (to_tsvector('korean', content));
-CREATE INDEX IF NOT EXISTS idx_references_topics ON references USING GIN (topics);
+CREATE INDEX IF NOT EXISTS idx_reference_materials_title ON reference_materials USING GIN (to_tsvector('simple', title));
+CREATE INDEX IF NOT EXISTS idx_reference_materials_content ON reference_materials USING GIN (to_tsvector('simple', content));
+CREATE INDEX IF NOT EXISTS idx_reference_materials_topics ON reference_materials USING GIN (topics);
 
 -- 샘플 데이터 삽입
-INSERT INTO references (id, title, content, topics)
+INSERT INTO reference_materials (id, title, content, topics)
 VALUES
     ('77777777-7777-7777-7777-777777777777', 'AWS 마이그레이션 Best Practices',
      '클라우드 마이그레이션 시 보안 고려사항...', ARRAY['AWS', 'Security', 'Migration']),
@@ -137,7 +137,7 @@ CREATE TRIGGER update_proposals_updated_at BEFORE UPDATE ON proposals
 CREATE TRIGGER update_personnel_updated_at BEFORE UPDATE ON personnel
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_references_updated_at BEFORE UPDATE ON references
+CREATE TRIGGER update_reference_materials_updated_at BEFORE UPDATE ON reference_materials
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON documents
@@ -150,7 +150,7 @@ CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON documents
 -- RLS 활성화
 ALTER TABLE proposals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE personnel ENABLE ROW LEVEL SECURITY;
-ALTER TABLE references ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reference_materials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
 -- 모든 테이블에 대해 인증된 사용자는 모든 작업 가능
@@ -160,7 +160,7 @@ CREATE POLICY "Enable all operations for authenticated users" ON proposals
 CREATE POLICY "Enable all operations for authenticated users" ON personnel
     FOR ALL USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Enable all operations for authenticated users" ON references
+CREATE POLICY "Enable all operations for authenticated users" ON reference_materials
     FOR ALL USING (auth.role() = 'authenticated');
 
 CREATE POLICY "Enable all operations for authenticated users" ON documents
@@ -173,7 +173,7 @@ CREATE POLICY "Enable all operations for service role" ON proposals
 CREATE POLICY "Enable all operations for service role" ON personnel
     FOR ALL USING (auth.role() = 'service_role');
 
-CREATE POLICY "Enable all operations for service role" ON references
+CREATE POLICY "Enable all operations for service role" ON reference_materials
     FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Enable all operations for service role" ON documents

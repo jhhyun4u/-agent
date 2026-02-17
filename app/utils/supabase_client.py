@@ -21,11 +21,14 @@ class SupabaseClient:
         return cls._instance
 
     def __init__(self):
-        if self._client is None and settings.supabase_url and settings.supabase_key:
-            self._client = create_client(
-                settings.supabase_url,
-                settings.supabase_key
-            )
+        if self._client is None and settings.supabase_url:
+            # 서비스 롤 키 우선 사용 (RLS 우회), 없으면 일반 키 사용
+            api_key = settings.supabase_service_role_key or settings.supabase_key
+            if api_key:
+                self._client = create_client(
+                    settings.supabase_url,
+                    api_key
+                )
 
     @property
     def client(self) -> Client:
@@ -172,7 +175,7 @@ class SupabaseClient:
             return []
 
         try:
-            query = self.client.table("references").select("*")
+            query = self.client.table("reference_materials").select("*")
 
             if filters:
                 for key, value in filters.items():
@@ -199,7 +202,7 @@ class SupabaseClient:
 
         try:
             response = (
-                self.client.table("references")
+                self.client.table("reference_materials")
                 .select("*")
                 .or_(f"title.ilike.%{query}%,content.ilike.%{query}%")
                 .limit(top_k)

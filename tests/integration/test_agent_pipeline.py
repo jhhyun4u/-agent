@@ -1,5 +1,7 @@
 """전체 Sub-agent 통합 테스트"""
 import asyncio
+import os
+from dotenv import load_dotenv
 from agents import (
     build_rfp_analysis_graph,
     build_strategy_graph,
@@ -7,6 +9,9 @@ from agents import (
     build_quality_graph,
     build_document_graph,
 )
+
+# .env 파일 로드
+load_dotenv()
 
 
 async def test_full_pipeline():
@@ -47,7 +52,7 @@ async def test_full_pipeline():
     # 1. RFP 분석 에이전트
     # ========================================
     print("\n" + "=" * 70)
-    print("1️⃣  RFP 분석 에이전트")
+    print("1.  RFP 분석 에이전트")
     print("=" * 70)
 
     rfp_graph = build_rfp_analysis_graph()
@@ -66,20 +71,20 @@ async def test_full_pipeline():
         rfp_result = await rfp_graph.ainvoke(rfp_state)
         rfp_analysis = rfp_result.get("rfp_analysis_result", {})
 
-        print(f"✓ RFP 분석 완료")
+        print("OK: RFP 분석 완료")
         print(f"  - 사업명: {rfp_analysis.get('rfp_title', 'N/A')}")
         print(f"  - 발주처: {rfp_analysis.get('client_name', 'N/A')}")
         print(f"  - 평가 기준: {len(rfp_analysis.get('evaluation_criteria', []))}개")
         print(f"  - 완성도: {rfp_analysis.get('completeness_score', 0):.2%}")
     except Exception as e:
-        print(f"✗ RFP 분석 실패: {e}")
+        print(f"ERROR: RFP 분석 실패: {e}")
         return
 
     # ========================================
     # 2. 전략 수립 에이전트
     # ========================================
     print("\n" + "=" * 70)
-    print("2️⃣  전략 수립 에이전트")
+    print("2.  전략 수립 에이전트")
     print("=" * 70)
 
     strategy_graph = build_strategy_graph()
@@ -98,13 +103,13 @@ async def test_full_pipeline():
         strategy_result = await strategy_graph.ainvoke(strategy_state)
         strategy = strategy_result.get("strategy_result", {})
 
-        print(f"✓ 전략 수립 완료")
+        print("OK: 전략 수립 완료")
         print(f"  - 핵심 메시지: {strategy.get('strategy', {}).get('core_message', 'N/A')[:50]}...")
         print(f"  - 차별화 포인트: {len(strategy.get('strategy', {}).get('differentiators', []))}개")
         print(f"  - 섹션 배분: {len(strategy.get('score_allocations', []))}개")
         print(f"  - 인력 구성: {len(strategy.get('personnel', []))}명")
     except Exception as e:
-        print(f"✗ 전략 수립 실패: {e}")
+        print(f"ERROR: 전략 수립 실패: {e}")
         import traceback
         traceback.print_exc()
         return
@@ -113,7 +118,7 @@ async def test_full_pipeline():
     # 3. 섹션 생성 에이전트
     # ========================================
     print("\n" + "=" * 70)
-    print("3️⃣  섹션 생성 에이전트")
+    print("3.  섹션 생성 에이전트")
     print("=" * 70)
 
     section_graph = build_section_generation_graph()
@@ -134,7 +139,7 @@ async def test_full_pipeline():
         section_result = await section_graph.ainvoke(section_state)
         sections = section_result.get("sections_result", {})
 
-        print(f"✓ 섹션 생성 완료")
+        print("OK: 섹션 생성 완료")
         print(f"  - 총 섹션: {sections.get('total_sections', 0)}개")
         print(f"  - 상태: {sections.get('status', 'N/A')}")
 
@@ -142,7 +147,7 @@ async def test_full_pipeline():
             section_data = sections['sections'][section_name]
             print(f"  - {section_name}: {section_data.get('word_count', 0)}자")
     except Exception as e:
-        print(f"✗ 섹션 생성 실패: {e}")
+        print(f"ERROR: 섹션 생성 실패: {e}")
         import traceback
         traceback.print_exc()
         return
@@ -151,7 +156,7 @@ async def test_full_pipeline():
     # 4. 품질 관리 에이전트
     # ========================================
     print("\n" + "=" * 70)
-    print("4️⃣  품질 관리 에이전트")
+    print("4.  품질 관리 에이전트")
     print("=" * 70)
 
     quality_graph = build_quality_graph()
@@ -172,12 +177,12 @@ async def test_full_pipeline():
         quality_result = await quality_graph.ainvoke(quality_state)
         quality = quality_result.get("quality_result", {})
 
-        print(f"✓ 품질 검토 완료")
+        print("OK: 품질 검토 완료")
         print(f"  - 품질 점수: {quality.get('quality_score', 0):.2%}")
         print(f"  - 액션: {quality.get('action', 'N/A')}")
         print(f"  - 이슈: {len(quality.get('issues', []))}개")
     except Exception as e:
-        print(f"✗ 품질 검토 실패: {e}")
+        print(f"ERROR: 품질 검토 실패: {e}")
         import traceback
         traceback.print_exc()
         return
@@ -186,7 +191,7 @@ async def test_full_pipeline():
     # 5. 문서 출력 에이전트
     # ========================================
     print("\n" + "=" * 70)
-    print("5️⃣  문서 출력 에이전트")
+    print("5.  문서 출력 에이전트")
     print("=" * 70)
 
     document_graph = build_document_graph()
@@ -209,7 +214,7 @@ async def test_full_pipeline():
         document_result = await document_graph.ainvoke(document_state)
         document = document_result.get("document_result", {})
 
-        print(f"✓ 문서 생성 완료")
+        print("OK: 문서 생성 완료")
         print(f"  - 요약문: {len(document.get('executive_summary', ''))}자")
 
         export_paths = document.get("export_paths", {})
@@ -218,7 +223,7 @@ async def test_full_pipeline():
         if export_paths.get("pptx"):
             print(f"  - PPTX: {export_paths['pptx']}")
     except Exception as e:
-        print(f"✗ 문서 생성 실패: {e}")
+        print(f"ERROR: 문서 생성 실패: {e}")
         import traceback
         traceback.print_exc()
         return
@@ -227,12 +232,12 @@ async def test_full_pipeline():
     # 완료
     # ========================================
     print("\n" + "=" * 70)
-    print("🎉 전체 파이프라인 테스트 완료!")
+    print("SUCCESS: 전체 파이프라인 테스트 완료!")
     print("=" * 70)
 
 
 if __name__ == "__main__":
-    print("\n⚠️  이 테스트는 실제 Claude API를 호출합니다.")
-    print("⚠️  .env 파일에 유효한 ANTHROPIC_API_KEY가 필요합니다.\n")
+    print("\n[WARNING] 이 테스트는 실제 Claude API를 호출합니다.")
+    print("[WARNING] .env 파일에 유효한 ANTHROPIC_API_KEY가 필요합니다.\n")
 
     asyncio.run(test_full_pipeline())
