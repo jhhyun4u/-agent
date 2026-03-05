@@ -49,3 +49,18 @@ async def parse_rfp(file_path: Path) -> RFPData:
     result_text = response.content[0].text
     data = extract_json_from_response(result_text)
     return RFPData(raw_text=raw_text, **data)
+
+async def parse_rfp_text(content: str) -> RFPData:
+    from app.utils import create_anthropic_client, extract_json_from_response
+    client = create_anthropic_client(async_client=True)
+    response = await client.messages.create(
+        model=settings.claude_model,
+        max_tokens=4096,
+        system=SYSTEM_PROMPT,
+        messages=[{
+            "role": "user",
+            "content": RFP_ANALYSIS_PROMPT.format(rfp_text=content[:10000]),
+        }],
+    )
+    data = extract_json_from_response(response.content[0].text)
+    return RFPData(raw_text=content, **data)

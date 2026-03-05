@@ -6,7 +6,7 @@ from pptx.util import Inches, Pt
 from app.models.schemas import ProposalContent
 
 
-def build_pptx(content: ProposalContent, project_name: str, output_path: Path) -> Path:
+def build_pptx(content: ProposalContent, output_path: Path, project_name: str = "용역 제안서") -> Path:
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)

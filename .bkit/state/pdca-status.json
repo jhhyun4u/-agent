@@ -1,0 +1,170 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-03-05T13:11:35.217Z",
+  "activeFeatures": [
+    "tenopa proposer",
+    "api",
+    "proposal-agent-v33",
+    "bid_calculator.py",
+    "temp"
+  ],
+  "primaryFeature": "tenopa proposer",
+  "features": {
+    "tenopa proposer": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-05T05:22:34.160Z",
+        "lastUpdated": "2026-03-05T13:06:51.224Z"
+      },
+      "lastFile": "c:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\app\\services\\phase_executor.py"
+    },
+    "api": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-05T05:32:52.501Z",
+        "lastUpdated": "2026-03-05T10:50:15.006Z"
+      },
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/app/api/routes.py"
+    },
+    "proposal-agent-v33": {
+      "phase": "act",
+      "phaseNumber": 5,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-05T06:10:03.251Z",
+        "lastUpdated": "2026-03-05T06:10:03.253Z"
+      },
+      "previousPhase": "check",
+      "autoAdvanced": true
+    },
+    "bid_calculator.py": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-05T11:25:50.832Z",
+        "lastUpdated": "2026-03-05T11:25:50.832Z"
+      },
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/app/services/bid_calculator.py"
+    },
+    "temp": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-05T13:10:46.070Z",
+        "lastUpdated": "2026-03-05T13:11:35.217Z"
+      },
+      "lastFile": "c:\\temp\\phase_schemas_new.py"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-03-05T04:49:56.875Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-03-05T13:11:35.217Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-03-05T05:22:34.160Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T05:23:01.222Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T05:32:52.501Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T06:10:03.253Z",
+      "feature": "proposal-agent-v33",
+      "phase": "act",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T10:50:09.539Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T10:50:15.006Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T11:25:50.832Z",
+      "feature": "bid_calculator.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T12:52:13.854Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T13:01:14.099Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T13:02:22.540Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T13:06:51.224Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T13:10:46.070Z",
+      "feature": "temp",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-05T13:11:35.217Z",
+      "feature": "temp",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
+}

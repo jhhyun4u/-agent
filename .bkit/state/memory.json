@@ -1,0 +1,14 @@
+{
+  "sessionCount": 7,
+  "lastSession": {
+    "startedAt": "2026-03-05T12:46:53.376Z",
+    "platform": "claude",
+    "level": "Starter"
+  },
+  "phase": "plan",
+  "matchRate": 93,
+  "feature": "proposal-platform-v1",
+  "archivedTo": "docs/archive/2026-03/tenopa-proposer/",
+  "archivedAt": "2026-03-05T21:53:05.000179",
+  "completedAt": "2026-03-05T21:51:23.939569"
+}

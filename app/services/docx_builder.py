@@ -6,7 +6,7 @@ from docx.shared import Pt
 from app.models.schemas import ProposalContent
 
 
-def build_docx(content: ProposalContent, project_name: str, output_path: Path) -> Path:
+def build_docx(content: ProposalContent, output_path: Path, project_name: str = "용역 제안서") -> Path:
     doc = Document()
 
     # 제목
