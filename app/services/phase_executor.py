@@ -98,15 +98,24 @@ class PhaseExecutor:
         """Supabase usage_logs 테이블에 토큰 사용량 기록"""
         try:
             client = await get_async_client()
+            # 세션에서 owner_id, team_id 조회
+            try:
+                session = self.session_manager.get_session(self.proposal_id)
+                owner_id = session.get("owner_id")
+                team_id = session.get("team_id")
+            except Exception:
+                owner_id = None
+                team_id = None
             await (
                 client.table("usage_logs")
                 .insert({
                     "proposal_id": self.proposal_id,
+                    "owner_id": owner_id,
+                    "team_id": team_id,
                     "phase_number": phase_num,
                     "model": model,
                     "input_tokens": input_tokens,
                     "output_tokens": output_tokens,
-                    "total_tokens": input_tokens + output_tokens,
                     "logged_at": datetime.now(timezone.utc).isoformat(),
                 })
                 .execute()

@@ -18,7 +18,7 @@ import logging
 import re
 from collections import Counter
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 from urllib.parse import quote
 
@@ -77,31 +77,30 @@ async def _get_cache(key: str) -> Optional[List]:
         client = await get_async_client()
         result = await (
             client.table("g2b_cache")
-            .select("data")
+            .select("response")
             .eq("query_hash", key)
-            .gt("expires_at", datetime.utcnow().isoformat())
+            .gt("expires_at", datetime.now(timezone.utc).isoformat())
             .single()
             .execute()
         )
         if result.data:
-            return result.data.get("data")
+            return result.data.get("response")
     except Exception:
         pass
     return None
 
 
-async def _set_cache(key: str, api_type: str, params: dict, data: List) -> None:
+async def _set_cache(key: str, endpoint: str, params: dict, data: List) -> None:
     try:
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
-        expires = (datetime.utcnow() + timedelta(hours=24)).isoformat()
+        expires = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
         await (
             client.table("g2b_cache")
             .upsert({
                 "query_hash": key,
-                "api_type": api_type,
-                "params": params,
-                "data": data,
+                "endpoint": endpoint,
+                "response": data,
                 "expires_at": expires,
             })
             .execute()
@@ -168,7 +167,7 @@ class G2BService:
                     items = result.get("body", {}).get("items") or {}
                     raw = items.get("item", [])
                     rows = raw if isinstance(raw, list) else [raw]
-                    await _set_cache(cache_key, endpoint, params, rows)
+                    await _set_cache(cache_key, endpoint, params, rows)  # endpoint/response 컬럼 사용
                     return rows
             except RuntimeError:
                 raise

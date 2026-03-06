@@ -217,6 +217,7 @@ class ProposalSessionManager:
                 "title": session.get("rfp_title", "제목 없음"),
                 "status": "initialized",
                 "owner_id": session.get("owner_id"),
+                "team_id": session.get("team_id"),
                 "rfp_content": session.get("proposal_state", {}).get("rfp_content", ""),
                 "current_phase": None,
                 "phases_completed": 0,

@@ -57,6 +57,7 @@ async def generate_proposal_v31(
     rfp_content: Optional[str] = None,
     rfp_file: Optional[UploadFile] = File(None),
     express_mode: bool = False,
+    team_id: Optional[str] = None,
     current_user=Depends(get_current_user),
 ):
     """v3.4 제안서 세션 초기화"""
@@ -90,6 +91,7 @@ async def generate_proposal_v31(
                 "rfp_title": rfp_title,
                 "client_name": client_name,
                 "owner_id": owner_id,
+                "team_id": team_id,
                 "phases_completed": 0,
                 "proposal_state": {
                     "rfp_title": rfp_title,
