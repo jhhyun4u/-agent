@@ -33,6 +33,15 @@ async def lifespan(app: FastAPI):
         logger.info("lifespan Supabase 초기화 완료")
     except Exception as e:
         logger.warning("lifespan 초기화 경고 (무시): " + str(e))
+    # Storage 버킷 자동 생성 (없으면 생성, 있으면 무시)
+    try:
+        await client.storage.create_bucket(
+            "proposal-files",
+            options={"public": False},
+        )
+        logger.info("proposal-files 버킷 생성 완료")
+    except Exception:
+        logger.info("proposal-files 버킷 이미 존재")
     # DB에서 활성 세션 복원
     from app.services.session_manager import session_manager
     loaded = await session_manager.startup_load()
