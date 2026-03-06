@@ -23,6 +23,7 @@ class RFPData(BaseModel):
     budget: str | None = None
     requirements: list[str] = []
     evaluation_criteria: list[str] = []
+    table_of_contents: list[str] = []
     raw_text: str
 
 

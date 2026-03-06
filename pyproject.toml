@@ -26,6 +26,9 @@ dependencies = [
     "chromadb>=0.5.0",
     # Supabase client
     "supabase>=2.0.0",
+    # HTTP 클라이언트 (나라장터 API)
+    "aiohttp>=3.9.0",
+    "python-hwpx>=2.5",
 ]
 
 [project.optional-dependencies]

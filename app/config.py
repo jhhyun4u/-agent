@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
 
     # 모델 선택 (일관된 필드명)
-    claude_model: str = "claude-sonnet-4-5-20250929"
-    supervisor_model: str = "claude-sonnet-4-5-20250929"
-    default_model: str = "claude-sonnet-4-5-20250929"
+    claude_model: str = "claude-opus-4-6"
+    supervisor_model: str = "claude-opus-4-6"
+    default_model: str = "claude-opus-4-6"
 
     # 최적화 옵션
     enable_token_optimization: bool = True
@@ -37,13 +37,25 @@ class Settings(BaseSettings):
     supabase_key: str = ""
     supabase_service_role_key: str = ""  # 서버 사이드 작업용
     vector_db_path: str = "./data/vectors"
+
+    # 프론트엔드 URL (이메일 링크 생성용)
+    frontend_url: str = "http://localhost:3000"
+
+    # CORS 허용 오리진 (프론트엔드 URL)
+    cors_origins: list[str] = ["http://localhost:3000"]
+
+    # 나라장터 API 키
+    g2b_api_key: str = ""
     
     # 파일 업로드 설정
     max_file_size_mb: int = 10
-    allowed_file_extensions: list[str] = [".pdf", ".docx", ".hwp", ".txt"]
+    allowed_file_extensions: list[str] = [".pdf", ".docx", ".txt"]
     
     # 출력 디렉토리
     output_dir: str = "output"
+
+    # 제안서 템플릿 디렉토리
+    template_dir: str = "output/output template"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

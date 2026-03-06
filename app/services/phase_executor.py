@@ -1,8 +1,11 @@
-import json, logging, os
+import asyncio
+import json
+import logging
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 import anthropic
 from app.config import settings
-from app.models.schemas import ProposalContent
 from app.models.phase_schemas import Phase1Artifact, Phase2Artifact, Phase3Artifact, Phase4Artifact, Phase5Artifact
 from app.services.rfp_parser import parse_rfp_text
 from app.services.docx_builder import build_docx
@@ -11,6 +14,9 @@ from app.services.g2b_service import G2BService
 from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
 from app.services.phase_prompts import PHASE2_SYSTEM, PHASE2_USER, PHASE3_SYSTEM, PHASE3_USER, PHASE4_SYSTEM, PHASE4_USER, PHASE5_SYSTEM, PHASE5_USER
 from app.utils.claude_utils import extract_json_from_response
+from app.services.template_service import get_template_toc
+from app.utils.edge_functions import notify_proposal_complete
+from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +29,109 @@ class PhaseExecutor:
         self.model = settings.claude_model
 
     def _update_status(self, phase_name):
+        """세션 메모리 상태 업데이트 + Supabase proposals 테이블 업데이트"""
         self.session_manager.update_session(self.proposal_id, {"current_phase": phase_name, "status": "processing"})
         logger.info("[%s] %s" % (self.proposal_id, phase_name))
+        asyncio.create_task(self._db_update_status(phase_name))
+
+    async def _db_update_status(self, phase_name: str):
+        """Supabase proposals 테이블에 현재 phase 상태 업데이트"""
+        try:
+            client = await get_async_client()
+            await (
+                client.table("proposals")
+                .update({"current_phase": phase_name, "status": "processing"})
+                .eq("id", self.proposal_id)
+                .execute()
+            )
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] DB 상태 업데이트 실패 (무시): {e}")
 
     def _save_artifact(self, n, artifact):
+        """세션 메모리 아티팩트 저장 + Supabase proposal_phases 테이블 upsert"""
         self.session_manager.update_session(self.proposal_id,
             {f"phase_artifact_{n}": artifact.model_dump(), "phases_completed": n})
+        asyncio.create_task(self._db_save_artifact(n, artifact))
+
+    async def _db_save_artifact(self, n: int, artifact):
+        """Supabase proposal_phases 테이블에 아티팩트 upsert"""
+        try:
+            client = await get_async_client()
+            phase_names = {
+                1: "phase_1_research",
+                2: "phase_2_analysis",
+                3: "phase_3_plan",
+                4: "phase_4_implement",
+                5: "phase_5_test",
+            }
+            await (
+                client.table("proposal_phases")
+                .upsert({
+                    "proposal_id": self.proposal_id,
+                    "phase_number": n,
+                    "phase_name": phase_names.get(n, f"phase_{n}"),
+                    "artifact": artifact.model_dump(),
+                    "status": "completed",
+                    "completed_at": datetime.now(timezone.utc).isoformat(),
+                })
+                .execute()
+            )
+            # proposals 테이블 phases_completed 업데이트
+            await (
+                client.table("proposals")
+                .update({"phases_completed": n})
+                .eq("id", self.proposal_id)
+                .execute()
+            )
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] DB 아티팩트 저장 실패 (무시): {e}")
+
+    async def _log_usage(self, phase_num: int, model: str, input_tokens: int, output_tokens: int):
+        """Supabase usage_logs 테이블에 토큰 사용량 기록"""
+        try:
+            client = await get_async_client()
+            await (
+                client.table("usage_logs")
+                .insert({
+                    "proposal_id": self.proposal_id,
+                    "phase_number": phase_num,
+                    "model": model,
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": input_tokens + output_tokens,
+                    "logged_at": datetime.now(timezone.utc).isoformat(),
+                })
+                .execute()
+            )
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] 토큰 사용량 기록 실패 (무시): {e}")
+
+    async def _handle_failure(self, phase_num: int, error_msg: str):
+        """실패 시 Supabase proposals + proposal_phases 상태 업데이트"""
+        try:
+            client = await get_async_client()
+            await (
+                client.table("proposals")
+                .update({
+                    "status": "failed",
+                    "failed_phase": str(phase_num),
+                    "notes": f"Phase {phase_num} 실패: {error_msg[:500]}",
+                })
+                .eq("id", self.proposal_id)
+                .execute()
+            )
+            await (
+                client.table("proposal_phases")
+                .upsert({
+                    "proposal_id": self.proposal_id,
+                    "phase_number": phase_num,
+                    "status": "failed",
+                    "error_msg": error_msg[:500],
+                })
+                .execute()
+            )
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] DB 실패 상태 업데이트 실패 (무시): {e}")
 
     def _parse(self, text):
         try:
@@ -155,6 +258,7 @@ class PhaseExecutor:
             price_analysis=d.get("price_analysis", {})
         )
         self._save_artifact(2, artifact)
+        asyncio.create_task(self._log_usage(2, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase3_plan(self, a2, improvement_instructions=None):
@@ -165,6 +269,8 @@ class PhaseExecutor:
             key_requirements=json.dumps(a2.key_requirements, ensure_ascii=False),
             evaluation_weights=json.dumps(a2.evaluation_weights, ensure_ascii=False),
             competitor_landscape=json.dumps(a2.competitor_landscape, ensure_ascii=False),
+            evaluator_perspective=json.dumps(a2.structured_data.get("evaluator_perspective", {}), ensure_ascii=False),
+            our_advantage_opportunities=json.dumps(a2.structured_data.get("our_advantage_opportunities", []), ensure_ascii=False),
             price_analysis=json.dumps(a2.price_analysis, ensure_ascii=False)
         )
         if improvement_prompt:
@@ -184,7 +290,8 @@ class PhaseExecutor:
             page_allocation=d.get("page_allocation", {}),
             team_plan=d.get("team_plan", ""),
             differentiation_strategy=d.get("differentiation_strategy", []),
-            bid_price_strategy=d.get("bid_price_strategy", {})
+            bid_price_strategy=d.get("bid_price_strategy", {}),
+            win_theme=d.get("win_theme", {})
         )
 
         bid_calc_result = {}
@@ -230,12 +337,18 @@ class PhaseExecutor:
 
         artifact.bid_calculation = bid_calc_result
         self._save_artifact(3, artifact)
+        asyncio.create_task(self._log_usage(3, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase4_implement(self, a3, a1, improvement_instructions=None):
         self._update_status("phase_4_implement")
         improvement_prompt = self._build_improvement_prompt(improvement_instructions, 4)
         rfp = a1.rfp_data
+        toc = rfp.table_of_contents if rfp and rfp.table_of_contents else []
+        if not toc:
+            toc = await get_template_toc()
+            logger.info(f"[{self.proposal_id}] RFP 목차 없음 — 템플릿 TOC 사용: {len(toc)}개 섹션")
+        toc_text = json.dumps(toc, ensure_ascii=False)
         user_prompt = PHASE4_USER.format(
             project_name=rfp.title if rfp else "미정",
             client_name=rfp.client_name if rfp else "미정",
@@ -243,10 +356,13 @@ class PhaseExecutor:
             duration=rfp.duration if rfp else "미정",
             budget=rfp.budget or "미정",
             requirements=json.dumps(rfp.requirements if rfp else [], ensure_ascii=False),
+            win_theme=json.dumps(a3.win_theme, ensure_ascii=False),
             win_strategy=a3.win_strategy,
             section_plan=json.dumps(a3.section_plan, ensure_ascii=False),
+            business_understanding_strategy=json.dumps(a3.structured_data.get("business_understanding_strategy", {}), ensure_ascii=False),
             differentiation_strategy=json.dumps(a3.differentiation_strategy, ensure_ascii=False),
-            price_competitiveness_message=a3.bid_price_strategy.get("price_competitiveness_message", "")
+            price_competitiveness_message=a3.bid_price_strategy.get("price_competitiveness_message", ""),
+            table_of_contents=toc_text
         )
         if improvement_prompt:
             user_prompt += "\n\n개선 지침을 반영해주세요:\n" + improvement_prompt
@@ -256,24 +372,19 @@ class PhaseExecutor:
             messages=[{"role": "user", "content": user_prompt}]
         )
         d = self._parse(r.content[0].text)
-        pc = ProposalContent(
-            project_overview=d.get("project_overview", ""),
-            understanding=d.get("understanding", ""),
-            approach=d.get("approach", ""),
-            methodology=d.get("methodology", ""),
-            schedule=d.get("schedule", ""),
-            team_composition=d.get("team_composition", ""),
-            expected_outcomes=d.get("expected_outcomes", ""),
-            budget_plan=d.get("budget_plan")
-        )
+        # 동적 섹션 추출: Claude가 반환한 sections dict 사용, 없으면 최상위 키 폴백
+        sections = d.get("sections")
+        if not sections or not isinstance(sections, dict):
+            sections = {k: v for k, v in d.items() if k not in ("summary", "sections") and isinstance(v, str)}
+        project_name = rfp.title if rfp else "용역 제안서"
         artifact = Phase4Artifact(
             summary=d.get("summary", "완료"),
-            structured_data=d,
+            structured_data={**d, "_project_name": project_name},
             token_count=r.usage.input_tokens + r.usage.output_tokens,
-            sections={k: v for k, v in d.items() if k != "summary"},
-            proposal_content=pc
+            sections=sections,
         )
         self._save_artifact(4, artifact)
+        asyncio.create_task(self._log_usage(4, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase5_test(self, a4, a2, improvement_instructions=None):
@@ -285,6 +396,7 @@ class PhaseExecutor:
         )
         user_prompt = PHASE5_USER.format(
             key_requirements=json.dumps(a2.key_requirements, ensure_ascii=False),
+            evaluation_weights=json.dumps(a2.evaluation_weights, ensure_ascii=False),
             sections_preview=preview
         )
         if improvement_prompt:
@@ -297,12 +409,13 @@ class PhaseExecutor:
         d = self._parse(r.content[0].text)
         score = float(d.get("quality_score", 70))
         docx_path = pptx_path = ""
-        if a4.proposal_content:
+        if a4.sections:
             os.makedirs(settings.output_dir, exist_ok=True)
             docx_path = os.path.join(settings.output_dir, self.proposal_id + ".docx")
             pptx_path = os.path.join(settings.output_dir, self.proposal_id + ".pptx")
-            build_docx(a4.proposal_content, Path(docx_path))
-            build_pptx(a4.proposal_content, Path(pptx_path))
+            project_name = a4.structured_data.get("_project_name", "용역 제안서")
+            build_docx(a4.sections, Path(docx_path), project_name)
+            build_pptx(a4.sections, Path(pptx_path), project_name)
         artifact = Phase5Artifact(
             summary=d.get("summary", ""),
             structured_data=d,
@@ -311,9 +424,12 @@ class PhaseExecutor:
             issues=d.get("issues", []),
             docx_path=docx_path,
             pptx_path=pptx_path,
-            executive_summary=d.get("executive_summary", "")
+            executive_summary=d.get("executive_summary", ""),
+            win_probability=d.get("win_probability", ""),
+            detailed_scores=d.get("detailed_scores", {})
         )
         self._save_artifact(5, artifact)
+        asyncio.create_task(self._log_usage(5, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def execute_all(self, rfp_content, improvement_instructions=None):
@@ -324,9 +440,26 @@ class PhaseExecutor:
             a4 = await self.phase4_implement(a3, a1, improvement_instructions)
             a5 = await self.phase5_test(a4, a2, improvement_instructions)
             self.session_manager.update_session(self.proposal_id, {"status": "completed", "phases_completed": 5})
+            # DB 최종 상태 업데이트
+            try:
+                client = await get_async_client()
+                await (
+                    client.table("proposals")
+                    .update({"status": "completed", "phases_completed": 5})
+                    .eq("id", self.proposal_id)
+                    .execute()
+                )
+            except Exception as db_err:
+                logger.warning(f"[{self.proposal_id}] 완료 상태 DB 업데이트 실패 (무시): {db_err}")
+            session = self.session_manager.get_session(self.proposal_id)
+            asyncio.create_task(notify_proposal_complete(
+                proposal_id=self.proposal_id,
+                proposal_title=session.get("rfp_title", ""),
+            ))
             return a5
         except Exception as e:
             self.session_manager.update_session(self.proposal_id, {"status": "failed", "error": str(e)})
+            asyncio.create_task(self._handle_failure(0, str(e)))
             raise
 
     async def execute_from_phase(self, start_phase: int, improvement_instructions=None):
@@ -359,6 +492,11 @@ class PhaseExecutor:
             self.session_manager.update_session(
                 self.proposal_id, {"status": "completed", "phases_completed": 5}
             )
+            session = self.session_manager.get_session(self.proposal_id)
+            asyncio.create_task(notify_proposal_complete(
+                proposal_id=self.proposal_id,
+                proposal_title=session.get("rfp_title", ""),
+            ))
             return a5
 
         except Exception as e:

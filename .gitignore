@@ -36,3 +36,17 @@ uv.lock
 .claude/
 .serena/
 app/api/routes_old.py
+
+# Node
+node_modules/
+.next/
+
+# Logs
+uvicorn.log
+*.log
+
+# bkit snapshots
+.bkit/snapshots/
+
+# Temp files
+_fix_*.py

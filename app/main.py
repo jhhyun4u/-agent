@@ -25,6 +25,18 @@ async def lifespan(app: FastAPI):
     logger.info("v3.4 Phase Pipeline 시스템 시작")
     import os
     os.makedirs(settings.output_dir, exist_ok=True)
+    from app.utils.supabase_client import get_async_client
+    client = await get_async_client()
+    try:
+        await client.rpc("mark_stale_running_proposals").execute()
+        await client.rpc("cleanup_expired_g2b_cache").execute()
+        logger.info("lifespan Supabase 초기화 완료")
+    except Exception as e:
+        logger.warning("lifespan 초기화 경고 (무시): " + str(e))
+    # DB에서 활성 세션 복원
+    from app.services.session_manager import session_manager
+    loaded = await session_manager.startup_load()
+    logger.info(f"세션 복원 완료: {loaded}개")
     yield
     logger.info("시스템 종료")
 
@@ -38,7 +50,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

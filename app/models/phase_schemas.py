@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
 
-from app.models.schemas import RFPData, ProposalContent
+from app.models.schemas import RFPData
 
 
 class PhaseArtifact(BaseModel):
@@ -67,6 +67,10 @@ class Phase3Artifact(PhaseArtifact):
         default_factory=dict,
         description="BidCalculator 원가 계산 결과 (인건비 기반 실제 원가)"
     )
+    win_theme: dict = Field(
+        default_factory=dict,
+        description="제안서 전체 관통 Win Theme (메시지, 근거, 3축 증거)"
+    )
 
 
 class Phase4Artifact(PhaseArtifact):
@@ -74,8 +78,6 @@ class Phase4Artifact(PhaseArtifact):
     phase_num: int = 4
     phase_name: str = "implement"
     sections: dict[str, str] = Field(default_factory=dict)
-    proposal_content: Optional[ProposalContent] = None
-
 
 class Phase5Artifact(PhaseArtifact):
     """Phase 5 산출물: 최종 완성본"""
@@ -86,3 +88,5 @@ class Phase5Artifact(PhaseArtifact):
     docx_path: str = ""
     pptx_path: str = ""
     executive_summary: str = ""
+    win_probability: str = ""
+    detailed_scores: dict = Field(default_factory=dict, description="항목별 세부 점수")
