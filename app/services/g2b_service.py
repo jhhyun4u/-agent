@@ -1,28 +1,53 @@
 """
-나라장터 연동 서비스
-나라장터에서 유사 용역을 수행했던 경쟁자를 식별하고 분석
+나라장터 Open API 연동 서비스
+
+4단계 경쟁사 분석:
+1. getBidPblancListInfoServc  — 유사 입찰공고 검색
+2. getBidResultListInfo       — 낙찰결과 조회 (낙찰업체명, 낙찰금액)
+3. getCmpnyBidInfoServc       — 업체별 수주이력
+4. CompetitorProfile 생성    — Phase 2 LLM 전달
+
+Rate Limit: 공공 API 초당 10건 → asyncio.sleep(0.1) + exponential backoff
+캐싱: Supabase g2b_cache 테이블 (SHA256 해시 키, 24h TTL)
 """
 
-from typing import Dict, List, Any, Optional
 import asyncio
-import aiohttp
+import hashlib
 import json
-from dataclasses import dataclass
-from datetime import datetime, timedelta
+import logging
 import re
+from collections import Counter
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+from urllib.parse import quote
+
+import aiohttp
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
+
+BASE_URL = "https://apis.data.go.kr/1230000"
+
+
+# ─────────────────────────────────────────────
+# 데이터 클래스
+# ─────────────────────────────────────────────
 
 @dataclass
 class G2BContract:
     """나라장터 계약 정보"""
     contract_id: str
     title: str
-    agency: str  # 발주처
-    contractor: str  # 수주업체
+    agency: str
+    contractor: str
     contract_date: str
     contract_amount: int
     category: str
     description: str
     similarity_score: float = 0.0
+
 
 @dataclass
 class CompetitorProfile:
@@ -36,372 +61,399 @@ class CompetitorProfile:
     strength_score: float
     weakness_score: float
 
+
+# ─────────────────────────────────────────────
+# 캐시 헬퍼
+# ─────────────────────────────────────────────
+
+def _cache_key(api_type: str, params: dict) -> str:
+    raw = api_type + json.dumps(sorted(params.items()))
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+async def _get_cache(key: str) -> Optional[List]:
+    try:
+        from app.utils.supabase_client import get_async_client
+        client = await get_async_client()
+        result = await (
+            client.table("g2b_cache")
+            .select("data")
+            .eq("query_hash", key)
+            .gt("expires_at", datetime.utcnow().isoformat())
+            .single()
+            .execute()
+        )
+        if result.data:
+            return result.data.get("data")
+    except Exception:
+        pass
+    return None
+
+
+async def _set_cache(key: str, api_type: str, params: dict, data: List) -> None:
+    try:
+        from app.utils.supabase_client import get_async_client
+        client = await get_async_client()
+        expires = (datetime.utcnow() + timedelta(hours=24)).isoformat()
+        await (
+            client.table("g2b_cache")
+            .upsert({
+                "query_hash": key,
+                "api_type": api_type,
+                "params": params,
+                "data": data,
+                "expires_at": expires,
+            })
+            .execute()
+        )
+    except Exception as e:
+        logger.warning(f"캐시 저장 실패 (무시): {e}")
+
+
+# ─────────────────────────────────────────────
+# G2BService
+# ─────────────────────────────────────────────
+
 class G2BService:
-    """나라장터 API 연동 서비스"""
+    """나라장터 Open API 연동 서비스"""
 
     def __init__(self):
-        self.base_url = "https://apis.data.go.kr/1230000/BidPublicInfoService04"
-        self.api_key = None  # 환경변수에서 가져와야 함
-        self.session = None
+        self.session: Optional[aiohttp.ClientSession] = None
+        self.base_url = BASE_URL
 
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, *_):
         if self.session:
             await self.session.close()
 
-    async def search_similar_contracts(self, rfp_title: str, rfp_description: str,
-                                     keywords: List[str], budget_range: tuple = None,
-                                     date_range_months: int = 24) -> List[G2BContract]:
-        """
-        RFP와 유사한 나라장터 계약 검색
+    # ── 공통 API 호출 ──────────────────────────────
 
-        Args:
-            rfp_title: RFP 제목
-            rfp_description: RFP 설명
-            keywords: 검색 키워드
-            budget_range: 예산 범위 (min, max)
-            date_range_months: 검색 기간 (개월)
+    async def _call_api(self, endpoint: str, params: dict) -> List[Dict]:
+        """나라장터 API 호출 (Rate Limit + Retry + 캐시)"""
+        cache_key = _cache_key(endpoint, params)
+        cached = await _get_cache(cache_key)
+        if cached is not None:
+            logger.debug(f"G2B 캐시 HIT: {endpoint}")
+            return cached
+
+        api_key = settings.g2b_api_key
+        if not api_key:
+            raise RuntimeError("G2B_API_KEY가 설정되지 않았습니다.")
+
+        encoded_key = quote(api_key, safe="")
+        url = f"{self.base_url}/{endpoint}?serviceKey={encoded_key}&_type=json"
+
+        for attempt in range(3):
+            await asyncio.sleep(0.1)  # 기본 Rate Limit 간격
+            try:
+                async with self.session.get(
+                    url,
+                    params=params,
+                    timeout=aiohttp.ClientTimeout(total=15),
+                ) as resp:
+                    if resp.status == 429:
+                        wait = 2 ** attempt
+                        logger.warning(f"G2B Rate Limit — {wait}초 대기")
+                        await asyncio.sleep(wait)
+                        continue
+                    resp.raise_for_status()
+                    data = await resp.json(content_type=None)
+                    result = data.get("response", {})
+                    header = result.get("header", {})
+                    if header.get("resultCode") != "00":
+                        raise RuntimeError(f"G2B API 오류: {header.get('resultMsg')}")
+                    items = result.get("body", {}).get("items") or {}
+                    raw = items.get("item", [])
+                    rows = raw if isinstance(raw, list) else [raw]
+                    await _set_cache(cache_key, endpoint, params, rows)
+                    return rows
+            except RuntimeError:
+                raise
+            except Exception as e:
+                if attempt == 2:
+                    raise
+                await asyncio.sleep(2 ** attempt)
+
+        raise RuntimeError(f"G2B API 호출 실패: {endpoint}")
+
+    # ── 1단계: 입찰공고 검색 ─────────────────────────
+
+    async def search_bid_announcements(
+        self,
+        keyword: str,
+        num_of_rows: int = 20,
+        page_no: int = 1,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+    ) -> List[Dict]:
+        """
+        입찰공고 목록 검색 (getBidPblancListInfoServc)
 
         Returns:
-            유사 계약 목록
+            나라장터 입찰공고 raw 목록
         """
+        params: Dict[str, Any] = {
+            "numOfRows": num_of_rows,
+            "pageNo": page_no,
+            "bidNtceNm": keyword,
+        }
+        if date_from:
+            params["bidNtceBgnDt"] = date_from  # 예: 20230101
+        if date_to:
+            params["bidNtceEndDt"] = date_to
 
-        # 검색 쿼리 구성
-        search_query = self._build_search_query(rfp_title, rfp_description, keywords)
+        return await self._call_api(
+            "BidPublicInfoService04/getBidPblancListInfoServc",
+            params,
+        )
 
-        # 날짜 범위 설정
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=date_range_months * 30)
+    # ── 2단계: 낙찰결과 조회 ─────────────────────────
 
-        contracts = []
+    async def get_bid_results(
+        self,
+        keyword: str,
+        num_of_rows: int = 20,
+        page_no: int = 1,
+    ) -> List[Dict]:
+        """
+        낙찰결과 목록 조회 (getBidResultListInfo)
+        낙찰업체명, 낙찰금액 포함
 
+        Returns:
+            낙찰결과 raw 목록
+        """
+        params: Dict[str, Any] = {
+            "numOfRows": num_of_rows,
+            "pageNo": page_no,
+            "bidNtceNm": keyword,
+        }
+        return await self._call_api(
+            "BidPublicInfoService04/getBidResultListInfo",
+            params,
+        )
+
+    # ── 3단계: 계약결과 조회 ─────────────────────────
+
+    async def get_contract_results(
+        self,
+        keyword: str,
+        num_of_rows: int = 20,
+        page_no: int = 1,
+    ) -> List[Dict]:
+        """
+        계약결과 목록 조회 (getContractResultListInfo)
+
+        Returns:
+            계약결과 raw 목록
+        """
+        params: Dict[str, Any] = {
+            "numOfRows": num_of_rows,
+            "pageNo": page_no,
+            "cntrctNm": keyword,
+        }
+        return await self._call_api(
+            "ContractInfoService/getContractResultListInfo",
+            params,
+        )
+
+    # ── 4단계: 업체 입찰이력 조회 ───────────────────────
+
+    async def get_company_bid_history(
+        self,
+        company_name: str,
+        num_of_rows: int = 20,
+        page_no: int = 1,
+    ) -> List[Dict]:
+        """
+        업체별 입찰이력 조회 (getCmpnyBidInfoServc)
+
+        Args:
+            company_name: 업체명
+
+        Returns:
+            업체 입찰이력 raw 목록
+        """
+        params: Dict[str, Any] = {
+            "numOfRows": num_of_rows,
+            "pageNo": page_no,
+            "cmpnyNm": company_name,
+        }
+        return await self._call_api(
+            "BidPublicInfoService04/getCmpnyBidInfoServc",
+            params,
+        )
+
+    # ── 통합: 경쟁사 분석 ────────────────────────────
+
+    async def search_competitors(
+        self,
+        rfp_title: str,
+        date_range_months: int = 24,
+        max_competitors: int = 10,
+    ) -> Dict[str, Any]:
+        """
+        경쟁사 통합 분석 (4단계 파이프라인)
+
+        1. 유사 입찰공고 검색
+        2. 낙찰결과에서 낙찰업체 추출
+        3. 주요 업체 수주이력 조회
+        4. CompetitorProfile 생성
+
+        Returns:
+            경쟁사 분석 결과 dict
+        """
+        # 날짜 범위
+        end_dt = datetime.now()
+        start_dt = end_dt - timedelta(days=date_range_months * 30)
+        date_from = start_dt.strftime("%Y%m%d%H%M%S")
+        date_to = end_dt.strftime("%Y%m%d%H%M%S")
+
+        keyword = self._extract_main_keyword(rfp_title)
+        logger.info(f"G2B 경쟁사 분석 시작: keyword={keyword}")
+
+        # Step 1: 유사 입찰공고 검색
         try:
-            # 나라장터 API 호출 (실제로는 API 키 필요)
-            # 여기서는 모의 데이터로 대체
-            contracts = await self._mock_search_contracts(search_query, start_date, end_date, budget_range)
-
-        except Exception as e:
-            print(f"나라장터 검색 중 오류: {e}")
-            contracts = []
-
-        return contracts
-
-    def _build_search_query(self, title: str, description: str, keywords: List[str]) -> str:
-        """검색 쿼리 구성"""
-        query_parts = []
-
-        # 제목에서 핵심 키워드 추출
-        title_keywords = self._extract_keywords(title)
-        query_parts.extend(title_keywords)
-
-        # 설명에서 키워드 추출
-        desc_keywords = self._extract_keywords(description)
-        query_parts.extend(desc_keywords[:3])  # 상위 3개만
-
-        # 추가 키워드
-        query_parts.extend(keywords)
-
-        # 중복 제거 및 조합
-        unique_keywords = list(set(query_parts))
-        return " ".join(unique_keywords)
-
-    def _extract_keywords(self, text: str) -> List[str]:
-        """텍스트에서 키워드 추출"""
-        # 불용어 제거 및 명사 추출 (간단한 구현)
-        stopwords = ['및', '등', '의', '을', '를', '이', '가', '은', '는', '에', '에서', '으로', '로', '과', '와']
-
-        words = re.findall(r'\b\w+\b', text)
-        keywords = [word for word in words if len(word) > 1 and word not in stopwords]
-
-        # 빈도수 기반 상위 키워드 선택
-        from collections import Counter
-        word_freq = Counter(keywords)
-        return [word for word, _ in word_freq.most_common(5)]
-
-    async def _mock_search_contracts(self, query: str, start_date: datetime,
-                                   end_date: datetime, budget_range: tuple = None) -> List[G2BContract]:
-        """모의 나라장터 검색 (실제 구현 시 API 호출로 대체)"""
-
-        # 모의 데이터 생성
-        mock_contracts = [
-            G2BContract(
-                contract_id="20240001",
-                title="AI 기반 데이터 분석 시스템 구축",
-                agency="과학기술정보통신부",
-                contractor="(주)테크노솔루션",
-                contract_date="2024-01-15",
-                contract_amount=150000000,
-                category="정보통신",
-                description="AI 및 빅데이터 분석 시스템 개발 및 구축"
-            ),
-            G2BContract(
-                contract_id="20240002",
-                title="머신러닝 플랫폼 개발",
-                agency="교육부",
-                contractor="(주)데이터인사이트",
-                contract_date="2024-02-20",
-                contract_amount=200000000,
-                category="정보통신",
-                description="교육 데이터 분석을 위한 머신러닝 플랫폼"
-            ),
-            G2BContract(
-                contract_id="20240003",
-                title="클라우드 기반 AI 서비스 개발",
-                agency="행정안전부",
-                contractor="(주)클라우드테크",
-                contract_date="2024-03-10",
-                contract_amount=180000000,
-                category="정보통신",
-                description="공공 클라우드 AI 서비스 구축"
-            ),
-            G2BContract(
-                contract_id="20240004",
-                title="빅데이터 분석 솔루션",
-                agency="보건복지부",
-                contractor="(주)헬스데이터",
-                contract_date="2024-04-05",
-                contract_amount=120000000,
-                category="정보통신",
-                description="의료 빅데이터 분석 시스템"
-            ),
-            G2BContract(
-                contract_id="20240005",
-                title="AI 챗봇 시스템 구축",
-                agency="문화체육관광부",
-                contractor="(주)AI솔루션",
-                contract_date="2024-05-12",
-                contract_amount=90000000,
-                category="정보통신",
-                description="민원 응대 AI 챗봇 개발"
+            bid_list = await self.search_bid_announcements(
+                keyword, num_of_rows=20, date_from=date_from, date_to=date_to
             )
-        ]
+        except Exception as e:
+            logger.warning(f"입찰공고 검색 실패: {e}")
+            bid_list = []
 
-        # 유사도 계산 및 필터링
-        relevant_contracts = []
-        for contract in mock_contracts:
-            similarity = self._calculate_similarity(query, contract.title + " " + contract.description)
-            if similarity > 0.3:  # 유사도 30% 이상
-                contract.similarity_score = similarity
-                relevant_contracts.append(contract)
+        # Step 2: 낙찰결과에서 업체명 추출
+        try:
+            bid_results = await self.get_bid_results(keyword, num_of_rows=30)
+        except Exception as e:
+            logger.warning(f"낙찰결과 조회 실패: {e}")
+            bid_results = []
 
-        # 예산 범위 필터링
-        if budget_range:
-            min_budget, max_budget = budget_range
-            relevant_contracts = [
-                c for c in relevant_contracts
-                if min_budget <= c.contract_amount <= max_budget
-            ]
+        # 낙찰업체 빈도 집계
+        winner_counter: Counter = Counter()
+        winner_amounts: Dict[str, List[int]] = {}
+        for row in bid_results:
+            company = row.get("sucsfBidderNm") or row.get("cmpnyNm", "")
+            amount_str = row.get("sucsfBidAmt") or row.get("bidAmt", "0")
+            if company:
+                winner_counter[company] += 1
+                try:
+                    amt = int(str(amount_str).replace(",", "").strip() or 0)
+                except (ValueError, TypeError):
+                    amt = 0
+                winner_amounts.setdefault(company, []).append(amt)
 
-        return sorted(relevant_contracts, key=lambda x: x.similarity_score, reverse=True)
+        # 상위 업체 선정
+        top_companies = [c for c, _ in winner_counter.most_common(max_competitors)]
 
-    def _calculate_similarity(self, query: str, text: str) -> float:
-        """단순 텍스트 유사도 계산"""
-        query_words = set(query.lower().split())
-        text_words = set(text.lower().split())
+        # Step 3: 주요 업체 수주이력 조회 (상위 5개만)
+        company_histories: Dict[str, List[Dict]] = {}
+        for company in top_companies[:5]:
+            try:
+                history = await self.get_company_bid_history(company, num_of_rows=10)
+                company_histories[company] = history
+            except Exception as e:
+                logger.warning(f"업체이력 조회 실패({company}): {e}")
+                company_histories[company] = []
 
-        intersection = query_words & text_words
-        union = query_words | text_words
+        # Step 4: CompetitorProfile 생성
+        profiles = []
+        total_market = sum(
+            sum(amts) for amts in winner_amounts.values()
+        ) or 1
 
-        return len(intersection) / len(union) if union else 0.0
+        for company in top_companies:
+            amts = winner_amounts.get(company, [0])
+            avg_amt = int(sum(amts) / len(amts)) if amts else 0
+            market_share = round(sum(amts) / total_market, 4)
+            win_count = winner_counter[company]
+            strength = min(0.5 + win_count * 0.08 + min(avg_amt / 5e8 * 0.1, 0.1), 0.95)
 
-    async def identify_competitors(self, contracts: List[G2BContract],
-                                 min_contracts: int = 2) -> List[CompetitorProfile]:
-        """
-        유사 계약에서 경쟁사 식별 및 프로필 생성
-
-        Args:
-            contracts: 유사 계약 목록
-            min_contracts: 최소 계약 건수 (이상인 업체만 경쟁사로 간주)
-
-        Returns:
-            경쟁사 프로필 목록
-        """
-
-        # 업체별 계약 그룹화
-        company_contracts = {}
-        for contract in contracts:
-            if contract.contractor not in company_contracts:
-                company_contracts[contract.contractor] = []
-            company_contracts[contract.contractor].append(contract)
-
-        # 경쟁사 필터링 (최소 계약 건수 이상)
-        competitors = []
-        for company_name, contracts_list in company_contracts.items():
-            if len(contracts_list) >= min_contracts:
-                profile = await self._create_competitor_profile(company_name, contracts_list)
-                competitors.append(profile)
-
-        return sorted(competitors, key=lambda x: x.market_share, reverse=True)
-
-    async def _create_competitor_profile(self, company_name: str,
-                                       contracts: List[G2BContract]) -> CompetitorProfile:
-        """경쟁사 프로필 생성"""
-
-        # 전문 분야 분석
-        specialization_areas = self._analyze_specialization(contracts)
-
-        # 평균 계약 금액
-        avg_amount = sum(c.contract_amount for c in contracts) / len(contracts)
-
-        # 성공률 (모의 데이터)
-        success_rate = 0.85 + (len(contracts) - 2) * 0.05  # 계약 건수가 많을수록 성공률 높음
-        success_rate = min(success_rate, 0.95)
-
-        # 시장 점유율 (모의 계산)
-        total_market = sum(c.contract_amount for c in contracts)
-        market_share = min(total_market / 1000000000, 0.15)  # 최대 15%로 제한
-
-        # 강점/약점 점수 계산
-        strength_score = self._calculate_competitor_strength(contracts, specialization_areas)
-        weakness_score = 1.0 - strength_score
-
-        return CompetitorProfile(
-            company_name=company_name,
-            contract_history=contracts,
-            specialization_areas=specialization_areas,
-            avg_contract_amount=int(avg_amount),
-            success_rate=success_rate,
-            market_share=market_share,
-            strength_score=strength_score,
-            weakness_score=weakness_score
-        )
-
-    def _analyze_specialization(self, contracts: List[G2BContract]) -> List[str]:
-        """전문 분야 분석"""
-        categories = {}
-        for contract in contracts:
-            cat = contract.category
-            categories[cat] = categories.get(cat, 0) + 1
-
-        # 상위 카테고리 추출
-        sorted_cats = sorted(categories.items(), key=lambda x: x[1], reverse=True)
-        return [cat for cat, _ in sorted_cats[:3]]
-
-    def _calculate_competitor_strength(self, contracts: List[G2BContract],
-                                     specialization_areas: List[str]) -> float:
-        """경쟁사 강점 점수 계산"""
-        base_score = 0.5
-
-        # 계약 건수 보너스
-        contract_bonus = min(len(contracts) * 0.1, 0.3)
-
-        # 전문성 보너스
-        specialization_bonus = min(len(specialization_areas) * 0.05, 0.15)
-
-        # 평균 계약 금액 보너스
-        avg_amount = sum(c.contract_amount for c in contracts) / len(contracts)
-        amount_bonus = min(avg_amount / 500000000 * 0.1, 0.1)  # 5억 이상 시 보너스
-
-        return min(base_score + contract_bonus + specialization_bonus + amount_bonus, 0.95)
-
-    async def get_competitor_strategy_recommendations(self, competitors: List[CompetitorProfile],
-                                                    our_company_profile: Dict) -> Dict[str, Any]:
-        """
-        경쟁사 분석 기반 전략 추천
-
-        Args:
-            competitors: 경쟁사 프로필 목록
-            our_company_profile: 우리 회사 프로필
-
-        Returns:
-            전략 추천 정보
-        """
-
-        if not competitors:
-            return {
-                "strategy_type": "defence",
-                "reasoning": "경쟁사가 식별되지 않아 방어 전략 권장",
-                "key_competitors": [],
-                "differentiation_opportunities": ["시장 리더십 확보"]
-            }
-
-        # 주요 경쟁사 식별
-        key_competitors = competitors[:3]  # 상위 3개사
-
-        # 경쟁 강도 분석
-        avg_strength = sum(c.strength_score for c in key_competitors) / len(key_competitors)
-
-        # 우리 회사 강점 비교
-        our_strength = our_company_profile.get("overall_strength", 0.7)
-
-        # 전략 결정
-        if our_strength > avg_strength + 0.2:
-            strategy_type = "defence"
-            reasoning = f"우리 회사 강점({our_strength:.2f})이 경쟁사 평균({avg_strength:.2f})보다 우월하여 방어 전략 적합"
-        elif our_strength < avg_strength - 0.2:
-            strategy_type = "offence"
-            reasoning = f"경쟁사 강점이 우월하여 혁신/가격 차별화 전략 필요"
-        else:
-            strategy_type = "balanced"
-            reasoning = f"경쟁 강도가 유사하여 균형 전략 적용"
-
-        # 차별화 기회 식별
-        differentiation_opportunities = self._identify_differentiation_opportunities(
-            key_competitors, our_company_profile
-        )
+            profiles.append({
+                "company_name": company,
+                "win_count": win_count,
+                "avg_contract_amount": avg_amt,
+                "market_share": market_share,
+                "strength_score": round(strength, 3),
+                "weakness_score": round(1 - strength, 3),
+                "bid_history_count": len(company_histories.get(company, [])),
+            })
 
         return {
-            "strategy_type": strategy_type,
-            "reasoning": reasoning,
-            "key_competitors": [
-                {
-                    "name": c.company_name,
-                    "strength_score": c.strength_score,
-                    "specialization": c.specialization_areas,
-                    "avg_contract": c.avg_contract_amount
-                }
-                for c in key_competitors
-            ],
-            "differentiation_opportunities": differentiation_opportunities,
-            "market_insights": {
-                "total_competitors": len(competitors),
-                "avg_market_share": sum(c.market_share for c in competitors) / len(competitors),
-                "dominant_categories": self._get_dominant_categories(competitors)
-            }
+            "keyword": keyword,
+            "rfp_title": rfp_title,
+            "bid_announcements_found": len(bid_list),
+            "bid_results_found": len(bid_results),
+            "competitors": profiles,
+            "total_competitors": len(profiles),
+            "date_range": {"from": start_dt.date().isoformat(), "to": end_dt.date().isoformat()},
         }
 
-    def _identify_differentiation_opportunities(self, competitors: List[CompetitorProfile],
-                                              our_profile: Dict) -> List[str]:
-        """차별화 기회 식별"""
+    # ── 내부 헬퍼 ────────────────────────────────
 
-        opportunities = []
+    def _extract_main_keyword(self, title: str) -> str:
+        """제목에서 핵심 키워드 추출 (불용어 제거)"""
+        stopwords = {'및', '등', '의', '을', '를', '이', '가', '은', '는', '에', '에서',
+                     '으로', '로', '과', '와', '구축', '개발', '서비스', '시스템', '사업'}
+        words = re.findall(r'[가-힣A-Za-z0-9]+', title)
+        keywords = [w for w in words if len(w) > 1 and w not in stopwords]
+        return keywords[0] if keywords else title[:10]
 
-        # 경쟁사 약점 분석
-        competitor_weaknesses = []
-        for comp in competitors:
-            if comp.weakness_score > 0.6:
-                competitor_weaknesses.extend(comp.specialization_areas)
 
-        # 우리 회사 강점
-        our_strengths = our_profile.get("strength_areas", [])
+# ─────────────────────────────────────────────
+# 하위 호환: search_similar_contracts (phase_executor에서 사용)
+# ─────────────────────────────────────────────
 
-        # 차별화 포인트 도출
-        if "AI" in our_strengths and "AI" not in competitor_weaknesses:
-            opportunities.append("AI 기술력 차별화")
+    async def search_similar_contracts(
+        self,
+        rfp_title: str,
+        rfp_description: str,
+        keywords: List[str],
+        budget_range: Optional[tuple] = None,
+        date_range_months: int = 24,
+    ) -> List[G2BContract]:
+        """하위 호환 메서드 — search_competitors 결과를 G2BContract 목록으로 변환"""
+        result = await self.search_competitors(rfp_title, date_range_months)
+        contracts = []
+        for i, comp in enumerate(result.get("competitors", [])):
+            contracts.append(G2BContract(
+                contract_id=f"g2b_{i:04d}",
+                title=rfp_title,
+                agency="나라장터",
+                contractor=comp["company_name"],
+                contract_date=datetime.now().strftime("%Y-%m-%d"),
+                contract_amount=comp["avg_contract_amount"],
+                category="정보통신",
+                description="",
+                similarity_score=comp["strength_score"],
+            ))
+        return contracts
 
-        if "빅데이터" in our_strengths:
-            opportunities.append("데이터 분석 전문성 강조")
+    async def identify_competitors(
+        self,
+        contracts: List[G2BContract],
+        min_contracts: int = 1,
+    ) -> List[CompetitorProfile]:
+        """하위 호환 메서드"""
+        company_map: Dict[str, List[G2BContract]] = {}
+        for c in contracts:
+            company_map.setdefault(c.contractor, []).append(c)
 
-        if "클라우드" in our_strengths:
-            opportunities.append("클라우드 네이티브 아키텍처")
-
-        if "가격 경쟁력" in our_strengths:
-            opportunities.append("합리적 가격 제시")
-
-        if not opportunities:
-            opportunities = ["기술 혁신", "고객 맞춤 솔루션", "빠른 구축 기간"]
-
-        return opportunities
-
-    def _get_dominant_categories(self, competitors: List[CompetitorProfile]) -> List[str]:
-        """주요 카테고리 식별"""
-        all_categories = []
-        for comp in competitors:
-            all_categories.extend(comp.specialization_areas)
-
-        from collections import Counter
-        category_counts = Counter(all_categories)
-        return [cat for cat, _ in category_counts.most_common(3)]
+        profiles = []
+        for company, clist in company_map.items():
+            if len(clist) < min_contracts:
+                continue
+            avg = int(sum(c.contract_amount for c in clist) / len(clist))
+            strength = min(0.5 + len(clist) * 0.1, 0.95)
+            profiles.append(CompetitorProfile(
+                company_name=company,
+                contract_history=clist,
+                specialization_areas=["정보통신"],
+                avg_contract_amount=avg,
+                success_rate=0.8,
+                market_share=0.05,
+                strength_score=strength,
+                weakness_score=1 - strength,
+            ))
+        return sorted(profiles, key=lambda x: x.strength_score, reverse=True)
