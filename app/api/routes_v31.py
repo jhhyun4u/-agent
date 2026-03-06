@@ -189,17 +189,42 @@ async def execute_proposal_phase_v31(
 
 @router.get("/proposals/{proposal_id}/download/{file_type}")
 async def download_document(proposal_id: str, file_type: str, current_user=Depends(get_current_user)):
-    """생성된 DOCX 또는 PPTX 파일 다운로드"""
+    """
+    DOCX/PPTX 다운로드
+
+    우선순위:
+    1. Supabase Storage 서명 URL 리다이렉트 (업로드 완료된 경우)
+    2. 로컬 파일 직접 반환 (Storage 미업로드 또는 개발 환경)
+    """
+    import os
+    from fastapi.responses import RedirectResponse
+    from app.utils.supabase_client import get_async_client
+
     if file_type not in ("docx", "pptx"):
         raise HTTPException(status_code=400, detail="file_type은 docx 또는 pptx여야 합니다.")
     try:
         session = await session_manager.aget_session(proposal_id)
     except SessionNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e.message))
+
+    # 1. Storage 서명 URL 시도
+    storage_path = session.get(f"{file_type}_storage_path", "")
+    if storage_path:
+        try:
+            client = await get_async_client()
+            signed = await client.storage.from_("proposal-files").create_signed_url(
+                storage_path, expires_in=300  # 5분 유효
+            )
+            url = signed.get("signedURL") or signed.get("signed_url", "")
+            if url:
+                return RedirectResponse(url=url)
+        except Exception as e:
+            logger.warning(f"Storage 서명 URL 생성 실패, 로컬 폴백: {e}")
+
+    # 2. 로컬 파일 폴백
     path = session.get(f"{file_type}_path", "")
     if not path:
         raise HTTPException(status_code=404, detail="파일이 아직 생성되지 않았습니다.")
-    import os
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="파일을 찾을 수 없습니다.")
     return FileResponse(path, filename=f"proposal_{proposal_id}.{file_type}")

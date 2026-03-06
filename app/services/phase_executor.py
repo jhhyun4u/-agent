@@ -133,6 +133,80 @@ class PhaseExecutor:
         except Exception as e:
             logger.warning(f"[{self.proposal_id}] DB 실패 상태 업데이트 실패 (무시): {e}")
 
+    async def _upload_to_storage(self, docx_path: str, pptx_path: str) -> dict:
+        """
+        DOCX/PPTX 파일을 Supabase Storage에 업로드
+
+        버킷: proposal-files
+        경로: {proposal_id}/proposal.docx, {proposal_id}/proposal.pptx
+
+        Returns:
+            {"docx_url": ..., "pptx_url": ..., "docx_storage_path": ..., "pptx_storage_path": ...}
+        """
+        result = {}
+        try:
+            client = await get_async_client()
+            bucket = "proposal-files"
+
+            uploads = [
+                (docx_path, f"{self.proposal_id}/proposal.docx",
+                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                 "docx"),
+                (pptx_path, f"{self.proposal_id}/proposal.pptx",
+                 "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                 "pptx"),
+            ]
+
+            for local_path, storage_path, content_type, key in uploads:
+                if not local_path:
+                    continue
+                try:
+                    import os
+                    if not os.path.exists(local_path):
+                        logger.warning(f"[{self.proposal_id}] 파일 없음: {local_path}")
+                        continue
+
+                    with open(local_path, "rb") as f:
+                        file_bytes = f.read()
+
+                    await client.storage.from_(bucket).upload(
+                        path=storage_path,
+                        file=file_bytes,
+                        file_options={
+                            "content-type": content_type,
+                            "upsert": "true",
+                        },
+                    )
+
+                    public_url = client.storage.from_(bucket).get_public_url(storage_path)
+                    result[f"{key}_url"] = public_url
+                    result[f"{key}_storage_path"] = storage_path
+                    logger.info(f"[{self.proposal_id}] Storage 업로드 완료: {storage_path}")
+
+                except Exception as e:
+                    logger.warning(f"[{self.proposal_id}] {key} 업로드 실패 (무시): {e}")
+
+            # proposals 테이블 storage path 업데이트
+            if result:
+                update_payload = {}
+                if "docx_storage_path" in result:
+                    update_payload["storage_path_docx"] = result["docx_storage_path"]
+                if "pptx_storage_path" in result:
+                    update_payload["storage_path_pptx"] = result["pptx_storage_path"]
+                if update_payload:
+                    await (
+                        client.table("proposals")
+                        .update(update_payload)
+                        .eq("id", self.proposal_id)
+                        .execute()
+                    )
+                    logger.info(f"[{self.proposal_id}] DB storage 경로 업데이트 완료")
+
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] Storage 업로드 전체 실패 (무시): {e}")
+
+        return result
+
     def _parse(self, text):
         try:
             return extract_json_from_response(text)
@@ -451,6 +525,11 @@ class PhaseExecutor:
                 )
             except Exception as db_err:
                 logger.warning(f"[{self.proposal_id}] 완료 상태 DB 업데이트 실패 (무시): {db_err}")
+            # Storage 업로드 (fire-and-forget)
+            asyncio.create_task(self._upload_to_storage(
+                docx_path=a5.docx_path or "",
+                pptx_path=a5.pptx_path or "",
+            ))
             session = self.session_manager.get_session(self.proposal_id)
             asyncio.create_task(notify_proposal_complete(
                 proposal_id=self.proposal_id,
@@ -492,6 +571,11 @@ class PhaseExecutor:
             self.session_manager.update_session(
                 self.proposal_id, {"status": "completed", "phases_completed": 5}
             )
+            # Storage 업로드 (fire-and-forget)
+            asyncio.create_task(self._upload_to_storage(
+                docx_path=a5.docx_path or "",
+                pptx_path=a5.pptx_path or "",
+            ))
             session = self.session_manager.get_session(self.proposal_id)
             asyncio.create_task(notify_proposal_complete(
                 proposal_id=self.proposal_id,
