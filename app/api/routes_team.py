@@ -5,11 +5,12 @@
 """
 
 import logging
+import math
 from datetime import datetime, timezone
 from typing import Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from pydantic import BaseModel
 
 from app.middleware.auth import get_current_user
@@ -350,7 +351,7 @@ async def list_comments(proposal_id: str, user=Depends(get_current_user)):
 
 @router.post("/proposals/{proposal_id}/comments", status_code=201)
 async def create_comment(
-    proposal_id: str, body: CommentCreate, user=Depends(get_current_user)
+    proposal_id: str, body: CommentCreate, background_tasks: BackgroundTasks, user=Depends(get_current_user)
 ):
     """댓글 작성"""
     client = await get_async_client()
@@ -359,7 +360,6 @@ async def create_comment(
     # body 필드 우선, content는 하위 호환성 폴백
     comment_text = body.body or body.content or ""
     if not comment_text:
-        from fastapi import HTTPException
         raise HTTPException(status_code=400, detail="body 또는 content 필드가 필요합니다.")
     insert_data = {
         "id": comment_id,
@@ -371,9 +371,8 @@ async def create_comment(
         insert_data["section"] = body.section
     await client.table("comments").insert(insert_data).execute()
 
-    # 팀원 알림 이메일 (비동기 fire-and-forget, 실패해도 무시)
-    import asyncio
-    asyncio.create_task(notify_comment_created(comment_id))
+    # 팀원 알림 이메일 (BackgroundTasks, 실패해도 무시)
+    background_tasks.add_task(notify_comment_created, comment_id)
 
     return {"comment_id": comment_id, "body": comment_text, "section": body.section}
 
@@ -459,7 +458,8 @@ async def list_proposals(
         query = query.eq("owner_id", user.id)
 
     if q:
-        query = query.ilike("title", f"%{q}%")
+        q_safe = q.replace("%", r"\%").replace("_", r"\_")
+        query = query.ilike("title", f"%{q_safe}%")
     if status:
         query = query.eq("status", status)
     if team_id:
@@ -473,7 +473,7 @@ async def list_proposals(
     else:
         count_query = count_query.eq("owner_id", user.id)
     if q:
-        count_query = count_query.ilike("title", f"%{q}%")
+        count_query = count_query.ilike("title", f"%{q_safe}%")
     if status:
         count_query = count_query.eq("status", status)
     if team_id:
@@ -485,7 +485,6 @@ async def list_proposals(
     query = query.order("created_at", desc=True).range(offset, offset + page_size - 1)
 
     res = await query.execute()
-    import math
     pages = math.ceil(total / page_size) if page_size > 0 else 1
     return {
         "items": res.data or [],

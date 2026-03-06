@@ -1,6 +1,7 @@
 """v3.4 Phase 기반 API 엔드포인트"""
 
 import logging
+import os
 import uuid
 from typing import List, Optional
 
@@ -8,6 +9,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFi
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+from app.config import settings
 from app.services.session_manager import session_manager
 from app.models.phase_schemas import Phase1Artifact, Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.services.phase_executor import PhaseExecutor
@@ -63,7 +65,19 @@ async def generate_proposal_v31(
 
     rfp_text = ""
     if rfp_file:
-        rfp_text = (await rfp_file.read()).decode("utf-8", errors="ignore")
+        # 파일 크기 검증
+        content = await rfp_file.read()
+        max_bytes = settings.max_file_size_mb * 1024 * 1024
+        if len(content) > max_bytes:
+            raise HTTPException(status_code=413, detail=f"파일 크기가 {settings.max_file_size_mb}MB를 초과합니다.")
+        # 확장자 검증
+        ext = os.path.splitext(rfp_file.filename or "")[1].lower()
+        if ext not in settings.allowed_file_extensions:
+            raise HTTPException(
+                status_code=415,
+                detail=f"지원하지 않는 파일 형식입니다. 허용: {', '.join(settings.allowed_file_extensions)}"
+            )
+        rfp_text = content.decode("utf-8", errors="ignore")
     elif rfp_content:
         rfp_text = rfp_content
     else:
@@ -95,7 +109,8 @@ async def generate_proposal_v31(
             "client_name": client_name,
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"세션 생성 오류: {proposal_id} — {e}")
+        raise HTTPException(status_code=500, detail="제안서 세션 생성 중 오류가 발생했습니다.")
 
 
 @router.get("/proposals/{proposal_id}/status")
@@ -113,7 +128,7 @@ async def get_proposal_status_v31(proposal_id: str, current_user=Depends(get_cur
         "status": session.get("status", "unknown"),
         "current_phase": session.get("current_phase", "pending"),
         "phases_completed": session.get("phases_completed", 0),
-        "created_at": session.get("created_at").isoformat(),
+        "created_at": (session.get("created_at") or "").isoformat() if hasattr(session.get("created_at"), "isoformat") else str(session.get("created_at", "")),
         "error": session.get("error", ""),
     }
 
@@ -246,7 +261,7 @@ class BidCalculateRequest(BaseModel):
 
 
 @router.post("/bid/calculate")
-async def calculate_bid(req: BidCalculateRequest):
+async def calculate_bid(req: BidCalculateRequest, current_user=Depends(get_current_user)):
     """낙찰가 계산 (인건비 기준 원가 산출 + 입찰 전략)"""
     method_map = {
         "최저가": ProcurementMethod.LOWEST_PRICE,
@@ -381,7 +396,7 @@ async def run_single_phase(proposal_id: str, phase_num: int, current_user=Depend
     except Exception as e:
         session_manager.update_session(proposal_id, {"status": "failed", "error": str(e)})
         logger.error(f"[{proposal_id}] Phase {phase_num} 실패: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Phase {phase_num} 실행 중 오류가 발생했습니다.")
 
 
 @router.get("/proposals/{proposal_id}/phase/{phase_num}")

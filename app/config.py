@@ -59,5 +59,24 @@ class Settings(BaseSettings):
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
+    def validate_required_keys(self) -> list[str]:
+        """필수 API 키 누락 여부 확인. 누락된 키 이름 목록 반환."""
+        missing = []
+        if not self.anthropic_api_key:
+            missing.append("ANTHROPIC_API_KEY")
+        if not self.supabase_url:
+            missing.append("SUPABASE_URL")
+        if not self.supabase_key:
+            missing.append("SUPABASE_KEY")
+        return missing
+
 
 settings = Settings()
+
+# 시작 시 필수 키 경고
+_missing = settings.validate_required_keys()
+if _missing:
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        f"필수 환경변수 누락: {', '.join(_missing)} — 기능이 제한될 수 있습니다."
+    )

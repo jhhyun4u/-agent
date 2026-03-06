@@ -27,12 +27,20 @@ class PhaseExecutor:
         self.session_manager = session_manager
         self.client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
         self.model = settings.claude_model
+        self._bg_tasks: set = set()
+
+    def _bg_task(self, coro):
+        """백그라운드 Task 생성 + 참조 저장 (GC 방지)"""
+        task = asyncio.create_task(coro)
+        self._bg_tasks.add(task)
+        task.add_done_callback(self._bg_tasks.discard)
+        return task
 
     def _update_status(self, phase_name):
         """세션 메모리 상태 업데이트 + Supabase proposals 테이블 업데이트"""
         self.session_manager.update_session(self.proposal_id, {"current_phase": phase_name, "status": "processing"})
         logger.info("[%s] %s" % (self.proposal_id, phase_name))
-        asyncio.create_task(self._db_update_status(phase_name))
+        self._bg_task(self._db_update_status(phase_name))
 
     async def _db_update_status(self, phase_name: str):
         """Supabase proposals 테이블에 현재 phase 상태 업데이트"""
@@ -51,7 +59,7 @@ class PhaseExecutor:
         """세션 메모리 아티팩트 저장 + Supabase proposal_phases 테이블 upsert"""
         self.session_manager.update_session(self.proposal_id,
             {f"phase_artifact_{n}": artifact.model_dump(), "phases_completed": n})
-        asyncio.create_task(self._db_save_artifact(n, artifact))
+        self._bg_task(self._db_save_artifact(n, artifact))
 
     async def _db_save_artifact(self, n: int, artifact):
         """Supabase proposal_phases 테이블에 아티팩트 upsert"""
@@ -166,8 +174,7 @@ class PhaseExecutor:
                         logger.warning(f"[{self.proposal_id}] 파일 없음: {local_path}")
                         continue
 
-                    with open(local_path, "rb") as f:
-                        file_bytes = f.read()
+                    file_bytes = await asyncio.to_thread(lambda p=local_path: open(p, "rb").read())
 
                     await client.storage.from_(bucket).upload(
                         path=storage_path,
@@ -332,7 +339,7 @@ class PhaseExecutor:
             price_analysis=d.get("price_analysis", {})
         )
         self._save_artifact(2, artifact)
-        asyncio.create_task(self._log_usage(2, self.model, r.usage.input_tokens, r.usage.output_tokens))
+        self._bg_task(self._log_usage(2, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase3_plan(self, a2, improvement_instructions=None):
@@ -411,7 +418,7 @@ class PhaseExecutor:
 
         artifact.bid_calculation = bid_calc_result
         self._save_artifact(3, artifact)
-        asyncio.create_task(self._log_usage(3, self.model, r.usage.input_tokens, r.usage.output_tokens))
+        self._bg_task(self._log_usage(3, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase4_implement(self, a3, a1, improvement_instructions=None):
@@ -458,7 +465,7 @@ class PhaseExecutor:
             sections=sections,
         )
         self._save_artifact(4, artifact)
-        asyncio.create_task(self._log_usage(4, self.model, r.usage.input_tokens, r.usage.output_tokens))
+        self._bg_task(self._log_usage(4, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def phase5_test(self, a4, a2, improvement_instructions=None):
@@ -488,8 +495,8 @@ class PhaseExecutor:
             docx_path = os.path.join(settings.output_dir, self.proposal_id + ".docx")
             pptx_path = os.path.join(settings.output_dir, self.proposal_id + ".pptx")
             project_name = a4.structured_data.get("_project_name", "용역 제안서")
-            build_docx(a4.sections, Path(docx_path), project_name)
-            build_pptx(a4.sections, Path(pptx_path), project_name)
+            await asyncio.to_thread(build_docx, a4.sections, Path(docx_path), project_name)
+            await asyncio.to_thread(build_pptx, a4.sections, Path(pptx_path), project_name)
         artifact = Phase5Artifact(
             summary=d.get("summary", ""),
             structured_data=d,
@@ -503,7 +510,7 @@ class PhaseExecutor:
             detailed_scores=d.get("detailed_scores", {})
         )
         self._save_artifact(5, artifact)
-        asyncio.create_task(self._log_usage(5, self.model, r.usage.input_tokens, r.usage.output_tokens))
+        self._bg_task(self._log_usage(5, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
     async def execute_all(self, rfp_content, improvement_instructions=None):
@@ -526,23 +533,25 @@ class PhaseExecutor:
             except Exception as db_err:
                 logger.warning(f"[{self.proposal_id}] 완료 상태 DB 업데이트 실패 (무시): {db_err}")
             # Storage 업로드 (fire-and-forget)
-            asyncio.create_task(self._upload_to_storage(
+            self._bg_task(self._upload_to_storage(
                 docx_path=a5.docx_path or "",
                 pptx_path=a5.pptx_path or "",
             ))
             session = self.session_manager.get_session(self.proposal_id)
-            asyncio.create_task(notify_proposal_complete(
+            self._bg_task(notify_proposal_complete(
                 proposal_id=self.proposal_id,
                 proposal_title=session.get("rfp_title", ""),
             ))
             return a5
         except Exception as e:
             self.session_manager.update_session(self.proposal_id, {"status": "failed", "error": str(e)})
-            asyncio.create_task(self._handle_failure(0, str(e)))
+            self._bg_task(self._handle_failure(0, str(e)))
             raise
 
     async def execute_from_phase(self, start_phase: int, improvement_instructions=None):
         """특정 phase부터 재실행 (개선 지침 적용)"""
+        if start_phase not in range(1, 6):
+            raise ValueError(f"start_phase는 1~5여야 합니다: {start_phase}")
         try:
             session = self.session_manager.get_session(self.proposal_id)
             rfp_content = session["proposal_state"]["rfp_content"]
@@ -556,6 +565,7 @@ class PhaseExecutor:
             a2 = _load(Phase2Artifact, "phase_artifact_2") if start_phase > 2 else None
             a3 = _load(Phase3Artifact, "phase_artifact_3") if start_phase > 3 else None
             a4 = _load(Phase4Artifact, "phase_artifact_4") if start_phase > 4 else None
+            a5 = None
 
             if start_phase <= 1:
                 a1 = await self.phase1_research(rfp_content, improvement_instructions)
@@ -568,16 +578,19 @@ class PhaseExecutor:
             if start_phase <= 5:
                 a5 = await self.phase5_test(a4, a2, improvement_instructions)
 
+            if a5 is None:
+                raise RuntimeError("phase5_test가 실행되지 않았습니다.")
+
             self.session_manager.update_session(
                 self.proposal_id, {"status": "completed", "phases_completed": 5}
             )
             # Storage 업로드 (fire-and-forget)
-            asyncio.create_task(self._upload_to_storage(
+            self._bg_task(self._upload_to_storage(
                 docx_path=a5.docx_path or "",
                 pptx_path=a5.pptx_path or "",
             ))
             session = self.session_manager.get_session(self.proposal_id)
-            asyncio.create_task(notify_proposal_complete(
+            self._bg_task(notify_proposal_complete(
                 proposal_id=self.proposal_id,
                 proposal_title=session.get("rfp_title", ""),
             ))

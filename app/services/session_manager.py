@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 from app.exceptions import SessionNotFoundError
@@ -24,7 +24,7 @@ _DB_FIELDS = {
 
 def _to_db_payload(session: Dict[str, Any]) -> Dict[str, Any]:
     """세션 데이터 → proposals 테이블 업데이트 페이로드 변환"""
-    payload: Dict[str, Any] = {"updated_at": datetime.utcnow().isoformat()}
+    payload: Dict[str, Any] = {"updated_at": datetime.now(timezone.utc).isoformat()}
     for session_key, db_col in _DB_FIELDS.items():
         if session_key in session:
             val = session[session_key]
@@ -49,8 +49,8 @@ def _from_db_row(row: Dict[str, Any]) -> Dict[str, Any]:
         "docx_path": row.get("storage_path_docx", ""),
         "pptx_path": row.get("storage_path_pptx", ""),
         "rfp_content": row.get("rfp_content", ""),
-        "created_at": row.get("created_at") or datetime.utcnow(),
-        "updated_at": row.get("updated_at") or datetime.utcnow(),
+        "created_at": row.get("created_at") or datetime.now(timezone.utc),
+        "updated_at": row.get("updated_at") or datetime.now(timezone.utc),
         "session_type": "v3.1",
         "proposal_state": {
             "rfp_title": row.get("title", ""),
@@ -81,8 +81,8 @@ class ProposalSessionManager:
             **initial_data,
             "proposal_id": proposal_id,
             "session_type": session_type,
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow(),
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
             "status": "initialized",
         }
         self._sessions[proposal_id] = session_data
@@ -115,7 +115,7 @@ class ProposalSessionManager:
         """세션 업데이트 (메모리 + DB write-through)"""
         session = self.get_session(proposal_id)
         session.update(updates)
-        session["updated_at"] = datetime.utcnow()
+        session["updated_at"] = datetime.now(timezone.utc)
 
         # DB 비동기 업데이트 (fire-and-forget)
         try:
