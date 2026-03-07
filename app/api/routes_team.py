@@ -144,7 +144,7 @@ class MemberRoleUpdate(BaseModel):
 
 @router.get("/teams/{team_id}/members")
 async def list_team_members(team_id: str, user=Depends(get_current_user)):
-    """팀원 목록"""
+    """팀원 목록 (email 포함)"""
     client = await get_async_client()
     await _require_team_member(client, team_id, user.id)
     res = (
@@ -153,7 +153,53 @@ async def list_team_members(team_id: str, user=Depends(get_current_user)):
         .eq("team_id", team_id)
         .execute()
     )
-    return {"members": res.data or []}
+    members = res.data or []
+
+    # auth.admin으로 email 조회 (service_role client 전용)
+    email_map: dict = {}
+    try:
+        for m in members:
+            u = client.auth.admin.get_user_by_id(m["user_id"])
+            if u.user:
+                email_map[m["user_id"]] = u.user.email or ""
+    except Exception:
+        pass  # email 조회 실패 시 user_id로 폴백
+
+    for m in members:
+        m["email"] = email_map.get(m["user_id"], "")
+
+    return {"members": members}
+
+
+@router.get("/teams/{team_id}/stats")
+async def get_team_stats(team_id: str, user=Depends(get_current_user)):
+    """팀 제안서 통계 (member 이상)"""
+    client = await get_async_client()
+    await _require_team_member(client, team_id, user.id)
+
+    res = (
+        await client.table("proposals")
+        .select("status, win_result")
+        .eq("team_id", team_id)
+        .execute()
+    )
+    proposals = res.data or []
+
+    total = len(proposals)
+    completed = sum(1 for p in proposals if p["status"] == "completed")
+    processing = sum(1 for p in proposals if p["status"] in ("processing", "initialized"))
+    failed = sum(1 for p in proposals if p["status"] == "failed")
+    won = sum(1 for p in proposals if p.get("win_result") == "won")
+    win_rate = round(won / completed * 100, 1) if completed > 0 else 0.0
+
+    return {
+        "total": total,
+        "completed": completed,
+        "processing": processing,
+        "failed": failed,
+        "won": won,
+        "win_rate": win_rate,
+    }
 
 
 @router.patch("/teams/{team_id}/members/{target_user_id}")

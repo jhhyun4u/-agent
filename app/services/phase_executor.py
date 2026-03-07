@@ -9,6 +9,7 @@ from app.config import settings
 from app.models.phase_schemas import Phase1Artifact, Phase2Artifact, Phase3Artifact, Phase4Artifact, Phase5Artifact
 from app.services.rfp_parser import parse_rfp_text
 from app.services.docx_builder import build_docx
+from app.services.hwpx_builder import build_hwpx
 from app.services.pptx_builder import build_pptx
 from app.services.g2b_service import G2BService
 from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
@@ -38,7 +39,7 @@ class PhaseExecutor:
 
     def _update_status(self, phase_name):
         """세션 메모리 상태 업데이트 + Supabase proposals 테이블 업데이트"""
-        self.session_manager.update_session(self.proposal_id, {"current_phase": phase_name, "status": "processing"})
+        self.session_manager.update_session(self.proposal_id, {"current_phase": phase_name, "status": "running"})
         logger.info("[%s] %s" % (self.proposal_id, phase_name))
         self._bg_task(self._db_update_status(phase_name))
 
@@ -48,7 +49,7 @@ class PhaseExecutor:
             client = await get_async_client()
             await (
                 client.table("proposals")
-                .update({"current_phase": phase_name, "status": "processing"})
+                .update({"current_phase": phase_name, "status": "running"})
                 .eq("id", self.proposal_id)
                 .execute()
             )
@@ -76,12 +77,10 @@ class PhaseExecutor:
                 client.table("proposal_phases")
                 .upsert({
                     "proposal_id": self.proposal_id,
-                    "phase_number": n,
+                    "phase_num": n,
                     "phase_name": phase_names.get(n, f"phase_{n}"),
-                    "artifact": artifact.model_dump(),
-                    "status": "completed",
-                    "completed_at": datetime.now(timezone.utc).isoformat(),
-                })
+                    "artifact_json": artifact.model_dump(),
+                }, on_conflict="proposal_id,phase_num")
                 .execute()
             )
             # proposals 테이블 phases_completed 업데이트
@@ -112,11 +111,10 @@ class PhaseExecutor:
                     "proposal_id": self.proposal_id,
                     "owner_id": owner_id,
                     "team_id": team_id,
-                    "phase_number": phase_num,
+                    "phase_num": phase_num,
                     "model": model,
                     "input_tokens": input_tokens,
                     "output_tokens": output_tokens,
-                    "logged_at": datetime.now(timezone.utc).isoformat(),
                 })
                 .execute()
             )
@@ -124,43 +122,35 @@ class PhaseExecutor:
             logger.warning(f"[{self.proposal_id}] 토큰 사용량 기록 실패 (무시): {e}")
 
     async def _handle_failure(self, phase_num: int, error_msg: str):
-        """실패 시 Supabase proposals + proposal_phases 상태 업데이트"""
+        """실패 시 Supabase proposals 상태 업데이트"""
         try:
             client = await get_async_client()
             await (
                 client.table("proposals")
                 .update({
                     "status": "failed",
-                    "failed_phase": str(phase_num),
+                    "failed_phase": phase_num,
+                    "current_phase": f"phase{phase_num}_failed",
                     "notes": f"Phase {phase_num} 실패: {error_msg[:500]}",
                 })
                 .eq("id", self.proposal_id)
                 .execute()
             )
-            await (
-                client.table("proposal_phases")
-                .upsert({
-                    "proposal_id": self.proposal_id,
-                    "phase_number": phase_num,
-                    "status": "failed",
-                    "error_msg": error_msg[:500],
-                })
-                .execute()
-            )
         except Exception as e:
             logger.warning(f"[{self.proposal_id}] DB 실패 상태 업데이트 실패 (무시): {e}")
 
-    async def _upload_to_storage(self, docx_path: str, pptx_path: str) -> dict:
+    async def _upload_to_storage(self, docx_path: str, pptx_path: str, hwpx_path: str = "") -> dict:
         """
-        DOCX/PPTX 파일을 Supabase Storage에 업로드
+        DOCX/PPTX/HWPX 파일을 Supabase Storage에 업로드
 
         버킷: proposal-files
-        경로: {proposal_id}/proposal.docx, {proposal_id}/proposal.pptx
+        경로: {proposal_id}/proposal.docx, {proposal_id}/proposal.pptx, {proposal_id}/proposal.hwpx
 
         Returns:
-            {"docx_url": ..., "pptx_url": ..., "docx_storage_path": ..., "pptx_storage_path": ...}
+            {"docx_url": ..., "pptx_url": ..., "hwpx_url": ..., ...}
         """
         result = {}
+        docx_ok = pptx_ok = False
         try:
             client = await get_async_client()
             bucket = "proposal-files"
@@ -172,6 +162,9 @@ class PhaseExecutor:
                 (pptx_path, f"{self.proposal_id}/proposal.pptx",
                  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                  "pptx"),
+                (hwpx_path, f"{self.proposal_id}/proposal.hwpx",
+                 "application/zip",
+                 "hwpx"),
             ]
 
             for local_path, storage_path, content_type, key in uploads:
@@ -199,27 +192,44 @@ class PhaseExecutor:
                     result[f"{key}_storage_path"] = storage_path
                     logger.info(f"[{self.proposal_id}] Storage 업로드 완료: {storage_path}")
 
+                    if key == "docx":
+                        docx_ok = True
+                    elif key == "pptx":
+                        pptx_ok = True
+
                 except Exception as e:
                     logger.warning(f"[{self.proposal_id}] {key} 업로드 실패 (무시): {e}")
 
-            # proposals 테이블 storage path 업데이트
-            if result:
-                update_payload = {}
-                if "docx_storage_path" in result:
-                    update_payload["storage_path_docx"] = result["docx_storage_path"]
-                if "pptx_storage_path" in result:
-                    update_payload["storage_path_pptx"] = result["pptx_storage_path"]
-                if update_payload:
-                    await (
-                        client.table("proposals")
-                        .update(update_payload)
-                        .eq("id", self.proposal_id)
-                        .execute()
-                    )
-                    logger.info(f"[{self.proposal_id}] DB storage 경로 업데이트 완료")
+            # proposals 테이블 storage path + 업로드 실패 플래그 업데이트
+            update_payload: dict = {
+                "storage_upload_failed": not (docx_ok and pptx_ok),
+            }
+            if "docx_storage_path" in result:
+                update_payload["storage_path_docx"] = result["docx_storage_path"]
+            if "pptx_storage_path" in result:
+                update_payload["storage_path_pptx"] = result["pptx_storage_path"]
+            if "hwpx_storage_path" in result:
+                update_payload["storage_path_hwpx"] = result["hwpx_storage_path"]
+            await (
+                client.table("proposals")
+                .update(update_payload)
+                .eq("id", self.proposal_id)
+                .execute()
+            )
+            logger.info(f"[{self.proposal_id}] DB storage 경로 업데이트 완료 (upload_failed={update_payload['storage_upload_failed']})")
 
         except Exception as e:
             logger.warning(f"[{self.proposal_id}] Storage 업로드 전체 실패 (무시): {e}")
+            try:
+                client = await get_async_client()
+                await (
+                    client.table("proposals")
+                    .update({"storage_upload_failed": True})
+                    .eq("id", self.proposal_id)
+                    .execute()
+                )
+            except Exception:
+                pass
 
         return result
 
@@ -498,14 +508,31 @@ class PhaseExecutor:
         )
         d = self._parse(r.content[0].text)
         score = float(d.get("quality_score", 70))
-        docx_path = pptx_path = ""
+        docx_path = pptx_path = hwpx_path = ""
         if a4.sections:
             os.makedirs(settings.output_dir, exist_ok=True)
             docx_path = os.path.join(settings.output_dir, self.proposal_id + ".docx")
             pptx_path = os.path.join(settings.output_dir, self.proposal_id + ".pptx")
+            hwpx_path = os.path.join(settings.output_dir, self.proposal_id + ".hwpx")
             project_name = a4.structured_data.get("_project_name", "용역 제안서")
             await asyncio.to_thread(build_docx, a4.sections, Path(docx_path), project_name)
             await asyncio.to_thread(build_pptx, a4.sections, Path(pptx_path), project_name)
+            # HWPX 생성 — 메타데이터는 세션 + 아티팩트에서 수집
+            try:
+                session = self.session_manager.get_session(self.proposal_id)
+                hwpx_metadata = {
+                    "client_name": session.get("client_name", ""),
+                    "proposer_name": settings.proposer_name if hasattr(settings, "proposer_name") else "",
+                    "submit_date": "",
+                    "bid_notice_number": "",
+                    "evaluation_weights": a2.evaluation_weights if a2 else {},
+                }
+                await asyncio.to_thread(
+                    build_hwpx, a4.sections, Path(hwpx_path), project_name, hwpx_metadata
+                )
+            except Exception as hwpx_err:
+                logger.warning(f"[{self.proposal_id}] HWPX 생성 실패 (무시): {hwpx_err}")
+                hwpx_path = ""
         artifact = Phase5Artifact(
             summary=d.get("summary", ""),
             structured_data=d,
@@ -514,6 +541,7 @@ class PhaseExecutor:
             issues=d.get("issues", []),
             docx_path=docx_path,
             pptx_path=pptx_path,
+            hwpx_path=hwpx_path,
             executive_summary=d.get("executive_summary", ""),
             win_probability=d.get("win_probability", ""),
             detailed_scores=d.get("detailed_scores", {})
@@ -545,6 +573,7 @@ class PhaseExecutor:
             self._bg_task(self._upload_to_storage(
                 docx_path=a5.docx_path or "",
                 pptx_path=a5.pptx_path or "",
+                hwpx_path=a5.hwpx_path or "",
             ))
             session = self.session_manager.get_session(self.proposal_id)
             self._bg_task(notify_proposal_complete(
@@ -597,6 +626,7 @@ class PhaseExecutor:
             self._bg_task(self._upload_to_storage(
                 docx_path=a5.docx_path or "",
                 pptx_path=a5.pptx_path or "",
+                hwpx_path=a5.hwpx_path or "",
             ))
             session = self.session_manager.get_session(self.proposal_id)
             self._bg_task(notify_proposal_complete(

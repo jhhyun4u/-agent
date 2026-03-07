@@ -54,3 +54,4 @@ class ProposalResponse(BaseModel):
     message: str
     docx_path: str | None = None
     pptx_path: str | None = None
+    hwpx_path: str | None = None

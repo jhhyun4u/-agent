@@ -185,6 +185,9 @@ export const api = {
     delete(teamId: string) {
       return request("DELETE", `/teams/${teamId}`);
     },
+    stats(teamId: string) {
+      return request<TeamStats>("GET", `/teams/${teamId}/stats`);
+    },
 
     members: {
       list(teamId: string) {
@@ -259,8 +262,18 @@ export interface TeamMember {
   id: string;
   team_id: string;
   user_id: string;
+  email: string;
   role: string;
   joined_at: string;
+}
+
+export interface TeamStats {
+  total: number;
+  completed: number;
+  processing: number;
+  failed: number;
+  won: number;
+  win_rate: number;
 }
 
 export interface Invitation {

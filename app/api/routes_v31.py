@@ -30,6 +30,7 @@ async def _run_phases(proposal_id: str, rfp_content: str):
         session_manager.update_session(proposal_id, {
             "docx_path": final.docx_path,
             "pptx_path": final.pptx_path,
+            "hwpx_path": final.hwpx_path,
         })
         logger.info(f"Phase 실행 완료: {proposal_id} (score={final.quality_score})")
     except Exception as e:
@@ -44,6 +45,7 @@ async def _run_phases_from(proposal_id: str, start_phase: int):
         session_manager.update_session(proposal_id, {
             "docx_path": final.docx_path,
             "pptx_path": final.pptx_path,
+            "hwpx_path": final.hwpx_path,
         })
         logger.info(f"Phase {start_phase}부터 재실행 완료: {proposal_id} (score={final.quality_score})")
     except Exception as e:
@@ -217,8 +219,8 @@ async def download_document(proposal_id: str, file_type: str, current_user=Depen
     from fastapi.responses import RedirectResponse
     from app.utils.supabase_client import get_async_client
 
-    if file_type not in ("docx", "pptx"):
-        raise HTTPException(status_code=400, detail="file_type은 docx 또는 pptx여야 합니다.")
+    if file_type not in ("docx", "pptx", "hwpx"):
+        raise HTTPException(status_code=400, detail="file_type은 docx, pptx, hwpx 중 하나여야 합니다.")
     try:
         session = await session_manager.aget_session(proposal_id)
     except SessionNotFoundError as e:

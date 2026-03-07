@@ -9,7 +9,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { api, Team, TeamMember, Invitation, TeamMembership } from "@/lib/api";
+import { api, Team, TeamMember, TeamStats, Invitation, TeamMembership } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminPage() {
@@ -17,6 +17,9 @@ export default function AdminPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [stats, setStats] = useState<TeamStats | null>(null);
+  const [editingName, setEditingName] = useState(false);
+  const [teamNameInput, setTeamNameInput] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("member");
   const [newTeamName, setNewTeamName] = useState("");
@@ -42,12 +45,14 @@ export default function AdminPage() {
   const fetchTeamDetail = useCallback(async () => {
     if (!selectedTeamId) return;
     try {
-      const [memRes, invRes] = await Promise.all([
+      const [memRes, invRes, statsRes] = await Promise.all([
         api.teams.members.list(selectedTeamId),
         api.teams.invitations.list(selectedTeamId).catch(() => ({ invitations: [] })),
+        api.teams.stats(selectedTeamId).catch(() => null),
       ]);
       setMembers(memRes.members);
       setInvitations(invRes.invitations);
+      setStats(statsRes);
     } catch {}
   }, [selectedTeamId]);
 
@@ -62,6 +67,19 @@ export default function AdminPage() {
 
   const selectedMembership = memberships.find((m) => m.team_id === selectedTeamId);
   const isAdmin = selectedMembership?.role === "admin";
+
+  async function handleRenameTeam(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedTeamId || !teamNameInput.trim()) return;
+    try {
+      await api.teams.update(selectedTeamId, teamNameInput.trim());
+      await fetchTeams();
+      setEditingName(false);
+      flash("팀 이름이 변경되었습니다.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "이름 변경 실패");
+    }
+  }
 
   async function handleCreateTeam(e: React.FormEvent) {
     e.preventDefault();
@@ -207,6 +225,52 @@ export default function AdminPage() {
               </div>
             ) : (
               <>
+                {/* 팀 이름 + 통계 */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    {isAdmin && editingName ? (
+                      <form onSubmit={handleRenameTeam} className="flex gap-2 flex-1">
+                        <input
+                          value={teamNameInput}
+                          onChange={(e) => setTeamNameInput(e.target.value)}
+                          className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          autoFocus
+                        />
+                        <button type="submit" disabled={!teamNameInput.trim()} className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-medium px-3 py-1.5 rounded-lg">저장</button>
+                        <button type="button" onClick={() => setEditingName(false)} className="text-xs text-gray-500 hover:text-gray-700 px-2">취소</button>
+                      </form>
+                    ) : (
+                      <>
+                        <h2 className="font-semibold text-gray-900">{selectedMembership?.teams.name}</h2>
+                        {isAdmin && (
+                          <button
+                            onClick={() => { setTeamNameInput(selectedMembership?.teams.name ?? ""); setEditingName(true); }}
+                            className="text-xs text-gray-400 hover:text-gray-600"
+                          >
+                            수정
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  {stats && (
+                    <div className="grid grid-cols-3 gap-4 text-center border-t border-gray-100 pt-4">
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">전체 제안서</p>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">완료</p>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-blue-600">{stats.win_rate}%</p>
+                        <p className="text-xs text-gray-500 mt-0.5">수주율</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* 팀원 목록 */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                   <h2 className="font-semibold text-gray-900 mb-4">팀원</h2>
@@ -214,9 +278,9 @@ export default function AdminPage() {
                     {members.map((m) => (
                       <li key={m.id} className="flex items-center py-3 gap-3">
                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-500 shrink-0">
-                          {m.user_id.slice(0, 2).toUpperCase()}
+                          {(m.email || m.user_id).slice(0, 2).toUpperCase()}
                         </div>
-                        <span className="flex-1 text-sm text-gray-700 truncate">{m.user_id}</span>
+                        <span className="flex-1 text-sm text-gray-700 truncate">{m.email || m.user_id}</span>
                         {isAdmin && m.user_id !== currentUserId ? (
                           <div className="flex items-center gap-2">
                             <select

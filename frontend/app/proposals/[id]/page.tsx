@@ -2,18 +2,19 @@
 
 /**
  * F5 + F6: 제안서 상세 페이지
- * - PhaseProgress: 실시간 진행 상태 (3초 polling)
+ * - PhaseProgress: Supabase Realtime 실시간 진행 상태
  * - ResultViewer: 완료 시 요약 + 다운로드
  * - PhaseRetryButton: 실패 시 재시도
  * - CommentThread: 댓글 목록 + 작성
  * - WinResult: 수주결과 저장
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { api, Comment_, ProposalStatus_ } from "@/lib/api";
+import { api, Comment_ } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
 
 const PHASES = [
   { n: 1, name: "RFP 분석 · 나라장터 조회" },
@@ -27,7 +28,7 @@ const PHASE_MINUTES = [2, 3, 3, 5, 2]; // 각 Phase 예상 소요시간
 
 export default function ProposalDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [status, setStatus] = useState<ProposalStatus_ | null>(null);
+  const { status, loading } = usePhaseStatus(id);
   const [comments, setComments] = useState<Comment_[]>([]);
   const [newComment, setNewComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
@@ -35,19 +36,6 @@ export default function ProposalDetailPage() {
   const [winSaved, setWinSaved] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
   const [downloadToken, setDownloadToken] = useState("");
-  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const fetchStatus = useCallback(async () => {
-    try {
-      const s = await api.proposals.status(id);
-      setStatus(s);
-      if (s.status === "completed" || s.status === "failed") {
-        if (pollingRef.current) clearInterval(pollingRef.current);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [id]);
 
   const fetchComments = useCallback(async () => {
     try {
@@ -57,13 +45,8 @@ export default function ProposalDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    fetchStatus();
     fetchComments();
-
-    // polling: processing 상태일 때만 3초마다 갱신
-    pollingRef.current = setInterval(fetchStatus, 3000);
-    return () => { if (pollingRef.current) clearInterval(pollingRef.current); };
-  }, [fetchStatus, fetchComments]);
+  }, [fetchComments]);
 
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => {
@@ -78,8 +61,7 @@ export default function ProposalDetailPage() {
   async function handleRetry() {
     try {
       await api.proposals.execute(id);
-      fetchStatus();
-      pollingRef.current = setInterval(fetchStatus, 3000);
+      // Realtime이 DB 변경을 자동 감지하므로 별도 refresh 불필요
     } catch (e) {
       alert(e instanceof Error ? e.message : "재시도 실패");
     }
@@ -124,11 +106,11 @@ export default function ProposalDetailPage() {
     }
   }
 
-  function downloadUrl(type: "docx" | "pptx") {
+  function downloadUrl(type: "docx" | "pptx" | "hwpx") {
     return `${process.env.NEXT_PUBLIC_API_URL}/v3.1/proposals/${id}/download/${type}?token=${downloadToken}`;
   }
 
-  if (!status) {
+  if (loading || !status) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-400">
         불러오는 중...
@@ -230,6 +212,12 @@ export default function ProposalDetailPage() {
                 className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
               >
                 📊 PPTX 다운로드
+              </a>
+              <a
+                href={downloadUrl("hwpx")}
+                className="flex-1 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+              >
+                📝 HWPX 다운로드
               </a>
             </div>
           </section>

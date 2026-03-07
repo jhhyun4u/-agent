@@ -87,6 +87,7 @@ class Phase5Artifact(PhaseArtifact):
     issues: list[dict] = Field(default_factory=list)
     docx_path: str = ""
     pptx_path: str = ""
+    hwpx_path: str = ""
     executive_summary: str = ""
     win_probability: str = ""
     detailed_scores: dict = Field(default_factory=dict, description="항목별 세부 점수")
