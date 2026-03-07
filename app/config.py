@@ -54,6 +54,9 @@ class Settings(BaseSettings):
     # 출력 디렉토리
     output_dir: str = "output"
 
+    # 제안업체명 (HWPX 표지용)
+    proposer_name: str = ""
+
     # 제안서 템플릿 디렉토리
     template_dir: str = "output/output template"
 

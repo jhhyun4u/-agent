@@ -2,11 +2,44 @@
 
 import asyncio
 import logging
+import xml.etree.ElementTree as _ET_orig
 from pathlib import Path
 
 from hwpx import HwpxDocument
+from lxml import etree as _LET
+from lxml.etree import _Element as _LxmlElement
 
 logger = logging.getLogger(__name__)
+
+
+def _patch_hwpx_library() -> None:
+    """python-hwpx v2.5 버그 패치.
+
+    ensure_run_style 내 modifier 클로저가 lxml.etree._Element에
+    stdlib ET.SubElement를 호출해 TypeError 발생하는 문제를 수정한다.
+    hwpx.oxml.document 모듈의 ET 참조를 래퍼로 교체하여
+    lxml element 대상 호출을 LET.SubElement로 위임한다.
+    """
+    import hwpx.oxml.document as _doc
+
+    class _ETProxy:
+        """xml.etree.ElementTree proxy — lxml element에 SubElement 호출 시 LET로 위임"""
+
+        def __getattr__(self, name: str):
+            return getattr(_ET_orig, name)
+
+        @staticmethod
+        def SubElement(parent, tag, attrib=None, **extra):
+            if isinstance(parent, _LxmlElement):
+                attrs = dict(attrib or {})
+                attrs.update(extra)
+                return _LET.SubElement(parent, tag, attrs)
+            return _ET_orig.SubElement(parent, tag, attrib or {}, **extra)
+
+    _doc.ET = _ETProxy()
+
+
+_patch_hwpx_library()
 
 # 섹션 키 → 본문 장(章) 매핑
 _CHAPTER_MAP = {

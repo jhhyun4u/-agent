@@ -163,6 +163,7 @@ async def get_proposal_result_v31(proposal_id: str, current_user=Depends(get_cur
         "quality_score": session.get("phase_artifact_5", {}).get("quality_score", 0),
         "docx_path": session.get("docx_path", ""),
         "pptx_path": session.get("pptx_path", ""),
+        "hwpx_path": session.get("hwpx_path", ""),
         "executive_summary": session.get("phase_artifact_5", {}).get("executive_summary", ""),
     }
 
@@ -378,7 +379,14 @@ async def run_single_phase(proposal_id: str, phase_num: int, current_user=Depend
                 "status": "completed",
                 "docx_path": artifact.docx_path,
                 "pptx_path": artifact.pptx_path,
+                "hwpx_path": artifact.hwpx_path,
             })
+            import asyncio as _asyncio
+            _asyncio.create_task(executor._upload_to_storage(
+                docx_path=artifact.docx_path or "",
+                pptx_path=artifact.pptx_path or "",
+                hwpx_path=artifact.hwpx_path or "",
+            ))
 
         updated = session_manager.get_session(proposal_id)
         next_phase = phase_num + 1 if phase_num < 5 else None
