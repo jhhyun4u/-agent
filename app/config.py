@@ -60,7 +60,7 @@ class Settings(BaseSettings):
     # 제안서 템플릿 디렉토리
     template_dir: str = "output/output template"
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
     def validate_required_keys(self) -> list[str]:
         """필수 API 키 누락 여부 확인. 누락된 키 이름 목록 반환."""
