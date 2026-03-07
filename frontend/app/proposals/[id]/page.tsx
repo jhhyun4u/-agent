@@ -213,12 +213,14 @@ export default function ProposalDetailPage() {
               >
                 📊 PPTX 다운로드
               </a>
-              <a
-                href={downloadUrl("hwpx")}
-                className="flex-1 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
-              >
-                📝 HWPX 다운로드
-              </a>
+              {status.hwpx_path && (
+                <a
+                  href={downloadUrl("hwpx")}
+                  className="flex-1 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+                >
+                  📝 HWPX 다운로드
+                </a>
+              )}
             </div>
           </section>
         )}

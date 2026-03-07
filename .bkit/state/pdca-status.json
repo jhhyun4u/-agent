@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-03-07T07:36:23.022Z",
+  "lastUpdated": "2026-03-07T10:31:57.952Z",
   "activeFeatures": [
     "tenopa proposer",
     "api",
@@ -21,7 +21,8 @@
     "new",
     "[id]",
     "accept",
-    "admin"
+    "admin",
+    "tenopa-proposer"
   ],
   "primaryFeature": "tenopa proposer",
   "features": {
@@ -58,9 +59,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-05T05:32:52.501Z",
-        "lastUpdated": "2026-03-07T03:27:43.948Z"
+        "lastUpdated": "2026-03-07T10:31:57.951Z"
       },
-      "lastFile": "c:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\app\\api\\routes_v31.py"
+      "lastFile": "C:\\projects\\tenopa-proposer\\app\\api\\routes_v31.py"
     },
     "proposal-agent-v33": {
       "phase": "act",
@@ -254,9 +255,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:32:10.407Z",
-        "lastUpdated": "2026-03-07T03:42:22.645Z"
+        "lastUpdated": "2026-03-07T09:15:14.063Z"
       },
-      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\frontend\\app\\proposals\\[id]\\page.tsx"
+      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\[id]\\page.tsx"
     },
     "accept": {
       "phase": "do",
@@ -283,6 +284,19 @@
         "lastUpdated": "2026-03-07T00:33:48.341Z"
       },
       "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\frontend\\app\\admin\\page.tsx"
+    },
+    "tenopa-proposer": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-07T10:31:38.389Z",
+        "lastUpdated": "2026-03-07T10:31:38.389Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\app\\config.py"
     }
   },
   "pipeline": {
@@ -293,7 +307,7 @@
   "session": {
     "startedAt": "2026-03-05T04:49:56.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-03-07T07:36:23.022Z"
+    "lastActivity": "2026-03-07T10:31:57.952Z"
   },
   "history": [
     {
@@ -1434,6 +1448,30 @@
     {
       "timestamp": "2026-03-07T07:36:23.020Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T09:15:14.063Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T10:31:38.389Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T10:31:49.752Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T10:31:57.951Z",
+      "feature": "api",
       "phase": "do",
       "action": "updated"
     }

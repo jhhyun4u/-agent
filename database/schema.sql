@@ -42,19 +42,20 @@ CREATE TABLE proposals (
     title                   TEXT NOT NULL,
     status                  TEXT NOT NULL DEFAULT 'initialized'
                                 CHECK (status IN (
-                                    'initialized','processing','completed','failed',
+                                    'initialized','running','processing','completed','failed',
                                     'pending','reviewing','approved'  -- 설계 명세 상태값 포함
                                 )),
     owner_id                UUID NOT NULL REFERENCES auth.users(id) ON DELETE RESTRICT,
     team_id                 UUID REFERENCES teams(id) ON DELETE SET NULL,
     current_phase           TEXT,
     phases_completed        INT NOT NULL DEFAULT 0,
-    failed_phase            TEXT,
+    failed_phase            INTEGER,
     rfp_filename            TEXT,
     rfp_content             TEXT,
     rfp_content_truncated   BOOLEAN NOT NULL DEFAULT false,
     storage_path_docx       TEXT,
     storage_path_pptx       TEXT,
+    storage_path_hwpx       TEXT,
     storage_path_rfp        TEXT,
     storage_upload_failed   BOOLEAN NOT NULL DEFAULT false,
     win_result              TEXT CHECK (win_result IN ('won', 'lost', 'pending')),  -- 설계 명세 CHECK 추가
@@ -71,14 +72,14 @@ ALTER TABLE proposals REPLICA IDENTITY FULL;
 CREATE TABLE proposal_phases (
     id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     proposal_id  UUID NOT NULL REFERENCES proposals(id) ON DELETE CASCADE,
-    phase_number INT NOT NULL,
+    phase_num    INT NOT NULL,
     phase_name   TEXT NOT NULL,
     status       TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','running','completed','failed')),
-    artifact     JSONB,
+    artifact_json JSONB,
     error_msg    TEXT,
     started_at   TIMESTAMPTZ,
     completed_at TIMESTAMPTZ,
-    UNIQUE (proposal_id, phase_number)
+    UNIQUE (proposal_id, phase_num)
 );
 
 -- comments
