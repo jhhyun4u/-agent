@@ -13,6 +13,19 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { api, Comment_, ProposalSummary } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+
+function useElapsedTime(running: boolean) {
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(Date.now());
+  useEffect(() => {
+    if (!running) { setElapsed(0); startRef.current = Date.now(); return; }
+    startRef.current = Date.now();
+    const t = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000);
+    return () => clearInterval(t);
+  }, [running]);
+  const m = Math.floor(elapsed / 60), s = elapsed % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
 import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
 
 // ── 상수 ─────────────────────────────────────────────────────────────
@@ -268,11 +281,13 @@ export default function ProposalDetailPage() {
     );
   }
 
-  const isProcessing = status.status === "processing" || status.status === "initialized";
+  const isProcessing = status.status === "processing" || status.status === "initialized" || status.status === "running";
   const isCompleted = status.status === "completed";
   const isFailed = status.status === "failed";
   const progressPct = Math.round((status.phases_completed / 5) * 100);
   const failedPhaseN = status.phases_completed + 1;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const elapsed = useElapsedTime(isProcessing);
 
   // ── 렌더 ──────────────────────────────────────────────────────────
 
@@ -431,26 +446,54 @@ export default function ProposalDetailPage() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="text-xs text-[#8c8c8c]">전체 진행률</span>
-              <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
+              <div className="flex items-center gap-2">
+                {isProcessing && (
+                  <span className="text-xs text-[#8c8c8c]">{elapsed}</span>
+                )}
+                <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
+              </div>
             </div>
             <div className="h-2 bg-[#262626] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
-                style={{ width: `${progressPct}%` }}
-              />
+              {isProcessing && progressPct === 0 ? (
+                <div className="h-full w-full relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[#3ecf8e]/30 rounded-full" />
+                  <div
+                    className="absolute inset-y-0 w-1/3 bg-[#3ecf8e] rounded-full animate-[slide_1.5s_ease-in-out_infinite]"
+                    style={{ animation: "slideX 1.5s ease-in-out infinite" }}
+                  />
+                </div>
+              ) : (
+                <div
+                  className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
+                  style={{ width: `${progressPct}%` }}
+                />
+              )}
             </div>
           </div>
+
+          {isProcessing && (
+            <div className="mt-3 flex items-center gap-2 text-xs text-[#8c8c8c]">
+              <span className="flex gap-0.5">
+                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "0ms" }} />
+                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "150ms" }} />
+                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "300ms" }} />
+              </span>
+              <span>
+                {[
+                  "RFP 문서를 분석하고 있습니다",
+                  "경쟁사를 분석하고 있습니다",
+                  "전략을 수립하고 있습니다",
+                  "본문을 작성하고 있습니다",
+                  "품질을 검증하고 있습니다",
+                ][status.phases_completed] ?? "처리 중입니다"}...
+              </span>
+            </div>
+          )}
 
           {isFailed && status.error && (
             <div className="mt-3 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
               <p className="text-xs text-red-400">{status.error}</p>
             </div>
-          )}
-
-          {isProcessing && (
-            <p className="mt-3 text-xs text-[#8c8c8c] text-center">
-              완료 시 이메일로 알림을 보내드립니다.
-            </p>
           )}
         </section>
 
@@ -540,10 +583,22 @@ export default function ProposalDetailPage() {
             )}
 
             {isProcessing && (
-              <div className="flex flex-col items-center justify-center py-10 gap-3 text-[#8c8c8c]">
-                <div className="w-8 h-8 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin" />
-                <p className="text-sm">생성 중입니다...</p>
-                <p className="text-xs">Phase {status.phases_completed + 1}/5 진행 중</p>
+              <div className="flex flex-col items-center justify-center py-10 gap-4 text-[#8c8c8c]">
+                <div className="relative w-12 h-12">
+                  <div className="absolute inset-0 rounded-full border-2 border-[#262626]" />
+                  <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#3ecf8e] animate-spin" />
+                  <div className="absolute inset-2 rounded-full border border-[#3ecf8e]/20 animate-ping" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-[#ededed] font-medium">
+                    Phase {status.phases_completed + 1}/5 — {
+                      ["RFP 분석", "경쟁 분석", "전략 수립", "본문 작성", "품질 검증"][status.phases_completed] ?? "처리"
+                    }
+                  </p>
+                  <p className="text-xs text-[#8c8c8c] mt-1">Claude AI가 제안서를 작성하는 중입니다</p>
+                  <p className="text-xs text-[#5c5c5c] mt-0.5">경과 시간: {elapsed}</p>
+                </div>
+                <p className="text-[11px] text-[#5c5c5c]">5~15분 소요됩니다. 페이지를 닫아도 작업은 계속됩니다.</p>
               </div>
             )}
 
