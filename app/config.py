@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import Field
 from typing import Literal
 
 
@@ -41,8 +42,8 @@ class Settings(BaseSettings):
     # 프론트엔드 URL (이메일 링크 생성용)
     frontend_url: str = "http://localhost:3000"
 
-    # CORS 허용 오리진 (프론트엔드 URL)
-    cors_origins: list[str] = ["http://localhost:3000"]
+    # CORS 허용 오리진 (프론트엔드 URL) — 환경변수: CORS_ORIGINS=https://yourdomain.vercel.app
+    cors_origins: list[str] = Field(default=["http://localhost:3000"])
 
     # 나라장터 API 키
     g2b_api_key: str = ""
@@ -51,13 +52,13 @@ class Settings(BaseSettings):
     max_file_size_mb: int = 10
     allowed_file_extensions: list[str] = [".pdf", ".docx", ".txt"]
     
-    # 출력 디렉토리
+    # 출력 디렉토리 — 환경변수: OUTPUT_DIR=/app/output
     output_dir: str = "output"
 
     # 제안업체명 (HWPX 표지용)
     proposer_name: str = ""
 
-    # 제안서 템플릿 디렉토리
+    # 제안서 템플릿 디렉토리 — 환경변수: TEMPLATE_DIR=/app/output/template
     template_dir: str = "output/output template"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
