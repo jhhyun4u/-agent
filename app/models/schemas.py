@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class ProjectInput(BaseModel):
@@ -25,6 +25,11 @@ class RFPData(BaseModel):
     evaluation_criteria: list[str] = []
     table_of_contents: list[str] = []
     raw_text: str
+
+    @field_validator("title", "client_name", "project_scope", "duration", mode="before")
+    @classmethod
+    def coerce_none_to_str(cls, v):
+        return v if v is not None else ""
 
 
 class ProposalSection(BaseModel):
