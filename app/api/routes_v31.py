@@ -56,14 +56,14 @@ async def _run_phases_from(proposal_id: str, start_phase: int):
 
 @router.post("/proposals/generate")
 async def generate_proposal_v31(
-    rfp_title: str,
-    client_name: str,
-    rfp_content: Optional[str] = None,
+    rfp_title: str = Form(...),
+    client_name: str = Form(...),
+    rfp_content: Optional[str] = Form(None),
     rfp_file: Optional[UploadFile] = File(None),
-    express_mode: bool = False,
-    team_id: Optional[str] = None,
-    section_ids: Optional[str] = None,       # JSON 배열 문자열 ex) '["uuid1","uuid2"]'
-    form_template_id: Optional[str] = None,
+    express_mode: bool = Form(False),
+    team_id: Optional[str] = Form(None),
+    section_ids: Optional[str] = Form(None),  # JSON 배열 문자열 ex) '["uuid1","uuid2"]'
+    form_template_id: Optional[str] = Form(None),
     current_user=Depends(get_current_user),
 ):
     """v3.4 제안서 세션 초기화"""
