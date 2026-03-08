@@ -1,14 +1,25 @@
 {
   "version": "1.0",
-  "enabled": false,
+  "enabled": true,
   "teamName": "",
-  "feature": "",
-  "pdcaPhase": "plan",
+  "feature": "tenopa proposer",
+  "pdcaPhase": "archived",
   "orchestrationPattern": "leader",
   "ctoAgent": "opus",
-  "startedAt": "2026-03-07T03:17:08.103Z",
-  "lastUpdated": "2026-03-07T03:39:05.428Z",
-  "teammates": [],
+  "startedAt": "2026-03-08T07:15:59.376Z",
+  "lastUpdated": "2026-03-08T07:15:59.386Z",
+  "teammates": [
+    {
+      "name": "adb89461f2cff5c75",
+      "role": "bkit:gap-detector",
+      "model": "sonnet",
+      "status": "spawning",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-03-08T07:15:59.385Z",
+      "lastActivityAt": "2026-03-08T07:15:59.385Z"
+    }
+  ],
   "progress": {
     "totalTasks": 0,
     "completedTasks": 0,
@@ -17,5 +28,5 @@
     "pendingTasks": 0
   },
   "recentMessages": [],
-  "sessionId": "b79f6346-befd-439c-a4c7-2b7bfd4036cd"
+  "sessionId": "08395107-5176-4295-a80c-156141a20f8d"
 }

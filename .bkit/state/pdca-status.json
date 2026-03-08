@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-03-07T10:31:57.952Z",
+  "lastUpdated": "2026-03-08T07:12:40.357Z",
   "activeFeatures": [
     "tenopa proposer",
     "api",
@@ -22,10 +22,28 @@
     "[id]",
     "accept",
     "admin",
-    "tenopa-proposer"
+    "tenopa-proposer",
+    "resources",
+    "archive",
+    "dashboard",
+    "g2b_service.py",
+    "bid_fetcher.py",
+    "bid_recommender.py",
+    "bids",
+    "[bidNo]",
+    "settings",
+    "unit"
   ],
   "primaryFeature": "tenopa proposer",
   "features": {
+    "proposal-platform-v2": {
+      "phase": "archived",
+      "matchRate": 91,
+      "iterationCount": 1,
+      "startedAt": "2026-03-08T00:00:00.000Z",
+      "archivedAt": "2026-03-08T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/proposal-platform-v2/"
+    },
     "admin-page": {
       "phase": "archived",
       "matchRate": 97,
@@ -51,17 +69,12 @@
       "archivedTo": "docs/archive/2026-03/tenopa-proposer/"
     },
     "api": {
-      "phase": "do",
-      "phaseNumber": 3,
-      "matchRate": null,
-      "iterationCount": 0,
-      "requirements": [],
-      "documents": {},
-      "timestamps": {
-        "started": "2026-03-05T05:32:52.501Z",
-        "lastUpdated": "2026-03-07T10:31:57.951Z"
-      },
-      "lastFile": "C:\\projects\\tenopa-proposer\\app\\api\\routes_v31.py"
+      "phase": "archived",
+      "matchRate": 90,
+      "iterationCount": 1,
+      "startedAt": "2026-03-05T05:32:52.501Z",
+      "archivedAt": "2026-03-08T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/api/"
     },
     "proposal-agent-v33": {
       "phase": "act",
@@ -125,9 +138,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-05T16:03:12.035Z",
-        "lastUpdated": "2026-03-05T16:03:12.035Z"
+        "lastUpdated": "2026-03-08T05:18:06.347Z"
       },
-      "lastFile": "c:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\hwpx_skill\\scripts\\fix_charpr.py"
+      "lastFile": "C:\\projects\\tenopa-proposer\\scripts\\hwpx_to_pptx.py"
     },
     "proposal-complete": {
       "phase": "do",
@@ -164,9 +177,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:19:49.667Z",
-        "lastUpdated": "2026-03-06T05:20:06.591Z"
+        "lastUpdated": "2026-03-08T00:55:27.954Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/app/services/phase_executor.py"
+      "lastFile": "c:/projects/tenopa-proposer/app/services/phase_executor.py"
     },
     "frontend": {
       "phase": "do",
@@ -177,9 +190,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:28:44.483Z",
-        "lastUpdated": "2026-03-07T07:30:25.635Z"
+        "lastUpdated": "2026-03-08T03:50:36.267Z"
       },
-      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\frontend\\lib\\hooks\\useProposals.ts"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\lib\\api.ts"
     },
     "supabase": {
       "phase": "do",
@@ -203,9 +216,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:30:02.981Z",
-        "lastUpdated": "2026-03-06T05:30:02.981Z"
+        "lastUpdated": "2026-03-07T23:44:10.102Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/login/page.tsx"
+      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\login\\page.tsx"
     },
     "onboarding": {
       "phase": "do",
@@ -229,9 +242,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:30:47.107Z",
-        "lastUpdated": "2026-03-06T05:30:47.107Z"
+        "lastUpdated": "2026-03-08T00:27:42.007Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/proposals/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/proposals/layout.tsx"
     },
     "new": {
       "phase": "do",
@@ -242,9 +255,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:31:21.064Z",
-        "lastUpdated": "2026-03-06T05:31:21.064Z"
+        "lastUpdated": "2026-03-08T03:44:23.715Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/proposals/new/page.tsx"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\new\\page.tsx"
     },
     "[id]": {
       "phase": "do",
@@ -255,7 +268,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:32:10.407Z",
-        "lastUpdated": "2026-03-07T09:15:14.063Z"
+        "lastUpdated": "2026-03-08T01:51:28.100Z"
       },
       "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\[id]\\page.tsx"
     },
@@ -287,16 +300,175 @@
     },
     "tenopa-proposer": {
       "phase": "do",
+      "matchRate": 97,
+      "iterationCount": 2,
+      "startedAt": "2026-03-07T10:31:38.389Z",
+      "archivedAt": "2026-03-08T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/tenopa-proposer/",
+      "phaseNumber": 3,
+      "lastFile": "c:\\projects\\tenopa-proposer\\app\\services\\presentation_generator.py",
+      "timestamps": {
+        "lastUpdated": "2026-03-08T07:12:40.357Z"
+      }
+    },
+    "resources": {
+      "phase": "do",
       "phaseNumber": 3,
       "matchRate": null,
       "iterationCount": 0,
       "requirements": [],
       "documents": {},
       "timestamps": {
-        "started": "2026-03-07T10:31:38.389Z",
-        "lastUpdated": "2026-03-07T10:31:38.389Z"
+        "started": "2026-03-08T00:28:55.765Z",
+        "lastUpdated": "2026-03-08T01:51:17.157Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\app\\config.py"
+      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\resources\\page.tsx"
+    },
+    "archive": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T00:29:29.828Z",
+        "lastUpdated": "2026-03-08T00:29:29.828Z"
+      },
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/archive/page.tsx"
+    },
+    "dashboard": {
+      "phase": "completed",
+      "phaseNumber": 4,
+      "matchRate": 100,
+      "iterationCount": 1,
+      "requirements": [],
+      "documents": {
+        "design": "docs/02-design/features/dashboard.design.md",
+        "analysis": "docs/03-analysis/dashboard.analysis.md",
+        "report": "docs/04-report/dashboard.report.md"
+      },
+      "timestamps": {
+        "started": "2026-03-08T01:03:09.294Z",
+        "lastUpdated": "2026-03-08T04:00:00.000Z",
+        "completed": "2026-03-08T04:00:00.000Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\dashboard\\page.tsx"
+    },
+    "proposal-platform-v2.1": {
+      "phase": "archived",
+      "matchRate": 97,
+      "iterationCount": 0,
+      "startedAt": "2026-03-08T00:00:00.000Z",
+      "archivedAt": "2026-03-08T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/proposal-platform-v2.1/"
+    },
+    "g2b_service.py": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:29:21.960Z",
+        "lastUpdated": "2026-03-08T02:29:21.960Z"
+      },
+      "lastFile": "C:/projects/tenopa-proposer/app/services/g2b_service.py"
+    },
+    "bid_fetcher.py": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:29:58.379Z",
+        "lastUpdated": "2026-03-08T02:29:58.379Z"
+      },
+      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_fetcher.py"
+    },
+    "bid_recommender.py": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:30:56.993Z",
+        "lastUpdated": "2026-03-08T02:30:56.993Z"
+      },
+      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_recommender.py"
+    },
+    "bids": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:51:53.372Z",
+        "lastUpdated": "2026-03-08T03:45:14.615Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\page.tsx"
+    },
+    "[bidNo]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:54:03.996Z",
+        "lastUpdated": "2026-03-08T03:44:02.739Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\[bidNo]\\page.tsx"
+    },
+    "settings": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T02:55:29.062Z",
+        "lastUpdated": "2026-03-08T04:51:37.939Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\settings\\page.tsx"
+    },
+    "bid-recommendation": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 0,
+      "startedAt": "2026-03-08T00:00:00.000Z",
+      "archivedAt": "2026-03-08T08:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/bid-recommendation/"
+    },
+    "presentation-generator": {
+      "phase": "archived",
+      "matchRate": 95,
+      "iterationCount": 0,
+      "startedAt": "2026-03-08T00:00:00.000Z",
+      "archivedAt": "2026-03-08T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/presentation-generator/"
+    },
+    "unit": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-08T05:00:49.397Z",
+        "lastUpdated": "2026-03-08T05:05:06.463Z"
+      },
+      "lastFile": "C:\\projects\\tenopa-proposer\\tests\\unit\\test_bid_recommendation.py"
     }
   },
   "pipeline": {
@@ -307,7 +479,7 @@
   "session": {
     "startedAt": "2026-03-05T04:49:56.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-03-07T10:31:57.952Z"
+    "lastActivity": "2026-03-08T07:12:40.357Z"
   },
   "history": [
     {
@@ -1472,6 +1644,1206 @@
     {
       "timestamp": "2026-03-07T10:31:57.951Z",
       "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T22:46:47.367Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T23:43:06.367Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T23:44:10.102Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T23:44:26.383Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T23:45:01.993Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-07T23:45:39.102Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:24:39.716Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:24:47.918Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:24:57.824Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:25:05.742Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:26:45.822Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:27:02.985Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:27:33.913Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:27:42.008Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:28:55.765Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:29:29.828Z",
+      "feature": "archive",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:36:24.007Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:36:29.930Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:36:46.607Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:36:54.428Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:37:04.330Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:37:31.984Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:37:50.757Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:38:01.903Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:38:08.885Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:38:20.664Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:38:49.441Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:48:16.470Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:48:21.695Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:48:29.331Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:50:02.694Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:51:49.857Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:51:55.347Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:52:12.807Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:52:18.605Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:54:42.082Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:54:47.188Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:54:52.945Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:54:54.262Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:00.294Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:01.849Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:07.313Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:08.900Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:20.142Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:22.039Z",
+      "feature": "phase_executor.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:27.954Z",
+      "feature": "phase_executor.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:29.397Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:38.520Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:41.502Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:55:52.102Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:56:04.196Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:56:32.346Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:56:39.064Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:56:47.095Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:56:53.188Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:57:10.159Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:57:20.735Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:57:44.462Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T00:57:58.210Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:01.449Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:27.171Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:35.684Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:37.648Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:42.210Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:48.271Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:01:53.707Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:03:09.294Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:27:29.892Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:27:40.478Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:27:46.935Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:27:57.519Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:33:42.408Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:33:47.163Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:33:54.002Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:34:02.306Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:24.865Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:30.989Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:35.480Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:44.082Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:51.737Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:44:56.147Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:45:14.130Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:45:19.387Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:45:26.005Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:45:33.672Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:45:45.233Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:46:10.165Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:48:38.045Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:48:44.192Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:48:55.624Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:49:03.719Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:51:17.157Z",
+      "feature": "resources",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:51:23.023Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T01:51:28.100Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:29:01.105Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:29:21.960Z",
+      "feature": "g2b_service.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:29:58.379Z",
+      "feature": "bid_fetcher.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:30:56.993Z",
+      "feature": "bid_recommender.py",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:32:17.486Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:32:30.832Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:32:35.166Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:41:36.326Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:41:42.034Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:41:58.136Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:41:59.396Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:42:09.217Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:43:13.428Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:43:52.848Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:44:03.043Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:51:27.891Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:51:46.266Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:51:53.372Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:52:54.273Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:53:43.026Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:54:03.996Z",
+      "feature": "[bidNo]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:55:29.062Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:55:45.236Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T02:55:52.169Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:31:15.083Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:31:30.854Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:31:37.808Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:31:41.871Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:31:52.893Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:32:16.583Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:37:54.255Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:38:00.967Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:41:46.186Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:41:50.653Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:41:56.098Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:42:00.199Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:42:05.034Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:42:09.358Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:02.739Z",
+      "feature": "[bidNo]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:09.037Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:17.018Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:23.715Z",
+      "feature": "new",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:30.621Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:36.712Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:47.790Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:44:55.861Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:02.201Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:04.319Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:09.972Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:14.615Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:16.935Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:27.055Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:29.920Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:33.555Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:50.856Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:50.875Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:45:59.150Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:05.155Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:11.166Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:12.543Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:27.809Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:31.680Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:33.744Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:40.979Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:46:55.770Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:47:07.420Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:47:13.431Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:49:46.237Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:11.031Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:15.542Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:26.920Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:36.267Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:47.341Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:50:54.931Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:51:01.899Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:51:16.080Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:52:00.972Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:52:11.005Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:52:22.613Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T03:52:37.245Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T04:37:19.945Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T04:37:35.932Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T04:51:37.940Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T04:54:17.305Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T04:57:56.131Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:00:03.282Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:00:17.806Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:00:49.398Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:05:06.463Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:17:22.832Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:17:41.560Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:17:51.010Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T05:18:06.347Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T06:42:59.404Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T06:43:36.178Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:03:03.313Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:03:07.146Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:03:12.178Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:03:17.866Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:10:37.814Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:11:00.976Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:11:05.756Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:11:10.903Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:12:03.598Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:12:17.987Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T07:12:40.357Z",
+      "feature": "tenopa-proposer",
       "phase": "do",
       "action": "updated"
     }

@@ -1,10 +1,7 @@
 "use client";
 
 /**
- * F1: 로그인 페이지
- * - 이메일/패스워드 로그인
- * - Magic Link 로그인
- * - 신규 가입 → /onboarding
+ * F1: 로그인 페이지 — Supabase 스타일 다크 테마
  */
 
 import { useState } from "react";
@@ -65,40 +62,72 @@ export default function LoginPage() {
     }
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        {/* 로고 */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Tenopa Proposer</h1>
-          <p className="mt-1 text-sm text-gray-500">AI 제안서 자동 생성 플랫폼</p>
-        </div>
+  const TAB_LABELS: Record<Mode, string> = {
+    login: "로그인",
+    signup: "회원가입",
+    magic: "Magic Link",
+  };
 
-        {/* 카드 */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+  return (
+    <div className="min-h-screen flex bg-[#0f0f0f]">
+      {/* 좌측 브랜드 패널 */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 border-r border-[#262626]">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-sm">T</div>
+          <span className="text-[#ededed] font-semibold text-sm">Tenopa Proposer</span>
+        </div>
+        <div>
+          <blockquote className="text-[#ededed] text-xl font-medium leading-relaxed mb-4">
+            "RFP 하나만 업로드하면<br />AI가 제안서 전체를 작성합니다."
+          </blockquote>
+          <p className="text-[#8c8c8c] text-sm">5단계 Claude AI 파이프라인 · DOCX + PPTX + HWPX 자동 생성</p>
+        </div>
+        <p className="text-[#8c8c8c] text-xs">© 2026 Technovation Partners</p>
+      </div>
+
+      {/* 우측 로그인 폼 */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-sm">
+          {/* 모바일 로고 */}
+          <div className="flex items-center gap-2 mb-8 lg:hidden">
+            <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-sm">T</div>
+            <span className="text-[#ededed] font-semibold text-sm">Tenopa Proposer</span>
+          </div>
+
+          <h2 className="text-xl font-semibold text-[#ededed] mb-1">
+            {mode === "login" ? "로그인" : mode === "signup" ? "계정 만들기" : "Magic Link"}
+          </h2>
+          <p className="text-sm text-[#8c8c8c] mb-6">
+            {mode === "login"
+              ? "계정에 로그인하세요"
+              : mode === "signup"
+              ? "새 계정을 만드세요"
+              : "이메일로 링크를 받아 로그인"}
+          </p>
+
           {/* 탭 */}
-          <div className="flex rounded-lg bg-gray-100 p-1 mb-6">
+          <div className="flex border border-[#262626] rounded-lg p-0.5 mb-6 bg-[#111111]">
             {(["login", "signup", "magic"] as Mode[]).map((m) => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setMessage(null); }}
-                className={`flex-1 text-sm py-1.5 rounded-md transition-colors font-medium ${
+                className={`flex-1 text-xs py-1.5 rounded-md transition-colors font-medium ${
                   mode === m
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-[#1c1c1c] text-[#ededed] shadow-sm"
+                    : "text-[#8c8c8c] hover:text-[#ededed]"
                 }`}
               >
-                {m === "login" ? "로그인" : m === "signup" ? "회원가입" : "Magic Link"}
+                {TAB_LABELS[m]}
               </button>
             ))}
           </div>
 
           {message && (
             <div
-              className={`mb-4 rounded-lg px-4 py-3 text-sm ${
+              className={`mb-4 rounded-lg px-4 py-3 text-sm border ${
                 message.type === "error"
-                  ? "bg-red-50 text-red-700 border border-red-200"
-                  : "bg-green-50 text-green-700 border border-green-200"
+                  ? "bg-red-950/40 text-red-400 border-red-900"
+                  : "bg-emerald-950/40 text-emerald-400 border-emerald-900"
               }`}
             >
               {message.text}
@@ -107,26 +136,26 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">이메일</label>
+              <label className="block text-sm font-medium text-[#ededed] mb-1.5">이메일</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="you@example.com"
+                className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
+                placeholder="you@company.com"
               />
             </div>
 
             {mode !== "magic" && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
+                <label className="block text-sm font-medium text-[#ededed] mb-1.5">비밀번호</label>
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
                   placeholder="8자 이상"
                   minLength={8}
                 />
@@ -136,7 +165,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+              className="w-full bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-40 disabled:cursor-not-allowed text-black font-semibold rounded-lg py-2.5 text-sm transition-colors"
             >
               {loading
                 ? "처리 중..."

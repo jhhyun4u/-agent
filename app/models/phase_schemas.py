@@ -71,6 +71,26 @@ class Phase3Artifact(PhaseArtifact):
         default_factory=dict,
         description="제안서 전체 관통 Win Theme (메시지, 근거, 3축 증거)"
     )
+    alternatives_considered: list[dict] = Field(
+        default_factory=list,
+        description="접근법 대안 비교 (approach, our_approach, why_better)"
+    )
+    risks_mitigations: list[dict] = Field(
+        default_factory=list,
+        description="리스크-대응방안 표 (risk, probability, impact, mitigation)"
+    )
+    implementation_checklist: list[dict] = Field(
+        default_factory=list,
+        description="단계별 추진 체계 (phase, duration, deliverables, milestones)"
+    )
+    logic_model: dict = Field(
+        default_factory=dict,
+        description="사업 논리 모델 (inputs→activities→outputs→단기성과→장기성과)"
+    )
+    objection_responses: list[dict] = Field(
+        default_factory=list,
+        description="평가위원 예상 반론 및 선제 대응 (objection/acknowledge/response/evidence)"
+    )
 
 
 class Phase4Artifact(PhaseArtifact):
@@ -91,3 +111,6 @@ class Phase5Artifact(PhaseArtifact):
     executive_summary: str = ""
     win_probability: str = ""
     detailed_scores: dict = Field(default_factory=dict, description="항목별 세부 점수")
+    alternatives_quality: str = Field(default="", description="대안 비교 설득력 평가")
+    risks_coverage: str = Field(default="", description="리스크 대응 완성도 평가")
+    checklist_specificity: str = Field(default="", description="추진 체계 구체성 평가")

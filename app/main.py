@@ -14,6 +14,7 @@ import logging
 
 from app.config import settings
 from app.api.routes import router
+from app.api.routes_bids import router as bids_router
 
 logging.basicConfig(level=settings.log_level)
 logger = logging.getLogger(__name__)
@@ -66,6 +67,7 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api")
+app.include_router(bids_router)
 
 
 @app.get("/health")

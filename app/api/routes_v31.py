@@ -5,7 +5,9 @@ import os
 import uuid
 from typing import List, Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFile, File
+import json as _json
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, HTTPException, UploadFile, File
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
@@ -60,6 +62,8 @@ async def generate_proposal_v31(
     rfp_file: Optional[UploadFile] = File(None),
     express_mode: bool = False,
     team_id: Optional[str] = None,
+    section_ids: Optional[str] = None,       # JSON 배열 문자열 ex) '["uuid1","uuid2"]'
+    form_template_id: Optional[str] = None,
     current_user=Depends(get_current_user),
 ):
     """v3.4 제안서 세션 초기화"""
@@ -86,6 +90,14 @@ async def generate_proposal_v31(
     else:
         raise HTTPException(status_code=400, detail="RFP 콘텐츠가 필요합니다.")
 
+    # section_ids JSON 파싱
+    parsed_section_ids: Optional[List[str]] = None
+    if section_ids:
+        try:
+            parsed_section_ids = _json.loads(section_ids)
+        except (ValueError, TypeError):
+            parsed_section_ids = None
+
     try:
         session_manager.create_session(
             proposal_id=proposal_id,
@@ -94,6 +106,8 @@ async def generate_proposal_v31(
                 "client_name": client_name,
                 "owner_id": owner_id,
                 "team_id": team_id,
+                "section_ids": parsed_section_ids,
+                "form_template_id": form_template_id or None,
                 "phases_completed": 0,
                 "proposal_state": {
                     "rfp_title": rfp_title,
@@ -409,6 +423,141 @@ async def run_single_phase(proposal_id: str, phase_num: int, current_user=Depend
         session_manager.update_session(proposal_id, {"status": "failed", "error": str(e)})
         logger.error(f"[{proposal_id}] Phase {phase_num} 실패: {e}")
         raise HTTPException(status_code=500, detail=f"Phase {phase_num} 실행 중 오류가 발생했습니다.")
+
+
+@router.get("/proposals/{proposal_id}/versions")
+async def get_proposal_versions(proposal_id: str, current_user=Depends(get_current_user)):
+    """제안서 버전 목록 조회 (같은 패밀리의 모든 버전)"""
+    from app.utils.supabase_client import get_async_client
+
+    client = await get_async_client()
+
+    # 루트 찾기: parent_id가 NULL인 조상까지 올라감
+    current_id = proposal_id
+    while True:
+        resp = client.table("proposals").select("id, parent_id").eq("id", current_id).single().execute()
+        if not resp.data:
+            raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
+        if resp.data.get("parent_id") is None:
+            root_id = current_id
+            break
+        current_id = resp.data["parent_id"]
+
+    # 루트 자신 + 루트의 직접/간접 자식 모두 조회
+    # (parent_id = root_id 조건은 직계 자식만 포함하므로, 전체 패밀리를 위해 재귀 없이
+    #  root_id를 공유하는 방식으로 단순화: root 포함하고 parent_id 체인 전체 수집)
+    all_ids: list[str] = [root_id]
+    queue: list[str] = [root_id]
+    while queue:
+        parent_batch = queue
+        queue = []
+        children_resp = (
+            client.table("proposals")
+            .select("id")
+            .in_("parent_id", parent_batch)
+            .execute()
+        )
+        for row in (children_resp.data or []):
+            cid = row["id"]
+            if cid not in all_ids:
+                all_ids.append(cid)
+                queue.append(cid)
+
+    versions_resp = (
+        client.table("proposals")
+        .select("id, title, version, status, created_at, phases_completed")
+        .in_("id", all_ids)
+        .order("version", desc=False)
+        .execute()
+    )
+    return {"versions": versions_resp.data or []}
+
+
+@router.post("/proposals/{proposal_id}/new-version", status_code=201)
+async def create_new_version(proposal_id: str, current_user=Depends(get_current_user)):
+    """기존 제안서 기반으로 새 버전 생성 (실행은 /execute로 별도 호출)"""
+    from app.utils.supabase_client import get_async_client
+
+    client = await get_async_client()
+
+    # 소스 제안서 조회
+    src_resp = (
+        client.table("proposals")
+        .select("id, rfp_title, client_name, owner_id, team_id, section_ids, parent_id, version")
+        .eq("id", proposal_id)
+        .single()
+        .execute()
+    )
+    if not src_resp.data:
+        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
+    src = src_resp.data
+
+    # 루트 ID 결정
+    root_id = proposal_id if src.get("parent_id") is None else src["parent_id"]
+
+    # 같은 패밀리 최대 version 조회
+    family_resp = (
+        client.table("proposals")
+        .select("version")
+        .or_(f"id.eq.{root_id},parent_id.eq.{root_id}")
+        .order("version", desc=True)
+        .limit(1)
+        .execute()
+    )
+    max_version = (family_resp.data[0]["version"] if family_resp.data else src.get("version", 1)) or 1
+    new_version_num = max_version + 1
+
+    # rfp_content는 세션에서 복사
+    rfp_content = ""
+    try:
+        session = await session_manager.aget_session(proposal_id)
+        rfp_content = session.get("proposal_state", {}).get("rfp_content", "")
+    except Exception:
+        pass
+
+    new_id = str(uuid.uuid4())
+
+    # DB에 새 행 삽입
+    insert_data = {
+        "id": new_id,
+        "rfp_title": src.get("rfp_title", ""),
+        "client_name": src.get("client_name", ""),
+        "owner_id": src.get("owner_id", current_user.id),
+        "team_id": src.get("team_id"),
+        "section_ids": src.get("section_ids"),
+        "parent_id": proposal_id,
+        "version": new_version_num,
+        "status": "initialized",
+        "phases_completed": 0,
+    }
+    ins_resp = client.table("proposals").insert(insert_data).execute()
+    if not ins_resp.data:
+        raise HTTPException(status_code=500, detail="새 버전 생성에 실패했습니다.")
+
+    # 세션 초기화 (rfp_content 포함)
+    try:
+        session_manager.create_session(
+            proposal_id=new_id,
+            initial_data={
+                "rfp_title": src.get("rfp_title", ""),
+                "client_name": src.get("client_name", ""),
+                "owner_id": src.get("owner_id", current_user.id),
+                "team_id": src.get("team_id"),
+                "phases_completed": 0,
+                "proposal_state": {
+                    "rfp_title": src.get("rfp_title", ""),
+                    "client_name": src.get("client_name", ""),
+                    "rfp_content": rfp_content,
+                    "express_mode": False,
+                },
+            },
+            session_type="v3.1",
+        )
+    except Exception as e:
+        logger.warning(f"새 버전 세션 생성 실패 (DB 행은 생성됨): {e}")
+
+    logger.info(f"새 버전 생성: {new_id} (version={new_version_num}, parent={proposal_id})")
+    return {"proposal_id": new_id, "version": new_version_num, "status": "initialized"}
 
 
 @router.get("/proposals/{proposal_id}/phase/{phase_num}")

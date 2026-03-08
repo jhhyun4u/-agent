@@ -440,6 +440,75 @@ class PhaseExecutor:
         self._bg_task(self._log_usage(3, self.model, r.usage.input_tokens, r.usage.output_tokens))
         return artifact
 
+    async def _load_section_context(self) -> str:
+        """제안서에 연결된 섹션 라이브러리 내용을 로드"""
+        try:
+            client = await get_async_client()
+            res = await (
+                client.table("proposals")
+                .select("section_ids")
+                .eq("id", self.proposal_id)
+                .maybe_single()
+                .execute()
+            )
+            if not res.data or not res.data.get("section_ids"):
+                return ""
+            section_ids = res.data["section_ids"]
+            if not section_ids:
+                return ""
+            sections_res = await (
+                client.table("sections")
+                .select("title,category,content")
+                .in_("id", section_ids)
+                .execute()
+            )
+            if not sections_res.data:
+                return ""
+            lines = ["\n\n## 우리 회사 참고 자료 (섹션 라이브러리)\n"]
+            for s in sections_res.data:
+                lines.append(f"### [{s['category']}] {s['title']}\n{s['content']}\n")
+            return "\n".join(lines)
+        except Exception as e:
+            logger.warning(f"[{self.proposal_id}] 섹션 컨텍스트 로드 실패 (무시): {e}")
+            return ""
+
+    async def _load_form_template_context(self) -> str:
+        """form_template_id 기반 서식 컨텍스트 로드"""
+        try:
+            client = await get_async_client()
+            res = (
+                await client.table("proposals")
+                .select("form_template_id")
+                .eq("id", self.proposal_id)
+                .maybe_single()
+                .execute()
+            )
+            if not res.data or not res.data.get("form_template_id"):
+                return ""
+            template_id = res.data["form_template_id"]
+            t_res = (
+                await client.table("form_templates")
+                .select("title, agency, category, description")
+                .eq("id", template_id)
+                .maybe_single()
+                .execute()
+            )
+            if not t_res.data:
+                return ""
+            t = t_res.data
+            lines = ["\n\n## 서식 요구사항"]
+            if t.get("agency"):
+                lines.append(f"발주 기관: {t['agency']}")
+            if t.get("category"):
+                lines.append(f"서식 유형: {t['category']}")
+            if t.get("description"):
+                lines.append(f"서식 설명: {t['description']}")
+            lines.append("위 서식의 구조와 항목에 맞춰 제안서를 작성하세요.")
+            return "\n".join(lines)
+        except Exception as e:
+            logger.warning("서식 컨텍스트 로드 실패 (무시): %s", e)
+            return ""
+
     async def phase4_implement(self, a3, a1, improvement_instructions=None):
         self._update_status("phase_4_implement")
         improvement_prompt = self._build_improvement_prompt(improvement_instructions, 4)
@@ -466,6 +535,14 @@ class PhaseExecutor:
         )
         if improvement_prompt:
             user_prompt += "\n\n개선 지침을 반영해주세요:\n" + improvement_prompt
+
+        section_ctx = await self._load_section_context()
+        if section_ctx:
+            user_prompt += section_ctx
+
+        template_ctx = await self._load_form_template_context()
+        if template_ctx:
+            user_prompt += template_ctx
 
         r = await self.client.messages.create(
             model=self.model, max_tokens=8192, system=PHASE4_SYSTEM,

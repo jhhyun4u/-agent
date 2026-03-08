@@ -222,6 +222,10 @@ class ProposalSessionManager:
                 "current_phase": None,
                 "phases_completed": 0,
             }
+            if session.get("section_ids") is not None:
+                payload["section_ids"] = session["section_ids"]
+            if session.get("form_template_id") is not None:
+                payload["form_template_id"] = session["form_template_id"]
             # owner_id가 없으면 삽입 스킵 (RLS 위반 방지)
             if not payload["owner_id"]:
                 logger.debug(f"_db_create 스킵 (owner_id 없음): {proposal_id}")

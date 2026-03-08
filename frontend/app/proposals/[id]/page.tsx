@@ -1,41 +1,169 @@
 "use client";
 
 /**
- * F5 + F6: 제안서 상세 페이지
- * - PhaseProgress: Supabase Realtime 실시간 진행 상태
- * - ResultViewer: 완료 시 요약 + 다운로드
- * - PhaseRetryButton: 실패 시 재시도
- * - CommentThread: 댓글 목록 + 작성
- * - WinResult: 수주결과 저장
+ * F5 + F6: 제안서 상세 페이지 (Phase B — Dark Theme)
+ * - Header: 제목, 상태 배지, 버전 드롭다운
+ * - Phase 진행 대시보드: 가로 스텝 + 진행률 바
+ * - 탭: 결과물 / 댓글 / 수주결과
+ * - Realtime 상태 구독: usePhaseStatus
  */
 
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, Comment_ } from "@/lib/api";
+import { api, Comment_, ProposalSummary } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
 
+// ── 상수 ─────────────────────────────────────────────────────────────
+
 const PHASES = [
-  { n: 1, name: "RFP 분석 · 나라장터 조회" },
-  { n: 2, name: "경쟁사 분석 · 가격 전략" },
-  { n: 3, name: "제안 전략 수립" },
-  { n: 4, name: "제안서 본문 작성" },
-  { n: 5, name: "품질 검증 · 문서 생성" },
+  { n: 1, name: "RFP분석" },
+  { n: 2, name: "경쟁분석" },
+  { n: 3, name: "전략수립" },
+  { n: 4, name: "본문작성" },
+  { n: 5, name: "품질검증" },
 ];
 
-const PHASE_MINUTES = [2, 3, 3, 5, 2]; // 각 Phase 예상 소요시간
+type Tab = "result" | "comments" | "win" | "compare";
+
+// ── 색상 토큰 (Tailwind arbitrary) ────────────────────────────────────
+// bg: #0f0f0f  surface: #111111  card: #1c1c1c  border: #262626
+// text: #ededed  muted: #8c8c8c  accent: #3ecf8e
+
+// ── 유틸 ─────────────────────────────────────────────────────────────
+
+function StatusBadge({ status }: { status: string }) {
+  if (status === "processing" || status === "initialized") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/15 text-blue-400 border border-blue-500/30 animate-pulse">
+        <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+        처리중
+      </span>
+    );
+  }
+  if (status === "completed") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#3ecf8e]/15 text-[#3ecf8e] border border-[#3ecf8e]/30">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e]" />
+        완료
+      </span>
+    );
+  }
+  if (status === "failed") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/15 text-red-400 border border-red-500/30">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+        실패
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#262626] text-[#8c8c8c] border border-[#262626]">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#8c8c8c]" />
+      초기화
+    </span>
+  );
+}
+
+// ── 메인 페이지 ───────────────────────────────────────────────────────
 
 export default function ProposalDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const { status, loading } = usePhaseStatus(id);
+
+  // 탭
+  const [activeTab, setActiveTab] = useState<Tab>("result");
+
+  // 버전 드롭다운
+  const [versions, setVersions] = useState<ProposalSummary[]>([]);
+  const [versionOpen, setVersionOpen] = useState(false);
+  const versionRef = useRef<HTMLDivElement>(null);
+
+  // 댓글
   const [comments, setComments] = useState<Comment_[]>([]);
   const [newComment, setNewComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+
+  // 다운로드 토큰 + result 추가 데이터
+  const [downloadToken, setDownloadToken] = useState("");
+  const [resultData, setResultData] = useState<{
+    docx_path?: string;
+    pptx_path?: string;
+    hwpx_path?: string;
+  } | null>(null);
+
+  // 수주결과
   const [winForm, setWinForm] = useState({ win_result: "", bid_amount: "", notes: "" });
   const [winSaved, setWinSaved] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState("");
-  const [downloadToken, setDownloadToken] = useState("");
+
+  // 버전 비교
+  const [compareVersionId, setCompareVersionId] = useState<string | null>(null);
+  const [compareData, setCompareData] = useState<{ artifacts: Record<string, unknown> } | null>(null);
+  const [compareLoading, setCompareLoading] = useState(false);
+  const [comparePhase, setComparePhase] = useState(1);
+
+  // ── 초기 데이터 로드 ───────────────────────────────────────────────
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => {
+      setCurrentUserId(data.user?.id ?? "");
+    });
+    createClient().auth.getSession().then(({ data }) => {
+      setDownloadToken(data.session?.access_token ?? "");
+    });
+  }, []);
+
+  // 버전 목록
+  const fetchVersions = useCallback(async () => {
+    try {
+      const res = await (api.proposals as any).versions(id);
+      setVersions(res ?? []);
+    } catch {
+      // 아직 API 미구현 시 무시
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchVersions();
+  }, [fetchVersions]);
+
+  // result 데이터 (완료 시)
+  useEffect(() => {
+    if (status?.status === "completed") {
+      api.proposals.result(id).then((r) => {
+        setResultData(r as any);
+      }).catch(() => {});
+    }
+  }, [id, status?.status]);
+
+  // 비교 버전 result 로드
+  useEffect(() => {
+    if (!compareVersionId) {
+      setCompareData(null);
+      return;
+    }
+    setCompareLoading(true);
+    api.proposals.result(compareVersionId)
+      .then((r) => setCompareData(r as any))
+      .catch(() => setCompareData(null))
+      .finally(() => setCompareLoading(false));
+  }, [compareVersionId]);
+
+  // 드롭다운 외부 클릭 닫기
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (versionRef.current && !versionRef.current.contains(e.target as Node)) {
+        setVersionOpen(false);
+      }
+    }
+    if (versionOpen) document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [versionOpen]);
+
+  // ── 댓글 ──────────────────────────────────────────────────────────
 
   const fetchComments = useCallback(async () => {
     try {
@@ -47,25 +175,6 @@ export default function ProposalDetailPage() {
   useEffect(() => {
     fetchComments();
   }, [fetchComments]);
-
-  useEffect(() => {
-    createClient().auth.getUser().then(({ data }) => {
-      setCurrentUserId(data.user?.id ?? "");
-    });
-    // 다운로드용 토큰 준비
-    createClient().auth.getSession().then(({ data }) => {
-      setDownloadToken(data.session?.access_token ?? "");
-    });
-  }, []);
-
-  async function handleRetry() {
-    try {
-      await api.proposals.execute(id);
-      // Realtime이 DB 변경을 자동 감지하므로 별도 refresh 불필요
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "재시도 실패");
-    }
-  }
 
   async function handleComment(e: React.FormEvent) {
     e.preventDefault();
@@ -92,6 +201,8 @@ export default function ProposalDetailPage() {
     }
   }
 
+  // ── 수주결과 ───────────────────────────────────────────────────────
+
   async function handleSaveWinResult() {
     if (!winForm.win_result) return;
     try {
@@ -106,13 +217,52 @@ export default function ProposalDetailPage() {
     }
   }
 
+  // ── Phase 재시작 ───────────────────────────────────────────────────
+
+  async function handleRetryFromPhase(phaseN: number) {
+    try {
+      const res = await (api.proposals as any).retryFromPhase(id, phaseN);
+      if (res?.proposal_id) router.push(`/proposals/${res.proposal_id}`);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "재시작 실패");
+    }
+  }
+
+  // ── 새 버전 ────────────────────────────────────────────────────────
+
+  async function handleNewVersion() {
+    setVersionOpen(false);
+    try {
+      const res = await (api.proposals as any).newVersion(id);
+      if (res?.proposal_id) router.push(`/proposals/${res.proposal_id}`);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "새 버전 생성 실패");
+    }
+  }
+
+  // ── 다운로드 URL ───────────────────────────────────────────────────
+
   function downloadUrl(type: "docx" | "pptx" | "hwpx") {
     return `${process.env.NEXT_PUBLIC_API_URL}/v3.1/proposals/${id}/download/${type}?token=${downloadToken}`;
   }
 
+  // ── 버전 라벨 계산 ─────────────────────────────────────────────────
+
+  function versionLabel(idx: number) {
+    return `v${idx + 1}`;
+  }
+
+  function currentVersionLabel() {
+    const idx = versions.findIndex((v) => v.id === id);
+    if (idx === -1) return versions.length > 0 ? `v${versions.length}` : "v1";
+    return versionLabel(idx);
+  }
+
+  // ── 로딩 ──────────────────────────────────────────────────────────
+
   if (loading || !status) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-400">
+      <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-[#8c8c8c] text-sm">
         불러오는 중...
       </div>
     );
@@ -121,155 +271,414 @@ export default function ProposalDetailPage() {
   const isProcessing = status.status === "processing" || status.status === "initialized";
   const isCompleted = status.status === "completed";
   const isFailed = status.status === "failed";
+  const progressPct = Math.round((status.phases_completed / 5) * 100);
+  const failedPhaseN = status.phases_completed + 1;
+
+  // ── 렌더 ──────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <div className="min-h-screen bg-[#0f0f0f] text-[#ededed]">
+
+      {/* ── 헤더 ── */}
+      <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <Link href="/proposals" className="text-gray-400 hover:text-gray-700 text-sm">
+          <Link
+            href="/proposals"
+            className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors shrink-0"
+          >
             ← 목록
           </Link>
-          <h1 className="text-base font-semibold text-gray-900 truncate flex-1">
+
+          <h1 className="text-sm font-semibold text-[#ededed] truncate flex-1 min-w-0">
             {status.rfp_title || "제안서"}
           </h1>
-          <span className="text-xs text-gray-400">{status.client_name}</span>
+
+          <StatusBadge status={status.status} />
+
+          {/* 버전 드롭다운 */}
+          <div className="relative shrink-0" ref={versionRef}>
+            <button
+              onClick={() => setVersionOpen((o) => !o)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1c1c1c] border border-[#262626] text-xs text-[#ededed] hover:border-[#3ecf8e]/40 transition-colors"
+            >
+              {currentVersionLabel()}
+              <svg className={`w-3 h-3 text-[#8c8c8c] transition-transform ${versionOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {versionOpen && (
+              <div className="absolute right-0 mt-1.5 w-40 bg-[#1c1c1c] border border-[#262626] rounded-xl shadow-xl overflow-hidden z-30">
+                <div className="py-1">
+                  {versions.length === 0 && (
+                    <p className="px-3 py-2 text-xs text-[#8c8c8c]">버전 없음</p>
+                  )}
+                  {versions.map((v, idx) => (
+                    <button
+                      key={v.id}
+                      onClick={() => {
+                        setVersionOpen(false);
+                        router.push(`/proposals/${v.id}`);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs transition-colors ${
+                        v.id === id
+                          ? "text-[#3ecf8e] bg-[#3ecf8e]/10"
+                          : "text-[#ededed] hover:bg-[#262626]"
+                      }`}
+                    >
+                      {versionLabel(idx)}
+                      {v.id === id && (
+                        <span className="ml-1 text-[#8c8c8c]">(현재)</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                <div className="border-t border-[#262626]">
+                  <button
+                    onClick={handleNewVersion}
+                    className="w-full text-left px-3 py-2 text-xs text-[#3ecf8e] hover:bg-[#3ecf8e]/10 transition-colors"
+                  >
+                    + 새 버전
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-3xl mx-auto px-6 py-6 space-y-5">
 
-        {/* ── Phase 진행 상태 ── */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="font-semibold text-gray-900 mb-4">진행 상태</h2>
-
-          {isFailed && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-              <p className="text-sm text-red-700 font-medium">생성 실패</p>
-              {status.error && <p className="text-xs text-red-600 mt-1">{status.error}</p>}
+        {/* ── Phase 진행 대시보드 ── */}
+        <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-[#ededed]">Phase 진행 대시보드</h2>
+            {isFailed && (
               <button
-                onClick={handleRetry}
-                className="mt-3 bg-red-600 hover:bg-red-700 text-white text-xs font-medium px-4 py-1.5 rounded-lg transition-colors"
+                onClick={() => handleRetryFromPhase(failedPhaseN)}
+                className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
               >
-                Phase {status.phases_completed + 1}부터 재시도
+                Phase {failedPhaseN}부터 재시작
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div className="space-y-3">
-            {PHASES.map((phase) => {
+          {/* 스텝 */}
+          <div className="flex items-start gap-1 mb-5">
+            {PHASES.map((phase, idx) => {
               const done = status.phases_completed >= phase.n;
-              const active =
-                isProcessing && status.phases_completed === phase.n - 1;
+              const active = isProcessing && status.phases_completed === phase.n - 1;
+              const isLast = idx === PHASES.length - 1;
+
               return (
-                <div key={phase.n} className="flex items-center gap-3">
+                <div key={phase.n} className="flex-1 flex flex-col items-center gap-1.5 relative">
+                  {/* 연결선 */}
+                  {!isLast && (
+                    <div
+                      className={`absolute top-4 left-1/2 right-0 h-px -translate-y-1/2 ${
+                        done ? "bg-[#3ecf8e]/60" : "bg-[#262626]"
+                      }`}
+                      style={{ left: "calc(50% + 16px)", right: "-50%" }}
+                    />
+                  )}
+
+                  {/* 원 */}
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 z-10 transition-all ${
                       done
-                        ? "bg-green-500 text-white"
+                        ? "bg-[#3ecf8e] text-[#0f0f0f]"
                         : active
-                        ? "bg-blue-500 text-white animate-pulse"
-                        : "bg-gray-100 text-gray-400"
+                        ? "bg-[#3ecf8e]/20 text-[#3ecf8e] border-2 border-[#3ecf8e] animate-pulse"
+                        : isFailed && phase.n === failedPhaseN
+                        ? "bg-red-500/20 text-red-400 border-2 border-red-500/50"
+                        : "bg-[#262626] text-[#8c8c8c]"
                     }`}
                   >
-                    {done ? "✓" : phase.n}
-                  </div>
-                  <div className="flex-1">
-                    <p className={`text-sm ${done ? "text-gray-700" : active ? "text-blue-700 font-medium" : "text-gray-400"}`}>
-                      {phase.name}
-                    </p>
-                    {active && (
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        처리 중 · 예상 {PHASE_MINUTES[phase.n - 1]}분
-                      </p>
+                    {done ? (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : isFailed && phase.n === failedPhaseN ? (
+                      "!"
+                    ) : (
+                      phase.n
                     )}
                   </div>
+
+                  {/* 이름 */}
+                  <span
+                    className={`text-[10px] text-center leading-tight ${
+                      done
+                        ? "text-[#3ecf8e]"
+                        : active
+                        ? "text-[#ededed] font-medium"
+                        : "text-[#8c8c8c]"
+                    }`}
+                  >
+                    {phase.name}
+                  </span>
+
+                  {/* 상태 아이콘 */}
+                  <span className="text-[10px]">
+                    {done ? "✅" : active ? "🔄" : "⏳"}
+                  </span>
                 </div>
               );
             })}
           </div>
 
+          {/* 진행률 바 */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[#8c8c8c]">전체 진행률</span>
+              <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
+            </div>
+            <div className="h-2 bg-[#262626] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          </div>
+
+          {isFailed && status.error && (
+            <div className="mt-3 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+              <p className="text-xs text-red-400">{status.error}</p>
+            </div>
+          )}
+
           {isProcessing && (
-            <p className="mt-4 text-xs text-gray-400 text-center">
+            <p className="mt-3 text-xs text-[#8c8c8c] text-center">
               완료 시 이메일로 알림을 보내드립니다.
             </p>
           )}
         </section>
 
-        {/* ── 결과 뷰어 ── */}
-        {isCompleted && (
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">생성 결과</h2>
+        {/* ── 탭 네비게이션 ── */}
+        <div className="border-b border-[#262626]">
+          <div className="flex">
+            {(
+              [
+                { key: "result" as Tab, label: "결과물" },
+                { key: "comments" as Tab, label: `댓글 ${comments.length > 0 ? `(${comments.length})` : ""}` },
+                { key: "win" as Tab, label: "수주결과" },
+                { key: "compare" as Tab, label: "버전 비교" },
+              ] as const
+            ).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                  activeTab === key
+                    ? "text-[#ededed] border-[#3ecf8e]"
+                    : "text-[#8c8c8c] border-transparent hover:text-[#ededed]"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            <div className="flex gap-3 mb-4">
-              <a
-                href={downloadUrl("docx")}
-                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
-              >
-                📄 DOCX 다운로드
-              </a>
-              <a
-                href={downloadUrl("pptx")}
-                className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
-              >
-                📊 PPTX 다운로드
-              </a>
-              {status.hwpx_path && (
+        {/* ── 탭: 결과물 ── */}
+        {activeTab === "result" && (
+          <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-4">생성 결과물</h2>
+
+            {isCompleted && (
+              <div className="flex flex-col gap-2.5">
                 <a
-                  href={downloadUrl("hwpx")}
-                  className="flex-1 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg py-2.5 text-sm transition-colors"
+                  href={downloadUrl("docx")}
+                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-blue-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
                 >
-                  📝 HWPX 다운로드
+                  <span className="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center text-base shrink-0">
+                    📄
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-[#ededed]">DOCX 다운로드</p>
+                    <p className="text-xs text-[#8c8c8c]">Word 제안서 문서</p>
+                  </div>
+                  <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
                 </a>
-              )}
-            </div>
+
+                <a
+                  href={downloadUrl("pptx")}
+                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-indigo-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
+                >
+                  <span className="w-9 h-9 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-base shrink-0">
+                    📊
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-[#ededed]">PPTX 다운로드</p>
+                    <p className="text-xs text-[#8c8c8c]">PowerPoint 요약본</p>
+                  </div>
+                  <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                </a>
+
+                {((resultData as any)?.hwpx_path) && (
+                  <a
+                    href={downloadUrl("hwpx")}
+                    className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-[#3ecf8e]/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-[#3ecf8e]/15 text-[#3ecf8e] flex items-center justify-center text-base shrink-0">
+                      📝
+                    </span>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-[#ededed]">HWPX 다운로드</p>
+                      <p className="text-xs text-[#8c8c8c]">한글 문서</p>
+                    </div>
+                    <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                  </a>
+                )}
+              </div>
+            )}
+
+            {isProcessing && (
+              <div className="flex flex-col items-center justify-center py-10 gap-3 text-[#8c8c8c]">
+                <div className="w-8 h-8 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin" />
+                <p className="text-sm">생성 중입니다...</p>
+                <p className="text-xs">Phase {status.phases_completed + 1}/5 진행 중</p>
+              </div>
+            )}
+
+            {isFailed && (
+              <div className="py-6 text-center">
+                <p className="text-sm font-medium text-red-400 mb-1">생성 실패</p>
+                {status.error && (
+                  <p className="text-xs text-[#8c8c8c] mb-4 max-w-sm mx-auto">{status.error}</p>
+                )}
+                <button
+                  onClick={() => handleRetryFromPhase(failedPhaseN)}
+                  className="px-4 py-2 bg-red-500/15 hover:bg-red-500/25 text-red-400 text-sm font-medium rounded-lg border border-red-500/30 transition-colors"
+                >
+                  Phase {failedPhaseN}부터 재시작
+                </button>
+              </div>
+            )}
           </section>
         )}
 
-        {/* ── 수주결과 저장 ── */}
-        {isCompleted && (
-          <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">수주결과 기록</h2>
-            {winSaved && (
-              <p className="mb-3 text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2">저장되었습니다.</p>
+        {/* ── 탭: 댓글 ── */}
+        {activeTab === "comments" && (
+          <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-4">
+              댓글{" "}
+              <span className="text-[#8c8c8c] font-normal">({comments.length})</span>
+            </h2>
+
+            {comments.length === 0 ? (
+              <p className="text-sm text-[#8c8c8c] mb-4">아직 댓글이 없습니다.</p>
+            ) : (
+              <ul className="space-y-3 mb-4">
+                {comments.map((c) => (
+                  <li key={c.id} className="flex gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#262626] shrink-0 flex items-center justify-center text-xs text-[#8c8c8c] font-medium">
+                      {c.user_id.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-[#ededed] leading-relaxed break-words">{c.content}</p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-xs text-[#8c8c8c]">
+                          {new Date(c.created_at).toLocaleString("ko-KR")}
+                        </span>
+                        {c.user_id === currentUserId && (
+                          <button
+                            onClick={() => handleDeleteComment(c.id)}
+                            className="text-xs text-red-400/70 hover:text-red-400 transition-colors"
+                          >
+                            삭제
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
+
+            <form onSubmit={handleComment} className="flex gap-2">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="댓글 작성..."
+                className="flex-1 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#8c8c8c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40 focus:border-[#3ecf8e]/50 transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={submittingComment || !newComment.trim()}
+                className="bg-[#3ecf8e] hover:bg-[#3ecf8e]/90 disabled:opacity-40 text-[#0f0f0f] text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              >
+                등록
+              </button>
+            </form>
+          </section>
+        )}
+
+        {/* ── 탭: 수주결과 ── */}
+        {activeTab === "win" && (
+          <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-4">수주결과 기록</h2>
+
+            {winSaved && (
+              <div className="mb-4 bg-[#3ecf8e]/10 border border-[#3ecf8e]/20 rounded-lg px-3 py-2">
+                <p className="text-sm text-[#3ecf8e]">저장되었습니다.</p>
+              </div>
+            )}
+
             <div className="space-y-3">
+              {/* 결과 선택 버튼 */}
               <div className="flex gap-2">
-                {["won", "lost", "pending"].map((v) => (
+                {(
+                  [
+                    { value: "won", label: "수주", activeClass: "bg-[#3ecf8e]/15 text-[#3ecf8e] border-[#3ecf8e]/50" },
+                    { value: "lost", label: "낙찰실패", activeClass: "bg-red-500/15 text-red-400 border-red-500/50" },
+                    { value: "pending", label: "결과대기", activeClass: "bg-[#262626] text-[#8c8c8c] border-[#8c8c8c]/30" },
+                  ] as const
+                ).map(({ value, label, activeClass }) => (
                   <button
-                    key={v}
-                    onClick={() => setWinForm((f) => ({ ...f, win_result: v }))}
+                    key={value}
+                    onClick={() => {
+                      setWinForm((f) => ({ ...f, win_result: value }));
+                      setWinSaved(false);
+                    }}
                     className={`flex-1 py-2 text-sm font-medium rounded-lg border transition-colors ${
-                      winForm.win_result === v
-                        ? v === "won"
-                          ? "bg-green-600 text-white border-green-600"
-                          : v === "lost"
-                          ? "bg-red-500 text-white border-red-500"
-                          : "bg-gray-600 text-white border-gray-600"
-                        : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                      winForm.win_result === value
+                        ? activeClass
+                        : "border-[#262626] text-[#8c8c8c] hover:border-[#8c8c8c]/40 hover:text-[#ededed]"
                     }`}
                   >
-                    {v === "won" ? "수주" : v === "lost" ? "낙찰 실패" : "결과 대기"}
+                    {label}
                   </button>
                 ))}
               </div>
+
               <input
                 type="number"
                 value={winForm.bid_amount}
                 onChange={(e) => setWinForm((f) => ({ ...f, bid_amount: e.target.value }))}
                 placeholder="낙찰 금액 (원)"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#8c8c8c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40 focus:border-[#3ecf8e]/50 transition-colors"
               />
+
               <textarea
                 value={winForm.notes}
                 onChange={(e) => setWinForm((f) => ({ ...f, notes: e.target.value }))}
                 placeholder="비고 (선택)"
-                rows={2}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                rows={3}
+                className="w-full bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#8c8c8c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40 focus:border-[#3ecf8e]/50 resize-none transition-colors"
               />
+
               <button
                 onClick={handleSaveWinResult}
                 disabled={!winForm.win_result}
-                className="w-full bg-gray-800 hover:bg-gray-900 disabled:opacity-40 text-white font-medium rounded-lg py-2 text-sm transition-colors"
+                className="w-full bg-[#3ecf8e] hover:bg-[#3ecf8e]/90 disabled:opacity-40 text-[#0f0f0f] font-semibold rounded-lg py-2.5 text-sm transition-colors"
               >
                 저장
               </button>
@@ -277,59 +686,131 @@ export default function ProposalDetailPage() {
           </section>
         )}
 
-        {/* ── 댓글 (F6) ── */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="font-semibold text-gray-900 mb-4">
-            댓글 <span className="text-gray-400 font-normal text-sm">({comments.length})</span>
-          </h2>
+        {/* ── 탭: 버전 비교 ── */}
+        {activeTab === "compare" && (
+          <section className="space-y-4">
+            {/* 패널 헤더 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 좌측: 현재 버전 */}
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+                <p className="text-xs font-semibold text-[#ededed] mb-1">
+                  현재 버전 {currentVersionLabel()}
+                </p>
+                <p className="text-[11px] text-[#8c8c8c] truncate">
+                  {status.rfp_title || "제안서"}
+                </p>
+              </div>
 
-          {comments.length === 0 ? (
-            <p className="text-sm text-gray-400 mb-4">아직 댓글이 없습니다.</p>
-          ) : (
-            <ul className="space-y-3 mb-4">
-              {comments.map((c) => (
-                <li key={c.id} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 shrink-0 flex items-center justify-center text-xs text-gray-500">
-                    {c.user_id.slice(0, 2).toUpperCase()}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-800 leading-relaxed">{c.content}</p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-gray-400">
-                        {new Date(c.created_at).toLocaleString("ko-KR")}
-                      </span>
-                      {c.user_id === currentUserId && (
-                        <button
-                          onClick={() => handleDeleteComment(c.id)}
-                          className="text-xs text-red-400 hover:text-red-600"
-                        >
-                          삭제
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </li>
+              {/* 우측: 비교 버전 선택 */}
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+                <p className="text-xs font-semibold text-[#ededed] mb-2">비교 버전 선택</p>
+                <select
+                  value={compareVersionId ?? ""}
+                  onChange={(e) => setCompareVersionId(e.target.value || null)}
+                  className="w-full bg-[#111111] border border-[#262626] rounded-lg px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
+                >
+                  <option value="">버전 선택...</option>
+                  {versions
+                    .filter((v) => v.id !== id)
+                    .map((v, idx) => {
+                      const allIdx = versions.findIndex((x) => x.id === v.id);
+                      return (
+                        <option key={v.id} value={v.id}>
+                          {versionLabel(allIdx !== -1 ? allIdx : idx)}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+
+            {/* Phase 탭 선택 */}
+            <div className="flex gap-1">
+              {PHASES.map((p) => (
+                <button
+                  key={p.n}
+                  onClick={() => setComparePhase(p.n)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
+                    comparePhase === p.n
+                      ? "bg-[#3ecf8e]/15 text-[#3ecf8e] border-[#3ecf8e]/40"
+                      : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
+                  }`}
+                >
+                  {p.name}
+                </button>
               ))}
-            </ul>
-          )}
+            </div>
 
-          <form onSubmit={handleComment} className="flex gap-2">
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="댓글 작성..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              disabled={submittingComment || !newComment.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-            >
-              등록
-            </button>
-          </form>
-        </section>
+            {/* 비교 콘텐츠 패널 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 좌측: 현재 버전 결과 */}
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4 min-h-[300px]">
+                <p className="text-[11px] font-semibold text-[#8c8c8c] uppercase tracking-wider mb-3">
+                  {currentVersionLabel()} — Phase {comparePhase}
+                </p>
+                {(resultData as any)?.artifacts?.[`phase_${comparePhase}`] ||
+                 (resultData as any)?.artifacts?.[comparePhase] ||
+                 (resultData as any)?.[`phase_${comparePhase}_result`] ? (
+                  <pre className="text-xs text-[#ededed] whitespace-pre-wrap break-words leading-relaxed font-sans">
+                    {String(
+                      (resultData as any)?.artifacts?.[`phase_${comparePhase}`] ??
+                      (resultData as any)?.artifacts?.[comparePhase] ??
+                      (resultData as any)?.[`phase_${comparePhase}_result`] ??
+                      ""
+                    )}
+                  </pre>
+                ) : (
+                  <p className="text-xs text-[#8c8c8c]">
+                    {status.status !== "completed"
+                      ? "제안서 생성이 완료되지 않았습니다."
+                      : `Phase ${comparePhase} 결과가 없습니다.`}
+                  </p>
+                )}
+              </div>
+
+              {/* 우측: 비교 버전 결과 */}
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4 min-h-[300px]">
+                {!compareVersionId ? (
+                  <div className="flex items-center justify-center h-full min-h-[200px]">
+                    <p className="text-xs text-[#8c8c8c] text-center">
+                      비교할 버전을 선택하세요
+                    </p>
+                  </div>
+                ) : compareLoading ? (
+                  <div className="flex items-center justify-center h-full min-h-[200px]">
+                    <div className="w-5 h-5 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-[11px] font-semibold text-[#8c8c8c] uppercase tracking-wider mb-3">
+                      {versionLabel(versions.findIndex((v) => v.id === compareVersionId))} — Phase {comparePhase}
+                    </p>
+                    {compareData &&
+                    ((compareData as any)?.artifacts?.[`phase_${comparePhase}`] ||
+                     (compareData as any)?.artifacts?.[comparePhase] ||
+                     (compareData as any)?.[`phase_${comparePhase}_result`]) ? (
+                      <pre className="text-xs text-[#ededed] whitespace-pre-wrap break-words leading-relaxed font-sans">
+                        {String(
+                          (compareData as any)?.artifacts?.[`phase_${comparePhase}`] ??
+                          (compareData as any)?.artifacts?.[comparePhase] ??
+                          (compareData as any)?.[`phase_${comparePhase}_result`] ??
+                          ""
+                        )}
+                      </pre>
+                    ) : (
+                      <p className="text-xs text-[#8c8c8c]">
+                        {!compareData
+                          ? "데이터를 불러올 수 없습니다."
+                          : `Phase ${comparePhase} 결과가 없습니다.`}
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
       </main>
     </div>
   );

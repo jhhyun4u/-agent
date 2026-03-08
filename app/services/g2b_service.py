@@ -209,6 +209,21 @@ class G2BService:
             params,
         )
 
+    async def get_bid_detail(self, bid_no: str) -> Dict:
+        """
+        입찰공고 상세 조회 (BidPublicInfoService04/getBidPblancDetailInfoServc)
+
+        자격요건 포함 공고 규격 내용(ntceSpecCn)을 확보하기 위해 사용.
+
+        Returns:
+            상세 정보 dict (없으면 빈 dict)
+        """
+        results = await self._call_api(
+            "BidPublicInfoService04/getBidPblancDetailInfoServc",
+            {"bidNtceNo": bid_no},
+        )
+        return results[0] if results else {}
+
     # ── 2단계: 낙찰결과 조회 ─────────────────────────
 
     async def get_bid_results(
