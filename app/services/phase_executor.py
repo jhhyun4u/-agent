@@ -389,7 +389,7 @@ class PhaseExecutor:
             user_prompt += "\n\n개선 지침을 반영해주세요:\n" + improvement_prompt
 
         r = await self.client.messages.create(
-            model=self.model, max_tokens=8192, system=PHASE3_SYSTEM,
+            model=self.model, max_tokens=16000, system=PHASE3_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}]
         )
         d = self._parse(r.content[0].text)
@@ -557,7 +557,7 @@ class PhaseExecutor:
             user_prompt += template_ctx
 
         r = await self.client.messages.create(
-            model=self.model, max_tokens=8192, system=PHASE4_SYSTEM,
+            model=self.model, max_tokens=16000, system=PHASE4_SYSTEM,
             messages=[{"role": "user", "content": user_prompt}]
         )
         d = self._parse(r.content[0].text)
