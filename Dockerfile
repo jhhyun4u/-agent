@@ -2,8 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# uv 설치
-RUN pip install uv
+# uv 설치 (공식 바이너리)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # 의존성 복사 및 설치
 COPY pyproject.toml uv.lock ./
