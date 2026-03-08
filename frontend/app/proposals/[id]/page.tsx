@@ -271,7 +271,14 @@ export default function ProposalDetailPage() {
     return versionLabel(idx);
   }
 
-  // ── 로딩 ──────────────────────────────────────────────────────────
+  // ── 로딩 (훅은 모두 위에서 호출 후 여기서 early return) ───────────
+
+  const isProcessing = !!status && (status.status === "processing" || status.status === "initialized" || status.status === "running");
+  const isCompleted = status?.status === "completed";
+  const isFailed = status?.status === "failed";
+  const progressPct = Math.round(((status?.phases_completed ?? 0) / 5) * 100);
+  const failedPhaseN = (status?.phases_completed ?? 0) + 1;
+  const elapsed = useElapsedTime(isProcessing);
 
   if (loading || !status) {
     return (
@@ -280,14 +287,6 @@ export default function ProposalDetailPage() {
       </div>
     );
   }
-
-  const isProcessing = status.status === "processing" || status.status === "initialized" || status.status === "running";
-  const isCompleted = status.status === "completed";
-  const isFailed = status.status === "failed";
-  const progressPct = Math.round((status.phases_completed / 5) * 100);
-  const failedPhaseN = status.phases_completed + 1;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const elapsed = useElapsedTime(isProcessing);
 
   // ── 렌더 ──────────────────────────────────────────────────────────
 
