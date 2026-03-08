@@ -31,11 +31,46 @@ import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
 // ── 상수 ─────────────────────────────────────────────────────────────
 
 const PHASES = [
-  { n: 1, name: "RFP분석" },
-  { n: 2, name: "경쟁분석" },
-  { n: 3, name: "전략수립" },
-  { n: 4, name: "본문작성" },
-  { n: 5, name: "품질검증" },
+  {
+    n: 1,
+    name: "RFP 분석",
+    key: "phase_1_research",
+    doneDesc: "RFP 문서 구조 분석 및 핵심 요구사항 추출 완료",
+    activeDesc: "RFP 문서를 읽고 사업 목적·범위·평가 기준을 분석하고 있습니다",
+    activeSubs: ["문서 텍스트 추출", "사업명/발주처/기간 파악", "핵심 요구사항 정리", "나라장터 유사계약 조회"],
+  },
+  {
+    n: 2,
+    name: "경쟁 분석",
+    key: "phase_2_analysis",
+    doneDesc: "경쟁사 현황 분석 및 차별화 포인트 도출 완료",
+    activeDesc: "유사 사업 수행이력을 바탕으로 경쟁사를 분석하고 있습니다",
+    activeSubs: ["경쟁사 식별 및 강점 분석", "과거 수주 패턴 파악", "차별화 요소 도출"],
+  },
+  {
+    n: 3,
+    name: "전략 수립",
+    key: "phase_3_plan",
+    doneDesc: "수주 전략·가격 전략·리스크 대응 방안 수립 완료",
+    activeDesc: "경쟁 분석 결과를 토대로 수주 전략을 설계하고 있습니다",
+    activeSubs: ["Win Theme 설정", "섹션별 작성 전략 수립", "가격 전략 시나리오 구성", "리스크 및 대응책 정리"],
+  },
+  {
+    n: 4,
+    name: "본문 작성",
+    key: "phase_4_implement",
+    doneDesc: "제안서 전체 본문 및 DOCX·PPTX 문서 생성 완료",
+    activeDesc: "Claude AI가 제안서 각 섹션의 본문을 작성하고 있습니다",
+    activeSubs: ["사업 이해 및 추진 방법론 작성", "인력 구성·추진 일정 작성", "DOCX 문서 빌드", "PPTX 요약본 생성"],
+  },
+  {
+    n: 5,
+    name: "품질 검증",
+    key: "phase_5_test",
+    doneDesc: "품질 점수 산정 및 최종 검토 완료",
+    activeDesc: "생성된 제안서의 완성도를 종합 검토하고 있습니다",
+    activeSubs: ["섹션별 품질 점수 산정", "수주 확률 예측", "최종 문서 업로드"],
+  },
 ];
 
 type Tab = "result" | "comments" | "win" | "compare";
@@ -365,133 +400,139 @@ export default function ProposalDetailPage() {
 
         {/* ── Phase 진행 대시보드 ── */}
         <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-[#ededed]">Phase 진행 대시보드</h2>
-            {isFailed && (
-              <button
-                onClick={() => handleRetryFromPhase(failedPhaseN)}
-                className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
-              >
-                Phase {failedPhaseN}부터 재시작
-              </button>
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-sm font-semibold text-[#ededed]">Phase 진행 현황</h2>
+            <div className="flex items-center gap-3">
+              {isProcessing && (
+                <span className="text-xs text-[#8c8c8c]">경과 {elapsed}</span>
+              )}
+              <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
+              {isFailed && (
+                <button
+                  onClick={() => handleRetryFromPhase(failedPhaseN)}
+                  className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
+                >
+                  Phase {failedPhaseN}부터 재시작
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* 진행률 바 */}
+          <div className="h-1 bg-[#262626] rounded-full overflow-hidden mb-4">
+            {isProcessing && progressPct === 0 ? (
+              <div className="h-full w-full relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#3ecf8e]/20" />
+                <div className="absolute inset-y-0 w-1/3 bg-[#3ecf8e] rounded-full"
+                  style={{ animation: "slideX 1.5s ease-in-out infinite" }} />
+              </div>
+            ) : (
+              <div className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
+                style={{ width: `${progressPct}%` }} />
             )}
           </div>
 
-          {/* 스텝 */}
-          <div className="flex items-start gap-1 mb-5">
+          {/* Phase 로그 리스트 */}
+          <div className="space-y-0">
             {PHASES.map((phase, idx) => {
               const done = status.phases_completed >= phase.n;
-              const active = isProcessing && status.phases_completed === phase.n - 1;
+              const active = isProcessing && (
+                status.current_phase === phase.key ||
+                (!status.current_phase && status.phases_completed === phase.n - 1)
+              );
+              const failed = isFailed && phase.n === failedPhaseN;
+              const pending = !done && !active && !failed;
               const isLast = idx === PHASES.length - 1;
 
               return (
-                <div key={phase.n} className="flex-1 flex flex-col items-center gap-1.5 relative">
-                  {/* 연결선 */}
-                  {!isLast && (
-                    <div
-                      className={`absolute top-4 left-1/2 right-0 h-px -translate-y-1/2 ${
-                        done ? "bg-[#3ecf8e]/60" : "bg-[#262626]"
-                      }`}
-                      style={{ left: "calc(50% + 16px)", right: "-50%" }}
-                    />
-                  )}
-
-                  {/* 원 */}
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 z-10 transition-all ${
+                <div key={phase.n} className="flex gap-3">
+                  {/* 타임라인 세로선 + 아이콘 */}
+                  <div className="flex flex-col items-center">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                       done
                         ? "bg-[#3ecf8e] text-[#0f0f0f]"
                         : active
-                        ? "bg-[#3ecf8e]/20 text-[#3ecf8e] border-2 border-[#3ecf8e] animate-pulse"
-                        : isFailed && phase.n === failedPhaseN
-                        ? "bg-red-500/20 text-red-400 border-2 border-red-500/50"
-                        : "bg-[#262626] text-[#8c8c8c]"
-                    }`}
-                  >
-                    {done ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : isFailed && phase.n === failedPhaseN ? (
-                      "!"
-                    ) : (
-                      phase.n
+                        ? "bg-[#3ecf8e]/20 border-2 border-[#3ecf8e]"
+                        : failed
+                        ? "bg-red-500/20 border-2 border-red-500/50"
+                        : "bg-[#262626] border border-[#363636]"
+                    }`}>
+                      {done ? (
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : active ? (
+                        <div className="w-2 h-2 rounded-full border border-[#3ecf8e] border-t-transparent animate-spin" />
+                      ) : failed ? (
+                        <span className="text-[10px] font-bold text-red-400">!</span>
+                      ) : (
+                        <span className="text-[10px] text-[#8c8c8c]">{phase.n}</span>
+                      )}
+                    </div>
+                    {!isLast && (
+                      <div className={`w-px flex-1 mt-1 mb-1 min-h-[12px] ${
+                        done ? "bg-[#3ecf8e]/30" : "bg-[#262626]"
+                      }`} />
                     )}
                   </div>
 
-                  {/* 이름 */}
-                  <span
-                    className={`text-[10px] text-center leading-tight ${
-                      done
-                        ? "text-[#3ecf8e]"
-                        : active
-                        ? "text-[#ededed] font-medium"
-                        : "text-[#8c8c8c]"
-                    }`}
-                  >
-                    {phase.name}
-                  </span>
+                  {/* 내용 */}
+                  <div className={`flex-1 pb-4 ${isLast ? "pb-0" : ""}`}>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className={`text-xs font-semibold ${
+                        done ? "text-[#3ecf8e]" : active ? "text-[#ededed]" : failed ? "text-red-400" : "text-[#5c5c5c]"
+                      }`}>
+                        Phase {phase.n} — {phase.name}
+                      </span>
+                      {done && (
+                        <span className="text-[10px] text-[#3ecf8e]/60 font-normal">완료</span>
+                      )}
+                      {active && (
+                        <span className="inline-flex gap-0.5 items-center">
+                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "300ms" }} />
+                        </span>
+                      )}
+                    </div>
 
-                  {/* 상태 아이콘 */}
-                  <span className="text-[10px]">
-                    {done ? "✅" : active ? "🔄" : "⏳"}
-                  </span>
+                    {done && (
+                      <p className="text-[11px] text-[#8c8c8c] leading-relaxed">{phase.doneDesc}</p>
+                    )}
+
+                    {active && (
+                      <div>
+                        <p className="text-[11px] text-[#8c8c8c] leading-relaxed mb-1.5">{phase.activeDesc}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {phase.activeSubs.map((sub, si) => (
+                            <span key={si} className="inline-flex items-center gap-1 text-[10px] text-[#3ecf8e]/70 bg-[#3ecf8e]/8 border border-[#3ecf8e]/15 rounded px-1.5 py-0.5">
+                              <span className="w-1 h-1 rounded-full bg-[#3ecf8e]/60" />
+                              {sub}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {failed && (
+                      <p className="text-[11px] text-red-400/80 leading-relaxed">
+                        {status.error || "처리 중 오류가 발생했습니다."}
+                      </p>
+                    )}
+
+                    {pending && (
+                      <p className="text-[11px] text-[#3c3c3c]">대기 중</p>
+                    )}
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          {/* 진행률 바 */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-[#8c8c8c]">전체 진행률</span>
-              <div className="flex items-center gap-2">
-                {isProcessing && (
-                  <span className="text-xs text-[#8c8c8c]">{elapsed}</span>
-                )}
-                <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
-              </div>
-            </div>
-            <div className="h-2 bg-[#262626] rounded-full overflow-hidden">
-              {isProcessing && progressPct === 0 ? (
-                <div className="h-full w-full relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[#3ecf8e]/30 rounded-full" />
-                  <div
-                    className="absolute inset-y-0 w-1/3 bg-[#3ecf8e] rounded-full animate-[slide_1.5s_ease-in-out_infinite]"
-                    style={{ animation: "slideX 1.5s ease-in-out infinite" }}
-                  />
-                </div>
-              ) : (
-                <div
-                  className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
-                  style={{ width: `${progressPct}%` }}
-                />
-              )}
-            </div>
-          </div>
-
-          {isProcessing && (
-            <div className="mt-3 flex items-center gap-2 text-xs text-[#8c8c8c]">
-              <span className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "0ms" }} />
-                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "150ms" }} />
-                <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "300ms" }} />
-              </span>
-              <span>
-                {[
-                  "RFP 문서를 분석하고 있습니다",
-                  "경쟁사를 분석하고 있습니다",
-                  "전략을 수립하고 있습니다",
-                  "본문을 작성하고 있습니다",
-                  "품질을 검증하고 있습니다",
-                ][status.phases_completed] ?? "처리 중입니다"}...
-              </span>
-            </div>
-          )}
-
-          {isFailed && status.error && (
-            <div className="mt-3 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
-              <p className="text-xs text-red-400">{status.error}</p>
+          {isCompleted && (
+            <div className="mt-2 pt-3 border-t border-[#262626] flex items-center gap-2">
+              <span className="text-[#3ecf8e] text-sm">✓</span>
+              <p className="text-xs text-[#3ecf8e]">모든 단계가 완료되었습니다. 아래에서 결과물을 다운로드하세요.</p>
             </div>
           )}
         </section>
