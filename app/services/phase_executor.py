@@ -326,7 +326,7 @@ class PhaseExecutor:
 
         artifact = Phase1Artifact(
             summary=summary,
-            structured_data=rfp_data.model_dump(),
+            structured_data=rfp_data.model_dump(exclude={"raw_text"}),
             rfp_data=rfp_data,
             history_summary="이력 없음",
             g2b_competitor_data=g2b_data,
@@ -337,13 +337,17 @@ class PhaseExecutor:
     async def phase2_analysis(self, a1, improvement_instructions=None):
         self._update_status("phase_2_analysis")
         improvement_prompt = self._build_improvement_prompt(improvement_instructions, 2)
+        # raw_text 제외: 토큰 절약 (full RFP 원문은 summary에 이미 반영됨)
+        structured_data_trimmed = {
+            k: v for k, v in a1.structured_data.items() if k != "raw_text"
+        }
         g2b_summary = (
-            json.dumps(a1.g2b_competitor_data, ensure_ascii=False)
+            json.dumps(a1.g2b_competitor_data, ensure_ascii=False)[:8000]
             if a1.g2b_competitor_data else "나라장터 데이터 없음"
         )
         user_prompt = PHASE2_USER.format(
-            rfp_summary=a1.summary,
-            structured_data=json.dumps(a1.structured_data, ensure_ascii=False),
+            rfp_summary=a1.summary[:3000],
+            structured_data=json.dumps(structured_data_trimmed, ensure_ascii=False),
             g2b_data=g2b_summary
         )
         if improvement_prompt:
@@ -373,13 +377,13 @@ class PhaseExecutor:
         self._update_status("phase_3_plan")
         improvement_prompt = self._build_improvement_prompt(improvement_instructions, 3)
         user_prompt = PHASE3_USER.format(
-            analysis_summary=a2.summary,
-            key_requirements=json.dumps(a2.key_requirements, ensure_ascii=False),
-            evaluation_weights=json.dumps(a2.evaluation_weights, ensure_ascii=False),
-            competitor_landscape=json.dumps(a2.competitor_landscape, ensure_ascii=False),
-            evaluator_perspective=json.dumps(a2.structured_data.get("evaluator_perspective", {}), ensure_ascii=False),
-            our_advantage_opportunities=json.dumps(a2.structured_data.get("our_advantage_opportunities", []), ensure_ascii=False),
-            price_analysis=json.dumps(a2.price_analysis, ensure_ascii=False)
+            analysis_summary=a2.summary[:3000],
+            key_requirements=json.dumps(a2.key_requirements, ensure_ascii=False)[:4000],
+            evaluation_weights=json.dumps(a2.evaluation_weights, ensure_ascii=False)[:2000],
+            competitor_landscape=json.dumps(a2.competitor_landscape, ensure_ascii=False)[:4000],
+            evaluator_perspective=json.dumps(a2.structured_data.get("evaluator_perspective", {}), ensure_ascii=False)[:3000],
+            our_advantage_opportunities=json.dumps(a2.structured_data.get("our_advantage_opportunities", []), ensure_ascii=False)[:3000],
+            price_analysis=json.dumps(a2.price_analysis, ensure_ascii=False)[:2000]
         )
         if improvement_prompt:
             user_prompt += "\n\n개선 지침을 반영해주세요:\n" + improvement_prompt
@@ -529,17 +533,17 @@ class PhaseExecutor:
         user_prompt = PHASE4_USER.format(
             project_name=rfp.title if rfp else "미정",
             client_name=rfp.client_name if rfp else "미정",
-            project_scope=rfp.project_scope if rfp else "미정",
+            project_scope=(rfp.project_scope if rfp else "미정")[:1000],
             duration=rfp.duration if rfp else "미정",
             budget=rfp.budget or "미정",
-            requirements=json.dumps(rfp.requirements if rfp else [], ensure_ascii=False),
-            win_theme=json.dumps(a3.win_theme, ensure_ascii=False),
-            win_strategy=a3.win_strategy,
-            section_plan=json.dumps(a3.section_plan, ensure_ascii=False),
-            business_understanding_strategy=json.dumps(a3.structured_data.get("business_understanding_strategy", {}), ensure_ascii=False),
-            differentiation_strategy=json.dumps(a3.differentiation_strategy, ensure_ascii=False),
-            price_competitiveness_message=a3.bid_price_strategy.get("price_competitiveness_message", ""),
-            table_of_contents=toc_text
+            requirements=json.dumps(rfp.requirements if rfp else [], ensure_ascii=False)[:3000],
+            win_theme=json.dumps(a3.win_theme, ensure_ascii=False)[:2000],
+            win_strategy=a3.win_strategy[:2000],
+            section_plan=json.dumps(a3.section_plan, ensure_ascii=False)[:6000],
+            business_understanding_strategy=json.dumps(a3.structured_data.get("business_understanding_strategy", {}), ensure_ascii=False)[:3000],
+            differentiation_strategy=json.dumps(a3.differentiation_strategy, ensure_ascii=False)[:3000],
+            price_competitiveness_message=a3.bid_price_strategy.get("price_competitiveness_message", "")[:500],
+            table_of_contents=toc_text[:3000]
         )
         if improvement_prompt:
             user_prompt += "\n\n개선 지침을 반영해주세요:\n" + improvement_prompt
