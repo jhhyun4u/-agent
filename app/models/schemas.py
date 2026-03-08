@@ -16,10 +16,10 @@ class ProjectInput(BaseModel):
 class RFPData(BaseModel):
     """RFP 파싱 결과 구조"""
 
-    title: str
-    client_name: str
-    project_scope: str
-    duration: str
+    title: str = ""
+    client_name: str = ""
+    project_scope: str = ""
+    duration: str = ""
     budget: str | None = None
     requirements: list[str] = []
     evaluation_criteria: list[str] = []

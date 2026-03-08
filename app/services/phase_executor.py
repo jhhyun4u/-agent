@@ -278,6 +278,14 @@ class PhaseExecutor:
         improvement_prompt = self._build_improvement_prompt(improvement_instructions, 1)
 
         rfp_data = await parse_rfp_text(rfp_content)
+        # 세션의 form 입력값으로 빈 필드 보완
+        session = self.session_manager.get_session(self.proposal_id)
+        if not rfp_data.title:
+            rfp_data.title = session.get("rfp_title", "")
+        if not rfp_data.client_name:
+            rfp_data.client_name = session.get("client_name", "")
+        if not rfp_data.project_scope:
+            rfp_data.project_scope = rfp_content[:300]
         summary = (
             "사업명: " + rfp_data.title + "\n"
             + "발주처: " + rfp_data.client_name + "\n"
