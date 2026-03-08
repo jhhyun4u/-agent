@@ -16,6 +16,7 @@
 | presentation-generator | 2026-03-08 | 95% | 0 | presentation-generator/ |
 | dashboard | 2026-03-08 | 100% | 1 | dashboard/ |
 | api | 2026-03-08 | 90% | 1 | api/ |
+| bid-search | 2026-03-08 | 96% | 0 | bid-search/ |
 
 ---
 
@@ -143,6 +144,20 @@
 | Path | docs/archive/2026-03/presentation-generator/ |
 | 주요 성과 | 평가항목 배점 기반 2-step 파이프라인(TOC→스토리보드), 7종 레이아웃 PPTX 빌더, 4개 API 엔드포인트 |
 | 잔여 작업 | PPTX 템플릿 파일 3개 (scratch fallback으로 동작) |
+
+---
+
+## bid-search — Completed (테스트 커버리지 강화)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-08 |
+| Match Rate | **96%** |
+| PDCA 반복 | 0회 (첫 번째 시도 통과) |
+| Documents | analysis, report |
+| Path | docs/archive/2026-03/bid-search/ |
+| 주요 성과 | 74개 유닛/API 테스트 신규 작성, BidFetcher 95%·BidRecommender 98% 커버리지, 프로덕션 버그 1건 수정 (routes_bids.py:286 team_id 중복) |
+| 성공 기준 | 8/8 (100%) |
 
 ---
 

@@ -283,7 +283,7 @@ async def trigger_fetch(
     )
     profile_obj = TeamBidProfile(team_id=team_id, **{
         k: v for k, v in profile_data.items()
-        if k in TeamBidProfile.model_fields
+        if k in TeamBidProfile.model_fields and k != "team_id"
     })
 
     background_tasks.add_task(
