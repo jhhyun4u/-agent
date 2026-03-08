@@ -46,7 +46,11 @@ async function request<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail ?? "API 오류");
+    const detail = err.detail;
+    const message = Array.isArray(detail)
+      ? detail.map((d: { msg?: string }) => d.msg ?? JSON.stringify(d)).join(", ")
+      : (typeof detail === "string" ? detail : "API 오류");
+    throw new Error(message);
   }
 
   if (res.status === 204) return undefined as T;
