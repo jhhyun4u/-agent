@@ -68,7 +68,7 @@ def _resolve_template_path(
     if mode == "sample" and sample_storage_path:
         # Storage 경로에서 파일명 추출하여 로컬 캐시 경로 결정
         fname = Path(sample_storage_path).name
-        local = Path(f"/tmp/sample_template_{fname}")
+        local = Path(tempfile.gettempdir()) / f"sample_template_{fname}"
         return local if local.exists() else None
 
     return None  # scratch
