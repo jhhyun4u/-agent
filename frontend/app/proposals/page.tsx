@@ -6,7 +6,7 @@
  * - 제안서 0개일 때 EmptyState
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { api, ProposalSummary } from "@/lib/api";
@@ -23,7 +23,7 @@ const WIN_LABELS: Record<string, string> = {
   won: "수주", lost: "낙찰 실패", pending: "결과 대기",
 };
 
-export default function ProposalsPage() {
+function ProposalsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -197,5 +197,13 @@ function EmptyState({ q }: { q: string }) {
         </Link>
       )}
     </div>
+  );
+}
+
+export default function ProposalsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0f0f0f]" />}>
+      <ProposalsContent />
+    </Suspense>
   );
 }

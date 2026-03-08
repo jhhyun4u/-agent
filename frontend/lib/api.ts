@@ -58,6 +58,7 @@ async function request<T>(
 export type ProposalStatus =
   | "initialized"
   | "processing"
+  | "running"
   | "completed"
   | "failed";
 

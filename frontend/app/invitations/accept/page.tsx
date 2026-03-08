@@ -6,11 +6,11 @@
  * - 자동으로 초대를 수락하고 /proposals로 이동
  */
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 
-export default function AcceptInvitationPage() {
+function AcceptInvitationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invitationId = searchParams.get("invitation_id") ?? "";
@@ -70,5 +70,13 @@ export default function AcceptInvitationPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AcceptInvitationPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p>로딩 중...</p></div>}>
+      <AcceptInvitationContent />
+    </Suspense>
   );
 }

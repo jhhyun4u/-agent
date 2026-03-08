@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-03-08T07:53:11.740Z",
+  "lastUpdated": "2026-03-08T15:28:44.880Z",
   "activeFeatures": [
     "tenopa proposer",
     "api",
@@ -195,9 +195,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:28:44.483Z",
-        "lastUpdated": "2026-03-08T03:50:36.267Z"
+        "lastUpdated": "2026-03-08T15:23:53.474Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\lib\\api.ts"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/middleware.ts"
     },
     "supabase": {
       "phase": "do",
@@ -208,9 +208,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:28:55.873Z",
-        "lastUpdated": "2026-03-06T05:28:58.350Z"
+        "lastUpdated": "2026-03-08T15:22:16.542Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/lib/supabase/server.ts"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/lib/supabase/server.ts"
     },
     "login": {
       "phase": "do",
@@ -221,9 +221,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:30:02.981Z",
-        "lastUpdated": "2026-03-07T23:44:10.102Z"
+        "lastUpdated": "2026-03-08T15:26:06.911Z"
       },
-      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\login\\page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/login/page.tsx"
     },
     "onboarding": {
       "phase": "do",
@@ -247,9 +247,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:30:47.107Z",
-        "lastUpdated": "2026-03-08T00:27:42.007Z"
+        "lastUpdated": "2026-03-08T15:28:16.837Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/proposals/layout.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/proposals/page.tsx"
     },
     "new": {
       "phase": "do",
@@ -286,9 +286,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-06T05:32:23.334Z",
-        "lastUpdated": "2026-03-06T05:32:23.334Z"
+        "lastUpdated": "2026-03-08T15:24:50.287Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/invitations/accept/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/invitations/accept/page.tsx"
     },
     "admin": {
       "phase": "do",
@@ -313,7 +313,7 @@
       "phaseNumber": 3,
       "lastFile": "c:\\projects\\tenopa-proposer\\app\\services\\presentation_generator.py",
       "timestamps": {
-        "lastUpdated": "2026-03-08T07:53:11.740Z"
+        "lastUpdated": "2026-03-08T12:38:33.400Z"
       }
     },
     "resources": {
@@ -429,9 +429,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-08T02:54:03.996Z",
-        "lastUpdated": "2026-03-08T03:44:02.739Z"
+        "lastUpdated": "2026-03-08T15:28:44.879Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\[bidNo]\\page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/bids/[bidNo]/page.tsx"
     },
     "settings": {
       "phase": "do",
@@ -484,7 +484,7 @@
   "session": {
     "startedAt": "2026-03-05T04:49:56.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-03-08T07:53:11.740Z"
+    "lastActivity": "2026-03-08T15:28:44.880Z"
   },
   "history": [
     {
@@ -2987,6 +2987,114 @@
     {
       "timestamp": "2026-03-08T07:53:11.740Z",
       "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T10:42:19.277Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T10:42:23.690Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T10:42:28.783Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T12:26:34.768Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T12:30:33.357Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T12:34:49.085Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T12:38:33.400Z",
+      "feature": "tenopa-proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:21:20.900Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:22:16.542Z",
+      "feature": "supabase",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:23:53.474Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:24:50.287Z",
+      "feature": "accept",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:26:06.911Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:00.356Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:07.489Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:16.837Z",
+      "feature": "proposals",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:31.264Z",
+      "feature": "[bidNo]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:36.223Z",
+      "feature": "[bidNo]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-08T15:28:44.879Z",
+      "feature": "[bidNo]",
       "phase": "do",
       "action": "updated"
     }

@@ -4,7 +4,7 @@
  * F-05: 공고 상세 + AI 분석 결과 페이지
  */
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { api, BidAnnouncement, BidRecommendation, RecommendationReason, RiskFactor } from "@/lib/api";
@@ -38,7 +38,7 @@ function formatBudget(amount: number | null): string {
   return `${amount.toLocaleString()}원`;
 }
 
-export default function BidDetailPage() {
+function BidDetailContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -268,5 +268,13 @@ export default function BidDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BidDetailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0f0f0f]" />}>
+      <BidDetailContent />
+    </Suspense>
   );
 }
