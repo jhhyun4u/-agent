@@ -1,0 +1,11 @@
+{
+  "sessionCount": 87,
+  "lastSession": {
+    "startedAt": "2026-03-08T14:52:05.142Z",
+    "platform": "claude",
+    "level": "Starter"
+  },
+  "phase": "do",
+  "matchRate": 12,
+  "feature": "proposal-platform-v1"
+}

@@ -1,0 +1,12 @@
+.env
+.env.local
+__pycache__/
+*.pyc
+.git/
+tests/
+docs/
+frontend/
+output/
+.coverage
+.venv/
+*.egg-info/

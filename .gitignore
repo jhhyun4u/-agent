@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output files
+output/
+*.docx
+*.pptx
+!app/templates/*.docx
+!app/templates/*.pptx
+
+# uv
+.claude/
+.serena/
+app/api/routes_old.py
+
+# Node
+node_modules/
+.next/
+
+# Logs
+uvicorn.log
+*.log
+
+# bkit snapshots
+.bkit/snapshots/
+
+# Temp files
+_fix_*.py
