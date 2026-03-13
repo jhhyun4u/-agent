@@ -1,0 +1,163 @@
+"""
+Claude API 클라이언트 (§16 프롬프트 설계 원칙)
+
+Anthropic API 래퍼:
+- Prompt Caching 지원
+- 토큰 사용량 추적
+- 구조화 출력 (JSON 파싱)
+- 재시도 로직 (지수 백오프)
+"""
+
+import json
+import logging
+from typing import Any
+
+import anthropic
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
+
+_client: anthropic.AsyncAnthropic | None = None
+
+
+def _get_client() -> anthropic.AsyncAnthropic:
+    global _client
+    if _client is None:
+        _client = anthropic.AsyncAnthropic(
+            api_key=settings.anthropic_api_key,
+            max_retries=settings.max_retries,
+        )
+    return _client
+
+
+async def claude_generate(
+    prompt: str,
+    system_prompt: str = "",
+    model: str | None = None,
+    max_tokens: int | None = None,
+    temperature: float = 0.3,
+    cache_system: bool = True,
+    response_format: str = "json",
+) -> dict[str, Any]:
+    """Claude API 호출 — JSON 응답 파싱.
+
+    Args:
+        prompt: 사용자 메시지 (단계별 프롬프트)
+        system_prompt: 시스템 프롬프트 (COMMON_CONTEXT + TRUSTWORTHINESS_RULES)
+        model: 모델 override (기본: settings.claude_model)
+        max_tokens: 최대 출력 토큰
+        temperature: 생성 온도
+        cache_system: 시스템 프롬프트 Prompt Caching 활성화
+        response_format: "json" | "text"
+
+    Returns:
+        파싱된 JSON dict 또는 {"text": str}
+    """
+    client = _get_client()
+    model = model or settings.claude_model
+    max_tokens = max_tokens or settings.max_output_tokens
+
+    # 시스템 프롬프트 구성 (Prompt Caching)
+    system_content = []
+    if system_prompt:
+        block = {"type": "text", "text": system_prompt}
+        if cache_system and settings.enable_prompt_caching:
+            block["cache_control"] = {"type": "ephemeral"}
+        system_content.append(block)
+
+    # 메시지 구성
+    messages = [{"role": "user", "content": prompt}]
+
+    # API 호출 kwargs 구성 (system이 비어있으면 파라미터 자체를 생략)
+    create_kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+        "messages": messages,
+    }
+    if system_content:
+        create_kwargs["system"] = system_content
+
+    try:
+        response = await client.messages.create(**create_kwargs)
+
+        # 토큰 사용량 로깅
+        usage = response.usage
+        if settings.log_token_usage:
+            logger.info(
+                f"Claude API: input={usage.input_tokens}, output={usage.output_tokens}, "
+                f"cache_read={getattr(usage, 'cache_read_input_tokens', 0)}, "
+                f"cache_create={getattr(usage, 'cache_creation_input_tokens', 0)}"
+            )
+
+        # 응답 텍스트 추출
+        text = response.content[0].text if response.content else ""
+
+        # JSON 파싱
+        if response_format == "json":
+            return _parse_json_response(text)
+
+        return {
+            "text": text,
+            "token_usage": {
+                "input_tokens": usage.input_tokens,
+                "output_tokens": usage.output_tokens,
+                "cached_tokens": getattr(usage, "cache_read_input_tokens", 0),
+            },
+        }
+
+    except anthropic.APIError as e:
+        logger.error(f"Claude API 오류: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError(f"Claude API 오류: {e.message}")
+
+
+async def claude_generate_streaming(
+    prompt: str,
+    system_prompt: str = "",
+    model: str | None = None,
+    max_tokens: int | None = None,
+):
+    """Claude API 스트리밍 호출 — SSE 이벤트 생성기."""
+    client = _get_client()
+    model = model or settings.claude_model
+    max_tokens = max_tokens or settings.max_output_tokens
+
+    system_content = []
+    if system_prompt:
+        system_content.append({"type": "text", "text": system_prompt})
+
+    stream_kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    if system_content:
+        stream_kwargs["system"] = system_content
+
+    async with client.messages.stream(**stream_kwargs) as stream:
+        async for text in stream.text_stream:
+            yield text
+
+
+def _parse_json_response(text: str) -> dict:
+    """Claude 응답에서 JSON 추출 및 파싱.
+
+    코드블록(```json ... ```) 또는 순수 JSON 모두 지원.
+    """
+    # 코드블록 제거
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        lines = cleaned.split("\n")
+        # 첫 줄(```json)과 마지막 줄(```) 제거
+        start = 1
+        end = len(lines) - 1 if lines[-1].strip() == "```" else len(lines)
+        cleaned = "\n".join(lines[start:end])
+
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        # JSON 파싱 실패 시 텍스트 응답 반환
+        logger.warning(f"JSON 파싱 실패, 텍스트 응답 반환: {cleaned[:200]}...")
+        return {"text": text, "_parse_error": True}

@@ -7946,3 +7946,452 @@ Phase 3 (MEDIUM - 기존 설계 구현):
 1. **v3.4 프론트엔드에 API 갭 5건 해소**: §13-10~13에 필요한 H1~H6 엔드포인트를 §12-4, §12-12, §12-13에 추가하여 프론트엔드-백엔드 정합성 확보.
 2. **표준 에러 코드 도입**: ProposalEditor 자동저장이 빈번한 API 호출을 유발하므로, 에러 종류별 핸들링(재시도/토큰갱신/인라인에러)을 §12-0에서 체계화. §22-4 Fallback 전략과 일관성 유지.
 3. **TENOPA `/resume` 다형성 패턴 유지**: PF의 checkpoint 분리 엔드포인트는 다중 에이전트에 적합하지만, TENOPA의 모놀리식 StateGraph + interrupt() 패턴에서는 단일 `/resume`이 더 깔끔. 변경 불요.
+
+---
+
+## §32. v3.5 워크플로 개선 — 순차 제안서 작성 + 유형별 프롬프트 + 스토리라인 파이프라인
+
+> **버전**: v3.5 (2026-03-13)
+>
+> v3.4까지의 STEP 4는 Send() 병렬 fan-out 패턴이었다. v3.5에서는 **섹션별 순차 작성 + 리뷰 루프**로 전환하고,
+> 10개 섹션 유형별 전문 프롬프트를 도입하며, 스토리라인 기반 목차 동기화 파이프라인을 완성한다.
+>
+> 이 섹션은 §4(STEP 4), §3(State), §5(review_node), §8(prompt), §9(proposal_section), §11(edges)에 대한 **v3.5 변경분**을 집중 기술한다.
+
+### 32-1. 변경 동기
+
+| 문제 (v3.4) | 해결 (v3.5) |
+|---|---|
+| Send() 병렬 fan-out은 섹션 간 맥락 단절 → 중복 서술, 일관성 저하 | 순차 작성으로 이전 섹션 컨텍스트 자동 참조 |
+| 전체 완성 후 1회 리뷰 → 수정 범위 광범위 | 섹션마다 즉시 리뷰 → 피드백 즉시 반영, 수정 비용 최소화 |
+| 단일 `proposal_section` 프롬프트로 모든 유형 처리 | 10개 유형별 전문 프롬프트 → 평가위원 관점 + 채점 극대화 |
+| plan_story 결과가 섹션 작성에 반영되지 않음 | 스토리라인 파이프라인 (목차 동기화 → 주입 → 작성) 완성 |
+
+### 32-2. STEP 4 그래프 토폴로지 변경 (§4 대체)
+
+> §4 lines 552-640의 STEP 4 병렬 fan-out 패턴을 아래로 **대체**한다.
+
+#### 32-2-1. 삭제 항목
+
+| 항목 | 유형 | 기존 위치 |
+|---|---|---|
+| `proposal_fan_out_gate` | 노드 | §4 line 553 |
+| `proposal_section` | 노드 | §4 line 554 |
+| `proposal_merge` | 노드 | §4 line 555 |
+| `proposal_selective_fan_out` | 라우팅 함수 | §11 |
+
+#### 32-2-2. 신규 노드
+
+```python
+# STEP 4 (v3.5: 순차 작성 + 섹션별 리뷰)
+g.add_node("proposal_start_gate",    _proposal_start_gate)   # index 초기화
+g.add_node("proposal_write_next",    proposal_write_next)    # 1개 섹션 순차 작성
+g.add_node("review_section",         review_section_node)    # 섹션별 human 리뷰
+g.add_node("self_review",            self_review_with_auto_improve)
+g.add_node("review_proposal",        review_node("proposal"))
+```
+
+| 노드 | 역할 | 구현 위치 |
+|---|---|---|
+| `proposal_start_gate` | `current_section_index = 0` 초기화 + 작성 대상 섹션 목록 결정 | `graph.py` _proposal_start_gate |
+| `proposal_write_next` | `current_section_index` 기준 1개 섹션 작성, 이전 섹션 컨텍스트 주입, 스토리라인 주입, 유형별 프롬프트 선택 | `proposal_nodes.py` |
+| `review_section` | 방금 작성된 1개 섹션을 interrupt()로 human에게 제시, 승인/반려/전체완료 분기 | `review_node.py` |
+
+#### 32-2-3. 신규 엣지 (§4 + §11 대체)
+
+```python
+# STEP 3 → STEP 4 진입
+g.add_conditional_edges("review_plan", route_after_plan_review, {
+    "approved":             "proposal_start_gate",      # ★ v3.5: proposal_fan_out_gate → proposal_start_gate
+    "rework":               "plan_fan_out_gate",
+    "rework_with_strategy": "strategy_generate",
+})
+
+# STEP 4: 순차 작성 루프
+g.add_edge("proposal_start_gate",   "proposal_write_next")
+g.add_edge("proposal_write_next",   "review_section")
+g.add_conditional_edges("review_section", route_after_section_review, {
+    "next_section":   "proposal_write_next",    # 승인 → index++ → 다음 섹션
+    "rewrite":        "proposal_write_next",    # 반려 → 같은 index 재작성
+    "all_done":       "self_review",            # 전체 완료 → 자가진단
+})
+
+# self_review 이후 (v3.3 5방향 유지, 목적지만 변경)
+g.add_conditional_edges("self_review", route_after_self_review, {
+    "pass":            "review_proposal",
+    "retry_research":  "research_gather",
+    "retry_strategy":  "strategy_generate",
+    "retry_sections":  "proposal_start_gate",   # ★ v3.5: proposal_fan_out_gate → proposal_start_gate
+    "force_review":    "review_proposal",
+})
+g.add_conditional_edges("review_proposal", route_after_proposal_review, {
+    "approved":  "presentation_strategy",
+    "rework":    "proposal_start_gate",          # ★ v3.5: proposal_fan_out_gate → proposal_start_gate
+})
+```
+
+#### 32-2-4. 순차 작성 흐름도
+
+```
+review_plan (approved)
+    │
+    ▼
+proposal_start_gate ── current_section_index = 0
+    │                   sections_to_write = _get_sections_to_write(state)
+    ▼
+proposal_write_next ◄─── (rewrite: 같은 index)
+    │  │
+    │  │  1. sections_to_write[current_section_index] 가져오기
+    │  │  2. classify_section_type() → 유형별 프롬프트 선택
+    │  │  3. _build_context(): 스토리라인 + 이전 섹션 + KB + 평가항목
+    │  │  4. Claude API 호출 → 섹션 본문 생성
+    │  │  5. parallel_results[section_id] 저장
+    │  │
+    ▼  │
+review_section ────────── interrupt() → human 검토
+    │  │  │
+    │  │  └─ (next_section) → current_section_index++ → proposal_write_next
+    │  │
+    │  └─── (rewrite) → proposal_write_next (같은 index)
+    │
+    └───── (all_done) → self_review → review_proposal → ...
+```
+
+### 32-3. State 스키마 변경 (§3 보완)
+
+```python
+class ProposalState(TypedDict):
+    # ... 기존 필드 ...
+
+    # ★ v3.5 추가
+    current_section_index: Annotated[int, lambda a, b: b]  # 순차 작성 인덱스 (0-based)
+```
+
+| 필드 | 타입 | 용도 | Reducer |
+|---|---|---|---|
+| `current_section_index` | `int` | 현재 작성 중인 섹션 인덱스 (0-based). `proposal_start_gate`에서 0으로 초기화, `route_after_section_review`에서 +1 | `lambda a, b: b` (최신값 우선) |
+
+### 32-4. 라우팅 함수 추가 (§11 보완)
+
+#### 32-4-1. route_after_section_review (신규)
+
+```python
+def route_after_section_review(state: ProposalState) -> str:
+    """섹션 리뷰 후 3방향 분기.
+
+    Returns:
+        - "next_section": 승인 → index 증가 → 다음 섹션 작성
+        - "rewrite": 반려 → 같은 인덱스 재작성
+        - "all_done": 모든 섹션 완료 → self_review 진입
+    """
+    step = state.get("current_step", "")
+    if step == "sections_complete":
+        return "all_done"
+    elif step == "section_approved":
+        return "next_section"
+    else:
+        return "rewrite"
+```
+
+| 조건 | current_step 값 | 라우팅 |
+|---|---|---|
+| 섹션 승인 + 남은 섹션 있음 | `section_approved` | `next_section` → `proposal_write_next` |
+| 모든 섹션 완료 | `sections_complete` | `all_done` → `self_review` |
+| 섹션 반려 | 기타 | `rewrite` → `proposal_write_next` (같은 index) |
+
+### 32-5. 유형별 전문 프롬프트 체계 (§9 대체)
+
+> §9의 단일 `proposal_section` 프롬프트를 아래 10개 유형 + 케이스 B 프롬프트로 대체한다.
+> 구현: `app/prompts/section_prompts.py`
+
+#### 32-5-1. 10개 섹션 유형 분류
+
+| 유형 | 설명 | 대표 키워드 |
+|---|---|---|
+| UNDERSTAND | 과업 이해 | 과업, 현황, 배경, 목적 |
+| STRATEGY | 전략·추진방향 | 전략, 추진방향, 비전, 접근 |
+| METHODOLOGY | 방법론·절차 | 방법론, 절차, 프로세스, 단계 |
+| TECHNICAL | 기술·시스템 | 기술, 시스템, 아키텍처, 인프라 |
+| MANAGEMENT | 관리·품질 | 관리, 품질, 위험, 이슈 |
+| PERSONNEL | 인력·조직 | 인력, 조직, 자격, 투입 |
+| TRACK_RECORD | 수행실적 | 실적, 사례, 유사과업, 경험 |
+| SECURITY | 보안·정보보호 | 보안, 정보보호, 개인정보, 암호화 |
+| MAINTENANCE | 유지보수·운영 | 유지보수, 운영, 하자보수, SLA |
+| ADDED_VALUE | 가산점·부가제안 | 가산, 부가, 추가, 기여 |
+
+`classify_section_type(section_id: str) -> str` — 섹션 ID/이름의 키워드를 매칭하여 유형 결정.
+매칭 실패 시 기본값: `METHODOLOGY`.
+
+#### 32-5-2. EVALUATOR_PERSPECTIVE_BLOCK (공통)
+
+모든 유형별 프롬프트 상단에 삽입되는 공통 블록:
+
+```
+## 평가위원 채점 관점
+이 섹션은 평가위원에 의해 채점됩니다. 다음 기준을 최우선으로 고려하세요:
+1. **세부 평가항목 1:1 대응**: 모든 세부 평가항목에 대해 명시적으로 답변
+2. **구체적 근거 제시**: 주장마다 수치, 사례, 방법론으로 뒷받침
+3. **차별화 포인트**: 경쟁사 대비 우위를 명확히 드러내는 서술
+4. **논리적 흐름**: 문제 인식 → 접근 방법 → 기대 효과의 일관된 논리 구조
+5. **배점 비례 분량**: 고배점 항목에 더 많은 지면과 깊이 할당
+```
+
+#### 32-5-3. 유형별 프롬프트 구조
+
+각 유형 프롬프트는 동일한 구조를 따른다:
+
+```
+{EVALUATOR_PERSPECTIVE_BLOCK}
+
+## [{유형}] {유형 설명} 섹션 작성 지침
+### 이 유형의 핵심 목표
+### 필수 포함 요소
+### 자가진단 체크리스트
+### 출력 형식 (JSON)
+
+## 작성 지침
+{storyline_context}
+{positioning_guide}
+{prev_sections_context}
+{feedback_context}
+```
+
+**입력 변수** (proposal_write_next에서 주입):
+
+| 변수 | 출처 | 설명 |
+|---|---|---|
+| `section_name` | dynamic_sections[current_section_index] | 섹션 ID/이름 |
+| `eval_item_detail` | eval_items 매칭 | 배점, 세부항목 |
+| `storyline_context` | plan.storylines → _build_context() | 스토리라인 컨텍스트 (32-6 참조) |
+| `positioning_guide` | strategy | 포지셔닝 전략 |
+| `prev_sections_context` | parallel_results (이전 섹션들) | 이전 섹션 요약 |
+| `feedback_context` | rework_targets | 재작업 시 피드백 |
+| `rfp_context` | rfp_analysis | RFP 분석 결과 |
+| `kb_context` | KB 검색 결과 | 관련 역량·실적·콘텐츠 |
+| `research_context` | research_brief | 리서치 결과 |
+
+#### 32-5-4. 배점 기반 분량 조절
+
+```python
+def get_recommended_pages(score_weight: float, total_pages: int = 100) -> int:
+    """배점 비율에 따른 권장 페이지 수 산출."""
+    base = max(2, int(total_pages * score_weight / 100))
+    return min(base, 15)  # 최대 15페이지
+```
+
+#### 32-5-5. 케이스 B 프롬프트
+
+서식이 사전 정의된 케이스 B에서는 별도 `CASE_B_PROMPT`를 사용:
+- 서식 구조(제목, 하위 항목, 표, 다이어그램 위치) 보존 최우선
+- 유형별 간략 가이드(`SECTION_TYPE_BRIEF_GUIDES`)를 참조하여 각 유형의 핵심 포인트 반영
+- 서식 슬롯에 내용을 채우는 방식
+
+### 32-6. 스토리라인 파이프라인 (§8 보완)
+
+> plan_story → plan_merge → proposal_write_next로 이어지는 스토리라인 흐름을 명시한다.
+
+#### 32-6-1. plan_story 프롬프트 강화
+
+기존 §8의 PLAN_STORY_PROMPT를 3단계로 확장:
+
+```
+입력: {current_sections} (dynamic_sections에서 생성)
+
+1단계: 목차 확정
+  - RFP eval_items 기반 초안 검토
+  - 항목 추가/삭제/순서 조정 결정
+
+2단계: 섹션별 스토리라인
+  - 각 섹션에 대해:
+    eval_item, key_message, narrative_arc, supporting_points,
+    evidence, win_theme_connection, transition_to_next, tone
+
+3단계: 톤앤매너
+  - overall_narrative, opening_hook, closing_impact
+```
+
+**출력 JSON**:
+```json
+{
+  "storylines": {
+    "overall_narrative": "전체 제안서를 관통하는 서사",
+    "opening_hook": "도입부 후킹 전략",
+    "closing_impact": "마무리 인상 전략",
+    "sections": [
+      {
+        "eval_item": "평가 항목명",
+        "key_message": "핵심 주장 (Assertion Title)",
+        "narrative_arc": "문제 제기 → 긴장감 → 해결책 구조",
+        "supporting_points": ["근거1", "근거2"],
+        "evidence": ["실적1", "수치1"],
+        "win_theme_connection": "Win Theme과 연결 방식",
+        "transition_to_next": "다음 섹션 연결고리",
+        "tone": "톤 가이드"
+      }
+    ]
+  }
+}
+```
+
+#### 32-6-2. plan_merge에서 목차 동기화 (_sync_dynamic_sections)
+
+`plan_merge` 노드 실행 시 `_sync_dynamic_sections(state, storylines)` 호출:
+
+1. `storylines.sections[].eval_item` 순서로 `dynamic_sections` 재정렬
+2. 기존 `dynamic_sections`에 있으나 storylines에 없는 섹션은 후미에 보존
+3. 신규 섹션에 대해 `classify_section_type()` 호출하여 `_section_type_map` 갱신
+4. 결과: `{ "dynamic_sections": [...], "parallel_results": {"_section_type_map": {...}} }` 반환
+
+```python
+def _sync_dynamic_sections(state: ProposalState, storylines: dict) -> dict:
+    story_sections = storylines.get("sections", [])
+    if not story_sections:
+        return {}
+    new_order = []
+    for s in story_sections:
+        section_id = s.get("eval_item") or s.get("section_id", "")
+        if section_id and section_id not in new_order:
+            new_order.append(section_id)
+    existing = state.get("dynamic_sections", [])
+    for sid in existing:
+        if sid not in new_order:
+            new_order.append(sid)
+    section_type_map = state.get("parallel_results", {}).get("_section_type_map", {})
+    for sid in new_order:
+        if sid not in section_type_map:
+            section_type_map[sid] = classify_section_type(sid)
+    return {
+        "dynamic_sections": new_order,
+        "parallel_results": {"_section_type_map": section_type_map},
+    }
+```
+
+#### 32-6-3. proposal_write_next에서 스토리라인 주입
+
+`_build_context()` 내부에서 현재 섹션에 해당하는 스토리라인을 추출하여 `storyline_context` 문자열 생성:
+
+```python
+# plan.storylines에서 현재 섹션 매칭
+storylines = state.get("plan", {}).get("storylines", {})
+sections_data = storylines.get("sections", [])
+matched = next((s for s in sections_data if s.get("eval_item") == section_id), None)
+
+if matched:
+    storyline_context = f"""## 스토리라인 가이드
+전체 서사: {storylines.get('overall_narrative', '')}
+도입 전략: {storylines.get('opening_hook', '')}
+
+### 이 섹션의 스토리라인
+- 핵심 메시지: {matched.get('key_message', '')}
+- 서사 구조: {matched.get('narrative_arc', '')}
+- 근거 포인트: {', '.join(matched.get('supporting_points', []))}
+- 증빙: {', '.join(matched.get('evidence', []))}
+- Win Theme 연결: {matched.get('win_theme_connection', '')}
+- 다음 섹션 전환: {matched.get('transition_to_next', '')}
+- 톤: {matched.get('tone', '')}"""
+```
+
+### 32-7. 리뷰 노드 변경 (§5 보완)
+
+#### 32-7-1. review_section_node (신규)
+
+```python
+def review_section_node(state: ProposalState) -> dict:
+    """섹션별 human 리뷰 게이트.
+
+    방금 작성된 섹션 1개를 human에게 제시하고 interrupt()로 대기.
+
+    interrupt 데이터:
+      - section_id: 현재 섹션 ID
+      - section_content: 작성된 본문
+      - section_index: 현재 인덱스
+      - total_sections: 전체 섹션 수
+      - self_check: 자가진단 결과
+
+    human_input 처리:
+      - approved=True, next=True → current_section_index++, current_step="section_approved"
+      - approved=True, finish=True → current_step="sections_complete"
+      - approved=False → feedback 저장, current_step="section_rejected"
+    """
+```
+
+#### 32-7-2. plan 리뷰 강화 (_build_plan_review_context)
+
+plan 리뷰 시 기존 plan 데이터에 추가로 스토리라인 컨텍스트를 제공:
+
+```python
+def _build_plan_review_context(state: ProposalState) -> dict:
+    """plan 리뷰 interrupt에 포함할 목차+스토리라인 데이터.
+
+    Returns:
+        toc_with_storylines: [{section_id, key_message, weight, tone, narrative_arc}, ...]
+        overall_narrative: 전체 서사
+        opening_hook: 도입 전략
+        closing_impact: 마무리 전략
+        review_instructions: "목차 순서 변경, 섹션 추가/삭제, 스토리라인 수정 가능"
+    """
+```
+
+#### 32-7-3. plan 리뷰 핸들러 (_handle_plan_review)
+
+```python
+def _handle_plan_review(state: ProposalState, human_input: dict) -> dict:
+    """plan 리뷰 human 응답 처리.
+
+    human_input 옵션:
+      - sections_reorder: [섹션ID 리스트] → dynamic_sections 재정렬
+      - storyline_feedback: {section_id: "피드백"} → plan.storylines 갱신
+      - approved=True → "approved"
+      - approved=False → rework_targets 설정
+    """
+```
+
+### 32-8. prompt-enhancement 추가 필드
+
+> `docs/02-design/features/prompt-enhancement.design.md` 보완 사항.
+> 구현: `app/services/phase_prompts.py`
+
+#### 32-8-1. PHASE3_USER 추가 출력 필드
+
+| 필드 | 설명 | 설계 문서 상태 |
+|---|---|---|
+| `alternatives_considered` | 대안 비교 | 기존 (prompt-enhancement §2-1) |
+| `risks_mitigations` | 리스크 대응 | 기존 |
+| `implementation_checklist` | 추진 체크리스트 | 기존 |
+| `logic_model` | 투입→활동→산출→결과→영향 Logic Model | ★ 신규 추가 |
+| `objection_responses` | 예상 반론 + 대응 논리 | ★ 신규 추가 |
+
+#### 32-8-2. PHASE4_SYSTEM 추가 원칙
+
+기존 3개 원칙에 5개 추가:
+
+| # | 원칙 | 설명 | 설계 문서 상태 |
+|---|---|---|---|
+| 1 | 대안 비교 | 2개 이상 대안 + 채택 근거 | 기존 |
+| 2 | 리스크 대응 | 리스크별 대응 전략 | 기존 |
+| 3 | 추진 체계 | 담당/일정/마일스톤 | 기존 |
+| 4 | Logic Model | 투입→활동→산출→결과→영향 | ★ 신규 |
+| 5 | Assertion Title | 각 섹션 제목을 주장형으로 | ★ 신규 |
+| 6 | Narrative Arc | 문제→긴장→해결 구조 | ★ 신규 |
+| 7 | Objection Handling | 예상 반론 선제 대응 | ★ 신규 |
+| 8 | Price Anchoring | 비용 대비 가치 프레이밍 | ★ 신규 |
+
+### 32-9. Dead Code 정리 기록
+
+| 항목 | 상태 | 비고 |
+|---|---|---|
+| `proposal_merge` (merge_nodes.py) | 코드 존재, graph.py 미사용 | 레거시 호환 목적으로 보존. 향후 정리 대상 |
+| `proposal_selective_fan_out` (edges.py) | 삭제됨 | v3.5에서 제거 |
+| `proposal_fan_out_gate` | 삭제됨 | `proposal_start_gate`로 대체 |
+
+### 32-10. 영향받는 기존 섹션 요약
+
+| 기존 섹션 | 변경 내용 | 변경 유형 |
+|---|---|---|
+| §3 (State) | `current_section_index` 필드 추가 | 보완 |
+| §4 (Graph, STEP 4) | 병렬 fan-out → 순차 작성 루프. 노드 3개 교체, 엣지 전면 변경 | **대체** |
+| §5 (review_node) | review_section_node 추가, plan 리뷰 핸들러 추가 | 보완 |
+| §8 (prompts — plan_story) | 3단계 프롬프트 확장, current_sections 입력 추가, 출력 필드 확장 | 보완 |
+| §9 (proposal_section) | 단일 프롬프트 → 10개 유형별 프롬프트 + EVALUATOR_PERSPECTIVE_BLOCK | **대체** |
+| §11 (edges) | `route_after_section_review` 추가, `proposal_selective_fan_out` 삭제 | 보완 |
+| §11 (edges — 기존 라우팅) | `proposal_fan_out_gate` 참조 → `proposal_start_gate`로 변경 (3곳) | 수정 |

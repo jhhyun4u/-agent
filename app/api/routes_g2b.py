@@ -4,6 +4,8 @@
 엔드포인트:
   GET /api/g2b/bid-search        입찰공고 검색
   GET /api/g2b/bid-results       낙찰결과 조회
+  GET /api/g2b/bid/{bid_no}      특정 공고 낙찰정보 (§12-4)
+  GET /api/g2b/stats             유사 공고 낙찰 통계 (§12-4)
   GET /api/g2b/contract-results  계약결과 조회
   GET /api/g2b/company-history   업체 입찰이력
   GET /api/g2b/competitors       경쟁사 통합 분석 (4단계)
@@ -97,6 +99,188 @@ async def bid_results(
     except Exception as e:
         logger.error(f"bid-results 오류: {e}")
         raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 특정 공고 낙찰정보 (§12-4)
+# ─────────────────────────────────────────────
+
+@router.get("/bid/{bid_no}")
+async def bid_award_info(
+    bid_no: str,
+    current_user=Depends(get_current_user),
+):
+    """
+    특정 공고의 낙찰정보 조회
+
+    - 낙찰업체명, 낙찰금액, 투찰 업체수, 개찰일 등
+    - 공고 상세 정보도 함께 반환
+    """
+    try:
+        async with G2BService() as g2b:
+            # 낙찰결과 조회 (공고번호 기준)
+            results = await g2b.get_bid_results(bid_no, num_of_rows=10)
+
+            # 공고 상세 조회 (예정가격, 발주기관 등 보충)
+            detail = await g2b.get_bid_detail(bid_no)
+
+        if not results:
+            return {
+                "bid_no": bid_no,
+                "status": "not_found",
+                "message": "낙찰결과가 아직 공개되지 않았거나 해당 공고번호가 없습니다.",
+                "bid_detail": _normalize_bid_detail(detail) if detail else None,
+            }
+
+        primary = results[0]
+        return {
+            "bid_no": bid_no,
+            "status": "found",
+            "award": {
+                "winner": primary.get("sucsfBidderNm", ""),
+                "amount": _parse_amount(primary.get("sucsfBidAmt")),
+                "bid_count": _parse_int(primary.get("bidprcPrtcptCnt")),
+                "open_date": primary.get("opengDt", ""),
+                "bid_date": primary.get("bidClseDt", primary.get("opengDt", "")),
+            },
+            "bid_detail": _normalize_bid_detail(detail) if detail else None,
+            "all_results": [
+                {
+                    "winner": r.get("sucsfBidderNm", ""),
+                    "amount": _parse_amount(r.get("sucsfBidAmt")),
+                    "bid_count": _parse_int(r.get("bidprcPrtcptCnt")),
+                    "open_date": r.get("opengDt", ""),
+                }
+                for r in results
+            ],
+        }
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        logger.error(f"bid-award-info 오류: {e}")
+        raise HTTPException(status_code=500, detail="낙찰정보 조회 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 유사 공고 낙찰 통계 (§12-4)
+# ─────────────────────────────────────────────
+
+@router.get("/stats")
+async def bid_stats(
+    keyword: str = Query(..., description="검색 키워드 (유사 공고 기준)"),
+    num_of_rows: int = Query(50, ge=10, le=100, description="분석 대상 건수"),
+    date_range_months: int = Query(24, ge=1, le=60, description="검색 기간 (개월)"),
+    current_user=Depends(get_current_user),
+):
+    """
+    유사 공고 낙찰 통계 — 평균 낙찰금액, 낙찰률, 경쟁강도 등
+
+    - 키워드로 유사 낙찰결과를 조회한 뒤 통계 집계
+    - plan_price 노드의 벤치마크 데이터로 활용
+    """
+    try:
+        async with G2BService() as g2b:
+            results = await g2b.get_bid_results(
+                keyword=keyword,
+                num_of_rows=num_of_rows,
+            )
+
+        if not results:
+            return {
+                "keyword": keyword,
+                "status": "no_data",
+                "message": "해당 키워드의 낙찰결과가 없습니다.",
+                "stats": None,
+            }
+
+        # 통계 집계
+        amounts = []
+        bid_counts = []
+        winners: dict[str, int] = {}
+
+        for r in results:
+            amt = _parse_amount(r.get("sucsfBidAmt"))
+            if amt and amt > 0:
+                amounts.append(amt)
+
+            cnt = _parse_int(r.get("bidprcPrtcptCnt"))
+            if cnt and cnt > 0:
+                bid_counts.append(cnt)
+
+            winner = r.get("sucsfBidderNm", "").strip()
+            if winner:
+                winners[winner] = winners.get(winner, 0) + 1
+
+        avg_amount = int(sum(amounts) / len(amounts)) if amounts else 0
+        min_amount = min(amounts) if amounts else 0
+        max_amount = max(amounts) if amounts else 0
+        avg_bid_count = round(sum(bid_counts) / len(bid_counts), 1) if bid_counts else 0
+
+        # 상위 낙찰업체 (빈도순)
+        top_winners = sorted(winners.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        return {
+            "keyword": keyword,
+            "status": "ok",
+            "analyzed_count": len(results),
+            "stats": {
+                "avg_amount": avg_amount,
+                "min_amount": min_amount,
+                "max_amount": max_amount,
+                "amount_count": len(amounts),
+                "avg_bid_count": avg_bid_count,
+                "bid_count_range": {
+                    "min": min(bid_counts) if bid_counts else 0,
+                    "max": max(bid_counts) if bid_counts else 0,
+                },
+                "unique_winners": len(winners),
+                "top_winners": [
+                    {"company": name, "win_count": count}
+                    for name, count in top_winners
+                ],
+            },
+        }
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        logger.error(f"bid-stats 오류: {e}")
+        raise HTTPException(status_code=500, detail="낙찰 통계 조회 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 헬퍼 함수
+# ─────────────────────────────────────────────
+
+def _parse_amount(val) -> int | None:
+    """금액 문자열을 int로 변환."""
+    if val is None:
+        return None
+    try:
+        return int(str(val).replace(",", "").strip() or "0")
+    except (ValueError, TypeError):
+        return None
+
+
+def _parse_int(val) -> int | None:
+    """정수 문자열을 int로 변환."""
+    if val is None:
+        return None
+    try:
+        return int(str(val).replace(",", "").strip() or "0")
+    except (ValueError, TypeError):
+        return None
+
+
+def _normalize_bid_detail(raw: dict) -> dict:
+    """공고 상세 raw 데이터를 정규화."""
+    return {
+        "project_name": raw.get("bidNtceNm", ""),
+        "client": raw.get("ntceInsttNm", raw.get("dminsttNm", "")),
+        "budget": _parse_amount(raw.get("presmptPrce", raw.get("asignBdgtAmt"))),
+        "deadline": raw.get("bidClseDt", ""),
+        "bid_method": raw.get("bidMethdNm", ""),
+        "contract_method": raw.get("cntrctCnclsMthdNm", ""),
+    }
 
 
 # ─────────────────────────────────────────────

@@ -471,3 +471,93 @@ class G2BService:
                 weakness_score=1 - strength,
             ))
         return sorted(profiles, key=lambda x: x.strength_score, reverse=True)
+
+
+# ─────────────────────────────────────────────
+# 스탠드얼론 래퍼 (LangGraph 노드에서 사용)
+# ─────────────────────────────────────────────
+
+async def search_bids(
+    keywords: str,
+    budget_min: Optional[int] = None,
+    region: Optional[str] = None,
+) -> List[Dict]:
+    """공고 검색 — rfp_search 노드에서 사용."""
+    async with G2BService() as svc:
+        try:
+            results = await svc.search_bid_announcements(keywords, num_of_rows=20)
+            # 간이 필터
+            filtered = []
+            for r in results:
+                bid = {
+                    "bid_no": r.get("bidNtceNo", ""),
+                    "project_name": r.get("bidNtceNm", ""),
+                    "client": r.get("ntceInsttNm", r.get("dminsttNm", "")),
+                    "budget": r.get("presmptPrce", r.get("asignBdgtAmt", "")),
+                    "deadline": r.get("bidClseDt", ""),
+                }
+                if budget_min:
+                    try:
+                        amt = int(str(bid["budget"]).replace(",", "").strip() or "0")
+                        if amt < budget_min:
+                            continue
+                    except (ValueError, TypeError):
+                        pass
+                filtered.append(bid)
+            return filtered
+        except Exception as e:
+            logger.warning(f"G2B 공고 검색 실패: {e}")
+            return []
+
+
+async def get_bid_detail(bid_no: str) -> Dict:
+    """공고 상세 조회 — rfp_fetch 노드에서 사용."""
+    async with G2BService() as svc:
+        try:
+            raw = await svc.get_bid_detail(bid_no)
+            return {
+                "project_name": raw.get("bidNtceNm", ""),
+                "client": raw.get("ntceInsttNm", raw.get("dminsttNm", "")),
+                "budget": raw.get("presmptPrce", raw.get("asignBdgtAmt", "")),
+                "deadline": raw.get("bidClseDt", ""),
+                "description": raw.get("ntceSpecDocUrl1", raw.get("bidNtceDtlUrl", "")),
+                "requirements_summary": raw.get("ntceSpecCn", ""),
+                "attachments": _extract_attachments(raw),
+            }
+        except Exception as e:
+            logger.warning(f"G2B 상세 조회 실패: {e}")
+            return {
+                "project_name": bid_no,
+                "client": "", "budget": "", "deadline": "",
+                "description": "", "requirements_summary": "",
+                "attachments": [],
+            }
+
+
+async def get_bid_result_info(bid_no: str) -> Dict:
+    """낙찰 정보 조회 — Phase 4 성과 추적에서 사용."""
+    async with G2BService() as svc:
+        try:
+            results = await svc.get_bid_results(bid_no, num_of_rows=5)
+            if results:
+                r = results[0]
+                return {
+                    "winner": r.get("sucsfBidderNm", ""),
+                    "amount": r.get("sucsfBidAmt", ""),
+                    "bid_count": r.get("bidprcPrtcptCnt", ""),
+                    "bid_date": r.get("opengDt", ""),
+                }
+            return {}
+        except Exception:
+            return {}
+
+
+def _extract_attachments(raw: Dict) -> List[Dict]:
+    """G2B 공고 상세에서 첨부파일 추출."""
+    attachments = []
+    for i in range(1, 6):
+        url = raw.get(f"ntceSpecDocUrl{i}", "")
+        if url:
+            ext = "pdf" if "pdf" in url.lower() else "hwp" if "hwp" in url.lower() else "unknown"
+            attachments.append({"url": url, "type": ext, "name": f"첨부파일{i}"})
+    return attachments

@@ -5,13 +5,14 @@ TENOPA 내부 직원이 활용하는 **용역제안 Knowledge Base 플랫폼**. 
 
 ## 기술 스택
 - Python 3.11+ / FastAPI (Backend — Railway/Render)
-- Next.js (Frontend — Vercel)
+- Next.js 15+ / React 19+ / TypeScript (Frontend — Vercel)
 - LangGraph (StateGraph + interrupt + PostgresSaver)
 - Anthropic Claude API (claude-sonnet-4-5-20250929)
-- Supabase (PostgreSQL + Auth + RLS + Storage)
+- Supabase (PostgreSQL + Auth + RLS + Storage + pgvector)
 - Azure AD (Entra ID) — MS365 SSO
 - Teams Incoming Webhook — 알림
-- PyPDF2, python-docx, python-pptx
+- UI: shadcn/ui + Tiptap + Recharts
+- PyPDF2, python-docx, python-pptx, python-hwpx
 - 패키지 관리: uv
 
 ## 주요 명령어
@@ -19,22 +20,81 @@ TENOPA 내부 직원이 활용하는 **용역제안 Knowledge Base 플랫폼**. 
 uv sync                              # 의존성 설치
 uv run uvicorn app.main:app --reload  # 개발 서버 실행
 uv run pytest                         # 테스트 실행
+uv run python scripts/seed_data.py    # 시드 데이터 생성
 ```
 
-## 구조
-- `app/api/routes_auth.py` — 인증 (Azure AD SSO)
-- `app/api/routes_users.py` — 사용자·조직·팀 관리
-- `app/api/routes_proposal.py` — 제안 프로젝트 CRUD
-- `app/api/routes_workflow.py` — 워크플로 실행·재개 + SSE
-- `app/api/routes_dashboard.py` — 역할별 대시보드
-- `app/api/routes_notification.py` — 알림 관리
-- `app/graph/` — LangGraph StateGraph (state, nodes, edges)
-- `app/services/` — rfp_parser, claude_client, auth_service, approval_chain, notification_service, knowledge_search 등
-- `app/models/schemas.py` — Pydantic 스키마
-- `app/models/db.py` — Supabase PostgreSQL 연결
-- `app/prompts/` — 단계별 프롬프트 템플릿
+## 백엔드 구조 (app/)
+
+### API 라우트
+- `app/api/deps.py` — 인증·인가 의존성 (get_current_user, require_role, require_project_access)
+- `app/api/routes_auth.py` — 인증 (Azure AD SSO + Supabase Auth)
+- `app/api/routes_users.py` — 사용자·조직·팀·참여자·위임 관리
+- `app/api/routes_proposal.py` — 제안서 프로젝트 CRUD (3가지 진입 경로)
+- `app/api/routes_workflow.py` — 워크플로 제어 (start, state, resume, stream, history)
+- `app/api/routes_artifacts.py` — 산출물 조회 + DOCX 다운로드 + Compliance Matrix
+- `app/api/routes_notification.py` — 알림 목록·읽음·설정
+- `app/api/routes.py` — 기존 라우터 통합 (v3.1 파이프라인, 팀, G2B, 리소스 등)
+- `app/api/routes_bids.py` — 입찰 관리
+
+### LangGraph (app/graph/)
+- `app/graph/state.py` — ProposalState TypedDict + 서브 모델 (§3)
+- `app/graph/edges.py` — Conditional Edge 라우팅 함수 10개 (§11)
+- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 29개 노드)
+- `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가
+- `app/graph/nodes/rfp_fetch.py` — STEP 0→1: G2B 상세 수집 + RFP 업로드 게이트
+- `app/graph/nodes/rfp_analyze.py` — STEP 1-①: RFP 분석 + Compliance Matrix
+- `app/graph/nodes/research_gather.py` — v3.2: 7차원 리서치 (자동 통과)
+- `app/graph/nodes/go_no_go.py` — STEP 1-②: Go/No-Go + 포지셔닝 판정
+- `app/graph/nodes/review_node.py` — 공통 리뷰 게이트 (Shipley Color Team) + plan 리뷰 (목차+스토리라인)
+- `app/graph/nodes/merge_nodes.py` — plan/proposal/ppt 병합 (부분 재작업 지원) + storylines→dynamic_sections 동기화
+- `app/graph/nodes/stub_nodes.py` — Phase 2~5 스텁 (strategy, plan, proposal, ppt)
+
+### 서비스
+- `app/services/claude_client.py` — Claude API 클라이언트 (JSON 파싱 + 스트리밍)
+- `app/services/auth_service.py` — Azure AD 프로필 동기화, 사용자 관리
+- `app/services/approval_chain.py` — 예산 기준 결재선 자동 구성 + 위임
+- `app/services/audit_service.py` — 감사 로그
+- `app/services/compliance_tracker.py` — Compliance Matrix 생애주기 (초안→전략→AI 체크)
+- `app/services/docx_builder.py` — DOCX 빌더 (케이스 A/B + Markdown → DOCX)
+- `app/services/notification_service.py` — Teams Webhook + 인앱 알림 (승인/마감/AI 완료)
+- `app/services/rfp_parser.py` — PDF/HWP/HWPX 파싱
+- `app/services/session_manager.py` — 세션 관리
+
+### 모델
+- `app/models/schemas.py` — 제안서 관련 Pydantic 스키마
+- `app/models/user_schemas.py` — 사용자·조직 Pydantic 스키마
+
+### 핵심 파일
+- `app/main.py` — FastAPI 앱 + TenopAPIError 핸들러
+- `app/config.py` — 환경 설정 (Supabase, Azure AD, AI 등)
+- `app/exceptions.py` — 표준 에러 코드 체계 (§12-0)
+- `app/utils/supabase_client.py` — Supabase 비동기 클라이언트 (service_role + user JWT)
+
+### 프롬프트 (app/prompts/)
+- `app/prompts/strategy.py` — 포지셔닝 매트릭스 + SWOT + 시나리오 + Win Theme
+- `app/prompts/plan.py` — 5개 plan 노드 프롬프트 (team/assign/schedule/story/price). plan_story는 목차 기획 + 스토리라인 설계
+- `app/prompts/proposal_prompts.py` — 케이스 A/B + 자가진단 + PPT + 발표전략
+- `app/prompts/section_prompts.py` — 10개 섹션 유형별 전문 프롬프트 + 케이스 B + 자동 분류 + 스토리라인 주입
+- `app/prompts/proposal.py` — 레거시 프롬프트 (참고용)
+
+### 미구현 (Phase 4~)
+- `app/services/pptx_builder.py` — PPTX 빌더
+- `app/services/knowledge_search.py` — 통합 KB 검색
+- `app/services/g2b_client.py` — G2B 낙찰정보 클라이언트
+- `app/api/routes_analytics.py` — 분석 API
+
+## DB 스키마
+- `database/schema_v3.4.sql` — v3.4 통합 스키마 (§15 전체)
+- `database/supabase_schema.sql` — 레거시 (참고용)
 
 ## 코드 컨벤션
 - 한국어 docstring 및 주석
 - Pydantic v2 스타일 사용
 - async/await 패턴 (FastAPI)
+- 에러: TenopAPIError 기반 표준 에러 코드 사용 (HTTPException 점진 교체)
+- 인증: `app/api/deps.py`의 get_current_user / require_role 사용
+
+## 설계 문서
+- 요구사항: `docs/01-plan/features/proposal-agent-v1.requirements.md` (v4.9)
+- 설계: `docs/02-design/features/proposal-agent-v1.design.md` (v3.5, §32 추가)
+- 갭 분석: `docs/03-analysis/features/proposal-agent-v1.analysis.md` (97%)
