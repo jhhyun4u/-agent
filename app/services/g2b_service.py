@@ -552,6 +552,110 @@ async def get_bid_result_info(bid_no: str) -> Dict:
             return {}
 
 
+async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개발") -> Dict:
+    """
+    낙찰정보 수집 + market_price_data 적재 (Phase 4-1).
+
+    공고번호로 낙찰결과를 조회하여 market_price_data 테이블에 저장.
+    """
+    async with G2BService() as svc:
+        results = await svc.get_bid_results(bid_notice_id, num_of_rows=5)
+        if not results:
+            return {"status": "not_found", "bid_notice_id": bid_notice_id}
+
+        r = results[0]
+        winner = r.get("sucsfBidderNm", "")
+        amount_str = r.get("sucsfBidAmt", "0")
+        budget_str = r.get("presmptPrce", r.get("asignBdgtAmt", "0"))
+        bid_count_str = r.get("bidprcPrtcptCnt", "0")
+
+        try:
+            winning_price = int(str(amount_str).replace(",", "").strip() or "0")
+        except (ValueError, TypeError):
+            winning_price = 0
+        try:
+            budget = int(str(budget_str).replace(",", "").strip() or "0")
+        except (ValueError, TypeError):
+            budget = 0
+        try:
+            num_bidders = int(str(bid_count_str).strip() or "0")
+        except (ValueError, TypeError):
+            num_bidders = 0
+
+        bid_ratio = round(winning_price / budget, 4) if budget > 0 else None
+        project_title = r.get("bidNtceNm", "")
+        client_org = r.get("ntceInsttNm", r.get("dminsttNm", ""))
+        bid_date = r.get("opengDt", "")
+        year = int(bid_date[:4]) if bid_date and len(bid_date) >= 4 else datetime.now().year
+
+        # market_price_data 적재
+        from app.utils.supabase_client import get_async_client
+        client = await get_async_client()
+
+        row = {
+            "project_title": project_title,
+            "client_org": client_org,
+            "domain": domain,
+            "budget": budget,
+            "winning_price": winning_price,
+            "bid_ratio": bid_ratio,
+            "num_bidders": num_bidders,
+            "year": year,
+            "source": f"G2B:{bid_notice_id}",
+        }
+
+        await client.table("market_price_data").upsert(
+            row, on_conflict="source"
+        ).execute()
+
+        return {
+            "status": "stored",
+            "bid_notice_id": bid_notice_id,
+            "winner": winner,
+            "winning_price": winning_price,
+            "budget": budget,
+            "bid_ratio": bid_ratio,
+            "num_bidders": num_bidders,
+        }
+
+
+async def bulk_sync_bid_results(proposal_ids: Optional[List[str]] = None) -> Dict:
+    """
+    진행 중인 프로젝트의 낙찰정보 일괄 동기화 (Phase 4-1).
+
+    proposal_ids 미지정 시 status='submitted'인 프로젝트 대상.
+    """
+    from app.utils.supabase_client import get_async_client
+    client = await get_async_client()
+
+    if proposal_ids:
+        proposals = await client.table("proposals").select(
+            "id, picked_bid_no"
+        ).in_("id", proposal_ids).not_.is_("picked_bid_no", "null").execute()
+    else:
+        proposals = await client.table("proposals").select(
+            "id, picked_bid_no"
+        ).eq("status", "submitted").not_.is_("picked_bid_no", "null").execute()
+
+    results = {"synced": 0, "not_found": 0, "errors": 0, "details": []}
+    for p in (proposals.data or []):
+        bid_no = p.get("picked_bid_no", "")
+        if not bid_no:
+            continue
+        try:
+            r = await fetch_and_store_bid_result(bid_no)
+            if r["status"] == "stored":
+                results["synced"] += 1
+            else:
+                results["not_found"] += 1
+            results["details"].append(r)
+        except Exception as e:
+            results["errors"] += 1
+            results["details"].append({"bid_notice_id": bid_no, "error": str(e)})
+
+    return results
+
+
 def _extract_attachments(raw: Dict) -> List[Dict]:
     """G2B 공고 상세에서 첨부파일 추출."""
     attachments = []

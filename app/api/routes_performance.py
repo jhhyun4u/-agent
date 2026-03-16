@@ -1,10 +1,15 @@
 """
-성과 추적 + 대시보드 API (§12-8, §12-9)
+성과 추적 + 대시보드 + 교훈 API (Phase 4)
 
-POST /api/proposals/{id}/result              — 제안 결과 등록
-GET  /api/performance/individual/{user_id}   — 개인 성과 (§12-9)
+POST /api/proposals/{id}/result              — 제안 결과 등록 (4-2)
+GET  /api/proposals/{id}/result              — 제안 결과 조회
+PUT  /api/proposals/{id}/result              — 제안 결과 수정
+POST /api/proposals/{id}/lessons             — 교훈 등록 (4-5)
+GET  /api/proposals/{id}/lessons             — 교훈 조회
+GET  /api/lessons                            — 교훈 검색
+GET  /api/performance/individual/{user_id}   — 개인 성과
 GET  /api/performance/team/{id}              — 팀 성과
-GET  /api/performance/division/{div_id}      — 본부 성과 (§12-9)
+GET  /api/performance/division/{div_id}      — 본부 성과
 GET  /api/performance/company                — 전사 성과
 GET  /api/performance/trends                 — 기간별 추이
 GET  /api/dashboard/my-projects              — 내 프로젝트
@@ -19,7 +24,8 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_role
-from app.exceptions import PropNotFoundError
+from app.exceptions import PropNotFoundError, TenopAPIError
+from app.models.schemas import ProposalResultCreate, ProposalResultUpdate, LessonCreate
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -27,64 +33,222 @@ logger = logging.getLogger(__name__)
 router = APIRouter(tags=["performance"])
 
 
-# ── 제안 결과 등록 (§12-9) ──
+# ════════════════════════════════════════
+# 4-2. 제안 결과 등록/조회/수정
+# ════════════════════════════════════════
 
-class ProposalResultBody(BaseModel):
-    result: str  # 수주 | 패찰 | 유찰
-    result_amount: int | None = None
-    result_note: str = ""
+STATUS_MAP = {"won": "won", "lost": "lost", "void": "cancelled"}
 
 
-@router.post("/api/proposals/{proposal_id}/result")
+async def _get_proposal_or_404(client, proposal_id: str) -> dict:
+    result = await client.table("proposals").select("id, status").eq("id", proposal_id).single().execute()
+    if not result.data:
+        raise PropNotFoundError(proposal_id)
+    return result.data
+
+
+async def _refresh_views(client):
+    """Materialized View 갱신 (실패 시 무시)."""
+    try:
+        await client.rpc("refresh_performance_views").execute()
+    except Exception:
+        logger.warning("성과 MV 갱신 실패 (무시)")
+
+
+@router.post("/api/proposals/{proposal_id}/result", status_code=201)
 async def register_proposal_result(
     proposal_id: str,
-    body: ProposalResultBody,
+    body: ProposalResultCreate,
     user=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """제안 결과 등록 (수주/패찰/유찰) — 팀장 이상."""
     client = await get_async_client()
+    await _get_proposal_or_404(client, proposal_id)
 
-    proposal = await client.table("proposals").select("id").eq("id", proposal_id).single().execute()
-    if not proposal.data:
-        raise PropNotFoundError(proposal_id)
+    # 중복 등록 방지
+    existing = await client.table("proposal_results").select("id").eq("proposal_id", proposal_id).execute()
+    if existing.data:
+        raise TenopAPIError("PROP_003", "이미 결과가 등록되어 있습니다. PUT으로 수정하세요.", 409)
 
-    await client.table("proposals").update({
+    # proposal_results 테이블에 상세 저장
+    result_row = {
+        "proposal_id": proposal_id,
         "result": body.result,
-        "result_amount": body.result_amount,
-        "result_note": body.result_note,
-        "result_at": datetime.utcnow().isoformat(),
-        "status": "won" if body.result == "수주" else "lost" if body.result == "패찰" else "cancelled",
+        "final_price": body.final_price,
+        "competitor_count": body.competitor_count,
+        "ranking": body.ranking,
+        "tech_score": body.tech_score,
+        "price_score": body.price_score,
+        "total_score": body.total_score,
+        "feedback_notes": body.feedback_notes,
+        "won_by": body.won_by,
+        "registered_by": user["id"],
+    }
+    await client.table("proposal_results").insert(result_row).execute()
+
+    # proposals 테이블 상태 업데이트
+    now = datetime.utcnow().isoformat()
+    await client.table("proposals").update({
+        "status": STATUS_MAP[body.result],
+        "result": {"won": "수주", "lost": "패찰", "void": "유찰"}[body.result],
+        "result_amount": body.final_price,
+        "result_reason": body.feedback_notes or "",
+        "result_at": now,
+        "updated_at": now,
     }).eq("id", proposal_id).execute()
 
-    # Materialized View 갱신 트리거
-    try:
-        await client.rpc("refresh_team_performance").execute()
-    except Exception:
-        logger.warning("team_performance 뷰 갱신 실패 (무시)")
+    await _refresh_views(client)
 
-    # KB 환류 트리거 (§20-4: 발주기관 이력 + 콘텐츠 등록 후보 + 회고 알림)
+    # KB 환류 트리거
     try:
-        from app.services.feedback_loop import process_project_completion
-        await process_project_completion(proposal_id, body.result)
+        from app.services.kb_updater import trigger_kb_update
+        await trigger_kb_update(proposal_id, body.result)
     except Exception:
         logger.warning("KB 환류 트리거 실패 (무시)")
 
-    return {"status": "ok", "result": body.result}
+    return {"status": "ok", "result": body.result, "proposal_id": proposal_id}
 
 
-# ── 성과 추적 API (§12-9) ──
+@router.get("/api/proposals/{proposal_id}/result")
+async def get_proposal_result(proposal_id: str, user=Depends(get_current_user)):
+    """제안 결과 조회."""
+    client = await get_async_client()
+    await _get_proposal_or_404(client, proposal_id)
+
+    result = await client.table("proposal_results").select("*").eq("proposal_id", proposal_id).single().execute()
+    if not result.data:
+        raise TenopAPIError("PROP_004", "결과가 등록되지 않았습니다.", 404)
+    return result.data
+
+
+@router.put("/api/proposals/{proposal_id}/result")
+async def update_proposal_result(
+    proposal_id: str,
+    body: ProposalResultUpdate,
+    user=Depends(require_role("lead", "director", "executive", "admin")),
+):
+    """제안 결과 수정 — 팀장 이상."""
+    client = await get_async_client()
+    await _get_proposal_or_404(client, proposal_id)
+
+    existing = await client.table("proposal_results").select("id").eq("proposal_id", proposal_id).single().execute()
+    if not existing.data:
+        raise TenopAPIError("PROP_004", "결과가 등록되지 않았습니다.", 404)
+
+    update_data = {k: v for k, v in body.model_dump().items() if v is not None}
+    if not update_data:
+        return {"status": "ok", "message": "변경 없음"}
+
+    update_data["updated_at"] = datetime.utcnow().isoformat()
+    await client.table("proposal_results").update(update_data).eq("proposal_id", proposal_id).execute()
+
+    # proposals 테이블도 동기화
+    proposals_update = {"updated_at": update_data["updated_at"]}
+    if body.final_price is not None:
+        proposals_update["result_amount"] = body.final_price
+    if body.feedback_notes is not None:
+        proposals_update["result_reason"] = body.feedback_notes
+    await client.table("proposals").update(proposals_update).eq("id", proposal_id).execute()
+
+    await _refresh_views(client)
+
+    return {"status": "ok", "proposal_id": proposal_id}
+
+
+# ════════════════════════════════════════
+# 4-5. 교훈(Lessons Learned) 등록/조회
+# ════════════════════════════════════════
+
+@router.post("/api/proposals/{proposal_id}/lessons", status_code=201)
+async def create_lesson(
+    proposal_id: str,
+    body: LessonCreate,
+    user=Depends(get_current_user),
+):
+    """프로젝트 교훈 등록."""
+    client = await get_async_client()
+    proposal = await client.table("proposals").select("id, org_id, positioning, client_name, result").eq("id", proposal_id).single().execute()
+    if not proposal.data:
+        raise PropNotFoundError(proposal_id)
+
+    p = proposal.data
+    lesson_row = {
+        "org_id": p.get("org_id", ""),
+        "proposal_id": proposal_id,
+        "strategy_summary": body.title,
+        "effective_points": body.description if body.category != "strategy" else None,
+        "weak_points": body.description if body.category == "strategy" else None,
+        "improvements": "\n".join(body.action_items) if body.action_items else None,
+        "failure_category": body.category,
+        "failure_detail": body.description,
+        "positioning": p.get("positioning"),
+        "client_name": p.get("client_name"),
+        "industry": ", ".join(body.applicable_domains) if body.applicable_domains else None,
+        "result": p.get("result"),
+        "author_id": user["id"],
+    }
+    result = await client.table("lessons_learned").insert(lesson_row).execute()
+    lesson_id = result.data[0]["id"] if result.data else None
+
+    # 벡터 임베딩 생성 (비동기, 실패 무시)
+    try:
+        from app.services.kb_updater import generate_lesson_embedding
+        await generate_lesson_embedding(lesson_id, body.title, body.description)
+    except Exception:
+        logger.warning(f"교훈 임베딩 생성 실패 (무시): {lesson_id}")
+
+    return {"status": "ok", "lesson_id": lesson_id}
+
+
+@router.get("/api/proposals/{proposal_id}/lessons")
+async def get_proposal_lessons(proposal_id: str, user=Depends(get_current_user)):
+    """프로젝트 교훈 조회."""
+    client = await get_async_client()
+    result = await client.table("lessons_learned").select(
+        "id, strategy_summary, failure_category, failure_detail, improvements, positioning, result, created_at"
+    ).eq("proposal_id", proposal_id).order("created_at", desc=True).execute()
+    return {"items": result.data or [], "total": len(result.data or [])}
+
+
+@router.get("/api/lessons")
+async def search_lessons(
+    keyword: str | None = Query(None, description="키워드 검색"),
+    category: str | None = Query(None, description="카테고리 필터"),
+    domain: str | None = Query(None, description="도메인 필터"),
+    skip: int = 0,
+    limit: int = 20,
+    user=Depends(get_current_user),
+):
+    """교훈 검색 (키워드, 카테고리, 도메인)."""
+    client = await get_async_client()
+    query = client.table("lessons_learned").select(
+        "id, proposal_id, strategy_summary, failure_category, failure_detail, improvements, positioning, client_name, industry, result, created_at"
+    ).order("created_at", desc=True).range(skip, skip + limit - 1)
+
+    if category:
+        query = query.eq("failure_category", category)
+    if domain:
+        query = query.ilike("industry", f"%{domain}%")
+    if keyword:
+        query = query.or_(f"strategy_summary.ilike.%{keyword}%,failure_detail.ilike.%{keyword}%")
+
+    result = await query.execute()
+    return {"items": result.data or [], "total": len(result.data or [])}
+
+
+# ════════════════════════════════════════
+# 성과 추적 API (§12-9)
+# ════════════════════════════════════════
 
 @router.get("/api/performance/individual/{user_id}")
 async def get_individual_performance(user_id: str, user=Depends(get_current_user)):
     """개인 성과 (참여·완료·수주 건수)."""
     client = await get_async_client()
 
-    # 생성한 프로젝트
     created = await client.table("proposals").select(
         "id, result, result_amount, created_at, result_at"
     ).eq("created_by", user_id).execute()
 
-    # 참여한 프로젝트
     participated = await client.table("project_teams").select("proposal_id").eq("user_id", user_id).execute()
     participated_ids = [p["proposal_id"] for p in (participated.data or [])]
 
@@ -95,7 +259,6 @@ async def get_individual_performance(user_id: str, user=Depends(get_current_user
         ).in_("id", participated_ids).execute()
         participated_proposals = pp.data or []
 
-    # 중복 제거 (생성 + 참여)
     all_proposals = {d["id"]: d for d in (created.data or []) + participated_proposals}
     data = list(all_proposals.values())
 
@@ -105,7 +268,6 @@ async def get_individual_performance(user_id: str, user=Depends(get_current_user
     decided = sum(1 for d in data if d.get("result") in ("수주", "패찰"))
     won_amount = sum(d.get("result_amount", 0) or 0 for d in data if d.get("result") == "수주")
 
-    # 평균 소요일 (created_at → result_at)
     durations = []
     for d in data:
         if d.get("result_at") and d.get("created_at"):
@@ -130,19 +292,37 @@ async def get_individual_performance(user_id: str, user=Depends(get_current_user
 
 @router.get("/api/performance/team/{team_id}")
 async def get_team_performance(team_id: str, user=Depends(get_current_user)):
-    """팀 성과 (수주율·건수·평균 소요일)."""
+    """팀 성과 (수주율·건수·평균 점수)."""
     client = await get_async_client()
-    result = await client.table("team_performance").select("*").eq("team_id", team_id).execute()
-    if result.data:
-        return result.data[0]
 
-    # Materialized View 없으면 직접 계산
-    proposals = await client.table("proposals").select("status, result, result_amount, created_at, result_at").eq("team_id", team_id).execute()
+    # MV 우선 조회
+    try:
+        mv = await client.table("mv_team_performance").select("*").eq("team_id", team_id).execute()
+        if mv.data:
+            return {"team_id": team_id, "quarters": mv.data}
+    except Exception:
+        pass
+
+    # MV 없으면 직접 계산
+    proposals = await client.table("proposals").select(
+        "status, result, result_amount, created_at, result_at"
+    ).eq("team_id", team_id).execute()
     data = proposals.data or []
     total = len(data)
     won = sum(1 for d in data if d.get("result") == "수주")
     decided = sum(1 for d in data if d.get("result") in ("수주", "패찰"))
     won_amount = sum(d.get("result_amount", 0) or 0 for d in data if d.get("result") == "수주")
+
+    # 평균 점수 (proposal_results 조인)
+    avg_tech = None
+    try:
+        proposal_ids = [d["id"] for d in data if "id" in d]
+        if proposal_ids:
+            scores = await client.table("proposal_results").select("tech_score").in_("proposal_id", proposal_ids).not_.is_("tech_score", "null").execute()
+            if scores.data:
+                avg_tech = round(sum(s["tech_score"] for s in scores.data) / len(scores.data), 1)
+    except Exception:
+        pass
 
     return {
         "team_id": team_id,
@@ -151,6 +331,7 @@ async def get_team_performance(team_id: str, user=Depends(get_current_user)):
         "decided_count": decided,
         "win_rate": round(won / decided * 100, 1) if decided else 0,
         "total_won_amount": won_amount,
+        "avg_tech_score": avg_tech,
     }
 
 
@@ -159,22 +340,16 @@ async def get_division_performance(div_id: str, user=Depends(get_current_user)):
     """본부 성과 (수주율·누적 수주액)."""
     client = await get_async_client()
 
-    # 본부 소속 팀 목록 조회
     teams = await client.table("teams").select("id").eq("division_id", div_id).execute()
     team_ids = [t["id"] for t in (teams.data or [])]
 
     if not team_ids:
         return {
             "division_id": div_id,
-            "total_proposals": 0,
-            "won_count": 0,
-            "decided_count": 0,
-            "win_rate": 0,
-            "total_won_amount": 0,
-            "teams": [],
+            "total_proposals": 0, "won_count": 0, "decided_count": 0,
+            "win_rate": 0, "total_won_amount": 0, "teams": [],
         }
 
-    # 본부 전체 제안 조회
     proposals = await client.table("proposals").select(
         "id, team_id, result, result_amount"
     ).in_("team_id", team_ids).execute()
@@ -185,7 +360,6 @@ async def get_division_performance(div_id: str, user=Depends(get_current_user)):
     decided = sum(1 for d in data if d.get("result") in ("수주", "패찰"))
     won_amount = sum(d.get("result_amount", 0) or 0 for d in data if d.get("result") == "수주")
 
-    # 팀별 요약
     by_team: dict[str, dict] = {}
     for d in data:
         tid = d.get("team_id", "")
@@ -218,10 +392,21 @@ async def get_division_performance(div_id: str, user=Depends(get_current_user)):
 async def get_company_performance(user=Depends(get_current_user)):
     """전사 성과 (포지셔닝별 수주율)."""
     client = await get_async_client()
-    proposals = await client.table("proposals").select("positioning, result, result_amount").not_.is_("result", "null").execute()
+
+    # MV 우선 조회
+    try:
+        mv = await client.table("mv_positioning_accuracy").select("*").execute()
+        if mv.data:
+            return {"by_positioning": {r["positioning"]: r for r in mv.data}, "total_proposals": sum(r["total"] for r in mv.data)}
+    except Exception:
+        pass
+
+    proposals = await client.table("proposals").select(
+        "positioning, result, result_amount"
+    ).not_.is_("result", "null").execute()
     data = proposals.data or []
 
-    by_positioning = {}
+    by_positioning: dict[str, dict] = {}
     for d in data:
         pos = d.get("positioning", "unknown")
         if pos not in by_positioning:
@@ -251,13 +436,14 @@ async def get_performance_trends(
 ):
     """기간별 추이 (월/분기/연)."""
     client = await get_async_client()
-    proposals = await client.table("proposals").select("created_at, result, result_at, result_amount").order("created_at").execute()
+    proposals = await client.table("proposals").select(
+        "created_at, result, result_at, result_amount"
+    ).order("created_at").execute()
     data = proposals.data or []
 
-    # 간이 월별 집계
-    trends = {}
+    trends: dict[str, dict] = {}
     for d in data:
-        created = d.get("created_at", "")[:7]  # YYYY-MM
+        created = d.get("created_at", "")[:7]
         if period == "quarterly":
             parts = created.split("-")
             if len(parts) == 2:
@@ -278,19 +464,19 @@ async def get_performance_trends(
     return {"period": period, "data": list(trends.values())}
 
 
-# ── 대시보드 API (§12-8) ──
+# ════════════════════════════════════════
+# 대시보드 API (§12-8)
+# ════════════════════════════════════════
 
 @router.get("/api/dashboard/my-projects")
 async def my_projects(user=Depends(get_current_user)):
     """내 참여 프로젝트 현황."""
     client = await get_async_client()
 
-    # 내가 생성한 프로젝트
     created = await client.table("proposals").select(
         "id, project_name, status, positioning, current_step, created_at, deadline"
     ).eq("created_by", user["id"]).order("created_at", desc=True).limit(20).execute()
 
-    # 내가 참여자인 프로젝트
     participated = await client.table("project_teams").select("proposal_id").eq("user_id", user["id"]).execute()
     participated_ids = [p["proposal_id"] for p in (participated.data or [])]
 
@@ -318,7 +504,7 @@ async def team_dashboard(user=Depends(get_current_user)):
     ).eq("team_id", team_id).order("created_at", desc=True).limit(50).execute()
 
     data = proposals.data or []
-    step_distribution = {}
+    step_distribution: dict[str, int] = {}
     for d in data:
         step = d.get("current_step", "unknown")
         step_distribution[step] = step_distribution.get(step, 0) + 1

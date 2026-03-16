@@ -252,6 +252,148 @@ async def monthly_trends(
 # 기관별 수주 현황
 # ════════════════════════════════════════
 
+# ════════════════════════════════════════
+# 수주율 트렌드 (분기별/연도별) — Phase 4-4
+# ════════════════════════════════════════
+
+@router.get("/win-rate")
+async def win_rate_trend(
+    granularity: str = Query("quarterly", pattern="^(quarterly|yearly)$"),
+    period: str | None = Query(None, description="기간 (예: 2026Q1)"),
+    scope: str | None = Query(None, pattern="^(team|division|company)$"),
+    user=Depends(get_current_user),
+):
+    """수주율 트렌드 (분기별/연도별)."""
+    resolved_scope = _resolve_scope(user, scope)
+    date_start, date_end = _period_to_date_range(period)
+
+    data = await _fetch_proposals(user, resolved_scope, date_start, date_end)
+    decided = [d for d in data if d.get("result") in ("수주", "패찰")]
+
+    by_period: dict[str, dict] = {}
+    for d in decided:
+        created = d.get("created_at", "")[:7]
+        if granularity == "quarterly":
+            parts = created.split("-")
+            if len(parts) == 2:
+                q = (int(parts[1]) - 1) // 3 + 1
+                key = f"{parts[0]}-Q{q}"
+            else:
+                key = created
+        else:
+            key = created[:4]
+
+        if key not in by_period:
+            by_period[key] = {"period": key, "total": 0, "won": 0, "lost": 0, "won_amount": 0}
+        by_period[key]["total"] += 1
+        if d.get("result") == "수주":
+            by_period[key]["won"] += 1
+            by_period[key]["won_amount"] += d.get("result_amount", 0) or 0
+        else:
+            by_period[key]["lost"] += 1
+
+    trends = []
+    for key in sorted(by_period.keys()):
+        m = by_period[key]
+        m["win_rate"] = round(m["won"] / m["total"] * 100, 1) if m["total"] else 0
+        trends.append(m)
+
+    return {"granularity": granularity, "scope": resolved_scope, "data": trends}
+
+
+# ════════════════════════════════════════
+# 부서/팀별 성과 비교 — Phase 4-4
+# ════════════════════════════════════════
+
+@router.get("/team-performance")
+async def team_performance(
+    period: str | None = Query(None, description="기간 (예: 2026Q1)"),
+    scope: str | None = Query(None, pattern="^(team|division|company)$"),
+    user=Depends(get_current_user),
+):
+    """부서/팀별 성과 비교."""
+    resolved_scope = _resolve_scope(user, scope)
+    date_start, date_end = _period_to_date_range(period)
+
+    data = await _fetch_proposals(
+        user, resolved_scope, date_start, date_end,
+        fields="id, result, result_amount, team_id, created_at",
+    )
+
+    by_team: dict[str, dict] = {}
+    for d in data:
+        tid = d.get("team_id", "unknown")
+        if tid not in by_team:
+            by_team[tid] = {"team_id": tid, "total": 0, "won": 0, "lost": 0, "won_amount": 0}
+        by_team[tid]["total"] += 1
+        if d.get("result") == "수주":
+            by_team[tid]["won"] += 1
+            by_team[tid]["won_amount"] += d.get("result_amount", 0) or 0
+        elif d.get("result") == "패찰":
+            by_team[tid]["lost"] += 1
+
+    teams = []
+    for stats in by_team.values():
+        decided = stats["won"] + stats["lost"]
+        stats["win_rate"] = round(stats["won"] / decided * 100, 1) if decided else 0
+        teams.append(stats)
+
+    teams.sort(key=lambda x: x["win_rate"], reverse=True)
+    return {"period": period, "scope": resolved_scope, "teams": teams}
+
+
+# ════════════════════════════════════════
+# 경쟁사별 대전 기록 — Phase 4-4
+# ════════════════════════════════════════
+
+@router.get("/competitor")
+async def competitor_record(
+    period: str | None = Query(None, description="기간 (예: 2026Q1)"),
+    scope: str | None = Query(None, pattern="^(team|division|company)$"),
+    user=Depends(get_current_user),
+):
+    """경쟁사별 대전 기록 (패찰 시 낙찰업체 기준)."""
+    resolved_scope = _resolve_scope(user, scope)
+    date_start, date_end = _period_to_date_range(period)
+
+    # proposal_results에서 won_by 필드 활용
+    client = await get_async_client()
+    data = await _fetch_proposals(user, resolved_scope, date_start, date_end, fields="id, result, result_amount")
+
+    proposal_ids = [d["id"] for d in data if d.get("result") in ("수주", "패찰")]
+    if not proposal_ids:
+        return {"period": period, "scope": resolved_scope, "competitors": []}
+
+    results = await client.table("proposal_results").select(
+        "proposal_id, result, won_by"
+    ).in_("proposal_id", proposal_ids).execute()
+    result_map = {r["proposal_id"]: r for r in (results.data or [])}
+
+    by_competitor: dict[str, dict] = {}
+    for d in data:
+        pr = result_map.get(d["id"])
+        if not pr:
+            continue
+        competitor = pr.get("won_by") or ""
+        if not competitor:
+            continue
+
+        if competitor not in by_competitor:
+            by_competitor[competitor] = {"competitor": competitor, "encounters": 0, "won_against": 0, "lost_to": 0}
+        by_competitor[competitor]["encounters"] += 1
+        if pr.get("result") == "won":
+            by_competitor[competitor]["won_against"] += 1
+        elif pr.get("result") == "lost":
+            by_competitor[competitor]["lost_to"] += 1
+
+    competitors = sorted(by_competitor.values(), key=lambda x: x["encounters"], reverse=True)
+    return {"period": period, "scope": resolved_scope, "competitors": competitors}
+
+
+# ════════════════════════════════════════
+# 기관별 수주 현황
+# ════════════════════════════════════════
+
 @router.get("/client-win-rate")
 async def client_win_rate(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),

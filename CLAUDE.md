@@ -38,16 +38,19 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 
 ### LangGraph (app/graph/)
 - `app/graph/state.py` — ProposalState TypedDict + 서브 모델 (§3)
-- `app/graph/edges.py` — Conditional Edge 라우팅 함수 10개 (§11)
-- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 29개 노드)
+- `app/graph/edges.py` — Conditional Edge 라우팅 함수 11개 (§11 + v3.5 route_after_section_review)
+- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 28개 노드)
 - `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가
 - `app/graph/nodes/rfp_fetch.py` — STEP 0→1: G2B 상세 수집 + RFP 업로드 게이트
 - `app/graph/nodes/rfp_analyze.py` — STEP 1-①: RFP 분석 + Compliance Matrix
 - `app/graph/nodes/research_gather.py` — v3.2: 7차원 리서치 (자동 통과)
 - `app/graph/nodes/go_no_go.py` — STEP 1-②: Go/No-Go + 포지셔닝 판정
 - `app/graph/nodes/review_node.py` — 공통 리뷰 게이트 (Shipley Color Team) + plan 리뷰 (목차+스토리라인)
-- `app/graph/nodes/merge_nodes.py` — plan/proposal/ppt 병합 (부분 재작업 지원) + storylines→dynamic_sections 동기화
-- `app/graph/nodes/stub_nodes.py` — Phase 2~5 스텁 (strategy, plan, proposal, ppt)
+- `app/graph/nodes/merge_nodes.py` — plan/ppt 병합 (부분 재작업 지원) + storylines→dynamic_sections 동기화
+- `app/graph/nodes/strategy_generate.py` — STEP 2: 포지셔닝 기반 제안전략
+- `app/graph/nodes/plan_nodes.py` — STEP 3: 팀/담당/일정/스토리/가격 (5개 병렬)
+- `app/graph/nodes/proposal_nodes.py` — STEP 4: 순차 섹션 작성 (v3.5) + 케이스 A/B
+- `app/graph/nodes/ppt_nodes.py` — STEP 5: 발표전략 + PPT 슬라이드
 
 ### 서비스
 - `app/services/claude_client.py` — Claude API 클라이언트 (JSON 파싱 + 스트리밍)
@@ -57,6 +60,7 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/services/compliance_tracker.py` — Compliance Matrix 생애주기 (초안→전략→AI 체크)
 - `app/services/docx_builder.py` — DOCX 빌더 (케이스 A/B + Markdown → DOCX)
 - `app/services/notification_service.py` — Teams Webhook + 인앱 알림 (승인/마감/AI 완료)
+- `app/services/kb_updater.py` — 성과 기반 KB 자동 업데이트 (수주→역량, 패찰→경쟁사, 교훈→임베딩)
 - `app/services/rfp_parser.py` — PDF/HWP/HWPX 파싱
 - `app/services/session_manager.py` — 세션 관리
 
@@ -75,17 +79,29 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/prompts/plan.py` — 5개 plan 노드 프롬프트 (team/assign/schedule/story/price). plan_story는 목차 기획 + 스토리라인 설계
 - `app/prompts/proposal_prompts.py` — 케이스 A/B + 자가진단 + PPT + 발표전략
 - `app/prompts/section_prompts.py` — 10개 섹션 유형별 전문 프롬프트 + 케이스 B + 자동 분류 + 스토리라인 주입
-- `app/prompts/proposal.py` — 레거시 프롬프트 (참고용)
 
-### 미구현 (Phase 4~)
-- `app/services/pptx_builder.py` — PPTX 빌더
+### 추가 서비스 (Phase C~E / 레거시)
+- `app/services/g2b_service.py` — G2B API 클라이언트 (공고 검색·낙찰정보·캐싱)
+- `app/services/bid_recommender.py` — AI 입찰 추천·적격성 분석
+- `app/services/pptx_builder.py` — PPTX 빌더 (그래프 연동, 경량)
+- `app/services/presentation_generator.py` — 발표 자료 3단계 JSON 생성
+- `app/services/presentation_pptx_builder.py` — 컨설팅급 PPTX 렌더링 (1,391줄)
+- `app/services/hwpx_builder.py` — HWP/HWPX 빌더
 - `app/services/knowledge_search.py` — 통합 KB 검색
-- `app/services/g2b_client.py` — G2B 낙찰정보 클라이언트
-- `app/api/routes_analytics.py` — 분석 API
+- `app/services/phase_executor.py` — ⚠️ 레거시 v3.1 파이프라인 (LangGraph로 대체됨)
+- `app/services/phase_prompts.py` — ⚠️ 레거시 v3.1 프롬프트
+- `app/api/routes_v31.py` — ⚠️ 레거시 v3.1 API (/api/v3.1/*)
+- `app/api/routes_analytics.py` — 분석 대시보드 집계 (Phase 4: win-rate, team-performance, competitor 추가)
+- `app/api/routes_calendar.py` — RFP 일정 관리
+- `app/api/routes_presentation.py` — 발표 자료 생성
+- `app/api/routes_resources.py` — 섹션 라이브러리·아카이브
+- `app/api/routes_stats.py` — 낙찰률 통계
+- `app/api/routes_templates.py` — 공통서식 라이브러리
 
 ## DB 스키마
 - `database/schema_v3.4.sql` — v3.4 통합 스키마 (§15 전체)
-- `database/supabase_schema.sql` — 레거시 (참고용)
+- `database/migrations/004_performance_views.sql` — Phase 4: proposal_results + Materialized View (mv_team_performance, mv_positioning_accuracy)
+- `database/archive/` — 레거시 SQL (schema.sql, schema_v2.sql, supabase_schema.sql 등)
 
 ## 코드 컨벤션
 - 한국어 docstring 및 주석
@@ -96,5 +112,5 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 
 ## 설계 문서
 - 요구사항: `docs/01-plan/features/proposal-agent-v1.requirements.md` (v4.9)
-- 설계: `docs/02-design/features/proposal-agent-v1.design.md` (v3.5, §32 추가)
+- 설계: `docs/02-design/features/proposal-agent-v1/_index.md` (v3.5, modular 18 files)
 - 갭 분석: `docs/03-analysis/features/proposal-agent-v1.analysis.md` (97%)

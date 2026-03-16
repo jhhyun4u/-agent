@@ -19,7 +19,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.middleware.auth import get_current_user
-from app.services.g2b_service import G2BService
+from app.services.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/g2b", tags=["g2b"])
@@ -385,3 +385,37 @@ async def competitors(
     except Exception as e:
         logger.error(f"competitors 분석 오류: {e}")
         raise HTTPException(status_code=500, detail="경쟁사 분석 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# Phase 4-1: 낙찰정보 수집 + market_price_data 적재
+# ─────────────────────────────────────────────
+
+@router.post("/bid-results/{bid_notice_id}")
+async def collect_bid_result(
+    bid_notice_id: str,
+    domain: str = Query("SI/SW개발", description="도메인 분류"),
+    current_user=Depends(get_current_user),
+):
+    """특정 공고 낙찰정보를 수집하여 market_price_data에 저장."""
+    try:
+        result = await fetch_and_store_bid_result(bid_notice_id, domain)
+        return result
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        logger.error(f"낙찰정보 수집 오류: {e}")
+        raise HTTPException(status_code=500, detail="낙찰정보 수집 중 오류가 발생했습니다.")
+
+
+@router.post("/bid-results/bulk-sync")
+async def bulk_sync(
+    current_user=Depends(get_current_user),
+):
+    """진행 중인 프로젝트의 낙찰정보 일괄 동기화."""
+    try:
+        result = await bulk_sync_bid_results()
+        return result
+    except Exception as e:
+        logger.error(f"낙찰정보 일괄 동기화 오류: {e}")
+        raise HTTPException(status_code=500, detail="일괄 동기화 중 오류가 발생했습니다.")

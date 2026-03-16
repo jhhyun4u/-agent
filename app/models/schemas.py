@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, field_validator
 
 
@@ -60,3 +62,44 @@ class ProposalResponse(BaseModel):
     docx_path: str | None = None
     pptx_path: str | None = None
     hwpx_path: str | None = None
+
+
+# ── Phase 4: 제안 결과 + 교훈 ──
+
+
+class ProposalResultCreate(BaseModel):
+    """제안 결과 등록 (§12-4, Phase 4-2)"""
+
+    result: Literal["won", "lost", "void"]
+    final_price: int | None = None
+    competitor_count: int | None = None
+    ranking: int | None = None
+    tech_score: float | None = None
+    price_score: float | None = None
+    total_score: float | None = None
+    feedback_notes: str | None = None
+    won_by: str | None = None
+
+
+class ProposalResultUpdate(BaseModel):
+    """제안 결과 수정"""
+
+    final_price: int | None = None
+    competitor_count: int | None = None
+    ranking: int | None = None
+    tech_score: float | None = None
+    price_score: float | None = None
+    total_score: float | None = None
+    feedback_notes: str | None = None
+    won_by: str | None = None
+
+
+class LessonCreate(BaseModel):
+    """교훈 등록 (§20-5, Phase 4-5)"""
+
+    category: Literal["strategy", "pricing", "team", "technical", "process", "other"]
+    title: str
+    description: str
+    impact: Literal["high", "medium", "low"]
+    action_items: list[str] = []
+    applicable_domains: list[str] = []
