@@ -29,14 +29,21 @@ class Settings(BaseSettings):
     enable_hitl: bool = True
     hitl_gates: list[str] = ["strategy", "personnel", "final"]
 
-    # 로깅
+    # 세션 (AUTH-04)
+    session_timeout_minutes: int = 30
+
+    # 로깅 (OPS-03: 구조화 로깅)
     log_level: str = "INFO"
+    log_format: Literal["text", "json"] = "text"  # 프로덕션 배포 시 "json"
     log_token_usage: bool = True
 
     # Supabase
     supabase_url: str = ""
     supabase_key: str = ""  # anon key (프론트엔드용)
     supabase_service_role_key: str = ""  # 서버 사이드 작업용 (RLS 우회)
+
+    # PostgreSQL 직접 연결 (LangGraph checkpointer용)
+    database_url: str = ""  # postgresql://user:pass@host:port/db
 
     # Azure AD (Entra ID) — §17 인증 흐름
     azure_ad_tenant_id: str = ""

@@ -103,6 +103,13 @@ export default function BidsPage() {
     })();
   }, [router]);
 
+  // C-3 fix: 컴포넌트 언마운트 시 폴링 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+    };
+  }, []);
+
   const loadData = useCallback(async (id: string) => {
     setLoading(true);
     setError("");

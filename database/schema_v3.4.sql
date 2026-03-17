@@ -117,6 +117,11 @@ CREATE TABLE proposals (
     presentation_at TIMESTAMPTZ,
     presentation_location TEXT,
     presenter       TEXT,
+    -- §8: Storage 업로드 경로 + 실패 추적
+    storage_path_docx TEXT,
+    storage_path_pptx TEXT,
+    storage_path_hwpx TEXT,
+    storage_upload_failed BOOLEAN NOT NULL DEFAULT false,
     created_at      TIMESTAMPTZ DEFAULT now(),
     updated_at      TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT proposals_status_check CHECK (

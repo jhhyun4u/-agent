@@ -5,7 +5,7 @@
 > **Project**: TENOPA Proposer
 > **Analyst**: gap-detector
 > **Date**: 2026-03-13
-> **Design Doc**: [proposal-agent-v1.design.md](../02-design/features/proposal-agent-v1.design.md) (v3.4)
+> **Design Doc**: [proposal-agent-v1/_index.md](../02-design/features/proposal-agent-v1/_index.md) (v3.5, modular)
 > **Supplementary**: [prompt-enhancement.design.md](../02-design/features/prompt-enhancement.design.md)
 
 ---
@@ -22,7 +22,7 @@ STEP 3(실행 계획)~STEP 4(제안서 작성) 워크플로의 설계-구현 일
 
 | 구분 | 경로 |
 |------|------|
-| 설계 문서 | `docs/02-design/features/proposal-agent-v1.design.md` (v3.4, Section 4/8/9/11/29) |
+| 설계 문서 | `docs/02-design/features/proposal-agent-v1/_index.md` (v3.5, modular — 관련: 03, 06, 07, 12) |
 | 보조 설계 | `docs/02-design/features/prompt-enhancement.design.md` |
 | 그래프 정의 | `app/graph/graph.py` |
 | 라우팅 함수 | `app/graph/edges.py` |

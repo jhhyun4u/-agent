@@ -17,7 +17,7 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const FRONTEND_URL = Deno.env.get("FRONTEND_URL") ?? "http://localhost:3000";
-const FROM_EMAIL = "Tenopa Proposer <noreply@tenopa.ai>";
+const FROM_EMAIL = "용역제안 Coworker <noreply@tenopa.ai>";
 
 serve(async (req: Request) => {
   if (req.method !== "POST") {
@@ -104,7 +104,7 @@ serve(async (req: Request) => {
 
           <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0"/>
           <p style="color:#9ca3af;font-size:12px;margin:0">
-            Tenopa Proposer — AI 제안서 자동 생성 플랫폼
+            용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker
           </p>
         </div>
       `,

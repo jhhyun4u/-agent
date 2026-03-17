@@ -9,11 +9,20 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import NotificationBell from "@/components/NotificationBell";
 
 const NAV = [
   { href: "/dashboard", label: "대시보드", icon: "◈" },
   { href: "/proposals", label: "제안서", icon: "☰" },
   { href: "/bids", label: "공고 추천", icon: "⊙" },
+  { href: "/analytics", label: "분석", icon: "◇" },
+  { href: "/kb/search", label: "KB 검색", icon: "⌕" },
+  { href: "/kb/content", label: "콘텐츠", icon: "▦" },
+  { href: "/kb/clients", label: "발주기관", icon: "▣" },
+  { href: "/kb/competitors", label: "경쟁사", icon: "▩" },
+  { href: "/kb/lessons", label: "교훈", icon: "▧" },
+  { href: "/kb/labor-rates", label: "원가기준", icon: "▤" },
+  { href: "/kb/market-prices", label: "낙찰가", icon: "▥" },
   { href: "/resources", label: "자료 관리", icon: "□" },
   { href: "/archive", label: "아카이브", icon: "≡" },
   { href: "/admin", label: "팀 관리", icon: "◎" },
@@ -42,11 +51,11 @@ export default function AppSidebar() {
       {/* 로고 */}
       <div className="px-4 py-4 border-b border-[#262626]">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-xs">
-            T
+          <div className="w-6 h-6 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px]">
+            CW
           </div>
           <span className="text-sm font-semibold text-[#ededed]">
-            Tenopa Proposer
+            용역제안 Coworker
           </span>
         </div>
       </div>
@@ -61,6 +70,10 @@ export default function AppSidebar() {
               ? pathname.startsWith("/dashboard")
               : href === "/bids"
               ? pathname.startsWith("/bids")
+              : href === "/analytics"
+              ? pathname.startsWith("/analytics")
+              : href.startsWith("/kb/")
+              ? pathname === href
               : pathname === href;
           return (
             <Link
@@ -79,10 +92,11 @@ export default function AppSidebar() {
         })}
       </nav>
 
-      {/* 유저 */}
+      {/* 유저 + 알림 */}
       <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
-        <div className="px-3 py-1.5">
-          <p className="text-xs text-[#5c5c5c] truncate">{email}</p>
+        <div className="flex items-center justify-between px-3 py-1.5">
+          <p className="text-xs text-[#5c5c5c] truncate flex-1">{email}</p>
+          <NotificationBell />
         </div>
         <button
           onClick={signOut}

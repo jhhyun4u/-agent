@@ -7,11 +7,12 @@ STEP 1: RFP 분석 → 리서치 → Go/No-Go
 STEP 2: 전략 수립
 STEP 3: 실행 계획 (병렬)
 STEP 4: 제안서 작성 (섹션별 순차 + 리뷰) → 자가진단
-STEP 5: PPT 생성
+STEP 5: PPT 3단계 파이프라인 (TOC → Visual Brief → Storyboard)
 
 v3.2: research_gather + presentation_strategy 노드 추가
 v3.3: self_review 5방향 라우팅, plan 3방향 라우팅
 v3.5: 제안서 섹션별 순차 작성 + 리뷰 루프
+Phase 4: PPT fan-out → 3단계 순차 파이프라인 교체
 """
 
 import logging
@@ -38,7 +39,7 @@ from app.graph.edges import (
 
 # 실제 구현 노드
 from app.graph.nodes.go_no_go import go_no_go
-from app.graph.nodes.merge_nodes import plan_merge, ppt_merge
+from app.graph.nodes.merge_nodes import plan_merge
 from app.graph.nodes.research_gather import research_gather
 from app.graph.nodes.review_node import review_node, review_section_node
 from app.graph.nodes.rfp_analyze import rfp_analyze
@@ -59,9 +60,12 @@ from app.graph.nodes.proposal_nodes import (
     self_review_with_auto_improve,
 )
 from app.graph.nodes.ppt_nodes import (
-    ppt_slide,
     presentation_strategy,
+    ppt_toc,
+    ppt_visual_brief,
+    ppt_storyboard_node,
 )
+from app.graph.token_tracking import track_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -81,20 +85,6 @@ def plan_selective_fan_out(state: ProposalState) -> list[Send]:
     return [Send(node, state) for node in nodes_to_run]
 
 
-def ppt_fan_out(state: ProposalState) -> list[Send]:
-    """PPT 슬라이드 병렬 생성."""
-    sections = state.get("proposal_sections", [])
-    if not sections:
-        return [Send("ppt_slide", state)]
-    return [
-        Send("ppt_slide", {
-            **state,
-            "_current_slide_id": s.section_id if hasattr(s, "section_id") else s.get("section_id", f"slide_{i}"),
-        })
-        for i, s in enumerate(sections)
-    ]
-
-
 def _passthrough(state: ProposalState) -> dict:
     """Fan-out 게이트용 패스스루 노드."""
     return {}
@@ -112,49 +102,49 @@ def build_graph(checkpointer=None):
     g = StateGraph(ProposalState)
 
     # STEP 0: 공고 검색/추천
-    g.add_node("rfp_search", rfp_search)
+    g.add_node("rfp_search", track_tokens("rfp_search")(rfp_search))
     g.add_node("review_search", review_node("search"))
     g.add_node("rfp_fetch", rfp_fetch)
 
     # STEP 1-①: RFP 분석
-    g.add_node("rfp_analyze", rfp_analyze)
+    g.add_node("rfp_analyze", track_tokens("rfp_analyze")(rfp_analyze))
     g.add_node("review_rfp", review_node("rfp"))
 
     # v3.2: 사전조사 (review 없이 자동 통과)
-    g.add_node("research_gather", research_gather)
+    g.add_node("research_gather", track_tokens("research_gather")(research_gather))
 
     # STEP 1-②: Go/No-Go
-    g.add_node("go_no_go", go_no_go)
+    g.add_node("go_no_go", track_tokens("go_no_go")(go_no_go))
     g.add_node("review_gng", review_node("go_no_go"))
 
     # STEP 2: 전략
-    g.add_node("strategy_generate", strategy_generate)
+    g.add_node("strategy_generate", track_tokens("strategy_generate")(strategy_generate))
     g.add_node("review_strategy", review_node("strategy"))
 
     # STEP 3: 실행 계획 (병렬)
     g.add_node("plan_fan_out_gate", _passthrough)
-    g.add_node("plan_team", plan_team)
-    g.add_node("plan_assign", plan_assign)
-    g.add_node("plan_schedule", plan_schedule)
-    g.add_node("plan_story", plan_story)
-    g.add_node("plan_price", plan_price)
+    g.add_node("plan_team", track_tokens("plan_team")(plan_team))
+    g.add_node("plan_assign", track_tokens("plan_assign")(plan_assign))
+    g.add_node("plan_schedule", track_tokens("plan_schedule")(plan_schedule))
+    g.add_node("plan_story", track_tokens("plan_story")(plan_story))
+    g.add_node("plan_price", track_tokens("plan_price")(plan_price))
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 
     # STEP 4: 제안서 (섹션별 순차 작성 + 리뷰)
     g.add_node("proposal_start_gate", _proposal_start_gate)
-    g.add_node("proposal_write_next", proposal_write_next)
+    g.add_node("proposal_write_next", track_tokens("proposal_write_next")(proposal_write_next))
     g.add_node("review_section", review_section_node)
-    g.add_node("self_review", self_review_with_auto_improve)
+    g.add_node("self_review", track_tokens("self_review")(self_review_with_auto_improve))
     g.add_node("review_proposal", review_node("proposal"))
 
     # v3.2: 발표전략
-    g.add_node("presentation_strategy", presentation_strategy)
+    g.add_node("presentation_strategy", track_tokens("presentation_strategy")(presentation_strategy))
 
-    # STEP 5: PPT
-    g.add_node("ppt_fan_out_gate", _passthrough)
-    g.add_node("ppt_slide", ppt_slide)
-    g.add_node("ppt_merge", ppt_merge)
+    # STEP 5: PPT 3단계 순차 파이프라인
+    g.add_node("ppt_toc", track_tokens("ppt_toc")(ppt_toc))
+    g.add_node("ppt_visual_brief", track_tokens("ppt_visual_brief")(ppt_visual_brief))
+    g.add_node("ppt_storyboard", track_tokens("ppt_storyboard")(ppt_storyboard_node))
     g.add_node("review_ppt", review_node("ppt"))
 
     # ── 엣지 정의 ──
@@ -239,19 +229,19 @@ def build_graph(checkpointer=None):
         "rework": "proposal_start_gate",
     })
 
-    # v3.2: 발표전략 → PPT
+    # v3.2: 발표전략 → PPT 3단계 파이프라인
     g.add_conditional_edges("presentation_strategy", route_after_presentation_strategy, {
-        "proceed": "ppt_fan_out_gate",
-        "document_only": "ppt_fan_out_gate",
+        "proceed": "ppt_toc",
+        "document_only": END,  # POST-06: 서류심사 시 PPT 건너뛰기
     })
 
-    # STEP 5
-    g.add_conditional_edges("ppt_fan_out_gate", ppt_fan_out)
-    g.add_edge("ppt_slide", "ppt_merge")
-    g.add_edge("ppt_merge", "review_ppt")
+    # STEP 5: PPT 3단계 순차
+    g.add_edge("ppt_toc", "ppt_visual_brief")
+    g.add_edge("ppt_visual_brief", "ppt_storyboard")
+    g.add_edge("ppt_storyboard", "review_ppt")
     g.add_conditional_edges("review_ppt", route_after_ppt_review, {
         "approved": END,
-        "rework": "ppt_fan_out_gate",
+        "rework": "ppt_toc",
     })
 
     return g.compile(checkpointer=checkpointer)

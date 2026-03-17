@@ -37,11 +37,11 @@ def test_node_imports():
     from app.graph.nodes.research_gather import research_gather
     from app.graph.nodes.go_no_go import go_no_go
     from app.graph.nodes.review_node import review_node
-    from app.graph.nodes.merge_nodes import plan_merge, proposal_merge, ppt_merge
+    from app.graph.nodes.merge_nodes import plan_merge, proposal_merge
     from app.graph.nodes.strategy_generate import strategy_generate
     from app.graph.nodes.plan_nodes import plan_team, plan_assign, plan_schedule, plan_story, plan_price
-    from app.graph.nodes.proposal_nodes import proposal_section, self_review_with_auto_improve
-    from app.graph.nodes.ppt_nodes import presentation_strategy, ppt_slide
+    from app.graph.nodes.proposal_nodes import proposal_write_next, self_review_with_auto_improve
+    from app.graph.nodes.ppt_nodes import presentation_strategy, ppt_toc, ppt_visual_brief, ppt_storyboard_node
 
 
 def test_prompt_imports():

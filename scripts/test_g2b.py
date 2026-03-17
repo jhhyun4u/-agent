@@ -1,137 +1,92 @@
 """
 나라장터 G2B API 실제 호출 테스트
 
+서비스별 경로:
+  - 입찰공고: /ad/BidPublicInfoService
+  - 낙찰정보: /as/ScsbidInfoService
+
+필수 파라미터: inqryDiv(1), inqryBgnDt(YYYYMMDDHHMM), inqryEndDt(YYYYMMDDHHMM)
+
 실행: uv run python -X utf8 scripts/test_g2b.py
 """
 
 import asyncio
-import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 sys.path.insert(0, ".")
 
 
-async def test_raw_api_call():
-    """G2B API 직접 호출 - 인증 키 동작 확인."""
-    import aiohttp
-    from app.config import settings
+async def test_bid_search():
+    """1단계: 입찰공고 검색 테스트."""
+    print("=" * 60)
+    print("[1] 입찰공고 검색 (G2BService.search_bid_announcements)")
+    print("=" * 60)
 
-    key = settings.g2b_api_key
-    if not key:
-        print("[FAIL] G2B_API_KEY가 .env에 설정되지 않았습니다.")
-        return False
+    from app.services.g2b_service import G2BService
 
-    print(f"[INFO] API 키 길이: {len(key)}자")
-
-    url = "https://apis.data.go.kr/1230000/BidPublicInfoService04/getBidPblancListInfoServc"
-    params = {
-        "serviceKey": key,
-        "_type": "json",
-        "numOfRows": "3",
-        "pageNo": "1",
-        "bidNtceNm": "정보",
-    }
-
-    async with aiohttp.ClientSession() as session:
-        # 시도 1: params 전달 (aiohttp 자동 인코딩)
-        print("\n[TEST 1] params 전달 (인코딩 없음)")
-        try:
-            async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=15)) as resp:
-                print(f"  HTTP Status: {resp.status}")
-                if resp.status == 200:
-                    data = await resp.json(content_type=None)
-                    header = data.get("response", {}).get("header", {})
-                    print(f"  resultCode: {header.get('resultCode')}")
-                    print(f"  resultMsg: {header.get('resultMsg')}")
-                    if header.get("resultCode") == "00":
-                        body = data.get("response", {}).get("body", {})
-                        print(f"  totalCount: {body.get('totalCount', 0)}")
-                        items = body.get("items", {}).get("item", [])
-                        if isinstance(items, dict):
-                            items = [items]
-                        print(f"  반환 건수: {len(items)}건")
-                        if items:
-                            print(f"  첫 번째: {items[0].get('bidNtceNm', 'N/A')}")
-                        return True
-                    else:
-                        print(f"  [WARN] API 오류: {header.get('resultMsg')}")
-                else:
-                    text = await resp.text()
-                    print(f"  [FAIL] HTTP {resp.status}")
-                    # 에러 내용에서 키는 가림
-                    safe_text = text.replace(key, "***KEY***")
-                    print(f"  응답: {safe_text[:300]}")
-        except Exception as e:
-            print(f"  [ERROR] {e}")
-
-        # 시도 2: serviceKey를 URL에 직접 넣기 (인코딩 없이)
-        print("\n[TEST 2] URL에 직접 삽입")
-        from urllib.parse import urlencode
-        qs = urlencode({"_type": "json", "numOfRows": "3", "pageNo": "1", "bidNtceNm": "정보"})
-        direct_url = f"{url}?serviceKey={key}&{qs}"
-        try:
-            async with session.get(direct_url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
-                print(f"  HTTP Status: {resp.status}")
-                if resp.status == 200:
-                    data = await resp.json(content_type=None)
-                    header = data.get("response", {}).get("header", {})
-                    print(f"  resultCode: {header.get('resultCode')}")
-                    print(f"  resultMsg: {header.get('resultMsg')}")
-                    if header.get("resultCode") == "00":
-                        body = data.get("response", {}).get("body", {})
-                        print(f"  totalCount: {body.get('totalCount', 0)}")
-                        return True
-                else:
-                    print(f"  [FAIL] HTTP {resp.status}")
-        except Exception as e:
-            print(f"  [ERROR] {e}")
-
-        # 시도 3: quote된 키 사용 (현재 코드 방식)
-        print("\n[TEST 3] quote 인코딩된 키")
-        from urllib.parse import quote
-        encoded_key = quote(key, safe="")
-        direct_url2 = f"{url}?serviceKey={encoded_key}&{qs}"
-        try:
-            async with session.get(direct_url2, timeout=aiohttp.ClientTimeout(total=15)) as resp:
-                print(f"  HTTP Status: {resp.status}")
-                if resp.status == 200:
-                    data = await resp.json(content_type=None)
-                    header = data.get("response", {}).get("header", {})
-                    print(f"  resultCode: {header.get('resultCode')}")
-                    print(f"  resultMsg: {header.get('resultMsg')}")
-                    if header.get("resultCode") == "00":
-                        body = data.get("response", {}).get("body", {})
-                        print(f"  totalCount: {body.get('totalCount', 0)}")
-                        return True
-                else:
-                    print(f"  [FAIL] HTTP {resp.status}")
-        except Exception as e:
-            print(f"  [ERROR] {e}")
-
-    return False
+    async with G2BService() as svc:
+        results = await svc.search_bid_announcements("시스템", num_of_rows=100)
+        print(f"  결과: {len(results)}건\n")
+        for i, r in enumerate(results[:5]):
+            title = r.get("bidNtceNm", "N/A")
+            bid_no = r.get("bidNtceNo", "")
+            agency = r.get("ntceInsttNm", r.get("dminsttNm", ""))
+            budget = r.get("presmptPrce", r.get("asignBdgtAmt", ""))
+            deadline = r.get("bidClseDt", "")
+            print(f"  [{i+1}] {title[:55]}")
+            print(f"      공고번호: {bid_no}  기관: {agency}")
+            print(f"      예산: {budget}  마감: {deadline}")
+            print()
+        return results
 
 
-async def test_search_bids():
-    """standalone wrapper search_bids() 테스트."""
-    print("\n" + "=" * 50)
-    print("[TEST 4] search_bids('클라우드')")
-    print("=" * 50)
+async def test_bid_results():
+    """2단계: 낙찰결과 조회 테스트."""
+    print("=" * 60)
+    print("[2] 낙찰결과 조회 (G2BService.get_bid_results)")
+    print("=" * 60)
+
+    from app.services.g2b_service import G2BService
+
+    async with G2BService() as svc:
+        results = await svc.get_bid_results("정보", num_of_rows=5, date_range_days=7)
+        print(f"  결과: {len(results)}건\n")
+        for i, r in enumerate(results[:5]):
+            title = r.get("bidNtceNm", "N/A")
+            winner = r.get("bidwinnrNm", "")
+            bid_no = r.get("bidNtceNo", "")
+            count = r.get("prtcptCnum", "")
+            print(f"  [{i+1}] {title[:50]}")
+            print(f"      낙찰업체: {winner}  참여: {count}개사  공고번호: {bid_no}")
+            print()
+        return results
+
+
+async def test_standalone_wrapper():
+    """3단계: search_bids 래퍼 테스트."""
+    print("=" * 60)
+    print("[3] search_bids 래퍼 (LangGraph 노드용)")
+    print("=" * 60)
 
     from app.services.g2b_service import search_bids
 
-    bids = await search_bids("클라우드")
-    print(f"  결과: {len(bids)}건")
+    bids = await search_bids("용역")
+    print(f"  결과: {len(bids)}건\n")
     for i, b in enumerate(bids[:3]):
-        print(f"  [{i+1}] {b.get('project_name', 'N/A')}")
-        print(f"      공고번호: {b.get('bid_no')}, 발주처: {b.get('client')}")
-        print(f"      예산: {b.get('budget')}, 마감: {b.get('deadline')}")
-    return len(bids) > 0
+        print(f"  [{i+1}] {b.get('project_name', 'N/A')[:55]}")
+        print(f"      공고번호: {b.get('bid_no')}  발주처: {b.get('client')}")
+        print(f"      예산: {b.get('budget')}  마감: {b.get('deadline')}")
+        print()
+    return bids
 
 
 async def test_bid_detail(bid_no: str):
-    """standalone wrapper get_bid_detail() 테스트."""
-    print(f"\n[TEST 5] get_bid_detail('{bid_no}')")
+    """4단계: 공고 상세 조회 테스트."""
+    print("=" * 60)
+    print(f"[4] 공고 상세 조회: {bid_no}")
+    print("=" * 60)
+
     from app.services.g2b_service import get_bid_detail
 
     detail = await get_bid_detail(bid_no)
@@ -140,38 +95,48 @@ async def test_bid_detail(bid_no: str):
     print(f"  예산: {detail.get('budget', 'N/A')}")
     print(f"  요구사항: {str(detail.get('requirements_summary', ''))[:100]}")
     print(f"  첨부파일: {len(detail.get('attachments', []))}건")
-    return bool(detail.get("project_name"))
+    return detail
 
 
 async def main():
-    print("=" * 50)
-    print(f"  G2B API Test - {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print("=" * 50)
+    print(f"\n{'━'*60}")
+    print(f"  G2B API 통합 테스트 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"{'━'*60}\n")
 
-    # 1. API 인증 확인 (3가지 방식 시도)
-    api_ok = await test_raw_api_call()
+    # 1. 입찰공고 검색
+    try:
+        results = await test_bid_search()
+        print(f"  ✅ 입찰공고 검색 성공 ({len(results)}건)\n")
+    except Exception as e:
+        print(f"  ❌ 입찰공고 검색 실패: {e}\n")
+        results = []
 
-    if not api_ok:
-        print("\n[결론] API 인증 실패. 확인 사항:")
-        print("  1. 공공데이터포털(data.go.kr)에서 발급받은 '인코딩' 키를 사용하세요")
-        print("  2. 키 형태 예시: Abc123%2Fxyz%3D%3D (URL-encoded, 보통 100자 이상)")
-        print("  3. 현재 키는 64자 hex - 공공데이터포털 키 형태가 아닐 수 있습니다")
-        print("  4. API 활용 신청 후 승인까지 1-2시간 소요될 수 있습니다")
-        return
+    # 2. 낙찰결과 조회
+    try:
+        bid_results = await test_bid_results()
+        print(f"  ✅ 낙찰결과 조회 성공 ({len(bid_results)}건)\n")
+    except Exception as e:
+        print(f"  ❌ 낙찰결과 조회 실패: {e}\n")
 
-    # 2. standalone 래퍼 테스트
-    search_ok = await test_search_bids()
+    # 3. search_bids 래퍼
+    try:
+        bids = await test_standalone_wrapper()
+        print(f"  ✅ search_bids 래퍼 성공 ({len(bids)}건)\n")
+    except Exception as e:
+        print(f"  ❌ search_bids 래퍼 실패: {e}\n")
+        bids = []
 
-    # 3. 상세 조회 (검색 성공 시)
-    if search_ok:
-        from app.services.g2b_service import search_bids
-        bids = await search_bids("클라우드")
-        if bids:
+    # 4. 상세 조회
+    if bids:
+        try:
             await test_bid_detail(bids[0]["bid_no"])
+            print(f"\n  ✅ 상세 조회 성공\n")
+        except Exception as e:
+            print(f"\n  ❌ 상세 조회 실패: {e}\n")
 
-    print("\n" + "=" * 50)
+    print(f"{'━'*60}")
     print("  DONE")
-    print("=" * 50)
+    print(f"{'━'*60}")
 
 
 if __name__ == "__main__":

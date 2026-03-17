@@ -10,6 +10,7 @@ Anthropic API 래퍼:
 
 import json
 import logging
+from contextvars import ContextVar
 from typing import Any
 
 import anthropic
@@ -20,18 +21,31 @@ logger = logging.getLogger(__name__)
 
 _client: anthropic.AsyncAnthropic | None = None
 
+# ── ContextVar: 노드별 토큰 사용량 수집 ──
+_current_call_usage: ContextVar[list[dict]] = ContextVar("_current_call_usage", default=[])
+
+
+def reset_usage_context() -> list[dict]:
+    """ContextVar를 새 리스트로 리셋. 데코레이터에서 노드 시작 시 호출."""
+    fresh: list[dict] = []
+    _current_call_usage.set(fresh)
+    return fresh
+
+
+def get_accumulated_usage() -> list[dict]:
+    """현재 노드 실행 중 누적된 API 호출 기록 반환."""
+    try:
+        return _current_call_usage.get()
+    except LookupError:
+        return []
+
 # 모든 Claude 호출에 적용되는 공통 시스템 프롬프트
-COMMON_SYSTEM_RULES = """당신은 전문 용역 제안서 작성 전문가입니다. 한국어로 작성하며 공공기관 제안서 형식과 관행을 따릅니다.
+# TRUSTWORTHINESS_RULES (§16-3-1)를 별도 모듈에서 임포트
+from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
 
-[데이터 신뢰성 원칙]
-- 수치 데이터는 반드시 확인하여, 근거가 있는 자료만 활용해야 합니다.
-- 출처가 불분명하거나 검증되지 않은 수치는 사용하지 마세요.
-- 통계·수치를 인용할 때는 출처(기관명, 연도, 보고서명 등)를 명시하세요.
-- 추정치를 사용할 경우 '추정', '약' 등을 표기하고 산출 근거를 밝히세요.
+COMMON_SYSTEM_RULES = f"""당신은 전문 용역 제안서 작성 전문가입니다. 한국어로 작성하며 공공기관 제안서 형식과 관행을 따릅니다.
 
-[용어 정합성 원칙]
-- RFP에서 사용하는 핵심 용어·표현을 그대로 사용하세요. 동의어로 바꾸지 마세요.
-- 발주기관의 비전·미션 문서에 나오는 키워드를 자연스럽게 활용하세요."""
+{TRUSTWORTHINESS_RULES}"""
 
 
 def _get_client() -> anthropic.AsyncAnthropic:
@@ -105,6 +119,18 @@ async def claude_generate(
                 f"cache_read={getattr(usage, 'cache_read_input_tokens', 0)}, "
                 f"cache_create={getattr(usage, 'cache_creation_input_tokens', 0)}"
             )
+
+        # ContextVar에 사용량 적재 (track_tokens 데코레이터에서 수집)
+        try:
+            _current_call_usage.get().append({
+                "input_tokens": usage.input_tokens,
+                "output_tokens": usage.output_tokens,
+                "cache_read_input_tokens": getattr(usage, "cache_read_input_tokens", 0),
+                "cache_creation_input_tokens": getattr(usage, "cache_creation_input_tokens", 0),
+                "model": model,
+            })
+        except LookupError:
+            pass
 
         # 응답 텍스트 추출
         text = response.content[0].text if response.content else ""

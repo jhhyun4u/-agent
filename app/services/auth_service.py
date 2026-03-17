@@ -10,6 +10,7 @@ AUTH-06: AI 작업은 세션과 독립적으로 실행.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Optional
 
 from app.utils.supabase_client import get_async_client
@@ -118,7 +119,7 @@ async def deactivate_user(user_id: str, reason: str = "") -> dict:
         await client.table("users")
         .update({
             "status": "inactive",
-            "deactivated_at": "now()",
+            "deactivated_at": datetime.now(timezone.utc).isoformat(),
         })
         .eq("id", user_id)
         .execute()

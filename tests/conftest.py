@@ -97,6 +97,8 @@ class MockQueryBuilder:
     lte = property(lambda self: lambda *a, **kw: self._chain())
     ilike = property(lambda self: lambda *a, **kw: self._chain())
     in_ = property(lambda self: lambda *a, **kw: self._chain())
+    or_ = property(lambda self: lambda *a, **kw: self._chain())
+    contains = property(lambda self: lambda *a, **kw: self._chain())
     not_ = property(lambda self: MagicMock(is_=lambda *a, **kw: self._chain()))
     order = property(lambda self: lambda *a, **kw: self._chain())
     limit = property(lambda self: lambda *a, **kw: self._chain())

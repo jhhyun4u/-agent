@@ -243,4 +243,7 @@ class ProposalState(TypedDict):
     evaluation_simulation: Optional[dict]
 
     # v3.5: 섹션별 순차 작성 인덱스
-    current_section_index: int
+    current_section_index: Annotated[int, lambda a, b: b]
+
+    # Phase 4: 3단계 PPT 파이프라인 최종 결과
+    ppt_storyboard: Optional[dict]

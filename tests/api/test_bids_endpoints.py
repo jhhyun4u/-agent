@@ -11,10 +11,12 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from fastapi.testclient import TestClient
+from httpx import AsyncClient, ASGITransport
 
-from app.main import app
-from app.middleware.auth import get_current_user
+from tests.conftest import _get_test_app, make_supabase_mock as make_conftest_mock
+from app.api.deps import get_current_user
+
+app = _get_test_app()
 
 
 # ─────────────────────────────────────────────────────────────
@@ -121,8 +123,16 @@ def make_supabase_mock(
 # 공통 상수 / 픽스처
 # ─────────────────────────────────────────────────────────────
 
-MOCK_USER = MagicMock()
-MOCK_USER.id = "user-test-001"
+MOCK_USER = {
+    "id": "user-test-001",
+    "email": "test@tenopa.com",
+    "name": "테스트",
+    "role": "admin",
+    "team_id": "team-test-001",
+    "division_id": "div-001",
+    "org_id": "org-001",
+    "status": "active",
+}
 
 TEAM_ID = "team-test-001"
 PRESET_ID = "preset-test-001"
@@ -130,18 +140,24 @@ AUTH_HEADERS = {"Authorization": "Bearer test-token"}
 
 
 @pytest.fixture
-def client_with_auth():
+async def client_with_auth():
     app.dependency_overrides[get_current_user] = lambda: MOCK_USER
-    with TestClient(app, raise_server_exceptions=False) as c:
-        yield c
+    sb_mock = make_conftest_mock()
+    with patch("app.utils.supabase_client.get_async_client", return_value=sb_mock):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            yield c
     app.dependency_overrides.clear()
 
 
 @pytest.fixture
-def client_no_auth():
+async def client_no_auth():
     app.dependency_overrides.clear()
-    with TestClient(app, raise_server_exceptions=False) as c:
-        yield c
+    sb_mock = make_conftest_mock()
+    with patch("app.utils.supabase_client.get_async_client", return_value=sb_mock):
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as c:
+            yield c
 
 
 # ─────────────────────────────────────────────────────────────
@@ -150,34 +166,34 @@ def client_no_auth():
 
 class TestBidProfile:
 
-    def test_GET_프로필_조회_200(self, client_with_auth):
+    async def test_GET_프로필_조회_200(self, client_with_auth):
         profile = {"team_id": TEAM_ID, "expertise_areas": ["AI"], "tech_keywords": ["Python"]}
         mock_client = make_supabase_mock(profile_data=[profile])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
+            res = await client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
 
         assert res.status_code == 200
         assert res.json()["data"] is not None
 
-    def test_GET_프로필_없으면_data_None(self, client_with_auth):
+    async def test_GET_프로필_없으면_data_None(self, client_with_auth):
         mock_client = make_supabase_mock(profile_data=[])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
+            res = await client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
 
         assert res.status_code == 200
         assert res.json()["data"] is None
 
-    def test_GET_비팀원_403(self, client_with_auth):
+    async def test_GET_비팀원_403(self, client_with_auth):
         mock_client = make_supabase_mock(team_member_role=None)
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
+            res = await client_with_auth.get(f"/api/teams/{TEAM_ID}/bid-profile", headers=AUTH_HEADERS)
 
         assert res.status_code == 403
 
-    def test_PUT_프로필_upsert_200(self, client_with_auth):
+    async def test_PUT_프로필_upsert_200(self, client_with_auth):
         profile_row = {
             "team_id": TEAM_ID, "expertise_areas": ["AI/ML"],
             "tech_keywords": ["Python"], "certifications": [],
@@ -186,7 +202,7 @@ class TestBidProfile:
 
         body = {"expertise_areas": ["AI/ML"], "tech_keywords": ["Python"], "certifications": []}
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.put(
+            res = await client_with_auth.put(
                 f"/api/teams/{TEAM_ID}/bid-profile", json=body, headers=AUTH_HEADERS
             )
 
@@ -199,19 +215,19 @@ class TestBidProfile:
 
 class TestSearchPresets:
 
-    def test_목록_조회_200(self, client_with_auth):
+    async def test_목록_조회_200(self, client_with_auth):
         presets = [{"id": PRESET_ID, "team_id": TEAM_ID, "name": "AI 프리셋", "is_active": True}]
         mock_client = make_supabase_mock(preset_data=presets)
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get(
+            res = await client_with_auth.get(
                 f"/api/teams/{TEAM_ID}/search-presets", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 200
         assert isinstance(res.json()["data"], list)
 
-    def test_프리셋_생성_201(self, client_with_auth):
+    async def test_프리셋_생성_201(self, client_with_auth):
         new_preset = {"id": PRESET_ID, "team_id": TEAM_ID, "name": "신규 프리셋"}
         mock_client = make_supabase_mock(preset_data=[new_preset])
 
@@ -222,23 +238,23 @@ class TestSearchPresets:
             "bid_types": ["용역"],
         }
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/search-presets", json=body, headers=AUTH_HEADERS
             )
 
         assert res.status_code == 201
 
-    def test_없는_프리셋_삭제_404(self, client_with_auth):
+    async def test_없는_프리셋_삭제_404(self, client_with_auth):
         mock_client = make_supabase_mock(preset_data=[])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.delete(
+            res = await client_with_auth.delete(
                 f"/api/teams/{TEAM_ID}/search-presets/nonexistent-id", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 404
 
-    def test_프리셋_활성화_200(self, client_with_auth):
+    async def test_프리셋_활성화_200(self, client_with_auth):
         preset = {
             "id": PRESET_ID, "team_id": TEAM_ID, "name": "AI",
             "is_active": False, "keywords": ["AI"], "bid_types": ["용역"],
@@ -248,7 +264,7 @@ class TestSearchPresets:
         mock_client = make_supabase_mock(preset_data=[preset])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/search-presets/{PRESET_ID}/activate",
                 headers=AUTH_HEADERS,
             )
@@ -271,31 +287,31 @@ class TestBidsFetch:
             "is_active": True, "last_fetched_at": last_fetched_at,
         }
 
-    def test_활성_프리셋_없으면_422(self, client_with_auth):
+    async def test_활성_프리셋_없으면_422(self, client_with_auth):
         mock_client = make_supabase_mock(preset_data=[])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/bids/fetch", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 422
         assert "프리셋" in res.json()["detail"]
 
-    def test_1시간내_재수집_429(self, client_with_auth):
+    async def test_1시간내_재수집_429(self, client_with_auth):
         recent = (datetime.now(timezone.utc) - timedelta(minutes=30)).isoformat()
         preset = self._active_preset(last_fetched_at=recent)
         mock_client = make_supabase_mock(preset_data=[preset])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/bids/fetch", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 429
         assert "분 후" in res.json()["detail"]
 
-    def test_정상_수집_트리거_200(self, client_with_auth):
+    async def test_정상_수집_트리거_200(self, client_with_auth):
         preset = self._active_preset(last_fetched_at=None)
         profile = {"team_id": TEAM_ID, "expertise_areas": ["AI"]}
         mock_client = make_supabase_mock(preset_data=[preset], profile_data=[profile])
@@ -304,14 +320,14 @@ class TestBidsFetch:
             patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)),
             patch("app.api.routes_bids._run_fetch_and_analyze", AsyncMock()),
         ):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/bids/fetch", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 200
         assert res.json()["status"] == "fetching"
 
-    def test_2시간_전_수집_재수집_허용(self, client_with_auth):
+    async def test_2시간_전_수집_재수집_허용(self, client_with_auth):
         old = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
         preset = self._active_preset(last_fetched_at=old)
         profile = {"team_id": TEAM_ID}
@@ -321,7 +337,7 @@ class TestBidsFetch:
             patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)),
             patch("app.api.routes_bids._run_fetch_and_analyze", AsyncMock()),
         ):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 f"/api/teams/{TEAM_ID}/bids/fetch", headers=AUTH_HEADERS
             )
 
@@ -334,7 +350,7 @@ class TestBidsFetch:
 
 class TestBidAnnouncements:
 
-    def test_공고_목록_200(self, client_with_auth):
+    async def test_공고_목록_200(self, client_with_auth):
         bids = [{
             "bid_no": "001", "bid_title": "AI 시스템 구축",
             "agency": "행정안전부", "bid_type": "용역",
@@ -343,7 +359,7 @@ class TestBidAnnouncements:
         mock_client = make_supabase_mock(bid_data=bids)
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get(
+            res = await client_with_auth.get(
                 f"/api/teams/{TEAM_ID}/bids/announcements", headers=AUTH_HEADERS
             )
 
@@ -352,31 +368,31 @@ class TestBidAnnouncements:
         assert "data" in body
         assert "meta" in body
 
-    def test_공고_상세_정상_200(self, client_with_auth):
+    async def test_공고_상세_정상_200(self, client_with_auth):
         bid = {"bid_no": "20260001-00", "bid_title": "AI 행정 시스템", "agency": "행정안전부"}
         mock_client = make_supabase_mock(bid_data=[bid])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get("/api/bids/20260001-00", headers=AUTH_HEADERS)
+            res = await client_with_auth.get("/api/bids/20260001-00", headers=AUTH_HEADERS)
 
         assert res.status_code == 200
         assert res.json()["data"]["announcement"]["bid_no"] == "20260001-00"
 
-    def test_공고_상세_잘못된_bid_no_형식_400(self, client_with_auth):
-        res = client_with_auth.get("/api/bids/invalid!@#no", headers=AUTH_HEADERS)
+    async def test_공고_상세_잘못된_bid_no_형식_400(self, client_with_auth):
+        res = await client_with_auth.get("/api/bids/invalid!@#no", headers=AUTH_HEADERS)
         assert res.status_code == 400
 
-    def test_공고_상세_없으면_404(self, client_with_auth):
+    async def test_공고_상세_없으면_404(self, client_with_auth):
         mock_client = make_supabase_mock(bid_data=[])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.get("/api/bids/99999999-00", headers=AUTH_HEADERS)
+            res = await client_with_auth.get("/api/bids/99999999-00", headers=AUTH_HEADERS)
 
         assert res.status_code == 404
 
-    def test_인증_없으면_401(self, client_no_auth):
+    async def test_인증_없으면_401(self, client_no_auth):
         with patch("app.utils.supabase_client.get_async_client", AsyncMock(side_effect=Exception)):
-            res = client_no_auth.get("/api/bids/20260001-00")
+            res = await client_no_auth.get("/api/bids/20260001-00")
         assert res.status_code == 401
 
 
@@ -386,7 +402,7 @@ class TestBidAnnouncements:
 
 class TestProposalFromBid:
 
-    def test_공고_제안서_연동_201(self, client_with_auth):
+    async def test_공고_제안서_연동_201(self, client_with_auth):
         bid = {
             "bid_no": "20260001-00", "bid_title": "AI 행정 시스템",
             "agency": "행정안전부",
@@ -396,7 +412,7 @@ class TestProposalFromBid:
         mock_client = make_supabase_mock(bid_data=[bid])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 "/api/proposals/from-bid/20260001-00", headers=AUTH_HEADERS
             )
 
@@ -405,18 +421,18 @@ class TestProposalFromBid:
         assert body["data"]["bid_no"] == "20260001-00"
         assert "rfp_content" in body["data"]
 
-    def test_존재하지_않는_공고_404(self, client_with_auth):
+    async def test_존재하지_않는_공고_404(self, client_with_auth):
         mock_client = make_supabase_mock(bid_data=[])
 
         with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
-            res = client_with_auth.post(
+            res = await client_with_auth.post(
                 "/api/proposals/from-bid/99999999-00", headers=AUTH_HEADERS
             )
 
         assert res.status_code == 404
 
-    def test_잘못된_bid_no_형식_400(self, client_with_auth):
-        res = client_with_auth.post(
+    async def test_잘못된_bid_no_형식_400(self, client_with_auth):
+        res = await client_with_auth.post(
             "/api/proposals/from-bid/invalid!bid", headers=AUTH_HEADERS
         )
         assert res.status_code == 400

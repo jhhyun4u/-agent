@@ -1,4 +1,9 @@
-"""v3.4 Phase 기반 API 엔드포인트"""
+"""⚠️ DEPRECATED: v3.1 Phase 기반 API 엔드포인트.
+
+이 모듈은 LangGraph 기반 워크플로(routes_workflow.py, routes_proposal.py)로 대체되었습니다.
+프론트엔드(frontend/lib/api.ts)가 /api/v3.1/* 엔드포인트를 아직 호출 중이므로 삭제 불가.
+프론트엔드 마이그레이션 완료 후 삭제 예정.
+"""
 
 import logging
 import os
@@ -18,7 +23,7 @@ from app.services.phase_executor import PhaseExecutor
 from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
 from app.exceptions import SessionNotFoundError
 from app.services.template_service import get_available_templates, get_template_toc, clear_toc_cache
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/v3.1", tags=["v3.1"])

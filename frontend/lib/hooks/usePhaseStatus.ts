@@ -3,7 +3,7 @@
 /**
  * usePhaseStatus — Supabase Realtime + 폴링 fallback 기반 Phase 상태 구독
  *
- * - 초기 데이터: api.proposals.status(id) HTTP 요청
+ * - 초기 데이터: api.proposals.get(id) HTTP 요청
  * - 이후 변경: Supabase Realtime postgres_changes (proposals UPDATE)
  * - Realtime 미작동 대비: processing 상태일 때 5초마다 HTTP 폴링 fallback
  */
@@ -31,7 +31,7 @@ export function usePhaseStatus(proposalId: string): UsePhaseStatusResult {
 
     const fetchStatus = async () => {
       try {
-        const data = await api.proposals.status(proposalId);
+        const data = await api.proposals.get(proposalId);
         if (!cancelled) setStatus(data);
         return data;
       } catch (err) {

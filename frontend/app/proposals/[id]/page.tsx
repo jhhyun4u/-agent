@@ -11,8 +11,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, Comment_, ProposalSummary } from "@/lib/api";
+import { api, Comment_, ProposalSummary, type WorkflowState } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import PhaseGraph from "@/components/PhaseGraph";
+import WorkflowPanel from "@/components/WorkflowPanel";
 
 function useElapsedTime(running: boolean) {
   const [elapsed, setElapsed] = useState(0);
@@ -135,6 +137,9 @@ export default function ProposalDetailPage() {
   const [submittingComment, setSubmittingComment] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("");
 
+  // 워크플로 상태 (PhaseGraph + WorkflowPanel)
+  const [workflowState, setWorkflowState] = useState<WorkflowState | null>(null);
+
   // 다운로드 토큰 + result 추가 데이터
   const [downloadToken, setDownloadToken] = useState("");
   const [resultData, setResultData] = useState<{
@@ -164,6 +169,27 @@ export default function ProposalDetailPage() {
     });
   }, []);
 
+  // 워크플로 상태 폴링
+  const fetchWorkflowState = useCallback(async () => {
+    try {
+      const ws = await api.workflow.getState(id);
+      setWorkflowState(ws);
+    } catch {
+      // 워크플로 미시작 시 무시
+    }
+  }, [id]);
+
+  const statusStr = status?.status;
+  useEffect(() => {
+    fetchWorkflowState();
+    // 처리 중이면 5초마다 폴링
+    const running = statusStr === "processing" || statusStr === "initialized" || statusStr === "running";
+    if (running) {
+      const t = setInterval(fetchWorkflowState, 5000);
+      return () => clearInterval(t);
+    }
+  }, [fetchWorkflowState, statusStr]);
+
   // 버전 목록
   const fetchVersions = useCallback(async () => {
     try {
@@ -178,10 +204,10 @@ export default function ProposalDetailPage() {
     fetchVersions();
   }, [fetchVersions]);
 
-  // result 데이터 (완료 시)
+  // result 데이터 (완료 시) — LangGraph artifacts API 사용
   useEffect(() => {
     if (status?.status === "completed") {
-      api.proposals.result(id).then((r) => {
+      api.artifacts.get(id, "proposal").then((r) => {
         setResultData(r as any);
       }).catch(() => {});
     }
@@ -194,7 +220,7 @@ export default function ProposalDetailPage() {
       return;
     }
     setCompareLoading(true);
-    api.proposals.result(compareVersionId)
+    api.artifacts.get(compareVersionId, "proposal")
       .then((r) => setCompareData(r as any))
       .catch(() => setCompareData(null))
       .finally(() => setCompareLoading(false));
@@ -290,8 +316,24 @@ export default function ProposalDetailPage() {
 
   // ── 다운로드 URL ───────────────────────────────────────────────────
 
-  function downloadUrl(type: "docx" | "pptx" | "hwpx") {
-    return `${process.env.NEXT_PUBLIC_API_URL}/v3.1/proposals/${id}/download/${type}?token=${downloadToken}`;
+  // C-1 fix: fetch + blob 다운로드 (토큰을 URL에 노출하지 않음)
+  async function handleDownload(type: "docx" | "pptx" | "hwpx") {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${id}/download/${type}`,
+        { headers: { Authorization: `Bearer ${downloadToken}` } },
+      );
+      if (!res.ok) throw new Error("다운로드 실패");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `proposal-${id}.${type}`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "다운로드 실패");
+    }
   }
 
   // ── 버전 라벨 계산 ─────────────────────────────────────────────────
@@ -398,144 +440,40 @@ export default function ProposalDetailPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-6 space-y-5">
 
-        {/* ── Phase 진행 대시보드 ── */}
-        <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-sm font-semibold text-[#ededed]">Phase 진행 현황</h2>
+        {/* ── 워크플로 그래프 (§13-1-1) ── */}
+        <PhaseGraph workflowState={workflowState} />
+
+        {/* ── 워크플로 패널: Go/No-Go + 리뷰 + 병렬 진행 (§13-4, §13-5, §13-7) ── */}
+        <WorkflowPanel
+          proposalId={id}
+          workflowState={workflowState}
+          onStateChange={fetchWorkflowState}
+        />
+
+        {/* 경과 시간 + 실패 재시작 */}
+        {(isProcessing || isFailed) && (
+          <div className="flex items-center justify-between bg-[#1c1c1c] rounded-2xl border border-[#262626] px-5 py-3">
             <div className="flex items-center gap-3">
               {isProcessing && (
-                <span className="text-xs text-[#8c8c8c]">경과 {elapsed}</span>
+                <>
+                  <div className="w-3 h-3 rounded-full border-2 border-[#3ecf8e] border-t-transparent animate-spin" />
+                  <span className="text-xs text-[#8c8c8c]">경과 {elapsed}</span>
+                </>
               )}
-              <span className="text-xs font-medium text-[#3ecf8e]">{progressPct}%</span>
               {isFailed && (
-                <button
-                  onClick={() => handleRetryFromPhase(failedPhaseN)}
-                  className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
-                >
-                  Phase {failedPhaseN}부터 재시작
-                </button>
+                <span className="text-xs text-red-400">{status.error || "처리 중 오류 발생"}</span>
               )}
             </div>
-          </div>
-
-          {/* 진행률 바 */}
-          <div className="h-1 bg-[#262626] rounded-full overflow-hidden mb-4">
-            {isProcessing && progressPct === 0 ? (
-              <div className="h-full w-full relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#3ecf8e]/20" />
-                <div className="absolute inset-y-0 w-1/3 bg-[#3ecf8e] rounded-full"
-                  style={{ animation: "slideX 1.5s ease-in-out infinite" }} />
-              </div>
-            ) : (
-              <div className="h-full bg-[#3ecf8e] rounded-full transition-all duration-700"
-                style={{ width: `${progressPct}%` }} />
+            {isFailed && (
+              <button
+                onClick={() => handleRetryFromPhase(failedPhaseN)}
+                className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
+              >
+                Phase {failedPhaseN}부터 재시작
+              </button>
             )}
           </div>
-
-          {/* Phase 로그 리스트 */}
-          <div className="space-y-0">
-            {PHASES.map((phase, idx) => {
-              const done = status.phases_completed >= phase.n;
-              const active = isProcessing && (
-                status.current_phase === phase.key ||
-                (!status.current_phase && status.phases_completed === phase.n - 1)
-              );
-              const failed = isFailed && phase.n === failedPhaseN;
-              const pending = !done && !active && !failed;
-              const isLast = idx === PHASES.length - 1;
-
-              return (
-                <div key={phase.n} className="flex gap-3">
-                  {/* 타임라인 세로선 + 아이콘 */}
-                  <div className="flex flex-col items-center">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                      done
-                        ? "bg-[#3ecf8e] text-[#0f0f0f]"
-                        : active
-                        ? "bg-[#3ecf8e]/20 border-2 border-[#3ecf8e]"
-                        : failed
-                        ? "bg-red-500/20 border-2 border-red-500/50"
-                        : "bg-[#262626] border border-[#363636]"
-                    }`}>
-                      {done ? (
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      ) : active ? (
-                        <div className="w-2 h-2 rounded-full border border-[#3ecf8e] border-t-transparent animate-spin" />
-                      ) : failed ? (
-                        <span className="text-[10px] font-bold text-red-400">!</span>
-                      ) : (
-                        <span className="text-[10px] text-[#8c8c8c]">{phase.n}</span>
-                      )}
-                    </div>
-                    {!isLast && (
-                      <div className={`w-px flex-1 mt-1 mb-1 min-h-[12px] ${
-                        done ? "bg-[#3ecf8e]/30" : "bg-[#262626]"
-                      }`} />
-                    )}
-                  </div>
-
-                  {/* 내용 */}
-                  <div className={`flex-1 pb-4 ${isLast ? "pb-0" : ""}`}>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className={`text-xs font-semibold ${
-                        done ? "text-[#3ecf8e]" : active ? "text-[#ededed]" : failed ? "text-red-400" : "text-[#5c5c5c]"
-                      }`}>
-                        Phase {phase.n} — {phase.name}
-                      </span>
-                      {done && (
-                        <span className="text-[10px] text-[#3ecf8e]/60 font-normal">완료</span>
-                      )}
-                      {active && (
-                        <span className="inline-flex gap-0.5 items-center">
-                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-1 h-1 rounded-full bg-[#3ecf8e] animate-bounce" style={{ animationDelay: "300ms" }} />
-                        </span>
-                      )}
-                    </div>
-
-                    {done && (
-                      <p className="text-[11px] text-[#8c8c8c] leading-relaxed">{phase.doneDesc}</p>
-                    )}
-
-                    {active && (
-                      <div>
-                        <p className="text-[11px] text-[#8c8c8c] leading-relaxed mb-1.5">{phase.activeDesc}</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {phase.activeSubs.map((sub, si) => (
-                            <span key={si} className="inline-flex items-center gap-1 text-[10px] text-[#3ecf8e]/70 bg-[#3ecf8e]/8 border border-[#3ecf8e]/15 rounded px-1.5 py-0.5">
-                              <span className="w-1 h-1 rounded-full bg-[#3ecf8e]/60" />
-                              {sub}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {failed && (
-                      <p className="text-[11px] text-red-400/80 leading-relaxed">
-                        {status.error || "처리 중 오류가 발생했습니다."}
-                      </p>
-                    )}
-
-                    {pending && (
-                      <p className="text-[11px] text-[#3c3c3c]">대기 중</p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {isCompleted && (
-            <div className="mt-2 pt-3 border-t border-[#262626] flex items-center gap-2">
-              <span className="text-[#3ecf8e] text-sm">✓</span>
-              <p className="text-xs text-[#3ecf8e]">모든 단계가 완료되었습니다. 아래에서 결과물을 다운로드하세요.</p>
-            </div>
-          )}
-        </section>
+        )}
 
         {/* ── 탭 네비게이션 ── */}
         <div className="border-b border-[#262626]">
@@ -570,9 +508,9 @@ export default function ProposalDetailPage() {
 
             {isCompleted && (
               <div className="flex flex-col gap-2.5">
-                <a
-                  href={downloadUrl("docx")}
-                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-blue-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
+                <button
+                  onClick={() => handleDownload("docx")}
+                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-blue-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group w-full text-left"
                 >
                   <span className="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center text-base shrink-0">
                     📄
@@ -584,11 +522,11 @@ export default function ProposalDetailPage() {
                   <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                </a>
+                </button>
 
-                <a
-                  href={downloadUrl("pptx")}
-                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-indigo-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
+                <button
+                  onClick={() => handleDownload("pptx")}
+                  className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-indigo-500/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group w-full text-left"
                 >
                   <span className="w-9 h-9 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center text-base shrink-0">
                     📊
@@ -600,12 +538,12 @@ export default function ProposalDetailPage() {
                   <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                </a>
+                </button>
 
                 {((resultData as any)?.hwpx_path) && (
-                  <a
-                    href={downloadUrl("hwpx")}
-                    className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-[#3ecf8e]/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group"
+                  <button
+                    onClick={() => handleDownload("hwpx")}
+                    className="flex items-center gap-3 px-4 py-3 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-[#3ecf8e]/40 rounded-xl text-sm font-medium text-[#ededed] transition-colors group w-full text-left"
                   >
                     <span className="w-9 h-9 rounded-lg bg-[#3ecf8e]/15 text-[#3ecf8e] flex items-center justify-center text-base shrink-0">
                       📝
@@ -617,7 +555,7 @@ export default function ProposalDetailPage() {
                     <svg className="w-4 h-4 text-[#8c8c8c] group-hover:text-[#ededed] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                  </a>
+                  </button>
                 )}
               </div>
             )}

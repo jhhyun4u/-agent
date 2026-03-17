@@ -158,42 +158,40 @@ export const api = {
       );
     },
 
-    generate(formData: FormData) {
+    /** 프로젝트 생성 — 공고 검색(STEP 0)부터 시작 */
+    create(data: { search_keywords?: string; industry?: string }) {
       return request<{ proposal_id: string; status: string }>(
         "POST",
-        "/v3.1/proposals/generate",
+        "/proposals",
+        data
+      );
+    },
+
+    /** 프로젝트 생성 — RFP 파일 업로드 기반 */
+    createFromRfp(formData: FormData) {
+      return request<{ proposal_id: string; status: string }>(
+        "POST",
+        "/proposals/from-rfp",
         formData,
         true
       );
     },
 
-    status(id: string) {
-      return request<ProposalStatus_>("GET", `/v3.1/proposals/${id}/status`);
-    },
-
-    result(id: string) {
-      return request<{
-        proposal_id: string;
-        status: string;
-        rfp_title: string;
-        phases_completed: number;
-        artifacts: Record<string, unknown>;
-        quality_score: number;
-        docx_path: string;
-        pptx_path: string;
-        executive_summary: string;
-      }>("GET", `/v3.1/proposals/${id}/result`);
-    },
-
-    execute(id: string) {
+    /** 프로젝트 생성 — 공고번호 직접 지정 */
+    createFromSearch(bidNo: string, teamId?: string) {
       return request<{ proposal_id: string; status: string }>(
         "POST",
-        `/v3.1/proposals/${id}/execute`
+        "/proposals/from-search",
+        { bid_no: bidNo, team_id: teamId }
       );
     },
 
-    downloadUrl(id: string, type: "docx" | "pptx") {
-      return `${BASE}/v3.1/proposals/${id}/download/${type}`;
+    get(id: string) {
+      return request<ProposalStatus_>("GET", `/proposals/${id}`);
+    },
+
+    downloadUrl(id: string, type: "docx" | "pptx" | "hwpx") {
+      return `${BASE}/proposals/${id}/download/${type}`;
     },
 
     updateWinResult(
@@ -201,27 +199,6 @@ export const api = {
       data: { win_result: string; bid_amount?: number; notes?: string }
     ) {
       return request("PATCH", `/proposals/${id}/win-result`, data);
-    },
-
-    versions(id: string) {
-      return request<{ versions: ProposalVersion[] }>(
-        "GET",
-        `/v3.1/proposals/${id}/versions`
-      );
-    },
-
-    newVersion(id: string) {
-      return request<{ proposal_id: string; version: number; status: string }>(
-        "POST",
-        `/v3.1/proposals/${id}/new-version`
-      );
-    },
-
-    retryFromPhase(id: string, phaseNum: number) {
-      return request<{ proposal_id: string; status: string }>(
-        "POST",
-        `/v3.1/proposals/${id}/execute?start_phase=${phaseNum}`
-      );
     },
   },
 
@@ -450,6 +427,182 @@ export const api = {
     },
   },
 
+  // ── LangGraph 워크플로 (§12-1) ──────────────────────────────────────
+
+  workflow: {
+    start(proposalId: string, initialState?: Record<string, unknown>) {
+      return request<WorkflowStartResult>(
+        "POST",
+        `/proposals/${proposalId}/start`,
+        { initial_state: initialState ?? {} }
+      );
+    },
+    getState(proposalId: string) {
+      return request<WorkflowState>("GET", `/proposals/${proposalId}/state`);
+    },
+    resume(proposalId: string, data: WorkflowResumeData) {
+      return request<WorkflowResumeResult>(
+        "POST",
+        `/proposals/${proposalId}/resume`,
+        data
+      );
+    },
+    getTokenUsage(proposalId: string) {
+      return request<TokenUsageResponse>(
+        "GET",
+        `/proposals/${proposalId}/token-usage`
+      );
+    },
+    getHistory(proposalId: string) {
+      return request<{ proposal_id: string; history: WorkflowHistoryEntry[] }>(
+        "GET",
+        `/proposals/${proposalId}/history`
+      );
+    },
+    streamUrl(proposalId: string) {
+      return `${BASE}/proposals/${proposalId}/stream`;
+    },
+    goto(proposalId: string, step: string) {
+      return request<{ success: boolean; restored_step: string; message: string }>(
+        "POST",
+        `/proposals/${proposalId}/goto/${step}`
+      );
+    },
+    impact(proposalId: string, step: string) {
+      return request<{
+        step: string;
+        step_number: number;
+        downstream_nodes: string[];
+        downstream_count: number;
+        affected_steps: number[];
+        message: string;
+      }>("GET", `/proposals/${proposalId}/impact/${step}`);
+    },
+  },
+
+  // ── 산출물 (§12-3) ────────────────────────────────────────────────
+
+  artifacts: {
+    get(proposalId: string, step: string) {
+      return request<ArtifactData>(
+        "GET",
+        `/proposals/${proposalId}/artifacts/${step}`
+      );
+    },
+    downloadDocxUrl(proposalId: string) {
+      return `${BASE}/proposals/${proposalId}/download/docx`;
+    },
+    downloadPptxUrl(proposalId: string) {
+      return `${BASE}/proposals/${proposalId}/download/pptx`;
+    },
+    getCompliance(proposalId: string) {
+      return request<ComplianceData>(
+        "GET",
+        `/proposals/${proposalId}/compliance`
+      );
+    },
+    checkCompliance(proposalId: string) {
+      return request<ComplianceData>(
+        "POST",
+        `/proposals/${proposalId}/compliance/check`
+      );
+    },
+    save(
+      proposalId: string,
+      step: string,
+      content: unknown,
+      changeSource = "human_edit"
+    ) {
+      return request<{ saved: boolean; step: string; message: string }>(
+        "PUT",
+        `/proposals/${proposalId}/artifacts/${step}`,
+        { content, change_source: changeSource }
+      );
+    },
+    regenerateSection(
+      proposalId: string,
+      step: string,
+      sectionId: string,
+      instructions = ""
+    ) {
+      return request<{
+        regenerated: boolean;
+        section_id: string;
+        section_title: string;
+        message: string;
+      }>(
+        "POST",
+        `/proposals/${proposalId}/artifacts/${step}/sections/${sectionId}/regenerate`,
+        { instructions }
+      );
+    },
+    aiAssist(
+      proposalId: string,
+      text: string,
+      mode: "improve" | "shorten" | "expand" | "formalize" = "improve",
+      context = ""
+    ) {
+      return request<{
+        suggestion: string;
+        explanation: string;
+        mode: string;
+        original_length: number;
+        suggestion_length: number;
+      }>(
+        "POST",
+        `/proposals/${proposalId}/ai-assist`,
+        { text, mode, context }
+      );
+    },
+  },
+
+  // ── 분석 대시보드 (§12-13) ────────────────────────────────────────
+
+  analytics: {
+    failureReasons(params?: AnalyticsParams) {
+      return request<FailureReasonsData>(
+        "GET",
+        `/analytics/failure-reasons${_qs(params)}`
+      );
+    },
+    positioningWinRate(params?: AnalyticsParams) {
+      return request<PositioningWinRateData>(
+        "GET",
+        `/analytics/positioning-win-rate${_qs(params)}`
+      );
+    },
+    monthlyTrends(params?: AnalyticsParams) {
+      return request<MonthlyTrendsData>(
+        "GET",
+        `/analytics/monthly-trends${_qs(params)}`
+      );
+    },
+    winRate(params?: AnalyticsParams) {
+      return request<WinRateDetailData>(
+        "GET",
+        `/analytics/win-rate${_qs(params)}`
+      );
+    },
+    teamPerformance(params?: AnalyticsParams) {
+      return request<TeamPerformanceData>(
+        "GET",
+        `/analytics/team-performance${_qs(params)}`
+      );
+    },
+    competitor(params?: AnalyticsParams) {
+      return request<CompetitorData>(
+        "GET",
+        `/analytics/competitor${_qs(params)}`
+      );
+    },
+    clientWinRate(params?: AnalyticsParams) {
+      return request<ClientWinRateData>(
+        "GET",
+        `/analytics/client-win-rate${_qs(params)}`
+      );
+    },
+  },
+
   calendar: {
     list(params?: { scope?: string; status?: string }) {
       const qs = new URLSearchParams(
@@ -484,7 +637,150 @@ export const api = {
       return request<void>("DELETE", `/calendar/${id}`);
     },
   },
+
+  // ── 알림 (§12-10) ─────────────────────────────────────────────────────
+
+  notifications: {
+    list(params?: { is_read?: boolean; skip?: number; limit?: number }) {
+      return request<{ items: Notification[]; unread_count: number }>(
+        "GET",
+        `/notifications${_qs(params)}`
+      );
+    },
+    markRead(id: string) {
+      return request<{ status: string }>("PUT", `/notifications/${id}/read`);
+    },
+    markAllRead() {
+      return request<{ status: string }>("PUT", "/notifications/read-all");
+    },
+    getSettings() {
+      return request<NotificationSettings>("GET", "/notifications/settings");
+    },
+    updateSettings(data: Partial<NotificationSettings>) {
+      return request<NotificationSettings>(
+        "PUT",
+        "/notifications/settings",
+        data
+      );
+    },
+  },
+
+  // ── KB 관리 (§13-13) ─────────────────────────────────────────────────
+
+  kb: {
+    laborRates: {
+      list(params?: { agency?: string; year?: string; grade?: string }) {
+        return request<{ items: LaborRate[] }>("GET", `/kb/labor-rates${_qs(params)}`);
+      },
+      create(data: Omit<LaborRate, "id" | "created_at" | "updated_at">) {
+        return request<LaborRate>("POST", "/kb/labor-rates", data);
+      },
+      update(id: string, data: Partial<LaborRate>) {
+        return request<LaborRate>("PUT", `/kb/labor-rates/${id}`, data);
+      },
+      delete(id: string) {
+        return request<void>("DELETE", `/kb/labor-rates/${id}`);
+      },
+    },
+    marketPrices: {
+      list(params?: { domain?: string; year?: string }) {
+        return request<{ items: MarketPrice[] }>("GET", `/kb/market-prices${_qs(params)}`);
+      },
+      create(data: Omit<MarketPrice, "id" | "created_at" | "updated_at">) {
+        return request<MarketPrice>("POST", "/kb/market-prices", data);
+      },
+      update(id: string, data: Partial<MarketPrice>) {
+        return request<MarketPrice>("PUT", `/kb/market-prices/${id}`, data);
+      },
+      delete(id: string) {
+        return request<void>("DELETE", `/kb/market-prices/${id}`);
+      },
+    },
+    content: {
+      list(params?: { status?: string; type?: string }) {
+        return request<{ items: KbContent[]; total: number }>("GET", `/kb/content${_qs(params)}`);
+      },
+      get(id: string) {
+        return request<KbContentDetail>("GET", `/kb/content/${id}`);
+      },
+      create(data: KbContentCreate) {
+        return request<KbContent>("POST", "/kb/content", data);
+      },
+      update(id: string, data: Partial<KbContentCreate>) {
+        return request<KbContent>("PUT", `/kb/content/${id}`, data);
+      },
+      delete(id: string) {
+        return request<void>("DELETE", `/kb/content/${id}`);
+      },
+      approve(id: string) {
+        return request<KbContent>("POST", `/kb/content/${id}/approve`);
+      },
+    },
+    clients: {
+      list(params?: { relationship?: string; client_type?: string }) {
+        return request<{ items: KbClient[]; total: number }>("GET", `/kb/clients${_qs(params)}`);
+      },
+      get(id: string) {
+        return request<KbClientDetail>("GET", `/kb/clients/${id}`);
+      },
+      create(data: KbClientCreate) {
+        return request<KbClient>("POST", "/kb/clients", data);
+      },
+      update(id: string, data: Partial<KbClientCreate>) {
+        return request<KbClient>("PUT", `/kb/clients/${id}`, data);
+      },
+      delete(id: string) {
+        return request<void>("DELETE", `/kb/clients/${id}`);
+      },
+    },
+    competitors: {
+      list(params?: { scale?: string }) {
+        return request<{ items: KbCompetitor[]; total: number }>("GET", `/kb/competitors${_qs(params)}`);
+      },
+      get(id: string) {
+        return request<KbCompetitorDetail>("GET", `/kb/competitors/${id}`);
+      },
+      create(data: KbCompetitorCreate) {
+        return request<KbCompetitor>("POST", "/kb/competitors", data);
+      },
+      update(id: string, data: Partial<KbCompetitorCreate>) {
+        return request<KbCompetitor>("PUT", `/kb/competitors/${id}`, data);
+      },
+      delete(id: string) {
+        return request<void>("DELETE", `/kb/competitors/${id}`);
+      },
+    },
+    lessons: {
+      list(params?: { result?: string; positioning?: string }) {
+        return request<{ items: KbLesson[]; total: number }>("GET", `/kb/lessons${_qs(params)}`);
+      },
+      get(id: string) {
+        return request<KbLessonDetail>("GET", `/kb/lessons/${id}`);
+      },
+      create(data: KbLessonCreate) {
+        return request<KbLesson>("POST", "/kb/lessons", data);
+      },
+    },
+    search(q: string, areas?: string, top_k = 5) {
+      return request<KbSearchResult>(
+        "GET",
+        `/kb/search?q=${encodeURIComponent(q)}${areas ? `&areas=${areas}` : ""}&top_k=${top_k}`
+      );
+    },
+  },
 };
+
+// ── 헬퍼 ─────────────────────────────────────────────────────────────
+
+function _qs(params?: object): string {
+  if (!params) return "";
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && v !== "") qs.set(k, String(v));
+  }
+  const s = qs.toString();
+  return s ? `?${s}` : "";
+}
 
 // ── 타입 ─────────────────────────────────────────────────────────────
 
@@ -683,3 +979,390 @@ export interface CalendarItem {
   status: "open" | "submitted" | "won" | "lost";
   created_at: string;
 }
+
+// ── 워크플로 타입 ─────────────────────────────────────────────────────
+
+export interface WorkflowStartResult {
+  proposal_id: string;
+  status: string;
+  current_step: string;
+  interrupted: boolean;
+}
+
+export interface WorkflowState {
+  proposal_id: string;
+  current_step: string;
+  positioning: string | null;
+  approval: Record<string, unknown>;
+  has_pending_interrupt: boolean;
+  next_nodes: string[];
+  token_summary: { total_cost_usd: number; nodes_tracked: number };
+}
+
+export interface WorkflowResumeData {
+  approved?: boolean;
+  quick_approve?: boolean;
+  feedback?: string;
+  decision?: string;
+  positioning_override?: string;
+  rework_targets?: string[];
+  picked_bid_no?: string;
+  no_interest?: boolean;
+  [key: string]: unknown;
+}
+
+export interface WorkflowResumeResult {
+  proposal_id: string;
+  current_step: string;
+  interrupted: boolean;
+}
+
+export interface WorkflowHistoryEntry {
+  step: string;
+  next: string[];
+  config: Record<string, unknown>;
+}
+
+export interface TokenUsageNode {
+  input_tokens: number;
+  output_tokens: number;
+  cache_read_tokens: number;
+  cache_create_tokens: number;
+  total_tokens: number;
+  cost_usd: number;
+  model: string;
+  num_calls: number;
+  duration_ms: number;
+}
+
+export interface TokenUsageResponse {
+  proposal_id: string;
+  by_node: Record<string, TokenUsageNode>;
+  total: {
+    input_tokens: number;
+    output_tokens: number;
+    total_tokens: number;
+    cost_usd: number;
+    nodes_executed: number;
+  };
+}
+
+// ── 산출물 타입 ───────────────────────────────────────────────────────
+
+export interface ArtifactData {
+  proposal_id: string;
+  step: string;
+  data: Record<string, unknown>;
+}
+
+export interface ComplianceItem {
+  requirement: string;
+  section: string;
+  status: "met" | "partial" | "not_met" | "pending";
+  notes: string;
+}
+
+export interface ComplianceData {
+  proposal_id: string;
+  items: ComplianceItem[];
+  summary: { met: number; partial: number; not_met: number; pending: number };
+}
+
+// ── 분석 대시보드 타입 ────────────────────────────────────────────────
+
+export interface AnalyticsParams {
+  period?: string;
+  team_id?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface FailureReasonsData {
+  reasons: Array<{ reason: string; count: number; percentage: number }>;
+  total_failures: number;
+}
+
+export interface PositioningWinRateData {
+  positioning: Array<{
+    type: string;
+    total: number;
+    won: number;
+    rate: number;
+  }>;
+}
+
+export interface MonthlyTrendsData {
+  months: Array<{
+    month: string;
+    total: number;
+    won: number;
+    rate: number;
+  }>;
+}
+
+export interface WinRateDetailData {
+  overall: { total: number; won: number; rate: number };
+  by_period: Array<{ period: string; total: number; won: number; rate: number }>;
+}
+
+export interface TeamPerformanceData {
+  teams: Array<{
+    team_id: string;
+    team_name: string;
+    total: number;
+    won: number;
+    rate: number;
+    avg_duration_days: number;
+  }>;
+}
+
+export interface CompetitorData {
+  competitors: Array<{
+    name: string;
+    encounters: number;
+    wins_against: number;
+    losses_against: number;
+  }>;
+}
+
+export interface ClientWinRateData {
+  clients: Array<{
+    agency: string;
+    total: number;
+    won: number;
+    rate: number;
+  }>;
+}
+
+// ── 모의평가 타입 ─────────────────────────────────────────────────────
+
+export interface EvaluatorScore {
+  compliance: number;
+  strategy: number;
+  quality: number;
+  trustworthiness: number;
+  total: number;
+}
+
+export interface Evaluator {
+  role: string;
+  scores: EvaluatorScore;
+  comments: string;
+}
+
+export interface EvaluationSimulation {
+  evaluators: Evaluator[];
+  average_scores: EvaluatorScore;
+  weaknesses: Array<{ area: string; description: string; related_section: string }>;
+  expected_qa: Array<{ question: string; answer: string }>;
+}
+
+// ── KB 관리 타입 ─────────────────────────────────────────────────────
+
+export interface LaborRate {
+  id: string;
+  agency: string;
+  year: number;
+  grade: string;
+  monthly_rate: number;
+  source: string;
+  updated_at: string;
+  created_at: string;
+}
+
+export interface MarketPrice {
+  id: string;
+  domain: string;
+  budget_range: string;
+  win_rate: number;
+  avg_bid_rate: number;
+  source: string;
+  year: number;
+  updated_at: string;
+  created_at: string;
+}
+
+// ── 알림 타입 ─────────────────────────────────────────────────────────
+
+export interface Notification {
+  id: string;
+  proposal_id: string | null;
+  type: string;
+  title: string;
+  body: string;
+  link: string | null;
+  is_read: boolean;
+  teams_sent: boolean;
+  created_at: string;
+}
+
+export interface NotificationSettings {
+  teams: boolean;
+  in_app: boolean;
+}
+
+// ── KB 콘텐츠 타입 ────────────────────────────────────────────────────
+
+export interface KbContent {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  quality_score: number | null;
+  reuse_count: number;
+  tags: string[];
+  industry: string | null;
+  tech_area: string | null;
+  created_at: string;
+}
+
+export interface KbContentDetail extends KbContent {
+  body: string;
+  source_project_id: string | null;
+}
+
+export interface KbContentCreate {
+  title: string;
+  body: string;
+  type?: string;
+  source_project_id?: string;
+  industry?: string;
+  tech_area?: string;
+  tags?: string[];
+}
+
+// ── KB 발주기관 타입 ──────────────────────────────────────────────────
+
+export interface KbClient {
+  id: string;
+  client_name: string;
+  client_type: string | null;
+  scale: string | null;
+  relationship: string;
+  eval_tendency: string | null;
+  location: string | null;
+  updated_at: string;
+}
+
+export interface KbClientDetail extends KbClient {
+  notes: string | null;
+  parent_ministry: string | null;
+  bid_history: Array<{ id: string; project_name: string; result: string; created_at: string }>;
+}
+
+export interface KbClientCreate {
+  client_name: string;
+  client_type?: string;
+  scale?: string;
+  parent_ministry?: string;
+  location?: string;
+  relationship?: string;
+  eval_tendency?: string;
+  notes?: string;
+}
+
+// ── KB 경쟁사 타입 ────────────────────────────────────────────────────
+
+export interface KbCompetitor {
+  id: string;
+  company_name: string;
+  scale: string | null;
+  primary_area: string | null;
+  price_pattern: string | null;
+  avg_win_rate: number | null;
+  updated_at: string;
+}
+
+export interface KbCompetitorDetail extends KbCompetitor {
+  strengths: string | null;
+  weaknesses: string | null;
+  notes: string | null;
+  competition_history: Array<{ id: string; project_name: string; result: string; created_at: string }>;
+}
+
+export interface KbCompetitorCreate {
+  company_name: string;
+  scale?: string;
+  primary_area?: string;
+  strengths?: string;
+  weaknesses?: string;
+  price_pattern?: string;
+  notes?: string;
+}
+
+// ── KB 교훈 타입 ──────────────────────────────────────────────────────
+
+export interface KbLesson {
+  id: string;
+  strategy_summary: string | null;
+  result: string | null;
+  positioning: string | null;
+  client_name: string | null;
+  industry: string | null;
+  failure_category: string | null;
+  created_at: string;
+}
+
+export interface KbLessonDetail extends KbLesson {
+  proposal_id: string | null;
+  effective_points: string | null;
+  weak_points: string | null;
+  improvements: string | null;
+  failure_detail: string | null;
+}
+
+export interface KbLessonCreate {
+  proposal_id?: string;
+  strategy_summary?: string;
+  effective_points?: string;
+  weak_points?: string;
+  improvements?: string;
+  failure_category?: string;
+  failure_detail?: string;
+  positioning?: string;
+  client_name?: string;
+  industry?: string;
+  result?: string;
+}
+
+// ── KB 검색 결과 타입 ─────────────────────────────────────────────────
+
+export interface KbSearchResult {
+  query: string;
+  total: number;
+  results: Record<string, Array<{ id: string; title?: string; summary?: string; score?: number; [key: string]: unknown }>>;
+}
+
+// ── 워크플로 STEP 정의 ───────────────────────────────────────────────
+
+export type WorkflowStep =
+  | "rfp_search"
+  | "rfp_fetch"
+  | "rfp_analyze"
+  | "research_gather"
+  | "go_no_go"
+  | "strategy_generate"
+  | "plan_team"
+  | "plan_assign"
+  | "plan_schedule"
+  | "plan_story"
+  | "plan_price"
+  | "proposal_write_next"
+  | "self_review"
+  | "presentation_strategy"
+  | "ppt_toc"
+  | "ppt_visual_brief"
+  | "ppt_storyboard";
+
+export const WORKFLOW_STEPS: Array<{
+  step: number;
+  label: string;
+  nodes: string[];
+}> = [
+  { step: 0, label: "공고 검색", nodes: ["rfp_search", "rfp_fetch"] },
+  { step: 1, label: "RFP 분석", nodes: ["rfp_analyze", "research_gather", "go_no_go"] },
+  { step: 2, label: "전략 수립", nodes: ["strategy_generate"] },
+  { step: 3, label: "실행 계획", nodes: ["plan_team", "plan_assign", "plan_schedule", "plan_story", "plan_price"] },
+  { step: 4, label: "제안서 작성", nodes: ["proposal_write_next", "self_review"] },
+  { step: 5, label: "PPT 생성", nodes: ["presentation_strategy", "ppt_toc", "ppt_visual_brief", "ppt_storyboard"] },
+];

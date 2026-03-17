@@ -1,7 +1,7 @@
 """
 FastAPI 애플리케이션 진입점 (v3.4)
 
-용역 제안서 자동 생성 에이전트:
+용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker
 - LangGraph StateGraph 기반 다단계 파이프라인
 - RFP 파싱 → 분석 → 전략 → 본문 생성 → 품질 검증
 - DOCX + PPTX + HWP 자동 생성
@@ -17,14 +17,34 @@ import logging
 from app.config import settings
 from app.exceptions import TenopAPIError
 
-logging.basicConfig(level=settings.log_level)
+# OPS-03: 구조화 로깅 (JSON 포맷)
+if settings.log_format == "json":
+    import json as _json
+    import datetime as _dt
+
+    class _JsonFormatter(logging.Formatter):
+        def format(self, record):
+            return _json.dumps({
+                "timestamp": _dt.datetime.fromtimestamp(record.created, tz=_dt.timezone.utc).isoformat(),
+                "level": record.levelname,
+                "logger": record.name,
+                "message": record.getMessage(),
+                **({"exc": self.formatException(record.exc_info)} if record.exc_info else {}),
+            }, ensure_ascii=False)
+
+    _handler = logging.StreamHandler()
+    _handler.setFormatter(_JsonFormatter())
+    logging.basicConfig(level=settings.log_level, handlers=[_handler])
+else:
+    logging.basicConfig(level=settings.log_level)
+
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """애플리케이션 생명주기"""
-    logger.info("TENOPA v3.4 시스템 시작")
+    logger.info("용역제안 Coworker v3.4 시스템 시작")
     import os
     os.makedirs(settings.output_dir, exist_ok=True)
 
@@ -51,13 +71,20 @@ async def lifespan(app: FastAPI):
     loaded = await session_manager.startup_load()
     logger.info(f"세션 복원 완료: {loaded}개")
 
+    # PSM-05: 마감 초과 제안서 expired 전환
+    await session_manager.mark_expired_proposals()
+
+    # §25-2: G2B 정기 모니터링 스케줄러
+    from app.services.scheduled_monitor import setup_scheduler
+    setup_scheduler()
+
     yield
     logger.info("시스템 종료")
 
 
 app = FastAPI(
-    title="TENOPA — 용역제안 AI Coworker",
-    description="LangGraph 기반 RFP 분석 및 제안서 자동 생성 (v3.4)",
+    title="용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker",
+    description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v3.4)",
     version="3.4.0",
     lifespan=lifespan,
 )
@@ -128,8 +155,17 @@ app.include_router(bids_router)
 
 @app.get("/health")
 async def health_check():
-    """시스템 상태 확인"""
-    return {"status": "ok", "version": "3.4.0"}
+    """시스템 상태 확인 (OPS-02: DB 연결 포함)"""
+    health = {"status": "ok", "version": "3.4.0"}
+    try:
+        from app.utils.supabase_client import get_async_client
+        client = await get_async_client()
+        await client.table("organizations").select("id", count="exact").limit(1).execute()
+        health["database"] = "connected"
+    except Exception as e:
+        health["status"] = "degraded"
+        health["database"] = f"error: {type(e).__name__}"
+    return health
 
 
 @app.get("/status")

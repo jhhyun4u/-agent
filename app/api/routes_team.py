@@ -13,7 +13,7 @@ from uuid import uuid4
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 from app.utils.supabase_client import get_async_client
 from app.utils.edge_functions import notify_comment_created
 

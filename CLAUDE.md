@@ -1,7 +1,7 @@
-# TENOPA Intranet — 용역제안 AI Coworker
+# 용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker
 
 ## 프로젝트 개요
-TENOPA 내부 직원이 활용하는 **용역제안 Knowledge Base 플랫폼**. 용역과제 모니터링과 제안서 공동 작성을 수행하는 **AI Coworker**(에이전트)가 사람과 협업한다. 프로젝트를 거듭할수록 조직 지식(역량·콘텐츠·발주기관·경쟁사·교훈)이 축적되어 다음 제안의 품질이 올라가는 선순환 구조. 부서/팀 단위 운영, 역할 기반 접근 제어, 결재선, 성과 추적 지원.
+tenopa 내부 직원이 활용하는 **용역제안 AI 협업 플랫폼**. 용역과제 모니터링과 제안서 공동 작성을 수행하는 **AI Coworker**(에이전트)가 경험 많은 동료처럼 사람과 협업한다. 프로젝트를 거듭할수록 조직 지식(역량·콘텐츠·발주기관·경쟁사·교훈)이 축적되어 다음 제안의 품질이 올라가는 선순환 구조. 부서/팀 단위 운영, 역할 기반 접근 제어, 결재선, 성과 추적 지원.
 
 ## 기술 스택
 - Python 3.11+ / FastAPI (Backend — Railway/Render)
@@ -30,8 +30,8 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/api/routes_auth.py` — 인증 (Azure AD SSO + Supabase Auth)
 - `app/api/routes_users.py` — 사용자·조직·팀·참여자·위임 관리
 - `app/api/routes_proposal.py` — 제안서 프로젝트 CRUD (3가지 진입 경로)
-- `app/api/routes_workflow.py` — 워크플로 제어 (start, state, resume, stream, history)
-- `app/api/routes_artifacts.py` — 산출물 조회 + DOCX 다운로드 + Compliance Matrix
+- `app/api/routes_workflow.py` — 워크플로 제어 (start, state, resume, stream, history, goto, impact)
+- `app/api/routes_artifacts.py` — 산출물 조회 + DOCX/HWPX/PPTX 다운로드 + Compliance Matrix + 섹션 재생성 + AI 어시스트
 - `app/api/routes_notification.py` — 알림 목록·읽음·설정
 - `app/api/routes.py` — 기존 라우터 통합 (v3.1 파이프라인, 팀, G2B, 리소스 등)
 - `app/api/routes_bids.py` — 입찰 관리
@@ -61,8 +61,15 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/services/docx_builder.py` — DOCX 빌더 (케이스 A/B + Markdown → DOCX)
 - `app/services/notification_service.py` — Teams Webhook + 인앱 알림 (승인/마감/AI 완료)
 - `app/services/kb_updater.py` — 성과 기반 KB 자동 업데이트 (수주→역량, 패찰→경쟁사, 교훈→임베딩)
+- `app/services/hwpx_service.py` — HWPX 서비스 래퍼 (hwpxskill 기반: 빌드, 검증, 양식 분석, 쪽수 가드)
+- `app/services/hwpx/` — hwpxskill 모듈 (build_hwpx, analyze_template, validate, page_guard + templates)
 - `app/services/rfp_parser.py` — PDF/HWP/HWPX 파싱
 - `app/services/session_manager.py` — 세션 관리
+- `app/services/token_manager.py` — STEP별 토큰 예산 관리 + 컨텍스트 빌더 (§21)
+- `app/services/ai_status_manager.py` — AI 작업 상태 추적 + 하트비트 + DB 로깅 (§22)
+- `app/services/section_lock.py` — 섹션 동시 편집 잠금 (§24, 5분 자동 해제)
+- `app/services/scheduled_monitor.py` — G2B 정기 모니터링 스케줄러 (§25-2, 매일 09:00)
+- `app/services/source_tagger.py` — 출처 태깅 + 근거 비율 분석 + 신뢰성 평가 (§16-3-2)
 
 ### 모델
 - `app/models/schemas.py` — 제안서 관련 Pydantic 스키마
@@ -79,6 +86,7 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/prompts/plan.py` — 5개 plan 노드 프롬프트 (team/assign/schedule/story/price). plan_story는 목차 기획 + 스토리라인 설계
 - `app/prompts/proposal_prompts.py` — 케이스 A/B + 자가진단 + PPT + 발표전략
 - `app/prompts/section_prompts.py` — 10개 섹션 유형별 전문 프롬프트 + 케이스 B + 자동 분류 + 스토리라인 주입
+- `app/prompts/trustworthiness.py` — 데이터 신뢰성 6대 규칙 + 출처 태그 형식 + 금지 표현 (§16-3-1)
 
 ### 추가 서비스 (Phase C~E / 레거시)
 - `app/services/g2b_service.py` — G2B API 클라이언트 (공고 검색·낙찰정보·캐싱)
@@ -86,7 +94,7 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/services/pptx_builder.py` — PPTX 빌더 (그래프 연동, 경량)
 - `app/services/presentation_generator.py` — 발표 자료 3단계 JSON 생성
 - `app/services/presentation_pptx_builder.py` — 컨설팅급 PPTX 렌더링 (1,391줄)
-- `app/services/hwpx_builder.py` — HWP/HWPX 빌더
+- `app/services/hwpx_builder.py` — ⚠️ v3.1 레거시 HWPX 빌더 (python-hwpx API). v3.5에서는 hwpx_service.py 사용
 - `app/services/knowledge_search.py` — 통합 KB 검색
 - `app/services/phase_executor.py` — ⚠️ 레거시 v3.1 파이프라인 (LangGraph로 대체됨)
 - `app/services/phase_prompts.py` — ⚠️ 레거시 v3.1 프롬프트

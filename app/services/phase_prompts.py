@@ -1,4 +1,8 @@
-"""Phase별 Claude API 프롬프트 (v3.5) — 이기는 제안서 가이드라인 반영"""
+"""⚠️ DEPRECATED: v3.1 Phase별 Claude API 프롬프트.
+
+이 모듈은 LangGraph 프롬프트(app/prompts/)로 대체되었습니다.
+phase_executor.py에서만 호출됨. 프론트엔드 마이그레이션 완료 후 삭제 예정.
+"""
 
 # ── Phase 2: Analysis ──────────────────────────────────────────────
 

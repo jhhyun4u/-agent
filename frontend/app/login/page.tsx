@@ -73,16 +73,16 @@ function LoginContent() {
       {/* 좌측 브랜드 패널 */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 border-r border-[#262626]">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-sm">T</div>
-          <span className="text-[#ededed] font-semibold text-sm">Tenopa Proposer</span>
+          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">CW</div>
+          <span className="text-[#ededed] font-semibold text-sm">용역제안 Coworker</span>
         </div>
         <div>
           <blockquote className="text-[#ededed] text-xl font-medium leading-relaxed mb-4">
-            "RFP 하나만 업로드하면<br />AI가 제안서 전체를 작성합니다."
+            "이기는 제안서,<br />동료와 함께 만듭니다."
           </blockquote>
-          <p className="text-[#8c8c8c] text-sm">5단계 Claude AI 파이프라인 · DOCX + PPTX + HWPX 자동 생성</p>
+          <p className="text-[#8c8c8c] text-sm">프로젝트 수주 성공률을 높이는 AI Coworker · DOCX + PPTX + HWPX</p>
         </div>
-        <p className="text-[#8c8c8c] text-xs">© 2026 Technovation Partners</p>
+        <p className="text-[#8c8c8c] text-xs">© 2026 tenopa</p>
       </div>
 
       {/* 우측 로그인 폼 */}
@@ -90,8 +90,8 @@ function LoginContent() {
         <div className="w-full max-w-sm">
           {/* 모바일 로고 */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-sm">T</div>
-            <span className="text-[#ededed] font-semibold text-sm">Tenopa Proposer</span>
+            <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">CW</div>
+            <span className="text-[#ededed] font-semibold text-sm">용역제안 Coworker</span>
           </div>
 
           <h2 className="text-xl font-semibold text-[#ededed] mb-1">

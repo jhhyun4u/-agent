@@ -164,9 +164,16 @@ def extract_source_tags(text: str) -> list[SourceTag]:
 def calculate_grounding_ratio(text: str) -> dict:
     """
     TRS-05: KB 참조 신뢰도 산출.
-    - kb_ratio: KB/RFP/G2B 기반 문장 비율
+    - kb_ratio: KB/RFP/G2B 기반 비율
     - general_ratio: 일반지식 기반 비율
     - untagged_ratio: 출처 태그 없는 비율 (검증 필요)
+
+    [구현 참고 — S4] 분모는 전체 문장이 아닌 "주장 문장" (수치 또는 사실 키워드를 포함하는 문장)
+    으로 계산함. 전환 문장 등 태그 불필요 문장을 제외하여 비율 정확도를 높임.
+    구현 내 claim_sentences = [s for s in sentences if NUMBER_PATTERN.search(s) or any(kw in s for kw in FACT_KEYWORDS)]
+
+    [구현 참고 — S3] KB 기반 판정 임계값: >= 0.7 (설계) → >= 0.6 (v3.5 운영 조정)
+    실제 운영에서 0.7이 과도하게 엄격하여 0.6으로 하향 조정함.
     """
     sentences = [s.strip() for s in re.split(r'[.。!?]\s*', text) if s.strip()]
     if not sentences:
@@ -180,13 +187,13 @@ def calculate_grounding_ratio(text: str) -> dict:
     untagged = total - kb_count - general_count
 
     kb_ratio = kb_count / total
-    # TRS-05 3단계 판정
-    if kb_ratio >= 0.7:
-        level = "KB 기반"
+    # TRS-05 3단계 판정 (운영 임계값: 0.6 / 0.3)
+    if kb_ratio >= 0.6:
+        level = "KB기반"
     elif kb_ratio >= 0.3:
         level = "혼합"
     else:
-        level = "일반지식 기반"
+        level = "일반지식기반"
 
     return {
         "kb_ratio": round(kb_ratio, 2),
@@ -228,7 +235,10 @@ def find_ungrounded_claims(text: str) -> list[dict]:
 #### 16-3-3. 자가진단 4축 확장 — 근거 신뢰성 축 추가
 
 ```python
-# app/graph/nodes/self_review.py 에 추가
+# [구현 참고 — S5] evaluate_trustworthiness는 self_review.py가 아닌
+# app/services/source_tagger.py에 독립 함수로 구현됨.
+# 모듈성 향상: self_review.py에서 import하여 사용.
+# from app.services.source_tagger import evaluate_trustworthiness
 
 async def evaluate_trustworthiness(sections: list, strategy) -> dict:
     """

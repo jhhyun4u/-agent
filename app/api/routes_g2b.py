@@ -18,7 +18,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 from app.services.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
 
 logger = logging.getLogger(__name__)
@@ -137,18 +137,18 @@ async def bid_award_info(
             "bid_no": bid_no,
             "status": "found",
             "award": {
-                "winner": primary.get("sucsfBidderNm", ""),
-                "amount": _parse_amount(primary.get("sucsfBidAmt")),
-                "bid_count": _parse_int(primary.get("bidprcPrtcptCnt")),
+                "winner": primary.get("bidwinnrNm", primary.get("sucsfBidderNm", "")),
+                "amount": _parse_amount(primary.get("sucsfBidAmt", primary.get("presmptPrce"))),
+                "bid_count": _parse_int(primary.get("prtcptCnum", primary.get("bidprcPrtcptCnt"))),
                 "open_date": primary.get("opengDt", ""),
                 "bid_date": primary.get("bidClseDt", primary.get("opengDt", "")),
             },
             "bid_detail": _normalize_bid_detail(detail) if detail else None,
             "all_results": [
                 {
-                    "winner": r.get("sucsfBidderNm", ""),
-                    "amount": _parse_amount(r.get("sucsfBidAmt")),
-                    "bid_count": _parse_int(r.get("bidprcPrtcptCnt")),
+                    "winner": r.get("bidwinnrNm", r.get("sucsfBidderNm", "")),
+                    "amount": _parse_amount(r.get("sucsfBidAmt", r.get("presmptPrce"))),
+                    "bid_count": _parse_int(r.get("prtcptCnum", r.get("bidprcPrtcptCnt"))),
                     "open_date": r.get("opengDt", ""),
                 }
                 for r in results
@@ -199,15 +199,15 @@ async def bid_stats(
         winners: dict[str, int] = {}
 
         for r in results:
-            amt = _parse_amount(r.get("sucsfBidAmt"))
+            amt = _parse_amount(r.get("sucsfBidAmt", r.get("presmptPrce")))
             if amt and amt > 0:
                 amounts.append(amt)
 
-            cnt = _parse_int(r.get("bidprcPrtcptCnt"))
+            cnt = _parse_int(r.get("prtcptCnum", r.get("bidprcPrtcptCnt")))
             if cnt and cnt > 0:
                 bid_counts.append(cnt)
 
-            winner = r.get("sucsfBidderNm", "").strip()
+            winner = (r.get("bidwinnrNm") or r.get("sucsfBidderNm", "")).strip()
             if winner:
                 winners[winner] = winners.get(winner, 0) + 1
 

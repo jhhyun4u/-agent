@@ -1,11 +1,13 @@
 """
 워크플로 제어 API (§12-1)
 
-POST /api/proposals/{id}/start   — 워크플로 시작
-GET  /api/proposals/{id}/state   — 현재 그래프 상태
-POST /api/proposals/{id}/resume  — Human 리뷰 결과 입력 → 재개
-GET  /api/proposals/{id}/stream  — SSE 스트리밍
-GET  /api/proposals/{id}/history — 체크포인트 이력
+POST /api/proposals/{id}/start       — 워크플로 시작
+GET  /api/proposals/{id}/state       — 현재 그래프 상태
+POST /api/proposals/{id}/resume      — Human 리뷰 결과 입력 → 재개
+GET  /api/proposals/{id}/stream      — SSE 스트리밍
+GET  /api/proposals/{id}/history     — 체크포인트 이력
+POST /api/proposals/{id}/goto/{step} — 특정 체크포인트로 타임트래블
+GET  /api/proposals/{id}/impact/{step} — step 변경 시 영향 범위 조회
 """
 
 import asyncio
@@ -17,7 +19,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_project_access
 from app.config import settings
 from app.exceptions import PropNotFoundError, WFAlreadyRunningError, WFResumeValidationError
 from app.utils.supabase_client import get_async_client
@@ -25,6 +27,12 @@ from app.utils.supabase_client import get_async_client
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/proposals", tags=["workflow"])
+
+# C-4: 워크플로 initial_state 허용 키 화이트리스트
+_ALLOWED_INITIAL_STATE_KEYS = frozenset({
+    "search_query", "project_name", "rfp_raw", "picked_bid_no",
+    "dynamic_sections", "team_id", "division_id", "participants",
+})
 
 
 class WorkflowStartRequest(BaseModel):
@@ -64,31 +72,44 @@ class WorkflowResumeRequest(BaseModel):
     selected_alt_id: str = ""
 
 
-# ── 그래프 인스턴스 관리 ──
+# ── 그래프 인스턴스 관리 (C-3: asyncio.Lock으로 동시성 보호) ──
 
 _graph_instance = None
+_graph_lock = asyncio.Lock()
 
 
 async def _get_graph():
     """LangGraph 그래프 인스턴스 (싱글톤). checkpointer 연결."""
     global _graph_instance
-    if _graph_instance is None:
+    if _graph_instance is not None:
+        return _graph_instance
+
+    async with _graph_lock:
+        if _graph_instance is not None:
+            return _graph_instance
+
         from app.graph.graph import build_graph
 
-        # PostgresSaver 연결 시도 (실패 시 메모리 checkpointer)
+        # C-2: database_url 사용 (supabase_url은 REST 엔드포인트, Postgres 아님)
         checkpointer = None
-        try:
-            from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-            checkpointer = AsyncPostgresSaver.from_conn_string(settings.supabase_url)
-            await checkpointer.setup()
-            logger.info("AsyncPostgresSaver 연결 성공")
-        except Exception as e:
-            logger.warning(f"PostgresSaver 연결 실패, MemorySaver 사용: {e}")
+        if settings.database_url:
+            try:
+                from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+                checkpointer = AsyncPostgresSaver.from_conn_string(settings.database_url)
+                await checkpointer.setup()
+                logger.info("AsyncPostgresSaver 연결 성공")
+            except Exception as e:
+                logger.warning(f"PostgresSaver 연결 실패, MemorySaver 사용: {e}")
+                checkpointer = None
+        else:
+            logger.warning("DATABASE_URL 미설정 — MemorySaver 사용 (서버 재시작 시 워크플로 상태 유실)")
+
+        if checkpointer is None:
             from langgraph.checkpoint.memory import MemorySaver
             checkpointer = MemorySaver()
 
         _graph_instance = build_graph(checkpointer=checkpointer)
-    return _graph_instance
+        return _graph_instance
 
 
 # ── API 엔드포인트 ──
@@ -118,11 +139,13 @@ async def start_workflow(
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
 
+    # C-4: 허용 키만 initial_state에서 추출 (상태 인젝션 방지)
+    safe_initial = {k: v for k, v in body.initial_state.items() if k in _ALLOWED_INITIAL_STATE_KEYS}
     initial_state = {
         "project_id": proposal_id,
         "mode": "full",
         "current_step": "start",
-        **body.initial_state,
+        **safe_initial,
     }
 
     try:
@@ -158,6 +181,11 @@ async def get_workflow_state(proposal_id: str, user=Depends(get_current_user)):
     try:
         snapshot = await graph.aget_state(config)
         state = snapshot.values if snapshot else {}
+
+        # 토큰 비용 요약
+        token_usage = state.get("token_usage", {})
+        total_cost = sum(v.get("cost_usd", 0) for v in token_usage.values())
+
         return {
             "proposal_id": proposal_id,
             "current_step": state.get("current_step", ""),
@@ -165,6 +193,10 @@ async def get_workflow_state(proposal_id: str, user=Depends(get_current_user)):
             "approval": _serialize_approval(state.get("approval", {})),
             "has_pending_interrupt": bool(snapshot.next) if snapshot else False,
             "next_nodes": list(snapshot.next) if snapshot and snapshot.next else [],
+            "token_summary": {
+                "total_cost_usd": round(total_cost, 4),
+                "nodes_tracked": len(token_usage),
+            },
         }
     except Exception as e:
         logger.error(f"상태 조회 실패: {e}")
@@ -184,7 +216,7 @@ async def resume_workflow(
     # 현재 상태 확인
     snapshot = await graph.aget_state(config)
     if not snapshot or not snapshot.next:
-        raise WFResumeValidationError("재개할 인터럽트가 없습니다")
+        raise WFResumeValidationError(["재개할 인터럽트가 없습니다"])
 
     # resume 데이터 구성 (None이 아닌 필드만)
     resume_data = {k: v for k, v in body.model_dump().items() if v is not None}
@@ -273,6 +305,273 @@ async def get_workflow_history(proposal_id: str, user=Depends(get_current_user))
         return {"proposal_id": proposal_id, "history": history}
     except Exception as e:
         return {"proposal_id": proposal_id, "history": [], "error": str(e)}
+
+
+@router.get("/{proposal_id}/token-usage")
+async def get_token_usage(proposal_id: str, user=Depends(get_current_user)):
+    """노드별 토큰 사용량 + 비용 상세 조회."""
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+
+    snapshot = await graph.aget_state(config)
+    state = snapshot.values if snapshot else {}
+    token_usage = state.get("token_usage", {})
+
+    total_input = sum(v.get("input_tokens", 0) for v in token_usage.values())
+    total_output = sum(v.get("output_tokens", 0) for v in token_usage.values())
+    total_cost = sum(v.get("cost_usd", 0) for v in token_usage.values())
+
+    return {
+        "proposal_id": proposal_id,
+        "by_node": token_usage,
+        "total": {
+            "input_tokens": total_input,
+            "output_tokens": total_output,
+            "total_tokens": total_input + total_output,
+            "cost_usd": round(total_cost, 4),
+            "nodes_executed": len(token_usage),
+        },
+    }
+
+
+# ── 섹션 잠금 (§24) ──
+
+
+@router.post("/{proposal_id}/sections/{section_id}/lock")
+async def lock_section(
+    proposal_id: str,
+    section_id: str,
+    user=Depends(get_current_user),
+):
+    """섹션 편집 잠금 획득."""
+    from app.services.section_lock import acquire_lock
+
+    return await acquire_lock(proposal_id, section_id, user["id"])
+
+
+@router.delete("/{proposal_id}/sections/{section_id}/lock")
+async def unlock_section(
+    proposal_id: str,
+    section_id: str,
+    user=Depends(get_current_user),
+):
+    """섹션 편집 잠금 해제."""
+    from app.services.section_lock import release_lock
+
+    released = await release_lock(proposal_id, section_id, user["id"])
+    return {"released": released}
+
+
+@router.get("/{proposal_id}/sections/locks")
+async def list_section_locks(
+    proposal_id: str,
+    user=Depends(get_current_user),
+):
+    """제안서의 모든 활성 잠금 목록."""
+    from app.services.section_lock import get_locks
+
+    locks = await get_locks(proposal_id)
+    return {"locks": locks}
+
+
+# ── AI 상태 (§22) ──
+
+
+@router.get("/{proposal_id}/ai-status")
+async def get_ai_status(
+    proposal_id: str,
+    user=Depends(get_current_user),
+):
+    """AI 작업 상태 조회."""
+    from app.services.ai_status_manager import ai_status_manager
+
+    return ai_status_manager.get_composite_status(proposal_id)
+
+
+# ── AI 제어 (§22 확장) ──
+
+
+@router.post("/{proposal_id}/ai-abort")
+async def abort_ai_task(
+    proposal_id: str,
+    user=Depends(get_current_user),
+):
+    """AI 작업 중단 (paused 상태로 전환, 완료 서브태스크 보존)."""
+    from app.services.ai_status_manager import ai_status_manager
+
+    result = ai_status_manager.abort_task(proposal_id)
+    if result is None:
+        return {"proposal_id": proposal_id, "status": "idle", "message": "실행 중인 작업 없음"}
+    return {"proposal_id": proposal_id, "status": result["status"], "step": result["step"]}
+
+
+@router.post("/{proposal_id}/ai-retry")
+async def retry_ai_task(
+    proposal_id: str,
+    user=Depends(get_current_user),
+):
+    """중단된 AI 작업 재시도 — 현재 STEP을 처음부터 재실행."""
+    from app.services.ai_status_manager import ai_status_manager
+
+    status = ai_status_manager.get_composite_status(proposal_id)
+    if status["status"] not in ("paused", "error", "no_response"):
+        return {
+            "proposal_id": proposal_id,
+            "error": f"재시도 불가 상태: {status['status']}",
+        }
+
+    # 기존 상태 제거 후 워크플로 재개
+    step = status.get("step", "unknown")
+    del ai_status_manager._statuses[proposal_id]
+
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+    try:
+        result = await graph.ainvoke(None, config=config)
+        return {
+            "proposal_id": proposal_id,
+            "retried_step": step,
+            "current_step": result.get("current_step", ""),
+        }
+    except Exception as e:
+        logger.error(f"AI 재시도 실패: {proposal_id}: {e}")
+        return {"proposal_id": proposal_id, "error": str(e)}
+
+
+@router.get("/{proposal_id}/ai-logs")
+async def get_ai_logs(
+    proposal_id: str,
+    limit: int = 20,
+    user=Depends(get_current_user),
+):
+    """AI 작업 로그 이력 조회 (ai_task_logs 테이블)."""
+    client = await get_async_client()
+    try:
+        resp = (
+            await client.table("ai_task_logs")
+            .select("*")
+            .eq("proposal_id", proposal_id)
+            .order("created_at", desc=True)
+            .limit(min(limit, 100))
+            .execute()
+        )
+        return {"proposal_id": proposal_id, "logs": resp.data or []}
+    except Exception as e:
+        logger.warning(f"AI 로그 조회 실패: {e}")
+        return {"proposal_id": proposal_id, "logs": [], "error": str(e)}
+
+
+# ── 타임트래블 (§12-1 확장) ──
+
+# 그래프 노드 토폴로지: 순서대로 나열한 주요 노드
+_NODE_ORDER = [
+    "rfp_search", "review_search", "rfp_fetch",
+    "rfp_analyze", "review_rfp",
+    "research_gather", "go_no_go", "review_gng",
+    "strategy_generate", "review_strategy",
+    "plan_fan_out_gate", "plan_team", "plan_assign", "plan_schedule",
+    "plan_story", "plan_price", "plan_merge", "review_plan",
+    "proposal_start_gate", "proposal_write_next", "review_section",
+    "self_review", "review_proposal",
+    "presentation_strategy",
+    "ppt_toc", "ppt_visual_brief", "ppt_storyboard", "review_ppt",
+]
+
+
+@router.post("/{proposal_id}/goto/{step}")
+async def goto_step(
+    proposal_id: str,
+    step: str,
+    user=Depends(get_current_user),
+):
+    """특정 체크포인트로 타임트래블 — 이력에서 해당 step의 config를 찾아 복원."""
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+
+    # 이력에서 해당 step의 체크포인트를 검색
+    target_config = None
+    async for snapshot in graph.aget_state_history(config):
+        snap_step = snapshot.values.get("current_step", "")
+        # 정확히 일치하거나 step이 포함된 경우
+        if snap_step == step or snap_step.startswith(step):
+            target_config = snapshot.config
+            break
+
+    if not target_config:
+        return {
+            "success": False,
+            "error": f"체크포인트 이력에서 '{step}' 단계를 찾을 수 없습니다.",
+        }
+
+    # 해당 체크포인트로 상태 복원 (aupdate_state with as_node)
+    target_snapshot = await graph.aget_state(target_config)
+    if not target_snapshot:
+        return {"success": False, "error": "체크포인트 상태 복원 실패"}
+
+    # 원래 thread의 상태를 타겟 체크포인트 값으로 덮어쓰기
+    await graph.aupdate_state(config, target_snapshot.values)
+
+    # DB의 current_step도 동기화
+    client = await get_async_client()
+    await client.table("proposals").update({
+        "current_step": target_snapshot.values.get("current_step", step),
+    }).eq("id", proposal_id).execute()
+
+    logger.info(f"타임트래블: proposal={proposal_id}, target_step={step}")
+
+    return {
+        "success": True,
+        "proposal_id": proposal_id,
+        "restored_step": target_snapshot.values.get("current_step", step),
+        "message": f"'{step}' 단계로 복원되었습니다. 이후 단계의 산출물은 재실행이 필요합니다.",
+    }
+
+
+@router.get("/{proposal_id}/impact/{step}")
+async def get_impact(
+    proposal_id: str,
+    step: str,
+    user=Depends(get_current_user),
+):
+    """특정 step 변경 시 재실행이 필요한 downstream 노드 목록 반환."""
+    if step not in _NODE_ORDER:
+        return {
+            "step": step,
+            "error": f"알 수 없는 노드: {step}",
+            "downstream": [],
+        }
+
+    idx = _NODE_ORDER.index(step)
+    downstream = _NODE_ORDER[idx + 1:]
+
+    # STEP 분류
+    step_labels = {
+        "rfp_search": 0, "review_search": 0, "rfp_fetch": 0,
+        "rfp_analyze": 1, "review_rfp": 1,
+        "research_gather": 1, "go_no_go": 1, "review_gng": 1,
+        "strategy_generate": 2, "review_strategy": 2,
+        "plan_fan_out_gate": 3, "plan_team": 3, "plan_assign": 3,
+        "plan_schedule": 3, "plan_story": 3, "plan_price": 3,
+        "plan_merge": 3, "review_plan": 3,
+        "proposal_start_gate": 4, "proposal_write_next": 4,
+        "review_section": 4, "self_review": 4, "review_proposal": 4,
+        "presentation_strategy": 4,
+        "ppt_toc": 5, "ppt_visual_brief": 5, "ppt_storyboard": 5,
+        "review_ppt": 5,
+    }
+
+    affected_steps = sorted(set(
+        step_labels.get(n, -1) for n in downstream if n in step_labels
+    ))
+
+    return {
+        "step": step,
+        "step_number": step_labels.get(step, -1),
+        "downstream_nodes": downstream,
+        "downstream_count": len(downstream),
+        "affected_steps": affected_steps,
+        "message": f"'{step}' 변경 시 STEP {affected_steps}의 {len(downstream)}개 노드를 재실행해야 합니다." if downstream else "마지막 노드입니다.",
+    }
 
 
 # ── 헬퍼 ──

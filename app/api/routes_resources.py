@@ -13,7 +13,7 @@ from uuid import uuid4
 from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel
 
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 from app.services.asset_extractor import extract_sections_from_asset
 from app.utils.supabase_client import get_async_client
 

@@ -2,8 +2,8 @@
 
 | 항목 | 내용 |
 |------|------|
-| 문서 버전 | v3.4 |
-| 작성일 | 2026-03-10 |
+| 문서 버전 | v3.5 |
+| 작성일 | 2026-03-13 |
 | 상태 | 초안 |
 | 기반 요구사항 | docs/01-plan/features/proposal-agent-v1.requirements.md (v4.9) |
 | 핵심 기술 | LangGraph + FastAPI + **Supabase (PostgreSQL + pgvector)** + Next.js + Azure AD + Teams |
@@ -8120,7 +8120,7 @@ def route_after_section_review(state: ProposalState) -> str:
 | ADDED_VALUE | 가산점·부가제안 | 가산, 부가, 추가, 기여 |
 
 `classify_section_type(section_id: str) -> str` — 섹션 ID/이름의 키워드를 매칭하여 유형 결정.
-매칭 실패 시 기본값: `METHODOLOGY`.
+매칭 실패 시 기본값: `TECHNICAL`.
 
 #### 32-5-2. EVALUATOR_PERSPECTIVE_BLOCK (공통)
 

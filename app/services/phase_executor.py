@@ -1,3 +1,9 @@
+"""⚠️ DEPRECATED: v3.1 Phase 실행기.
+
+이 모듈은 LangGraph 노드(app/graph/nodes/)로 대체되었습니다.
+routes_v31.py에서만 호출됨. 프론트엔드 마이그레이션 완료 후 삭제 예정.
+"""
+
 import asyncio
 import json
 import logging

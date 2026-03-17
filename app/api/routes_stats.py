@@ -11,7 +11,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

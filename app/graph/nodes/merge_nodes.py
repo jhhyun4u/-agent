@@ -1,7 +1,7 @@
 """
 병렬 노드 결과 병합 (§4-2)
 
-plan_merge, proposal_merge, ppt_merge:
+plan_merge, proposal_merge:
 부분 재작업 시 기존 결과 보존 + 새 결과 덮어씌움.
 
 v3.5: plan_merge에서 storylines 기반 dynamic_sections 동기화.
@@ -92,14 +92,3 @@ def proposal_merge(state: ProposalState) -> dict:
         return {"proposal_sections": new_sections, "rework_targets": []}
 
 
-def ppt_merge(state: ProposalState) -> dict:
-    """STEP 5 병합: PPT 슬라이드 취합."""
-    new_slides = state.get("parallel_results", {}).get("slides", [])
-    existing_slides = list(state.get("ppt_slides", []))
-
-    if state.get("rework_targets") and existing_slides:
-        new_ids = {s.slide_id if hasattr(s, "slide_id") else s.get("slide_id", "") for s in new_slides}
-        kept = [s for s in existing_slides if (s.slide_id if hasattr(s, "slide_id") else s.get("slide_id", "")) not in new_ids]
-        return {"ppt_slides": kept + new_slides, "rework_targets": []}
-    else:
-        return {"ppt_slides": new_slides, "rework_targets": []}

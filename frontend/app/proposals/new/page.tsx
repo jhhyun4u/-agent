@@ -34,9 +34,20 @@ function validateFile(file: File): string | null {
   return null;
 }
 
+type EntryMode = "rfp_upload" | "bid_search" | "bid_direct";
+
+const ENTRY_MODES = [
+  { value: "rfp_upload" as EntryMode, label: "RFP 파일 업로드", desc: "PDF/DOCX 파일을 업로드하여 시작", icon: "📄" },
+  { value: "bid_search" as EntryMode, label: "공고 검색", desc: "키워드로 나라장터 공고를 검색하여 시작", icon: "🔍" },
+  { value: "bid_direct" as EntryMode, label: "공고번호 입력", desc: "나라장터 공고번호를 직접 입력하여 시작", icon: "🔢" },
+] as const;
+
 export default function NewProposalPage() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // 진입 모드
+  const [entryMode, setEntryMode] = useState<EntryMode>("rfp_upload");
 
   const [file, setFile] = useState<File | null>(null);
   const [rfpTitle, setRfpTitle] = useState("");
@@ -46,6 +57,10 @@ export default function NewProposalPage() {
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const [bidPrefill, setBidPrefill] = useState<{ bid_no: string; rfp_title: string } | null>(null);
+
+  // 공고 검색 / 공고번호 입력 모드용
+  const [searchKeywords, setSearchKeywords] = useState("");
+  const [bidNo, setBidNo] = useState("");
 
   // 공통서식 선택
   const [templates, setTemplates] = useState<FormTemplate[]>([]);
@@ -108,23 +123,36 @@ export default function NewProposalPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!file || !rfpTitle.trim() || !clientName.trim()) return;
     setSubmitting(true);
     setError("");
 
     try {
-      const fd = new FormData();
-      fd.append("rfp_title", rfpTitle.trim());
-      fd.append("client_name", clientName.trim());
-      fd.append("rfp_file", file);
-      if (selectedTemplate) fd.append("form_template_id", selectedTemplate.id);
-      if (selectedSectionIds.length > 0) {
-        fd.append("section_ids", JSON.stringify(selectedSectionIds));
+      let proposalId: string;
+
+      if (entryMode === "rfp_upload") {
+        if (!file || !rfpTitle.trim() || !clientName.trim()) return;
+        const fd = new FormData();
+        fd.append("rfp_title", rfpTitle.trim());
+        fd.append("client_name", clientName.trim());
+        fd.append("rfp_file", file);
+        if (selectedTemplate) fd.append("form_template_id", selectedTemplate.id);
+        if (selectedSectionIds.length > 0) {
+          fd.append("section_ids", JSON.stringify(selectedSectionIds));
+        }
+        const res = await api.proposals.createFromRfp(fd);
+        proposalId = res.proposal_id;
+      } else if (entryMode === "bid_search") {
+        if (!searchKeywords.trim()) return;
+        const res = await api.proposals.create({ search_keywords: searchKeywords.trim() });
+        proposalId = res.proposal_id;
+      } else {
+        // bid_direct
+        if (!bidNo.trim()) return;
+        const res = await api.proposals.createFromSearch(bidNo.trim());
+        proposalId = res.proposal_id;
       }
 
-      const res = await api.proposals.generate(fd);
-      await api.proposals.execute(res.proposal_id);
-      router.push(`/proposals/${res.proposal_id}`);
+      router.push(`/proposals/${proposalId}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "제출 실패");
     } finally {
@@ -142,14 +170,79 @@ export default function NewProposalPage() {
           </Link>
           <div>
             <h1 className="text-sm font-semibold text-[#ededed]">새 제안서 생성</h1>
-            <p className="text-xs text-[#8c8c8c] mt-0.5">RFP 파일을 업로드하여 AI 제안서를 생성합니다</p>
+            <p className="text-xs text-[#8c8c8c] mt-0.5">시작 방법을 선택하여 AI 제안서를 생성합니다</p>
           </div>
         </div>
       </div>
 
       {/* 폼 */}
       <div className="flex-1 overflow-auto px-6 py-6">
+        {/* 진입 모드 선택 (§12-1) */}
+        <div className="max-w-xl mb-5">
+          <div className="grid grid-cols-3 gap-3">
+            {ENTRY_MODES.map((mode) => (
+              <button
+                key={mode.value}
+                type="button"
+                onClick={() => { setEntryMode(mode.value); setError(""); }}
+                className={`p-3 rounded-xl border text-left transition-colors ${
+                  entryMode === mode.value
+                    ? "bg-[#3ecf8e]/10 border-[#3ecf8e]/40 text-[#ededed]"
+                    : "bg-[#1c1c1c] border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c]"
+                }`}
+              >
+                <span className="text-lg">{mode.icon}</span>
+                <p className="text-xs font-medium mt-1">{mode.label}</p>
+                <p className="text-[10px] text-[#5c5c5c] mt-0.5">{mode.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="max-w-xl space-y-5">
+          {/* 공고 검색 모드 */}
+          {entryMode === "bid_search" && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">검색 키워드 *</label>
+                <input
+                  type="text"
+                  required
+                  value={searchKeywords}
+                  onChange={(e) => setSearchKeywords(e.target.value)}
+                  placeholder="예: 스마트시티 플랫폼 구축"
+                  className="w-full bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
+                />
+              </div>
+              <p className="text-[10px] text-[#5c5c5c]">
+                나라장터에서 키워드 기반으로 공고를 검색합니다. STEP 0(공고 검색)부터 시작합니다.
+              </p>
+            </div>
+          )}
+
+          {/* 공고번호 직접 입력 모드 */}
+          {entryMode === "bid_direct" && (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">공고번호 *</label>
+                <input
+                  type="text"
+                  required
+                  value={bidNo}
+                  onChange={(e) => setBidNo(e.target.value)}
+                  placeholder="예: 20260300001-00"
+                  className="w-full bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
+                />
+              </div>
+              <p className="text-[10px] text-[#5c5c5c]">
+                나라장터 공고번호를 직접 입력합니다. STEP 1(RFP 분석)부터 시작합니다.
+              </p>
+            </div>
+          )}
+
+          {/* RFP 업로드 모드 (기존) */}
+          {entryMode === "rfp_upload" && (
+            <>
               {/* 공고 자동 입력 배너 */}
           {bidPrefill && (
             <div className="flex items-center gap-3 bg-emerald-950/20 border border-emerald-900/40 rounded-lg px-4 py-2.5">
@@ -444,20 +537,28 @@ export default function NewProposalPage() {
             />
           </div>
 
+            </>
+          )}
+
           {error && (
             <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">{error}</p>
           )}
 
           <div className="bg-blue-950/30 border border-blue-900/50 rounded-lg px-4 py-3 text-xs text-blue-300">
-            AI가 5단계 분석을 수행합니다. 완료까지 <strong>5~15분</strong> 소요됩니다.
+            AI가 {entryMode === "bid_search" ? "공고 검색 후 " : entryMode === "bid_direct" ? "공고 분석 후 " : ""}5단계 분석을 수행합니다. 완료까지 <strong>5~15분</strong> 소요됩니다.
           </div>
 
           <button
             type="submit"
-            disabled={submitting || !file || !rfpTitle.trim() || !clientName.trim()}
+            disabled={
+              submitting ||
+              (entryMode === "rfp_upload" && (!file || !rfpTitle.trim() || !clientName.trim())) ||
+              (entryMode === "bid_search" && !searchKeywords.trim()) ||
+              (entryMode === "bid_direct" && !bidNo.trim())
+            }
             className="w-full bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-40 disabled:cursor-not-allowed text-black font-semibold rounded-lg py-2.5 text-sm transition-colors"
           >
-            {submitting ? "제출 중..." : "제안서 생성 시작"}
+            {submitting ? "제출 중..." : entryMode === "bid_search" ? "공고 검색 시작" : entryMode === "bid_direct" ? "공고로 제안서 시작" : "제안서 생성 시작"}
           </button>
         </form>
       </div>

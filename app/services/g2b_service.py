@@ -20,7 +20,6 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
-from urllib.parse import quote
 
 import aiohttp
 
@@ -29,6 +28,13 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://apis.data.go.kr/1230000"
+
+# 서비스별 경로 prefix (공고=/ad, 낙찰=/as)
+SERVICE_PREFIX = {
+    "BidPublicInfoService": "ad",
+    "ScsbidInfoService": "as",
+    "ContractInfoService": "ac",
+}
 
 
 # ─────────────────────────────────────────────
@@ -142,8 +148,13 @@ class G2BService:
         if not api_key:
             raise RuntimeError("G2B_API_KEY가 설정되지 않았습니다.")
 
-        encoded_key = quote(api_key, safe="")
-        url = f"{self.base_url}/{endpoint}?serviceKey={encoded_key}&_type=json"
+        # serviceKey를 URL에 직접 삽입 (인코딩 불필요한 hex 키)
+        # endpoint에서 서비스명 추출 → prefix 결정
+        svc_name = endpoint.split("/")[0]
+        prefix = SERVICE_PREFIX.get(svc_name, "ad")
+        url = f"{self.base_url}/{prefix}/{endpoint}?serviceKey={api_key}"
+        # type=json을 params에 포함
+        params = {**params, "type": "json"}
 
         for attempt in range(3):
             await asyncio.sleep(0.1)  # 기본 Rate Limit 간격
@@ -160,14 +171,24 @@ class G2BService:
                         continue
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
+                    # 응답 구조: {"response": ...} 또는 {"nkoneps...": ...}
                     result = data.get("response", {})
+                    if not result:
+                        for k, v in data.items():
+                            if isinstance(v, dict) and "header" in v:
+                                result = v
+                                break
                     header = result.get("header", {})
                     if header.get("resultCode") != "00":
                         raise RuntimeError(f"G2B API 오류: {header.get('resultMsg')}")
-                    items = result.get("body", {}).get("items") or {}
-                    raw = items.get("item", [])
-                    rows = raw if isinstance(raw, list) else [raw]
-                    await _set_cache(cache_key, endpoint, params, rows)  # endpoint/response 컬럼 사용
+                    items = result.get("body", {}).get("items") or []
+                    # items가 list일 수도, dict일 수도 있음
+                    if isinstance(items, list):
+                        rows = items
+                    else:
+                        raw = items.get("item", [])
+                        rows = raw if isinstance(raw, list) else [raw]
+                    await _set_cache(cache_key, endpoint, params, rows)
                     return rows
             except RuntimeError:
                 raise
@@ -191,36 +212,56 @@ class G2BService:
         """
         입찰공고 목록 검색 (getBidPblancListInfoServc)
 
+        Args:
+            keyword: 검색 키워드 (클라이언트 측 제목 필터링)
+            date_from: 조회시작일시 (YYYYMMDDHHMM). 미지정 시 최근 14일
+            date_to: 조회종료일시 (YYYYMMDDHHMM). 미지정 시 현재
+
         Returns:
-            나라장터 입찰공고 raw 목록
+            나라장터 입찰공고 raw 목록 (keyword로 제목 필터링 적용)
         """
+        # 기본 날짜 범위: 최근 14일 (API 최대 21일)
+        if not date_to:
+            date_to = datetime.now().strftime("%Y%m%d") + "2359"
+        if not date_from:
+            date_from = (datetime.now() - timedelta(days=14)).strftime("%Y%m%d") + "0000"
+
         params: Dict[str, Any] = {
             "numOfRows": num_of_rows,
             "pageNo": page_no,
-            "bidNtceNm": keyword,
+            "inqryDiv": "1",
+            "inqryBgnDt": date_from,
+            "inqryEndDt": date_to,
         }
-        if date_from:
-            params["bidNtceBgnDt"] = date_from  # 예: 20230101
-        if date_to:
-            params["bidNtceEndDt"] = date_to
 
-        return await self._call_api(
-            "BidPublicInfoService04/getBidPblancListInfoServc",
+        results = await self._call_api(
+            "BidPublicInfoService/getBidPblancListInfoServc",
             params,
         )
 
+        # 서버 측 키워드 필터가 미작동 → 클라이언트 측 제목 필터링
+        if keyword:
+            kw_lower = keyword.lower()
+            results = [r for r in results if kw_lower in r.get("bidNtceNm", "").lower()]
+
+        return results
+
     async def get_bid_detail(self, bid_no: str) -> Dict:
         """
-        입찰공고 상세 조회 (BidPublicInfoService04/getBidPblancDetailInfoServc)
+        입찰공고 상세 조회
 
         자격요건 포함 공고 규격 내용(ntceSpecCn)을 확보하기 위해 사용.
 
         Returns:
             상세 정보 dict (없으면 빈 dict)
         """
+        # 상세 조회: bidNtceNo로 검색 (날짜 범위 최대 14일)
         results = await self._call_api(
-            "BidPublicInfoService04/getBidPblancDetailInfoServc",
-            {"bidNtceNo": bid_no},
+            "BidPublicInfoService/getBidPblancListInfoServc",
+            {"bidNtceNo": bid_no, "inqryDiv": "2",
+             "inqryBgnDt": (datetime.now() - timedelta(days=14)).strftime("%Y%m%d") + "0000",
+             "inqryEndDt": datetime.now().strftime("%Y%m%d") + "2359",
+             "numOfRows": "10", "pageNo": "1"},
         )
         return results[0] if results else {}
 
@@ -231,21 +272,27 @@ class G2BService:
         keyword: str,
         num_of_rows: int = 20,
         page_no: int = 1,
+        date_range_days: int = 30,
     ) -> List[Dict]:
         """
-        낙찰결과 목록 조회 (getBidResultListInfo)
-        낙찰업체명, 낙찰금액 포함
+        낙찰결과 목록 조회 (ScsbidInfoService/getScsbidListSttusServc)
+        낙찰업체명(bidwinnrNm), 참여업체수(prtcptCnum) 포함
 
         Returns:
             낙찰결과 raw 목록
         """
+        end_dt = datetime.now()
+        bgn_dt = end_dt - timedelta(days=date_range_days)
         params: Dict[str, Any] = {
             "numOfRows": num_of_rows,
             "pageNo": page_no,
+            "inqryDiv": "1",
+            "inqryBgnDt": bgn_dt.strftime("%Y%m%d") + "0000",
+            "inqryEndDt": end_dt.strftime("%Y%m%d") + "2359",
             "bidNtceNm": keyword,
         }
         return await self._call_api(
-            "BidPublicInfoService04/getBidResultListInfo",
+            "ScsbidInfoService/getScsbidListSttusServc",
             params,
         )
 
@@ -256,16 +303,22 @@ class G2BService:
         keyword: str,
         num_of_rows: int = 20,
         page_no: int = 1,
+        date_range_days: int = 30,
     ) -> List[Dict]:
         """
-        계약결과 목록 조회 (getContractResultListInfo)
+        계약결과 목록 조회 (ContractInfoService)
 
         Returns:
             계약결과 raw 목록
         """
+        end_dt = datetime.now()
+        bgn_dt = end_dt - timedelta(days=date_range_days)
         params: Dict[str, Any] = {
             "numOfRows": num_of_rows,
             "pageNo": page_no,
+            "inqryDiv": "1",
+            "inqryBgnDt": bgn_dt.strftime("%Y%m%d") + "0000",
+            "inqryEndDt": end_dt.strftime("%Y%m%d") + "2359",
             "cntrctNm": keyword,
         }
         return await self._call_api(
@@ -280,9 +333,10 @@ class G2BService:
         company_name: str,
         num_of_rows: int = 20,
         page_no: int = 1,
+        date_range_days: int = 7,
     ) -> List[Dict]:
         """
-        업체별 입찰이력 조회 (getCmpnyBidInfoServc)
+        업체별 입찰이력 조회 — 낙찰정보에서 업체명 검색
 
         Args:
             company_name: 업체명
@@ -290,13 +344,18 @@ class G2BService:
         Returns:
             업체 입찰이력 raw 목록
         """
+        end_dt = datetime.now()
+        bgn_dt = end_dt - timedelta(days=date_range_days)
         params: Dict[str, Any] = {
             "numOfRows": num_of_rows,
             "pageNo": page_no,
-            "cmpnyNm": company_name,
+            "inqryDiv": "1",
+            "inqryBgnDt": bgn_dt.strftime("%Y%m%d") + "0000",
+            "inqryEndDt": end_dt.strftime("%Y%m%d") + "2359",
+            "bidwinnrNm": company_name,
         }
         return await self._call_api(
-            "BidPublicInfoService04/getCmpnyBidInfoServc",
+            "ScsbidInfoService/getScsbidListSttusServc",
             params,
         )
 
@@ -319,27 +378,29 @@ class G2BService:
         Returns:
             경쟁사 분석 결과 dict
         """
-        # 날짜 범위
+        # 날짜 범위 (YYYYMMDDHHMM 포맷)
         end_dt = datetime.now()
         start_dt = end_dt - timedelta(days=date_range_months * 30)
-        date_from = start_dt.strftime("%Y%m%d%H%M%S")
-        date_to = end_dt.strftime("%Y%m%d%H%M%S")
+        date_from = start_dt.strftime("%Y%m%d") + "0000"
+        date_to = end_dt.strftime("%Y%m%d") + "2359"
 
         keyword = self._extract_main_keyword(rfp_title)
         logger.info(f"G2B 경쟁사 분석 시작: keyword={keyword}")
 
-        # Step 1: 유사 입찰공고 검색
+        # Step 1: 유사 입찰공고 검색 (최근 14일, API 날짜 범위 제한)
         try:
             bid_list = await self.search_bid_announcements(
-                keyword, num_of_rows=20, date_from=date_from, date_to=date_to
+                keyword, num_of_rows=50
             )
         except Exception as e:
             logger.warning(f"입찰공고 검색 실패: {e}")
             bid_list = []
 
-        # Step 2: 낙찰결과에서 업체명 추출
+        # Step 2: 낙찰결과에서 업체명 추출 (최근 7일)
         try:
-            bid_results = await self.get_bid_results(keyword, num_of_rows=30)
+            bid_results = await self.get_bid_results(
+                keyword, num_of_rows=50, date_range_days=7
+            )
         except Exception as e:
             logger.warning(f"낙찰결과 조회 실패: {e}")
             bid_results = []
@@ -348,8 +409,10 @@ class G2BService:
         winner_counter: Counter = Counter()
         winner_amounts: Dict[str, List[int]] = {}
         for row in bid_results:
-            company = row.get("sucsfBidderNm") or row.get("cmpnyNm", "")
-            amount_str = row.get("sucsfBidAmt") or row.get("bidAmt", "0")
+            company = (row.get("bidwinnrNm") or row.get("sucsfBidderNm")
+                       or row.get("cmpnyNm", ""))
+            amount_str = (row.get("sucsfBidAmt") or row.get("bidAmt")
+                         or row.get("presmptPrce", "0"))
             if company:
                 winner_counter[company] += 1
                 try:
@@ -403,6 +466,59 @@ class G2BService:
             "total_competitors": len(profiles),
             "date_range": {"from": start_dt.date().isoformat(), "to": end_dt.date().isoformat()},
         }
+
+    # ── 다중 키워드 검색 ──────────────────────────────
+
+    async def search_multi_keyword(
+        self,
+        keywords: list[str],
+        num_of_rows: int = 999,
+        date_range_days: int = 14,
+    ) -> list[dict]:
+        """
+        다중 키워드로 공고 검색 후 OR 매칭 + 중복 제거.
+
+        전체 공고를 조회한 뒤 클라이언트 측에서 키워드 매칭.
+        각 공고에 matched_keywords, match_count 필드를 추가.
+
+        Args:
+            keywords: 매칭할 키워드 목록
+            num_of_rows: 조회 건수 (기본 999)
+            date_range_days: 조회 기간 일수 (기본 14)
+
+        Returns:
+            매칭된 공고 목록 (match_count 내림차순)
+        """
+        all_bids = await self.search_bid_announcements(
+            keyword="",
+            num_of_rows=num_of_rows,
+            date_from=(datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000",
+        )
+
+        # 중복 제거 (공고번호 기준)
+        seen = set()
+        unique_bids = []
+        for bid in all_bids:
+            bid_no = bid.get("bidNtceNo", "")
+            if bid_no and bid_no not in seen:
+                seen.add(bid_no)
+                unique_bids.append(bid)
+            elif not bid_no:
+                unique_bids.append(bid)
+
+        # 키워드 OR 매칭
+        kw_lower = [kw.lower() for kw in keywords]
+        matched = []
+        for bid in unique_bids:
+            title = bid.get("bidNtceNm", "").lower()
+            hits = [kw for kw, kw_l in zip(keywords, kw_lower) if kw_l in title]
+            if hits:
+                bid["matched_keywords"] = hits
+                bid["match_count"] = len(hits)
+                matched.append(bid)
+
+        matched.sort(key=lambda x: x["match_count"], reverse=True)
+        return matched
 
     # ── 내부 헬퍼 ────────────────────────────────
 
@@ -485,7 +601,7 @@ async def search_bids(
     """공고 검색 — rfp_search 노드에서 사용."""
     async with G2BService() as svc:
         try:
-            results = await svc.search_bid_announcements(keywords, num_of_rows=20)
+            results = await svc.search_bid_announcements(keywords, num_of_rows=500)
             # 간이 필터
             filtered = []
             for r in results:
@@ -542,9 +658,9 @@ async def get_bid_result_info(bid_no: str) -> Dict:
             if results:
                 r = results[0]
                 return {
-                    "winner": r.get("sucsfBidderNm", ""),
-                    "amount": r.get("sucsfBidAmt", ""),
-                    "bid_count": r.get("bidprcPrtcptCnt", ""),
+                    "winner": r.get("bidwinnrNm", r.get("sucsfBidderNm", "")),
+                    "amount": r.get("sucsfBidAmt", r.get("presmptPrce", "")),
+                    "bid_count": r.get("prtcptCnum", r.get("bidprcPrtcptCnt", "")),
                     "bid_date": r.get("opengDt", ""),
                 }
             return {}
@@ -564,10 +680,10 @@ async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개
             return {"status": "not_found", "bid_notice_id": bid_notice_id}
 
         r = results[0]
-        winner = r.get("sucsfBidderNm", "")
-        amount_str = r.get("sucsfBidAmt", "0")
+        winner = r.get("bidwinnrNm", r.get("sucsfBidderNm", ""))
+        amount_str = r.get("sucsfBidAmt", r.get("presmptPrce", "0"))
         budget_str = r.get("presmptPrce", r.get("asignBdgtAmt", "0"))
-        bid_count_str = r.get("bidprcPrtcptCnt", "0")
+        bid_count_str = r.get("prtcptCnum", r.get("bidprcPrtcptCnt", "0"))
 
         try:
             winning_price = int(str(amount_str).replace(",", "").strip() or "0")

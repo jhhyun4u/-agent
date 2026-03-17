@@ -10,7 +10,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from fastapi.responses import FileResponse
 
 from app.exceptions import SessionNotFoundError
-from app.middleware.auth import get_current_user
+from app.api.deps import get_current_user
 from app.models.phase_schemas import Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.models.schemas import RFPData
 from app.services.presentation_generator import generate_presentation_slides

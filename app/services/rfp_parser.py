@@ -6,7 +6,31 @@ from PyPDF2 import PdfReader
 
 from app.config import settings
 from app.models.schemas import RFPData
-from app.prompts.proposal import RFP_ANALYSIS_PROMPT, SYSTEM_PROMPT
+
+# RFP 파싱 전용 프롬프트 (기존 app/prompts/proposal.py에서 인라인 이동)
+SYSTEM_PROMPT = """당신은 전문 용역 제안서 작성 전문가입니다.
+공공기관 및 민간 기업의 용역 제안서를 작성하는 데 풍부한 경험이 있습니다.
+제안서는 명확하고 설득력 있으며, 발주처의 요구사항을 정확히 반영해야 합니다.
+한국어로 작성하며, 공공기관 제안서 형식과 관행을 따릅니다.
+수치 데이터는 반드시 확인하여, 근거가 있는 자료만 활용해야 합니다. 출처가 불분명하거나 검증되지 않은 수치는 사용하지 마세요."""
+
+RFP_ANALYSIS_PROMPT = """다음 RFP(제안요청서) 문서 내용을 분석하여 핵심 정보를 추출해주세요.
+
+## RFP 원문
+{rfp_text}
+
+## 추출 지침
+아래 JSON 형식으로 핵심 정보를 정리해주세요:
+{{
+    "title": "사업명",
+    "client_name": "발주 기관명",
+    "project_scope": "사업 범위 요약",
+    "duration": "사업 기간",
+    "budget": "예산 (명시된 경우, 없으면 null)",
+    "requirements": ["주요 요구사항 목록"],
+    "evaluation_criteria": ["평가 기준 목록 (배점 포함 시 함께 기재)"],
+    "table_of_contents": ["RFP에 명시된 제안서 목차 항목 (없으면 빈 배열)"]
+}}"""
 
 
 def extract_text_from_pdf(file_path: Path) -> str:

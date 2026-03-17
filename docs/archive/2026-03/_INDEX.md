@@ -17,6 +17,12 @@
 | dashboard | 2026-03-08 | 100% | 1 | dashboard/ |
 | api | 2026-03-08 | 90% | 1 | api/ |
 | bid-search | 2026-03-08 | 96% | 0 | bid-search/ |
+| token-tracking | 2026-03-16 | 100% | 0 | token-tracking/ |
+| hwpxskill-integration | 2026-03-16 | 97% | 0 | hwpxskill-integration/ |
+| frontend-core-components | 2026-03-16 | 93% | 0 | frontend-core-components/ |
+| **proposal-agent-v1** | **2026-03-16** | **99%** | **3** | **proposal-agent-v1/** |
+| remaining-modules | 2026-03-16 | 99% | 2 | remaining-modules/ |
+| **proposal-platform-v1** | **2026-03-16** | **98%** | **1** | **proposal-platform-v1/** |
 
 ---
 
@@ -186,4 +192,89 @@
 | Path | docs/archive/2026-03/dashboard/ |
 | 주요 성과 | 오늘 할 일(액션 허브), 제안 파이프라인 뷰, 추천 공고 S/A 위젯, KPI 추세 표시, 인사이트 카드 |
 | 핵심 원칙 | 기존 API 재사용, 신규 백엔드 없음, 사용자 행동 유도 중심 UX |
+
+---
+
+## token-tracking — Completed
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-16 |
+| Match Rate | **100%** |
+| PDCA 반복 | 0회 (첫 번째 시도 통과) |
+| Documents | analysis, report |
+| Path | docs/archive/2026-03/token-tracking/ |
+| 주요 성과 | ContextVar + 데코레이터 패턴으로 노드 파일 0개 수정, 16개 AI 노드 토큰 비용 자동 추적, GET /token-usage API |
+| 신규 파일 | token_pricing.py, token_tracking.py, 005_token_cost.sql |
+| 수정 파일 | claude_client.py, graph.py, routes_workflow.py |
+
+---
+
+## hwpxskill-integration — Completed
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-16 |
+| Match Rate | **97%** |
+| PDCA 반복 | 0회 (첫 번째 시도 통과) |
+| Documents | analysis, report |
+| Path | docs/archive/2026-03/hwpxskill-integration/ |
+| 주요 성과 | Canine89/hwpxskill XML-first 4종(validate, page_guard, analyze_template, build_hwpx) 통합. 서식 복원 99%, 쪽수 가드, 고객 양식 분석, HWPX 다운로드 API |
+| 신규 파일 | hwpx/__init__.py, validate.py, page_guard.py, analyze_template.py, build_hwpx.py, hwpx_service.py, templates/ (13 파일) |
+| 수정 파일 | routes_artifacts.py (+HWPX endpoint), CLAUDE.md |
+| 코드량 | 1,065줄 신규, 추가 의존성 0개 (lxml 기존) |
+
+---
+
+## frontend-core-components — Completed
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-16 |
+| Match Rate | **93%** |
+| PDCA 반복 | 0회 (첫 번째 시도 통과) |
+| Documents | plan, analysis, report |
+| Path | docs/archive/2026-03/frontend-core-components/ |
+| 주요 성과 | v3.4 설계 기반 프론트엔드 핵심 컴포넌트 6종 구현 — PhaseGraph (6-STEP 워크플로), WorkflowPanel (Go/No-Go+Review+Parallel), EvaluationView (RadarChart+3명 평가자), AnalyticsPage (4종 차트), ProposalEditor (Tiptap 3-col), KbManagement (DataTable CRUD) |
+| 신규 파일 | 14개 (PhaseGraph, WorkflowPanel, EvaluationRadar, EvaluationView, AnalyticsCharts, EditorTocPanel, EditorAiPanel, ProposalEditor, DataTable + 5 페이지) |
+| 수정 파일 | 3개 (api.ts, proposals/[id]/page.tsx, package.json) |
+| 코드량 | ~2,973줄 신규 |
+| 갭 | 10건 (1 P0, 4 P1, 5 P2) — 서버 연동·실시간 데이터 관련, UI 구조는 100% 설계 부합 |
+
+---
+
+## proposal-agent-v1 — Completed (메인 피처)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-16 |
+| 시작일 | 2026-01-15 |
+| 기간 | 약 2개월 |
+| Match Rate (설계vs구현) | **99%** |
+| Match Rate (설계vs요구) | **99%** |
+| PDCA 반복 | 3회 (82% → 94% → 97% → 99%) |
+| Documents | plan (v4.9), design (v3.6, 18 modular files), analysis (99%), report (v2.0) |
+| Path | docs/archive/2026-03/proposal-agent-v1/ |
+| 주요 성과 | LangGraph 28노드 StateGraph, 10종 섹션별 전문 프롬프트, 순차 작성+리뷰 루프, 스토리라인 파이프라인, Grant-Writer Best Practice, G2B 낙찰+성과 추적+KB 피드백, CRITICAL 8건 코드 품질 수정 |
+| 구현 Phase | 0(인프라) → 1(LangGraph) → 2(전략·제안서) → 3(산출물) → 3.5(프롬프트) → 4(G2B·성과) → 4.5(갭·품질) |
+| Backend | ~15,000줄 (Python 3.11 + FastAPI) |
+| Frontend | ~10,163줄 (Next.js 15 + React 19) |
+| DB 테이블 | 30+ (RLS + pgvector) |
+| API 엔드포인트 | 50+ |
+| 잔여 갭 | HIGH 1 (PSM-16), LOW 1 (AGT-04), 설계-구현 차이 2 (LOW+MEDIUM) |
+
+---
+
+## remaining-modules — Completed (Phase 5 서비스 모듈 6종)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-16 |
+| Match Rate | **99%** (93% → 96% → 99%) |
+| PDCA 반복 | 2회 (P1 7건 수정 → P2 12건 정리) |
+| Documents | analysis, report (설계는 proposal-agent-v1에 포함) |
+| Path | docs/archive/2026-03/remaining-modules/ |
+| 주요 성과 | token_manager(토큰 예산+KB절단+Prompt Caching), ai_status_manager(6종 상태+하트비트+4 API), section_lock(5분 잠금+강제 해제), scheduled_monitor(09:00 G2B 키워드 검색+Teams 알림), trustworthiness(6대 규칙+출처 ID), source_tagger(9종 태그+근거비율+숫자일관성) |
+| 대상 파일 | 6개 서비스 + 1개 프롬프트 + routes_workflow.py API 확장 |
+| 잔여 갭 | L1 (section_lock SSE) — SSE 버스 인프라 대기 |
 

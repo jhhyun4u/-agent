@@ -97,6 +97,35 @@ class ProposalSessionManager:
 
         return session_data
 
+    async def acreate_session(
+        self,
+        proposal_id: str,
+        initial_data: Dict[str, Any],
+        session_type: str = "v3",
+    ) -> Dict[str, Any]:
+        """새 세션 생성 — DB INSERT 먼저 (ghost session 방지).
+
+        설계 요구: DB INSERT 성공 후 인메모리 캐시에 추가.
+        DB 실패 시 세션이 생성되지 않아 ghost session을 방지한다.
+        """
+        session_data = {
+            **initial_data,
+            "proposal_id": proposal_id,
+            "session_type": session_type,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
+            "status": "initialized",
+        }
+
+        # DB INSERT 먼저 (실패 시 예외 전파 → ghost session 방지)
+        await self._db_create(proposal_id, session_data)
+
+        # DB 성공 후 인메모리 캐시에 추가
+        self._sessions[proposal_id] = session_data
+        logger.info(f"세션 생성 (DB-first): {proposal_id} (type={session_type})")
+
+        return session_data
+
     def get_session(self, proposal_id: str) -> Dict[str, Any]:
         """세션 조회 (메모리 전용, 빠른 읽기)"""
         session = self._sessions.get(proposal_id)
@@ -181,6 +210,26 @@ class ProposalSessionManager:
         logger.info(f"DB에서 세션 복원: {proposal_id}")
         return session
 
+    async def mark_expired_proposals(self) -> int:
+        """PSM-05: 마감일이 지난 진행중 제안서를 expired로 자동 전환."""
+        try:
+            from app.utils.supabase_client import get_async_client
+            client = await get_async_client()
+            result = await (
+                client.table("proposals")
+                .update({"status": "expired", "updated_at": datetime.now(timezone.utc).isoformat()})
+                .in_("status", ["initialized", "processing", "draft"])
+                .lt("deadline", datetime.now(timezone.utc).isoformat())
+                .execute()
+            )
+            count = len(result.data or [])
+            if count:
+                logger.info(f"PSM-05: 마감 초과 제안서 {count}건 expired 전환")
+            return count
+        except Exception as e:
+            logger.warning(f"mark_expired_proposals 실패 (무시): {e}")
+            return 0
+
     async def startup_load(self) -> int:
         """앱 시작 시 DB에서 활성 세션 로드 (processing/initialized 상태)"""
         try:
@@ -208,32 +257,38 @@ class ProposalSessionManager:
     # ─────────────────────────────────────────────
 
     async def _db_create(self, proposal_id: str, session: Dict[str, Any]) -> None:
-        """proposals 테이블에 신규 행 삽입"""
+        """proposals 테이블에 신규 행 삽입.
+
+        acreate_session에서 호출 시 예외가 전파되어 ghost session을 방지한다.
+        create_session(동기)에서 fire-and-forget으로 호출 시 예외는 로그만 남긴다.
+        """
+        from app.utils.supabase_client import get_async_client
+
+        payload = {
+            "id": proposal_id,
+            "title": session.get("rfp_title", "제목 없음"),
+            "status": "initialized",
+            "owner_id": session.get("owner_id"),
+            "team_id": session.get("team_id"),
+            "rfp_content": session.get("proposal_state", {}).get("rfp_content", ""),
+            "current_phase": None,
+            "phases_completed": 0,
+        }
+        if session.get("section_ids") is not None:
+            payload["section_ids"] = session["section_ids"]
+        if session.get("form_template_id") is not None:
+            payload["form_template_id"] = session["form_template_id"]
+        # owner_id가 없으면 삽입 스킵 (RLS 위반 방지)
+        if not payload["owner_id"]:
+            logger.debug(f"_db_create 스킵 (owner_id 없음): {proposal_id}")
+            return
         try:
-            from app.utils.supabase_client import get_async_client
             client = await get_async_client()
-            payload = {
-                "id": proposal_id,
-                "title": session.get("rfp_title", "제목 없음"),
-                "status": "initialized",
-                "owner_id": session.get("owner_id"),
-                "team_id": session.get("team_id"),
-                "rfp_content": session.get("proposal_state", {}).get("rfp_content", ""),
-                "current_phase": None,
-                "phases_completed": 0,
-            }
-            if session.get("section_ids") is not None:
-                payload["section_ids"] = session["section_ids"]
-            if session.get("form_template_id") is not None:
-                payload["form_template_id"] = session["form_template_id"]
-            # owner_id가 없으면 삽입 스킵 (RLS 위반 방지)
-            if not payload["owner_id"]:
-                logger.debug(f"_db_create 스킵 (owner_id 없음): {proposal_id}")
-                return
             await client.table("proposals").insert(payload).execute()
             logger.debug(f"DB 세션 생성: {proposal_id}")
         except Exception as e:
-            logger.warning(f"_db_create 실패 (무시): {e}")
+            logger.warning(f"_db_create 실패: {e}")
+            raise
 
     async def _db_update(self, proposal_id: str, session: Dict[str, Any]) -> None:
         """proposals 테이블 업데이트"""
