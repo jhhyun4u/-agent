@@ -390,10 +390,12 @@ class TestBidAnnouncements:
 
         assert res.status_code == 404
 
-    async def test_인증_없으면_401(self, client_no_auth):
-        with patch("app.utils.supabase_client.get_async_client", AsyncMock(side_effect=Exception)):
+    async def test_인증_없이_접근_가능_404(self, client_no_auth):
+        """get_bid_detail은 get_current_user_or_none을 사용하므로 인증 없이도 접근 가능 (공고 미존재 시 404)"""
+        mock_client = make_supabase_mock(bid_data=[])
+        with patch("app.api.routes_bids.get_async_client", AsyncMock(return_value=mock_client)):
             res = await client_no_auth.get("/api/bids/20260001-00")
-        assert res.status_code == 401
+        assert res.status_code == 404
 
 
 # ─────────────────────────────────────────────────────────────

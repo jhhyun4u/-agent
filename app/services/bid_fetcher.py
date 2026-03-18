@@ -41,15 +41,11 @@ class BidFetcher:
         """
         raw_bids: dict[str, dict] = {}  # bid_no → raw dict (중복 제거)
 
-        # 검색 기간 계산 (0 = 제한 없음)
-        date_from: Optional[str] = None
-        date_to: Optional[str] = None
-        range_days = getattr(preset, "announce_date_range_days", 14)
-        if range_days and range_days > 0:
-            now = datetime.now(timezone.utc)
-            date_to = now.strftime("%Y%m%d%H%M%S")
-            date_from = (now - timedelta(days=range_days)).strftime("%Y%m%d%H%M%S")
-            logger.info(f"검색 기간 적용: {date_from} ~ {date_to} ({range_days}일)")
+        # 당일 신규 공고만 검색
+        today = date.today()
+        date_from = today.strftime("%Y%m%d") + "0000"
+        date_to = today.strftime("%Y%m%d") + "2359"
+        logger.info(f"당일 신규 공고 검색: {date_from} ~ {date_to}")
 
         for keyword in preset.keywords:
             try:
@@ -124,12 +120,12 @@ class BidFetcher:
         try:
             bid_no = raw.get("bidNtceNo", "").strip()
             bid_title = raw.get("bidNtceNm", "").strip()
-            agency = raw.get("ntcInsttNm", "").strip()
+            agency = (raw.get("ntceInsttNm") or raw.get("dminsttNm") or "").strip()
             if not bid_no or not bid_title or not agency:
                 return None
 
             budget_amount: Optional[int] = None
-            raw_budget = raw.get("presmptPrceAmt")
+            raw_budget = raw.get("presmptPrce") or raw.get("asignBdgtAmt") or raw.get("presmptPrceAmt")
             if raw_budget:
                 try:
                     budget_amount = int(float(str(raw_budget).replace(",", "")))
@@ -137,7 +133,7 @@ class BidFetcher:
                     pass
 
             deadline_date: Optional[datetime] = None
-            raw_deadline = raw.get("bfSpecRgstDt") or raw.get("bidNtceDt")
+            raw_deadline = raw.get("bidClseDt") or raw.get("bfSpecRgstDt") or raw.get("bidNtceDt")
             if raw_deadline:
                 try:
                     # 포맷 예: "2026/03/20 18:00:00" 또는 "20260320180000"

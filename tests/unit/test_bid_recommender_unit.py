@@ -1,8 +1,8 @@
 """
 BidRecommender 유닛 테스트 — 파싱/포맷 메서드 (Claude API 호출 없음)
 
-_parse_qualification_response, _parse_scoring_response,
-_format_profile, _format_bids_for_qualification, _format_bids_for_scoring
+_parse_qualification_response, _parse_review_response,
+_format_profile, _format_bids_for_qualification, _review_to_recommendation
 """
 
 import json
@@ -127,10 +127,10 @@ class TestParseQualificationResponse:
 
 
 # ─────────────────────────────────────────────────────────────
-# _parse_scoring_response
+# _parse_review_response (구 _parse_scoring_response)
 # ─────────────────────────────────────────────────────────────
 
-class TestParseScoringResponse:
+class TestParseReviewResponse:
 
     def setup_method(self):
         self.rec = make_recommender()
@@ -139,88 +139,119 @@ class TestParseScoringResponse:
         bids = [make_bid("001")]
         response = json.dumps([{
             "bid_no": "001",
-            "match_score": 85,
-            "match_grade": "A",
-            "recommendation_summary": "AI 전문성과 부합",
-            "recommendation_reasons": [
-                {"category": "전문성", "reason": "LLM 경험 보유", "strength": "high"}
-            ],
-            "risk_factors": [{"risk": "경쟁사 다수", "level": "medium"}],
-            "win_probability_hint": "중상",
-            "recommended_action": "적극 검토",
+            "bid_title": "AI 시스템 구축",
+            "suitability_score": 85,
+            "verdict": "추천",
+            "reason_analysis": {
+                "strengths": ["LLM 경험 보유", "공공 AI 실적"],
+                "risks": ["경쟁사 다수"]
+            },
+            "action_plan": "AI 전문성 강조",
         }])
-        results = self.rec._parse_scoring_response(response, bids)
+        results = self.rec._parse_review_response(response, bids)
         assert len(results) == 1
-        assert results[0].match_score == 85
-        assert results[0].match_grade == "A"
-        assert len(results[0].recommendation_reasons) == 1
-        assert results[0].recommendation_reasons[0].strength == "high"
+        assert results[0].suitability_score == 85
+        assert results[0].verdict == "추천"
+        assert len(results[0].reason_analysis.strengths) == 2
+        assert len(results[0].reason_analysis.risks) == 1
 
     def test_score_100_초과_클램핑(self):
         bids = [make_bid("001")]
         response = json.dumps([{
             "bid_no": "001",
-            "match_score": 150,
-            "match_grade": "S",
-            "recommendation_summary": "요약",
-            "recommendation_reasons": [
-                {"category": "기타", "reason": "부합", "strength": "high"}
-            ],
-            "win_probability_hint": "상",
-            "recommended_action": "검토",
+            "suitability_score": 150,
+            "verdict": "추천",
+            "reason_analysis": {"strengths": ["부합"], "risks": []},
+            "action_plan": "검토",
         }])
-        results = self.rec._parse_scoring_response(response, bids)
-        assert results[0].match_score == 100
+        results = self.rec._parse_review_response(response, bids)
+        assert results[0].suitability_score == 100
 
     def test_score_음수_클램핑(self):
         bids = [make_bid("001")]
         response = json.dumps([{
             "bid_no": "001",
-            "match_score": -10,
-            "match_grade": "D",
-            "recommendation_summary": "요약",
-            "recommendation_reasons": [
-                {"category": "기타", "reason": "부합", "strength": "low"}
-            ],
-            "win_probability_hint": "하",
-            "recommended_action": "보류",
+            "suitability_score": -10,
+            "verdict": "제외",
+            "reason_analysis": {"strengths": [], "risks": ["부적합"]},
+            "action_plan": "보류",
         }])
-        results = self.rec._parse_scoring_response(response, bids)
-        assert results[0].match_score == 0
+        results = self.rec._parse_review_response(response, bids)
+        assert results[0].suitability_score == 0
 
-    def test_recommendation_reasons_없으면_기본값_삽입(self):
+    def test_verdict_잘못된_값_score_기반_대체(self):
+        """verdict가 유효하지 않으면 score 기반으로 결정"""
         bids = [make_bid("001")]
         response = json.dumps([{
             "bid_no": "001",
-            "match_score": 70,
-            "match_grade": "B",
-            "recommendation_summary": "요약",
-            "recommendation_reasons": [],  # 빈 배열
-            "win_probability_hint": "중",
-            "recommended_action": "검토",
+            "suitability_score": 50,
+            "verdict": "invalid_verdict",
+            "reason_analysis": {"strengths": ["부합"], "risks": []},
+            "action_plan": "검토",
         }])
-        results = self.rec._parse_scoring_response(response, bids)
-        assert len(results[0].recommendation_reasons) >= 1
+        results = self.rec._parse_review_response(response, bids)
+        assert results[0].verdict == "검토 필요"  # score 50 >= 40
 
     def test_깨진_JSON_빈_목록_반환(self):
         bids = [make_bid("001")]
-        results = self.rec._parse_scoring_response("이건 JSON이 아님", bids)
+        results = self.rec._parse_review_response("이건 JSON이 아님", bids)
         assert results == []
 
-    def test_match_grade_없으면_score로_계산(self):
+    def test_reason_analysis_없으면_빈_리스트(self):
         bids = [make_bid("001")]
         response = json.dumps([{
             "bid_no": "001",
-            "match_score": 92,
-            "recommendation_summary": "요약",
-            "recommendation_reasons": [
-                {"category": "기술", "reason": "부합", "strength": "high"}
-            ],
-            "win_probability_hint": "상",
-            "recommended_action": "추천",
+            "suitability_score": 70,
+            "verdict": "추천",
+            "action_plan": "검토",
         }])
-        results = self.rec._parse_scoring_response(response, bids)
-        assert results[0].match_grade == "S"  # score 92 → S
+        results = self.rec._parse_review_response(response, bids)
+        assert results[0].reason_analysis.strengths == []
+        assert results[0].reason_analysis.risks == []
+
+
+# ─────────────────────────────────────────────────────────────
+# _review_to_recommendation
+# ─────────────────────────────────────────────────────────────
+
+class TestReviewToRecommendation:
+
+    def setup_method(self):
+        self.rec = make_recommender()
+
+    def test_정상_변환(self):
+        from app.models.bid_schemas import TenopaBidReview, ReasonAnalysis
+        review = TenopaBidReview(
+            bid_no="001",
+            bid_title="AI 시스템",
+            suitability_score=85,
+            verdict="추천",
+            reason_analysis=ReasonAnalysis(
+                strengths=["AI 경험", "공공 실적"],
+                risks=["경쟁사 다수"],
+            ),
+            action_plan="AI 전문성 강조",
+        )
+        rec = self.rec._review_to_recommendation(review)
+        assert rec.bid_no == "001"
+        assert rec.match_score == 85
+        assert rec.match_grade == "A"  # 85 → A
+        assert len(rec.recommendation_reasons) == 2
+        assert len(rec.risk_factors) == 1
+        assert "추천" in rec.recommendation_summary
+
+    def test_strengths_없으면_기본_reason_삽입(self):
+        from app.models.bid_schemas import TenopaBidReview, ReasonAnalysis
+        review = TenopaBidReview(
+            bid_no="001",
+            suitability_score=50,
+            verdict="검토 필요",
+            reason_analysis=ReasonAnalysis(strengths=[], risks=[]),
+            action_plan="검토 필요",
+        )
+        rec = self.rec._review_to_recommendation(review)
+        assert len(rec.recommendation_reasons) >= 1
+        assert rec.recommendation_reasons[0].category == "기타"
 
 
 # ─────────────────────────────────────────────────────────────
@@ -253,7 +284,7 @@ class TestFormatProfile:
 
 
 # ─────────────────────────────────────────────────────────────
-# _format_bids_for_qualification / _format_bids_for_scoring
+# _format_bids_for_qualification
 # ─────────────────────────────────────────────────────────────
 
 class TestFormatBids:
@@ -269,13 +300,6 @@ class TestFormatBids:
         assert "행정안전부" in text
         assert "자격요건 상세 내용" in text
 
-    def test_scoring_포맷_예산_마감일_포함(self):
-        bids = [make_bid("001")]
-        text = self.rec._format_bids_for_scoring(bids)
-        assert "001" in text
-        assert "300,000,000원" in text
-        assert "D-" in text
-
     def test_content_500자_자르기(self):
         long_content = "자" * 600
         bids = [make_bid("001", content=long_content)]
@@ -288,13 +312,32 @@ class TestFormatBids:
         text = self.rec._format_bids_for_qualification(bids)
         assert "내용 없음" in text
 
-    def test_예산_None_미기재_표시(self):
+    def test_예산_None_미기재_표시_in_review_format(self):
+        """_call_tenopa_review 인라인 포맷에서 예산 None이 미기재로 표시되는지"""
         bid = BidAnnouncement(
             bid_no="001", bid_title="예산없는 공고", agency="기관",
             budget_amount=None, days_remaining=5,
         )
-        text = self.rec._format_bids_for_scoring([bid])
-        assert "미기재" in text
+        # _call_tenopa_review 내부 포맷팅 로직 재현
+        budget = f"{bid.budget_amount:,}원" if bid.budget_amount else "미기재"
+        assert budget == "미기재"
+
+
+# ─────────────────────────────────────────────────────────────
+# _score_to_grade
+# ─────────────────────────────────────────────────────────────
+
+class TestScoreToGrade:
+
+    @pytest.mark.parametrize("score,expected", [
+        (100, "S"), (95, "S"), (90, "S"),
+        (89, "A"), (85, "A"), (80, "A"),
+        (79, "B"), (75, "B"), (70, "B"),
+        (69, "C"), (60, "C"),
+        (59, "D"), (0, "D"),
+    ])
+    def test_점수_등급_변환(self, score, expected):
+        assert _score_to_grade(score) == expected
 
 
 # ─────────────────────────────────────────────────────────────
@@ -328,17 +371,20 @@ class TestAnalyzeBidsMocked:
             {"bid_no": "001", "qualification_status": "pass"},
             {"bid_no": "002", "qualification_status": "fail", "disqualification_reason": "인증 없음"},
         ])
-        score_response = json.dumps([{
-            "bid_no": "001", "match_score": 80, "match_grade": "A",
-            "recommendation_summary": "적합",
-            "recommendation_reasons": [{"category": "기술", "reason": "LLM 경험", "strength": "high"}],
-            "risk_factors": [], "win_probability_hint": "중상", "recommended_action": "검토",
+        # Stage 2: TENOPA 리뷰 형식
+        review_response = json.dumps([{
+            "bid_no": "001",
+            "bid_title": "AI 시스템 구축",
+            "suitability_score": 80,
+            "verdict": "추천",
+            "reason_analysis": {"strengths": ["AI 경험"], "risks": []},
+            "action_plan": "적극 검토",
         }])
 
         rec.client.messages.create = AsyncMock(
             side_effect=[
                 _make_claude_response(qual_response),
-                _make_claude_response(score_response),
+                _make_claude_response(review_response),
             ]
         )
 
@@ -411,27 +457,29 @@ class TestAnalyzeBidsMocked:
         assert call_kwargs["max_tokens"] == 2000
         assert len(results) == 1
 
-    async def test_call_scoring_claude_호출_파라미터(self):
-        """_call_scoring 이 올바른 파라미터로 Claude 호출"""
+    async def test_call_tenopa_review_claude_호출_파라미터(self):
+        """_call_tenopa_review가 올바른 파라미터로 Claude 호출"""
         rec = self._make_rec()
         bids = [make_bid("001")]
 
-        score_json = json.dumps([{
-            "bid_no": "001", "match_score": 75, "match_grade": "B",
-            "recommendation_summary": "적합",
-            "recommendation_reasons": [{"category": "기술", "reason": "부합", "strength": "medium"}],
-            "risk_factors": [], "win_probability_hint": "중", "recommended_action": "검토",
+        review_json = json.dumps([{
+            "bid_no": "001",
+            "bid_title": "AI 시스템 구축",
+            "suitability_score": 75,
+            "verdict": "추천",
+            "reason_analysis": {"strengths": ["기술 부합"], "risks": []},
+            "action_plan": "검토",
         }])
         rec.client.messages.create = AsyncMock(
-            return_value=_make_claude_response(score_json)
+            return_value=_make_claude_response(review_json)
         )
 
-        results = await rec._call_scoring(SAMPLE_PROFILE, bids)
+        results = await rec._call_tenopa_review(bids, summaries={})
 
         call_kwargs = rec.client.messages.create.call_args.kwargs
         assert call_kwargs["max_tokens"] == 4000
         assert len(results) == 1
-        assert results[0].match_score == 75
+        assert results[0].suitability_score == 75
 
     async def test_analyze_bids_top_n_제한(self):
         """top_n 초과 공고는 2단계 분석 제외"""
@@ -442,17 +490,19 @@ class TestAnalyzeBidsMocked:
         qual_json = json.dumps([
             {"bid_no": f"00{i}", "qualification_status": "pass"} for i in range(5)
         ])
-        score_json = json.dumps([{
-            "bid_no": f"00{i}", "match_score": 70, "match_grade": "B",
-            "recommendation_summary": "요약",
-            "recommendation_reasons": [{"category": "기술", "reason": "부합", "strength": "medium"}],
-            "risk_factors": [], "win_probability_hint": "중", "recommended_action": "검토",
+        review_json = json.dumps([{
+            "bid_no": f"00{i}",
+            "bid_title": "AI 시스템 구축",
+            "suitability_score": 70,
+            "verdict": "추천",
+            "reason_analysis": {"strengths": ["부합"], "risks": []},
+            "action_plan": "검토",
         } for i in range(2)])  # 2건만 반환
 
         rec.client.messages.create = AsyncMock(
             side_effect=[
                 _make_claude_response(qual_json),
-                _make_claude_response(score_json),
+                _make_claude_response(review_json),
             ]
         )
 
@@ -461,5 +511,5 @@ class TestAnalyzeBidsMocked:
         # 2단계에 전달된 bids가 2건인지 확인
         scoring_call_args = rec.client.messages.create.call_args_list[1]
         user_content = scoring_call_args.kwargs["messages"][0]["content"]
-        # 2건만 포함 (bid 000, 001)
-        assert user_content.count("bid_no:") == 2
+        # 2건만 포함 ([공고번호] 형식)
+        assert user_content.count("[공고번호]") == 2

@@ -86,9 +86,9 @@ class TestBidFetcherNormalize:
         raw = {
             "bidNtceNo": "20260001-00",
             "bidNtceNm": "AI 기반 행정 업무 지원 시스템 구축",
-            "ntcInsttNm": "행정안전부",
+            "ntceInsttNm": "행정안전부",
             "bidClsfcNm": "용역",
-            "presmptPrceAmt": "300000000",
+            "presmptPrce": "300000000",
             "bfSpecRgstDt": "2026/03/20 18:00:00",
             "bidNtceDt": "2026/03/08 09:00:00",
         }
@@ -103,11 +103,11 @@ class TestBidFetcherNormalize:
 
     def test_필수_필드_누락_시_None_반환(self):
         # bid_no 누락
-        raw = {"bidNtceNm": "테스트", "ntcInsttNm": "기관"}
+        raw = {"bidNtceNm": "테스트", "ntceInsttNm": "기관"}
         assert self.fetcher._normalize(raw) is None
 
         # bid_title 누락
-        raw = {"bidNtceNo": "001", "ntcInsttNm": "기관"}
+        raw = {"bidNtceNo": "001", "ntceInsttNm": "기관"}
         assert self.fetcher._normalize(raw) is None
 
         # agency 누락
@@ -119,8 +119,8 @@ class TestBidFetcherNormalize:
         raw = {
             "bidNtceNo": "001",
             "bidNtceNm": "테스트 공고",
-            "ntcInsttNm": "테스트 기관",
-            "presmptPrceAmt": "1,500,000,000",
+            "ntceInsttNm": "테스트 기관",
+            "presmptPrce": "1,500,000,000",
         }
         bid = self.fetcher._normalize(raw)
         assert bid is not None
@@ -137,7 +137,7 @@ class TestBidFetcherNormalize:
             raw = {
                 "bidNtceNo": "001",
                 "bidNtceNm": "테스트",
-                "ntcInsttNm": "기관",
+                "ntceInsttNm": "기관",
                 "bfSpecRgstDt": fmt,
             }
             bid = self.fetcher._normalize(raw)
@@ -148,7 +148,7 @@ class TestBidFetcherNormalize:
         raw = {
             "bidNtceNo": "001",
             "bidNtceNm": "예산없는 공고",
-            "ntcInsttNm": "기관",
+            "ntceInsttNm": "기관",
         }
         bid = self.fetcher._normalize(raw)
         assert bid is not None

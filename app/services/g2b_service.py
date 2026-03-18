@@ -333,7 +333,7 @@ class G2BService:
         company_name: str,
         num_of_rows: int = 20,
         page_no: int = 1,
-        date_range_days: int = 7,
+        date_range_days: int = 180,
     ) -> List[Dict]:
         """
         업체별 입찰이력 조회 — 낙찰정보에서 업체명 검색
@@ -396,10 +396,10 @@ class G2BService:
             logger.warning(f"입찰공고 검색 실패: {e}")
             bid_list = []
 
-        # Step 2: 낙찰결과에서 업체명 추출 (최근 7일)
+        # Step 2: 낙찰결과에서 업체명 추출
         try:
             bid_results = await self.get_bid_results(
-                keyword, num_of_rows=50, date_range_days=7
+                keyword, num_of_rows=50, date_range_days=min(date_range_months * 30, 365)
             )
         except Exception as e:
             logger.warning(f"낙찰결과 조회 실패: {e}")
@@ -472,53 +472,46 @@ class G2BService:
     async def search_multi_keyword(
         self,
         keywords: list[str],
-        num_of_rows: int = 999,
+        num_of_rows: int = 100,
         date_range_days: int = 14,
     ) -> list[dict]:
         """
-        다중 키워드로 공고 검색 후 OR 매칭 + 중복 제거.
+        키워드별 개별 API 호출 → 합산 + 중복 제거 + matched_keywords 첨부.
 
-        전체 공고를 조회한 뒤 클라이언트 측에서 키워드 매칭.
-        각 공고에 matched_keywords, match_count 필드를 추가.
+        v2: 전체 조회(999건 1회) → 키워드별 개별 검색으로 전환.
+        API 서버 측 키워드 필터링 활용으로 누락 최소화.
 
         Args:
-            keywords: 매칭할 키워드 목록
-            num_of_rows: 조회 건수 (기본 999)
+            keywords: 검색 키워드 목록
+            num_of_rows: 키워드당 최대 조회 건수 (기본 100)
             date_range_days: 조회 기간 일수 (기본 14)
 
         Returns:
             매칭된 공고 목록 (match_count 내림차순)
         """
-        all_bids = await self.search_bid_announcements(
-            keyword="",
-            num_of_rows=num_of_rows,
-            date_from=(datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000",
-        )
+        date_from = (datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000"
 
-        # 중복 제거 (공고번호 기준)
-        seen = set()
-        unique_bids = []
-        for bid in all_bids:
-            bid_no = bid.get("bidNtceNo", "")
-            if bid_no and bid_no not in seen:
-                seen.add(bid_no)
-                unique_bids.append(bid)
-            elif not bid_no:
-                unique_bids.append(bid)
+        all_bids: dict[str, dict] = {}
+        for kw in keywords:
+            results = await self.search_bid_announcements(
+                keyword=kw,
+                num_of_rows=num_of_rows,
+                date_from=date_from,
+            )
+            for bid in results:
+                bid_no = bid.get("bidNtceNo", "")
+                if not bid_no:
+                    continue
+                if bid_no not in all_bids:
+                    all_bids[bid_no] = {**bid, "matched_keywords": [kw], "match_count": 1}
+                else:
+                    existing_kws = all_bids[bid_no]["matched_keywords"]
+                    if kw not in existing_kws:
+                        existing_kws.append(kw)
+                        all_bids[bid_no]["match_count"] = len(existing_kws)
 
-        # 키워드 OR 매칭
-        kw_lower = [kw.lower() for kw in keywords]
-        matched = []
-        for bid in unique_bids:
-            title = bid.get("bidNtceNm", "").lower()
-            hits = [kw for kw, kw_l in zip(keywords, kw_lower) if kw_l in title]
-            if hits:
-                bid["matched_keywords"] = hits
-                bid["match_count"] = len(hits)
-                matched.append(bid)
-
-        matched.sort(key=lambda x: x["match_count"], reverse=True)
-        return matched
+        result = sorted(all_bids.values(), key=lambda x: x["match_count"], reverse=True)
+        return result
 
     # ── 내부 헬퍼 ────────────────────────────────
 
@@ -778,6 +771,43 @@ def _extract_attachments(raw: Dict) -> List[Dict]:
     for i in range(1, 6):
         url = raw.get(f"ntceSpecDocUrl{i}", "")
         if url:
-            ext = "pdf" if "pdf" in url.lower() else "hwp" if "hwp" in url.lower() else "unknown"
-            attachments.append({"url": url, "type": ext, "name": f"첨부파일{i}"})
+            ext = _guess_file_ext(url)
+            name = _extract_filename(url, i, ext)
+            attachments.append({"url": url, "type": ext, "name": name, "index": i})
+
+    # bidNtceDtlUrl (공고 상세 URL) 도 포함
+    detail_url = raw.get("bidNtceDtlUrl", "")
+    if detail_url and not any(a["url"] == detail_url for a in attachments):
+        attachments.insert(0, {
+            "url": detail_url,
+            "type": "link",
+            "name": "나라장터 공고 상세",
+            "index": 0,
+        })
+
     return attachments
+
+
+def _guess_file_ext(url: str) -> str:
+    """URL에서 파일 확장자 추측."""
+    url_lower = url.lower()
+    for ext in ("pdf", "hwpx", "hwp", "docx", "doc", "xlsx", "xls", "zip"):
+        if ext in url_lower:
+            return ext
+    return "unknown"
+
+
+def _extract_filename(url: str, index: int, ext: str) -> str:
+    """URL에서 파일명 추출, 실패 시 기본명 반환."""
+    import urllib.parse
+    try:
+        parsed = urllib.parse.urlparse(url)
+        path = urllib.parse.unquote(parsed.path)
+        if "/" in path:
+            basename = path.rsplit("/", 1)[-1]
+            if "." in basename and len(basename) < 200:
+                return basename
+    except Exception:
+        pass
+    label = "규격서" if index == 1 else f"첨부파일{index}"
+    return f"{label}.{ext}" if ext != "unknown" else label

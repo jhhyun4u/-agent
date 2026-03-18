@@ -391,6 +391,19 @@ async def competitors(
 # Phase 4-1: 낙찰정보 수집 + market_price_data 적재
 # ─────────────────────────────────────────────
 
+@router.post("/bid-results/bulk-sync")
+async def bulk_sync(
+    current_user=Depends(get_current_user),
+):
+    """진행 중인 프로젝트의 낙찰정보 일괄 동기화."""
+    try:
+        result = await bulk_sync_bid_results()
+        return result
+    except Exception as e:
+        logger.error(f"낙찰정보 일괄 동기화 오류: {e}")
+        raise HTTPException(status_code=500, detail="일괄 동기화 중 오류가 발생했습니다.")
+
+
 @router.post("/bid-results/{bid_notice_id}")
 async def collect_bid_result(
     bid_notice_id: str,
@@ -406,16 +419,3 @@ async def collect_bid_result(
     except Exception as e:
         logger.error(f"낙찰정보 수집 오류: {e}")
         raise HTTPException(status_code=500, detail="낙찰정보 수집 중 오류가 발생했습니다.")
-
-
-@router.post("/bid-results/bulk-sync")
-async def bulk_sync(
-    current_user=Depends(get_current_user),
-):
-    """진행 중인 프로젝트의 낙찰정보 일괄 동기화."""
-    try:
-        result = await bulk_sync_bid_results()
-        return result
-    except Exception as e:
-        logger.error(f"낙찰정보 일괄 동기화 오류: {e}")
-        raise HTTPException(status_code=500, detail="일괄 동기화 중 오류가 발생했습니다.")

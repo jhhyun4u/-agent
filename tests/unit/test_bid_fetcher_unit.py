@@ -49,10 +49,10 @@ def make_raw(
     return {
         "bidNtceNo": bid_no,
         "bidNtceNm": bid_title,
-        "ntcInsttNm": agency,
+        "ntceInsttNm": agency,
         "bidClsfcNm": bid_type,
-        "presmptPrceAmt": budget,
-        "bfSpecRgstDt": deadline,
+        "presmptPrce": budget,
+        "bidClseDt": deadline,
         "bidNtceDt": datetime.now(timezone.utc).strftime("%Y/%m/%d %H:%M:%S"),
     }
 
@@ -117,8 +117,8 @@ class TestFetchBidsByPreset:
         assert result[0].bid_no == "002"
 
     @pytest.mark.asyncio
-    async def test_announce_date_range_days_0_날짜필터_없음(self):
-        """range_days=0이면 date_from/date_to 없이 API 호출"""
+    async def test_announce_date_range_days_0_당일검색_적용(self):
+        """range_days=0이어도 당일 검색 date_from/date_to가 설정됨"""
         g2b = MagicMock()
         g2b.search_bid_announcements = AsyncMock(return_value=[])
 
@@ -128,8 +128,9 @@ class TestFetchBidsByPreset:
         await fetcher.fetch_bids_by_preset(preset)
 
         call_kwargs = g2b.search_bid_announcements.call_args
-        assert call_kwargs.kwargs.get("date_from") is None
-        assert call_kwargs.kwargs.get("date_to") is None
+        today_str = date.today().strftime("%Y%m%d")
+        assert call_kwargs.kwargs.get("date_from") == today_str + "0000"
+        assert call_kwargs.kwargs.get("date_to") == today_str + "2359"
 
     @pytest.mark.asyncio
     async def test_announce_date_range_days_14_날짜필터_적용(self):
@@ -233,8 +234,8 @@ class TestNormalizeEdgeCases:
     def test_예산_파싱_실패시_None(self):
         """예산이 숫자로 변환 불가면 budget_amount=None"""
         raw = {
-            "bidNtceNo": "001", "bidNtceNm": "테스트", "ntcInsttNm": "기관",
-            "presmptPrceAmt": "금액미정(협의)",
+            "bidNtceNo": "001", "bidNtceNm": "테스트", "ntceInsttNm": "기관",
+            "presmptPrce": "금액미정(협의)",
         }
         bid = self.fetcher._normalize(raw)
         assert bid is not None
@@ -243,7 +244,7 @@ class TestNormalizeEdgeCases:
     def test_공고일_파싱_실패시_announce_date_None(self):
         """bidNtceDt가 파싱 불가 형식이면 announce_date=None"""
         raw = {
-            "bidNtceNo": "001", "bidNtceNm": "테스트", "ntcInsttNm": "기관",
+            "bidNtceNo": "001", "bidNtceNm": "테스트", "ntceInsttNm": "기관",
             "bidNtceDt": "invalid-date",
         }
         bid = self.fetcher._normalize(raw)
@@ -254,7 +255,7 @@ class TestNormalizeEdgeCases:
         """BidAnnouncement 생성 실패 시 None 반환"""
         fetcher = make_fetcher()
         # bid_no가 빈 문자열 → 필수 필드 누락 → None 반환
-        raw = {"bidNtceNo": "", "bidNtceNm": "테스트", "ntcInsttNm": "기관"}
+        raw = {"bidNtceNo": "", "bidNtceNm": "테스트", "ntceInsttNm": "기관"}
         result = fetcher._normalize(raw)
         assert result is None
 
