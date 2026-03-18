@@ -346,9 +346,15 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
             result["parallel_results"]["_auto_improve_count"] = auto_improve_count + 1
             result["current_step"] = "self_review_retry_strategy"
         else:
-            # 약한 섹션만 재작성
+            # 약한 섹션 + 분량 미달 섹션 재작성
             section_scores = score.get("section_scores", [])
-            weak_sections = [s["section_id"] for s in section_scores if s.get("score", 100) < 70]
+            weak_sections = []
+            for s in section_scores:
+                is_weak = s.get("score", 100) < 70
+                depth = s.get("depth_metrics", {})
+                is_thin = depth.get("min_pages_met") is False or depth.get("evidence_count", 99) < 3
+                if is_weak or is_thin:
+                    weak_sections.append(s["section_id"])
             result["rework_targets"] = weak_sections
             result["current_section_index"] = 0
             result["parallel_results"]["_auto_improve_count"] = auto_improve_count + 1

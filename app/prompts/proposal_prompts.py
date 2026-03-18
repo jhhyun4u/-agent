@@ -132,8 +132,10 @@ Win Theme: {win_theme}
 
 ### 3축: 작성 품질 (25점)
 - 논리 구조의 명확성
-- 구체성 (수치·사례·도표)
+- 구체성 (수치·사례·도표) — 섹션당 구체적 근거 3개 미만이면 감점
 - 가독성 (소제목·불릿·표)
+- 분량 적정성 — 배점 대비 너무 얇은 섹션(최소 분량 미달)이 있으면 감점
+- 표/다이어그램 밀도 — 섹션당 최소 1개 포함 여부 확인
 
 ### 4축: 근거 신뢰성 (25점, v3.0)
 - 인용된 수치·통계의 출처 명시 여부
@@ -164,7 +166,13 @@ Win Theme: {win_theme}
       "score": 0,
       "strengths": ["..."],
       "weaknesses": ["..."],
-      "improvement_suggestions": ["..."]
+      "improvement_suggestions": ["..."],
+      "depth_metrics": {{
+        "evidence_count": 0,
+        "tables_or_diagrams": 0,
+        "estimated_pages": 0.0,
+        "min_pages_met": true
+      }}
     }}
   ],
   "persona_reviews": {{
