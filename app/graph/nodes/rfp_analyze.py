@@ -100,11 +100,11 @@ async def rfp_analyze(state: ProposalState) -> dict:
     else:
         sections = [item.get("item", f"section_{i}") for i, item in enumerate(rfp_analysis.eval_items, 1)]
 
-    # v3.5: 섹션 유형 자동 분류
+    # v3.5: 섹션 유형 자동 분류 (section_title 전달로 분류 정확도 향상)
     from app.prompts.section_prompts import classify_section_type
     section_type_map = {}
     for section_id in sections:
-        section_type_map[section_id] = classify_section_type(section_id)
+        section_type_map[section_id] = classify_section_type(section_id, section_id)
 
     return {
         "rfp_analysis": rfp_analysis,

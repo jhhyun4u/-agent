@@ -74,6 +74,90 @@ async def parse_rfp(file_path: Path) -> RFPData:
     data = extract_json_from_response(result_text)
     return RFPData(raw_text=raw_text, **data)
 
+async def parse_rfp_bytes(content: bytes, file_type: str = "pdf") -> str:
+    """바이트 데이터에서 텍스트 추출.
+
+    Args:
+        content: 파일 바이트 데이터
+        file_type: 파일 타입 (pdf, hwp, hwpx, docx)
+
+    Returns:
+        추출된 텍스트. 실패 시 빈 문자열.
+    """
+    import tempfile
+
+    if not content:
+        return ""
+
+    suffix = f".{file_type}" if not file_type.startswith(".") else file_type
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(content)
+        tmp_path = Path(tmp.name)
+
+    try:
+        from app.utils.file_utils import extract_text_from_file
+        return extract_text_from_file(tmp_path)
+    except Exception:
+        return ""
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
+async def parse_rfp_from_url(url: str, file_type: str = "pdf") -> str:
+    """URL에서 파일을 다운로드하여 텍스트 추출.
+
+    Args:
+        url: 첨부파일 다운로드 URL
+        file_type: 파일 타입 (pdf, hwp, hwpx, docx)
+
+    Returns:
+        추출된 텍스트. 실패 시 빈 문자열.
+    """
+    import tempfile
+    import aiohttp
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+            if resp.status != 200:
+                return ""
+            content_bytes = await resp.read()
+
+    if not content_bytes:
+        return ""
+
+    suffix = f".{file_type}" if not file_type.startswith(".") else file_type
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(content_bytes)
+        tmp_path = Path(tmp.name)
+
+    try:
+        from app.utils.file_utils import extract_text_from_file
+        return extract_text_from_file(tmp_path)
+    except Exception:
+        return ""
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
+async def download_file_from_url(url: str, timeout: int = 30) -> tuple[bytes, str]:
+    """URL에서 파일 바이트 다운로드.
+
+    Returns:
+        (file_bytes, content_type) 튜플. 실패 시 (b"", "").
+    """
+    import aiohttp
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=timeout)) as resp:
+                if resp.status != 200:
+                    return b"", ""
+                content_type = resp.headers.get("Content-Type", "application/octet-stream")
+                return await resp.read(), content_type
+    except Exception:
+        return b"", ""
+
+
 async def parse_rfp_text(content: str) -> RFPData:
     from app.utils import create_anthropic_client, extract_json_from_response
     client = create_anthropic_client(async_client=True)

@@ -131,7 +131,9 @@ async def go_no_go(state: ProposalState) -> dict:
   "pros": ["강점1", "강점2", "강점3"],
   "risks": ["리스크1", "리스크2", "리스크3"],
   "recommendation": "go 또는 no-go",
-  "recommendation_rationale": "추천 근거"
+  "recommendation_rationale": "추천 근거",
+  "fatal_flaw": "no-go 판정 시 가장 치명적인 결격 사유 1줄. go일 경우 null",
+  "strategic_focus": "go 판정 시 제안서에서 가장 뾰족하게 강조할 승부수(Winning Theme) 1줄. no-go일 경우 null"
 }}
 """
 
@@ -146,6 +148,8 @@ async def go_no_go(state: ProposalState) -> dict:
         pros=result.get("pros", []),
         risks=result.get("risks", []),
         recommendation=result.get("recommendation", "go"),
+        fatal_flaw=result.get("fatal_flaw"),
+        strategic_focus=result.get("strategic_focus"),
     )
 
     return {

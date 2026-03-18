@@ -71,6 +71,8 @@ class GoNoGoResult(BaseModel):
     pros: list[str]
     risks: list[str]
     recommendation: Literal["go", "no-go"]
+    fatal_flaw: Optional[str] = None
+    strategic_focus: Optional[str] = None
     decision: str = "pending"
 
 

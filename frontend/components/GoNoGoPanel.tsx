@@ -16,6 +16,8 @@ interface GngAnalysis {
   strengths?: string[];
   risks?: string[];
   recommendation?: string;
+  fatal_flaw?: string | null;
+  strategic_focus?: string | null;
 }
 
 interface GoNoGoPanelProps {
@@ -54,6 +56,8 @@ export default function GoNoGoPanel({
         strengths: d.strengths as string[] | undefined,
         risks: d.risks as string[] | undefined,
         recommendation: d.recommendation as string | undefined,
+        fatal_flaw: (d.fatal_flaw as string | null) ?? null,
+        strategic_focus: (d.strategic_focus as string | null) ?? null,
       });
     }).catch(() => {});
   }, [proposalId]);
@@ -220,6 +224,22 @@ export default function GoNoGoPanel({
           {analysis.recommendation && (
             <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
               <p className="text-[10px] text-[#8c8c8c]">{analysis.recommendation}</p>
+            </div>
+          )}
+
+          {/* 치명적 결격 사유 (no-go 시) */}
+          {analysis.fatal_flaw && (
+            <div className="bg-red-500/5 border border-red-500/20 rounded-lg px-3 py-2">
+              <p className="text-[9px] text-red-400 uppercase tracking-wider mb-0.5">치명적 결격 사유</p>
+              <p className="text-[10px] text-[#ededed]">{analysis.fatal_flaw}</p>
+            </div>
+          )}
+
+          {/* 핵심 승부수 (go 시) */}
+          {analysis.strategic_focus && (
+            <div className="bg-[#3ecf8e]/5 border border-[#3ecf8e]/20 rounded-lg px-3 py-2">
+              <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-0.5">핵심 승부수</p>
+              <p className="text-[10px] text-[#ededed]">{analysis.strategic_focus}</p>
             </div>
           )}
         </div>

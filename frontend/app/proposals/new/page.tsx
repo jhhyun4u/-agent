@@ -2,563 +2,340 @@
 
 /**
  * F4: 새 제안서 생성 페이지
- * - 드래그앤드롭 파일 업로드 (PDF / DOCX / TXT)
- * - 형식/크기 즉시 검증 (서버 요청 전)
- * - .hwp 업로드 시 즉시 오류 메시지
+ * - 공고 모니터링에서 넘어온 경우: 공고 정보 + RFP AI 요약 + 적합성 분석 + 첨부파일
+ * - 공고명 편집 가능
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, FormTemplate, Section } from "@/lib/api";
+import { api, BidAnalysis } from "@/lib/api";
+import { createClient } from "@/lib/supabase/client";
 
-const ALLOWED = [".pdf", ".docx", ".txt"];
-const ALLOWED_MIME = [
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "text/plain",
-];
-const MAX_MB = 10;
-
-function validateFile(file: File): string | null {
-  const ext = "." + file.name.split(".").pop()?.toLowerCase();
-  if (ext === ".hwp" || ext === ".hwpx") {
-    return "HWP 파일은 지원하지 않습니다. PDF 또는 DOCX로 변환 후 업로드해 주세요.";
-  }
-  if (!ALLOWED.includes(ext) && !ALLOWED_MIME.includes(file.type)) {
-    return `지원하지 않는 파일 형식입니다. (PDF, DOCX, TXT만 가능)`;
-  }
-  if (file.size > MAX_MB * 1024 * 1024) {
-    return `파일 크기가 ${MAX_MB}MB를 초과합니다. (현재: ${(file.size / 1024 / 1024).toFixed(1)}MB)`;
-  }
-  return null;
+interface BidPrefill {
+  bid_no: string;
+  rfp_title: string;
+  client_name?: string;
+  rfp_content?: string;
+  budget_amount?: number | null;
+  attachments?: { name: string; url: string; type: string }[];
 }
 
-type EntryMode = "rfp_upload" | "bid_search" | "bid_direct";
-
-const ENTRY_MODES = [
-  { value: "rfp_upload" as EntryMode, label: "RFP 파일 업로드", desc: "PDF/DOCX 파일을 업로드하여 시작", icon: "📄" },
-  { value: "bid_search" as EntryMode, label: "공고 검색", desc: "키워드로 나라장터 공고를 검색하여 시작", icon: "🔍" },
-  { value: "bid_direct" as EntryMode, label: "공고번호 입력", desc: "나라장터 공고번호를 직접 입력하여 시작", icon: "🔢" },
-] as const;
+function formatBudget(amount: number | null | undefined): string {
+  if (!amount) return "미기재";
+  if (amount >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
+  if (amount >= 10_000) return `${(amount / 10_000).toFixed(0)}만원`;
+  return `${amount.toLocaleString()}원`;
+}
 
 export default function NewProposalPage() {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  // 진입 모드
-  const [entryMode, setEntryMode] = useState<EntryMode>("rfp_upload");
-
-  const [file, setFile] = useState<File | null>(null);
+  const [bidPrefill, setBidPrefill] = useState<BidPrefill | null>(null);
   const [rfpTitle, setRfpTitle] = useState("");
-  const [clientName, setClientName] = useState("");
-  const [fileError, setFileError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [dragging, setDragging] = useState(false);
-  const [bidPrefill, setBidPrefill] = useState<{ bid_no: string; rfp_title: string } | null>(null);
 
-  // 공고 검색 / 공고번호 입력 모드용
-  const [searchKeywords, setSearchKeywords] = useState("");
-  const [bidNo, setBidNo] = useState("");
-
-  // 공통서식 선택
-  const [templates, setTemplates] = useState<FormTemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate | null>(null);
-  const [templateAgencyFilter, setTemplateAgencyFilter] = useState("");
-
-  // 섹션 선택
-  const [sections, setSections] = useState<Section[]>([]);
-  const [selectedSectionIds, setSelectedSectionIds] = useState<string[]>([]);
-  const [sectionCategoryFilter, setSectionCategoryFilter] = useState("");
+  // AI 분석 결과
+  const [analysis, setAnalysis] = useState<BidAnalysis | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
-    api.formTemplates.list().then((res) => setTemplates(res.templates)).catch(() => {});
-    api.sections.list().then((res) => setSections(res.sections)).catch(() => {});
-
-    // 공고에서 넘어온 경우 bid 데이터 자동 입력
     const stored = sessionStorage.getItem("bid_prefill");
     if (stored) {
       try {
-        const data = JSON.parse(stored);
+        const data = JSON.parse(stored) as BidPrefill;
         sessionStorage.removeItem("bid_prefill");
-        if (data.rfp_title) setRfpTitle(data.rfp_title);
-        if (data.client_name) setClientName(data.client_name);
-        if (data.rfp_content) {
-          // 공고 원문을 txt 파일로 변환하여 파일 슬롯에 채움
-          const blob = new Blob([data.rfp_content], { type: "text/plain" });
-          const f = new File([blob], `${data.rfp_title || "공고"}.txt`, { type: "text/plain" });
-          setFile(f);
-        }
-        setBidPrefill({ bid_no: data.bid_no, rfp_title: data.rfp_title });
+        setBidPrefill(data);
+        setRfpTitle(data.rfp_title || "");
+
+        // AI 분석 요청
+        setAnalyzing(true);
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+        fetch(`${baseUrl}/bids/${data.bid_no}/analysis`)
+          .then((r) => r.ok ? r.json() : null)
+          .then((json) => {
+            if (json?.data) setAnalysis(json.data);
+          })
+          .catch(() => {})
+          .finally(() => setAnalyzing(false));
       } catch {
-        // 파싱 실패 시 무시
+        // 파싱 실패
       }
     }
   }, []);
 
-  function handleFile(f: File) {
-    const err = validateFile(f);
-    if (err) {
-      setFileError(err);
-      setFile(null);
-    } else {
-      setFileError("");
-      setFile(f);
-      if (!rfpTitle) {
-        setRfpTitle(f.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " "));
-      }
-    }
-  }
-
-  const onDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragging(false);
-      const f = e.dataTransfer.files[0];
-      if (f) handleFile(f);
-    },
-    [rfpTitle] // eslint-disable-line react-hooks/exhaustive-deps
-  );
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!rfpTitle.trim() || !bidPrefill) return;
     setSubmitting(true);
     setError("");
 
     try {
-      let proposalId: string;
+      const content = bidPrefill.rfp_content || rfpTitle;
+      const blob = new Blob([content], { type: "text/plain" });
+      const file = new File([blob], `${rfpTitle}.txt`, { type: "text/plain" });
 
-      if (entryMode === "rfp_upload") {
-        if (!file || !rfpTitle.trim() || !clientName.trim()) return;
-        const fd = new FormData();
-        fd.append("rfp_title", rfpTitle.trim());
-        fd.append("client_name", clientName.trim());
-        fd.append("rfp_file", file);
-        if (selectedTemplate) fd.append("form_template_id", selectedTemplate.id);
-        if (selectedSectionIds.length > 0) {
-          fd.append("section_ids", JSON.stringify(selectedSectionIds));
-        }
-        const res = await api.proposals.createFromRfp(fd);
-        proposalId = res.proposal_id;
-      } else if (entryMode === "bid_search") {
-        if (!searchKeywords.trim()) return;
-        const res = await api.proposals.create({ search_keywords: searchKeywords.trim() });
-        proposalId = res.proposal_id;
-      } else {
-        // bid_direct
-        if (!bidNo.trim()) return;
-        const res = await api.proposals.createFromSearch(bidNo.trim());
-        proposalId = res.proposal_id;
+      const fd = new FormData();
+      fd.append("rfp_title", rfpTitle.trim());
+      fd.append("client_name", bidPrefill.client_name || "");
+      fd.append("rfp_file", file);
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const supabase = createClient();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token ?? "";
+      const res = await fetch(`${baseUrl}/proposals/from-rfp`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: fd,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || err.message || "제안서 생성 실패");
       }
 
-      router.push(`/proposals/${proposalId}`);
+      const data = await res.json();
+      router.push(`/proposals/${data.proposal_id}`);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "제출 실패");
+      setError(err instanceof Error ? err.message : "제안서 생성에 실패했습니다.");
     } finally {
       setSubmitting(false);
     }
   }
+
+  // 공고에서 넘어오지 않은 경우
+  if (!bidPrefill) {
+    return (
+      <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
+        <div className="border-b border-[#262626] px-6 py-4 shrink-0">
+          <div className="flex items-center gap-3">
+            <Link href="/proposals" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">←</Link>
+            <h1 className="text-sm font-semibold text-[#ededed]">새 제안서 생성</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-6">
+          <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl">📡</div>
+          <h3 className="text-sm font-semibold text-[#ededed]">공고를 먼저 선택해주세요</h3>
+          <p className="text-xs text-[#8c8c8c] max-w-xs">
+            공고 모니터링에서 원하는 공고의 &quot;제안 착수&quot; 버튼을 눌러 제안서를 시작할 수 있습니다.
+          </p>
+          <Link
+            href="/bids"
+            className="bg-[#3ecf8e] hover:bg-[#49e59e] text-black font-semibold rounded-lg px-5 py-2 text-sm transition-colors"
+          >
+            공고 모니터링으로 이동
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const attachments = bidPrefill.attachments || [];
+  const fitColor: Record<string, string> = {
+    "적극 추천": "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
+    "추천": "text-blue-400 bg-blue-950/60 border-blue-900",
+    "보통": "text-yellow-400 bg-yellow-950/60 border-yellow-900",
+    "낮음": "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]",
+  };
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       {/* 헤더 */}
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <div className="flex items-center gap-3">
-          <Link href="/proposals" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">
-            ←
-          </Link>
+          <Link href="/bids" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">←</Link>
           <div>
             <h1 className="text-sm font-semibold text-[#ededed]">새 제안서 생성</h1>
-            <p className="text-xs text-[#8c8c8c] mt-0.5">시작 방법을 선택하여 AI 제안서를 생성합니다</p>
+            <p className="text-xs text-[#8c8c8c] mt-0.5">공고번호: {bidPrefill.bid_no}</p>
           </div>
         </div>
       </div>
 
-      {/* 폼 */}
       <div className="flex-1 overflow-auto px-6 py-6">
-        {/* 진입 모드 선택 (§12-1) */}
-        <div className="max-w-xl mb-5">
-          <div className="grid grid-cols-3 gap-3">
-            {ENTRY_MODES.map((mode) => (
-              <button
-                key={mode.value}
-                type="button"
-                onClick={() => { setEntryMode(mode.value); setError(""); }}
-                className={`p-3 rounded-xl border text-left transition-colors ${
-                  entryMode === mode.value
-                    ? "bg-[#3ecf8e]/10 border-[#3ecf8e]/40 text-[#ededed]"
-                    : "bg-[#1c1c1c] border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c]"
-                }`}
-              >
-                <span className="text-lg">{mode.icon}</span>
-                <p className="text-xs font-medium mt-1">{mode.label}</p>
-                <p className="text-[10px] text-[#5c5c5c] mt-0.5">{mode.desc}</p>
-              </button>
-            ))}
-          </div>
-        </div>
+        <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
 
-        <form onSubmit={handleSubmit} className="max-w-xl space-y-5">
-          {/* 공고 검색 모드 */}
-          {entryMode === "bid_search" && (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">검색 키워드 *</label>
-                <input
-                  type="text"
-                  required
-                  value={searchKeywords}
-                  onChange={(e) => setSearchKeywords(e.target.value)}
-                  placeholder="예: 스마트시티 플랫폼 구축"
-                  className="w-full bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
-                />
-              </div>
-              <p className="text-[10px] text-[#5c5c5c]">
-                나라장터에서 키워드 기반으로 공고를 검색합니다. STEP 0(공고 검색)부터 시작합니다.
-              </p>
-            </div>
-          )}
-
-          {/* 공고번호 직접 입력 모드 */}
-          {entryMode === "bid_direct" && (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">공고번호 *</label>
-                <input
-                  type="text"
-                  required
-                  value={bidNo}
-                  onChange={(e) => setBidNo(e.target.value)}
-                  placeholder="예: 20260300001-00"
-                  className="w-full bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
-                />
-              </div>
-              <p className="text-[10px] text-[#5c5c5c]">
-                나라장터 공고번호를 직접 입력합니다. STEP 1(RFP 분석)부터 시작합니다.
-              </p>
-            </div>
-          )}
-
-          {/* RFP 업로드 모드 (기존) */}
-          {entryMode === "rfp_upload" && (
-            <>
-              {/* 공고 자동 입력 배너 */}
-          {bidPrefill && (
-            <div className="flex items-center gap-3 bg-emerald-950/20 border border-emerald-900/40 rounded-lg px-4 py-2.5">
-              <span className="text-emerald-400 text-base">📌</span>
-              <div>
-                <p className="text-xs font-medium text-emerald-400">공고 정보가 자동으로 입력되었습니다.</p>
-                <p className="text-[11px] text-[#5c5c5c] mt-0.5">공고번호: {bidPrefill.bid_no} · 공고 원문이 RFP 파일로 사용됩니다.</p>
-              </div>
-            </div>
-          )}
-
-          {/* 파일 업로드 */}
+          {/* 공고명 (편집 가능) */}
           <div>
-            <label className="block text-xs font-medium text-[#ededed] mb-2 uppercase tracking-wider">
-              RFP 파일 <span className="text-red-400 normal-case">*</span>
-            </label>
-            <div
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onDrop={onDrop}
-              onClick={() => inputRef.current?.click()}
-              className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${
-                dragging
-                  ? "border-[#3ecf8e] bg-emerald-950/20"
-                  : file
-                  ? "border-[#3ecf8e] bg-emerald-950/10"
-                  : "border-[#262626] bg-[#111111] hover:border-[#3a3a3a]"
-              }`}
-            >
-              <input
-                ref={inputRef}
-                type="file"
-                accept=".pdf,.docx,.txt"
-                className="hidden"
-                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
-              />
-              {file ? (
-                <div>
-                  <p className="text-2xl mb-2">📎</p>
-                  <p className="font-medium text-[#3ecf8e] text-sm">{file.name}</p>
-                  <p className="text-xs text-[#8c8c8c] mt-1">{(file.size / 1024).toFixed(0)} KB</p>
-                  <button
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); setFile(null); setRfpTitle(""); }}
-                    className="mt-2 text-xs text-red-400 hover:text-red-300 transition-colors"
-                  >
-                    파일 제거
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-3xl mb-2">⬆</p>
-                  <p className="font-medium text-[#ededed] text-sm">파일을 드래그하거나 클릭하여 업로드</p>
-                  <p className="text-xs text-[#8c8c8c] mt-1">PDF, DOCX, TXT · 최대 10MB</p>
-                </div>
-              )}
-            </div>
-            {fileError && (
-              <p className="mt-2 text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">{fileError}</p>
-            )}
-          </div>
-
-          {/* 공통서식 선택 (선택사항) */}
-          {templates.length > 0 && (
-            <div className="bg-[#111111] border border-[#262626] rounded-xl p-4 space-y-3">
-              <p className="text-xs font-medium text-[#ededed] uppercase tracking-wider">
-                공통서식 선택 <span className="normal-case text-[#8c8c8c] font-normal">(선택사항)</span>
-              </p>
-
-              {/* 발행기관 필터 chips */}
-              {(() => {
-                const agencies = Array.from(
-                  new Set(templates.map((t) => t.agency).filter(Boolean) as string[])
-                );
-                return agencies.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setTemplateAgencyFilter("")}
-                      className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors ${
-                        templateAgencyFilter === ""
-                          ? "bg-[#3ecf8e] text-black border-[#3ecf8e] font-medium"
-                          : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                      }`}
-                    >
-                      전체
-                    </button>
-                    {agencies.map((ag) => (
-                      <button
-                        key={ag}
-                        type="button"
-                        onClick={() => setTemplateAgencyFilter(ag === templateAgencyFilter ? "" : ag)}
-                        className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors ${
-                          templateAgencyFilter === ag
-                            ? "bg-[#3ecf8e] text-black border-[#3ecf8e] font-medium"
-                            : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                        }`}
-                      >
-                        {ag}
-                      </button>
-                    ))}
-                  </div>
-                ) : null;
-              })()}
-
-              {/* 서식 카드 그리드 */}
-              <div className="grid grid-cols-2 gap-2">
-                {templates
-                  .filter((t) => !templateAgencyFilter || t.agency === templateAgencyFilter)
-                  .map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => setSelectedTemplate(selectedTemplate?.id === t.id ? null : t)}
-                      className={`text-left p-3 rounded-lg border transition-colors ${
-                        selectedTemplate?.id === t.id
-                          ? "border-[#3ecf8e] bg-[#3ecf8e]/5"
-                          : "border-[#262626] bg-[#1c1c1c] hover:border-[#3c3c3c]"
-                      }`}
-                    >
-                      <p className="text-xs font-medium text-[#ededed] truncate">{t.title}</p>
-                      {t.agency && (
-                        <p className="text-[10px] text-[#3ecf8e] mt-0.5">{t.agency}</p>
-                      )}
-                    </button>
-                  ))}
-              </div>
-
-              {/* 선택 해제 */}
-              {selectedTemplate && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedTemplate(null)}
-                  className="text-xs text-[#8c8c8c] hover:text-[#ededed] transition-colors"
-                >
-                  선택 해제 ({selectedTemplate.title})
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* 섹션 선택 (선택사항) */}
-          {sections.length > 0 && (
-            <div className="bg-[#111111] border border-[#262626] rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-[#ededed] uppercase tracking-wider">
-                  자료 섹션 선택 <span className="normal-case text-[#8c8c8c] font-normal">(선택사항)</span>
-                </p>
-                {selectedSectionIds.length > 0 && (
-                  <div className="flex items-center gap-3">
-                    <span className="text-[11px] text-[#3ecf8e]">
-                      {selectedSectionIds.length}개 섹션 선택됨
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedSectionIds([])}
-                      className="text-[11px] text-[#8c8c8c] hover:text-[#ededed] transition-colors"
-                    >
-                      선택 해제
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* 카테고리 필터 chips */}
-              {(() => {
-                const CATEGORY_LABELS: Record<string, string> = {
-                  company_intro: "회사소개",
-                  track_record: "수행실적",
-                  methodology: "기술방법론",
-                  organization: "조직구성",
-                  schedule: "추진일정",
-                  cost: "원가/예산",
-                  other: "기타",
-                };
-                const categories = Array.from(
-                  new Set(sections.map((s) => s.category).filter(Boolean))
-                );
-                return categories.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setSectionCategoryFilter("")}
-                      className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors ${
-                        sectionCategoryFilter === ""
-                          ? "bg-[#3ecf8e] text-black border-[#3ecf8e] font-medium"
-                          : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                      }`}
-                    >
-                      전체
-                    </button>
-                    {categories.map((cat) => (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() =>
-                          setSectionCategoryFilter(cat === sectionCategoryFilter ? "" : cat)
-                        }
-                        className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors ${
-                          sectionCategoryFilter === cat
-                            ? "bg-[#3ecf8e] text-black border-[#3ecf8e] font-medium"
-                            : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                        }`}
-                      >
-                        {CATEGORY_LABELS[cat] ?? cat}
-                      </button>
-                    ))}
-                  </div>
-                ) : null;
-              })()}
-
-              {/* 섹션 카드 그리드 */}
-              {(() => {
-                const CATEGORY_LABELS: Record<string, string> = {
-                  company_intro: "회사소개",
-                  track_record: "수행실적",
-                  methodology: "기술방법론",
-                  organization: "조직구성",
-                  schedule: "추진일정",
-                  cost: "원가/예산",
-                  other: "기타",
-                };
-                const filtered = sections.filter(
-                  (s) => !sectionCategoryFilter || s.category === sectionCategoryFilter
-                );
-                return (
-                  <div className="grid grid-cols-2 gap-2">
-                    {filtered.map((s) => {
-                      const isSelected = selectedSectionIds.includes(s.id);
-                      return (
-                        <button
-                          key={s.id}
-                          type="button"
-                          onClick={() =>
-                            setSelectedSectionIds((prev) =>
-                              isSelected
-                                ? prev.filter((x) => x !== s.id)
-                                : [...prev, s.id]
-                            )
-                          }
-                          className={`text-left p-3 rounded-lg border transition-colors ${
-                            isSelected
-                              ? "border-[#3ecf8e] bg-[#3ecf8e]/5"
-                              : "border-[#262626] bg-[#1c1c1c] hover:border-[#3c3c3c]"
-                          }`}
-                        >
-                          <p className="text-xs font-medium text-[#ededed] truncate">{s.title}</p>
-                          <p className="text-[10px] text-[#3ecf8e] mt-0.5">
-                            {CATEGORY_LABELS[s.category] ?? s.category}
-                          </p>
-                          {s.content && (
-                            <p className="text-[10px] text-[#8c8c8c] mt-1 line-clamp-2 leading-relaxed">
-                              {s.content.slice(0, 50)}
-                            </p>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-
-          {/* 사업명 */}
-          <div>
-            <label className="block text-xs font-medium text-[#ededed] mb-2 uppercase tracking-wider">
-              사업명 <span className="text-red-400 normal-case">*</span>
-            </label>
+            <label className="block text-xs font-medium text-[#ededed] mb-2">공고명</label>
             <input
               type="text"
               required
               value={rfpTitle}
               onChange={(e) => setRfpTitle(e.target.value)}
-              className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
-              placeholder="예: 공공데이터 AI 분석 시스템 구축"
+              className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
             />
           </div>
 
-          {/* 발주처 */}
-          <div>
-            <label className="block text-xs font-medium text-[#ededed] mb-2 uppercase tracking-wider">
-              발주처 <span className="text-red-400 normal-case">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
-              placeholder="예: 행정안전부"
-            />
+          {/* 공고 정보 */}
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[#3ecf8e] text-sm">📌</span>
+              <p className="text-xs font-medium text-[#ededed]">공고 정보</p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 text-xs">
+              <div>
+                <span className="text-[#5c5c5c]">발주처</span>
+                <p className="text-[#ededed] mt-0.5">{bidPrefill.client_name || "-"}</p>
+              </div>
+              <div>
+                <span className="text-[#5c5c5c]">용역비</span>
+                <p className="text-[#ededed] mt-0.5">{formatBudget(bidPrefill.budget_amount)}</p>
+              </div>
+              <div>
+                <span className="text-[#5c5c5c]">공고번호</span>
+                <p className="text-[#ededed] mt-0.5">{bidPrefill.bid_no}</p>
+              </div>
+            </div>
           </div>
 
-            </>
+          {/* RFP 주요내용 (AI 개조식 요약) */}
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-blue-400 text-sm">📋</span>
+              <p className="text-xs font-medium text-[#ededed]">RFP 주요내용</p>
+              {analyzing && <span className="text-[10px] text-[#5c5c5c] animate-pulse">AI 분석 중...</span>}
+            </div>
+            {analyzing ? (
+              <div className="flex items-center gap-2 py-6 justify-center">
+                <div className="w-4 h-4 border-2 border-[#262626] border-t-blue-400 rounded-full animate-spin" />
+                <span className="text-xs text-[#5c5c5c]">RFP를 분석하고 있습니다...</span>
+              </div>
+            ) : analysis?.rfp_summary && analysis.rfp_summary.length > 0 ? (
+              <div className="bg-[#111111] border border-[#262626] rounded-lg p-3 space-y-1.5">
+                {analysis.rfp_summary.map((line, i) => (
+                  <p key={i} className="text-xs text-[#8c8c8c] leading-relaxed">{line}</p>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-[#111111] border border-[#262626] rounded-lg p-3">
+                <p className="text-xs text-[#5c5c5c]">
+                  공고 상세 텍스트를 가져올 수 없습니다. 첨부된 제안요청서를 직접 확인해주세요.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* TENOPA 적합성 분석 (Positive/Negative 2축 + 추천 팀) */}
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-400 text-sm">🎯</span>
+                <p className="text-xs font-medium text-[#ededed]">TENOPA 적합성 분석</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {analysis?.recommended_teams && analysis.recommended_teams.length > 0 && (
+                  <div className="flex gap-1">
+                    {analysis.recommended_teams.map((team, i) => (
+                      <span key={i} className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-950/60 text-blue-400 border border-blue-900">
+                        {team}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {analysis?.fit_level && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${fitColor[analysis.fit_level] || fitColor["보통"]}`}>
+                    {analysis.fit_level}
+                  </span>
+                )}
+              </div>
+            </div>
+            {analyzing ? (
+              <div className="flex items-center gap-2 py-4 justify-center">
+                <div className="w-4 h-4 border-2 border-[#262626] border-t-emerald-400 rounded-full animate-spin" />
+                <span className="text-xs text-[#5c5c5c]">적합성을 분석하고 있습니다...</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {/* Positive */}
+                <div>
+                  <p className="text-[10px] font-medium text-[#3ecf8e] mb-2 uppercase tracking-wider">Positive</p>
+                  <div className="space-y-1.5">
+                    {(analysis?.positive || []).map((item, i) => (
+                      <div key={i} className="flex items-start gap-2 px-3 py-2 rounded-lg bg-emerald-950/20 border border-emerald-900/30">
+                        <span className="text-[#3ecf8e] text-xs shrink-0">+</span>
+                        <p className="text-xs text-[#8c8c8c] leading-relaxed">{item}</p>
+                      </div>
+                    ))}
+                    {(!analysis?.positive || analysis.positive.length === 0) && (
+                      <p className="text-xs text-[#5c5c5c] px-3 py-2">해당 없음</p>
+                    )}
+                  </div>
+                </div>
+                {/* Negative */}
+                <div>
+                  <p className="text-[10px] font-medium text-red-400 mb-2 uppercase tracking-wider">Negative</p>
+                  <div className="space-y-1.5">
+                    {(analysis?.negative || []).map((item, i) => (
+                      <div key={i} className="flex items-start gap-2 px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/30">
+                        <span className="text-red-400 text-xs shrink-0">-</span>
+                        <p className="text-xs text-[#8c8c8c] leading-relaxed">{item}</p>
+                      </div>
+                    ))}
+                    {(!analysis?.negative || analysis.negative.length === 0) && (
+                      <p className="text-xs text-[#5c5c5c] px-3 py-2">해당 없음</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 첨부파일 */}
+          {attachments.length > 0 && (
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-emerald-400 text-sm">📎</span>
+                <p className="text-xs font-medium text-[#ededed]">공고 첨부파일</p>
+              </div>
+              <div className="space-y-1.5">
+                {attachments.map((att, i) => {
+                  const ext = att.name.split(".").pop()?.toUpperCase() ?? "";
+                  const typeColor: Record<string, string> = {
+                    "제안요청서": "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
+                    "과업지시서": "text-blue-400 bg-blue-950/60 border-blue-900",
+                    "공고문": "text-[#8c8c8c] bg-[#111111] border-[#262626]",
+                    "기타": "text-[#5c5c5c] bg-[#111111] border-[#262626]",
+                  };
+                  return (
+                    <a
+                      key={i}
+                      href={att.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111111] border border-[#262626] hover:border-[#3ecf8e]/40 transition-colors"
+                    >
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${typeColor[att.type] || typeColor["기타"]}`}>
+                        {att.type}
+                      </span>
+                      <span className="text-xs text-[#ededed] truncate flex-1">{att.name}</span>
+                      <span className="text-[10px] text-[#5c5c5c] shrink-0">{ext}</span>
+                      <span className="text-xs text-[#3ecf8e] shrink-0">↓</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
+          {/* 에러 */}
           {error && (
             <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">{error}</p>
           )}
 
+          {/* 안내 */}
           <div className="bg-blue-950/30 border border-blue-900/50 rounded-lg px-4 py-3 text-xs text-blue-300">
-            AI가 {entryMode === "bid_search" ? "공고 검색 후 " : entryMode === "bid_direct" ? "공고 분석 후 " : ""}5단계 분석을 수행합니다. 완료까지 <strong>5~15분</strong> 소요됩니다.
+            AI가 RFP 분석 → 전략 수립 → 제안서 작성까지 5단계를 수행합니다. 완료까지 <strong>5~15분</strong> 소요됩니다.
           </div>
 
+          {/* 제출 */}
           <button
             type="submit"
-            disabled={
-              submitting ||
-              (entryMode === "rfp_upload" && (!file || !rfpTitle.trim() || !clientName.trim())) ||
-              (entryMode === "bid_search" && !searchKeywords.trim()) ||
-              (entryMode === "bid_direct" && !bidNo.trim())
-            }
+            disabled={submitting || !rfpTitle.trim()}
             className="w-full bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-40 disabled:cursor-not-allowed text-black font-semibold rounded-lg py-2.5 text-sm transition-colors"
           >
-            {submitting ? "제출 중..." : entryMode === "bid_search" ? "공고 검색 시작" : entryMode === "bid_direct" ? "공고로 제안서 시작" : "제안서 생성 시작"}
+            {submitting ? "제안서 생성 중..." : "제안서 생성 시작"}
           </button>
         </form>
       </div>
