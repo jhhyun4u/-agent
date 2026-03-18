@@ -15,6 +15,10 @@ import { api, Comment_, ProposalSummary, type WorkflowState } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import PhaseGraph from "@/components/PhaseGraph";
 import WorkflowPanel from "@/components/WorkflowPanel";
+import QaPanel from "@/components/QaPanel";
+import StepArtifactViewer from "@/components/StepArtifactViewer";
+import WorkflowLogPanel from "@/components/WorkflowLogPanel";
+import { useWorkflowStream } from "@/lib/hooks/useWorkflowStream";
 
 function useElapsedTime(running: boolean) {
   const [elapsed, setElapsed] = useState(0);
@@ -75,7 +79,7 @@ const PHASES = [
   },
 ];
 
-type Tab = "result" | "comments" | "win" | "compare";
+type Tab = "result" | "comments" | "win" | "compare" | "qa";
 
 // ── 색상 토큰 (Tailwind arbitrary) ────────────────────────────────────
 // bg: #0f0f0f  surface: #111111  card: #1c1c1c  border: #262626
@@ -348,9 +352,52 @@ export default function ProposalDetailPage() {
     return versionLabel(idx);
   }
 
+  // ── SSE 스트림 + 산출물 뷰어 + 로그 ──────────────────────────────
+
+  const isRunning = !!status && (status.status === "processing" || status.status === "initialized" || status.status === "running");
+  const { events: streamEvents, nodeProgress, isStreaming, currentNode } = useWorkflowStream(id, isRunning);
+  const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const [logCollapsed, setLogCollapsed] = useState(true);
+  const [aborting, setAborting] = useState(false);
+
+  // 중단
+  async function handleAbort() {
+    setAborting(true);
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${id}/ai-abort`,
+        { method: "POST", headers: { Authorization: `Bearer ${downloadToken}` } },
+      );
+      fetchWorkflowState();
+    } catch { /* ignore */ }
+    finally { setAborting(false); }
+  }
+
+  // 재시도
+  async function handleRetry() {
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${id}/ai-retry`,
+        { method: "POST", headers: { Authorization: `Bearer ${downloadToken}` } },
+      );
+      fetchWorkflowState();
+    } catch { /* ignore */ }
+  }
+
+  // 타임트래블
+  async function handleGoto(step: string) {
+    try {
+      await api.workflow.goto(id, step);
+      fetchWorkflowState();
+      setSelectedStep(null);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "복원 실패");
+    }
+  }
+
   // ── 로딩 (훅은 모두 위에서 호출 후 여기서 early return) ───────────
 
-  const isProcessing = !!status && (status.status === "processing" || status.status === "initialized" || status.status === "running");
+  const isProcessing = isRunning;
   const isCompleted = status?.status === "completed";
   const isFailed = status?.status === "failed";
   const progressPct = Math.round(((status?.phases_completed ?? 0) / 5) * 100);
@@ -440,8 +487,23 @@ export default function ProposalDetailPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-6 space-y-5">
 
-        {/* ── 워크플로 그래프 (§13-1-1) ── */}
-        <PhaseGraph workflowState={workflowState} />
+        {/* ── 워크플로 그래프 (§13-1-1, v2: 클릭 확장) ── */}
+        <PhaseGraph
+          workflowState={workflowState}
+          nodeProgress={nodeProgress}
+          currentNode={currentNode}
+          selectedStep={selectedStep}
+          onStepClick={(idx) => setSelectedStep(selectedStep === idx ? null : idx)}
+        />
+
+        {/* ── STEP별 산출물 뷰어 ── */}
+        {selectedStep !== null && (
+          <StepArtifactViewer
+            proposalId={id}
+            stepIndex={selectedStep}
+            onGoto={handleGoto}
+          />
+        )}
 
         {/* ── 워크플로 패널: Go/No-Go + 리뷰 + 병렬 진행 (§13-4, §13-5, §13-7) ── */}
         <WorkflowPanel
@@ -450,7 +512,7 @@ export default function ProposalDetailPage() {
           onStateChange={fetchWorkflowState}
         />
 
-        {/* 경과 시간 + 실패 재시작 */}
+        {/* 경과 시간 + 중단/재개/실패 */}
         {(isProcessing || isFailed) && (
           <div className="flex items-center justify-between bg-[#1c1c1c] rounded-2xl border border-[#262626] px-5 py-3">
             <div className="flex items-center gap-3">
@@ -458,20 +520,44 @@ export default function ProposalDetailPage() {
                 <>
                   <div className="w-3 h-3 rounded-full border-2 border-[#3ecf8e] border-t-transparent animate-spin" />
                   <span className="text-xs text-[#8c8c8c]">경과 {elapsed}</span>
+                  {currentNode && (
+                    <span className="text-[10px] text-[#3ecf8e]/80">
+                      {currentNode}
+                    </span>
+                  )}
                 </>
               )}
               {isFailed && (
                 <span className="text-xs text-red-400">{status.error || "처리 중 오류 발생"}</span>
               )}
             </div>
-            {isFailed && (
-              <button
-                onClick={() => handleRetryFromPhase(failedPhaseN)}
-                className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
-              >
-                Phase {failedPhaseN}부터 재시작
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {isProcessing && (
+                <button
+                  onClick={handleAbort}
+                  disabled={aborting}
+                  className="text-xs text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded-lg px-2.5 py-1 transition-colors disabled:opacity-40"
+                >
+                  {aborting ? "중단 중..." : "일시정지"}
+                </button>
+              )}
+              {isFailed && (
+                <>
+                  <button
+                    onClick={handleRetry}
+                    className="text-xs text-[#3ecf8e] hover:text-[#49e59e] border border-[#3ecf8e]/30 rounded-lg px-2.5 py-1 transition-colors"
+                  >
+                    재시도
+                  </button>
+                  <button
+                    onClick={() => handleRetryFromPhase(failedPhaseN)}
+                    className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
+                  >
+                    Phase {failedPhaseN}부터 재시작
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
 
@@ -484,6 +570,7 @@ export default function ProposalDetailPage() {
                 { key: "comments" as Tab, label: `댓글 ${comments.length > 0 ? `(${comments.length})` : ""}` },
                 { key: "win" as Tab, label: "수주결과" },
                 { key: "compare" as Tab, label: "버전 비교" },
+                { key: "qa" as Tab, label: "Q&A" },
               ] as const
             ).map(({ key, label }) => (
               <button
@@ -842,6 +929,23 @@ export default function ProposalDetailPage() {
               </div>
             </div>
           </section>
+        )}
+
+        {/* ── 탭: Q&A (PSM-16) ── */}
+        {activeTab === "qa" && (
+          <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+            <QaPanel proposalId={id} />
+          </section>
+        )}
+
+        {/* ── 실시간 로그 패널 ── */}
+        {(isProcessing || streamEvents.length > 0) && (
+          <WorkflowLogPanel
+            events={streamEvents}
+            isStreaming={isStreaming}
+            collapsed={logCollapsed}
+            onToggle={() => setLogCollapsed(!logCollapsed)}
+          />
         )}
 
       </main>
