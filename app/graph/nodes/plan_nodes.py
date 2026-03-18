@@ -133,6 +133,28 @@ async def plan_story(state: ProposalState) -> dict:
     current_sections = state.get("dynamic_sections", [])
     current_sections_text = "\n".join(f"  {i+1}. {s}" for i, s in enumerate(current_sections)) if current_sections else "(목차 미생성)"
 
+    # research_brief에서 고신뢰 근거 추출 (evidence 후보로 제공)
+    research_brief = state.get("research_brief", {})
+    evidence_candidates = []
+    if isinstance(research_brief, dict):
+        for topic in research_brief.get("research_topics", []):
+            if not isinstance(topic, dict):
+                continue
+            rfp_align = topic.get("rfp_alignment", topic.get("relevance", ""))
+            for dp in topic.get("data_points", []):
+                if isinstance(dp, dict) and dp.get("credibility") in ("high", "medium"):
+                    evidence_candidates.append(
+                        f"- {dp.get('content', '')} [{dp.get('source', '')}] (연관: {rfp_align})"
+                    )
+                elif isinstance(dp, str):
+                    evidence_candidates.append(f"- {dp}")
+
+    evidence_text = "\n".join(evidence_candidates[:20]) if evidence_candidates else "(리서치 근거 없음)"
+
+    # 평가항목 ID 목록 (커버리지 검증용)
+    eval_item_ids = [item.get("item", "") for item in eval_items if isinstance(item, dict)]
+    eval_item_ids_text = ", ".join(eval_item_ids) if eval_item_ids else "(평가항목 미추출)"
+
     prompt = PLAN_STORY_PROMPT.format(
         rfp_summary=rfp_summary,
         current_sections=current_sections_text,
@@ -142,6 +164,8 @@ async def plan_story(state: ProposalState) -> dict:
         key_messages=sf["key_messages"],
         action_forcing_event=sf["action_forcing_event"],
         eval_items=eval_items,
+        evidence_candidates=evidence_text,
+        eval_item_ids=eval_item_ids_text,
     )
 
     result = await claude_generate(prompt)

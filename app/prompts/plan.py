@@ -121,6 +121,10 @@ Action Forcing Event: {action_forcing_event}
 ## 평가 항목
 {eval_items}
 
+## 활용 가능한 검증된 근거 데이터 (리서치 기반)
+{evidence_candidates}
+위 데이터를 각 섹션의 evidence에 우선 배치하세요. 부족한 경우 [KB 데이터 필요: 설명] 플레이스홀더를 사용하세요.
+
 ## 지시사항
 
 ### 1단계: 목차 확정
@@ -164,6 +168,30 @@ Action Forcing Event: {action_forcing_event}
       }}
     ],
     "closing_impact": "마무리 임팩트 메시지 (Win Theme 재강조)"
+  }},
+  "quality_check": {{
+    "eval_coverage": {{
+      "required": ["{eval_item_ids}의 각 항목"],
+      "mapped": ["실제 매핑된 평가항목 목록"],
+      "missing": ["누락된 평가항목 (없으면 빈 배열)"]
+    }},
+    "win_theme_coverage": {{
+      "total_sections": 0,
+      "sections_with_win_theme": 0,
+      "weak_sections": ["Win Theme 연결이 약한 섹션명 (없으면 빈 배열)"]
+    }},
+    "smart_compliance": {{
+      "total_sections": 0,
+      "smart_complete": 0,
+      "incomplete_sections": [
+        {{"section": "섹션명", "missing": ["Measurable 등 미충족 SMART 요소"]}}
+      ]
+    }},
+    "evidence_quality": {{
+      "total_evidence": 0,
+      "from_research": 0,
+      "placeholders": 0
+    }}
   }}
 }}
 """
