@@ -21,6 +21,7 @@ from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_project_access
 from app.config import settings
+from app.middleware.rate_limit import limiter
 from app.exceptions import PropNotFoundError, WFAlreadyRunningError, WFResumeValidationError
 from app.utils.supabase_client import get_async_client
 
@@ -115,7 +116,9 @@ async def _get_graph():
 # ── API 엔드포인트 ──
 
 @router.post("/{proposal_id}/start")
+@limiter.limit("10/minute")
 async def start_workflow(
+    request: Request,
     proposal_id: str,
     body: WorkflowStartRequest,
     user=Depends(get_current_user),
@@ -133,7 +136,7 @@ async def start_workflow(
     # 상태 업데이트
     await client.table("proposals").update({
         "status": "running",
-        "current_step": "start",
+        "current_phase": "start",
     }).eq("id", proposal_id).execute()
 
     graph = await _get_graph()
@@ -152,10 +155,8 @@ async def start_workflow(
         result = await graph.ainvoke(initial_state, config=config)
         current_step = result.get("current_step", "unknown")
 
-        await client.table("proposals").update({
-            "current_step": current_step,
-            "positioning": result.get("positioning"),
-        }).eq("id", proposal_id).execute()
+        update_fields = {"current_phase": current_step}
+        await client.table("proposals").update(update_fields).eq("id", proposal_id).execute()
 
         return {
             "proposal_id": proposal_id,
@@ -167,7 +168,7 @@ async def start_workflow(
         logger.error(f"워크플로 시작 실패: {e}")
         await client.table("proposals").update({
             "status": "error",
-            "current_step": f"error: {str(e)[:100]}",
+            "current_phase": f"error: {str(e)[:100]}",
         }).eq("id", proposal_id).execute()
         raise
 
@@ -223,13 +224,12 @@ async def resume_workflow(
     resume_data["approved_by"] = resume_data.get("approved_by") or user.get("name", user["id"])
 
     try:
-        result = await graph.ainvoke(None, config=config, input=resume_data)
+        from langgraph.types import Command
+        result = await graph.ainvoke(Command(resume=resume_data), config=config)
         current_step = result.get("current_step", "unknown")
 
         client = await get_async_client()
-        update_data = {"current_step": current_step}
-        if result.get("positioning"):
-            update_data["positioning"] = result["positioning"]
+        update_data = {"current_phase": current_step}
         # 종료 체크
         if current_step in ("go_no_go_no_go", "search_no_interest"):
             update_data["status"] = "cancelled"
@@ -272,6 +272,8 @@ async def stream_workflow(
                 elif event_type == "on_chain_end":
                     output = event.get("data", {}).get("output", {})
                     data["current_step"] = output.get("current_step", "") if isinstance(output, dict) else ""
+                    # 산출물 1줄 요약 추출
+                    data["output_summary"] = _extract_output_summary(event.get("name", ""), output)
 
                 yield f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
 
@@ -511,10 +513,10 @@ async def goto_step(
     # 원래 thread의 상태를 타겟 체크포인트 값으로 덮어쓰기
     await graph.aupdate_state(config, target_snapshot.values)
 
-    # DB의 current_step도 동기화
+    # DB의 current_phase도 동기화
     client = await get_async_client()
     await client.table("proposals").update({
-        "current_step": target_snapshot.values.get("current_step", step),
+        "current_phase": target_snapshot.values.get("current_step", step),
     }).eq("id", proposal_id).execute()
 
     logger.info(f"타임트래블: proposal={proposal_id}, target_step={step}")
@@ -593,3 +595,49 @@ def _serialize_approval(approval: dict) -> dict:
         else:
             serialized[key] = str(val)
     return serialized
+
+
+def _extract_output_summary(node_name: str, output: Any) -> str:
+    """노드 완료 시 산출물에서 핵심 정보를 1줄 요약."""
+    if not isinstance(output, dict):
+        return ""
+    try:
+        if node_name == "rfp_analyze":
+            rfp = output.get("rfp_analysis")
+            if rfp:
+                d = rfp.model_dump() if hasattr(rfp, "model_dump") else rfp
+                n_eval = len(d.get("eval_items", []))
+                n_hb = len(d.get("hot_buttons", []))
+                return f"케이스 {d.get('case_type', '?')}, 평가항목 {n_eval}개, 핫버튼 {n_hb}개"
+        elif node_name == "go_no_go":
+            gng = output.get("go_no_go")
+            if gng:
+                d = gng.model_dump() if hasattr(gng, "model_dump") else gng
+                return f"수주 가능성 {d.get('feasibility_score', 0)}%, 포지셔닝: {d.get('positioning', '?')}"
+        elif node_name == "strategy_generate":
+            s = output.get("strategy")
+            if s:
+                d = s.model_dump() if hasattr(s, "model_dump") else s
+                return f"Win Theme: {(d.get('win_theme', '') or '')[:50]}"
+        elif node_name == "research_gather":
+            rb = output.get("research_brief", {})
+            if isinstance(rb, dict):
+                n_topics = len(rb.get("research_topics", []))
+                return f"리서치 주제 {n_topics}개 도출"
+        elif node_name == "proposal_write_next":
+            sections = output.get("proposal_sections", [])
+            return f"섹션 {len(sections)}개 작성"
+        elif node_name == "self_review":
+            pr = output.get("parallel_results", {})
+            score = pr.get("_self_review_score", {})
+            total = score.get("total", 0)
+            return f"자가진단 {total}/100점"
+        elif node_name == "plan_merge":
+            return "계획 통합 완료"
+        elif node_name == "ppt_storyboard":
+            sb = output.get("ppt_storyboard", {})
+            n_slides = sb.get("total_slides", len(sb.get("slides", [])))
+            return f"PPT {n_slides}장 생성"
+    except Exception:
+        pass
+    return ""

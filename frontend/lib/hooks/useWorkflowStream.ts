@@ -16,6 +16,7 @@ export interface StreamEvent {
   event: string;      // on_chain_start | on_chain_end | done | error
   name: string;       // 노드명
   current_step?: string;
+  output_summary?: string;  // on_chain_end 시 산출물 1줄 요약
   message?: string;
 }
 

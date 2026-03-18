@@ -124,11 +124,14 @@ function LogEntry({ event }: { event: StreamEvent }) {
 
   if (event.event === "on_chain_end") {
     return (
-      <div className="flex gap-2 py-0.5">
+      <div className="flex gap-2 py-0.5 flex-wrap">
         <span className="text-[#5c5c5c] shrink-0">{time}</span>
         <span className="text-[#3ecf8e]">✓</span>
         <span className="text-[#ededed]">{label}</span>
         <span className="text-[#3ecf8e]">완료</span>
+        {event.output_summary && (
+          <span className="text-[#8c8c8c]">— {event.output_summary}</span>
+        )}
         {event.current_step && (
           <span className="text-[#5c5c5c]">→ {event.current_step}</span>
         )}
