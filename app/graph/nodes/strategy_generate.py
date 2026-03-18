@@ -87,13 +87,46 @@ async def strategy_generate(state: ProposalState) -> dict:
     except Exception as e:
         logger.warning(f"KB 조회 실패 (계속 진행): {e}")
 
-    # 리서치 브리프
+    # 리서치 브리프 + credibility 필터링 (go_no_go와 동일 패턴)
     research_brief = state.get("research_brief", {})
     research_text = ""
     if isinstance(research_brief, dict):
-        research_text = research_brief.get("summary", str(research_brief) if research_brief else "")
+        research_text = research_brief.get("summary", "")
+
+        # 고신뢰 데이터만 추출 (credibility: high/medium)
+        topics = research_brief.get("research_topics", [])
+        credible_evidence = []
+        for topic in topics:
+            if not isinstance(topic, dict):
+                continue
+            for dp in topic.get("data_points", []):
+                if isinstance(dp, dict):
+                    cred = dp.get("credibility", "low")
+                    if cred in ("high", "medium"):
+                        source = dp.get("source", "")
+                        credible_evidence.append(
+                            f"- {dp.get('content', '')} [{source}] ({cred})"
+                        )
+                elif isinstance(dp, str):
+                    credible_evidence.append(f"- {dp}")
+
+        if credible_evidence:
+            research_text += "\n\n검증된 근거 데이터:\n" + "\n".join(credible_evidence[:20])
+
+        diff_pts = research_brief.get("differentiation_points", [])
+        risk_pts = research_brief.get("risk_factors", [])
+        if diff_pts:
+            research_text += "\n\n차별화 포인트:\n" + "\n".join(f"- {d}" for d in diff_pts)
+        if risk_pts:
+            research_text += "\n\n리스크 요인:\n" + "\n".join(f"- {r}" for r in risk_pts)
+
+        if not research_text:
+            research_text = str(research_brief) if research_brief else ""
     elif research_brief:
         research_text = str(research_brief)
+
+    # Go/No-Go에서 도출한 핵심 승부수
+    strategic_focus = gng_dict.get("strategic_focus", "")
 
     prompt = STRATEGY_GENERATE_PROMPT.format(
         rfp_summary=rfp_summary,
@@ -102,6 +135,7 @@ async def strategy_generate(state: ProposalState) -> dict:
         positioning_rationale=gng_dict.get("positioning_rationale", ""),
         pros=gng_dict.get("pros", []),
         risks=gng_dict.get("risks", []),
+        strategic_focus=strategic_focus or "(미도출)",
         positioning_guide=_format_positioning_guide(pos_guide),
         capabilities_text=capabilities_text or "(역량 DB 없음)",
         research_brief=research_text or "(리서치 미수행)",
