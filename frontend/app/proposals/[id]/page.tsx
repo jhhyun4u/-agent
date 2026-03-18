@@ -400,6 +400,7 @@ export default function ProposalDetailPage() {
   const isProcessing = isRunning;
   const isCompleted = status?.status === "completed";
   const isFailed = status?.status === "failed";
+  const isPaused = status?.status === "cancelled" && workflowState?.has_pending_interrupt === false;
   const progressPct = Math.round(((status?.phases_completed ?? 0) / 5) * 100);
   const failedPhaseN = (status?.phases_completed ?? 0) + 1;
   const elapsed = useElapsedTime(isProcessing);
@@ -511,6 +512,37 @@ export default function ProposalDetailPage() {
           workflowState={workflowState}
           onStateChange={fetchWorkflowState}
         />
+
+        {/* 일시정지 상태 */}
+        {isPaused && (
+          <div className="flex items-center justify-between bg-[#1c1c1c] rounded-2xl border border-amber-500/30 px-5 py-3">
+            <div className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <span className="text-xs text-amber-400">일시정지됨</span>
+              <span className="text-[10px] text-[#8c8c8c]">
+                현재 단계: {workflowState?.current_step || "알 수 없음"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRetry}
+                className="text-xs text-[#3ecf8e] hover:text-[#49e59e] border border-[#3ecf8e]/30 rounded-lg px-3 py-1.5 font-medium transition-colors"
+              >
+                재개
+              </button>
+              {selectedStep === null && (
+                <button
+                  onClick={() => setSelectedStep(
+                    Math.max(0, (status?.phases_completed ?? 1) - 1)
+                  )}
+                  className="text-xs text-amber-400 hover:text-amber-300 border border-amber-500/30 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  산출물 확인
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* 경과 시간 + 중단/재개/실패 */}
         {(isProcessing || isFailed) && (

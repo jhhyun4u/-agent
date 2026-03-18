@@ -64,7 +64,9 @@ export type ProposalStatus =
   | "processing"
   | "running"
   | "completed"
-  | "failed";
+  | "failed"
+  | "cancelled"
+  | "paused";
 
 export interface ProposalVersion {
   id: string;
@@ -82,10 +84,63 @@ export interface ProposalSummary {
   team_id: string | null;
   current_phase: string | null;
   phases_completed: number;
+  positioning: string | null;
   win_result: string | null;
   bid_amount: number | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface ProposalResult {
+  id: string;
+  proposal_id: string;
+  result: "won" | "lost" | "void";
+  final_price: number | null;
+  tech_score: number | null;
+  price_score: number | null;
+  total_score: number | null;
+  rank: number | null;
+  total_bidders: number | null;
+  winner_name: string | null;
+  feedback_notes: string | null;
+  created_at: string;
+}
+
+export interface ProposalResultCreate {
+  result: "won" | "lost" | "void";
+  final_price?: number;
+  tech_score?: number;
+  price_score?: number;
+  total_score?: number;
+  rank?: number;
+  total_bidders?: number;
+  winner_name?: string;
+  feedback_notes?: string;
+}
+
+export interface Lesson {
+  id: string;
+  strategy_summary: string | null;
+  failure_category: string | null;
+  failure_detail: string | null;
+  improvements: string | null;
+  positioning: string | null;
+  result: string | null;
+  created_at: string;
+}
+
+export interface LessonCreate {
+  title: string;
+  description: string;
+  category?: string;
+}
+
+export interface SectionLock {
+  section_id: string;
+  locked_by: string;
+  locked_by_name?: string;
+  locked_at: string;
+  expires_at: string;
 }
 
 export interface ProposalStatus_ {
@@ -145,7 +200,119 @@ export interface FormTemplate {
   created_at: string;
 }
 
+// ── AUTH 요청 (/api/auth/*) ─────────────────────────────────────────
+
+async function authRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const token = await getToken();
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ message: res.statusText }));
+    throw new Error(err.message || err.detail || "API 오류");
+  }
+  return res.json();
+}
+
 export const api = {
+  // ── 인증 ──────────────────────────────────────────────────────────
+  auth: {
+    changePassword(currentPassword: string, newPassword: string) {
+      return authRequest<{ message: string }>("POST", "/auth/change-password", {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+    },
+    me() {
+      return authRequest<Record<string, unknown>>("GET", "/auth/me");
+    },
+  },
+
+  // ── 관리자 ────────────────────────────────────────────────────────
+  admin: {
+    // 조직
+    listOrganizations() {
+      return request<Array<{ id: string; name: string; created_at: string }>>("GET", "/admin/organizations");
+    },
+    createOrganization(name: string) {
+      return request<{ id: string; name: string }>("POST", "/admin/organizations", { name });
+    },
+    // 본부
+    listDivisions(orgId?: string) {
+      return request<Array<{ id: string; org_id: string; name: string; created_at: string }>>(
+        "GET", `/admin/divisions${orgId ? `?org_id=${orgId}` : ""}`
+      );
+    },
+    createDivision(name: string, orgId: string) {
+      return request<{ id: string; name: string }>("POST", "/admin/divisions", { name, org_id: orgId });
+    },
+    // 팀
+    listTeams(divisionId?: string) {
+      return request<Array<{ id: string; division_id: string; name: string; teams_webhook_url?: string; created_at: string; divisions?: { name: string; org_id: string } }>>(
+        "GET", `/admin/teams${divisionId ? `?division_id=${divisionId}` : ""}`
+      );
+    },
+    createTeam(name: string, divisionId: string, teamsWebhookUrl?: string) {
+      return request<{ id: string; name: string }>("POST", "/admin/teams", {
+        name, division_id: divisionId, ...(teamsWebhookUrl ? { teams_webhook_url: teamsWebhookUrl } : {}),
+      });
+    },
+    updateTeam(teamId: string, data: { name?: string; teams_webhook_url?: string }) {
+      return request<{ id: string; name: string }>("PATCH", `/admin/teams/${teamId}`, data);
+    },
+    // 사용자
+    createUser(data: {
+      email: string;
+      name: string;
+      role?: string;
+      org_id: string;
+      team_id?: string;
+      division_id?: string;
+      password?: string;
+    }) {
+      return request<Record<string, unknown>>("POST", "/admin/users", data);
+    },
+    bulkCreateUsers(file: File) {
+      const formData = new FormData();
+      formData.append("file", file);
+      return request<{
+        total: number;
+        success_count: number;
+        failed_count: number;
+        results: Array<Record<string, unknown>>;
+      }>("POST", "/admin/users/bulk", formData, true);
+    },
+    bulkSetupOrg(file: File) {
+      const formData = new FormData();
+      formData.append("file", file);
+      return request<Record<string, unknown>>("POST", "/admin/setup/bulk", formData, true);
+    },
+    resetPassword(userId: string, newPassword?: string) {
+      return request<{ user_id: string; temp_password: string }>(
+        "POST",
+        `/admin/users/${userId}/reset-password`,
+        newPassword ? { new_password: newPassword } : {}
+      );
+    },
+    listUsers(params?: { role?: string; team_id?: string; status?: string; page?: number; page_size?: number }) {
+      return request<{ users: Array<Record<string, unknown>>; total: number }>(
+        "GET",
+        `/users${_qs(params)}`
+      );
+    },
+    updateUser(userId: string, data: Record<string, unknown>) {
+      return request<Record<string, unknown>>("PATCH", `/admin/users/${userId}`, data);
+    },
+    deactivateUser(userId: string) {
+      return request<{ message: string }>("POST", `/admin/users/${userId}/deactivate`);
+    },
+  },
+
   proposals: {
     list(params?: { q?: string; status?: string; page?: number }) {
       const qs = new URLSearchParams();
@@ -199,6 +366,34 @@ export const api = {
       data: { win_result: string; bid_amount?: number; notes?: string }
     ) {
       return request("PATCH", `/proposals/${id}/win-result`, data);
+    },
+
+    // 성과 추적 (§12-9)
+    getResult(id: string) {
+      return request<ProposalResult>("GET", `/proposals/${id}/result`);
+    },
+    registerResult(id: string, data: ProposalResultCreate) {
+      return request<{ status: string; result: string }>(
+        "POST",
+        `/proposals/${id}/result`,
+        data
+      );
+    },
+    updateResult(id: string, data: Partial<ProposalResultCreate>) {
+      return request("PUT", `/proposals/${id}/result`, data);
+    },
+    getLessons(id: string) {
+      return request<{ items: Lesson[]; total: number }>(
+        "GET",
+        `/proposals/${id}/lessons`
+      );
+    },
+    createLesson(id: string, data: LessonCreate) {
+      return request<{ status: string; lesson_id: string }>(
+        "POST",
+        `/proposals/${id}/lessons`,
+        data
+      );
     },
   },
 
@@ -419,10 +614,33 @@ export const api = {
     createProposalFromBid(bidNo: string) {
       return request<{ data: { bid_no: string; bid_title: string; rfp_content: string } }>("POST", `/proposals/from-bid/${bidNo}`);
     },
+    getAttachments(bidNo: string, proposalId?: string) {
+      const qs = proposalId ? `?proposal_id=${proposalId}` : "";
+      return request<{ data: { stored_files: StoredAttachment[]; g2b_urls: G2bUrl[] } }>("GET", `/bids/${bidNo}/attachments${qs}`);
+    },
+    getAttachmentUrl(bidNo: string, fileName: string, proposalId?: string) {
+      const qs = proposalId ? `?proposal_id=${proposalId}` : "";
+      return request<{ data: { url: string; file_name: string; expires_in: number } }>("GET", `/bids/${bidNo}/attachments/${encodeURIComponent(fileName)}${qs}`);
+    },
+    // 공고 모니터링 (스코프별)
+    monitor(scope: "my" | "team" | "division" | "company" = "company", page = 1, showAll = false) {
+      return request<{ data: MonitoredBid[]; meta: { total: number; page: number; scope: string; show_all: boolean } }>(
+        "GET", `/bids/monitor?scope=${scope}&page=${page}&show_all=${showAll}`
+      );
+    },
+    toggleBookmark(bidNo: string) {
+      return request<{ bookmarked: boolean }>("POST", `/bids/${bidNo}/bookmark`);
+    },
+    updateStatus(bidNo: string, status: string) {
+      return request<{ bid_no: string; status: string; decided_by: string }>("PUT", `/bids/${bidNo}/status`, { status });
+    },
+    analyzeBid(bidNo: string) {
+      return request<{ data: BidAnalysis }>("GET", `/bids/${bidNo}/analysis`);
+    },
   },
 
   stats: {
-    winRate(scope: "personal" | "team" | "company" = "personal") {
+    winRate(scope: "personal" | "team" | "division" | "company" = "personal") {
       return request<WinRateStats>("GET", `/stats/win-rate?scope=${scope}`);
     },
   },
@@ -477,6 +695,26 @@ export const api = {
         affected_steps: number[];
         message: string;
       }>("GET", `/proposals/${proposalId}/impact/${step}`);
+    },
+
+    // 섹션 잠금 (§24)
+    listLocks(proposalId: string) {
+      return request<{ locks: SectionLock[] }>(
+        "GET",
+        `/proposals/${proposalId}/sections/locks`
+      );
+    },
+    lockSection(proposalId: string, sectionId: string) {
+      return request<SectionLock>(
+        "POST",
+        `/proposals/${proposalId}/sections/${sectionId}/lock`
+      );
+    },
+    unlockSection(proposalId: string, sectionId: string) {
+      return request<{ released: boolean }>(
+        "DELETE",
+        `/proposals/${proposalId}/sections/${sectionId}/lock`
+      );
     },
   },
 
@@ -552,6 +790,16 @@ export const api = {
         "POST",
         `/proposals/${proposalId}/ai-assist`,
         { text, mode, context }
+      );
+    },
+  },
+
+  // ── 교훈 전체 검색 ────────────────────────────────────────────────
+  lessons: {
+    search(params?: { positioning?: string; category?: string; limit?: number; offset?: number }) {
+      return request<{ items: Lesson[]; total: number }>(
+        "GET",
+        `/lessons${_qs(params)}`
       );
     },
   },
@@ -768,7 +1016,76 @@ export const api = {
       );
     },
   },
+
+  // PSM-16: Q&A 기록 CRUD + 검색
+  qa: {
+    list(proposalId: string) {
+      return request<{ data: QARecord[]; count: number }>(
+        "GET",
+        `/proposals/${proposalId}/qa`
+      );
+    },
+    create(proposalId: string, records: QARecordCreate[]) {
+      return request<{ data: QARecord[]; count: number }>(
+        "POST",
+        `/proposals/${proposalId}/qa`,
+        records
+      );
+    },
+    update(proposalId: string, qaId: string, body: QARecordUpdate) {
+      return request<{ data: QARecord }>(
+        "PUT",
+        `/proposals/${proposalId}/qa/${qaId}`,
+        body
+      );
+    },
+    delete(proposalId: string, qaId: string) {
+      return request<void>("DELETE", `/proposals/${proposalId}/qa/${qaId}`);
+    },
+    search(query: string, category?: string, limit = 10) {
+      let path = `/kb/qa/search?query=${encodeURIComponent(query)}&limit=${limit}`;
+      if (category) path += `&category=${category}`;
+      return request<{ data: QASearchResult[]; count: number }>("GET", path);
+    },
+  },
 };
+
+// ── PSM-16: Q&A 타입 ─────────────────────────────────────────────────
+
+export interface QARecord {
+  id: string;
+  proposal_id: string;
+  question: string;
+  answer: string;
+  category: string;
+  evaluator_reaction: string | null;
+  memo: string | null;
+  content_library_id: string | null;
+  created_at: string;
+  created_by: string | null;
+}
+
+export interface QARecordCreate {
+  question: string;
+  answer: string;
+  category?: string;
+  evaluator_reaction?: string | null;
+  memo?: string | null;
+}
+
+export interface QARecordUpdate {
+  question?: string;
+  answer?: string;
+  category?: string;
+  evaluator_reaction?: string | null;
+  memo?: string | null;
+}
+
+export interface QASearchResult extends QARecord {
+  similarity: number | null;
+  proposal_name: string | null;
+  client: string | null;
+}
 
 // ── 헬퍼 ─────────────────────────────────────────────────────────────
 
@@ -912,6 +1229,45 @@ export interface RiskFactor {
   level: "high" | "medium" | "low";
 }
 
+export interface BidAnalysis {
+  rfp_summary: string[];
+  fit_level: "적극 추천" | "추천" | "보통" | "낮음";
+  positive: string[];
+  negative: string[];
+  recommended_teams: string[];
+  suitability_score?: number;
+  verdict?: "추천" | "검토 필요" | "제외";
+  action_plan?: string;
+}
+
+export interface BidAttachment {
+  name: string;
+  url: string;
+}
+
+export interface MonitoredBid {
+  bid_no: string;
+  bid_title: string;
+  agency: string;
+  budget_amount: number | null;
+  deadline_date: string | null;
+  days_remaining: number | null;
+  bid_type?: string;
+  content_text?: string;
+  match_score?: number | null;
+  match_grade?: string | null;
+  recommendation_summary?: string | null;
+  recommendation_reasons?: RecommendationReason[];
+  is_bookmarked?: boolean;
+  qualified?: boolean;
+  attachments?: BidAttachment[];
+  related_teams?: string[];
+  relevance?: "적극 추천" | "보통" | "낮음";
+  bid_stage?: "사전공고" | "본공고";
+  proposal_status?: "검토중" | "제안결정" | "제안포기" | "제안유보" | "제안착수" | "관련없음" | null;
+  decided_by?: string | null;
+}
+
 export interface RecommendedBid {
   bid_no: string;
   bid_title: string;
@@ -955,6 +1311,7 @@ export interface BidAnnouncement {
   days_remaining: number | null;
   content_text: string | null;
   qualification_available: boolean;
+  raw_data: Record<string, unknown> | null;
 }
 
 export interface BidRecommendation {
@@ -968,6 +1325,19 @@ export interface BidRecommendation {
   risk_factors: RiskFactor[] | null;
   win_probability_hint: string | null;
   recommended_action: string | null;
+}
+
+export interface StoredAttachment {
+  name: string;
+  size: number;
+  storage_path: string;
+  created_at: string;
+}
+
+export interface G2bUrl {
+  index: number;
+  url: string;
+  label?: string;
 }
 
 export interface CalendarItem {

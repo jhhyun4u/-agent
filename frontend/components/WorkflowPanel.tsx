@@ -96,6 +96,12 @@ export default function WorkflowPanel({
   const { current_step, has_pending_interrupt, next_nodes, positioning } =
     workflowState;
 
+  // paused 상태 (abort 후 interrupt 없이 멈춘 경우)
+  const isPausedState = !has_pending_interrupt && !next_nodes.length && current_step && !current_step.includes("complete");
+  if (isPausedState && current_step.includes("error")) {
+    // 에러 상태는 상위에서 처리
+  }
+
   // 리뷰 게이트 감지
   const activeReview = has_pending_interrupt
     ? next_nodes.find((n) => REVIEW_GATES[n])
