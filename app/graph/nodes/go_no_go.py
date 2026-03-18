@@ -83,11 +83,44 @@ async def go_no_go(state: ProposalState) -> dict:
         except Exception:
             pass
 
-    # 리서치 브리프 요약 (v3.2)
+    # 리서치 브리프 요약 (v3.2) + credibility 필터링 (v3.7)
     research_text = ""
     if research_brief:
         if isinstance(research_brief, dict):
-            research_text = research_brief.get("summary", str(research_brief))
+            # 종합 요약
+            research_text = research_brief.get("summary", "")
+
+            # 고신뢰 데이터만 추출 (credibility: high/medium만 포함)
+            topics = research_brief.get("research_topics", [])
+            credible_evidence = []
+            for topic in topics:
+                if not isinstance(topic, dict):
+                    continue
+                for dp in topic.get("data_points", []):
+                    if isinstance(dp, dict):
+                        cred = dp.get("credibility", "low")
+                        if cred in ("high", "medium"):
+                            source = dp.get("source", "")
+                            credible_evidence.append(
+                                f"- {dp.get('content', '')} [{source}] ({cred})"
+                            )
+                    elif isinstance(dp, str):
+                        # 레거시 문자열 형식 호환
+                        credible_evidence.append(f"- {dp}")
+
+            if credible_evidence:
+                research_text += "\n\n검증된 근거 데이터:\n" + "\n".join(credible_evidence[:15])
+
+            # 차별화 포인트 + 리스크
+            diff_pts = research_brief.get("differentiation_points", [])
+            risk_pts = research_brief.get("risk_factors", [])
+            if diff_pts:
+                research_text += "\n\n차별화 포인트:\n" + "\n".join(f"- {d}" for d in diff_pts)
+            if risk_pts:
+                research_text += "\n\n리스크 요인:\n" + "\n".join(f"- {r}" for r in risk_pts)
+
+            if not research_text:
+                research_text = str(research_brief)
         else:
             research_text = str(research_brief)
 
