@@ -1,7 +1,7 @@
 """
 G2B 정기 모니터링 스케줄러 (§25-2)
 
-매일 09:00에 각 팀의 monitor_keywords로 나라장터 공고를 검색,
+매일 08:00, 15:00 2회 각 팀의 monitor_keywords로 나라장터 공고를 검색,
 신규 공고 발견 시 Teams + 인앱 알림.
 """
 
@@ -54,8 +54,22 @@ async def daily_g2b_monitor() -> dict:
 
             for keyword in keywords:
                 try:
-                    # G2B 검색
+                    # G2B 본공고 검색
                     results = await g2b.search_bid_announcements(keyword, num_of_rows=50)
+
+                    # 사전규격도 검색하여 합산
+                    try:
+                        pre_results = await g2b.search_pre_bid_specifications(keyword, num_of_rows=50)
+                        # 사전규격 결과를 본공고 형식에 맞춰 변환
+                        for pr in pre_results:
+                            pr["bidNtceNo"] = f"PRE-{pr.get('prcSpcfNo', '')}"
+                            pr["bidNtceNm"] = f"[사전규격] {pr.get('prcSpcfNm', '')}"
+                            pr["ntceInsttNm"] = pr.get("orderInsttNm") or pr.get("rlDminsttNm", "")
+                            pr["dminsttNm"] = pr.get("orderInsttNm", "")
+                            pr["presmptPrce"] = pr.get("asignBdgtAmt") or pr.get("presmptPrce")
+                        results.extend(pre_results)
+                    except Exception as e:
+                        logger.debug(f"사전규격 검색 실패 (무시): {e}")
                     if not results:
                         continue
 
@@ -211,13 +225,20 @@ def setup_scheduler() -> None:
         scheduler = AsyncIOScheduler()
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=9, minute=0),
-            id="daily_g2b_monitor",
-            name="G2B 일일 모니터링",
+            trigger=CronTrigger(hour=8, minute=0),
+            id="g2b_monitor_morning",
+            name="G2B 오전 모니터링",
+            replace_existing=True,
+        )
+        scheduler.add_job(
+            daily_g2b_monitor,
+            trigger=CronTrigger(hour=15, minute=0),
+            id="g2b_monitor_afternoon",
+            name="G2B 오후 모니터링",
             replace_existing=True,
         )
         scheduler.start()
-        logger.info("G2B 모니터링 스케줄러 시작 (매일 09:00)")
+        logger.info("G2B 모니터링 스케줄러 시작 (매일 08:00, 15:00)")
     except ImportError:
         logger.info("APScheduler 미설치 — G2B 스케줄러 비활성화")
     except Exception as e:
