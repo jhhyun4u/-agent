@@ -157,3 +157,59 @@ class RecommendationsMeta(BaseModel):
 class RecommendationsResponse(BaseModel):
     data: dict  # {recommended: list[RecommendedBid], excluded: list[ExcludedBid]}
     meta: RecommendationsMeta
+
+
+# ── 전처리 요약 (Stage 1) ────────────────────────────────────
+
+class BidSummary(BaseModel):
+    """전처리 에이전트 출력: 공고문 핵심 섹션 추출 결과"""
+    bid_no: str
+    organization: str = ""
+    budget_detail: str = ""
+    period: str = ""
+    core_tasks: list[str] = []
+    required_license: str = ""
+    experience_needed: str = ""
+    restriction: str = ""
+    evaluation_points: str = ""
+
+    def to_text(self) -> str:
+        """리뷰어 프롬프트에 주입할 텍스트 변환."""
+        lines = []
+        if self.organization:
+            lines.append(f"발주기관: {self.organization}")
+        if self.budget_detail:
+            lines.append(f"예산: {self.budget_detail}")
+        if self.period:
+            lines.append(f"기간: {self.period}")
+        if self.core_tasks:
+            lines.append("주요 과업:")
+            for t in self.core_tasks:
+                lines.append(f"  - {t}")
+        if self.required_license:
+            lines.append(f"필수 면허: {self.required_license}")
+        if self.experience_needed:
+            lines.append(f"실적 요건: {self.experience_needed}")
+        if self.restriction:
+            lines.append(f"제한 사항: {self.restriction}")
+        if self.evaluation_points:
+            lines.append(f"평가 배점: {self.evaluation_points}")
+        return "\n".join(lines)
+
+
+# ── TENOPA 리뷰 결과 (Stage 2) ──────────────────────────────
+
+class ReasonAnalysis(BaseModel):
+    """TENOPA 리뷰어 강점/리스크 분석"""
+    strengths: list[str] = []
+    risks: list[str] = []
+
+
+class TenopaBidReview(BaseModel):
+    """TENOPA 수주 심의위원 평가 결과"""
+    bid_no: str
+    bid_title: str = ""
+    suitability_score: int = Field(ge=0, le=100)
+    verdict: Literal["추천", "검토 필요", "제외"]
+    reason_analysis: ReasonAnalysis = ReasonAnalysis()
+    action_plan: str = ""

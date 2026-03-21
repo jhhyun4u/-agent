@@ -7,28 +7,33 @@
 - 결재 위임 관리
 """
 
+import csv
+import io
 import logging
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, UploadFile, File
 
 from app.api.deps import get_current_user, require_role
 from app.exceptions import TenopAPIError
 from app.models.user_schemas import (
+    BulkCreateResult,
     DelegationCreate,
     DivisionCreate,
     DivisionResponse,
     OrganizationCreate,
     OrganizationResponse,
     ParticipantAdd,
+    PasswordResetRequest,
     TeamCreate,
     TeamResponse,
     TeamUpdate,
-    UserCreate,
+    UserCreateWithPassword,
     UserListResponse,
     UserResponse,
     UserUpdate,
 )
 from app.services.audit_service import log_action
+from app.services import user_account_service
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -146,21 +151,130 @@ async def update_team(
 # 사용자 관리
 # ══════════════════════════════════════════════
 
-@router.post("/api/admin/users", response_model=UserResponse)
+@router.post("/api/admin/users")
 async def create_user(
-    body: UserCreate,
+    body: UserCreateWithPassword,
     user: dict = Depends(require_role("admin")),
 ):
-    """사용자 사전 등록 (admin only).
+    """사용자 등록 (admin only) — Supabase Auth 계정 + users 행 동시 생성."""
+    result = await user_account_service.create_auth_user(
+        email=body.email,
+        password=body.password,
+        name=body.name,
+        role=body.role,
+        org_id=body.org_id,
+        team_id=body.team_id,
+        division_id=body.division_id,
+    )
+    await log_action(user["id"], "create", "user", body.email)
+    return {
+        **result["user"],
+        "temp_password": result["temp_password"],
+    }
 
-    Azure AD OID를 미리 등록하면, 해당 사용자가 최초 로그인 시
-    auth_service.get_or_create_user_profile에서 자동 매핑.
+
+@router.post("/api/admin/users/bulk", response_model=BulkCreateResult)
+async def bulk_create_users(
+    file: UploadFile = File(...),
+    user: dict = Depends(require_role("admin")),
+):
+    """CSV 또는 XLSX 파일로 사용자 일괄 등록 (admin only).
+
+    CSV 형식: email,name,role,team_id,division_id
+    XLSX 형식: 헤더에 이메일/이름 컬럼 필수, 역할/팀/본부 선택
     """
-    client = await get_async_client()
-    data = body.model_dump(exclude_none=True)
-    res = await client.table("users").insert(data).execute()
-    await log_action(user["id"], "create", "user", data.get("email"))
-    return res.data[0]
+    content = await file.read()
+    filename = (file.filename or "").lower()
+
+    if filename.endswith(".xlsx") or filename.endswith(".xls"):
+        rows = user_account_service.parse_xlsx_users(content)
+    else:
+        # CSV
+        text = content.decode("utf-8-sig")
+        reader = csv.DictReader(io.StringIO(text))
+        rows = list(reader)
+
+    if not rows:
+        raise TenopAPIError("ADMIN_001", "파일이 비어있거나 파싱할 수 없습니다.", 422)
+
+    # team_name / division_name → team_id / division_id 변환
+    needs_resolve = any(r.get("team_name") or r.get("division_name") for r in rows)
+    if needs_resolve:
+        client = await get_async_client()
+        org_id = user["org_id"]
+
+        # 본부명 → id 캐시
+        div_res = await client.table("divisions").select("id, name").eq("org_id", org_id).execute()
+        div_map = {d["name"]: d["id"] for d in (div_res.data or [])}
+
+        # 팀명 → id 캐시
+        team_res = await client.table("teams").select("id, name").execute()
+        team_map = {t["name"]: t["id"] for t in (team_res.data or [])}
+
+        for row in rows:
+            if row.get("division_name") and not row.get("division_id"):
+                row["division_id"] = div_map.get(row["division_name"])
+            if row.get("team_name") and not row.get("team_id"):
+                row["team_id"] = team_map.get(row["team_name"])
+
+    result = await user_account_service.bulk_create_users(
+        rows=rows,
+        org_id=user["org_id"],
+    )
+    await log_action(user["id"], "bulk_create", "user", detail={
+        "total": result["total"],
+        "success": result["success_count"],
+    })
+    return result
+
+
+@router.post("/api/admin/setup/bulk")
+async def bulk_setup_org(
+    file: UploadFile = File(...),
+    user: dict = Depends(require_role("admin")),
+):
+    """XLSX 5개 시트(조직/본부/팀/사용자/역량) 일괄 등록 (admin only).
+
+    tenopa team structure.xlsx 형식:
+    - 1_조직: 조직명
+    - 2_본부: 본부명, 소속 조직명
+    - 3_팀: 팀명, 소속 본부명, 특화 분야, Teams Webhook URL
+    - 4_사용자: 이메일, 이름, 직급, 역할, 소속 팀명, 소속 본부명, 소속 조직명
+    - 5_역량: 유형, 제목, 상세 내용, 키워드, 소속 조직명
+    """
+    content = await file.read()
+    filename = (file.filename or "").lower()
+    if not (filename.endswith(".xlsx") or filename.endswith(".xls")):
+        raise TenopAPIError("ADMIN_001", "XLSX 파일만 지원합니다.", 422)
+
+    parsed = user_account_service.parse_xlsx_all(content)
+    if not parsed["users"]:
+        raise TenopAPIError("ADMIN_001", "사용자 시트가 비어있습니다.", 422)
+
+    result = await user_account_service.bulk_setup_org(parsed, org_id=user["org_id"])
+    await log_action(user["id"], "bulk_setup_org", "organization", detail={
+        "divisions": result["divisions"],
+        "teams": result["teams"],
+        "users_total": result["users"]["total"],
+        "users_success": result["users"]["success_count"],
+        "capabilities": result["capabilities"],
+    })
+    return result
+
+
+@router.post("/api/admin/users/{user_id}/reset-password")
+async def reset_user_password(
+    user_id: str,
+    body: PasswordResetRequest = PasswordResetRequest(),
+    user: dict = Depends(require_role("admin")),
+):
+    """사용자 비밀번호 초기화 (admin only)."""
+    result = await user_account_service.reset_user_password(
+        user_id=user_id,
+        new_password=body.new_password,
+    )
+    await log_action(user["id"], "reset_password", "user", user_id)
+    return result
 
 
 @router.get("/api/users", response_model=UserListResponse)

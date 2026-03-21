@@ -8,6 +8,7 @@ import logging
 
 from app.graph.state import ComplianceItem, ProposalState, RFPAnalysis
 from app.services.claude_client import claude_generate
+from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +69,22 @@ async def rfp_analyze(state: ProposalState) -> dict:
 """
 
     result = await claude_generate(prompt)
+
+    # 프롬프트 사용 기록 (인라인 프롬프트)
+    proposal_id = state.get("project_id", "")
+    if proposal_id:
+        try:
+            import hashlib
+            await prompt_tracker.record_usage(
+                proposal_id=proposal_id,
+                artifact_step="rfp_analyze",
+                section_id=None,
+                prompt_id="_inline.rfp_analyze",
+                prompt_version=0,
+                prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
+            )
+        except Exception:
+            pass
 
     # RFP 분석 결과 구성
     rfp_analysis = RFPAnalysis(

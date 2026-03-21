@@ -29,7 +29,7 @@ async def unified_search(
     통합 KB 검색 — 시맨틱 + 키워드 하이브리드.
     결과를 영역별로 그룹화하여 반환.
     """
-    all_areas = ["content", "client", "competitor", "lesson", "capability"]
+    all_areas = ["content", "client", "competitor", "lesson", "capability", "qa"]
     areas = (filters or {}).get("areas", all_areas)
 
     # 임베딩 생성
@@ -47,6 +47,8 @@ async def unified_search(
         tasks["lesson"] = _search_lessons(query, query_embedding, org_id, top_k)
     if "capability" in areas:
         tasks["capability"] = _search_capabilities(query, org_id, top_k)
+    if "qa" in areas:
+        tasks["qa"] = _search_qa(query, query_embedding, org_id, top_k)
 
     results = await asyncio.gather(*tasks.values(), return_exceptions=True)
 
@@ -185,3 +187,32 @@ async def _search_capabilities(
         "description", f"%{query}%"
     ).limit(top_k).execute()
     return result.data or []
+
+
+async def _search_qa(
+    query: str,
+    embedding: list[float],
+    org_id: str,
+    top_k: int,
+) -> list[dict]:
+    """Q&A 시맨틱 검색 (PSM-16)."""
+    client = await get_async_client()
+    try:
+        result = await client.rpc("search_qa_by_embedding", {
+            "query_embedding": embedding,
+            "match_org_id": org_id,
+            "match_count": top_k,
+        }).execute()
+        return result.data or []
+    except Exception:
+        logger.info("search_qa_by_embedding RPC 미등록, 키워드 검색 폴백")
+        result = await client.table("presentation_qa").select(
+            "id, question, answer, category, created_at, "
+            "proposals!inner(org_id)"
+        ).eq("proposals.org_id", org_id).or_(
+            f"question.ilike.%{query}%,answer.ilike.%{query}%"
+        ).limit(top_k).execute()
+        items = result.data or []
+        for item in items:
+            item.pop("proposals", None)
+        return items

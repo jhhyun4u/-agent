@@ -61,7 +61,7 @@ async def bid_search(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"bid-search 오류: {e}")
         raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
@@ -95,7 +95,7 @@ async def bid_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"bid-results 오류: {e}")
         raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
@@ -155,7 +155,7 @@ async def bid_award_info(
             ],
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"bid-award-info 오류: {e}")
         raise HTTPException(status_code=500, detail="낙찰정보 조회 중 오류가 발생했습니다.")
@@ -241,7 +241,7 @@ async def bid_stats(
             },
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"bid-stats 오류: {e}")
         raise HTTPException(status_code=500, detail="낙찰 통계 조회 중 오류가 발생했습니다.")
@@ -311,7 +311,7 @@ async def contract_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"contract-results 오류: {e}")
         raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
@@ -345,7 +345,7 @@ async def company_history(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"company-history 오류: {e}")
         raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
@@ -381,7 +381,7 @@ async def competitors(
             )
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"competitors 분석 오류: {e}")
         raise HTTPException(status_code=500, detail="경쟁사 분석 중 오류가 발생했습니다.")
@@ -415,7 +415,7 @@ async def collect_bid_result(
         result = await fetch_and_store_bid_result(bid_notice_id, domain)
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
     except Exception as e:
         logger.error(f"낙찰정보 수집 오류: {e}")
         raise HTTPException(status_code=500, detail="낙찰정보 수집 중 오류가 발생했습니다.")

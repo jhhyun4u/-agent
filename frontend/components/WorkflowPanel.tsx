@@ -17,7 +17,6 @@ import {
   type WorkflowResumeData,
 } from "@/lib/api";
 import GoNoGoPanel from "@/components/GoNoGoPanel";
-import RfpSearchPanel from "@/components/RfpSearchPanel";
 
 // ── 리뷰 게이트 정의 ──
 
@@ -110,27 +109,13 @@ export default function WorkflowPanel({
   // Go/No-Go 패널
   const isGoNoGo = activeReview === "review_gng";
 
-  // STEP 0: 공고 검색 결과 검토
-  const isSearchReview = activeReview === "review_search";
-
   // 병렬 진행 감지 (STEP 3 노드가 현재 실행 중)
-  const step3Nodes = WORKFLOW_STEPS[3]?.nodes ?? [];
+  const step3Nodes = WORKFLOW_STEPS.find(s => s.step === 3)?.nodes ?? [];
   const isParallelActive =
     !has_pending_interrupt &&
     step3Nodes.some(
       (n) => current_step.includes(n) || current_step === n
     );
-
-  if (isSearchReview) {
-    return (
-      <RfpSearchPanel
-        proposalId={proposalId}
-        workflowState={workflowState}
-        onStateChange={onStateChange}
-        className={className}
-      />
-    );
-  }
 
   if (isGoNoGo) {
     return (
@@ -195,6 +180,11 @@ function ReviewPanel({
   const [reworkTargets, setReworkTargets] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
+  // W3: 산출물 요약 인라인
+  const [artifactSummary, setArtifactSummary] = useState<string | null>(null);
+  // W11: 산출물/이슈 영역 접기
+  const [detailsCollapsed, setDetailsCollapsed] = useState(false);
+
   // AI 이슈 플래그 (자가진단 < 70점 항목)
   const [aiIssues, setAiIssues] = useState<AiIssue[]>([]);
   const [issuesLoaded, setIssuesLoaded] = useState(false);
@@ -212,6 +202,26 @@ function ReviewPanel({
   // STEP 4 리뷰: AI 이슈 플래그 로드
   const isProposalReview =
     reviewNode === "review_proposal" || reviewNode === "review_section";
+
+  // W3: 산출물 요약 로드 (리뷰 대상 단계의 산출물)
+  useEffect(() => {
+    const artifactMap: Record<string, string> = {
+      review_rfp: "rfp_analysis",
+      review_strategy: "strategy",
+      review_bid_plan: "bid_plan",
+      review_plan: "plan",
+      review_proposal: "proposal",
+      review_ppt: "ppt",
+    };
+    const artifactKey = artifactMap[reviewNode];
+    if (!artifactKey) return;
+    api.artifacts.get(proposalId, artifactKey).then((a) => {
+      const d = a.data as Record<string, unknown>;
+      // 요약 필드 우선순위: summary > recommendation > title
+      const summary = (d.summary || d.recommendation || d.title || "") as string;
+      if (summary) setArtifactSummary(typeof summary === "string" ? summary : JSON.stringify(summary).slice(0, 200));
+    }).catch(() => {});
+  }, [proposalId, reviewNode]);
 
   // 이슈 로드 (최초 1회)
   useEffect(() => {
@@ -318,10 +328,25 @@ function ReviewPanel({
           STEP {gate?.step ?? "?"}
         </span>
       </div>
-      <p className="text-xs text-[#8c8c8c] mb-4">{gate?.perspective}</p>
+      <p className="text-xs text-[#8c8c8c] mb-2">{gate?.perspective}</p>
+
+      {/* W9: 섹션 리뷰 진행률 */}
+      {reviewNode === "review_section" && workflowState.current_section_index != null && workflowState.total_sections != null && (
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex-1 h-1.5 bg-[#262626] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#3ecf8e] rounded-full transition-all duration-300"
+              style={{ width: `${((workflowState.current_section_index + 1) / workflowState.total_sections) * 100}%` }}
+            />
+          </div>
+          <span className="text-[10px] text-[#8c8c8c] shrink-0">
+            {workflowState.current_section_index + 1}/{workflowState.total_sections} 섹션
+          </span>
+        </div>
+      )}
 
       {/* AI 이슈 플래그 (§13-5 보강) */}
-      {aiIssues.length > 0 && (
+      {!detailsCollapsed && aiIssues.length > 0 && (
         <div className="mb-4">
           <p className="text-[10px] text-red-400 uppercase tracking-wider font-medium mb-2">
             AI 이슈 플래그 ({aiIssues.length}건)
@@ -344,6 +369,24 @@ function ReviewPanel({
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* W11: 상세 접기/펼치기 */}
+      {(artifactSummary || aiIssues.length > 0) && (
+        <button
+          onClick={() => setDetailsCollapsed(!detailsCollapsed)}
+          className="text-[10px] text-[#5c5c5c] hover:text-[#8c8c8c] mb-2 transition-colors"
+        >
+          {detailsCollapsed ? "▸ AI 분석 상세 펼치기" : "▾ AI 분석 상세 접기"}
+        </button>
+      )}
+
+      {/* W3: AI 산출물 요약 */}
+      {!detailsCollapsed && artifactSummary && (
+        <div className="mb-3 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2.5">
+          <p className="text-[10px] text-[#5c5c5c] uppercase tracking-wider mb-1">AI 산출물 요약</p>
+          <p className="text-xs text-[#ededed] leading-relaxed">{artifactSummary}</p>
         </div>
       )}
 
@@ -426,6 +469,7 @@ function ReviewPanel({
         <button
           onClick={() => handleResume(true, true)}
           disabled={submitting}
+          title="피드백 없이 AI 결과를 그대로 사용합니다"
           className="px-4 py-2 text-xs font-medium rounded-lg border border-[#3ecf8e]/30 text-[#3ecf8e] hover:bg-[#3ecf8e]/10 disabled:opacity-40 transition-colors"
         >
           빠른 승인

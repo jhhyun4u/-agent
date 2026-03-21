@@ -132,14 +132,20 @@ async def get_locks(proposal_id: str) -> list[dict[str, Any]]:
     client = await get_async_client()
     now = datetime.now(timezone.utc).isoformat()
 
-    result = (
-        await client.table("section_locks")
-        .select("section_id, locked_by, locked_at, expires_at")
-        .eq("proposal_id", proposal_id)
-        .gt("expires_at", now)
-        .execute()
-    )
-    return result.data or []
+    try:
+        result = (
+            await client.table("section_locks")
+            .select("section_id, locked_by, locked_at, expires_at")
+            .eq("proposal_id", proposal_id)
+            .gt("expires_at", now)
+            .execute()
+        )
+        return result.data or []
+    except Exception as e:
+        if "PGRST205" in str(e):
+            logger.warning("section_locks 테이블이 존재하지 않습니다. 빈 목록 반환.")
+            return []
+        raise
 
 
 async def force_release(proposal_id: str, section_id: str) -> bool:

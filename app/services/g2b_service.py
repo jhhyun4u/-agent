@@ -29,11 +29,13 @@ logger = logging.getLogger(__name__)
 
 BASE_URL = "https://apis.data.go.kr/1230000"
 
-# 서비스별 경로 prefix (공고=/ad, 낙찰=/as)
+# 서비스별 경로 prefix (공고=/ad, 낙찰=/as, 사전규격=/ad)
 SERVICE_PREFIX = {
     "BidPublicInfoService": "ad",
     "ScsbidInfoService": "as",
     "ContractInfoService": "ac",
+    "BfSpecRgstInfoService": "",  # 사전규격 (prefix 없음)
+    "OrderPlanSttusService": "ao",  # 발주계획
 }
 
 
@@ -152,7 +154,10 @@ class G2BService:
         # endpoint에서 서비스명 추출 → prefix 결정
         svc_name = endpoint.split("/")[0]
         prefix = SERVICE_PREFIX.get(svc_name, "ad")
-        url = f"{self.base_url}/{prefix}/{endpoint}?serviceKey={api_key}"
+        if prefix:
+            url = f"{self.base_url}/{prefix}/{endpoint}?serviceKey={api_key}"
+        else:
+            url = f"{self.base_url}/{endpoint}?serviceKey={api_key}"
         # type=json을 params에 포함
         params = {**params, "type": "json"}
 
@@ -243,6 +248,63 @@ class G2BService:
         if keyword:
             kw_lower = keyword.lower()
             results = [r for r in results if kw_lower in r.get("bidNtceNm", "").lower()]
+
+        return results
+
+    async def search_pre_bid_specifications(
+        self,
+        keyword: str,
+        num_of_rows: int = 20,
+        page_no: int = 1,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+    ) -> List[Dict]:
+        """
+        사전규격 공개 목록 검색 (용역: getServcBfSpecRgstListInfoServc)
+
+        나라장터 사전규격 등록 정보를 조회한다.
+        입찰 공고 전에 게시되는 사전규격으로, 미리 준비할 수 있는 공고를 파악하는 데 활용.
+
+        ※ 공공데이터포털에서 '나라장터 사전규격 등록 정보' 서비스 활용 신청 필요.
+           미신청 시 500 에러 → 빈 목록 반환 (graceful skip).
+
+        Args:
+            keyword: 검색 키워드 (클라이언트 측 제목 필터링)
+            date_from: 조회시작일시 (YYYYMMDDHHMM). 미지정 시 최근 30일
+            date_to: 조회종료일시 (YYYYMMDDHHMM). 미지정 시 현재
+
+        Returns:
+            사전규격 raw 목록
+        """
+        if not date_to:
+            date_to = datetime.now().strftime("%Y%m%d") + "2359"
+        if not date_from:
+            date_from = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d") + "0000"
+
+        params: Dict[str, Any] = {
+            "numOfRows": num_of_rows,
+            "pageNo": page_no,
+            "inqryDiv": "1",
+            "inqryBgnDt": date_from,
+            "inqryEndDt": date_to,
+        }
+
+        try:
+            results = await self._call_api(
+                "BfSpecRgstInfoService/getServcBfSpecRgstListInfoServc",
+                params,
+            )
+        except Exception as e:
+            # API 키 미활용 신청 시 500 에러 → graceful skip
+            logger.info(f"사전규격 API 미활성 (활용 신청 필요): {e}")
+            return []
+
+        if keyword:
+            kw_lower = keyword.lower()
+            results = [
+                r for r in results
+                if kw_lower in (r.get("bfSpecRgstNm") or r.get("prcSpcfNm") or "").lower()
+            ]
 
         return results
 
@@ -467,6 +529,145 @@ class G2BService:
             "date_range": {"from": start_dt.date().isoformat(), "to": end_dt.date().isoformat()},
         }
 
+    # ── 전수 수집 (페이지네이션) ───────────────────────
+
+    async def fetch_all_bids(
+        self,
+        date_from: str,
+        date_to: str,
+        max_pages: int = 40,
+    ) -> List[Dict]:
+        """
+        날짜 범위 내 전체 공고를 페이지네이션으로 수집.
+
+        bidNtceNm 서버측 키워드 필터가 작동하지 않으므로,
+        전체를 가져온 뒤 클라이언트에서 필터링하는 전략.
+
+        Args:
+            date_from: 조회시작일시 (YYYYMMDDHHMM)
+            date_to: 조회종료일시 (YYYYMMDDHHMM)
+            max_pages: 최대 페이지 수 (안전장치, 기본 20)
+
+        Returns:
+            전체 공고 raw 목록 (중복 제거)
+        """
+        all_bids: Dict[str, Dict] = {}
+
+        for page in range(1, max_pages + 1):
+            rows = await self._call_api(
+                "BidPublicInfoService/getBidPblancListInfoServc",
+                {
+                    "numOfRows": 999,
+                    "pageNo": page,
+                    "inqryDiv": "1",
+                    "inqryBgnDt": date_from,
+                    "inqryEndDt": date_to,
+                },
+            )
+            for r in rows:
+                bid_no = r.get("bidNtceNo", "")
+                if bid_no and bid_no not in all_bids:
+                    all_bids[bid_no] = r
+
+            logger.info(f"G2B 전수 수집 p{page}: {len(rows)}건 (누적 {len(all_bids)}건)")
+            if len(rows) < 999:
+                break
+            await asyncio.sleep(0.15)  # Rate limit
+
+        return list(all_bids.values())
+
+    # ── 사전규격 전수 수집 (페이지네이션) ────────────────
+
+    async def fetch_all_pre_specs(
+        self,
+        date_from: str,
+        date_to: str,
+        max_pages: int = 20,
+    ) -> List[Dict]:
+        """
+        날짜 범위 내 사전규격을 전수 페이지네이션 수집.
+
+        ※ 공공데이터포털에서 사전규격 서비스 활용 신청 필요.
+           미신청 시 빈 목록 반환 (graceful skip).
+        """
+        all_specs: Dict[str, Dict] = {}
+
+        for page in range(1, max_pages + 1):
+            try:
+                rows = await self._call_api(
+                    "BfSpecRgstInfoService/getServcBfSpecRgstListInfoServc",
+                    {
+                        "numOfRows": 999,
+                        "pageNo": page,
+                        "inqryDiv": "1",
+                        "inqryBgnDt": date_from,
+                        "inqryEndDt": date_to,
+                    },
+                )
+            except Exception as e:
+                if page == 1:
+                    logger.info(f"사전규격 API 미활성 (활용 신청 필요): {e}")
+                    return []
+                break
+
+            for r in rows:
+                spec_no = (r.get("bfSpecRgstNo") or r.get("prcSpcfNo") or "").strip()
+                if spec_no and spec_no not in all_specs:
+                    all_specs[spec_no] = r
+
+            logger.info(f"사전규격 전수 수집 p{page}: {len(rows)}건 (누적 {len(all_specs)}건)")
+            if len(rows) < 999:
+                break
+            await asyncio.sleep(0.15)
+
+        return list(all_specs.values())
+
+    # ── 발주계획 전수 수집 (페이지네이션) ────────────────
+
+    async def fetch_all_procurement_plans(
+        self,
+        date_from: str,
+        date_to: str,
+        max_pages: int = 10,
+    ) -> List[Dict]:
+        """
+        날짜 범위 내 발주계획을 전수 페이지네이션 수집.
+
+        ※ 공공데이터포털에서 발주계획현황서비스 활용 신청 필요.
+           미신청 시 빈 목록 반환 (graceful skip).
+        """
+        all_plans: Dict[str, Dict] = {}
+
+        for page in range(1, max_pages + 1):
+            try:
+                rows = await self._call_api(
+                    "OrderPlanSttusService/getOrderPlanSttusListThng",
+                    {
+                        "numOfRows": 999,
+                        "pageNo": page,
+                        "inqryDiv": "1",
+                        "inqryBgnDt": date_from,
+                        "inqryEndDt": date_to,
+                    },
+                )
+            except Exception as e:
+                if page == 1:
+                    logger.info(f"발주계획 API 미활성 (활용 신청 필요): {e}")
+                    return []
+                break
+
+            for r in rows:
+                plan_no = (r.get("orderPlanNo") or r.get("bidNtceNo") or "").strip()
+                if plan_no and plan_no not in all_plans:
+                    all_plans[plan_no] = r
+
+            logger.info(f"발주계획 전수 수집 p{page}: {len(rows)}건 (누적 {len(all_plans)}건)")
+            if len(rows) < 999:
+                break
+            await asyncio.sleep(0.15)
+
+        return list(all_plans.values())
+
     # ── 다중 키워드 검색 ──────────────────────────────
 
     async def search_multi_keyword(
@@ -661,6 +862,22 @@ async def get_bid_result_info(bid_no: str) -> Dict:
             return {}
 
 
+def _map_evaluation_method(raw: str) -> str:
+    """G2B 평가방식 문자열 → 표준 조달방식 매핑."""
+    if not raw:
+        return ""
+    raw_lower = raw.strip()
+    if "종합" in raw_lower or "종평" in raw_lower:
+        return "종합심사"
+    if "적격" in raw_lower:
+        return "적격심사"
+    if "최저" in raw_lower:
+        return "최저가"
+    if "수의" in raw_lower or "협상" in raw_lower:
+        return "수의계약"
+    return raw_lower
+
+
 async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개발") -> Dict:
     """
     낙찰정보 수집 + market_price_data 적재 (Phase 4-1).
@@ -697,6 +914,25 @@ async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개
         bid_date = r.get("opengDt", "")
         year = int(bid_date[:4]) if bid_date and len(bid_date) >= 4 else datetime.now().year
 
+        # 예정가격 파싱
+        est_price_str = r.get("presmptPrce", r.get("bssamt", "0"))
+        try:
+            estimated_price = int(str(est_price_str).replace(",", "").strip() or "0")
+        except (ValueError, TypeError):
+            estimated_price = 0
+
+        # 평가방식 매핑
+        eval_method_raw = r.get("evlMthd", r.get("bidMethdNm", ""))
+        eval_method = _map_evaluation_method(eval_method_raw)
+
+        # budget_tier 자동 계산
+        if budget < 500_000_000:
+            budget_tier = "<500M"
+        elif budget < 1_000_000_000:
+            budget_tier = "500M-1B"
+        else:
+            budget_tier = ">1B"
+
         # market_price_data 적재
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
@@ -711,6 +947,10 @@ async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개
             "num_bidders": num_bidders,
             "year": year,
             "source": f"G2B:{bid_notice_id}",
+            "estimated_price": estimated_price or None,
+            "winner_name": winner or None,
+            "budget_tier": budget_tier if budget > 0 else None,
+            "evaluation_method": eval_method or None,
         }
 
         await client.table("market_price_data").upsert(
@@ -725,6 +965,8 @@ async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개
             "budget": budget,
             "bid_ratio": bid_ratio,
             "num_bidders": num_bidders,
+            "estimated_price": estimated_price,
+            "evaluation_method": eval_method,
         }
 
 

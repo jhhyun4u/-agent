@@ -23,6 +23,25 @@
 | **proposal-agent-v1** | **2026-03-16** | **99%** | **3** | **proposal-agent-v1/** |
 | remaining-modules | 2026-03-16 | 99% | 2 | remaining-modules/ |
 | **proposal-platform-v1** | **2026-03-16** | **98%** | **1** | **proposal-platform-v1/** |
+| **auth-simplification** | **2026-03-17** | **100%** | **1** | **auth-simplification/** |
+| **psm-16-qa-search** | **2026-03-18** | **98%** | **0** | **psm-16-qa-search/** |
+| **frontend-gaps** | **2026-03-18** | **92%** | **0** | **frontend-gaps/** |
+| **security-hardening** | **2026-03-20** | **83% (실질91%)** | **2** | **security-hardening/** |
+
+---
+
+## psm-16-qa-search
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-18 |
+| Match Rate | 98% |
+| 요구사항 | PSM-16 (Must) — Q&A 기록 검색 가능 저장 |
+| 구현 규모 | 신규 5파일 + 수정 6파일 = 11파일, ~860줄 |
+| 핵심 | qa_service.py (4단계 KB 연동), routes_qa.py (5 API), QaPanel.tsx, kb/qa/page.tsx |
+| 성과 | v1 요구사항 HIGH 잔여 0건 달성 |
+| Documents | plan, design, analysis, report |
+| Path | docs/archive/2026-03/psm-16-qa-search/ |
 
 ---
 
@@ -278,3 +297,34 @@
 | 대상 파일 | 6개 서비스 + 1개 프롬프트 + routes_workflow.py API 확장 |
 | 잔여 갭 | L1 (section_lock SSE) — SSE 버스 인프라 대기 |
 
+---
+
+## auth-simplification — Completed (인증 단순화)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-17 |
+| Match Rate | **100%** (96% → 100%, MEDIUM 2건 수정) |
+| PDCA 반복 | 1회 (수동 수정) |
+| Documents | analysis, report |
+| Path | docs/archive/2026-03/auth-simplification/ |
+| 주요 성과 | Azure AD SSO+매직링크 → 관리자 등록+이메일/비밀번호 로그인으로 단순화. Supabase Admin API 래퍼, CSV/XLSX 일괄 등록, 비밀번호 변경 강제, 셀프 가입 차단, team_structure.json 프로비저닝 스크립트 |
+| 백엔드 | 8파일 (신규 3 + 수정 5) — user_account_service.py, routes_users.py, routes_auth.py, auth_service.py, user_schemas.py, exceptions.py, provision_users.py |
+| 프론트엔드 | 7파일 (신규 2 + 수정 5) — login, change-password, admin/users, AppSidebar, api.ts, onboarding |
+| 수정된 이슈 | must_change_password 우회 방지, XLSX team_name→team_id 변환 |
+
+---
+
+## security-hardening — Completed (보안 강화)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-20 |
+| Match Rate | **83%** (가중치) / **91%** (의도적 허용 제외) |
+| PDCA 반복 | 2회 (43% → 65% → 83%) |
+| Documents | analysis, report, security-audit |
+| Path | docs/archive/2026-03/security-hardening/ |
+| 주요 성과 | 보안 감사 21건 (CRITICAL 2, HIGH 5, MEDIUM 8, LOW 6) 대응. CRITICAL/HIGH 100%/90% 해소. RLS 적용, SSRF 방지, 업로드 크기 검증, 프로젝트 접근 제어, 보안 헤더, Rate Limit, 에러 응답 정리 |
+| 신규 파일 | 4개 (request_id.py, security_headers.py, e2e_interrupt_test.py, analysis.md) |
+| 수정 파일 | 10개 (deps.py, main.py, rfp_parser.py, routes_proposal/workflow/artifacts/files/g2b/team.py) |
+| Deferred | L-4(Supabase 비밀번호 정책), L-5(감사 로그 변조 방지), L-6(프론트엔드 ErrorBoundary) |

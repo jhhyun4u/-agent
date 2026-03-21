@@ -42,40 +42,10 @@ async def get_or_create_user_profile(
     if res.data:
         return res.data
 
-    # Azure AD OID로 사전 등록된 프로필 매칭
-    if azure_ad_oid:
-        oid_res = (
-            await client.table("users")
-            .select("*")
-            .eq("azure_ad_oid", azure_ad_oid)
-            .maybe_single()
-            .execute()
-        )
-        if oid_res.data:
-            # id를 auth user id로 업데이트
-            await client.table("users").update(
-                {"id": auth_user_id}
-            ).eq("azure_ad_oid", azure_ad_oid).execute()
-            return oid_res.data
-
-    # 이메일 도메인으로 조직 자동 매핑
-    org_id = await _resolve_org_by_email(email)
-    if not org_id:
-        logger.warning(f"조직 매핑 실패: {email} — 관리자 배정 필요")
-        return None
-
-    # 신규 프로필 생성
-    new_user = {
-        "id": auth_user_id,
-        "email": email,
-        "name": name,
-        "role": "member",
-        "org_id": org_id,
-        "azure_ad_oid": azure_ad_oid,
-    }
-    insert_res = await client.table("users").insert(new_user).execute()
-    logger.info(f"신규 사용자 프로필 생성: {email}")
-    return insert_res.data[0] if insert_res.data else new_user
+    # 셀프 가입 차단: 관리자가 사전 등록하지 않은 사용자는 접근 불가
+    # (Azure AD OID 매칭, 자동 프로필 생성 비활성화)
+    logger.warning(f"사전 등록되지 않은 사용자 로그인 시도: {email} — 관리자에게 문의 필요")
+    return None
 
 
 async def _resolve_org_by_email(email: str) -> Optional[str]:

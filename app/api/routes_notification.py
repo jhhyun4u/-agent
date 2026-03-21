@@ -41,7 +41,12 @@ async def list_notifications(
     if is_read is not None:
         query = query.eq("is_read", is_read)
 
-    result = await query.execute()
+    try:
+        result = await query.execute()
+    except Exception as e:
+        if "PGRST205" in str(e):
+            return {"items": [], "unread_count": 0}
+        raise
 
     # 안 읽은 알림 수
     unread = await (

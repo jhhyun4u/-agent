@@ -1,18 +1,19 @@
 """
 LangGraph StateGraph 정의 (§4)
 
-6 STEP 워크플로:
-STEP 0: 공고 검색 → 관심과제 선정 → RFP 획득
-STEP 1: RFP 분석 → 리서치 → Go/No-Go
-STEP 2: 전략 수립
-STEP 3: 실행 계획 (병렬)
-STEP 4: 제안서 작성 (섹션별 순차 + 리뷰) → 자가진단
-STEP 5: PPT 3단계 파이프라인 (TOC → Visual Brief → Storyboard)
+5 STEP 워크플로:
+STEP 1:   RFP 분석 → 리서치 → Go/No-Go
+STEP 2:   전략 수립
+STEP 2.5: 입찰가격계획 (bid_plan) → 리뷰
+STEP 3:   실행 계획 (병렬)
+STEP 4:   제안서 작성 (섹션별 순차 + 리뷰) → 자가진단
+STEP 5:   PPT 3단계 파이프라인 (TOC → Visual Brief → Storyboard)
 
 v3.2: research_gather + presentation_strategy 노드 추가
 v3.3: self_review 5방향 라우팅, plan 3방향 라우팅
 v3.5: 제안서 섹션별 순차 작성 + 리뷰 루프
-Phase 4: PPT fan-out → 3단계 순차 파이프라인 교체
+v3.7: STEP 0 제거 — 공고 모니터링에서 제안결정 시 RFP 이미 확보. 진입점은 rfp_analyze.
+v3.8: bid_plan 독립 노드 + interrupt 리뷰 (STEP 2.5)
 """
 
 import logging
@@ -24,17 +25,16 @@ from app.graph.state import ProposalState
 
 # 라우팅 함수
 from app.graph.edges import (
+    route_after_bid_plan_review,
     route_after_gng_review,
     route_after_plan_review,
     route_after_ppt_review,
     route_after_presentation_strategy,
     route_after_proposal_review,
     route_after_rfp_review,
-    route_after_search_review,
     route_after_section_review,
     route_after_self_review,
     route_after_strategy_review,
-    route_start,
 )
 
 # 실제 구현 노드
@@ -43,10 +43,9 @@ from app.graph.nodes.merge_nodes import plan_merge
 from app.graph.nodes.research_gather import research_gather
 from app.graph.nodes.review_node import review_node, review_section_node
 from app.graph.nodes.rfp_analyze import rfp_analyze
-from app.graph.nodes.rfp_fetch import rfp_fetch
-from app.graph.nodes.rfp_search import rfp_search
 
 # Phase 2: 전략·계획·제안서·PPT 실제 구현
+from app.graph.nodes.bid_plan import bid_plan
 from app.graph.nodes.strategy_generate import strategy_generate
 from app.graph.nodes.plan_nodes import (
     plan_assign,
@@ -90,6 +89,35 @@ def _passthrough(state: ProposalState) -> dict:
     return {}
 
 
+def _stream1_complete_hook(state: ProposalState) -> dict:
+    """Stream 1(정성제안서) 완료 훅 — END 도달 시 스트림 상태 갱신."""
+    import asyncio
+
+    proposal_id = state.get("project_id", "")
+    if not proposal_id:
+        return {}
+
+    async def _mark():
+        try:
+            from app.services.stream_orchestrator import update_stream_progress
+            await update_stream_progress(
+                proposal_id, "proposal",
+                status="completed",
+                current_phase="workflow_done",
+            )
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Stream 1 완료 갱신 실패: {e}")
+
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(_mark())
+    except RuntimeError:
+        pass
+
+    return {}
+
+
 def _proposal_start_gate(state: ProposalState) -> dict:
     """섹션별 순차 작성 시작: current_section_index 초기화."""
     return {"current_section_index": 0}
@@ -100,11 +128,6 @@ def _proposal_start_gate(state: ProposalState) -> dict:
 def build_graph(checkpointer=None):
     """전체 StateGraph 구성 및 컴파일."""
     g = StateGraph(ProposalState)
-
-    # STEP 0: 공고 검색/추천
-    g.add_node("rfp_search", track_tokens("rfp_search")(rfp_search))
-    g.add_node("review_search", review_node("search"))
-    g.add_node("rfp_fetch", rfp_fetch)
 
     # STEP 1-①: RFP 분석
     g.add_node("rfp_analyze", track_tokens("rfp_analyze")(rfp_analyze))
@@ -120,6 +143,10 @@ def build_graph(checkpointer=None):
     # STEP 2: 전략
     g.add_node("strategy_generate", track_tokens("strategy_generate")(strategy_generate))
     g.add_node("review_strategy", review_node("strategy"))
+
+    # STEP 2.5: 입찰가격계획
+    g.add_node("bid_plan", track_tokens("bid_plan")(bid_plan))
+    g.add_node("review_bid_plan", review_node("bid_plan"))
 
     # STEP 3: 실행 계획 (병렬)
     g.add_node("plan_fan_out_gate", _passthrough)
@@ -149,21 +176,8 @@ def build_graph(checkpointer=None):
 
     # ── 엣지 정의 ──
 
-    # START → 3가지 진입 경로
-    g.add_conditional_edges(START, route_start, {
-        "search": "rfp_search",
-        "direct_fetch": "rfp_fetch",
-        "direct_rfp": "rfp_analyze",
-    })
-
-    # STEP 0
-    g.add_edge("rfp_search", "review_search")
-    g.add_conditional_edges("review_search", route_after_search_review, {
-        "picked_up": "rfp_fetch",
-        "re_search": "rfp_search",
-        "no_interest": END,
-    })
-    g.add_edge("rfp_fetch", "rfp_analyze")
+    # START → rfp_analyze 직접 진입 (v3.7: STEP 0 제거)
+    g.add_edge(START, "rfp_analyze")
 
     # STEP 1-①
     g.add_edge("rfp_analyze", "review_rfp")
@@ -183,12 +197,20 @@ def build_graph(checkpointer=None):
         "rejected": "go_no_go",
     })
 
-    # STEP 2
+    # STEP 2 → 2.5: review_strategy "approved" → bid_plan (v3.8)
     g.add_edge("strategy_generate", "review_strategy")
     g.add_conditional_edges("review_strategy", route_after_strategy_review, {
-        "approved": "plan_fan_out_gate",
+        "approved": "bid_plan",
         "rejected": "strategy_generate",
         "positioning_changed": "strategy_generate",
+    })
+
+    # STEP 2.5 → 3: bid_plan → review_bid_plan → plan_fan_out_gate
+    g.add_edge("bid_plan", "review_bid_plan")
+    g.add_conditional_edges("review_bid_plan", route_after_bid_plan_review, {
+        "approved": "plan_fan_out_gate",
+        "rejected": "bid_plan",
+        "back_to_strategy": "strategy_generate",
     })
 
     # STEP 3: 선택적 병렬
@@ -200,6 +222,7 @@ def build_graph(checkpointer=None):
         "approved": "proposal_start_gate",
         "rework": "plan_fan_out_gate",
         "rework_with_strategy": "strategy_generate",
+        "rework_bid_plan": "bid_plan",
     })
 
     # STEP 4: 섹션별 순차 작성 + 리뷰 루프
@@ -229,10 +252,13 @@ def build_graph(checkpointer=None):
         "rework": "proposal_start_gate",
     })
 
+    # ── Stream 1 완료 훅 (END 도달 전) ──
+    g.add_node("stream1_complete_hook", _stream1_complete_hook)
+
     # v3.2: 발표전략 → PPT 3단계 파이프라인
     g.add_conditional_edges("presentation_strategy", route_after_presentation_strategy, {
         "proceed": "ppt_toc",
-        "document_only": END,  # POST-06: 서류심사 시 PPT 건너뛰기
+        "document_only": "stream1_complete_hook",  # POST-06: 서류심사 시 PPT 건너뛰기 → 훅 → END
     })
 
     # STEP 5: PPT 3단계 순차
@@ -240,8 +266,11 @@ def build_graph(checkpointer=None):
     g.add_edge("ppt_visual_brief", "ppt_storyboard")
     g.add_edge("ppt_storyboard", "review_ppt")
     g.add_conditional_edges("review_ppt", route_after_ppt_review, {
-        "approved": END,
+        "approved": "stream1_complete_hook",
         "rework": "ppt_toc",
     })
+
+    # stream1_complete_hook → END
+    g.add_edge("stream1_complete_hook", END)
 
     return g.compile(checkpointer=checkpointer)

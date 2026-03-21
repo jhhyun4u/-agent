@@ -31,9 +31,9 @@ async def process_project_completion(proposal_id: str, result: str) -> dict:
         return {"actions": []}
 
     p = proposal.data
-    created_by = p.get("created_by", "")
+    created_by = p.get("owner_id", "")
     org_id = p.get("org_id", "")
-    project_name = p.get("project_name", "")
+    project_name = p.get("title", "")
 
     # 1. 발주기관 DB 자동 업데이트 제안
     client_name = p.get("client_name") or p.get("client_org")

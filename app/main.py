@@ -1,7 +1,7 @@
 """
 FastAPI 애플리케이션 진입점 (v3.4)
 
-용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker
+Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker
 - LangGraph StateGraph 기반 다단계 파이프라인
 - RFP 파싱 → 분석 → 전략 → 본문 생성 → 품질 검증
 - DOCX + PPTX + HWP 자동 생성
@@ -16,6 +16,8 @@ import logging
 
 from app.config import settings
 from app.exceptions import TenopAPIError
+from app.middleware.rate_limit import limiter, rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -24,13 +26,20 @@ if settings.log_format == "json":
 
     class _JsonFormatter(logging.Formatter):
         def format(self, record):
-            return _json.dumps({
+            from app.middleware.request_id import get_request_id
+            log_entry = {
                 "timestamp": _dt.datetime.fromtimestamp(record.created, tz=_dt.timezone.utc).isoformat(),
                 "level": record.levelname,
+                "service": "api",
                 "logger": record.name,
+                "request_id": getattr(record, "request_id", "") or get_request_id(),
                 "message": record.getMessage(),
-                **({"exc": self.formatException(record.exc_info)} if record.exc_info else {}),
-            }, ensure_ascii=False)
+            }
+            if hasattr(record, "data"):
+                log_entry["data"] = record.data
+            if record.exc_info:
+                log_entry["exc"] = self.formatException(record.exc_info)
+            return _json.dumps(log_entry, ensure_ascii=False)
 
     _handler = logging.StreamHandler()
     _handler.setFormatter(_JsonFormatter())
@@ -44,7 +53,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """애플리케이션 생명주기"""
-    logger.info("용역제안 Coworker v3.4 시스템 시작")
+    logger.info("Proposal Architect v3.4 시스템 시작")
     import os
     os.makedirs(settings.output_dir, exist_ok=True)
 
@@ -78,16 +87,49 @@ async def lifespan(app: FastAPI):
     from app.services.scheduled_monitor import setup_scheduler
     setup_scheduler()
 
+    # 공고 자동 정리 (마감 경과 + days_remaining 갱신)
+    try:
+        from app.services.bid_cleanup import cleanup_expired_bids
+        cleaned = await cleanup_expired_bids()
+        logger.info(f"공고 자동 정리 완료: {cleaned}")
+    except Exception as e:
+        logger.warning(f"공고 자동 정리 경고 (무시): {e}")
+
+    # 프롬프트 레지스트리 동기화 (코드 → DB)
+    try:
+        from app.services.prompt_registry import sync_all_prompts
+        sync_result = await sync_all_prompts()
+        logger.info(f"프롬프트 레지스트리 동기화: {sync_result}")
+    except Exception as e:
+        logger.warning(f"프롬프트 레지스트리 동기화 경고 (무시): {e}")
+
     yield
     logger.info("시스템 종료")
 
 
+# L-3: 프로덕션에서 OpenAPI docs 비활성화
+_is_production = settings.log_format == "json"
+
 app = FastAPI(
-    title="용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker",
+    title="Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker",
     description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v3.4)",
     version="3.4.0",
     lifespan=lifespan,
+    docs_url=None if _is_production else "/docs",
+    redoc_url=None if _is_production else "/redoc",
 )
+
+# ── Request ID 미들웨어 (Zero Script QA 핵심) ──
+from app.middleware.request_id import RequestIdMiddleware
+app.add_middleware(RequestIdMiddleware)
+
+# ── 보안 헤더 미들웨어 (L-1, L-2) ──
+from app.middleware.security_headers import SecurityHeadersMiddleware
+app.add_middleware(SecurityHeadersMiddleware)
+
+# ── Rate Limiting ──
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
 
 # ── CORS ──
 app.add_middleware(
@@ -143,6 +185,32 @@ app.include_router(kb_router)
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
 app.include_router(analytics_router)
+
+# PSM-16: Q&A 기록 CRUD + 검색
+from app.api.routes_qa import router as qa_router
+app.include_router(qa_router)
+
+# 프로젝트 파일 관리 (GAP-1~6)
+from app.api.routes_files import router as files_router
+app.include_router(files_router)
+
+# 비딩 가격 시뮬레이션
+from app.api.routes_pricing import router as pricing_router
+app.include_router(pricing_router)
+
+# 투찰 관리
+from app.api.routes_bid_submission import router as bid_submission_router
+app.include_router(bid_submission_router)
+
+# 프롬프트 진화 시스템
+from app.api.routes_prompt_evolution import router as prompt_evolution_router
+app.include_router(prompt_evolution_router)
+
+# 3-Stream 병행 업무
+from app.api.routes_streams import router as streams_router
+from app.api.routes_submission_docs import router as submission_docs_router
+app.include_router(streams_router)
+app.include_router(submission_docs_router)
 
 # 기존 라우터
 from app.api.routes import router as main_router

@@ -277,7 +277,7 @@ async def invite_member(
     except Exception as e:
         if "unique" in str(e).lower() or "duplicate" in str(e).lower():
             raise HTTPException(status_code=409, detail="이미 초대된 이메일입니다.")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="초대 처리 중 오류가 발생했습니다.")
     return {"invitation_id": inv_id, "email": body.email, "role": body.role, "status": "pending"}
 
 
@@ -357,7 +357,7 @@ async def accept_invitation(body: InvitationAccept, user=Depends(get_current_use
     except Exception as e:
         if "unique" in str(e).lower() or "duplicate" in str(e).lower():
             raise HTTPException(status_code=409, detail="이미 팀에 속해 있습니다.")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="멤버 추가 중 오류가 발생했습니다.")
 
     await (
         client.table("invitations")

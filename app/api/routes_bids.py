@@ -369,6 +369,64 @@ async def list_announcements(
     }
 
 
+# ── 적합도 스코어링 기반 공고 조회 (v2) ────────────────
+
+@router.get("/api/bids/scored")
+async def get_scored_bids(
+    date_from: Optional[str] = Query(None, description="시작일 (YYYYMMDD). 미지정 시 오늘"),
+    date_to: Optional[str] = Query(None, description="종료일 (YYYYMMDD). 미지정 시 오늘"),
+    days: int = Query(1, ge=1, le=30, description="조회 일수 (date_from 미지정 시 사용)"),
+    min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
+    min_score: float = Query(20, description="최소 적합도 점수"),
+    max_results: int = Query(100, ge=1, le=300, description="최대 반환 건수"),
+    current_user=Depends(get_current_user_or_none),
+):
+    """
+    적합도 스코어링 기반 공고 추천 (v2).
+
+    G2B 전수 수집 → 역할 키워드 + 분류 가중치 + 도메인 스코어링.
+    tenopa upfront research(전략/기획/연구/분석) 특화 랭킹.
+    """
+    from app.services.bid_fetcher import BidFetcher
+
+    try:
+        # 날짜 범위 결정
+        if not date_to:
+            date_to_dt = datetime.now(timezone.utc)
+            date_to_str = date_to_dt.strftime("%Y%m%d") + "2359"
+        else:
+            date_to_str = date_to + "2359"
+
+        if not date_from:
+            date_from_dt = datetime.now(timezone.utc) - timedelta(days=days - 1)
+            date_from_str = date_from_dt.strftime("%Y%m%d") + "0000"
+        else:
+            date_from_str = date_from + "0000"
+
+        async with G2BService() as g2b:
+            fetcher = BidFetcher(g2b_service=g2b, supabase_client=None)
+            results = await fetcher.fetch_bids_scored(
+                date_from=date_from_str,
+                date_to=date_to_str,
+                min_budget=min_budget,
+                min_score=min_score,
+                max_results=max_results,
+            )
+
+        data = results["data"]
+        return {
+            "date_from": date_from_str[:8],
+            "date_to": date_to_str[:8],
+            "total_count": len(data),
+            "total_fetched": results["total_fetched"],
+            "sources": results.get("sources", {}),
+            "data": data,
+        }
+    except Exception as e:
+        logger.error(f"scored bids 오류: {e}")
+        raise HTTPException(status_code=500, detail="공고 스코어링 중 오류가 발생했습니다.")
+
+
 @router.get("/api/bids/monitor")
 async def get_monitored_bids(
     scope: str = Query(default="company", pattern="^(my|team|division|company)$"),
@@ -464,41 +522,45 @@ async def get_monitored_bids(
         )
         user_data = user_res.data or {}
 
-        if scope == "team":
-            team_id = user_data.get("team_id")
-            if not team_id:
-                return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
-            rec_res = (
-                await client.table("bid_recommendations")
-                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
-                .eq("team_id", team_id)
-                .neq("qualification_status", "fail")
-                .order("match_score", desc=True)
-                .range(offset, offset + per_page - 1)
-                .execute()
-            )
-        else:
-            division_id = user_data.get("division_id")
-            if not division_id:
-                return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
-            teams_res = (
-                await client.table("teams")
-                .select("id")
-                .eq("division_id", division_id)
-                .execute()
-            )
-            team_ids = [t["id"] for t in (teams_res.data or [])]
-            if not team_ids:
-                return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
-            rec_res = (
-                await client.table("bid_recommendations")
-                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
-                .in_("team_id", team_ids)
-                .neq("qualification_status", "fail")
-                .order("match_score", desc=True)
-                .range(offset, offset + per_page - 1)
-                .execute()
-            )
+        try:
+            if scope == "team":
+                team_id = user_data.get("team_id")
+                if not team_id:
+                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                rec_res = (
+                    await client.table("bid_recommendations")
+                    .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                    .eq("team_id", team_id)
+                    .neq("qualification_status", "fail")
+                    .order("match_score", desc=True)
+                    .range(offset, offset + per_page - 1)
+                    .execute()
+                )
+            else:
+                division_id = user_data.get("division_id")
+                if not division_id:
+                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                teams_res = (
+                    await client.table("teams")
+                    .select("id")
+                    .eq("division_id", division_id)
+                    .execute()
+                )
+                team_ids = [t["id"] for t in (teams_res.data or [])]
+                if not team_ids:
+                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                rec_res = (
+                    await client.table("bid_recommendations")
+                    .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                    .in_("team_id", team_ids)
+                    .neq("qualification_status", "fail")
+                    .order("match_score", desc=True)
+                    .range(offset, offset + per_page - 1)
+                    .execute()
+                )
+        except Exception as e:
+            logger.warning(f"bid_recommendations 조회 실패 ({scope}): {e}")
+            rec_res = type("R", (), {"data": []})()
 
         data = []
         seen_bids = set()
@@ -574,9 +636,10 @@ async def get_monitored_bids(
                 attachments.append({"name": name, "url": url})
         b["attachments"] = attachments
 
-        # 공고 단계: ntceKindNm (등록공고=본공고, 사전규격공개=사전공고 등)
+        # 공고 단계: PRE- prefix 또는 ntceKindNm으로 판별
+        bid_no = b.get("bid_no", "")
         kind = raw.get("ntceKindNm", "")
-        if "사전" in kind or "규격" in kind:
+        if bid_no.startswith("PRE-") or "사전" in kind or "규격" in kind:
             b["bid_stage"] = "사전공고"
         else:
             b["bid_stage"] = "본공고"
@@ -655,6 +718,9 @@ async def get_monitored_bids(
         bm_set = {r["bid_no"] for r in (bm_res.data or [])}
         for b in data:
             b["is_bookmarked"] = b["bid_no"] in bm_set
+    else:
+        for b in data:
+            b["is_bookmarked"] = False
 
     # 제안여부 (파일 캐시에서 조회)
     import json as _status_json
@@ -774,6 +840,16 @@ async def analyze_bid_for_proposal(
         parts = [raw.get("bidNtceNm", ""), raw.get("bidNtceDtl", "")]
         content = "\n".join(p for p in parts if p)
 
+    # NEW: content가 부족하면 첨부파일에서 텍스트 추출
+    if len(content.strip()) < 200:
+        try:
+            attachment_text = await _extract_text_from_attachments(raw)
+            if attachment_text:
+                content = attachment_text
+                logger.info(f"[{bid_no}] 첨부파일에서 텍스트 추출 성공 ({len(attachment_text)}자)")
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 첨부파일 텍스트 추출 실패 (무시): {e}")
+
     # 팀 목록 조회 (적합 팀 추천용)
     teams_list: list[str] = []
     try:
@@ -799,10 +875,9 @@ async def analyze_bid_for_proposal(
     summary = await preprocessor.preprocess(bid_ann) if content.strip() else None
 
     # rfp_summary 구성: 전처리 결과 기반
+    # NOTE: 발주기관은 상단 "공고 정보" 섹션에 이미 표시되므로 중복 제거
     rfp_summary: list[str] = []
     if summary:
-        if summary.organization:
-            rfp_summary.append(f"발주기관: {summary.organization}")
         if summary.budget_detail:
             rfp_summary.append(f"예산: {summary.budget_detail}")
         if summary.period:
@@ -1072,6 +1147,50 @@ async def create_proposal_from_bid(
 
 # ── 내부 헬퍼 ────────────────────────────────────────────────
 
+async def _extract_text_from_attachments(raw: dict) -> str:
+    """raw_data에서 첨부파일 URL을 찾아 텍스트 추출 (제안요청서/과업지시서 우선)"""
+    from app.services.rfp_parser import parse_rfp_from_url
+
+    # 1. 첨부파일 URL + 파일명 수집
+    attachments = []
+    for i in range(1, 11):
+        url = raw.get(f"ntceSpecDocUrl{i}")
+        name = raw.get(f"ntceSpecFileNm{i}", "")
+        if url:
+            attachments.append({"url": url, "name": name})
+
+    if not attachments:
+        return ""
+
+    # 2. 우선순위 정렬: 제안요청서 > 과업지시서 > 공고문 > 기타
+    def priority(att):
+        lower = att["name"].lower()
+        if "제안요청" in lower or "rfp" in lower:
+            return 0
+        if "과업지시" in lower or "과업내용" in lower:
+            return 1
+        if "공고" in lower:
+            return 2
+        return 3
+
+    attachments.sort(key=priority)
+
+    # 3. 상위 2개 파일만 시도 (시간/토큰 절약)
+    extracted_parts = []
+    for att in attachments[:2]:
+        ext = att["name"].rsplit(".", 1)[-1].lower() if "." in att["name"] else "pdf"
+        if ext not in ("pdf", "docx", "hwpx", "hwp"):
+            continue
+        try:
+            text = await parse_rfp_from_url(att["url"], ext)
+            if text and len(text.strip()) > 100:
+                extracted_parts.append(text)
+        except Exception:
+            continue
+
+    return "\n\n".join(extracted_parts)
+
+
 async def _invalidate_recommendations_cache(client, team_id: str) -> None:
     """팀 프로필 변경 시 bid_recommendations 캐시 즉시 만료"""
     try:
@@ -1224,6 +1343,12 @@ async def _run_fetch_and_analyze(
         async with G2BService() as g2b:
             fetcher = BidFetcher(g2b, client)
             bids = await fetcher.fetch_bids_by_preset(preset)
+            # 사전규격도 수집
+            try:
+                pre_bids = await fetcher.fetch_pre_bids_by_preset(preset)
+                bids.extend(pre_bids)
+            except Exception as e:
+                logger.debug(f"사전규격 수집 실패 (무시): {e}")
 
         if not bids:
             logger.info(f"[팀 {team_id}] 수집된 공고 없음")

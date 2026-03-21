@@ -51,3 +51,21 @@ uvicorn.log
 
 # Temp files
 _fix_*.py
+tmp_*
+tmp_screenshots/
+
+# Test results
+frontend/test-results/
+
+# Supabase temp
+supabase/.temp/
+
+# Data (local analysis)
+data/bid_analyses/
+data/bid_status/
+data/bid_pipeline.json
+data/team_structure.json
+data/*.xlsx
+
+# bkit state
+.pdca-status.json

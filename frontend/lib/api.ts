@@ -87,6 +87,8 @@ export interface ProposalSummary {
   positioning: string | null;
   win_result: string | null;
   bid_amount: number | null;
+  deadline: string | null;
+  client_name: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -152,6 +154,21 @@ export interface ProposalStatus_ {
   phases_completed: number;
   created_at: string;
   error: string;
+}
+
+// ── 프로젝트 파일 타입 ────────────────────────────────────────────────
+
+export interface ProposalFile {
+  id: string;
+  proposal_id: string;
+  category: string;
+  filename: string;
+  storage_path: string;
+  file_type: string | null;
+  file_size: number | null;
+  uploaded_by: string | null;
+  description: string | null;
+  created_at: string;
 }
 
 // ── 자료 관리 타입 ────────────────────────────────────────────────────
@@ -314,12 +331,14 @@ export const api = {
   },
 
   proposals: {
-    list(params?: { q?: string; status?: string; page?: number }) {
+    list(params?: { q?: string; status?: string; page?: number; scope?: string; search?: string }) {
       const qs = new URLSearchParams();
       if (params?.q) qs.set("q", params.q);
       if (params?.status) qs.set("status", params.status);
       if (params?.page) qs.set("page", String(params.page));
-      return request<{ items: ProposalSummary[]; page: number; page_size: number }>(
+      if (params?.scope) qs.set("scope", params.scope);
+      if (params?.search) qs.set("search", params.search);
+      return request<{ items: ProposalSummary[]; total: number }>(
         "GET",
         `/proposals?${qs}`
       );
@@ -344,12 +363,12 @@ export const api = {
       );
     },
 
-    /** 프로젝트 생성 — 공고번호 직접 지정 */
-    createFromSearch(bidNo: string, teamId?: string) {
-      return request<{ proposal_id: string; status: string }>(
+    /** 프로젝트 생성 — 공고 모니터링에서 제안 시작 */
+    createFromBid(bidNo: string) {
+      return request<{ proposal_id: string; title: string; entry_point: string; bid_no: string }>(
         "POST",
-        "/proposals/from-search",
-        { bid_no: bidNo, team_id: teamId }
+        "/proposals/from-bid",
+        { bid_no: bidNo }
       );
     },
 
@@ -394,6 +413,31 @@ export const api = {
         `/proposals/${id}/lessons`,
         data
       );
+    },
+
+    // 프로젝트 파일 관리 (GAP-1~6)
+    listFiles(id: string, category?: string) {
+      const qs = category ? `?category=${category}` : "";
+      return request<{ files: ProposalFile[] }>("GET", `/proposals/${id}/files${qs}`);
+    },
+    uploadFile(id: string, file: File, description?: string) {
+      const formData = new FormData();
+      formData.append("file", file);
+      if (description) formData.append("description", description);
+      return request<{ file_id: string; filename: string; storage_path: string }>(
+        "POST", `/proposals/${id}/files`, formData, true
+      );
+    },
+    deleteFile(id: string, fileId: string) {
+      return request<void>("DELETE", `/proposals/${id}/files/${fileId}`);
+    },
+    getFileUrl(id: string, fileId: string) {
+      return request<{ url: string; filename: string; expires_in: number }>(
+        "GET", `/proposals/${id}/files/${fileId}/url`
+      );
+    },
+    deleteProposal(id: string) {
+      return request<void>("DELETE", `/proposals/${id}`);
     },
   },
 
@@ -621,6 +665,20 @@ export const api = {
     getAttachmentUrl(bidNo: string, fileName: string, proposalId?: string) {
       const qs = proposalId ? `?proposal_id=${proposalId}` : "";
       return request<{ data: { url: string; file_name: string; expires_in: number } }>("GET", `/bids/${bidNo}/attachments/${encodeURIComponent(fileName)}${qs}`);
+    },
+    // 적합도 스코어링 기반 공고 조회 (v2)
+    scored(params: { dateFrom?: string; dateTo?: string; days?: number; minBudget?: number; minScore?: number; maxResults?: number } = {}) {
+      const qs = new URLSearchParams();
+      if (params.dateFrom) qs.set("date_from", params.dateFrom);
+      if (params.dateTo) qs.set("date_to", params.dateTo);
+      if (params.days) qs.set("days", String(params.days));
+      if (params.minBudget) qs.set("min_budget", String(params.minBudget));
+      if (params.minScore !== undefined) qs.set("min_score", String(params.minScore));
+      if (params.maxResults) qs.set("max_results", String(params.maxResults));
+      const q = qs.toString();
+      return request<{ date_from: string; date_to: string; total_count: number; total_fetched: number; sources: Record<string, number>; data: ScoredBid[] }>(
+        "GET", `/bids/scored${q ? `?${q}` : ""}`
+      );
     },
     // 공고 모니터링 (스코프별)
     monitor(scope: "my" | "team" | "division" | "company" = "company", page = 1, showAll = false) {
@@ -1048,7 +1106,183 @@ export const api = {
       return request<{ data: QASearchResult[]; count: number }>("GET", path);
     },
   },
+
+  // ── 프롬프트 진화 시스템 ──
+  prompts: {
+    dashboard() {
+      return request<PromptDashboard>("GET", "/prompts/dashboard");
+    },
+    list(status = "active") {
+      return request<{ prompts: PromptRegistryItem[] }>("GET", `/prompts/list?status=${status}`);
+    },
+    detail(promptId: string) {
+      return request<PromptDetail>("GET", `/prompts/${encodeURIComponent(promptId)}/detail`);
+    },
+    effectiveness(promptId: string, version?: number) {
+      let path = `/prompts/${encodeURIComponent(promptId)}/effectiveness`;
+      if (version !== undefined) path += `?version=${version}`;
+      return request<PromptEffectiveness>("GET", path);
+    },
+    sectionHeatmap() {
+      return request<{ heatmap: SectionHeatmapItem[] }>("GET", "/prompts/section-heatmap");
+    },
+    suggestImprovement(promptId: string) {
+      return request<PromptSuggestion>("POST", `/prompts/${encodeURIComponent(promptId)}/suggest-improvement`);
+    },
+    createCandidate(promptId: string, text: string, reason: string) {
+      return request<{ version: number; status: string }>(
+        "POST", `/prompts/${encodeURIComponent(promptId)}/create-candidate`, { text, reason }
+      );
+    },
+    recordEditAction(body: EditActionBody) {
+      return request<{ recorded: boolean }>("POST", "/prompts/edit-action", body);
+    },
+    experiments: {
+      list(status?: string) {
+        let path = "/prompts/experiments/list";
+        if (status) path += `?status=${status}`;
+        return request<{ experiments: PromptExperiment[] }>("GET", path);
+      },
+      create(body: ExperimentCreateBody) {
+        return request<{ experiment_id: string; status: string }>(
+          "POST", "/prompts/experiments/create", body
+        );
+      },
+      evaluate(id: string) {
+        return request<ExperimentEvaluation>("POST", `/prompts/experiments/${id}/evaluate`);
+      },
+      promote(id: string) {
+        return request<{ promoted: boolean; version?: number }>("POST", `/prompts/experiments/${id}/promote`);
+      },
+      rollback(id: string) {
+        return request<{ rolled_back: boolean }>("POST", `/prompts/experiments/${id}/rollback`);
+      },
+    },
+  },
 };
+
+// ── 프롬프트 진화 타입 ──────────────────────────────────────────────
+
+export interface PromptRegistryItem {
+  prompt_id: string;
+  version: number;
+  source_file: string;
+  status: string;
+  content_hash: string;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  created_by: string;
+}
+
+export interface PromptDashboard {
+  prompts: PromptRegistryItem[];
+  effectiveness: PromptEffectivenessRow[];
+  edit_stats: PromptEditStat[];
+  running_experiments: PromptExperiment[];
+  total_prompts: number;
+}
+
+export interface PromptEffectivenessRow {
+  prompt_id: string;
+  prompt_version: number;
+  proposals_used: number;
+  won: number;
+  lost: number;
+  win_rate: number | null;
+  avg_quality_score: number | null;
+  avg_input_tokens: number | null;
+  avg_output_tokens: number | null;
+  avg_duration_ms: number | null;
+}
+
+export interface PromptEditStat {
+  prompt_id: string;
+  edit_count: number;
+  avg_edit_ratio: number;
+  actions: Record<string, number>;
+}
+
+export interface PromptDetail {
+  prompt_id: string;
+  active_version: PromptRegistryItem | null;
+  versions: (PromptRegistryItem & { content_text: string; change_reason: string })[];
+  total_versions: number;
+}
+
+export interface PromptEffectiveness {
+  prompt_id: string;
+  prompt_version?: number;
+  proposals_used: number;
+  won?: number;
+  lost?: number;
+  win_rate?: number | null;
+  avg_quality_score?: number | null;
+  avg_edit_ratio?: number | null;
+  avg_input_tokens?: number;
+  avg_output_tokens?: number;
+  avg_duration_ms?: number;
+}
+
+export interface SectionHeatmapItem {
+  section_id: string;
+  usage_count: number;
+  avg_quality: number | null;
+  unique_prompts: number;
+}
+
+export interface PromptSuggestion {
+  analysis?: string;
+  suggestions?: {
+    title: string;
+    rationale: string;
+    key_changes: string[];
+    prompt_text: string;
+  }[];
+  error?: string;
+}
+
+export interface EditActionBody {
+  proposal_id: string;
+  section_id: string;
+  action: "accept" | "edit" | "reject" | "regenerate";
+  original?: string;
+  edited?: string;
+}
+
+export interface ExperimentCreateBody {
+  prompt_id: string;
+  candidate_version: number;
+  traffic_pct?: number;
+  experiment_name?: string;
+  min_samples?: number;
+}
+
+export interface PromptExperiment {
+  id: string;
+  experiment_name: string;
+  prompt_id: string;
+  baseline_version: number;
+  candidate_version: number;
+  traffic_pct: number;
+  status: string;
+  min_samples: number;
+  promote_threshold: number;
+  conclusion?: string;
+  promoted_version?: number;
+  started_at: string;
+  ended_at?: string;
+}
+
+export interface ExperimentEvaluation {
+  experiment_id: string;
+  experiment_name: string;
+  baseline: Record<string, unknown>;
+  candidate: Record<string, unknown>;
+  min_samples_reached: boolean;
+  improvement?: number;
+  recommendation?: "promote" | "rollback" | "continue";
+  error?: string;
+}
 
 // ── PSM-16: Q&A 타입 ─────────────────────────────────────────────────
 
@@ -1245,6 +1479,21 @@ export interface BidAttachment {
   url: string;
 }
 
+export interface ScoredBid {
+  bid_no: string;
+  title: string;
+  agency: string;
+  budget: number;
+  deadline: string;
+  d_day: number | null;
+  score: number;
+  role_keywords: string[];
+  domain_keywords: string[];
+  classification: string;
+  classification_large: string;
+  bid_stage: "입찰공고" | "사전규격" | "발주계획";
+}
+
 export interface MonitoredBid {
   bid_no: string;
   bid_title: string;
@@ -1367,6 +1616,11 @@ export interface WorkflowState {
   has_pending_interrupt: boolean;
   next_nodes: string[];
   token_summary: { total_cost_usd: number; nodes_tracked: number };
+  current_section_index?: number | null;
+  total_sections?: number | null;
+  interrupt_data?: Record<string, unknown> | null;
+  review_history?: Array<{ node: string; approved: boolean; feedback?: string; timestamp: string }>;
+  streams_status?: StreamsOverview | null;
 }
 
 export interface WorkflowResumeData {
@@ -1712,6 +1966,7 @@ export type WorkflowStep =
   | "research_gather"
   | "go_no_go"
   | "strategy_generate"
+  | "bid_plan"
   | "plan_team"
   | "plan_assign"
   | "plan_schedule"
@@ -1729,10 +1984,392 @@ export const WORKFLOW_STEPS: Array<{
   label: string;
   nodes: string[];
 }> = [
-  { step: 0, label: "공고 검색", nodes: ["rfp_search", "rfp_fetch"] },
   { step: 1, label: "RFP 분석", nodes: ["rfp_analyze", "research_gather", "go_no_go"] },
   { step: 2, label: "전략 수립", nodes: ["strategy_generate"] },
+  { step: 2.5, label: "가격 결정", nodes: ["bid_plan"] },
   { step: 3, label: "실행 계획", nodes: ["plan_team", "plan_assign", "plan_schedule", "plan_story", "plan_price"] },
   { step: 4, label: "제안서 작성", nodes: ["proposal_write_next", "self_review"] },
   { step: 5, label: "PPT 생성", nodes: ["presentation_strategy", "ppt_toc", "ppt_visual_brief", "ppt_storyboard"] },
 ];
+
+
+// ── 비딩 가격 시뮬레이션 ─────────────────────────────────────────────
+
+export interface PricingPersonnelInput {
+  role: string;
+  grade: string;
+  person_months: number;
+  labor_type?: string;
+}
+
+export interface PricingSimulationRequest {
+  budget: number;
+  domain?: string;
+  evaluation_method?: string;
+  tech_price_ratio?: { tech: number; price: number };
+  positioning?: string;
+  competitor_count?: number;
+  cost_standard?: string | null;
+  personnel?: PricingPersonnelInput[];
+  client_name?: string | null;
+  proposal_id?: string | null;
+}
+
+export interface SensitivityPoint {
+  ratio: number;
+  bid_price: number;
+  win_prob: number;
+  expected_payoff: number;
+}
+
+export interface PricingScenario {
+  name: string;
+  label: string;
+  bid_ratio: number;
+  bid_price: number;
+  win_probability: number;
+  expected_payoff: number;
+  risk_level: string;
+}
+
+export interface CostBreakdownDetail {
+  direct_labor: number;
+  direct_labor_fmt: string;
+  indirect_cost: number;
+  indirect_fmt: string;
+  technical_fee: number;
+  tech_fee_fmt: string;
+  subtotal: number;
+  subtotal_fmt: string;
+  vat: number;
+  vat_fmt: string;
+  total_cost: number;
+  total_cost_fmt: string;
+  personnel_detail: Array<{
+    role: string;
+    grade: string;
+    monthly_rate: number;
+    person_months: number;
+    amount: number;
+    amount_fmt: string;
+  }>;
+}
+
+export interface MarketContext {
+  domain: string;
+  avg_bid_ratio: number | null;
+  avg_num_bidders: number | null;
+  total_cases: number;
+  evaluation_method_distribution: Record<string, number>;
+  budget_tier_distribution: Record<string, number>;
+}
+
+export interface PricingSimulationResult {
+  cost_breakdown: CostBreakdownDetail | null;
+  cost_standard_used: string;
+  cost_standard_reason: string;
+  recommended_bid: number;
+  recommended_ratio: number;
+  bid_range: { min_price: number; max_price: number; min_ratio: number; max_ratio: number } | null;
+  win_probability: number;
+  win_probability_confidence: string;
+  comparable_cases: number;
+  sensitivity_curve: SensitivityPoint[];
+  optimal_ratio: number;
+  scenarios: PricingScenario[];
+  market_context: MarketContext | null;
+  data_quality: string;
+  created_at: string;
+}
+
+export interface QuickEstimateResult {
+  recommended_ratio: number;
+  recommended_bid: number;
+  win_probability: number;
+  win_probability_confidence: string;
+  comparable_cases: number;
+  data_quality: string;
+  market_avg_ratio: number | null;
+  positioning_adjustment: string;
+}
+
+export interface PricingSimulationSummary {
+  id: string;
+  proposal_id: string | null;
+  budget: number;
+  domain: string;
+  evaluation_method: string;
+  positioning: string;
+  selected_scenario: string | null;
+  created_at: string;
+}
+
+export interface MarketAnalysisResult {
+  domain: string;
+  total_cases: number;
+  avg_bid_ratio: number | null;
+  avg_num_bidders: number | null;
+  distribution: Array<{ bucket: string; count: number }>;
+  yearly_trend: Array<{ year: number; avg_ratio: number; count: number }>;
+}
+
+export interface PricingSensitivityRequest {
+  budget: number;
+  total_cost?: number;
+  domain?: string;
+  evaluation_method?: string;
+  competitor_count?: number;
+  positioning?: string;
+  center_ratio?: number;
+  range_pct?: number;
+  steps?: number;
+}
+
+export interface PricingSensitivityResult {
+  points: SensitivityPoint[];
+  optimal_ratio: number;
+  optimal_payoff: number;
+}
+
+// ── Pricing API 메서드 (api 객체에 추가) ──
+
+export const pricingApi = {
+  async simulatePricing(req: PricingSimulationRequest): Promise<PricingSimulationResult> {
+    return request("POST", "/pricing/simulate", req);
+  },
+  async quickEstimate(params: { budget: number; evaluation_method?: string; domain?: string; positioning?: string; competitor_count?: number }): Promise<QuickEstimateResult> {
+    return request("POST", "/pricing/quick-estimate", params);
+  },
+  async getPricingSimulations(proposalId?: string): Promise<{ items: PricingSimulationSummary[]; total: number }> {
+    const qs = proposalId ? `?proposal_id=${proposalId}` : "";
+    return request("GET", `/pricing/simulations${qs}`);
+  },
+  async getPricingSimulation(id: string): Promise<Record<string, unknown>> {
+    return request("GET", `/pricing/simulations/${id}`);
+  },
+  async getMarketAnalysis(domain: string, method?: string): Promise<MarketAnalysisResult> {
+    const qs = method ? `?domain=${encodeURIComponent(domain)}&evaluation_method=${encodeURIComponent(method)}` : `?domain=${encodeURIComponent(domain)}`;
+    return request("GET", `/pricing/market-analysis${qs}`);
+  },
+  async runSensitivity(req: PricingSensitivityRequest): Promise<PricingSensitivityResult> {
+    return request("POST", "/pricing/sensitivity", req);
+  },
+  async getPredictionAccuracy(): Promise<{ total_resolved: number; avg_error: number | null; accuracy_by_result: Record<string, { count: number; avg_error: number | null }> }> {
+    return request("GET", "/pricing/prediction-accuracy");
+  },
+};
+
+
+// ── 투찰 관리 API ─────────────────────────────────────────────
+
+export interface BidSubmissionStatus {
+  bid_confirmed_price: number | null;
+  bid_confirmed_ratio: number | null;
+  bid_confirmed_scenario: string | null;
+  bid_confirmed_at: string | null;
+  bid_confirmed_by: string | null;
+  bid_submitted_price: number | null;
+  bid_submitted_at: string | null;
+  bid_submitted_by: string | null;
+  bid_submission_note: string | null;
+  bid_submission_status: "ready" | "submitted" | "verified" | null;
+}
+
+export interface BidPriceHistoryEntry {
+  id: string;
+  proposal_id: string;
+  event_type: "confirmed" | "override" | "submitted" | "verified";
+  price: number;
+  ratio: number | null;
+  scenario_name: string | null;
+  reason: string | null;
+  actor_id: string | null;
+  actor_name: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+// ── 3-Stream 타입 ──────────────────────────────────────────────
+
+export type StreamName = "proposal" | "bidding" | "documents";
+export type StreamStatusType = "not_started" | "in_progress" | "blocked" | "completed" | "error";
+
+export interface StreamProgress {
+  stream: StreamName;
+  status: StreamStatusType;
+  progress_pct: number;
+  current_phase: string | null;
+  blocked_reason: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  metadata: Record<string, unknown>;
+}
+
+export interface StreamsOverview {
+  streams: StreamProgress[];
+  convergence_ready: boolean;
+  missing_streams: string[];
+}
+
+export type DocCategory = "proposal" | "qualification" | "certification" | "financial" | "other";
+export type DocStatus = "pending" | "assigned" | "in_progress" | "uploaded" | "verified" | "rejected" | "not_applicable" | "expired";
+
+export interface SubmissionDocument {
+  id: string;
+  proposal_id: string;
+  doc_type: string;
+  doc_category: DocCategory;
+  required_format: string;
+  required_copies: number;
+  source: string;
+  status: DocStatus;
+  assignee_id: string | null;
+  deadline: string | null;
+  priority: string;
+  notes: string | null;
+  file_path: string | null;
+  file_name: string | null;
+  file_size: number | null;
+  file_format: string | null;
+  uploaded_by: string | null;
+  uploaded_at: string | null;
+  verified_by: string | null;
+  verified_at: string | null;
+  rejection_reason: string | null;
+  sort_order: number;
+  rfp_reference: string | null;
+  created_at: string | null;
+}
+
+export interface SubmissionDocCreate {
+  doc_type: string;
+  doc_category?: DocCategory;
+  required_format?: string;
+  required_copies?: number;
+  priority?: string;
+  notes?: string;
+  assignee_id?: string;
+  deadline?: string;
+  rfp_reference?: string;
+}
+
+export interface SubmissionDocUpdate {
+  status?: DocStatus;
+  assignee_id?: string;
+  priority?: string;
+  notes?: string;
+  deadline?: string;
+  rejection_reason?: string;
+}
+
+export interface ReadinessResult {
+  ready: boolean;
+  total: number;
+  completed: number;
+  issues: Array<{ doc_id: string; doc_type: string; status: string; issue: string | null }>;
+}
+
+export interface OrgDocTemplate {
+  id: string;
+  org_id: string;
+  doc_type: string;
+  doc_category: DocCategory;
+  required_format: string | null;
+  file_path: string | null;
+  file_name: string | null;
+  file_size: number | null;
+  valid_from: string | null;
+  valid_until: string | null;
+  auto_include: boolean;
+  notes: string | null;
+  created_at: string | null;
+}
+
+export interface BiddingWorkspace {
+  proposal_id: string;
+  bid_status: BidSubmissionStatus;
+  scenarios: Array<Record<string, unknown>>;
+  price_history: BidPriceHistoryEntry[];
+  market_summary: {
+    comparable_cases: number;
+    market_avg_ratio: number | null;
+    data_quality: string;
+    win_probability: number;
+  };
+}
+
+// ── 3-Stream API ──
+
+export const streamsApi = {
+  async getAll(proposalId: string): Promise<StreamsOverview> {
+    return request("GET", `/proposals/${proposalId}/streams`);
+  },
+  async getOne(proposalId: string, stream: StreamName): Promise<StreamProgress> {
+    return request("GET", `/proposals/${proposalId}/streams/${stream}`);
+  },
+  async finalSubmit(proposalId: string): Promise<{ success: boolean; message: string; submission_gate_status: string }> {
+    return request("POST", `/proposals/${proposalId}/streams/final-submit`, { confirm: true });
+  },
+};
+
+export const submissionDocsApi = {
+  async list(proposalId: string): Promise<SubmissionDocument[]> {
+    return request("GET", `/proposals/${proposalId}/submission-docs`);
+  },
+  async extract(proposalId: string): Promise<SubmissionDocument[]> {
+    return request("POST", `/proposals/${proposalId}/submission-docs/extract`);
+  },
+  async add(proposalId: string, data: SubmissionDocCreate): Promise<SubmissionDocument> {
+    return request("POST", `/proposals/${proposalId}/submission-docs`, data);
+  },
+  async update(proposalId: string, docId: string, data: SubmissionDocUpdate): Promise<SubmissionDocument> {
+    return request("PUT", `/proposals/${proposalId}/submission-docs/${docId}`, data);
+  },
+  async remove(proposalId: string, docId: string): Promise<void> {
+    return request("DELETE", `/proposals/${proposalId}/submission-docs/${docId}`);
+  },
+  async upload(proposalId: string, docId: string, file: File): Promise<SubmissionDocument> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/upload`, formData, true);
+  },
+  async verify(proposalId: string, docId: string): Promise<SubmissionDocument> {
+    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/verify`);
+  },
+  async readiness(proposalId: string): Promise<ReadinessResult> {
+    return request("GET", `/proposals/${proposalId}/submission-docs/readiness`);
+  },
+};
+
+export const orgTemplatesApi = {
+  async list(orgId: string): Promise<OrgDocTemplate[]> {
+    return request("GET", `/org/${orgId}/document-templates`);
+  },
+  async upsert(orgId: string, data: { doc_type: string; doc_category?: string; required_format?: string; valid_from?: string; valid_until?: string; auto_include?: boolean; notes?: string }): Promise<OrgDocTemplate> {
+    return request("POST", `/org/${orgId}/document-templates`, data);
+  },
+  async remove(orgId: string, templateId: string): Promise<void> {
+    return request("DELETE", `/org/${orgId}/document-templates/${templateId}`);
+  },
+};
+
+export const bidSubmissionApi = {
+  async getStatus(proposalId: string): Promise<BidSubmissionStatus> {
+    return request("GET", `/proposals/${proposalId}/bid-submission`);
+  },
+  async submitBid(proposalId: string, data: { submitted_price: number; note?: string }): Promise<{ status: string; submitted_at: string }> {
+    return request("POST", `/proposals/${proposalId}/bid-submission`, data);
+  },
+  async verifyBid(proposalId: string): Promise<{ status: string; verified_at: string }> {
+    return request("POST", `/proposals/${proposalId}/bid-submission/verify`);
+  },
+  async getPriceHistory(proposalId: string): Promise<BidPriceHistoryEntry[]> {
+    return request("GET", `/proposals/${proposalId}/bid-price-history`);
+  },
+  async adjustPrice(proposalId: string, data: { adjusted_price: number; reason: string }): Promise<{ success: boolean; new_price: number; message: string }> {
+    return request("PUT", `/proposals/${proposalId}/bid-submission/adjust`, data);
+  },
+  async getBiddingWorkspace(proposalId: string): Promise<BiddingWorkspace> {
+    return request("GET", `/proposals/${proposalId}/bidding-workspace`);
+  },
+};

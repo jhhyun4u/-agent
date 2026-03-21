@@ -35,11 +35,12 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/api/routes_notification.py` — 알림 목록·읽음·설정
 - `app/api/routes.py` — 기존 라우터 통합 (v3.1 파이프라인, 팀, G2B, 리소스 등)
 - `app/api/routes_bids.py` — 입찰 관리
+- `app/api/routes_bid_submission.py` — 투찰 관리 (투찰 기록/확인/상태/이력)
 
 ### LangGraph (app/graph/)
 - `app/graph/state.py` — ProposalState TypedDict + 서브 모델 (§3)
-- `app/graph/edges.py` — Conditional Edge 라우팅 함수 11개 (§11 + v3.5 route_after_section_review)
-- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 28개 노드)
+- `app/graph/edges.py` — Conditional Edge 라우팅 함수 12개 (§11 + v3.5 route_after_section_review + v3.8 route_after_bid_plan_review)
+- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 30개 노드, v3.8 bid_plan 추가)
 - `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가
 - `app/graph/nodes/rfp_fetch.py` — STEP 0→1: G2B 상세 수집 + RFP 업로드 게이트
 - `app/graph/nodes/rfp_analyze.py` — STEP 1-①: RFP 분석 + Compliance Matrix
@@ -48,7 +49,8 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/graph/nodes/review_node.py` — 공통 리뷰 게이트 (Shipley Color Team) + plan 리뷰 (목차+스토리라인)
 - `app/graph/nodes/merge_nodes.py` — plan/ppt 병합 (부분 재작업 지원) + storylines→dynamic_sections 동기화
 - `app/graph/nodes/strategy_generate.py` — STEP 2: 포지셔닝 기반 제안전략
-- `app/graph/nodes/plan_nodes.py` — STEP 3: 팀/담당/일정/스토리/가격 (5개 병렬)
+- `app/graph/nodes/bid_plan.py` — STEP 2.5: 입찰가격계획 (PricingEngine + 시나리오)
+- `app/graph/nodes/plan_nodes.py` — STEP 3: 팀/담당/일정/스토리/가격 (5개 병렬, bid_budget_constraint 반영)
 - `app/graph/nodes/proposal_nodes.py` — STEP 4: 순차 섹션 작성 (v3.5) + 케이스 A/B
 - `app/graph/nodes/ppt_nodes.py` — STEP 5: 발표전략 + PPT 슬라이드
 
@@ -59,7 +61,9 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/services/audit_service.py` — 감사 로그
 - `app/services/compliance_tracker.py` — Compliance Matrix 생애주기 (초안→전략→AI 체크)
 - `app/services/docx_builder.py` — DOCX 빌더 (케이스 A/B + Markdown → DOCX)
-- `app/services/notification_service.py` — Teams Webhook + 인앱 알림 (승인/마감/AI 완료)
+- `app/services/bid_market_research.py` — 시장 조사 (유사과제 낙찰정보 확인 + G2B 크롤링 보강)
+- `app/services/bid_handoff.py` — 투찰 핸드오프 (확정가 DB persist + artifact 저장 + 투찰 기록 + 이력 추적)
+- `app/services/notification_service.py` — Teams Webhook + 인앱 알림 (승인/마감/AI 완료/입찰가확정/투찰완료)
 - `app/services/kb_updater.py` — 성과 기반 KB 자동 업데이트 (수주→역량, 패찰→경쟁사, 교훈→임베딩)
 - `app/services/hwpx_service.py` — HWPX 서비스 래퍼 (hwpxskill 기반: 빌드, 검증, 양식 분석, 쪽수 가드)
 - `app/services/hwpx/` — hwpxskill 모듈 (build_hwpx, analyze_template, validate, page_guard + templates)

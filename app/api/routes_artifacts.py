@@ -79,6 +79,7 @@ async def get_artifacts(
     proposal_id: str,
     step: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """단계별 산출물 조회 (그래프 상태에서 추출)."""
     from app.api.routes_workflow import _get_graph
@@ -99,6 +100,8 @@ async def get_artifacts(
             "research": state.get("research_brief"),
             "go_no_go": state.get("go_no_go"),
             "strategy": state.get("strategy"),
+            "bid_plan": state.get("bid_plan"),
+            "bid_budget_constraint": state.get("bid_budget_constraint"),
             "plan": state.get("plan"),
             "proposal": state.get("proposal_sections"),
             "self_review": state.get("parallel_results", {}).get("_self_review_score"),
@@ -122,8 +125,8 @@ async def get_artifacts(
     except PropNotFoundError:
         raise
     except Exception as e:
-        logger.error(f"산출물 조회 실패: {e}")
-        return {"step": step, "artifact": None, "error": str(e)}
+        logger.error(f"산출물 조회 실패: {e}", exc_info=True)
+        return {"step": step, "artifact": None, "error": "산출물 조회 중 오류가 발생했습니다."}
 
 
 class ArtifactSaveRequest(BaseModel):
@@ -138,6 +141,7 @@ async def save_artifact(
     step: str,
     body: ArtifactSaveRequest,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """에디터에서 수정한 산출물을 그래프 상태에 저장."""
     from app.api.routes_workflow import _get_graph
@@ -172,6 +176,26 @@ async def save_artifact(
             "_edited_html": body.content,
             "_last_editor": user.get("name", user.get("id", "unknown")),
         }
+
+        # Phase C: 사람 수정 추적
+        try:
+            from app.services.human_edit_tracker import record_action
+            old_html = state.get("_edited_html", "")
+            if not old_html:
+                # 섹션 content를 이전 버전으로 사용
+                for sec in existing:
+                    sd = sec.model_dump() if hasattr(sec, "model_dump") else (sec if isinstance(sec, dict) else {})
+                    old_html += sd.get("content", "")
+            await record_action(
+                proposal_id=proposal_id,
+                section_id="full_proposal",
+                action="edit",
+                original=old_html[:10000],
+                edited=body.content[:10000],
+                user_id=user.get("id"),
+            )
+        except Exception as e:
+            logger.debug(f"수정 추적 실패 (무시): {e}")
     else:
         update = {state_key: body.content}
 
@@ -181,6 +205,29 @@ async def save_artifact(
         f"산출물 저장: proposal={proposal_id}, step={step}, "
         f"source={body.change_source}, user={user.get('id')}"
     )
+
+    # GAP-4: artifacts 테이블에 버전 기록
+    try:
+        import json
+        from app.utils.supabase_client import get_async_client as _get_client
+        db = await _get_client()
+        ver_res = await db.table("artifacts") \
+            .select("version").eq("proposal_id", proposal_id).eq("step", step) \
+            .order("version", desc=True).limit(1).execute()
+        next_ver = (ver_res.data[0]["version"] + 1) if ver_res.data else 1
+
+        content_str = json.dumps(body.content, ensure_ascii=False) if not isinstance(body.content, str) else body.content
+        await db.table("artifacts").insert({
+            "proposal_id": proposal_id,
+            "step": step,
+            "version": next_ver,
+            "content": content_str[:50000],
+            "change_source": body.change_source,
+            "change_summary": f"{step} v{next_ver}",
+            "created_by": user.get("id"),
+        }).execute()
+    except Exception as e:
+        logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
 
     return {
         "saved": True,
@@ -201,6 +248,7 @@ async def regenerate_section(
     section_id: str,
     body: SectionRegenerateRequest,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """특정 섹션만 AI로 재생성 (§12-4-1).
 
@@ -292,7 +340,41 @@ async def regenerate_section(
 
         await graph.aupdate_state(config, {"proposal_sections": updated_sections})
 
+        # Phase C: 재생성 추적
+        try:
+            from app.services.human_edit_tracker import record_action
+            await record_action(
+                proposal_id=proposal_id,
+                section_id=section_id,
+                action="regenerate",
+                user_id=user.get("id"),
+            )
+        except Exception:
+            pass
+
         logger.info(f"섹션 재생성: proposal={proposal_id}, section={section_id}, user={user.get('id')}")
+
+        # GAP-4: artifacts 버전 기록 (ai_regenerate)
+        try:
+            import json
+            from app.utils.supabase_client import get_async_client as _get_client
+            db = await _get_client()
+            ver_res = await db.table("artifacts") \
+                .select("version").eq("proposal_id", proposal_id).eq("step", step) \
+                .order("version", desc=True).limit(1).execute()
+            next_ver = (ver_res.data[0]["version"] + 1) if ver_res.data else 1
+
+            await db.table("artifacts").insert({
+                "proposal_id": proposal_id,
+                "step": step,
+                "version": next_ver,
+                "content": json.dumps(result, ensure_ascii=False)[:50000],
+                "change_source": "ai_regenerate",
+                "change_summary": f"{section_title} AI 재생성 v{next_ver}",
+                "created_by": user.get("id"),
+            }).execute()
+        except Exception as e:
+            logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
 
         return {
             "regenerated": True,
@@ -301,8 +383,8 @@ async def regenerate_section(
             "message": f"'{section_title}' 섹션이 재생성되었습니다.",
         }
     except Exception as e:
-        logger.error(f"섹션 재생성 실패: {e}")
-        return {"regenerated": False, "error": str(e)}
+        logger.error(f"섹션 재생성 실패: {e}", exc_info=True)
+        return {"regenerated": False, "error": "섹션 재생성 중 오류가 발생했습니다."}
 
 
 class AiAssistRequest(BaseModel):
@@ -317,6 +399,7 @@ async def ai_assist(
     proposal_id: str,
     body: AiAssistRequest,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """에디터에서 선택한 텍스트에 대한 AI 개선 제안 (§12-4-2)."""
     from app.services.claude_client import claude_generate
@@ -356,8 +439,8 @@ async def ai_assist(
             "suggestion_length": len(result.get("suggestion", "")),
         }
     except Exception as e:
-        logger.error(f"AI 어시스트 실패: {e}")
-        return {"suggestion": "", "error": str(e), "mode": body.mode}
+        logger.error(f"AI 어시스트 실패: {e}", exc_info=True)
+        return {"suggestion": "", "error": "AI 어시스트 처리 중 오류가 발생했습니다.", "mode": body.mode}
 
 
 @router.get("/{proposal_id}/download/docx")
@@ -365,6 +448,7 @@ async def download_docx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """DOCX 다운로드 (중간 버전 포함) + Storage 업로드 (§8 finally 패턴)."""
     from app.api.routes_workflow import _get_graph
@@ -411,6 +495,7 @@ async def download_hwpx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """HWPX 다운로드 (hwpxskill 기반 템플릿 조립)."""
     import tempfile
@@ -473,6 +558,7 @@ async def download_pptx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """PPTX 다운로드 — 컨설팅급(ppt_storyboard) 또는 경량(ppt_slides) 폴백 + Storage 업로드."""
     from app.api.routes_workflow import _get_graph
@@ -535,6 +621,7 @@ async def download_pptx(
 async def get_compliance_matrix(
     proposal_id: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """Compliance Matrix 현재 상태."""
     from app.api.routes_workflow import _get_graph
@@ -571,6 +658,7 @@ async def get_compliance_matrix(
 async def run_compliance_check(
     proposal_id: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """Compliance Matrix AI 체크 실행."""
     from app.api.routes_workflow import _get_graph

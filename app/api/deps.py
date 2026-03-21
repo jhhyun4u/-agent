@@ -20,7 +20,7 @@ from app.exceptions import (
     AuthTokenExpiredError,
     TenopAPIError,
 )
-from app.utils.supabase_client import get_async_client
+from app.utils.supabase_client import get_async_client, get_user_client
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +79,28 @@ async def get_current_user_or_none(
         return await get_current_user(credentials)
     except TenopAPIError:
         return None
+
+
+async def get_rls_client(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
+):
+    """사용자 JWT 기반 Supabase 클라이언트 반환 (RLS 적용).
+
+    C-2 보안 수정: 사용자 대면 API에서는 service_role 대신 이 의존성을 사용하여
+    Supabase RLS 정책을 활성화. 서버 내부/시스템 작업에만 get_async_client() 사용.
+
+    사용법:
+        @router.get("/my-data")
+        async def my_data(
+            user=Depends(get_current_user),
+            rls_client=Depends(get_rls_client),
+        ):
+            # rls_client는 해당 사용자의 JWT로 RLS 필터링된 결과 반환
+            result = await rls_client.table("proposals").select("*").execute()
+    """
+    if not credentials:
+        raise AuthTokenExpiredError()
+    return await get_user_client(credentials.credentials)
 
 
 def require_role(*roles: str):
@@ -142,7 +164,7 @@ async def require_project_access(
         return proposal
 
     # member: 참여자 또는 생성자
-    if proposal["created_by"] == user["id"]:
+    if proposal.get("owner_id") == user["id"]:
         return proposal
 
     participants = (

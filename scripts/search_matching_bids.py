@@ -4,6 +4,8 @@
 data/company_profile.json을 로드하여 G2B 공고를 검색하고
 키워드 매칭으로 적합도 스코어를 계산한다.
 
+v2: 키워드별 개별 검색 (999건 1회 → 키워드 25개 × 100건)으로 누락 최소화.
+
 사용법:
     uv run python scripts/search_matching_bids.py                    # 기본 검색
     uv run python scripts/search_matching_bids.py --min-score 70     # 70점 이상만
@@ -14,7 +16,6 @@ data/company_profile.json을 로드하여 G2B 공고를 검색하고
 
 import argparse
 import asyncio
-import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -24,169 +25,19 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.services.g2b_service import G2BService
+from scripts.bid_scoring import (
+    MIN_DAYS_BEFORE_DEADLINE,
+    SERVICE_TYPES,
+    build_client_to_dept,
+    format_budget,
+    format_d_day,
+    load_profile,
+    score_bid,
+    search_by_keywords,
+)
 
-PROFILE_PATH = PROJECT_ROOT / "data" / "company_profile.json"
-
-# 마감 최소 잔여일
-MIN_DAYS_BEFORE_DEADLINE = 3
-
-# 용역 유형 필터 (물품/공사 제외)
-SERVICE_TYPES = {"일반용역", "기술용역", "학술용역", ""}
-
-
-def load_profile() -> dict:
-    with open(PROFILE_PATH, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def parse_budget(raw) -> int:
-    """공고 예산 문자열 → 원 단위 정수."""
-    if not raw:
-        return 0
-    try:
-        return int(str(raw).replace(",", "").strip() or "0")
-    except (ValueError, TypeError):
-        return 0
-
-
-def days_until_deadline(deadline_str: str) -> int | None:
-    """마감일까지 남은 일수. 파싱 실패 시 None."""
-    if not deadline_str:
-        return None
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y/%m/%d %H:%M:%S", "%Y%m%d%H%M", "%Y%m%d"):
-        try:
-            dt = datetime.strptime(deadline_str.strip()[:19], fmt)
-            return (dt - datetime.now()).days
-        except ValueError:
-            continue
-    return None
-
-
-def _build_client_to_dept(profile: dict) -> dict[str, str]:
-    """track_records에서 발주처→부처 매핑 구축."""
-    mapping: dict[str, str] = {}
-    for r in profile["track_records"]:
-        if r["client"] and r["department"]:
-            mapping[r["client"]] = r["department"]
-    return mapping
-
-
-def score_bid(bid: dict, profile: dict, client_dept_map: dict[str, str]) -> dict:
-    """
-    공고에 대한 적합도 스코어 (0~100) 계산.
-
-    배점:
-    - 도메인 키워드 매칭: 40점
-    - 발주처 기존고객: 30점
-    - 부처 경험: 20점
-    - 예산 범위 적합: 10점
-    """
-    title = bid.get("bidNtceNm", "")
-    client = bid.get("ntceInsttNm", "") or bid.get("dminsttNm", "")
-    budget = parse_budget(bid.get("presmptPrce") or bid.get("asignBdgtAmt"))
-    # bidClseDt가 비어있는 경우 opengDt(개찰일시) 사용
-    deadline = bid.get("bidClseDt") or bid.get("opengDt") or bid.get("rbidOpengDt") or ""
-    bid_type = bid.get("srvceDivNm", "")
-    bid_category = bid.get("pubPrcrmntLrgClsfcNm", "")
-
-    ki = profile["keyword_index"]
-    search_kw = profile["search_keywords"]
-    stats = profile["company"]["stats"]
-
-    # ── 1. 도메인 키워드 (40점) ──
-    # 키워드 빈도 가중: 고빈도 키워드 매칭에 더 높은 점수
-    title_lower = title.lower()
-    domain_kw = ki.get("domain_keywords", {})
-    matched_kw = []
-    weighted_hits = 0.0
-    for kw in search_kw:
-        if kw.lower() in title_lower:
-            matched_kw.append(kw)
-            freq = domain_kw.get(kw, 1)
-            # 빈도 높을수록 가중치 (log scale)
-            import math
-            weighted_hits += 1.0 + math.log2(max(freq, 1)) * 0.15
-
-    # 2.0 가중히트 이상이면 만점
-    kw_score = min(weighted_hits / 2.0, 1.0) * 40
-
-    # ── 2. 발주처 매칭 (30점) ──
-    client_freq = ki.get("client_frequency", {})
-    if client in client_freq:
-        # 기존 고객: 실적 많을수록 높은 점수 (최소 20, 최대 30)
-        freq = client_freq[client]
-        client_score = min(20.0 + freq * 0.5, 30.0)
-    else:
-        # 부분 매칭: 발주처명 핵심 부분 비교 (예: "한국보건산업진흥원" ∈ "한국보건산업진흥원 부산지부")
-        partial_match = None
-        for known_client in client_freq:
-            if known_client in client or client in known_client:
-                partial_match = known_client
-                break
-        if partial_match:
-            client_score = 15.0
-        else:
-            client_score = 0.0
-
-    # ── 3. 부처 경험 (20점) ──
-    dept_freq = ki.get("department_frequency", {})
-    total_projects = stats["total_projects"] or 1
-
-    # 발주처→부처 매핑으로 부처 추정
-    dept_score = 0.0
-    matched_dept = None
-    # 먼저 기존 매핑에서 찾기
-    for known_client, dept in client_dept_map.items():
-        if known_client in client or client in known_client:
-            count = dept_freq.get(dept, 0)
-            if count > 0:
-                matched_dept = dept
-                dept_score = min((count / total_projects) * 100, 20.0)
-                break
-    # 매핑 없으면 제목+발주처에서 부처 키워드 탐색
-    if not matched_dept:
-        text = title + " " + client
-        for dept, count in dept_freq.items():
-            if dept in text:
-                matched_dept = dept
-                dept_score = min((count / total_projects) * 100, 20.0)
-                break
-
-    # ── 4. 예산 범위 (10점) ──
-    budget_score = 0.0
-    if budget > 0:
-        # tenopa 적합 범위: 1천만원 ~ 7억원
-        if 10_000_000 <= budget <= 700_000_000:
-            budget_score = 10.0
-        elif budget < 10_000_000:
-            budget_score = 3.0  # 소규모
-        else:
-            budget_score = 5.0  # 대규모 (컨소시엄 가능)
-
-    total_score = round(kw_score + client_score + dept_score + budget_score)
-    d_days = days_until_deadline(deadline)
-
-    return {
-        "score": total_score,
-        "title": title,
-        "client": client,
-        "budget": budget,
-        "deadline": deadline,
-        "d_days": d_days,
-        "bid_no": bid.get("bidNtceNo", ""),
-        "url": bid.get("bidNtceDtlUrl", ""),
-        "bid_type": bid_type,
-        "bid_category": bid_category,
-        "matched_keywords": matched_kw,
-        "matched_dept": matched_dept,
-        "score_detail": {
-            "keyword": round(kw_score, 1),
-            "client": round(client_score, 1),
-            "department": round(dept_score, 1),
-            "budget": round(budget_score, 1),
-        },
-        "excluded": d_days is not None and d_days < MIN_DAYS_BEFORE_DEADLINE,
-    }
+# 키워드별 검색 시 상위 N개 키워드 사용
+MAX_KEYWORDS = 25
 
 
 async def search_and_score(
@@ -195,25 +46,25 @@ async def search_and_score(
     min_budget: int = 0,
     date_range_days: int = 14,
 ) -> list[dict]:
-    """G2B 전체 조회 → 용역 필터 → 스코어링 → 정렬."""
+    """키워드별 개별 검색 → 용역 필터 → 스코어링 → 정렬."""
+    keywords = profile["search_keywords"][:MAX_KEYWORDS]
+    date_from = (datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000"
+
     async with G2BService() as svc:
-        print(f"G2B 공고 검색 중 (최근 {date_range_days}일, 최대 999건)...")
-        raw_bids = await svc.search_bid_announcements(
-            keyword="",  # 전체 조회
-            num_of_rows=999,
-            date_from=(datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000",
-        )
-        print(f"  → {len(raw_bids)}건 조회됨")
+        print(f"G2B 공고 검색 중 (최근 {date_range_days}일, 키워드 {len(keywords)}개 × 100건)...")
+        all_bids = await search_by_keywords(svc, keywords, num_per_kw=100, date_from=date_from)
+        print(f"  → {len(all_bids)}건 조회됨 (중복 제거 후)")
 
     # 용역 유형 필터 (물품/공사 제외)
     service_bids = [
-        b for b in raw_bids
+        b for b in all_bids.values()
         if b.get("srvceDivNm", "") in SERVICE_TYPES
     ]
-    if len(service_bids) < len(raw_bids):
-        print(f"  → 용역 필터 후 {len(service_bids)}건 (물품/공사 {len(raw_bids) - len(service_bids)}건 제외)")
+    if len(service_bids) < len(all_bids):
+        excluded_count = len(all_bids) - len(service_bids)
+        print(f"  → 용역 필터 후 {len(service_bids)}건 (물품/공사 {excluded_count}건 제외)")
 
-    client_dept_map = _build_client_to_dept(profile)
+    client_dept_map = build_client_to_dept(profile)
 
     scored = []
     for bid in service_bids:
@@ -223,26 +74,6 @@ async def search_and_score(
 
     scored.sort(key=lambda x: x["score"], reverse=True)
     return scored
-
-
-def format_budget(amount: int) -> str:
-    """예산 한국식 표기."""
-    if amount >= 100_000_000:
-        return f"{amount / 100_000_000:.1f}억"
-    elif amount >= 10_000:
-        return f"{amount / 10_000:,.0f}만원"
-    return f"{amount:,}원"
-
-
-def format_d_day(d_days: int | None) -> str:
-    """D-day 표시 포맷."""
-    if d_days is None:
-        return "마감일 미상"
-    if d_days < 0:
-        return f"마감({-d_days}일 전)"
-    if d_days == 0:
-        return "오늘 마감"
-    return f"D-{d_days}"
 
 
 def print_results(scored: list[dict], show_excluded: bool = False):
@@ -295,6 +126,7 @@ def main():
     parser.add_argument("--show-excluded", action="store_true", help="마감임박 제외 공고 전체 표시")
     args = parser.parse_args()
 
+    from scripts.bid_scoring import PROFILE_PATH
     if not PROFILE_PATH.exists():
         print(f"[ERROR] 역량 프로필 없음: {PROFILE_PATH}")
         print("먼저 import_project_history.py를 실행하세요.")
@@ -307,7 +139,7 @@ def main():
     scored = asyncio.run(search_and_score(
         profile,
         min_score=args.min_score,
-        min_budget=args.min_budget * 1000,  # 천원 → 원
+        min_budget=args.min_budget * 1000,
         date_range_days=args.days,
     ))
 

@@ -55,6 +55,39 @@ async def _refresh_views(client):
         logger.warning("성과 MV 갱신 실패 (무시)")
 
 
+async def _resolve_pricing_predictions(client, proposal_id: str, body) -> None:
+    """결과 등록 시 해당 proposal의 pricing_predictions 해소."""
+    preds = await client.table("pricing_predictions").select(
+        "id, predicted_ratio"
+    ).eq("proposal_id", proposal_id).is_("resolved_at", "null").execute()
+
+    if not preds.data:
+        return
+
+    # 실제 낙찰률 계산
+    actual_ratio = None
+    if body.final_price and body.final_price > 0:
+        # proposals에서 budget 가져오기
+        prop = await client.table("proposals").select("budget_amount").eq("id", proposal_id).single().execute()
+        budget = prop.data.get("budget_amount", 0) if prop.data else 0
+        if budget and budget > 0:
+            actual_ratio = round(body.final_price / budget, 4)
+
+    now = datetime.utcnow().isoformat()
+    for pred in preds.data:
+        pred_ratio = pred.get("predicted_ratio")
+        error = round(abs(pred_ratio - actual_ratio), 4) if pred_ratio and actual_ratio else None
+
+        await client.table("pricing_predictions").update({
+            "actual_ratio": actual_ratio,
+            "actual_result": body.result,
+            "prediction_error": error,
+            "resolved_at": now,
+        }).eq("id", pred["id"]).execute()
+
+    logger.info(f"가격 예측 {len(preds.data)}건 해소: proposal={proposal_id}")
+
+
 @router.post("/api/proposals/{proposal_id}/result", status_code=201)
 async def register_proposal_result(
     proposal_id: str,
@@ -105,6 +138,12 @@ async def register_proposal_result(
         await trigger_kb_update(proposal_id, body.result)
     except Exception:
         logger.warning("KB 환류 트리거 실패 (무시)")
+
+    # 가격 예측 정확도 해소 (pricing_predictions)
+    try:
+        await _resolve_pricing_predictions(client, proposal_id, body)
+    except Exception:
+        logger.warning("가격 예측 해소 실패 (무시)")
 
     return {"status": "ok", "result": body.result, "proposal_id": proposal_id}
 
@@ -247,9 +286,9 @@ async def get_individual_performance(user_id: str, user=Depends(get_current_user
 
     created = await client.table("proposals").select(
         "id, result, result_amount, created_at, result_at"
-    ).eq("created_by", user_id).execute()
+    ).eq("owner_id", user_id).execute()
 
-    participated = await client.table("project_teams").select("proposal_id").eq("user_id", user_id).execute()
+    participated = await client.table("project_participants").select("proposal_id").eq("user_id", user_id).execute()
     participated_ids = [p["proposal_id"] for p in (participated.data or [])]
 
     participated_proposals = []
@@ -474,16 +513,16 @@ async def my_projects(user=Depends(get_current_user)):
     client = await get_async_client()
 
     created = await client.table("proposals").select(
-        "id, project_name, status, positioning, current_step, created_at, deadline"
-    ).eq("created_by", user["id"]).order("created_at", desc=True).limit(20).execute()
+        "id, title, status, positioning, current_phase, created_at"
+    ).eq("owner_id", user["id"]).order("created_at", desc=True).limit(20).execute()
 
-    participated = await client.table("project_teams").select("proposal_id").eq("user_id", user["id"]).execute()
+    participated = await client.table("project_participants").select("proposal_id").eq("user_id", user["id"]).execute()
     participated_ids = [p["proposal_id"] for p in (participated.data or [])]
 
     participant_proposals = []
     if participated_ids:
         pp = await client.table("proposals").select(
-            "id, project_name, status, positioning, current_step, created_at, deadline"
+            "id, title, status, positioning, current_phase, created_at"
         ).in_("id", participated_ids).order("created_at", desc=True).execute()
         participant_proposals = pp.data or []
 
@@ -500,13 +539,13 @@ async def team_dashboard(user=Depends(get_current_user)):
     team_id = user.get("team_id", "")
 
     proposals = await client.table("proposals").select(
-        "id, project_name, status, current_step, positioning, deadline"
+        "id, title, status, current_phase, positioning"
     ).eq("team_id", team_id).order("created_at", desc=True).limit(50).execute()
 
     data = proposals.data or []
     step_distribution: dict[str, int] = {}
     for d in data:
-        step = d.get("current_step", "unknown")
+        step = d.get("current_phase", "unknown")
         step_distribution[step] = step_distribution.get(step, 0) + 1
 
     return {

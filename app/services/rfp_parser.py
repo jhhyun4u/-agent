@@ -1,11 +1,52 @@
+import ipaddress
 import json
+import logging
 from pathlib import Path
+from urllib.parse import urlparse
 
 import anthropic
 from PyPDF2 import PdfReader
 
 from app.config import settings
 from app.models.schemas import RFPData
+
+logger = logging.getLogger(__name__)
+
+# ── SSRF 방지 (H-3) ──
+
+_ALLOWED_SCHEMES = {"http", "https"}
+_BLOCKED_NETWORKS = [
+    ipaddress.ip_network("127.0.0.0/8"),       # loopback
+    ipaddress.ip_network("10.0.0.0/8"),         # private A
+    ipaddress.ip_network("172.16.0.0/12"),      # private B
+    ipaddress.ip_network("192.168.0.0/16"),     # private C
+    ipaddress.ip_network("169.254.0.0/16"),     # link-local / AWS metadata
+    ipaddress.ip_network("::1/128"),            # IPv6 loopback
+    ipaddress.ip_network("fc00::/7"),           # IPv6 private
+    ipaddress.ip_network("fe80::/10"),          # IPv6 link-local
+]
+
+
+def _validate_url(url: str) -> str:
+    """SSRF 방지: URL 스킴 + 사설 IP 차단. 안전한 URL이면 그대로 반환, 아니면 ValueError."""
+    parsed = urlparse(url)
+    if parsed.scheme not in _ALLOWED_SCHEMES:
+        raise ValueError(f"허용되지 않는 URL 스킴: {parsed.scheme}")
+    if not parsed.hostname:
+        raise ValueError("호스트명이 없는 URL")
+
+    import socket
+    try:
+        resolved = socket.getaddrinfo(parsed.hostname, None)
+        for _, _, _, _, addr in resolved:
+            ip = ipaddress.ip_address(addr[0])
+            for network in _BLOCKED_NETWORKS:
+                if ip in network:
+                    raise ValueError(f"사설/내부 네트워크 접근 차단: {parsed.hostname} → {ip}")
+    except socket.gaierror:
+        raise ValueError(f"DNS 확인 실패: {parsed.hostname}")
+
+    return url
 
 # RFP 파싱 전용 프롬프트 (기존 app/prompts/proposal.py에서 인라인 이동)
 SYSTEM_PROMPT = """당신은 전문 용역 제안서 작성 전문가입니다.
@@ -116,6 +157,8 @@ async def parse_rfp_from_url(url: str, file_type: str = "pdf") -> str:
     import tempfile
     import aiohttp
 
+    _validate_url(url)  # H-3: SSRF 방지
+
     async with aiohttp.ClientSession() as session:
         async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
             if resp.status != 200:
@@ -148,12 +191,17 @@ async def download_file_from_url(url: str, timeout: int = 30) -> tuple[bytes, st
     import aiohttp
 
     try:
+        _validate_url(url)  # H-3: SSRF 방지
+
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=aiohttp.ClientTimeout(total=timeout)) as resp:
                 if resp.status != 200:
                     return b"", ""
                 content_type = resp.headers.get("Content-Type", "application/octet-stream")
                 return await resp.read(), content_type
+    except ValueError as e:
+        logger.warning(f"SSRF 차단: {url} — {e}")
+        return b"", ""
     except Exception:
         return b"", ""
 

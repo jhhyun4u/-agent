@@ -17,6 +17,7 @@ import {
   type PositioningWinRateData,
   type MonthlyTrendsData,
   type ClientWinRateData,
+  type PromptDashboard,
 } from "@/lib/api";
 import {
   FailureReasonsPie,
@@ -42,6 +43,7 @@ export default function AnalyticsPage() {
   const [positioningData, setPositioningData] = useState<PositioningWinRateData | null>(null);
   const [trendsData, setTrendsData] = useState<MonthlyTrendsData | null>(null);
   const [clientData, setClientData] = useState<ClientWinRateData | null>(null);
+  const [promptData, setPromptData] = useState<PromptDashboard | null>(null);
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -52,12 +54,14 @@ export default function AnalyticsPage() {
       api.analytics.positioningWinRate(params),
       api.analytics.monthlyTrends(params),
       api.analytics.clientWinRate(params),
+      api.prompts.dashboard(),
     ]);
 
     setFailureData(results[0].status === "fulfilled" ? results[0].value : null);
     setPositioningData(results[1].status === "fulfilled" ? results[1].value : null);
     setTrendsData(results[2].status === "fulfilled" ? results[2].value : null);
     setClientData(results[3].status === "fulfilled" ? results[3].value : null);
+    setPromptData(results[4].status === "fulfilled" ? results[4].value : null);
     setLoading(false);
   }, [period]);
 
@@ -106,6 +110,7 @@ export default function AnalyticsPage() {
         )}
 
         {!loading && (
+          <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* 실패 원인 분석 */}
             <ChartPanel title="실패 원인 분석" icon="📉">
@@ -127,6 +132,76 @@ export default function AnalyticsPage() {
               <ClientWinRateBar data={clientData} />
             </ChartPanel>
           </div>
+
+          {/* 프롬프트 인사이트 위젯 */}
+          {promptData && promptData.effectiveness.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+              <ChartPanel title="Top 프롬프트 (승률)" icon="🏆">
+                <div className="space-y-2">
+                  {[...promptData.effectiveness]
+                    .filter((e) => e.win_rate != null && e.proposals_used >= 1)
+                    .sort((a, b) => (b.win_rate ?? 0) - (a.win_rate ?? 0))
+                    .slice(0, 5)
+                    .map((e) => (
+                      <Link
+                        key={`${e.prompt_id}:${e.prompt_version}`}
+                        href={`/admin/prompts/${encodeURIComponent(e.prompt_id)}`}
+                        className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-[#262626] transition-colors"
+                      >
+                        <span className="text-xs font-mono text-[#ededed] truncate max-w-[60%]">
+                          {e.prompt_id}
+                        </span>
+                        <span className="text-xs text-[#3ecf8e]">
+                          {e.win_rate}% ({e.proposals_used}건)
+                        </span>
+                      </Link>
+                    ))}
+                  {promptData.effectiveness.filter(
+                    (e) => e.win_rate != null
+                  ).length === 0 && (
+                    <div className="text-xs text-[#8c8c8c]">
+                      수주 결과가 아직 없습니다.
+                    </div>
+                  )}
+                </div>
+              </ChartPanel>
+
+              <ChartPanel title="주의 필요 프롬프트 (수정율)" icon="⚠️">
+                <div className="space-y-2">
+                  {[...(promptData.edit_stats ?? [])]
+                    .sort((a, b) => b.avg_edit_ratio - a.avg_edit_ratio)
+                    .slice(0, 5)
+                    .map((e) => (
+                      <Link
+                        key={e.prompt_id}
+                        href={`/admin/prompts/${encodeURIComponent(e.prompt_id)}`}
+                        className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-[#262626] transition-colors"
+                      >
+                        <span className="text-xs font-mono text-[#ededed] truncate max-w-[60%]">
+                          {e.prompt_id}
+                        </span>
+                        <span
+                          className={`text-xs ${
+                            e.avg_edit_ratio > 0.5
+                              ? "text-[#ff6b6b]"
+                              : "text-[#f5a623]"
+                          }`}
+                        >
+                          {(e.avg_edit_ratio * 100).toFixed(1)}% ({e.edit_count}
+                          건)
+                        </span>
+                      </Link>
+                    ))}
+                  {(promptData.edit_stats ?? []).length === 0 && (
+                    <div className="text-xs text-[#8c8c8c]">
+                      편집 데이터가 아직 없습니다.
+                    </div>
+                  )}
+                </div>
+              </ChartPanel>
+            </div>
+          )}
+          </>
         )}
       </main>
     </div>

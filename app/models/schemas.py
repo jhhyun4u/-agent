@@ -103,3 +103,61 @@ class LessonCreate(BaseModel):
     impact: Literal["high", "medium", "low"]
     action_items: list[str] = []
     applicable_domains: list[str] = []
+
+
+# ── PSM-16: Q&A 기록 ──
+
+QA_CATEGORIES = Literal[
+    "technical", "management", "pricing", "experience", "team", "general"
+]
+
+
+class QARecordCreate(BaseModel):
+    """Q&A 기록 생성."""
+
+    question: str
+    answer: str
+    category: QA_CATEGORIES = "general"
+    evaluator_reaction: Literal["positive", "neutral", "negative"] | None = None
+    memo: str | None = None
+
+
+class QARecordUpdate(BaseModel):
+    """Q&A 기록 수정."""
+
+    question: str | None = None
+    answer: str | None = None
+    category: QA_CATEGORIES | None = None
+    evaluator_reaction: Literal["positive", "neutral", "negative"] | None = None
+    memo: str | None = None
+
+
+class QARecordResponse(BaseModel):
+    """Q&A 기록 응답."""
+
+    id: str
+    proposal_id: str
+    question: str
+    answer: str
+    category: str
+    evaluator_reaction: str | None
+    memo: str | None
+    content_library_id: str | None
+    created_at: str
+    created_by: str | None
+
+
+class QASearchResult(BaseModel):
+    """Q&A 검색 결과."""
+
+    id: str
+    proposal_id: str
+    question: str
+    answer: str
+    category: str
+    evaluator_reaction: str | None
+    memo: str | None
+    created_at: str
+    similarity: float | None = None
+    proposal_name: str | None = None
+    client: str | None = None

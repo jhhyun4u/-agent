@@ -1,17 +1,19 @@
 """
 인증 API (§17)
 
-Azure AD(Entra ID) + Supabase Auth OAuth 흐름.
-프론트엔드에서 Supabase Auth signInWithOAuth(azure) 직접 호출.
-이 라우트는 콜백 처리 + 프로필 동기화 담당.
+이메일+비밀번호 로그인 (Supabase Auth).
+관리자가 사전 등록한 계정으로만 접근 가능.
 """
 
 import logging
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 
 from app.api.deps import get_current_user
-from app.services.auth_service import get_or_create_user_profile
+from app.exceptions import TenopAPIError
+from app.middleware.rate_limit import limiter
+from app.models.user_schemas import PasswordChangeRequest
+from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -21,24 +23,50 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 async def get_my_profile(user: dict = Depends(get_current_user)):
     """현재 로그인 사용자 프로필 조회.
 
-    프론트엔드 로그인 후 첫 호출 시 users 테이블 프로필 자동 생성.
+    must_change_password 필드 포함.
     """
     return user
 
 
-@router.post("/sync-profile")
-async def sync_profile(user: dict = Depends(get_current_user)):
-    """Supabase Auth → users 테이블 프로필 동기화.
+@router.post("/change-password")
+@limiter.limit("5/minute")
+async def change_password(
+    request: Request,
+    body: PasswordChangeRequest,
+    user: dict = Depends(get_current_user),
+):
+    """비밀번호 변경.
 
-    최초 로그인 시 프론트엔드에서 호출하여 프로필 생성 보장.
+    첫 로그인 시 임시 비밀번호를 변경할 때 사용.
+    현재 비밀번호 검증 후 새 비밀번호로 업데이트.
     """
-    profile = await get_or_create_user_profile(
-        auth_user_id=user["id"],
-        email=user["email"],
-        name=user.get("name", user["email"].split("@")[0]),
-        azure_ad_oid=user.get("azure_ad_oid"),
-    )
-    return profile
+    client = await get_async_client()
+
+    # 현재 비밀번호 검증 (로그인 시도)
+    try:
+        await client.auth.sign_in_with_password({
+            "email": user["email"],
+            "password": body.current_password,
+        })
+    except Exception:
+        raise TenopAPIError("AUTH_005", "현재 비밀번호가 올바르지 않습니다.", 400)
+
+    # 새 비밀번호로 업데이트
+    try:
+        await client.auth.admin.update_user_by_id(
+            user["id"],
+            {"password": body.new_password},
+        )
+    except Exception as e:
+        logger.error(f"비밀번호 변경 실패: user={user['id']}: {e}")
+        raise TenopAPIError("AUTH_005", "비밀번호 변경에 실패했습니다. 관리자에게 문의하세요.", 500)
+
+    # must_change_password 해제
+    await client.table("users").update(
+        {"must_change_password": False}
+    ).eq("id", user["id"]).execute()
+
+    return {"message": "비밀번호가 변경되었습니다."}
 
 
 @router.post("/logout")

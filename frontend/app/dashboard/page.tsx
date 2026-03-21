@@ -13,11 +13,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AppSidebar from "@/components/AppSidebar";
-import { api, CalendarItem, WinRateStats, ProposalSummary, RecommendedBid } from "@/lib/api";
+import {
+  api, CalendarItem, WinRateStats, ProposalSummary, RecommendedBid,
+  type FailureReasonsData, type MonthlyTrendsData, type ClientWinRateData,
+  type TeamPerformanceData, type PositioningWinRateData,
+} from "@/lib/api";
+import {
+  FailureReasonsPie,
+  MonthlyTrendsLine,
+  ClientWinRateBar,
+} from "@/components/AnalyticsCharts";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
-type Scope = "personal" | "team" | "company";
+type Scope = "personal" | "team" | "division" | "company";
 
 type ActionItem =
   | { type: "calendar"; item: CalendarItem; days: number }
@@ -101,6 +110,15 @@ export default function DashboardPage() {
   const [bidCounts, setBidCounts] = useState({ S: 0, A: 0 });
   const [bidsLoading, setBidsLoading] = useState(true);
 
+  // 분석 차트
+  const [failureData, setFailureData] = useState<FailureReasonsData | null>(null);
+  const [trendsData, setTrendsData] = useState<MonthlyTrendsData | null>(null);
+  const [clientData, setClientData] = useState<ClientWinRateData | null>(null);
+
+  // 팀 성과 + 포지셔닝별 수주율
+  const [teamPerfData, setTeamPerfData] = useState<TeamPerformanceData | null>(null);
+  const [posWinData, setPosWinData] = useState<PositioningWinRateData | null>(null);
+
   // 일정 추가 폼
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -179,12 +197,28 @@ export default function DashboardPage() {
     }
   }, [scope]);
 
+  const loadAnalytics = useCallback(async () => {
+    const results = await Promise.allSettled([
+      api.analytics.failureReasons({}),
+      api.analytics.monthlyTrends({}),
+      api.analytics.clientWinRate({}),
+      api.analytics.teamPerformance({}),
+      api.analytics.positioningWinRate({}),
+    ]);
+    setFailureData(results[0].status === "fulfilled" ? results[0].value : null);
+    setTrendsData(results[1].status === "fulfilled" ? results[1].value : null);
+    setClientData(results[2].status === "fulfilled" ? results[2].value : null);
+    setTeamPerfData(results[3].status === "fulfilled" ? results[3].value : null);
+    setPosWinData(results[4].status === "fulfilled" ? results[4].value : null);
+  }, []);
+
   useEffect(() => {
     loadStats(scope);
     loadCalendar();
     loadProposals();
     loadBidRecommendations();
-  }, [scope, loadStats, loadCalendar, loadProposals, loadBidRecommendations]);
+    loadAnalytics();
+  }, [scope, loadStats, loadCalendar, loadProposals, loadBidRecommendations, loadAnalytics]);
 
   // ── 일정 추가 저장 ─────────────────────────────────────────────────
 
@@ -294,6 +328,7 @@ export default function DashboardPage() {
               [
                 { key: "personal" as Scope, label: "개인" },
                 { key: "team" as Scope, label: "팀" },
+                { key: "division" as Scope, label: "본부" },
                 { key: "company" as Scope, label: "전체" },
               ] as const
             ).map(({ key, label }) => (
@@ -430,12 +465,124 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ── 추천 공고 위젯 ── */}
+          {/* ── 제안 분석 (3개 카드 — 연도별) ── */}
+          <div className="grid grid-cols-3 gap-4">
+            {/* 총 제안건수 */}
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
+              <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 총 제안건수</p>
+              <p className="text-3xl font-bold text-[#ededed]">
+                {stats?.overall.total ?? 0}
+                <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
+              </p>
+            </div>
+
+            {/* 수주 성공 건수 */}
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
+              <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 수주 성공</p>
+              <p className="text-3xl font-bold text-[#3ecf8e]">
+                {stats?.overall.won ?? 0}
+                <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
+              </p>
+              {stats && stats.overall.total > 0 && (
+                <p className="text-xs text-[#8c8c8c] mt-1">
+                  수주율 {(stats.overall.rate * 100).toFixed(1)}%
+                </p>
+              )}
+            </div>
+
+            {/* 이번달 수주율 */}
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
+              <p className="text-xs text-[#8c8c8c] mb-2">이번달 수주율</p>
+              {thisMonthData ? (
+                <>
+                  <p className="text-3xl font-bold text-[#ededed]">
+                    {(thisMonthData.rate * 100).toFixed(1)}
+                    <span className="text-base font-normal text-[#8c8c8c] ml-1">%</span>
+                  </p>
+                  <p className="text-xs text-[#8c8c8c] mt-1">
+                    {thisMonthData.total}건 중 {thisMonthData.won}건 수주
+                  </p>
+                </>
+              ) : (
+                <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
+              )}
+            </div>
+          </div>
+
+          {/* ── 분석 차트 (월별 추이 + 실패원인) ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+              <h2 className="text-sm font-semibold text-[#ededed] mb-4">월별 수주율 추이</h2>
+              <MonthlyTrendsLine data={trendsData} />
+            </div>
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+              <h2 className="text-sm font-semibold text-[#ededed] mb-4">실패 원인 분석</h2>
+              <FailureReasonsPie data={failureData} />
+            </div>
+          </div>
+
+          {/* ── 기관별 수주 현황 차트 ── */}
+          {clientData && (
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+              <h2 className="text-sm font-semibold text-[#ededed] mb-4">기관별 수주 현황</h2>
+              <ClientWinRateBar data={clientData} />
+            </div>
+          )}
+
+          {/* ── 팀 성과 + 포지셔닝별 수주율 ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 팀 성과 */}
+            {teamPerfData && teamPerfData.teams.length > 0 && (
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3">팀별 성과</h2>
+                <div className="space-y-2">
+                  {teamPerfData.teams.map((t) => (
+                    <div key={t.team_id} className="flex items-center gap-3 bg-[#111111] rounded-lg px-3 py-2">
+                      <span className="text-xs text-[#ededed] font-medium flex-1 truncate">{t.team_name}</span>
+                      <span className="text-xs text-[#8c8c8c]">{t.total}건</span>
+                      <span className={`text-xs font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}>
+                        {(t.rate * 100).toFixed(0)}%
+                      </span>
+                      <span className="text-[10px] text-[#5c5c5c]">평균 {t.avg_duration_days}일</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 포지셔닝별 수주율 */}
+            {posWinData && posWinData.positioning.length > 0 && (
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3">포지셔닝별 수주율</h2>
+                <div className="space-y-2">
+                  {posWinData.positioning.map((p) => {
+                    const posLabel = p.type === "defensive" ? "🛡️ 수성형" : p.type === "offensive" ? "⚔️ 공격형" : p.type === "adjacent" ? "🔄 인접형" : p.type;
+                    return (
+                      <div key={p.type} className="bg-[#111111] rounded-lg px-3 py-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-[#ededed]">{posLabel}</span>
+                          <span className="text-xs text-[#8c8c8c]">{p.won}/{p.total}건</span>
+                        </div>
+                        <div className="h-1.5 bg-[#262626] rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full ${p.rate >= 0.5 ? "bg-[#3ecf8e]" : p.rate >= 0.3 ? "bg-amber-500" : "bg-red-500"}`}
+                            style={{ width: `${p.rate * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── 공고 모니터링 위젯 ── */}
           {!bidsLoading && (bidCounts.S > 0 || bidCounts.A > 0) && (
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-sm font-semibold text-[#ededed]">추천 공고</h2>
+                  <h2 className="text-sm font-semibold text-[#ededed]">공고 모니터링</h2>
                   {bidCounts.S > 0 && (
                     <span className="text-xs px-2 py-0.5 rounded-md font-bold bg-purple-950/60 text-purple-400 border border-purple-900">
                       S {bidCounts.S}건
@@ -499,228 +646,6 @@ export default function DashboardPage() {
                   );
                 })}
               </div>
-            </div>
-          )}
-
-          {/* ── KPI 카드 3개 ── */}
-          {statsLoading ? (
-            <p className="text-sm text-[#8c8c8c]">로딩 중...</p>
-          ) : !stats ? (
-            <p className="text-sm text-[#8c8c8c]">통계 데이터를 불러올 수 없습니다.</p>
-          ) : (
-            <div className="grid grid-cols-3 gap-4">
-              {/* 전체 수주율 */}
-              <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
-                <p className="text-xs text-[#8c8c8c] mb-2">전체 수주율</p>
-                <p className="text-3xl font-bold text-[#3ecf8e]">
-                  {(stats.overall.rate * 100).toFixed(1)}
-                  <span className="text-base font-normal text-[#8c8c8c] ml-1">%</span>
-                </p>
-                <p className="text-xs text-[#8c8c8c] mt-1">
-                  총 {stats.overall.total}건 중 {stats.overall.won}건 수주
-                </p>
-              </div>
-
-              {/* 이번달 수주율 */}
-              <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
-                <p className="text-xs text-[#8c8c8c] mb-2">이번달 수주율</p>
-                {thisMonthData ? (
-                  <>
-                    <p className="text-3xl font-bold text-[#ededed]">
-                      {(thisMonthData.rate * 100).toFixed(1)}
-                      <span className="text-base font-normal text-[#8c8c8c] ml-1">%</span>
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-[#8c8c8c]">
-                        {thisMonthData.total}건 중 {thisMonthData.won}건 수주
-                      </span>
-                      {monthTrend !== null && (
-                        <span
-                          className={`text-xs font-semibold ${
-                            monthTrend > 0
-                              ? "text-[#3ecf8e]"
-                              : monthTrend < 0
-                              ? "text-red-400"
-                              : "text-[#8c8c8c]"
-                          }`}
-                        >
-                          {monthTrend > 0 ? "↑" : monthTrend < 0 ? "↓" : "–"}
-                          {Math.abs(monthTrend).toFixed(1)}%p
-                        </span>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
-                    <p className="text-xs text-[#8c8c8c] mt-1">이번달 데이터 없음</p>
-                  </>
-                )}
-              </div>
-
-              {/* 총 수주 건수 */}
-              <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
-                <p className="text-xs text-[#8c8c8c] mb-2">총 수주 건수</p>
-                <p className="text-3xl font-bold text-[#ededed]">
-                  {stats.overall.won}
-                  <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
-                </p>
-                <p className="text-xs text-[#8c8c8c] mt-1">
-                  누적 제안 {stats.overall.total}건
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* ── 인사이트 ── */}
-          {!statsLoading && stats && (topAgency || avgRate6m !== null || mostProposedAgency) && (
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-3">인사이트</h2>
-              <div className="space-y-2.5">
-
-                {/* 수주율 최강 기관 */}
-                {topAgency && (
-                  <div className="flex items-start gap-3 px-3 py-2.5 rounded-xl bg-[#111111]">
-                    <span className="text-base shrink-0 mt-0.5">🏆</span>
-                    <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                      <span className="text-[#ededed] font-medium">{topAgency.agency}</span>
-                      에서 수주율{" "}
-                      <span className="text-[#3ecf8e] font-semibold">
-                        {Math.round(topAgency.rate * 100)}%
-                      </span>{" "}
-                      기록 ({topAgency.total}건 중 {topAgency.won}건 수주)
-                    </p>
-                  </div>
-                )}
-
-                {/* 최근 6개월 평균 */}
-                {avgRate6m !== null && recentMonths.length >= 2 && (
-                  <div className="flex items-start gap-3 px-3 py-2.5 rounded-xl bg-[#111111]">
-                    <span className="text-base shrink-0 mt-0.5">📊</span>
-                    <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                      최근 {recentMonths.length}개월 평균 수주율{" "}
-                      <span className="text-[#ededed] font-semibold">
-                        {(avgRate6m * 100).toFixed(1)}%
-                      </span>
-                      {monthTrend !== null && monthTrend !== 0 && (
-                        <>
-                          {" "}— 이번달{" "}
-                          <span
-                            className={
-                              monthTrend > 0 ? "text-[#3ecf8e] font-semibold" : "text-red-400 font-semibold"
-                            }
-                          >
-                            {monthTrend > 0 ? "상승" : "하락"}
-                          </span>{" "}
-                          추세
-                        </>
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                {/* 가장 많이 제안한 기관 */}
-                {mostProposedAgency && mostProposedAgency.total >= 2 && (
-                  <div className="flex items-start gap-3 px-3 py-2.5 rounded-xl bg-[#111111]">
-                    <span className="text-base shrink-0 mt-0.5">📋</span>
-                    <p className="text-xs text-[#8c8c8c] leading-relaxed">
-                      <span className="text-[#ededed] font-medium">{mostProposedAgency.agency}</span>
-                      에 가장 많이 제안 ({mostProposedAgency.total}건) —{" "}
-                      수주율{" "}
-                      <span className="font-medium text-[#ededed]">
-                        {Math.round(mostProposedAgency.rate * 100)}%
-                      </span>
-                    </p>
-                  </div>
-                )}
-
-              </div>
-            </div>
-          )}
-
-          {/* ── 기관별 수주율 ── */}
-          {!statsLoading && stats && stats.by_agency.length > 0 && (
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-4">
-                기관별 수주율
-              </h2>
-              <div className="space-y-3">
-                {stats.by_agency.slice(0, 10).map((item) => {
-                  const pct = Math.round(item.rate * 100);
-                  return (
-                    <div key={item.agency} className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#ededed] w-24 truncate shrink-0">
-                          {item.agency}
-                        </span>
-                        <div className="flex-1 mx-3">
-                          <div className="h-2 bg-[#262626] rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-[#3ecf8e] rounded-full transition-all duration-500"
-                              style={{ width: `${pct}%` }}
-                            />
-                          </div>
-                        </div>
-                        <span className="text-[#3ecf8e] font-medium w-10 text-right shrink-0">
-                          {pct}%
-                        </span>
-                        <span className="text-[#8c8c8c] w-12 text-right shrink-0 ml-2">
-                          {item.won}/{item.total}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* ── 월별 추이 테이블 ── */}
-          {!statsLoading && stats && recentMonths.length > 0 && (
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-4">
-                월별 추이
-                <span className="ml-2 text-xs font-normal text-[#8c8c8c]">
-                  최근 6개월
-                </span>
-              </h2>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#262626]">
-                    <th className="text-left pb-2 text-xs text-[#8c8c8c] font-medium">
-                      월
-                    </th>
-                    <th className="text-right pb-2 text-xs text-[#8c8c8c] font-medium">
-                      건수
-                    </th>
-                    <th className="text-right pb-2 text-xs text-[#8c8c8c] font-medium">
-                      수주
-                    </th>
-                    <th className="text-right pb-2 text-xs text-[#8c8c8c] font-medium">
-                      수주율
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentMonths.map((m) => (
-                    <tr
-                      key={m.month}
-                      className="border-b border-[#262626]/50 last:border-0"
-                    >
-                      <td className="py-2.5 text-[#ededed]">{m.month}</td>
-                      <td className="py-2.5 text-right text-[#8c8c8c]">
-                        {m.total}건
-                      </td>
-                      <td className="py-2.5 text-right text-[#8c8c8c]">
-                        {m.won}수주
-                      </td>
-                      <td className="py-2.5 text-right font-medium text-[#3ecf8e]">
-                        {(m.rate * 100).toFixed(0)}%
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           )}
 

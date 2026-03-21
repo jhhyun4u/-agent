@@ -9,8 +9,6 @@ import type { StreamEvent } from "@/lib/hooks/useWorkflowStream";
 
 // 노드명 → 한글 라벨 매핑
 const NODE_LABELS: Record<string, string> = {
-  rfp_search: "공고 검색",
-  rfp_fetch: "공고 상세 수집",
   rfp_analyze: "RFP 분석",
   research_gather: "선행 리서치",
   go_no_go: "Go/No-Go 판정",

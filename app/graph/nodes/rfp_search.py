@@ -8,6 +8,7 @@ import logging
 
 from app.graph.state import ProposalState, RfpRecommendation
 from app.services.claude_client import claude_generate
+from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +89,23 @@ async def rfp_search(state: ProposalState) -> dict:
 """
 
     result = await claude_generate(prompt)
+
+    # 프롬프트 사용 기록 (인라인 프롬프트)
+    proposal_id = state.get("project_id", "")
+    if proposal_id:
+        try:
+            import hashlib
+            await prompt_tracker.record_usage(
+                proposal_id=proposal_id,
+                artifact_step="rfp_search",
+                section_id=None,
+                prompt_id="_inline.rfp_search",
+                prompt_version=0,
+                prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
+            )
+        except Exception:
+            pass
+
     recommendations = result if isinstance(result, list) else result.get("recommendations", [result])
 
     sorted_recs = sorted(recommendations, key=lambda r: r.get("fit_score", 0), reverse=True)

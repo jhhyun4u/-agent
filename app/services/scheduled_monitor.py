@@ -16,11 +16,16 @@ logger = logging.getLogger(__name__)
 
 
 async def daily_g2b_monitor() -> dict:
-    """일일 G2B 공고 모니터링 (SRC-11).
+    """일일 G2B 공고 모니터링 (v2: 전수 수집 + 적합도 스코어링).
+
+    v1: 키워드별 50건 검색 → 제목 매칭 (누락 95%+)
+    v2: 전체 페이지네이션 수집 → 역할 키워드 + 분류 스코어링 (누락 ~5%)
 
     Returns:
-        {"teams_checked": int, "new_bids_found": int, "notifications_sent": int}
+        {"teams_checked": int, "new_bids_found": int, "notifications_sent": int,
+         "total_fetched": int, "scored_passed": int}
     """
+    from app.services.bid_scorer import score_and_rank_bids
     from app.services.g2b_service import G2BService
     from app.services.notification_service import (
         create_notification,
@@ -28,14 +33,16 @@ async def daily_g2b_monitor() -> dict:
     )
 
     client = await get_async_client()
-    stats = {"teams_checked": 0, "new_bids_found": 0, "notifications_sent": 0}
+    stats = {
+        "teams_checked": 0, "new_bids_found": 0, "notifications_sent": 0,
+        "total_fetched": 0, "scored_passed": 0,
+    }
 
-    # 활성 팀 + 모니터링 키워드 조회
+    # 활성 팀 조회
     try:
         teams_result = (
             await client.table("teams")
             .select("id, name, monitor_keywords, teams_webhook_url")
-            .not_.is_("monitor_keywords", "null")
             .execute()
         )
         teams = teams_result.data or []
@@ -43,84 +50,99 @@ async def daily_g2b_monitor() -> dict:
         logger.error(f"팀 목록 조회 실패: {e}")
         return stats
 
+    if not teams:
+        return stats
+
     async with G2BService() as g2b:
+        # ── 1) 당일 전체 공고 1회 수집 (팀 공통) ──────────
+        today = datetime.now(timezone.utc)
+        date_from = today.strftime("%Y%m%d") + "0000"
+        date_to = today.strftime("%Y%m%d") + "2359"
+
+        try:
+            all_raw = await g2b.fetch_all_bids(date_from, date_to)
+        except Exception as e:
+            logger.error(f"전수 수집 실패: {e}")
+            return stats
+
+        stats["total_fetched"] = len(all_raw)
+
+        # ── 2) 적합도 스코어링 (역할 키워드 + 분류 가중치) ───
+        scored = score_and_rank_bids(
+            all_raw,
+            reference_date=today.date(),
+            min_score=0,
+            exclude_expired=True,
+            max_results=200,
+        )
+        stats["scored_passed"] = len(scored)
+
+        # scored → bidNtceNm 포함 dict 형태로 변환 (알림용)
+        scored_bids = []
+        for bs in scored:
+            scored_bids.append({
+                "bidNtceNo": bs.bid_no,
+                "bidNtceNm": bs.title,
+                "ntceInsttNm": bs.agency,
+                "presmptPrce": str(bs.budget) if bs.budget else "",
+                "bidClseDt": bs.deadline,
+                "score": bs.score,
+                "role_keywords": bs.role_keywords_matched,
+            })
+
+        if not scored_bids:
+            logger.info("스코어링 통과 공고 없음")
+            return stats
+
+        # ── 3) 팀별 알림 ────────────────────────────────
         for team in teams:
             team_id = team["id"]
-            keywords = team.get("monitor_keywords", [])
-            if not keywords:
-                continue
-
             stats["teams_checked"] += 1
 
-            for keyword in keywords:
-                try:
-                    # G2B 본공고 검색
-                    results = await g2b.search_bid_announcements(keyword, num_of_rows=50)
+            try:
+                # 이미 알림 보낸 공고 필터링
+                new_bids = await _filter_new_bids(client, team_id, scored_bids)
+                if not new_bids:
+                    continue
 
-                    # 사전규격도 검색하여 합산
-                    try:
-                        pre_results = await g2b.search_pre_bid_specifications(keyword, num_of_rows=50)
-                        # 사전규격 결과를 본공고 형식에 맞춰 변환
-                        for pr in pre_results:
-                            pr["bidNtceNo"] = f"PRE-{pr.get('prcSpcfNo', '')}"
-                            pr["bidNtceNm"] = f"[사전규격] {pr.get('prcSpcfNm', '')}"
-                            pr["ntceInsttNm"] = pr.get("orderInsttNm") or pr.get("rlDminsttNm", "")
-                            pr["dminsttNm"] = pr.get("orderInsttNm", "")
-                            pr["presmptPrce"] = pr.get("asignBdgtAmt") or pr.get("presmptPrce")
-                        results.extend(pre_results)
-                    except Exception as e:
-                        logger.debug(f"사전규격 검색 실패 (무시): {e}")
-                    if not results:
-                        continue
+                stats["new_bids_found"] += len(new_bids)
 
-                    # 이미 알림 보낸 공고 필터링
-                    new_bids = await _filter_new_bids(client, team_id, results)
-                    if not new_bids:
-                        continue
+                # 알림 발송 (상위 10건 요약)
+                bid_summary = _format_scored_bid_summary(new_bids[:10])
 
-                    stats["new_bids_found"] += len(new_bids)
+                from urllib.parse import quote
+                search_link = f"{settings.frontend_url}/bids"
 
-                    # 알림 발송 (최대 5건 요약)
-                    bid_summary = _format_bid_summary(new_bids[:5], keyword)
+                # Teams 알림
+                await send_teams_notification(
+                    team_id=team_id,
+                    title=f"오늘의 추천 공고 {len(new_bids)}건",
+                    body=bid_summary,
+                    link=search_link,
+                )
 
-                    # 알림 링크: APP_URL + /projects?search={keyword} (§25-2)
-                    from urllib.parse import quote
-                    search_link = (
-                        f"{settings.frontend_url}/projects?search={quote(keyword)}"
-                    )
-
-                    # Teams 알림
-                    await send_teams_notification(
-                        team_id=team_id,
-                        title=f"신규 공고 알림: '{keyword}' ({len(new_bids)}건)",
-                        body=bid_summary,
+                # 팀 리더에게 인앱 알림
+                leader = await _get_team_leader(client, team_id)
+                if leader:
+                    await create_notification(
+                        user_id=leader,
+                        proposal_id=None,
+                        type="g2b_monitor",
+                        title=f"오늘의 추천 공고 {len(new_bids)}건",
+                        body=bid_summary[:200],
                         link=search_link,
                     )
 
-                    # 팀 리더에게 인앱 알림
-                    leader = await _get_team_leader(client, team_id)
-                    if leader:
-                        await create_notification(
-                            user_id=leader,
-                            proposal_id=None,
-                            type="g2b_monitor",
-                            title=f"신규 공고 {len(new_bids)}건 ({keyword})",
-                            body=bid_summary[:200],
-                            link=search_link,
-                        )
+                # 알림 기록 저장 (중복 방지)
+                await _record_notified_bids(client, team_id, new_bids)
+                stats["notifications_sent"] += 1
 
-                    # 알림 기록 저장 (중복 방지)
-                    await _record_notified_bids(client, team_id, new_bids)
-                    stats["notifications_sent"] += 1
-
-                    # Rate limit: G2B API 0.1초 간격
-                    await asyncio.sleep(0.1)
-
-                except Exception as e:
-                    logger.warning(f"G2B 모니터링 실패 (team={team_id}, kw={keyword}): {e}")
+            except Exception as e:
+                logger.warning(f"G2B 모니터링 실패 (team={team_id}): {e}")
 
     logger.info(
-        f"G2B 모니터링 완료: {stats['teams_checked']}팀, "
+        f"G2B 모니터링 완료: 전수 {stats['total_fetched']}건 → "
+        f"스코어 {stats['scored_passed']}건 → "
         f"{stats['new_bids_found']}건 신규, {stats['notifications_sent']}건 알림"
     )
     return stats
@@ -198,7 +220,7 @@ async def _get_team_leader(client: any, team_id: str) -> str | None:
 
 
 def _format_bid_summary(bids: list[dict], keyword: str) -> str:
-    """공고 요약 텍스트 생성."""
+    """공고 요약 텍스트 생성 (v1 레거시 호환)."""
     lines = [f"키워드 '{keyword}'에 매칭된 신규 공고:"]
     for i, b in enumerate(bids, 1):
         title = b.get("bidNtceNm", "제목 없음")
@@ -210,6 +232,29 @@ def _format_bid_summary(bids: list[dict], keyword: str) -> str:
         except (ValueError, TypeError):
             budget_str = "미정"
         lines.append(f"{i}. {title} ({agency}, {budget_str})")
+    return "\n".join(lines)
+
+
+def _format_scored_bid_summary(bids: list[dict]) -> str:
+    """스코어링 기반 공고 요약 텍스트 생성 (v2)."""
+    lines = ["적합도 스코어링 기반 추천 공고:"]
+    for i, b in enumerate(bids, 1):
+        title = b.get("bidNtceNm", "제목 없음")
+        agency = b.get("ntceInsttNm", "")
+        budget_raw = b.get("presmptPrce", "0")
+        try:
+            budget_val = int(str(budget_raw).replace(",", "").strip() or "0")
+            if budget_val >= 100_000_000:
+                budget_str = f"{budget_val / 100_000_000:.1f}억"
+            elif budget_val > 0:
+                budget_str = f"{budget_val / 10_000:.0f}만"
+            else:
+                budget_str = "미정"
+        except (ValueError, TypeError):
+            budget_str = "미정"
+        score = b.get("score", 0)
+        kws = ", ".join(b.get("role_keywords", []))
+        lines.append(f"{i}. [{score:.0f}점] {title} ({agency}, {budget_str}) [{kws}]")
     return "\n".join(lines)
 
 
@@ -237,9 +282,19 @@ def setup_scheduler() -> None:
             name="G2B 오후 모니터링",
             replace_existing=True,
         )
+        # 프롬프트 진화 유지보수 (매일 02:00 — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)
+        from app.services.prompt_tracker import periodic_maintenance
+        scheduler.add_job(
+            periodic_maintenance,
+            trigger=CronTrigger(hour=2, minute=0),
+            id="prompt_evolution_maintenance",
+            name="프롬프트 진화 유지보수",
+            replace_existing=True,
+        )
+
         scheduler.start()
-        logger.info("G2B 모니터링 스케줄러 시작 (매일 08:00, 15:00)")
+        logger.info("스케줄러 시작: G2B 모니터링 (08:00, 15:00) + 프롬프트 유지보수 (02:00)")
     except ImportError:
-        logger.info("APScheduler 미설치 — G2B 스케줄러 비활성화")
+        logger.info("APScheduler 미설치 — 스케줄러 비활성화")
     except Exception as e:
         logger.warning(f"스케줄러 설정 실패: {e}")

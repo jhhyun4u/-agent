@@ -81,6 +81,67 @@ def extract_text_from_docx(file_path: Union[str, Path]) -> str:
         )
 
 
+def extract_text_from_hwp(file_path: Union[str, Path]) -> str:
+    """
+    HWP 파일에서 텍스트 추출
+
+    시그니처 기반 자동 감지:
+    - OLE2 (진짜 HWP v5): olefile로 PrvText 스트림 추출
+    - ZIP (확장자만 .hwp인 HWPX): python-hwpx로 추출
+
+    Args:
+        file_path: HWP 파일 경로
+
+    Returns:
+        추출된 텍스트
+    """
+    file_path = Path(file_path)
+    try:
+        header = file_path.read_bytes()[:4]
+    except Exception as e:
+        raise FileProcessingError(
+            f"HWP 파일을 읽을 수 없습니다: {file_path}",
+            details={"path": str(file_path), "error": str(e)}
+        )
+
+    # ZIP 시그니처 (PK) → 실제로는 HWPX
+    if header[:2] == b"PK":
+        logger.info(f"HWP 파일이 실제로는 HWPX (ZIP): {file_path.name}")
+        try:
+            from hwpx import HwpxDocument
+            doc = HwpxDocument(str(file_path))
+            text = doc.to_text() if hasattr(doc, "to_text") else ""
+            if not text:
+                from hwpx import TextExtractor
+                extractor = TextExtractor(str(file_path))
+                text = extractor.extract()
+            return text
+        except Exception as e:
+            logger.warning(f"HWPX 파싱 실패, 빈 문자열 반환: {e}")
+            return ""
+
+    # OLE2 시그니처 (D0 CF 11 E0) → 진짜 HWP v5
+    if header[:4] == b"\xd0\xcf\x11\xe0":
+        try:
+            import olefile
+            ole = olefile.OleFileIO(str(file_path))
+            try:
+                if ole.exists("PrvText"):
+                    raw = ole.openstream("PrvText").read()
+                    return raw.decode("utf-16")
+                else:
+                    logger.warning(f"HWP PrvText 스트림 없음: {file_path.name}")
+                    return ""
+            finally:
+                ole.close()
+        except Exception as e:
+            logger.warning(f"HWP OLE2 파싱 실패: {e}")
+            return ""
+
+    logger.warning(f"HWP 파일 시그니처 불명: {header.hex()}")
+    return ""
+
+
 def extract_text_from_file(file_path: Union[str, Path]) -> str:
     """
     파일에서 텍스트 추출 (통합 함수)
@@ -110,10 +171,7 @@ def extract_text_from_file(file_path: Union[str, Path]) -> str:
         elif suffix == ".docx":
             return extract_text_from_docx(file_path)
         elif suffix == ".hwp":
-            raise FileProcessingError(
-                "HWP 파일 형식은 아직 지원되지 않습니다.",
-                details={"path": str(file_path)}
-            )
+            return extract_text_from_hwp(file_path)
         elif suffix == ".txt":
             return file_path.read_text(encoding="utf-8")
         else:

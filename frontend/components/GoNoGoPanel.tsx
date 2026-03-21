@@ -44,6 +44,7 @@ export default function GoNoGoPanel({
   );
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [confirmNoGo, setConfirmNoGo] = useState(false);
 
   // AI 분석 결과 로드 (go_no_go 산출물)
   const [analysis, setAnalysis] = useState<GngAnalysis | null>(null);
@@ -256,11 +257,34 @@ export default function GoNoGoPanel({
         />
       </div>
 
+      {/* W12: No-Go 확인 모달 */}
+      {confirmNoGo && (
+        <div className="mb-4 bg-red-500/5 border border-red-500/30 rounded-lg p-4">
+          <p className="text-xs text-red-400 font-medium mb-2">정말 No-Go 처리하시겠습니까?</p>
+          <p className="text-[10px] text-[#8c8c8c] mb-3">No-Go 결정 시 이 프로젝트의 워크플로가 종료됩니다.</p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setConfirmNoGo(false)}
+              className="flex-1 py-1.5 text-xs rounded-lg border border-[#262626] text-[#8c8c8c] hover:bg-[#1c1c1c] transition-colors"
+            >
+              취소
+            </button>
+            <button
+              onClick={() => { setConfirmNoGo(false); handleSubmit(false); }}
+              disabled={submitting}
+              className="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 disabled:opacity-40 transition-colors"
+            >
+              No-Go 확정
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 버튼 */}
       <div className="flex gap-2">
         <button
-          onClick={() => handleSubmit(false)}
-          disabled={submitting}
+          onClick={() => setConfirmNoGo(true)}
+          disabled={submitting || confirmNoGo}
           className="flex-1 py-2.5 text-xs font-semibold rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 disabled:opacity-40 transition-colors"
         >
           No-Go

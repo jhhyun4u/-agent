@@ -19,6 +19,7 @@ export interface UseProposalsResult {
   proposals: ProposalSummary[];
   page: number;
   pageSize: number;
+  total: number;
   isLoading: boolean;
   error: Error | null;
   refresh: () => void;
@@ -28,7 +29,8 @@ export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult
   const { q, status, page = 1 } = opts;
 
   const [proposals, setProposals] = useState<ProposalSummary[]>([]);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize] = useState(20);
+  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const cancelledRef = useRef(false);
@@ -41,7 +43,7 @@ export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult
       const data = await api.proposals.list({ q, status, page });
       if (!cancelledRef.current) {
         setProposals(data.items);
-        setPageSize(data.page_size);
+        setTotal(data.total ?? data.items.length);
       }
     } catch (err) {
       if (!cancelledRef.current) {
@@ -65,6 +67,7 @@ export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult
     proposals,
     page,
     pageSize,
+    total,
     isLoading,
     error,
     refresh: fetch_,

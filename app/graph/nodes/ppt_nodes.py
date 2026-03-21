@@ -21,8 +21,28 @@ from app.prompts.ppt_pipeline import (
 )
 from app.prompts.proposal_prompts import PRESENTATION_STRATEGY_PROMPT
 from app.services.claude_client import claude_generate
+from app.services import prompt_registry, prompt_tracker
 
 logger = logging.getLogger(__name__)
+
+
+async def _track_ppt_prompt(state: ProposalState, step: str, prompt_id: str) -> None:
+    """PPT 노드 공통 프롬프트 추적 헬퍼."""
+    proposal_id = state.get("project_id", "")
+    if not proposal_id:
+        return
+    try:
+        _, ver, hash_ = await prompt_registry.get_active_prompt(prompt_id)
+        await prompt_tracker.record_usage(
+            proposal_id=proposal_id,
+            artifact_step=step,
+            section_id=None,
+            prompt_id=prompt_id,
+            prompt_version=ver,
+            prompt_hash=hash_,
+        )
+    except Exception:
+        pass
 
 
 # ── 발표전략 (기존 유지) ──
@@ -61,15 +81,58 @@ async def presentation_strategy(state: ProposalState) -> dict:
 발주기관: {rfp_dict.get('client', '')}
 평가방식: {eval_method}"""
 
-    prompt = PRESENTATION_STRATEGY_PROMPT.format(
+    # ── 과거 발표 Q&A 패턴 조회 (Phase 3: 자가학습) ──
+    past_qa_text = ""
+    try:
+        from app.utils.supabase_client import get_async_client
+        client = await get_async_client()
+        client_name = rfp_dict.get("client", "")
+
+        # 동일 발주기관 Q&A → 전체 최근 Q&A fallback
+        qa_query = client.table("presentation_qa").select(
+            "question, answer, category, evaluator_reaction"
+        ).order("created_at", desc=True).limit(10)
+        if client_name:
+            qa_result = await qa_query.ilike("client_name", f"%{client_name}%").execute()
+            if not qa_result.data:
+                qa_result = await client.table("presentation_qa").select(
+                    "question, answer, category, evaluator_reaction"
+                ).order("created_at", desc=True).limit(10).execute()
+        else:
+            qa_result = await qa_query.execute()
+
+        if qa_result.data:
+            parts = []
+            for qa in qa_result.data:
+                reaction = qa.get("evaluator_reaction", "")
+                reaction_tag = f" → 평가위원 반응: {reaction}" if reaction else ""
+                parts.append(
+                    f"- [{qa.get('category', '일반')}] Q: {qa.get('question', '')}\n"
+                    f"  A: {qa.get('answer', '')[:150]}{reaction_tag}"
+                )
+            past_qa_text = "\n".join(parts)
+    except Exception as e:
+        logger.debug(f"과거 Q&A 조회 실패 (무시): {e}")
+
+    # 레지스트리에서 진화된 프롬프트 조회
+    try:
+        ps_text, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "proposal_prompts.PRESENTATION_STRATEGY_PROMPT", state.get("project_id", "")
+        )
+    except Exception:
+        ps_text = ""
+
+    prompt = (ps_text or PRESENTATION_STRATEGY_PROMPT).format(
         rfp_summary=rfp_summary,
         eval_method=eval_method or "(평가 방식 미정)",
         positioning=state.get("positioning", "defensive"),
         win_theme=s_dict.get("win_theme", ""),
         sections_summary=sections_summary or "(섹션 없음)",
+        past_qa_context=past_qa_text or "(과거 발표 Q&A 데이터 없음)",
     )
 
     result = await claude_generate(prompt)
+    await _track_ppt_prompt(state, "presentation_strategy", "proposal_prompts.PRESENTATION_STRATEGY_PROMPT")
 
     return {
         "presentation_strategy": result,
@@ -149,15 +212,24 @@ async def ppt_toc(state: ProposalState) -> dict:
         presentation_strategy=ctx["presentation_strategy"] or "(발표전략 없음)",
     )
 
+    # 레지스트리에서 진화된 system prompt 조회
+    try:
+        toc_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "ppt_pipeline.TOC_SYSTEM", state.get("project_id", "")
+        )
+    except Exception:
+        toc_sys = ""
+
     result = await claude_generate(
         prompt_user,
-        system_prompt=PPT_TOC_SYSTEM,
+        system_prompt=toc_sys or PPT_TOC_SYSTEM,
         max_tokens=4096,
     )
 
     toc = result.get("toc", [])
     total_slides = result.get("total_slides", len(toc))
     logger.info(f"[PPT Step 1] TOC 완료 — {len(toc)}개 슬라이드")
+    await _track_ppt_prompt(state, "ppt_toc", "ppt_pipeline.TOC_SYSTEM")
 
     return {
         "ppt_storyboard": {"toc": toc, "total_slides": total_slides},
@@ -180,14 +252,22 @@ async def ppt_visual_brief(state: ProposalState) -> dict:
         differentiation_strategy=json.dumps(ctx["differentiation_strategy"], ensure_ascii=False),
     )
 
+    try:
+        vb_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "ppt_pipeline.VISUAL_BRIEF_SYSTEM", state.get("project_id", "")
+        )
+    except Exception:
+        vb_sys = ""
+
     result = await claude_generate(
         prompt_user,
-        system_prompt=PPT_VISUAL_BRIEF_SYSTEM,
+        system_prompt=vb_sys or PPT_VISUAL_BRIEF_SYSTEM,
         max_tokens=4096,
     )
 
     visual_briefs = result.get("visual_briefs", [])
     logger.info(f"[PPT Step 2] Visual Brief 완료 — {len(visual_briefs)}개 슬라이드 시각 전략")
+    await _track_ppt_prompt(state, "ppt_visual_brief", "ppt_pipeline.VISUAL_BRIEF_SYSTEM")
 
     # 기존 storyboard에 visual_briefs 병합
     updated = {**storyboard, "visual_briefs": visual_briefs}
@@ -219,9 +299,16 @@ async def ppt_storyboard_node(state: ProposalState) -> dict:
         team_plan=json.dumps(ctx["team_plan"], ensure_ascii=False),
     )
 
+    try:
+        sb_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "ppt_pipeline.STORYBOARD_SYSTEM", state.get("project_id", "")
+        )
+    except Exception:
+        sb_sys = ""
+
     result = await claude_generate(
         prompt_user,
-        system_prompt=PPT_STORYBOARD_SYSTEM,
+        system_prompt=sb_sys or PPT_STORYBOARD_SYSTEM,
         max_tokens=16384,
     )
 
@@ -233,6 +320,7 @@ async def ppt_storyboard_node(state: ProposalState) -> dict:
         f"[PPT Step 3] Storyboard 완료 — {len(slides)}장 "
         f"/ eval_coverage: {list(eval_coverage.keys())}"
     )
+    await _track_ppt_prompt(state, "ppt_storyboard", "ppt_pipeline.STORYBOARD_SYSTEM")
 
     # 최종 storyboard (presentation_pptx_builder 직접 소비)
     final_storyboard = {

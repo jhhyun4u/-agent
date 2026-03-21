@@ -29,6 +29,10 @@ dependencies = [
     # HTTP 클라이언트 (나라장터 API)
     "aiohttp>=3.9.0",
     "python-hwpx>=2.5",
+    # Rate limiting
+    "slowapi>=0.1.9",
+    "psycopg2-binary>=2.9.11",
+    "olefile>=0.47",
 ]
 
 [project.optional-dependencies]

@@ -110,7 +110,7 @@ export default function BidsSettingsPage() {
       <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-6">
         <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl">👥</div>
         <h3 className="text-sm font-semibold text-[#ededed]">팀이 없습니다</h3>
-        <p className="text-xs text-[#8c8c8c] max-w-xs">공고 추천을 사용하려면 먼저 팀을 생성하세요.</p>
+        <p className="text-xs text-[#8c8c8c] max-w-xs">공고 모니터링을 사용하려면 먼저 팀을 생성하세요.</p>
         <button
           onClick={() => router.push("/admin")}
           className="bg-[#3ecf8e] hover:bg-[#49e59e] text-black font-semibold rounded-lg px-5 py-2 text-sm transition-colors"
@@ -138,7 +138,7 @@ export default function BidsSettingsPage() {
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       {/* 헤더 */}
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
-        <h1 className="text-sm font-semibold text-[#ededed]">공고 추천 설정</h1>
+        <h1 className="text-sm font-semibold text-[#ededed]">공고 모니터링 설정</h1>
         <p className="text-xs text-[#8c8c8c] mt-0.5">팀 프로필과 검색 조건을 설정합니다</p>
       </div>
 

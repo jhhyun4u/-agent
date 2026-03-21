@@ -142,6 +142,21 @@ class ProposalPlan(BaseModel):
     bid_price: dict
 
 
+class BidPlanResult(BaseModel):
+    """STEP 2.5: 입찰가격계획 결과."""
+    recommended_bid: int = 0
+    recommended_ratio: float = 0.0
+    scenarios: list[dict] = []
+    selected_scenario: str = ""
+    cost_breakdown: dict = {}
+    sensitivity_curve: list[dict] = []
+    win_probability: float = 0.0
+    market_context: dict = {}
+    data_quality: str = "rule_based"
+    user_override_price: int | None = None
+    user_override_reason: str = ""
+
+
 class PPTSlide(BaseModel):
     slide_id: str
     title: str
@@ -246,6 +261,10 @@ class ProposalState(TypedDict):
 
     # v3.5: 섹션별 순차 작성 인덱스
     current_section_index: Annotated[int, lambda a, b: b]
+
+    # v3.8: 입찰가격계획
+    bid_plan: Optional[BidPlanResult]
+    bid_budget_constraint: Optional[dict]
 
     # Phase 4: 3단계 PPT 파이프라인 최종 결과
     ppt_storyboard: Optional[dict]

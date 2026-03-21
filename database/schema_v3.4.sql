@@ -88,45 +88,34 @@ CREATE TRIGGER update_capabilities_updated_at BEFORE UPDATE ON capabilities
 
 CREATE TABLE proposals (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name            TEXT NOT NULL,
-    client          TEXT,
-    deadline        TIMESTAMPTZ,
-    positioning     TEXT,        -- defensive | offensive | adjacent
-    mode            TEXT DEFAULT 'full',  -- lite | full
-    picked_bid_no   TEXT,
-    bid_detail      JSONB,
-    search_query    JSONB,
-    sales_intel     TEXT,
-    status          TEXT DEFAULT 'draft',
-    result          TEXT,        -- 수주 | 패찰 | 유찰
-    result_amount   BIGINT,
-    result_reason   TEXT,
-    result_at       TIMESTAMPTZ,
-    thread_id       TEXT UNIQUE,
-    -- 소유·조직
-    team_id         UUID REFERENCES teams(id) NOT NULL,
-    division_id     UUID REFERENCES divisions(id) NOT NULL,
-    org_id          UUID REFERENCES organizations(id) NOT NULL,
-    created_by      UUID REFERENCES users(id) NOT NULL,
-    budget_amount   BIGINT,
-    -- §15-5a: 상태 머신 확장
-    current_step    TEXT,
-    previous_status TEXT,
-    hold_reason     TEXT,
-    abandon_reason  TEXT,
-    presentation_at TIMESTAMPTZ,
-    presentation_location TEXT,
-    presenter       TEXT,
-    -- §8: Storage 업로드 경로 + 실패 추적
+    title           TEXT,
+    status          TEXT DEFAULT 'initialized',
+    owner_id        UUID REFERENCES users(id),
+    team_id         UUID REFERENCES teams(id),
+    -- RFP 관련
+    rfp_filename    TEXT,
+    rfp_content     TEXT,
+    rfp_content_truncated BOOLEAN DEFAULT false,
+    -- 진행 상태
+    current_phase   TEXT,
+    phases_completed INTEGER DEFAULT 0,
+    failed_phase    TEXT,
+    -- Storage 업로드 경로
     storage_path_docx TEXT,
     storage_path_pptx TEXT,
     storage_path_hwpx TEXT,
-    storage_upload_failed BOOLEAN NOT NULL DEFAULT false,
+    storage_path_rfp TEXT,
+    storage_upload_failed BOOLEAN DEFAULT false,
+    -- 결과
+    win_result      TEXT,        -- 수주 | 패찰 | 유찰
+    bid_amount      BIGINT,
+    notes           TEXT,
     created_at      TIMESTAMPTZ DEFAULT now(),
     updated_at      TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT proposals_status_check CHECK (
-        status IN ('draft','searching','analyzing','strategizing','submitted',
-                   'presented','won','lost','no_go','on_hold','expired','abandoned','retrospect')
+        status IN ('initialized','processing','searching','analyzing','strategizing',
+                   'submitted','presented','won','lost','no_go','on_hold','expired',
+                   'abandoned','retrospect','completed')
     )
 );
 

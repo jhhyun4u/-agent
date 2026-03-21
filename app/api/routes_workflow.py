@@ -122,8 +122,16 @@ async def start_workflow(
     proposal_id: str,
     body: WorkflowStartRequest,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """워크플로 시작 — 그래프 invoke."""
+    from app.middleware.request_id import get_request_id
+    rid = get_request_id()
+    logger.info(f"[WF_START] proposal={proposal_id}, user={user.get('id','?')}", extra={
+        "request_id": rid,
+        "data": {"event": "workflow_start", "proposal_id": proposal_id, "initial_keys": list(body.initial_state.keys())},
+    })
+
     client = await get_async_client()
 
     # 프로젝트 존재 확인
@@ -158,23 +166,27 @@ async def start_workflow(
         update_fields = {"current_phase": current_step}
         await client.table("proposals").update(update_fields).eq("id", proposal_id).execute()
 
+        # 3-Stream 상태 포함
+        streams_status = await _get_streams_status_safe(proposal_id)
+
         return {
             "proposal_id": proposal_id,
             "status": "running",
             "current_step": current_step,
             "interrupted": _is_interrupted(result),
+            "streams_status": streams_status,
         }
     except Exception as e:
         logger.error(f"워크플로 시작 실패: {e}")
         await client.table("proposals").update({
             "status": "error",
-            "current_phase": f"error: {str(e)[:100]}",
+            "current_phase": f"error: {type(e).__name__}",
         }).eq("id", proposal_id).execute()
         raise
 
 
 @router.get("/{proposal_id}/state")
-async def get_workflow_state(proposal_id: str, user=Depends(get_current_user)):
+async def get_workflow_state(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
     """현재 그래프 상태 조회."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -187,6 +199,9 @@ async def get_workflow_state(proposal_id: str, user=Depends(get_current_user)):
         token_usage = state.get("token_usage", {})
         total_cost = sum(v.get("cost_usd", 0) for v in token_usage.values())
 
+        # 3-Stream 상태 포함
+        streams_status = await _get_streams_status_safe(proposal_id)
+
         return {
             "proposal_id": proposal_id,
             "current_step": state.get("current_step", ""),
@@ -198,19 +213,26 @@ async def get_workflow_state(proposal_id: str, user=Depends(get_current_user)):
                 "total_cost_usd": round(total_cost, 4),
                 "nodes_tracked": len(token_usage),
             },
+            "streams_status": streams_status,
         }
     except Exception as e:
-        logger.error(f"상태 조회 실패: {e}")
-        return {"proposal_id": proposal_id, "error": str(e)}
+        logger.error(f"상태 조회 실패: {e}", exc_info=True)
+        return {"proposal_id": proposal_id, "error": "상태 조회 중 오류가 발생했습니다."}
 
 
 @router.post("/{proposal_id}/resume")
+@limiter.limit("20/minute")
 async def resume_workflow(
+    request: Request,
     proposal_id: str,
     body: WorkflowResumeRequest,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """Human 리뷰 결과 입력 → 그래프 재개."""
+    from app.middleware.request_id import get_request_id
+    rid = get_request_id()
+
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
 
@@ -219,9 +241,27 @@ async def resume_workflow(
     if not snapshot or not snapshot.next:
         raise WFResumeValidationError(["재개할 인터럽트가 없습니다"])
 
+    waiting_at = list(snapshot.next) if snapshot.next else []
+
     # resume 데이터 구성 (None이 아닌 필드만)
     resume_data = {k: v for k, v in body.model_dump().items() if v is not None}
     resume_data["approved_by"] = resume_data.get("approved_by") or user.get("name", user["id"])
+
+    # 비즈니스 이벤트 로깅: 승인/거부/No-Go 분기
+    event_type = "resume_approve" if resume_data.get("approved") or resume_data.get("quick_approve") else "resume_reject"
+    if resume_data.get("decision") == "no_go":
+        event_type = "resume_no_go"
+    logger.info(f"[WF_RESUME] proposal={proposal_id}, event={event_type}, waiting_at={waiting_at}", extra={
+        "request_id": rid,
+        "data": {
+            "event": event_type,
+            "proposal_id": proposal_id,
+            "waiting_at": waiting_at,
+            "decision": resume_data.get("decision"),
+            "has_feedback": bool(resume_data.get("feedback")),
+            "rework_targets": resume_data.get("rework_targets", []),
+        },
+    })
 
     try:
         from langgraph.types import Command
@@ -229,16 +269,40 @@ async def resume_workflow(
         current_step = result.get("current_step", "unknown")
 
         client = await get_async_client()
+
+        # GAP-3: 피드백 DB 자동 저장
+        if resume_data.get("feedback") or resume_data.get("comments"):
+            try:
+                step_name = current_step.replace("_rejected", "").replace("_approved", "")
+                await client.table("feedbacks").insert({
+                    "proposal_id": proposal_id,
+                    "step": step_name,
+                    "feedback": resume_data.get("feedback", ""),
+                    "comments": resume_data.get("comments"),
+                    "rework_targets": resume_data.get("rework_targets"),
+                    "author_id": user.get("id"),
+                }).execute()
+            except Exception as e:
+                logger.warning(f"피드백 DB 저장 실패 (무시): {e}")
+
         update_data = {"current_phase": current_step}
         # 종료 체크
         if current_step in ("go_no_go_no_go", "search_no_interest"):
             update_data["status"] = "cancelled"
+            logger.info(f"[WF_CANCELLED] proposal={proposal_id}, reason={current_step}", extra={
+                "request_id": rid,
+                "data": {"event": "workflow_cancelled", "proposal_id": proposal_id, "final_step": current_step},
+            })
         await client.table("proposals").update(update_data).eq("id", proposal_id).execute()
+
+        # 3-Stream 상태 포함
+        streams_status = await _get_streams_status_safe(proposal_id)
 
         return {
             "proposal_id": proposal_id,
             "current_step": current_step,
             "interrupted": _is_interrupted(result),
+            "streams_status": streams_status,
         }
     except Exception as e:
         logger.error(f"워크플로 재개 실패: {e}")
@@ -250,6 +314,7 @@ async def stream_workflow(
     proposal_id: str,
     request: Request,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """SSE 스트리밍 — 그래프 실행 상태를 실시간 전송."""
     graph = await _get_graph()
@@ -279,7 +344,8 @@ async def stream_workflow(
 
             yield f"data: {json.dumps({'event': 'done'})}\n\n"
         except Exception as e:
-            yield f"data: {json.dumps({'event': 'error', 'message': str(e)})}\n\n"
+            logger.error(f"SSE 스트리밍 오류: {e}", exc_info=True)
+            yield f"data: {json.dumps({'event': 'error', 'message': '스트리밍 중 오류가 발생했습니다.'})}\n\n"
 
     return StreamingResponse(
         event_generator(),
@@ -289,7 +355,7 @@ async def stream_workflow(
 
 
 @router.get("/{proposal_id}/history")
-async def get_workflow_history(proposal_id: str, user=Depends(get_current_user)):
+async def get_workflow_history(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
     """체크포인트 이력."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -306,11 +372,12 @@ async def get_workflow_history(proposal_id: str, user=Depends(get_current_user))
                 break
         return {"proposal_id": proposal_id, "history": history}
     except Exception as e:
-        return {"proposal_id": proposal_id, "history": [], "error": str(e)}
+        logger.error(f"이력 조회 실패: {e}", exc_info=True)
+        return {"proposal_id": proposal_id, "history": [], "error": "이력 조회 중 오류가 발생했습니다."}
 
 
 @router.get("/{proposal_id}/token-usage")
-async def get_token_usage(proposal_id: str, user=Depends(get_current_user)):
+async def get_token_usage(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
     """노드별 토큰 사용량 + 비용 상세 조회."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -383,6 +450,7 @@ async def list_section_locks(
 async def get_ai_status(
     proposal_id: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """AI 작업 상태 조회."""
     from app.services.ai_status_manager import ai_status_manager
@@ -394,23 +462,40 @@ async def get_ai_status(
 
 
 @router.post("/{proposal_id}/ai-abort")
+@limiter.limit("10/minute")
 async def abort_ai_task(
+    request: Request,
     proposal_id: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """AI 작업 중단 (paused 상태로 전환, 완료 서브태스크 보존)."""
+    from app.middleware.request_id import get_request_id
     from app.services.ai_status_manager import ai_status_manager
 
+    rid = get_request_id()
     result = ai_status_manager.abort_task(proposal_id)
     if result is None:
+        logger.info(f"[WF_ABORT] proposal={proposal_id}, result=no_running_task", extra={
+            "request_id": rid,
+            "data": {"event": "ai_abort_noop", "proposal_id": proposal_id},
+        })
         return {"proposal_id": proposal_id, "status": "idle", "message": "실행 중인 작업 없음"}
+
+    logger.info(f"[WF_ABORT] proposal={proposal_id}, step={result['step']}, paused", extra={
+        "request_id": rid,
+        "data": {"event": "ai_abort", "proposal_id": proposal_id, "step": result["step"], "status": result["status"]},
+    })
     return {"proposal_id": proposal_id, "status": result["status"], "step": result["step"]}
 
 
 @router.post("/{proposal_id}/ai-retry")
+@limiter.limit("5/minute")
 async def retry_ai_task(
+    request: Request,
     proposal_id: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """중단된 AI 작업 재시도 — 현재 STEP을 처음부터 재실행."""
     from app.services.ai_status_manager import ai_status_manager
@@ -436,8 +521,8 @@ async def retry_ai_task(
             "current_step": result.get("current_step", ""),
         }
     except Exception as e:
-        logger.error(f"AI 재시도 실패: {proposal_id}: {e}")
-        return {"proposal_id": proposal_id, "error": str(e)}
+        logger.error(f"AI 재시도 실패: {proposal_id}: {e}", exc_info=True)
+        return {"proposal_id": proposal_id, "error": "AI 재시도 중 오류가 발생했습니다."}
 
 
 @router.get("/{proposal_id}/ai-logs")
@@ -445,6 +530,7 @@ async def get_ai_logs(
     proposal_id: str,
     limit: int = 20,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """AI 작업 로그 이력 조회 (ai_task_logs 테이블)."""
     client = await get_async_client()
@@ -460,7 +546,7 @@ async def get_ai_logs(
         return {"proposal_id": proposal_id, "logs": resp.data or []}
     except Exception as e:
         logger.warning(f"AI 로그 조회 실패: {e}")
-        return {"proposal_id": proposal_id, "logs": [], "error": str(e)}
+        return {"proposal_id": proposal_id, "logs": [], "error": "로그 조회 중 오류가 발생했습니다."}
 
 
 # ── 타임트래블 (§12-1 확장) ──
@@ -485,6 +571,7 @@ async def goto_step(
     proposal_id: str,
     step: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """특정 체크포인트로 타임트래블 — 이력에서 해당 step의 config를 찾아 복원."""
     graph = await _get_graph()
@@ -519,7 +606,12 @@ async def goto_step(
         "current_phase": target_snapshot.values.get("current_step", step),
     }).eq("id", proposal_id).execute()
 
-    logger.info(f"타임트래블: proposal={proposal_id}, target_step={step}")
+    from app.middleware.request_id import get_request_id
+    rid = get_request_id()
+    logger.info(f"[WF_GOTO] proposal={proposal_id}, target_step={step}", extra={
+        "request_id": rid,
+        "data": {"event": "time_travel", "proposal_id": proposal_id, "target_step": step},
+    })
 
     return {
         "success": True,
@@ -534,6 +626,7 @@ async def get_impact(
     proposal_id: str,
     step: str,
     user=Depends(get_current_user),
+    _access=Depends(require_project_access),
 ):
     """특정 step 변경 시 재실행이 필요한 downstream 노드 목록 반환."""
     if step not in _NODE_ORDER:
@@ -595,6 +688,43 @@ def _serialize_approval(approval: dict) -> dict:
         else:
             serialized[key] = str(val)
     return serialized
+
+
+async def _get_streams_status_safe(proposal_id: str) -> dict | None:
+    """3-Stream 상태 조회 (실패 시 None 반환).
+
+    자동 복구: Go 결정 이후인데 스트림 레코드가 없으면 자동 초기화.
+    """
+    try:
+        from app.services.stream_orchestrator import get_streams_status, initialize_streams
+        result = await get_streams_status(proposal_id)
+
+        # 자동 복구: Go 통과 후인데 스트림이 모두 not_started이면 초기화 재시도
+        streams = result.get("streams", [])
+        all_not_started = all(s.get("status") == "not_started" for s in streams if isinstance(s, dict))
+        if all_not_started and streams:
+            # Go 통과 여부 확인 (proposals.current_phase 기반)
+            from app.utils.supabase_client import get_async_client
+            client = await get_async_client()
+            prop = await (
+                client.table("proposals")
+                .select("current_phase")
+                .eq("id", proposal_id)
+                .single()
+                .execute()
+            )
+            phase = (prop.data or {}).get("current_phase", "")
+            go_passed_phases = {
+                "go_no_go_go", "strategy", "bid_plan", "plan",
+                "proposal", "ppt", "completed",
+            }
+            if any(gp in phase for gp in go_passed_phases):
+                await initialize_streams(proposal_id)
+                result = await get_streams_status(proposal_id)
+
+        return result
+    except Exception:
+        return None
 
 
 def _extract_output_summary(node_name: str, output: Any) -> str:

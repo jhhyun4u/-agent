@@ -6,6 +6,9 @@ interrupt()로 프론트엔드 /resume 대기.
 빠른 승인, 결재선 다단계 승인, 포지셔닝 변경 지원.
 """
 
+import asyncio
+import logging
+
 from langgraph.types import interrupt
 
 from app.graph.state import (
@@ -13,6 +16,8 @@ from app.graph.state import (
     ApprovalStatus,
     ProposalState,
 )
+
+logger = logging.getLogger(__name__)
 
 # Shipley Color Team 관점 매핑
 REVIEW_PERSPECTIVES = {
@@ -31,6 +36,10 @@ REVIEW_PERSPECTIVES = {
     "strategy": {
         "perspective": "Blue Team (전략 검증) 관점",
         "focus": "이 전략으로 이길 수 있는가? 포지셔닝이 맞는가?",
+    },
+    "bid_plan": {
+        "perspective": "가격결정 위원회 관점",
+        "focus": "어떤 가격으로 입찰할 것인가? 수주확률과 마진의 최적 균형점은?",
     },
     "plan": {
         "perspective": "Pink Team (실행 검증) 관점",
@@ -68,6 +77,13 @@ def review_node(step_name: str):
             ],
         }
 
+        # PSM-16: PPT 리뷰 시 Q&A 입력 안내
+        if step_name == "ppt":
+            interrupt_data["qa_reminder"] = (
+                "발표 완료 후, 프로젝트 상세 → Q&A 탭에서 "
+                "질의응답 기록을 등록하면 향후 제안에 활용됩니다."
+            )
+
         # plan 리뷰: 목차 + 스토리라인 데이터를 함께 제공
         if step_name == "plan":
             interrupt_data.update(_build_plan_review_context(state))
@@ -86,6 +102,10 @@ def review_node(step_name: str):
         # 전략 리뷰: 포지셔닝 변경 가능
         if step_name == "strategy":
             return _handle_strategy_review(state, human_input)
+
+        # 입찰가격계획 리뷰: 시나리오 선택 + 수동 오버라이드
+        if step_name == "bid_plan":
+            return _handle_bid_plan_review(state, human_input)
 
         # plan 리뷰: 목차 조정 처리
         if step_name == "plan":
@@ -179,10 +199,22 @@ def _handle_gng_review(state, human_input):
         override = human_input.get("positioning_override")
         if override and override != state.get("positioning"):
             result["positioning"] = override
+            result["feedback_history"] = [{
+                "step": "go_no_go",
+                "feedback": f"포지셔닝 오버라이드: {state.get('positioning')} → {override}",
+                "override_reason": human_input.get("positioning_override_reason", ""),
+                "original_positioning": state.get("positioning"),
+                "new_positioning": override,
+                "timestamp": human_input.get("timestamp", ""),
+            }]
         # 결재선 확인
         chain_result = _check_approval_chain(state, "go_no_go", human_input)
         if chain_result:
             return chain_result
+
+        # ── 3-Stream 초기화: Go 결정 시 스트림 레코드 생성 + 제출서류 추출 ──
+        _fire_stream_initialization(state)
+
         return result
 
     elif decision == "no_go":
@@ -239,6 +271,7 @@ def _handle_strategy_review(state, human_input):
         return result
 
     elif positioning_changed:
+        override_reason = human_input.get("positioning_override_reason", "")
         return {
             "positioning": override,
             "approval": {
@@ -250,6 +283,9 @@ def _handle_strategy_review(state, human_input):
             "feedback_history": [{
                 "step": "strategy",
                 "feedback": f"포지셔닝 변경: {state.get('positioning')} → {override}",
+                "override_reason": override_reason,
+                "original_positioning": state.get("positioning"),
+                "new_positioning": override,
                 "timestamp": human_input.get("timestamp", ""),
             }],
             "current_step": "strategy_positioning_changed",
@@ -382,6 +418,13 @@ def review_section_node(state: ProposalState) -> dict:
     })
 
     if human_input.get("approved") or human_input.get("quick_approve"):
+        # 승인된 섹션 → content_library 자동 등록 (자가학습 루프)
+        if current_section:
+            try:
+                _auto_register_to_content_library(state, current_section, current_section_id)
+            except Exception:
+                pass  # 콘텐츠 등록 실패는 워크플로 차단하지 않음
+
         new_index = index + 1
         if new_index >= len(sections_to_write):
             return {
@@ -523,6 +566,251 @@ def _handle_plan_review(state: ProposalState, human_input: dict) -> dict:
     return result
 
 
+def _auto_register_to_content_library(state: ProposalState, section, section_id: str) -> None:
+    """승인된 섹션을 content_library에 자동 등록 (비동기 fire-and-forget).
+
+    사람이 리뷰하고 승인한 섹션 = 높은 품질 → 다음 제안서에서 재활용 가능.
+    """
+    import asyncio
+
+    sd = section.model_dump() if hasattr(section, "model_dump") else (section if isinstance(section, dict) else {})
+    content_text = sd.get("content", "")
+    if not content_text or len(content_text) < 100:
+        return  # 너무 짧은 섹션은 스킵
+
+    rfp = state.get("rfp_analysis")
+    rfp_dict = {}
+    if rfp:
+        rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
+
+    from app.prompts.section_prompts import classify_section_type
+    section_type = classify_section_type(section_id, sd.get("title", ""))
+
+    async def _register():
+        try:
+            from app.utils.supabase_client import get_async_client
+            client = await get_async_client()
+            org_id = state.get("org_id", "")
+            if not org_id:
+                return
+
+            # 중복 체크 (같은 proposal_id + section_id)
+            existing = await (
+                client.table("content_library")
+                .select("id")
+                .eq("proposal_id", state.get("project_id", ""))
+                .eq("section_type", section_type)
+                .eq("title", sd.get("title", section_id))
+                .limit(1)
+                .execute()
+            )
+            if existing.data:
+                return  # 이미 등록됨
+
+            await client.table("content_library").insert({
+                "org_id": org_id,
+                "type": "sections",
+                "title": sd.get("title", section_id),
+                "content": content_text[:50000],
+                "section_type": section_type,
+                "proposal_id": state.get("project_id", ""),
+                "client_name": rfp_dict.get("client", ""),
+                "industry": rfp_dict.get("industry", ""),
+                "positioning": state.get("positioning", ""),
+                "quality_score": sd.get("self_review_score", {}).get("depth_score", {}).get("evidence_count", 0) if isinstance(sd.get("self_review_score"), dict) else 0,
+                "change_source": "human_approved_section",
+                "status": "draft",
+            }).execute()
+        except Exception:
+            pass  # fire-and-forget
+
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(_register())
+    except RuntimeError:
+        pass  # 이벤트 루프 없으면 스킵
+
+
+def _handle_bid_plan_review(state: ProposalState, human_input: dict) -> dict:
+    """STEP 2.5: 입찰가격계획 리뷰 — 시나리오 선택 + 수동 오버라이드 + 결재선 + DB persist."""
+    from app.graph.nodes.bid_plan import _build_constraint
+
+    if human_input.get("approved") or human_input.get("quick_approve"):
+        bid_plan = state.get("bid_plan")
+        selected = human_input.get("selected_scenario", "balanced")
+        custom_price = human_input.get("custom_bid_price")
+        custom_reason = human_input.get("custom_bid_reason", "")
+
+        # bid_plan에 선택 결과 반영
+        updates = {}
+        if bid_plan:
+            bp = bid_plan.model_copy() if hasattr(bid_plan, "model_copy") else bid_plan
+            if hasattr(bp, "selected_scenario"):
+                bp.selected_scenario = selected
+            if custom_price:
+                if hasattr(bp, "user_override_price"):
+                    bp.user_override_price = int(custom_price)
+                    bp.user_override_reason = custom_reason
+            updates["bid_plan"] = bp
+
+            # 선택된 시나리오 기반 constraint 재계산
+            constraint = _build_constraint(bp, selected)
+
+            # 수동 오버라이드 시 constraint 조정
+            if custom_price:
+                override_price = int(custom_price)
+                # constraint가 빈 dict일 수 있으므로 기본 필드 보장
+                constraint.setdefault("scenario_name", selected)
+                constraint.setdefault("cost_standard", "KOSA")
+                constraint["total_bid_price"] = override_price
+                rfp = state.get("rfp_analysis")
+                budget = 0
+                if rfp:
+                    rfp_d = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
+                    from app.services.bid_calculator import parse_budget_string
+                    budget = parse_budget_string(rfp_d.get("budget", "")) or 0
+                if budget > 0:
+                    constraint["bid_ratio"] = round(override_price / budget * 100, 2)
+                constraint["labor_budget"] = int(override_price * 0.62)
+                avg_monthly = 6_800_000
+                constraint["max_team_mm"] = round(constraint["labor_budget"] / avg_monthly, 1)
+
+            updates["bid_budget_constraint"] = constraint
+
+        # 결재선 다단계 승인 (고위험 의사결정)
+        chain_result = _check_approval_chain(state, "bid_plan", human_input)
+        if chain_result:
+            # 결재 아직 미완 — state 업데이트는 하되 pending 상태
+            updates.update(chain_result)
+            return updates
+
+        approval = ApprovalStatus(
+            status="approved",
+            approved_by=human_input.get("approved_by", "user"),
+            approved_at=human_input.get("approved_at", ""),
+        )
+        # 결재선 기존 chain 보존
+        existing = state.get("approval", {}).get("bid_plan", ApprovalStatus())
+        approval.chain = existing.chain
+
+        updates["approval"] = {"bid_plan": approval}
+        updates["current_step"] = "bid_plan_approved"
+        updates["rework_targets"] = []
+
+        # ── DB persist + artifact + 알림 (fire-and-forget) ──
+        _fire_bid_confirmation(state, updates, human_input)
+
+        return updates
+
+    # 거부: 전략으로 돌아가기 or 재시뮬레이션
+    back_to_strategy = human_input.get("back_to_strategy", False)
+    feedback_entry = {
+        "step": "bid_plan",
+        "feedback": human_input.get("feedback", ""),
+        "back_to_strategy": back_to_strategy,
+        "timestamp": human_input.get("timestamp", ""),
+    }
+    return {
+        "approval": {"bid_plan": ApprovalStatus(
+            status="rejected",
+            feedback=human_input.get("feedback", ""),
+        )},
+        "feedback_history": [feedback_entry],
+        "current_step": "bid_plan_rejected",
+    }
+
+
+def _fire_bid_confirmation(state: ProposalState, updates: dict, human_input: dict) -> None:
+    """bid_plan 승인 후 DB persist + artifact 저장 + 알림을 비동기 fire-and-forget."""
+    import asyncio
+
+    constraint = updates.get("bid_budget_constraint", {})
+    bid_price = constraint.get("total_bid_price", 0)
+    bid_ratio = constraint.get("bid_ratio", 0)
+    scenario_name = constraint.get("scenario_name", "balanced")
+    proposal_id = state.get("project_id", "")
+    user_id = human_input.get("approved_by", "")
+    user_name = human_input.get("approver_name", "")
+    custom_reason = human_input.get("custom_bid_reason", "")
+
+    if not proposal_id or not bid_price:
+        return
+
+    bp = updates.get("bid_plan")
+    bp_data = bp.model_dump() if hasattr(bp, "model_dump") else (bp if isinstance(bp, dict) else {})
+
+    async def _persist():
+        try:
+            from app.services.bid_handoff import persist_bid_confirmation
+            await persist_bid_confirmation(
+                proposal_id=proposal_id,
+                bid_price=bid_price,
+                bid_ratio=bid_ratio,
+                scenario_name=scenario_name,
+                user_id=user_id,
+                user_name=user_name,
+                override_reason=custom_reason,
+                bid_plan_data=bp_data,
+            )
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"bid_plan DB persist 실패: {e}")
+
+        try:
+            from app.services.notification_service import notify_bid_confirmed
+            team_id = state.get("team_id", "")
+            await notify_bid_confirmed(
+                proposal_id=proposal_id,
+                bid_price=bid_price,
+                scenario_name=scenario_name,
+                team_id=team_id,
+            )
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"bid_plan 알림 실패: {e}")
+
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(_persist())
+    except RuntimeError:
+        logger.warning("이벤트 루프 없음 — bid persist 스킵")
+
+
+def _fire_stream_initialization(state: ProposalState) -> None:
+    """Go 결정 시 3-Stream 초기화 + Stream 3(제출서류) 체크리스트 추출을 비동기 실행."""
+    import asyncio
+
+    proposal_id = state.get("project_id", "")
+    if not proposal_id:
+        return
+
+    async def _init():
+        try:
+            from app.services.stream_orchestrator import initialize_streams
+            await initialize_streams(proposal_id)
+        except Exception as e:
+            logger.warning(f"3-Stream 초기화 실패: {e}")
+
+        # Stream 3: RFP 텍스트가 있으면 제출서류 자동 추출
+        try:
+            rfp = state.get("rfp_analysis")
+            rfp_dict = {}
+            if rfp:
+                rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
+            rfp_raw = state.get("rfp_raw", "")
+            if rfp_raw or rfp_dict:
+                from app.services.submission_docs_service import extract_checklist_from_rfp
+                await extract_checklist_from_rfp(proposal_id, rfp_raw, rfp_dict)
+        except Exception as e:
+            logger.warning(f"제출서류 자동 추출 실패 (무시): {e}")
+
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(_init())
+    except RuntimeError:
+        logger.warning("이벤트 루프 없음 — Stream 초기화 스킵")
+
+
 def _get_artifact(state, step_name):
     mapping = {
         "search": state.get("search_results"),
@@ -530,6 +818,7 @@ def _get_artifact(state, step_name):
         "go_no_go": state.get("go_no_go"),
         "rfp": state.get("rfp_analysis"),
         "strategy": state.get("strategy"),
+        "bid_plan": state.get("bid_plan"),
         "plan": state.get("plan"),
         "proposal": state.get("proposal_sections"),
         "ppt": state.get("ppt_slides"),

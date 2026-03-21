@@ -105,10 +105,10 @@ async def notify_approval_request(
     """승인 요청 알림 (Teams + 인앱)."""
     try:
         client = await get_async_client()
-        proposal = await client.table("proposals").select("project_name, team_id").eq("id", proposal_id).single().execute()
+        proposal = await client.table("proposals").select("title, team_id").eq("id", proposal_id).single().execute()
         approver = await client.table("users").select("name").eq("id", approver_id).single().execute()
 
-        proposal_name = proposal.data.get("project_name", "") if proposal.data else ""
+        proposal_name = proposal.data.get("title", "") if proposal.data else ""
         approver_name = approver.data.get("name", "") if approver.data else ""
         tid = team_id or (proposal.data.get("team_id", "") if proposal.data else "")
 
@@ -142,9 +142,9 @@ async def notify_approval_result(
     """승인 결과 알림 (approved/rejected)."""
     try:
         client = await get_async_client()
-        proposal = await client.table("proposals").select("project_name, created_by").eq("id", proposal_id).single().execute()
-        proposal_name = proposal.data.get("project_name", "") if proposal.data else ""
-        created_by = proposal.data.get("created_by", "") if proposal.data else ""
+        proposal = await client.table("proposals").select("title, owner_id").eq("id", proposal_id).single().execute()
+        proposal_name = proposal.data.get("title", "") if proposal.data else ""
+        created_by = proposal.data.get("owner_id", "") if proposal.data else ""
 
         status_text = "승인" if result == "approved" else "반려"
         users = target_user_ids or ([created_by] if created_by else [])
@@ -169,12 +169,12 @@ async def notify_deadline_alert(
     """마감 임박 알림 (D-7, D-3, D-1)."""
     try:
         client = await get_async_client()
-        proposal = await client.table("proposals").select("project_name, team_id").eq("id", proposal_id).single().execute()
-        proposal_name = proposal.data.get("project_name", "") if proposal.data else ""
+        proposal = await client.table("proposals").select("title, team_id").eq("id", proposal_id).single().execute()
+        proposal_name = proposal.data.get("title", "") if proposal.data else ""
         team_id = proposal.data.get("team_id", "") if proposal.data else ""
 
         # 참여자 목록 조회
-        participants = await client.table("project_teams").select("user_id").eq("proposal_id", proposal_id).execute()
+        participants = await client.table("project_participants").select("user_id").eq("proposal_id", proposal_id).execute()
 
         for p in (participants.data or []):
             await create_notification(
@@ -210,3 +210,104 @@ async def notify_ai_complete(
         body=f"{step} 단계 AI 생성이 완료되었습니다. 검토해 주세요.",
         link=f"/projects/{proposal_id}/review/{step}",
     )
+
+
+async def notify_bid_confirmed(
+    proposal_id: str,
+    bid_price: int,
+    scenario_name: str,
+    team_id: str = "",
+):
+    """입찰가 확정 알림 — 투찰 담당자 + 참여자에게 발송."""
+    try:
+        client = await get_async_client()
+        proposal = await (
+            client.table("proposals")
+            .select("title, team_id, owner_id")
+            .eq("id", proposal_id).single().execute()
+        )
+        proposal_name = proposal.data.get("title", "") if proposal.data else ""
+        tid = team_id or (proposal.data.get("team_id", "") if proposal.data else "")
+        owner_id = proposal.data.get("owner_id", "") if proposal.data else ""
+
+        price_text = f"{bid_price / 100_000_000:.1f}억원" if bid_price >= 100_000_000 else f"{bid_price:,}원"
+        scenario_label = {"conservative": "보수적", "balanced": "균형", "aggressive": "공격적"}.get(scenario_name, scenario_name)
+
+        body = (
+            f"입찰가가 확정되었습니다.\n"
+            f"확정가: {price_text} ({scenario_label})\n"
+            f"투찰 담당자는 나라장터 투찰을 진행해 주세요."
+        )
+
+        # 참여자 목록 조회
+        participants = await (
+            client.table("project_participants")
+            .select("user_id")
+            .eq("proposal_id", proposal_id)
+            .execute()
+        )
+        user_ids = list({p["user_id"] for p in (participants.data or [])})
+        if owner_id and owner_id not in user_ids:
+            user_ids.append(owner_id)
+
+        # 인앱 알림
+        for uid in user_ids:
+            await create_notification(
+                user_id=uid,
+                proposal_id=proposal_id,
+                type="bid_confirmed",
+                title=f"[입찰가 확정] {proposal_name}",
+                body=body,
+                link=f"/projects/{proposal_id}",
+            )
+
+        # Teams 알림
+        await send_teams_notification(
+            team_id=tid,
+            title=f"입찰가 확정: {proposal_name}",
+            body=body,
+            link=f"/projects/{proposal_id}",
+        )
+    except Exception as e:
+        logger.warning(f"입찰가 확정 알림 실패: {e}")
+
+
+async def notify_bid_submitted(
+    proposal_id: str,
+    submitted_price: int,
+    team_id: str = "",
+):
+    """투찰 완료 알림 — 팀장 + 프로젝트 오너에게 발송."""
+    try:
+        client = await get_async_client()
+        proposal = await (
+            client.table("proposals")
+            .select("title, team_id, owner_id")
+            .eq("id", proposal_id).single().execute()
+        )
+        proposal_name = proposal.data.get("title", "") if proposal.data else ""
+        tid = team_id or (proposal.data.get("team_id", "") if proposal.data else "")
+        owner_id = proposal.data.get("owner_id", "") if proposal.data else ""
+
+        price_text = f"{submitted_price / 100_000_000:.1f}억원" if submitted_price >= 100_000_000 else f"{submitted_price:,}원"
+
+        body = f"나라장터 투찰이 완료되었습니다.\n투찰가: {price_text}"
+
+        if owner_id:
+            await create_notification(
+                user_id=owner_id,
+                proposal_id=proposal_id,
+                type="bid_submitted",
+                title=f"[투찰 완료] {proposal_name}",
+                body=body,
+                link=f"/projects/{proposal_id}",
+            )
+
+        await send_teams_notification(
+            team_id=tid,
+            title=f"투찰 완료: {proposal_name}",
+            body=body,
+            link=f"/projects/{proposal_id}",
+        )
+    except Exception as e:
+        logger.warning(f"투찰 완료 알림 실패: {e}")

@@ -24,6 +24,44 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 
+/* #1 placeholder 가독성 개선 */
+::placeholder { color: #666 !important; }
+
+/* #2 focus-visible ring 강화 — 키보드 탐색 시 명확한 표시 */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  border-radius: 4px;
+}
+
+/* #15 disabled 상태 강화 */
+button:disabled, input:disabled, select:disabled, textarea:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* #17 텍스트 링크 hover 밑줄 */
+a[class*="text-"]:hover { text-decoration-line: underline; text-underline-offset: 2px; }
+nav a:hover { text-decoration: none !important; }
+
+/* #12 모바일 터치 타겟 최소 44px */
+@media (pointer: coarse) {
+  button, a, [role="button"] { min-height: 44px; }
+}
+
+/* #18 z-index 체계 */
+:root {
+  --z-dropdown: 50;
+  --z-modal: 60;
+  --z-overlay: 70;
+  --z-toast: 80;
+}
+
+/* #14 버튼 사이즈 체계 */
+.btn-sm { @apply px-2.5 py-1.5 text-xs rounded-md; }
+.btn-md { @apply px-4 py-2 text-sm rounded-lg; }
+.btn-lg { @apply px-5 py-2.5 text-sm rounded-lg; }
+
 @keyframes slideX {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(400%); }

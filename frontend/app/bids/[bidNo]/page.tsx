@@ -7,7 +7,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { api, BidAnnouncement, BidRecommendation, RecommendationReason, RiskFactor } from "@/lib/api";
+import { api, BidAnnouncement, BidRecommendation, RecommendationReason, RiskFactor, StoredAttachment, G2bUrl } from "@/lib/api";
 
 const GRADE_COLOR: Record<string, string> = {
   S: "text-purple-400",
@@ -31,6 +31,21 @@ const RISK_COLOR: Record<string, string> = {
   low: "text-yellow-400 bg-yellow-950/40 border-yellow-900/50",
 };
 
+function fileIcon(name: string): string {
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  const icons: Record<string, string> = {
+    pdf: "📄", hwp: "📝", hwpx: "📝", docx: "📃", doc: "📃",
+    xlsx: "📊", xls: "📊", zip: "📦", pptx: "📑",
+  };
+  return icons[ext] ?? "📎";
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+}
+
 function formatBudget(amount: number | null): string {
   if (!amount) return "미기재";
   if (amount >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
@@ -50,6 +65,9 @@ function BidDetailContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [creating, setCreating] = useState(false);
+  const [attachments, setAttachments] = useState<StoredAttachment[]>([]);
+  const [g2bUrls, setG2bUrls] = useState<G2bUrl[]>([]);
+  const [downloading, setDownloading] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -57,19 +75,66 @@ function BidDetailContent() {
         const res = await api.bids.getDetail(bidNo, teamId ?? undefined);
         setAnnouncement(res.data.announcement);
         setRecommendation(res.data.recommendation);
-      } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "공고를 불러올 수 없습니다.");
-      } finally {
-        setLoading(false);
+      } catch {
+        // 인증 실패 시 직접 호출
+        try {
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+          const qs = teamId ? `?team_id=${teamId}` : "";
+          const directRes = await fetch(`${baseUrl}/bids/${bidNo}${qs}`);
+          if (directRes.ok) {
+            const json = await directRes.json();
+            setAnnouncement(json.data.announcement);
+            setRecommendation(json.data.recommendation);
+          } else {
+            setError("공고를 불러올 수 없습니다.");
+          }
+        } catch {
+          setError("백엔드에 연결할 수 없습니다.");
+        }
       }
+      // 첨부파일 목록 로드
+      try {
+        const attRes = await api.bids.getAttachments(bidNo);
+        setAttachments(attRes.data.stored_files);
+        setG2bUrls(attRes.data.g2b_urls);
+      } catch { /* 첨부파일 없어도 진행 */ }
+      setLoading(false);
     })();
   }, [bidNo, teamId]);
+
+  async function handleDownloadAttachment(fileName: string) {
+    setDownloading(fileName);
+    try {
+      const res = await api.bids.getAttachmentUrl(bidNo, fileName);
+      window.open(res.data.url, "_blank");
+    } catch {
+      alert("파일을 다운로드할 수 없습니다.");
+    } finally {
+      setDownloading(null);
+    }
+  }
 
   async function handleCreateProposal() {
     setCreating(true);
     try {
       const res = await api.bids.createProposalFromBid(bidNo);
-      // bid 데이터를 sessionStorage에 저장 → new proposal 페이지에서 자동 입력
+
+      // 첨부파일 URL 추출 (raw_data에서)
+      const raw = announcement?.raw_data || {};
+      const files: { name: string; url: string; type: string }[] = [];
+      for (let i = 1; i <= 10; i++) {
+        const url = raw[`ntceSpecDocUrl${i}`];
+        const name = raw[`ntceSpecFileNm${i}`];
+        if (url && name) {
+          const lower = (name as string).toLowerCase();
+          let type = "기타";
+          if (lower.includes("제안요청") || lower.includes("rfp")) type = "제안요청서";
+          else if (lower.includes("과업지시") || lower.includes("과업내용")) type = "과업지시서";
+          else if (lower.includes("공고") || lower.includes("입찰")) type = "공고문";
+          files.push({ name: name as string, url: url as string, type });
+        }
+      }
+
       sessionStorage.setItem(
         "bid_prefill",
         JSON.stringify({
@@ -77,6 +142,8 @@ function BidDetailContent() {
           client_name: announcement!.agency,
           rfp_content: res.data.rfp_content,
           bid_no: bidNo,
+          budget_amount: announcement!.budget_amount,
+          attachments: files,
         })
       );
       router.push("/proposals/new");
@@ -113,7 +180,7 @@ function BidDetailContent() {
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <div className="flex items-center gap-2 mb-1">
           <Link href="/bids" className="text-xs text-[#5c5c5c] hover:text-[#ededed] transition-colors">
-            공고 추천
+            공고 모니터링
           </Link>
           <span className="text-xs text-[#5c5c5c]">/</span>
           <span className="text-xs text-[#8c8c8c]">{announcement.bid_no}</span>
@@ -235,6 +302,59 @@ function BidDetailContent() {
                   </div>
                 )}
               </div>
+            )}
+          </section>
+        )}
+
+        {/* 첨부파일 */}
+        {(attachments.length > 0 || g2bUrls.length > 0) && (
+          <section className="rounded-lg border border-[#262626] bg-[#111111] p-5">
+            <h2 className="text-xs font-semibold text-[#5c5c5c] uppercase tracking-wider mb-3">
+              첨부파일
+            </h2>
+            <div className="space-y-2">
+              {attachments.map((att) => (
+                <div
+                  key={att.storage_path}
+                  className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-[#1c1c1c] border border-[#262626] hover:border-[#3ecf8e]/30 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-base shrink-0">{fileIcon(att.name)}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs text-[#ededed] truncate">{att.name}</p>
+                      {att.size > 0 && (
+                        <p className="text-[10px] text-[#5c5c5c]">{formatFileSize(att.size)}</p>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleDownloadAttachment(att.name)}
+                    disabled={downloading === att.name}
+                    className="shrink-0 px-3 py-1.5 text-[10px] font-medium rounded-md bg-[#262626] text-[#8c8c8c] hover:bg-[#3ecf8e]/20 hover:text-[#3ecf8e] disabled:opacity-40 transition-colors"
+                  >
+                    {downloading === att.name ? "..." : "다운로드"}
+                  </button>
+                </div>
+              ))}
+              {g2bUrls.filter(u => u.index > 0).map((u) => (
+                <a
+                  key={u.index}
+                  href={u.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[#1c1c1c] border border-[#262626] hover:border-blue-500/30 transition-colors"
+                >
+                  <span className="text-base shrink-0">🔗</span>
+                  <span className="text-xs text-blue-400 truncate">
+                    {u.label || `규격서 원본 링크 ${u.index}`}
+                  </span>
+                </a>
+              ))}
+            </div>
+            {attachments.length === 0 && g2bUrls.length > 0 && (
+              <p className="text-[10px] text-[#5c5c5c] mt-2">
+                파일은 제안서 프로젝트 생성 시 자동 다운로드됩니다.
+              </p>
             )}
           </section>
         )}

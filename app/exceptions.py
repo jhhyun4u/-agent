@@ -159,6 +159,24 @@ SessionNotFoundError = type("SessionNotFoundError", (TenopAPIError,), {
 })
 
 
+class AdminAuthCreateError(TenopAPIError):
+    """ADMIN_004: 사용자 Auth 계정 생성 실패"""
+    def __init__(self, detail: dict | None = None):
+        super().__init__("ADMIN_004", "사용자 Auth 계정 생성 실패", 500, detail)
+
+
+class AdminPasswordResetError(TenopAPIError):
+    """ADMIN_005: 비밀번호 초기화 실패"""
+    def __init__(self, detail: dict | None = None):
+        super().__init__("ADMIN_005", "비밀번호 초기화 실패", 500, detail)
+
+
+class AuthPasswordChangeRequired(TenopAPIError):
+    """AUTH_005: 비밀번호 변경 필요"""
+    def __init__(self):
+        super().__init__("AUTH_005", "비밀번호 변경이 필요합니다.", 403)
+
+
 class AIServiceError(TenopAPIError):
     """AI_001: Claude API 일시 오류"""
     def __init__(self, message: str = "AI 서비스 일시 오류"):
