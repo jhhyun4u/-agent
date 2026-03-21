@@ -10,6 +10,7 @@ import logging
 import time
 
 from app.services.claude_client import get_accumulated_usage, reset_usage_context
+from app.services.token_manager import check_budget
 from app.services.token_pricing import summarize_usage
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,16 @@ def track_tokens(node_name: str):
                 summary = summarize_usage(records)
                 summary["duration_ms"] = duration_ms
 
+                # 토큰 예산 체크 (경고 로그)
+                budget_check = check_budget(node_name, summary.get("input_tokens", 0))
+                if not budget_check["within_budget"]:
+                    logger.warning(
+                        f"[TOKEN BUDGET] {node_name}: "
+                        f"{budget_check['estimated']:,} / {budget_check['budget']:,} "
+                        f"({budget_check['ratio']:.1f}x 초과)"
+                    )
+                summary["budget_check"] = budget_check
+
                 if isinstance(result, dict):
                     existing = result.get("token_usage", {})
                     result["token_usage"] = {**existing, node_name: summary}
@@ -42,7 +53,7 @@ def track_tokens(node_name: str):
                     proposal_id = state.get("project_id", "")
                     if proposal_id:
                         await _persist_ai_task_log(
-                            proposal_id, node_name, summary, duration_ms
+                            proposal_id, node_name, summary, duration_ms,
                         )
                 except Exception as e:
                     logger.warning(f"ai_task_log 저장 실패: {e}")
@@ -65,17 +76,22 @@ async def _persist_ai_task_log(
         from app.utils.supabase_client import get_async_client
 
         client = await get_async_client()
-        await client.table("ai_task_logs").insert({
+        row = {
             "proposal_id": proposal_id,
             "step": step,
             "status": "complete",
             "duration_ms": duration_ms,
             "input_tokens": summary.get("input_tokens", 0),
             "output_tokens": summary.get("output_tokens", 0),
-            "cache_read_tokens": summary.get("cache_read_tokens", 0),
-            "cache_create_tokens": summary.get("cache_create_tokens", 0),
             "cost_usd": summary.get("cost_usd", 0),
             "model": summary.get("model", ""),
-        }).execute()
+        }
+        try:
+            await client.table("ai_task_logs").insert(row).execute()
+        except Exception:
+            # cache 토큰 컬럼 포함하여 재시도
+            row["cache_read_tokens"] = summary.get("cache_read_tokens", 0)
+            row["cache_create_tokens"] = summary.get("cache_create_tokens", 0)
+            await client.table("ai_task_logs").insert(row).execute()
     except Exception as e:
         logger.warning(f"ai_task_log DB insert 실패: {e}")

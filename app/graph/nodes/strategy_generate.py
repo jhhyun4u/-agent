@@ -9,6 +9,12 @@ v3.2: 경쟁분석 프레임워크 + 연구수행 전략.
 import logging
 
 from app.graph.state import ProposalState, Strategy, StrategyAlternative
+from app.graph.context_helpers import (
+    extract_credible_research,
+    get_rfp_summary,
+    query_kb_context,
+    rfp_to_dict,
+)
 from app.prompts.strategy import (
     COMPETITIVE_ANALYSIS_FRAMEWORK,
     POSITIONING_STRATEGY_MATRIX,
@@ -16,6 +22,7 @@ from app.prompts.strategy import (
     STRATEGY_RESEARCH_FRAMEWORK,
 )
 from app.services.claude_client import claude_generate
+from app.services import prompt_registry, prompt_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -30,23 +37,8 @@ async def strategy_generate(state: ProposalState) -> dict:
     if not rfp:
         return {"current_step": "strategy_error"}
 
-    # RFP 요약
-    if hasattr(rfp, "model_dump"):
-        rfp_dict = rfp.model_dump()
-    elif isinstance(rfp, dict):
-        rfp_dict = rfp
-    else:
-        rfp_dict = {}
-
-    rfp_summary = f"""
-사업명: {rfp_dict.get('project_name', '')}
-발주기관: {rfp_dict.get('client', '')}
-핫버튼: {rfp_dict.get('hot_buttons', [])}
-평가항목: {rfp_dict.get('eval_items', [])}
-기술:가격 비중: {rfp_dict.get('tech_price_ratio', {})}
-필수요건: {rfp_dict.get('mandatory_reqs', [])}
-특수조건: {rfp_dict.get('special_conditions', [])}
-"""
+    rfp_dict = rfp_to_dict(rfp)
+    rfp_summary = get_rfp_summary(rfp_dict)
 
     # Go/No-Go 결과
     gng_dict = {}
@@ -56,79 +48,65 @@ async def strategy_generate(state: ProposalState) -> dict:
     # 포지셔닝 가이드
     pos_guide = POSITIONING_STRATEGY_MATRIX.get(positioning, POSITIONING_STRATEGY_MATRIX["defensive"])
 
-    # 역량 + KB 조회
-    capabilities_text = ""
-    client_intel_text = ""
-    competitor_text = ""
+    # KB 조회 (go_no_go와 동일 테이블이지만, competitor_history도 포함)
+    kb = await query_kb_context(
+        org_id=state.get("org_id", ""),
+        client_name=rfp_dict.get("client", ""),
+        include_capabilities=True,
+        include_client_intel=True,
+        include_competitors=True,
+        include_lessons=True,
+        include_competitor_history=True,
+    )
 
+    # 리서치 브리프 + credibility 필터링
+    research_text = extract_credible_research(
+        state.get("research_brief"), max_evidence=20
+    )
+
+    # 가격전략 시장 데이터 (PricingEngine 연동)
+    pricing_strategy_context = ""
     try:
-        from app.utils.supabase_client import get_async_client
-        client = await get_async_client()
-        org_id = state.get("org_id", "")
+        from app.services.bid_calculator import parse_budget_string
+        from app.services.pricing import PricingEngine, QuickEstimateRequest
 
-        if org_id:
-            caps = await client.table("capabilities").select("type, title, detail").eq("org_id", org_id).execute()
-            capabilities_text = "\n".join(
-                f"- [{c['type']}] {c['title']}: {c['detail']}" for c in (caps.data or [])
+        budget_str = rfp_dict.get("budget", "")
+        budget_val = parse_budget_string(budget_str) if budget_str else None
+        if budget_val and budget_val > 0:
+            engine = PricingEngine()
+            qe = await engine.quick_estimate(QuickEstimateRequest(
+                budget=budget_val,
+                evaluation_method=rfp_dict.get("eval_method", "종합심사"),
+                domain=rfp_dict.get("domain", "SI/SW개발"),
+                positioning=positioning,
+                competitor_count=5,
+            ))
+            pricing_strategy_context = (
+                f"\n## 시장 기반 가격 전략 데이터\n"
+                f"- 추천 낙찰률: {qe.recommended_ratio}% (시장 평균: {qe.market_avg_ratio * 100:.1f}%)\n" if qe.market_avg_ratio else
+                f"\n## 시장 기반 가격 전략 데이터\n"
+                f"- 추천 낙찰률: {qe.recommended_ratio}%\n"
             )
-
-        client_name = rfp_dict.get("client", "")
-        if client_name:
-            intel = await client.table("client_intelligence").select("*").ilike("client_name", f"%{client_name}%").limit(5).execute()
-            if intel.data:
-                client_intel_text = "\n".join(f"- {r['aspect']}: {r['detail']}" for r in intel.data)
-
-        comp = await client.table("competitors").select("*").limit(10).execute()
-        if comp.data:
-            competitor_text = "\n".join(
-                f"- {c['company_name']}: 강점={c.get('strengths', '')} / 약점={c.get('weaknesses', '')}"
-                for c in comp.data
+            pricing_strategy_context += (
+                f"- 수주확률: {qe.win_probability:.0%} (유사 사례 {qe.comparable_cases}건)\n"
+                f"- 포지셔닝별 가격 가이드: {qe.positioning_adjustment}\n"
             )
     except Exception as e:
-        logger.warning(f"KB 조회 실패 (계속 진행): {e}")
-
-    # 리서치 브리프 + credibility 필터링 (go_no_go와 동일 패턴)
-    research_brief = state.get("research_brief", {})
-    research_text = ""
-    if isinstance(research_brief, dict):
-        research_text = research_brief.get("summary", "")
-
-        # 고신뢰 데이터만 추출 (credibility: high/medium)
-        topics = research_brief.get("research_topics", [])
-        credible_evidence = []
-        for topic in topics:
-            if not isinstance(topic, dict):
-                continue
-            for dp in topic.get("data_points", []):
-                if isinstance(dp, dict):
-                    cred = dp.get("credibility", "low")
-                    if cred in ("high", "medium"):
-                        source = dp.get("source", "")
-                        credible_evidence.append(
-                            f"- {dp.get('content', '')} [{source}] ({cred})"
-                        )
-                elif isinstance(dp, str):
-                    credible_evidence.append(f"- {dp}")
-
-        if credible_evidence:
-            research_text += "\n\n검증된 근거 데이터:\n" + "\n".join(credible_evidence[:20])
-
-        diff_pts = research_brief.get("differentiation_points", [])
-        risk_pts = research_brief.get("risk_factors", [])
-        if diff_pts:
-            research_text += "\n\n차별화 포인트:\n" + "\n".join(f"- {d}" for d in diff_pts)
-        if risk_pts:
-            research_text += "\n\n리스크 요인:\n" + "\n".join(f"- {r}" for r in risk_pts)
-
-        if not research_text:
-            research_text = str(research_brief) if research_brief else ""
-    elif research_brief:
-        research_text = str(research_brief)
+        logger.debug(f"PricingEngine 가격전략 조회 실패 (무시): {e}")
 
     # Go/No-Go에서 도출한 핵심 승부수
     strategic_focus = gng_dict.get("strategic_focus", "")
 
-    prompt = STRATEGY_GENERATE_PROMPT.format(
+    # 레지스트리에서 진화된 프롬프트 조회 (A/B 라우팅 포함)
+    proposal_id = state.get("project_id", "")
+    try:
+        reg_text, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "strategy.GENERATE_PROMPT", proposal_id
+        )
+    except Exception:
+        reg_text = ""
+
+    prompt = (reg_text or STRATEGY_GENERATE_PROMPT).format(
         rfp_summary=rfp_summary,
         positioning=positioning,
         positioning_label=pos_guide["label"],
@@ -137,15 +115,36 @@ async def strategy_generate(state: ProposalState) -> dict:
         risks=gng_dict.get("risks", []),
         strategic_focus=strategic_focus or "(미도출)",
         positioning_guide=_format_positioning_guide(pos_guide),
-        capabilities_text=capabilities_text or "(역량 DB 없음)",
+        capabilities_text=kb.get("capabilities", "(역량 DB 없음)"),
         research_brief=research_text or "(리서치 미수행)",
-        client_intel_text=client_intel_text or "(발주기관 정보 없음)",
-        competitor_text=competitor_text or "(경쟁사 정보 없음)",
+        client_intel_text=kb.get("client_intel", "(발주기관 정보 없음)"),
+        competitor_text=kb.get("competitors", "(경쟁사 정보 없음)"),
+        lessons_text=kb.get("lessons", "(과거 교훈 없음 — 첫 번째 제안)"),
+        competitor_history_text=kb.get("competitor_history", "(대전 기록 없음)"),
         competitive_analysis_framework=COMPETITIVE_ANALYSIS_FRAMEWORK,
         strategy_research_framework=STRATEGY_RESEARCH_FRAMEWORK,
     )
 
+    # 가격전략 시장 데이터 추가
+    if pricing_strategy_context:
+        prompt += f"\n\n{pricing_strategy_context}\n위 시장 데이터를 price_strategy 설정 시 참고하세요."
+
     result = await claude_generate(prompt, max_tokens=8000)
+
+    # 프롬프트 사용 기록
+    if proposal_id:
+        try:
+            _, sg_ver, sg_hash = await prompt_registry.get_active_prompt("strategy.GENERATE_PROMPT")
+            await prompt_tracker.record_usage(
+                proposal_id=proposal_id,
+                artifact_step="strategy_generate",
+                section_id=None,
+                prompt_id="strategy.GENERATE_PROMPT",
+                prompt_version=sg_ver,
+                prompt_hash=sg_hash,
+            )
+        except Exception:
+            pass
 
     # 전략 대안 구성
     alternatives = []

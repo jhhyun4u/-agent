@@ -9,6 +9,12 @@ self_review_with_auto_improve: 전체 섹션 완성 후 4축 평가.
 import logging
 
 from app.graph.state import ProposalSection, ProposalState
+from app.graph.context_helpers import (
+    build_prev_sections_context,
+    extract_credible_research,
+    get_strategy_dict,
+    rfp_to_dict,
+)
 from app.prompts.proposal_prompts import SELF_REVIEW_PROMPT
 from app.prompts.section_prompts import (
     SECTION_PROMPT_CASE_B,
@@ -19,6 +25,7 @@ from app.prompts.section_prompts import (
 )
 from app.prompts.strategy import POSITIONING_STRATEGY_MATRIX
 from app.services.claude_client import claude_generate
+from app.services import prompt_registry, prompt_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -34,17 +41,10 @@ def _get_sections_to_write(state: ProposalState) -> list[str]:
     return sections
 
 
-def _build_context(state: ProposalState, section_id: str, section_type: str) -> dict:
+async def _build_context(state: ProposalState, section_id: str, section_type: str) -> dict:
     """섹션 작성에 필요한 컨텍스트를 유형별로 조립."""
-    rfp = state.get("rfp_analysis")
-    rfp_dict = {}
-    if rfp:
-        rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
-
-    strategy = state.get("strategy")
-    s_dict = {}
-    if strategy:
-        s_dict = strategy.model_dump() if hasattr(strategy, "model_dump") else (strategy if isinstance(strategy, dict) else {})
+    rfp_dict = rfp_to_dict(state.get("rfp_analysis"))
+    s_dict = get_strategy_dict(state.get("strategy"))
 
     positioning = state.get("positioning", "defensive")
     pos_guide = POSITIONING_STRATEGY_MATRIX.get(positioning, POSITIONING_STRATEGY_MATRIX["defensive"])
@@ -58,17 +58,7 @@ def _build_context(state: ProposalState, section_id: str, section_type: str) -> 
 분량규격: {rfp_dict.get('volume_spec', {})}"""
 
     # ── 리서치 결과 ──
-    research = state.get("research_brief") or {}
-    research_context = "(선행 리서치 없음)"
-    if research:
-        topics = research.get("research_topics", [])
-        if topics:
-            parts = []
-            for t in topics[:5]:
-                parts.append(f"- **{t.get('topic', '')}**: {', '.join(t.get('findings', [])[:3])}")
-            research_context = "\n".join(parts)
-        elif research.get("summary"):
-            research_context = research["summary"]
+    research_context = extract_credible_research(state.get("research_brief"), max_evidence=10) or "(선행 리서치 없음)"
 
     # ── KB 참조 (인력, 실적, 역량) ──
     kb_refs = state.get("kb_references", [])
@@ -117,15 +107,9 @@ def _build_context(state: ProposalState, section_id: str, section_type: str) -> 
             if parts:
                 storyline_context = "\n\n## 스토리라인 가이드 (반드시 반영)\n" + "\n".join(parts)
 
-    # ── 이전 섹션 컨텍스트 ──
+    # ── 이전 섹션 컨텍스트 (최근 3개만 content 포함, 이전은 title만) ──
     existing_sections = state.get("proposal_sections", [])
-    prev_context = ""
-    if existing_sections:
-        prev_parts = []
-        for s in existing_sections:
-            sd = s.model_dump() if hasattr(s, "model_dump") else (s if isinstance(s, dict) else {})
-            prev_parts.append(f"### {sd.get('section_id', '')}: {sd.get('title', '')}\n{sd.get('content', '')[:300]}...")
-        prev_context = f"\n\n## 이전에 작성된 섹션 (참고하여 일관성 유지)\n" + "\n\n".join(prev_parts)
+    prev_context = build_prev_sections_context(existing_sections)
 
     # ── 이전 리뷰 피드백 ──
     feedback_history = state.get("feedback_history", [])
@@ -137,6 +121,35 @@ def _build_context(state: ProposalState, section_id: str, section_type: str) -> 
     if section_feedback:
         latest = section_feedback[-1]
         feedback_context = f"\n\n## 이전 리뷰 피드백 (반드시 반영)\n{latest.get('feedback', '')}"
+
+    # ── 과거 교훈 (동일 발주기관/유사 섹션 유형) ──
+    lessons_context = ""
+    try:
+        from app.utils.supabase_client import get_async_client as _get_db
+        db = await _get_db()
+        client_name = rfp_dict.get("client", "")
+        if client_name:
+            lessons = await (
+                db.table("lessons_learned")
+                .select("title, result, effective_points, weak_points, improvements")
+                .ilike("client_name", f"%{client_name}%")
+                .order("created_at", desc=True)
+                .limit(3)
+                .execute()
+            )
+            if lessons.data:
+                parts = []
+                for ls in lessons.data:
+                    r = "수주" if ls.get("result") == "won" else "패찰"
+                    parts.append(
+                        f"- [{r}] {ls.get('title', '')}: "
+                        f"강점={ls.get('effective_points', '-')}, "
+                        f"약점={ls.get('weak_points', '-')}, "
+                        f"개선={ls.get('improvements', '-')}"
+                    )
+                lessons_context = "\n\n## 과거 교훈 (이 발주기관에서의 경험, 반드시 참고)\n" + "\n".join(parts)
+    except Exception:
+        pass
 
     # ── 평가 배점 + 세부항목 ──
     eval_weight = 0
@@ -168,7 +181,7 @@ def _build_context(state: ProposalState, section_id: str, section_type: str) -> 
         "hot_buttons": rfp_dict.get("hot_buttons", []),
         "storyline_context": storyline_context,
         "prev_sections_context": prev_context,
-        "feedback_context": feedback_context,
+        "feedback_context": feedback_context + lessons_context,
         "eval_weight": eval_weight,
         "eval_item_detail": eval_item_detail,
         "recommended_pages": get_recommended_pages(eval_weight, total_pages),
@@ -211,19 +224,43 @@ async def proposal_write_next(state: ProposalState) -> dict:
     logger.info(f"섹션 작성: [{index + 1}/{len(sections_to_write)}] {section_id} (유형: {section_type}, 케이스: {case_type})")
 
     # 컨텍스트 조립
-    ctx = _build_context(state, section_id, section_type)
+    ctx = await _build_context(state, section_id, section_type)
 
-    # 프롬프트 선택
+    # 프롬프트 선택 (레지스트리 연동)
+    prompt_id_str = f"section_prompts.CASE_B" if case_type == "B" else f"section_prompts.{section_type}"
+    proposal_id = state.get("project_id", "")
+
+    try:
+        text, ver, hash_ = await prompt_registry.get_prompt_for_experiment(
+            prompt_id_str, proposal_id
+        )
+    except Exception:
+        text, ver, hash_ = "", 0, ""
+
     if case_type == "B":
         template_structure = rfp_dict.get("format_template", {}).get("structure", {}).get(section_id, {})
         ctx["template_structure"] = template_structure or "(서식 구조 없음)"
         ctx["section_type_name"] = section_type
         ctx["section_type_guide"] = SECTION_TYPE_GUIDES.get(section_type, "")
-        prompt = SECTION_PROMPT_CASE_B.format(**ctx)
+        prompt = (text or SECTION_PROMPT_CASE_B).format(**ctx)
     else:
-        prompt = get_section_prompt(section_type).format(**ctx)
+        prompt = (text or get_section_prompt(section_type)).format(**ctx)
 
     result = await claude_generate(prompt, max_tokens=6000)
+
+    # 프롬프트 사용 기록
+    if proposal_id and ver:
+        try:
+            await prompt_tracker.record_usage(
+                proposal_id=proposal_id,
+                artifact_step="proposal_write_next",
+                section_id=section_id,
+                prompt_id=prompt_id_str,
+                prompt_version=ver,
+                prompt_hash=hash_,
+            )
+        except Exception as e:
+            logger.debug(f"프롬프트 사용 기록 실패 (무시): {e}")
 
     new_section = ProposalSection(
         section_id=result.get("section_id", section_id),
@@ -279,15 +316,10 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
         sections_summary += f"\n### {sd.get('section_id', '')}: {sd.get('title', '')}\n{sd.get('content', '')[:500]}...\n"
 
     # 전략 필드
-    s_dict = {}
-    if strategy:
-        s_dict = strategy.model_dump() if hasattr(strategy, "model_dump") else (strategy if isinstance(strategy, dict) else {})
+    s_dict = get_strategy_dict(strategy)
 
     # RFP 요구사항
-    rfp = state.get("rfp_analysis")
-    rfp_dict = {}
-    if rfp:
-        rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
+    rfp_dict = rfp_to_dict(state.get("rfp_analysis"))
 
     rfp_requirements = f"""필수요건: {rfp_dict.get('mandatory_reqs', [])}
 평가항목: {rfp_dict.get('eval_items', [])}
@@ -299,7 +331,16 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
         cd = c.model_dump() if hasattr(c, "model_dump") else (c if isinstance(c, dict) else {})
         compliance_text += f"- [{cd.get('req_id', '')}] {cd.get('content', '')} → {cd.get('status', '미확인')}\n"
 
-    prompt = SELF_REVIEW_PROMPT.format(
+    # 레지스트리에서 진화된 프롬프트 조회
+    proposal_id_for_exp = state.get("project_id", "")
+    try:
+        sr_text, _, _ = await prompt_registry.get_prompt_for_experiment(
+            "proposal_prompts.SELF_REVIEW_PROMPT", proposal_id_for_exp
+        )
+    except Exception:
+        sr_text = ""
+
+    prompt = (sr_text or SELF_REVIEW_PROMPT).format(
         sections_summary=sections_summary[:8000],
         rfp_requirements=rfp_requirements,
         positioning=state.get("positioning", "defensive"),
@@ -309,6 +350,52 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
     )
 
     score = await claude_generate(prompt, max_tokens=4000)
+
+    # 프롬프트 사용 기록 (자가진단) + 섹션별 품질 점수 DB 저장
+    proposal_id = state.get("project_id", "")
+    if proposal_id:
+        try:
+            _, sr_ver, sr_hash = await prompt_registry.get_active_prompt("proposal_prompts.SELF_REVIEW_PROMPT")
+            await prompt_tracker.record_usage(
+                proposal_id=proposal_id,
+                artifact_step="self_review",
+                section_id=None,
+                prompt_id="proposal_prompts.SELF_REVIEW_PROMPT",
+                prompt_version=sr_ver,
+                prompt_hash=sr_hash,
+                quality_score=score.get("total", 0) or 0,
+            )
+
+            # 섹션별 품질 점수를 prompt_artifact_link에 업데이트
+            section_scores = score.get("section_scores", [])
+            for ss in section_scores:
+                sec_id = ss.get("section_id", "")
+                sec_score = ss.get("score")
+                if sec_id and sec_score is not None:
+                    try:
+                        from app.utils.supabase_client import get_async_client
+                        db = await get_async_client()
+                        # 해당 섹션의 가장 최근 prompt_artifact_link에 quality_score 업데이트
+                        link = await (
+                            db.table("prompt_artifact_link")
+                            .select("id")
+                            .eq("proposal_id", proposal_id)
+                            .eq("section_id", sec_id)
+                            .order("created_at", desc=True)
+                            .limit(1)
+                            .execute()
+                        )
+                        if link.data:
+                            await (
+                                db.table("prompt_artifact_link")
+                                .update({"quality_score": sec_score})
+                                .eq("id", link.data[0]["id"])
+                                .execute()
+                            )
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
     # 총점 계산
     total = score.get("total", 0)
