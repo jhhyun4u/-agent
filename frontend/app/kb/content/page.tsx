@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { api, type KbContent, type KbContentCreate } from "@/lib/api";
+import KbUsageHistory from "@/components/KbUsageHistory";
 
 const CONTENT_TYPES = [
   { value: "", label: "전체" },
@@ -159,6 +160,8 @@ export default function ContentPage() {
                       {item.industry && <span>{item.industry}</span>}
                       {item.tags.length > 0 && <span>{item.tags.join(", ")}</span>}
                     </div>
+                    {/* 권고 #5: KB ↔ 제안서 양방향 링크 */}
+                    <KbUsageHistory contentId={item.id} contentTitle={item.title} />
                   </div>
                   <div className="flex gap-1.5 shrink-0">
                     {item.status === "draft" && (

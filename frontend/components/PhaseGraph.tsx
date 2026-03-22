@@ -154,6 +154,7 @@ export default function PhaseGraph({
                 <button
                   onClick={() => handleStepClick(idx, status)}
                   title={status === "completed" ? STEP_COMPLETED_HINT[idx] : status === "pending" ? `예상 ~${STEP_EST_MINUTES[idx] ?? 3}분` : undefined}
+                  aria-label={`STEP ${step.step}: ${step.label} - ${status === "completed" ? "완료" : status === "active" ? "진행 중" : status === "review_pending" ? "승인 대기" : "대기"}`}
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                     isSelected
                       ? "ring-2 ring-[#3ecf8e] ring-offset-1 ring-offset-[#1c1c1c]"
@@ -194,6 +195,16 @@ export default function PhaseGraph({
                   }`}
                 >
                   {step.label}
+                </span>
+
+                {/* 상태 텍스트 */}
+                <span className={`text-[8px] ${
+                  status === "completed" ? "text-[#3ecf8e]/60" :
+                  status === "active" ? "text-[#ededed]/60" :
+                  status === "review_pending" ? "text-amber-400/60" :
+                  "text-[#5c5c5c]/60"
+                }`}>
+                  {status === "completed" ? "완료" : status === "active" ? "진행 중" : status === "review_pending" ? "승인 대기" : "대기"}
                 </span>
 
                 {/* 병렬 표시 */}

@@ -109,6 +109,14 @@ def _stream1_complete_hook(state: ProposalState) -> dict:
             import logging
             logging.getLogger(__name__).warning(f"Stream 1 완료 갱신 실패: {e}")
 
+        # 산출물 자동 연결 (Stream 3 체크리스트에 제안서/PPT 파일 연결)
+        try:
+            from app.services.submission_docs_service import link_stream1_artifacts
+            await link_stream1_artifacts(proposal_id)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"산출물 자동 연결 실패: {e}")
+
     try:
         loop = asyncio.get_running_loop()
         loop.create_task(_mark())

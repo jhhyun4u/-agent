@@ -496,24 +496,85 @@ function PlanArtifact({ data }: { data: Record<string, unknown> }) {
 
 // ── 범용 렌더러 (JSON 표시) ──
 
+/** JSON 구문 강조 (키: 녹색, 문자열: 주황, 숫자/boolean: 파랑) */
+function highlightJson(json: string): React.ReactNode {
+  const parts = json.split(/("(?:[^"\\]|\\.)*")/g);
+  let nextIsKey = false;
+  return parts.map((part, i) => {
+    if (part.startsWith('"') && part.endsWith('"')) {
+      // 다음 비공백 문자가 : 이면 키
+      const rest = parts.slice(i + 1).join("");
+      const isKey = /^\s*:/.test(rest);
+      if (isKey) {
+        nextIsKey = true;
+        return <span key={i} className="text-[#3ecf8e]">{part}</span>;
+      }
+      return <span key={i} className="text-amber-400">{part}</span>;
+    }
+    // 숫자, true, false, null
+    return <span key={i} className="text-[#8c8c8c]">{
+      part.replace(/\b(true|false|null|\d+\.?\d*)\b/g, (match) =>
+        match === "true" || match === "false" || match === "null" ? match : match
+      )
+    }</span>;
+  });
+}
+
 function GenericArtifact({ data }: { data: Record<string, unknown> }) {
   const [expanded, setExpanded] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const json = JSON.stringify(data, null, 2);
   const preview = json.slice(0, 500);
 
   return (
     <div>
-      <pre className="text-[10px] text-[#8c8c8c] whitespace-pre-wrap break-words leading-relaxed font-mono bg-[#111111] rounded-lg p-3 max-h-[300px] overflow-auto">
-        {expanded ? json : preview}
-        {!expanded && json.length > 500 && "..."}
+      <pre className="text-[10px] whitespace-pre-wrap break-words leading-relaxed font-mono bg-[#111111] rounded-lg p-3 max-h-[300px] overflow-auto">
+        {highlightJson(expanded ? json : preview)}
+        {!expanded && json.length > 500 && <span className="text-[#5c5c5c]">...</span>}
       </pre>
       {json.length > 500 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-1 text-[10px] text-[#3ecf8e] hover:underline"
+        <div className="flex gap-3 mt-1">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-[10px] text-[#3ecf8e] hover:underline"
+          >
+            {expanded ? "접기" : "펼치기"}
+          </button>
+          <button
+            onClick={() => setFullscreen(true)}
+            className="text-[10px] text-[#8c8c8c] hover:text-[#ededed]"
+          >
+            전체 화면
+          </button>
+        </div>
+      )}
+
+      {/* 전체화면 모달 */}
+      {fullscreen && (
+        <div
+          className="fixed inset-0 bg-[#0f0f0f]/90 flex items-center justify-center p-8"
+          style={{ zIndex: "var(--z-modal, 60)" }}
+          onClick={() => setFullscreen(false)}
         >
-          {expanded ? "접기" : "전체 보기"}
-        </button>
+          <div
+            className="bg-[#1c1c1c] border border-[#262626] rounded-xl w-full max-w-4xl max-h-[85vh] overflow-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-medium text-[#ededed]">산출물 전체 보기</h3>
+              <button
+                onClick={() => setFullscreen(false)}
+                className="text-[#8c8c8c] hover:text-[#ededed] transition-colors"
+                aria-label="닫기"
+              >
+                ✕
+              </button>
+            </div>
+            <pre className="text-xs text-[#8c8c8c] whitespace-pre-wrap break-words font-mono leading-relaxed">
+              {json}
+            </pre>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -72,7 +72,7 @@ async def upload_project_file(
     except Exception as e:
         logger.error(f"파일 업로드 실패: {e}")
         from fastapi import HTTPException
-        raise HTTPException(500, "파일 업로드 실패")
+        raise HTTPException(500, f"파일 저장소 업로드 실패: 잠시 후 다시 시도해주세요 ({type(e).__name__})")
 
     # DB 기록
     await client.table("proposal_files").insert({
@@ -150,6 +150,51 @@ async def delete_project_file(
 
     # DB 삭제
     await client.table("proposal_files").delete().eq("id", file_id).execute()
+
+
+@router.get("/{proposal_id}/files/bundle")
+async def download_files_bundle(
+    proposal_id: str,
+    category: str | None = None,
+    user=Depends(get_current_user),
+):
+    """참고자료 일괄 ZIP 다운로드 (#10, GAP-4 StreamingResponse)."""
+    import io
+    import zipfile
+    from collections.abc import AsyncGenerator
+
+    from fastapi.responses import StreamingResponse
+
+    client = await get_async_client()
+
+    query = client.table("proposal_files").select(
+        "filename, storage_path, file_size"
+    ).eq("proposal_id", proposal_id)
+    if category:
+        query = query.eq("category", category)
+    result = await query.execute()
+    file_rows = result.data or []
+
+    if not file_rows:
+        from fastapi import HTTPException
+        raise HTTPException(404, "다운로드할 파일이 없습니다")
+
+    async def generate_zip() -> AsyncGenerator[bytes, None]:
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for row in file_rows:
+                try:
+                    data = await client.storage.from_(BUCKET).download(row["storage_path"])
+                    zf.writestr(row["filename"], data)
+                except Exception as e:
+                    logger.warning(f"번들 다운로드 중 파일 스킵: {row['filename']} ({e})")
+        yield buf.getvalue()
+
+    return StreamingResponse(
+        generate_zip(),
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="files_{proposal_id[:8]}.zip"'},
+    )
 
 
 @router.get("/{proposal_id}/files/{file_id}/url")

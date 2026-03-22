@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { api } from "@/lib/api";
 import { SEED_ORG, SEED_EXECUTIVES, type SeedDivision } from "@/lib/org-seed-data";
+import AdminOrgChart from "@/components/AdminOrgChart";
 
 // ── 타입 ──
 interface Division { id: string; org_id: string; name: string }
@@ -48,6 +49,8 @@ export default function AdminPage() {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [modal, setModal] = useState<Modal>("none");
   const [toast, setToast] = useState<{ type: "ok" | "err"; msg: string } | null>(null);
+  // 권고 #7: 뷰 모드 (테이블 / 시각화)
+  const [adminView, setAdminView] = useState<"table" | "visual">("table");
 
   // ── 인라인 편집 버퍼 ──
   const [teamEdits, setTeamEdits] = useState<Record<string, { name?: string }>>({});
@@ -274,6 +277,13 @@ export default function AdminPage() {
               {source === "seed" && <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">초기 데이터</span>}
             </div>
             <div className="flex items-center gap-2">
+              {/* 권고 #7: 뷰 전환 */}
+              <div className="flex items-center gap-1 bg-[#111] rounded-lg p-0.5 border border-[#262626]">
+                <button onClick={() => setAdminView("table")}
+                  className={`px-2 py-1 text-[10px] rounded transition-colors ${adminView === "table" ? "bg-[#3ecf8e] text-[#0f0f0f] font-medium" : "text-[#666] hover:text-[#aaa]"}`}>테이블</button>
+                <button onClick={() => setAdminView("visual")}
+                  className={`px-2 py-1 text-[10px] rounded transition-colors ${adminView === "visual" ? "bg-[#3ecf8e] text-[#0f0f0f] font-medium" : "text-[#666] hover:text-[#aaa]"}`}>시각화</button>
+              </div>
               <button onClick={expandAll} className="text-xs text-[#555] hover:text-[#999]">펼침</button>
               <button onClick={collapseAll} className="text-xs text-[#555] hover:text-[#999]">접기</button>
               {editing ? (
@@ -296,11 +306,14 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ━━ 트리 테이블 ━━ */}
+        {/* ━━ 트리 테이블 / 시각화 ━━ */}
         <main className="flex-1 overflow-y-auto px-6 py-4">
           <div className="max-w-6xl mx-auto">
             {loading ? (
               <div className="text-center py-16 text-[#555] text-sm">불러오는 중...</div>
+            ) : adminView === "visual" ? (
+              /* 권고 #7: 조직도 + 역할 매트릭스 시각화 뷰 */
+              <AdminOrgChart tree={tree} execs={execs} />
             ) : (
               <div className="bg-[#1c1c1c] rounded-xl border border-[#262626] overflow-hidden text-sm">
                 {/* 헤더 */}

@@ -27,6 +27,8 @@
 | **psm-16-qa-search** | **2026-03-18** | **98%** | **0** | **psm-16-qa-search/** |
 | **frontend-gaps** | **2026-03-18** | **92%** | **0** | **frontend-gaps/** |
 | **security-hardening** | **2026-03-20** | **83% (실질91%)** | **2** | **security-hardening/** |
+| **file-management-ux** | **2026-03-21** | **96%** | **0** | **file-management-ux/** |
+| **ux-improvements** | **2026-03-21** | **98%** | **0** | **ux-improvements/** |
 
 ---
 
@@ -328,3 +330,20 @@
 | 신규 파일 | 4개 (request_id.py, security_headers.py, e2e_interrupt_test.py, analysis.md) |
 | 수정 파일 | 10개 (deps.py, main.py, rfp_parser.py, routes_proposal/workflow/artifacts/files/g2b/team.py) |
 | Deferred | L-4(Supabase 비밀번호 정책), L-5(감사 로그 변조 방지), L-6(프론트엔드 ErrorBoundary) |
+
+---
+
+## ux-improvements — Completed (UX 권고 7건 구현)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-21 |
+| Match Rate | **98%** |
+| PDCA 반복 | 0회 (first-pass 통과) |
+| PDCA Flow | UX Analysis → Do → Check → Report (Plan/Design 생략) |
+| Documents | analysis, report |
+| Path | docs/archive/2026-03/ux-improvements/ |
+| 주요 성과 | 7건 UX 권고 전량 구현 — WorkflowResumeBanner(재개 요약), GuidedTour(5종 투어+HelpTooltip), StreamDependencyGraph(5개 의존성 플로우), DuplicateBidWarning(중복 공고 경고), KbUsageHistory(사용 이력), Dashboard Widget Toggle(9종 표시/숨김), AdminOrgChart(조직도+역할 매트릭스) |
+| 신규 파일 | 6개 컴포넌트 (~1,145줄) |
+| 수정 파일 | 7개 (proposals/[id], proposals/new, dashboard, kb/content, admin, WorkflowPanel, StreamDashboard) |
+| 잔여 갭 | GAP-1 KB 근사검색(LOW), GAP-2 bid_no 제목매칭(LOW) |

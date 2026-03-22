@@ -428,6 +428,44 @@ export const api = {
         "POST", `/proposals/${id}/files`, formData, true
       );
     },
+    /** 프로그레스 콜백 지원 업로드 (XMLHttpRequest) */
+    uploadFileWithProgress(
+      id: string,
+      file: File,
+      onProgress: (pct: number) => void,
+      description?: string,
+    ): { promise: Promise<{ file_id: string; filename: string; storage_path: string }>; abort: () => void } {
+      const xhr = new XMLHttpRequest();
+      const promise = new Promise<{ file_id: string; filename: string; storage_path: string }>(
+        async (resolve, reject) => {
+          const token = await getToken();
+          const formData = new FormData();
+          formData.append("file", file);
+          if (description) formData.append("description", description);
+
+          xhr.upload.addEventListener("progress", (e) => {
+            if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+          });
+          xhr.addEventListener("load", () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(JSON.parse(xhr.responseText));
+            } else {
+              try {
+                const err = JSON.parse(xhr.responseText);
+                reject(new Error(typeof err.detail === "string" ? err.detail : "업로드 실패"));
+              } catch { reject(new Error(`업로드 실패 (${xhr.status})`)); }
+            }
+          });
+          xhr.addEventListener("error", () => reject(new Error("네트워크 오류")));
+          xhr.addEventListener("abort", () => reject(new Error("업로드 취소됨")));
+
+          xhr.open("POST", `${BASE}/proposals/${id}/files`);
+          xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+          xhr.send(formData);
+        },
+      );
+      return { promise, abort: () => xhr.abort() };
+    },
     deleteFile(id: string, fileId: string) {
       return request<void>("DELETE", `/proposals/${id}/files/${fileId}`);
     },
@@ -435,6 +473,11 @@ export const api = {
       return request<{ url: string; filename: string; expires_in: number }>(
         "GET", `/proposals/${id}/files/${fileId}/url`
       );
+    },
+    /** 참고자료 일괄 ZIP 다운로드 URL */
+    filesBundleUrl(id: string, category?: string) {
+      const qs = category ? `?category=${category}` : "";
+      return `${BASE}/proposals/${id}/files/bundle${qs}`;
     },
     deleteProposal(id: string) {
       return request<void>("DELETE", `/proposals/${id}`);
@@ -2338,6 +2381,12 @@ export const submissionDocsApi = {
   },
   async readiness(proposalId: string): Promise<ReadinessResult> {
     return request("GET", `/proposals/${proposalId}/submission-docs/readiness`);
+  },
+  async confirmOriginal(proposalId: string, docId: string): Promise<SubmissionDocument> {
+    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/confirm-original`);
+  },
+  bundleUrl(proposalId: string): string {
+    return `${BASE}/proposals/${proposalId}/submission-docs/bundle`;
   },
 };
 

@@ -22,6 +22,8 @@ import StreamTabBar, { type StreamTab } from "@/components/StreamTabBar";
 import SubmissionDocsPanel from "@/components/SubmissionDocsPanel";
 import BiddingWorkspace from "@/components/BiddingWorkspace";
 import StreamDashboard from "@/components/StreamDashboard";
+import WorkflowResumeBanner from "@/components/WorkflowResumeBanner";
+import GuidedTour, { TOUR_PROPOSAL_DETAIL } from "@/components/GuidedTour";
 
 // ── 경과 시간 훅 ──
 function useElapsedTime(running: boolean) {
@@ -393,6 +395,12 @@ export default function ProposalDetailPage() {
         </div>
       </header>
 
+      {/* 권고 #1: 워크플로 재개 요약 배너 */}
+      <WorkflowResumeBanner
+        proposalId={id}
+        workflowState={workflowState}
+      />
+
       {/* HITL 리뷰 대기 배너 */}
       {pendingReviewLabel && (
         <div className="bg-amber-500/10 border-b border-amber-500/30 px-6 py-2.5 flex items-center justify-between shrink-0">
@@ -540,6 +548,9 @@ export default function ProposalDetailPage() {
           />
         </aside>
       </div>
+
+      {/* 권고 #2: 초보 사용자 가이드 투어 */}
+      <GuidedTour tourId="proposal-detail" steps={TOUR_PROPOSAL_DETAIL} />
 
       {/* 모바일 플로팅 버튼 (lg 미만, 패널 닫혀있을 때) */}
       {!rightPanelOpen && (

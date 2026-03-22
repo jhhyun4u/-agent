@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { api, BidAnalysis } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import DuplicateBidWarning from "@/components/DuplicateBidWarning";
 
 // ── 타입 ──
 
@@ -443,6 +444,9 @@ export default function NewProposalPage() {
                 </div>
               </div>
             )}
+
+            {/* 권고 #4: 공고 중복 프로젝트 경고 */}
+            <DuplicateBidWarning bidNo={bidPrefill.bid_no} rfpTitle={rfpTitle} />
 
             {errorBanner}
             {infoBanner}

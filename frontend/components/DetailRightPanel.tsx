@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api, Comment_, ProposalFile, ProposalSummary } from "@/lib/api";
 import StepArtifactViewer from "@/components/StepArtifactViewer";
 import QaPanel from "@/components/QaPanel";
+import VersionCompareModal from "@/components/VersionCompareModal";
 
 // ── 상수 ──
 const PHASES = [
@@ -120,6 +121,7 @@ export default function DetailRightPanel({
   }
 
   // ── 버전 비교 (자체 완결) ──
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
   const [compareVersionId, setCompareVersionId] = useState<string | null>(null);
   const [compareData, setCompareData] = useState<{ artifacts: Record<string, unknown> } | null>(null);
   const [compareLoading, setCompareLoading] = useState(false);
@@ -138,21 +140,75 @@ export default function DetailRightPanel({
   }, [compareVersionId]);
 
   // ── 파일 업로드/다운로드/삭제 ──
-  const [uploading, setUploading] = useState(false);
+  const ALLOWED_EXTS = new Set(["pdf","docx","hwp","hwpx","xlsx","pptx","png","jpg","jpeg"]);
+  const MAX_FILE_SIZE_MB = 50;
 
-  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      await api.proposals.uploadFile(proposalId, file);
-      onFetchFiles();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "업로드 실패");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
+  // 업로드 큐 상태
+  interface UploadItem { file: File; progress: number; status: "pending"|"uploading"|"done"|"error"; error?: string; abort?: () => void }
+  const [uploadQueue, setUploadQueue] = useState<UploadItem[]>([]);
+  const [fileDragOver, setFileDragOver] = useState(false);
+  const [fileSearch, setFileSearch] = useState("");
+  const [fileSort, setFileSort] = useState<"name"|"date"|"size">("date");
+
+  function validateFile(file: File): string | null {
+    const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+    if (!ALLOWED_EXTS.has(ext)) return `허용되지 않는 형식: .${ext}`;
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) return `파일 크기 초과: ${(file.size / 1024 / 1024).toFixed(1)}MB (최대 ${MAX_FILE_SIZE_MB}MB)`;
+    // 중복 감지 (#8)
+    const dup = files.find(f => f.filename === file.name && f.file_size === file.size);
+    if (dup) return `동일한 파일이 이미 존재합니다: ${file.name}`;
+    return null;
+  }
+
+  async function processUploadQueue(newFiles: File[]) {
+    const items: UploadItem[] = newFiles.map(f => ({ file: f, progress: 0, status: "pending" as const }));
+    setUploadQueue(prev => [...prev, ...items]);
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const validationError = validateFile(item.file);
+      if (validationError) {
+        item.status = "error";
+        item.error = validationError;
+        setUploadQueue(prev => [...prev]);
+        continue;
+      }
+      item.status = "uploading";
+      setUploadQueue(prev => [...prev]);
+
+      try {
+        const { promise, abort } = api.proposals.uploadFileWithProgress(
+          proposalId, item.file,
+          (pct) => { item.progress = pct; setUploadQueue(prev => [...prev]); },
+        );
+        item.abort = abort;
+        setUploadQueue(prev => [...prev]);
+        await promise;
+        item.status = "done";
+        item.progress = 100;
+      } catch (err) {
+        item.status = "error";
+        item.error = err instanceof Error ? err.message : "업로드 실패";
+      }
+      setUploadQueue(prev => [...prev]);
     }
+    onFetchFiles();
+    // 3초 후 완료/에러 항목 자동 제거
+    setTimeout(() => setUploadQueue(prev => prev.filter(u => u.status === "uploading")), 3000);
+  }
+
+  function handleMultiFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const fileList = e.target.files;
+    if (!fileList || fileList.length === 0) return;
+    processUploadQueue(Array.from(fileList));
+    e.target.value = "";
+  }
+
+  function handleFileDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setFileDragOver(false);
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    if (droppedFiles.length > 0) processUploadQueue(droppedFiles);
   }
 
   async function handleFileDownload(fileId: string) {
@@ -172,6 +228,50 @@ export default function DetailRightPanel({
     } catch (err) {
       alert(err instanceof Error ? err.message : "삭제 실패");
     }
+  }
+
+  // 파일 미리보기 (#6)
+  const [previewFile, setPreviewFile] = useState<{ url: string; filename: string; type: string } | null>(null);
+
+  async function handleFilePreview(file: ProposalFile) {
+    const previewTypes = ["png", "jpg", "jpeg", "pdf"];
+    if (!file.file_type || !previewTypes.includes(file.file_type.toLowerCase())) {
+      handleFileDownload(file.id);
+      return;
+    }
+    try {
+      const res = await api.proposals.getFileUrl(proposalId, file.id);
+      setPreviewFile({ url: res.url, filename: file.filename, type: file.file_type.toLowerCase() });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "미리보기 실패");
+    }
+  }
+
+  function formatFileSize(bytes: number | null): string {
+    if (bytes == null) return "-";
+    if (bytes === 0) return "0B";
+    if (bytes < 1024) return `${bytes}B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)}KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+  }
+
+  function formatDate(dateStr: string): string {
+    const d = new Date(dateStr);
+    return `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,"0")}:${d.getMinutes().toString().padStart(2,"0")}`;
+  }
+
+  // 정렬 + 검색 (#7)
+  function getFilteredSortedFiles(catFiles: ProposalFile[]): ProposalFile[] {
+    let result = catFiles;
+    if (fileSearch.trim()) {
+      const q = fileSearch.trim().toLowerCase();
+      result = result.filter(f => f.filename.toLowerCase().includes(q));
+    }
+    return result.sort((a, b) => {
+      if (fileSort === "name") return a.filename.localeCompare(b.filename);
+      if (fileSort === "size") return (b.file_size ?? 0) - (a.file_size ?? 0);
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
   }
 
   // ── 다운로드 ──
@@ -350,7 +450,9 @@ export default function DetailRightPanel({
                       {c.user_id.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-[#ededed] leading-relaxed break-words">{c.content}</p>
+                      <div className="text-xs text-[#ededed] leading-relaxed break-words">
+                        <SimpleMarkdown text={c.content} />
+                      </div>
                       <div className="flex items-center gap-2 mt-0.5">
                         <span className="text-[10px] text-[#8c8c8c]">
                           {new Date(c.created_at).toLocaleString("ko-KR")}
@@ -386,6 +488,7 @@ export default function DetailRightPanel({
                 등록
               </button>
             </form>
+            <p className="text-[9px] text-[#5c5c5c] mt-1">**볼드**, `코드`, - 목록 지원</p>
           </div>
         )}
 
@@ -494,6 +597,14 @@ export default function DetailRightPanel({
               ))}
             </div>
 
+            {/* 전체화면 비교 버튼 */}
+            <button
+              onClick={() => setCompareModalOpen(true)}
+              className="text-[10px] text-[#3ecf8e] hover:underline"
+            >
+              전체화면 비교 (Side-by-side)
+            </button>
+
             {/* 비교 콘텐츠 — 세로 배치 (패널 너비 제한) */}
             <div className="space-y-2">
               <div className="bg-[#111111] border border-[#262626] rounded-lg p-3 min-h-[120px]">
@@ -545,6 +656,15 @@ export default function DetailRightPanel({
                 </div>
               )}
             </div>
+
+            {/* 전체화면 비교 모달 */}
+            <VersionCompareModal
+              open={compareModalOpen}
+              onClose={() => setCompareModalOpen(false)}
+              proposalId={proposalId}
+              versions={versions}
+              currentVersionLabel={currentVersionLabel}
+            />
           </div>
         )}
 
@@ -556,70 +676,203 @@ export default function DetailRightPanel({
         {/* 파일 */}
         {activeTab === "files" && (
           <div>
-            <div className="flex items-center justify-between mb-3">
+            {/* 헤더: 제목 + 일괄다운로드 + 업로드 버튼 */}
+            <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold text-[#ededed]">
                 파일 <span className="text-[#8c8c8c] font-normal">({files.length})</span>
               </h3>
-              <label className={`cursor-pointer px-2.5 py-1 rounded-lg text-[10px] font-medium transition-colors ${
-                uploading
-                  ? "bg-[#262626] text-[#8c8c8c]"
-                  : "bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90"
-              }`}>
-                {uploading ? "업로드 중..." : "추가"}
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleFileUpload}
-                  disabled={uploading}
-                  accept=".pdf,.docx,.hwp,.hwpx,.xlsx,.pptx,.png,.jpg,.jpeg"
-                />
-              </label>
+              <div className="flex items-center gap-1.5">
+                {files.length > 0 && (
+                  <a
+                    href={api.proposals.filesBundleUrl(proposalId)}
+                    className="px-2.5 py-1 rounded-lg text-[10px] font-medium border border-[#262626] text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3ecf8e]/40 transition-colors"
+                    title="전체 ZIP 다운로드"
+                  >
+                    ZIP
+                  </a>
+                )}
+                <label className="cursor-pointer px-2.5 py-1 rounded-lg text-[10px] font-medium bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 transition-colors">
+                  추가
+                  <input
+                    type="file"
+                    multiple
+                    className="hidden"
+                    onChange={handleMultiFileUpload}
+                    accept=".pdf,.docx,.hwp,.hwpx,.xlsx,.pptx,.png,.jpg,.jpeg"
+                  />
+                </label>
+              </div>
             </div>
 
-            {filesLoading ? (
-              <p className="text-xs text-[#8c8c8c]">불러오는 중...</p>
-            ) : files.length === 0 ? (
-              <p className="text-xs text-[#8c8c8c]">등록된 파일이 없습니다.</p>
-            ) : (
-              <div className="space-y-1">
-                {(["rfp", "reference", "attachment"] as const).map((cat) => {
-                  const catFiles = files.filter((f) => f.category === cat);
-                  if (catFiles.length === 0) return null;
-                  const catLabels = { rfp: "RFP 원본", reference: "참고자료", attachment: "G2B 첨부" };
-                  return (
-                    <div key={cat} className="mb-2">
-                      <p className="text-[10px] font-semibold text-[#8c8c8c] uppercase tracking-wider mb-1">
-                        {catLabels[cat]}
-                      </p>
-                      <ul className="space-y-0.5">
-                        {catFiles.map((f) => (
-                          <li key={f.id} className="flex items-center gap-2 px-2 py-1.5 bg-[#111111] border border-[#262626] rounded-lg group">
-                            <span className="text-[10px] text-[#8c8c8c] uppercase w-8 shrink-0">
-                              {f.file_type || "?"}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs text-[#ededed] truncate">{f.filename}</p>
-                            </div>
-                            <button
-                              onClick={() => handleFileDownload(f.id)}
-                              className="text-[10px] text-[#3ecf8e] hover:text-[#49e59e] opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              DL
-                            </button>
-                            {f.category !== "rfp" && (
-                              <button
-                                onClick={() => handleFileDelete(f.id)}
-                                className="text-[10px] text-red-400/70 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                X
-                              </button>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
+            {/* 검색 + 정렬 (#7) */}
+            {files.length > 0 && (
+              <div className="flex gap-1.5 mb-2">
+                <input
+                  type="text"
+                  value={fileSearch}
+                  onChange={(e) => setFileSearch(e.target.value)}
+                  placeholder="파일 검색..."
+                  className="flex-1 bg-[#111111] border border-[#262626] rounded-lg px-2 py-1 text-[10px] text-[#ededed] placeholder-[#8c8c8c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40"
+                />
+                <select
+                  value={fileSort}
+                  onChange={(e) => setFileSort(e.target.value as "name"|"date"|"size")}
+                  className="bg-[#111111] border border-[#262626] rounded-lg px-1.5 py-1 text-[10px] text-[#8c8c8c] focus:outline-none"
+                >
+                  <option value="date">최신순</option>
+                  <option value="name">이름순</option>
+                  <option value="size">크기순</option>
+                </select>
+              </div>
+            )}
+
+            {/* 업로드 큐 (프로그레스 바 #3 + GAP-1 aria-live) */}
+            {uploadQueue.length > 0 && (
+              <div className="space-y-1 mb-3" aria-live="polite" aria-label="업로드 진행 상태">
+                {uploadQueue.map((item, idx) => (
+                  <div key={idx} className="bg-[#111111] border border-[#262626] rounded-lg px-2 py-1.5">
+                    <div className="flex items-center gap-2">
+                      <p className="text-[10px] text-[#ededed] truncate flex-1">{item.file.name}</p>
+                      <span className="text-[10px] text-[#8c8c8c] shrink-0">
+                        {item.status === "uploading" ? `${item.progress}%` : item.status === "done" ? "완료" : item.status === "error" ? "실패" : "대기"}
+                      </span>
+                      {item.status === "uploading" && item.abort && (
+                        <button onClick={item.abort} className="text-[10px] text-red-400/70 hover:text-red-400" aria-label={`${item.file.name} 업로드 취소`}>취소</button>
+                      )}
                     </div>
-                  );
-                })}
+                    {item.status === "uploading" && (
+                      <div className="mt-1 h-1 bg-[#262626] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#3ecf8e] transition-all duration-200 rounded-full" style={{ width: `${item.progress}%` }} />
+                      </div>
+                    )}
+                    {item.status === "error" && (
+                      <p className="text-[10px] text-red-400 mt-0.5">{item.error}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 드래그&드롭 영역 (#5) */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setFileDragOver(true); }}
+              onDragLeave={() => setFileDragOver(false)}
+              onDrop={handleFileDrop}
+              className={`transition-colors rounded-lg ${fileDragOver ? "ring-2 ring-[#3ecf8e]/50 bg-[#3ecf8e]/5" : ""}`}
+            >
+              {filesLoading ? (
+                <p className="text-xs text-[#8c8c8c] py-4 text-center">불러오는 중...</p>
+              ) : files.length === 0 ? (
+                <div className="border-2 border-dashed border-[#262626] rounded-lg py-8 text-center">
+                  <p className="text-xs text-[#8c8c8c]">파일을 드래그하거나 추가 버튼을 눌러주세요</p>
+                  <p className="text-[10px] text-[#8c8c8c]/60 mt-1">PDF, DOCX, HWP, HWPX, XLSX, PPTX, PNG, JPG (최대 50MB)</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {(["rfp", "reference", "attachment"] as const).map((cat) => {
+                    const catFiles = getFilteredSortedFiles(files.filter((f) => f.category === cat));
+                    if (catFiles.length === 0) return null;
+                    const catLabels = { rfp: "RFP 원본", reference: "참고자료", attachment: "G2B 첨부" };
+                    return (
+                      <div key={cat} className="mb-2">
+                        <p className="text-[10px] font-semibold text-[#8c8c8c] uppercase tracking-wider mb-1">
+                          {catLabels[cat]} ({catFiles.length})
+                        </p>
+                        <ul className="space-y-0.5">
+                          {catFiles.map((f) => (
+                            <li key={f.id} className="flex items-center gap-2 px-2 py-1.5 bg-[#111111] border border-[#262626] rounded-lg group hover:border-[#3ecf8e]/20 transition-colors">
+                              {/* 확장자 아이콘 */}
+                              <span className={`text-[10px] uppercase w-8 shrink-0 font-medium ${
+                                f.file_type === "pdf" ? "text-red-400" :
+                                f.file_type === "docx" ? "text-blue-400" :
+                                f.file_type === "hwpx" || f.file_type === "hwp" ? "text-[#3ecf8e]" :
+                                f.file_type === "pptx" ? "text-orange-400" :
+                                f.file_type === "xlsx" ? "text-green-400" :
+                                ["png","jpg","jpeg"].includes(f.file_type || "") ? "text-purple-400" :
+                                "text-[#8c8c8c]"
+                              }`}>
+                                {f.file_type || "?"}
+                              </span>
+                              {/* 파일명 + 메타데이터 (#1) */}
+                              <div className="flex-1 min-w-0">
+                                <button
+                                  onClick={() => handleFilePreview(f)}
+                                  className="text-xs text-[#ededed] truncate block w-full text-left hover:text-[#3ecf8e] transition-colors"
+                                  title={f.filename}
+                                >
+                                  {f.filename}
+                                </button>
+                                <p className="text-[10px] text-[#8c8c8c]/70 mt-0.5">
+                                  {formatFileSize(f.file_size)}
+                                  {f.created_at && <> · {formatDate(f.created_at)}</>}
+                                  {f.description && <> · {f.description}</>}
+                                </p>
+                              </div>
+                              {/* 액션 버튼 */}
+                              <button
+                                onClick={() => handleFileDownload(f.id)}
+                                className="text-[10px] text-[#3ecf8e] hover:text-[#49e59e] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                                title="다운로드"
+                                aria-label={`${f.filename} 다운로드`}
+                              >
+                                DL
+                              </button>
+                              {f.category !== "rfp" && (
+                                <button
+                                  onClick={() => handleFileDelete(f.id)}
+                                  className="text-[10px] text-red-400/70 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                                  title="삭제"
+                                  aria-label={`${f.filename} 삭제`}
+                                >
+                                  X
+                                </button>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+
+                  {/* 드래그&드롭 힌트 (파일 있을 때) */}
+                  {fileDragOver && (
+                    <div className="border-2 border-dashed border-[#3ecf8e]/50 rounded-lg py-4 text-center mt-2">
+                      <p className="text-xs text-[#3ecf8e]">여기에 놓으세요</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* 파일 미리보기 모달 (#6 + GAP-1 접근성) */}
+            {previewFile && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`파일 미리보기: ${previewFile.filename}`}
+                onClick={() => setPreviewFile(null)}
+                onKeyDown={(e) => { if (e.key === "Escape") setPreviewFile(null); }}
+                tabIndex={-1}
+                ref={(el) => el?.focus()}
+              >
+                <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#262626]">
+                    <p className="text-xs text-[#ededed] font-medium truncate">{previewFile.filename}</p>
+                    <div className="flex items-center gap-2">
+                      <a href={previewFile.url} target="_blank" rel="noopener noreferrer"
+                        className="text-[10px] text-[#3ecf8e] hover:text-[#49e59e]">새 탭에서 열기</a>
+                      <button onClick={() => setPreviewFile(null)} className="text-[#8c8c8c] hover:text-[#ededed] text-sm" aria-label="미리보기 닫기">X</button>
+                    </div>
+                  </div>
+                  <div className="flex-1 overflow-auto p-4 flex items-center justify-center">
+                    {["png","jpg","jpeg"].includes(previewFile.type) ? (
+                      <img src={previewFile.url} alt={previewFile.filename} className="max-w-full max-h-[70vh] object-contain rounded" />
+                    ) : previewFile.type === "pdf" ? (
+                      <iframe src={previewFile.url} className="w-full h-[70vh] rounded" title={previewFile.filename} />
+                    ) : null}
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -627,4 +880,39 @@ export default function DetailRightPanel({
       </div>
     </div>
   );
+}
+
+// ── 간이 마크다운 렌더러 ──
+function SimpleMarkdown({ text }: { text: string }) {
+  const lines = text.split("\n");
+  return (
+    <>
+      {lines.map((line, i) => {
+        // 목록 항목
+        if (line.trimStart().startsWith("- ")) {
+          const content = line.replace(/^\s*-\s+/, "");
+          return <li key={i} className="ml-3 list-disc">{renderInline(content)}</li>;
+        }
+        return <p key={i}>{renderInline(line) || "\u00A0"}</p>;
+      })}
+    </>
+  );
+}
+
+function renderInline(text: string): React.ReactNode {
+  // **볼드** 및 `코드` 변환
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code key={i} className="px-1 py-0.5 bg-[#262626] rounded text-[10px] font-mono">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
 }

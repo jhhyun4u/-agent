@@ -12,8 +12,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="min-h-screen bg-[#0f0f0f] text-[#ededed] antialiased">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        {/* 테마 깜빡임 방지 — localStorage 선읽기 */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var t = localStorage.getItem('theme');
+            if (t === 'light') document.documentElement.classList.add('light');
+            else if (!t && window.matchMedia('(prefers-color-scheme: light)').matches) {
+              document.documentElement.classList.add('light');
+            }
+          } catch(e) {}
+        `}} />
+      </head>
+      <body className="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
         {children}
       </body>
     </html>

@@ -9,6 +9,8 @@
   DELETE /api/proposals/{id}/submission-docs/{doc_id}
   POST   /api/proposals/{id}/submission-docs/{doc_id}/upload
   POST   /api/proposals/{id}/submission-docs/{doc_id}/verify
+  POST   /api/proposals/{id}/submission-docs/{doc_id}/confirm-original
+  GET    /api/proposals/{id}/submission-docs/bundle
   GET    /api/proposals/{id}/submission-docs/readiness
 
 조직 공통 서류:
@@ -20,6 +22,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.responses import Response
 
 from app.api.deps import get_current_user, require_project_access, require_role
 from app.models.stream_schemas import (
@@ -235,6 +238,48 @@ async def verify_submission_doc(
     from app.services.submission_docs_service import verify_document
 
     return await verify_document(doc_id, user["id"], proposal_id=proposal_id)
+
+
+@router.post(
+    "/api/proposals/{proposal_id}/submission-docs/{doc_id}/confirm-original",
+    response_model=SubmissionDocResponse,
+)
+async def confirm_original(
+    proposal_id: str,
+    doc_id: str,
+    user=Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """원본 서류 준비 완료 확인 (파일 업로드 없이 verified 처리)."""
+    from app.services.submission_docs_service import confirm_original_document
+
+    try:
+        return await confirm_original_document(doc_id, user["id"], proposal_id=proposal_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/api/proposals/{proposal_id}/submission-docs/bundle")
+async def download_copy_bundle(
+    proposal_id: str,
+    user=Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """사본 서류 묶음 다운로드 (PDF 병합 또는 ZIP)."""
+    from app.services.submission_docs_service import build_copy_bundle
+
+    try:
+        data, content_type = await build_copy_bundle(proposal_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    ext = "pdf" if "pdf" in content_type else "zip"
+    filename = f"submission_copies_{proposal_id[:8]}.{ext}"
+    return Response(
+        content=data,
+        media_type=content_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.get(

@@ -23,6 +23,7 @@ import {
   MonthlyTrendsLine,
   ClientWinRateBar,
 } from "@/components/AnalyticsCharts";
+import GuidedTour, { TOUR_DASHBOARD } from "@/components/GuidedTour";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
@@ -118,6 +119,23 @@ export default function DashboardPage() {
   // 팀 성과 + 포지셔닝별 수주율
   const [teamPerfData, setTeamPerfData] = useState<TeamPerformanceData | null>(null);
   const [posWinData, setPosWinData] = useState<PositioningWinRateData | null>(null);
+
+  // 권고 #6: 대시보드 위젯 토글
+  const [widgetConfig, setWidgetConfig] = useState(() => {
+    if (typeof window === "undefined") return { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true };
+    try {
+      const stored = localStorage.getItem("tenopa-dashboard-widgets");
+      return stored ? JSON.parse(stored) : { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true };
+    } catch { return { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true }; }
+  });
+  const [showWidgetConfig, setShowWidgetConfig] = useState(false);
+  function toggleWidget(key: string) {
+    setWidgetConfig((prev: Record<string, boolean>) => {
+      const next = { ...prev, [key]: !prev[key] };
+      localStorage.setItem("tenopa-dashboard-widgets", JSON.stringify(next));
+      return next;
+    });
+  }
 
   // 일정 추가 폼
   const [showAddForm, setShowAddForm] = useState(false);
@@ -322,7 +340,52 @@ export default function DashboardPage() {
             대시보드
           </h1>
 
-          {/* 스코프 탭 */}
+          {/* 위젯 설정 + 스코프 탭 */}
+          <div className="flex items-center gap-3">
+          {/* 권고 #6: 위젯 표시/숨김 토글 */}
+          <div className="relative">
+            <button
+              onClick={() => setShowWidgetConfig(!showWidgetConfig)}
+              className="p-1.5 rounded-lg text-[#8c8c8c] hover:text-[#ededed] hover:bg-[#262626] transition-colors"
+              title="위젯 설정"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            {showWidgetConfig && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowWidgetConfig(false)} />
+                <div className="absolute right-0 mt-1.5 w-48 bg-[#1c1c1c] border border-[#262626] rounded-xl shadow-xl z-40 py-2">
+                  <p className="px-3 py-1.5 text-[10px] text-[#8c8c8c] uppercase tracking-wider">위젯 표시</p>
+                  {([
+                    ["action", "지금 해야 할 것"],
+                    ["pipeline", "제안 파이프라인"],
+                    ["kpi", "제안 분석 KPI"],
+                    ["charts", "분석 차트"],
+                    ["client", "기관별 수주"],
+                    ["team", "팀별 성과"],
+                    ["positioning", "포지셔닝별"],
+                    ["bids", "공고 모니터링"],
+                    ["calendar", "RFP 캘린더"],
+                  ] as const).map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => toggleWidget(key)}
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] transition-colors"
+                    >
+                      <span className={`w-3.5 h-3.5 rounded border flex items-center justify-center text-[9px] ${widgetConfig[key] ? "bg-[#3ecf8e] border-[#3ecf8e] text-[#0f0f0f]" : "border-[#363636]"}`}>
+                        {widgetConfig[key] ? "v" : ""}
+                      </span>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
           <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-1 border border-[#262626]">
             {(
               [
@@ -345,13 +408,14 @@ export default function DashboardPage() {
               </button>
             ))}
           </div>
+          </div>
         </header>
 
         {/* 스크롤 본문 */}
         <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
 
           {/* ── 오늘 할 일 ── */}
-          {actionItems.length > 0 && (
+          {widgetConfig.action && actionItems.length > 0 && (
             <div className="bg-[#1c1c1c] border border-[#3ecf8e]/20 rounded-2xl p-5">
               <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e] animate-pulse" />
@@ -430,7 +494,7 @@ export default function DashboardPage() {
           )}
 
           {/* ── 파이프라인 뷰 ── */}
-          <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+          {widgetConfig.pipeline && <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
             <h2 className="text-sm font-semibold text-[#ededed] mb-4">제안 파이프라인</h2>
             <div className="flex items-stretch gap-0">
               {(
@@ -463,10 +527,10 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </div>}
 
           {/* ── 제안 분석 (3개 카드 — 연도별) ── */}
-          <div className="grid grid-cols-3 gap-4">
+          {widgetConfig.kpi && <div className="grid grid-cols-3 gap-4">
             {/* 총 제안건수 */}
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
               <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 총 제안건수</p>
@@ -507,10 +571,10 @@ export default function DashboardPage() {
                 <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
               )}
             </div>
-          </div>
+          </div>}
 
           {/* ── 분석 차트 (월별 추이 + 실패원인) ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {widgetConfig.charts && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
               <h2 className="text-sm font-semibold text-[#ededed] mb-4">월별 수주율 추이</h2>
               <MonthlyTrendsLine data={trendsData} />
@@ -519,10 +583,10 @@ export default function DashboardPage() {
               <h2 className="text-sm font-semibold text-[#ededed] mb-4">실패 원인 분석</h2>
               <FailureReasonsPie data={failureData} />
             </div>
-          </div>
+          </div>}
 
           {/* ── 기관별 수주 현황 차트 ── */}
-          {clientData && (
+          {widgetConfig.client && clientData && (
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
               <h2 className="text-sm font-semibold text-[#ededed] mb-4">기관별 수주 현황</h2>
               <ClientWinRateBar data={clientData} />
@@ -532,7 +596,7 @@ export default function DashboardPage() {
           {/* ── 팀 성과 + 포지셔닝별 수주율 ── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* 팀 성과 */}
-            {teamPerfData && teamPerfData.teams.length > 0 && (
+            {widgetConfig.team && teamPerfData && teamPerfData.teams.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
                 <h2 className="text-sm font-semibold text-[#ededed] mb-3">팀별 성과</h2>
                 <div className="space-y-2">
@@ -551,7 +615,7 @@ export default function DashboardPage() {
             )}
 
             {/* 포지셔닝별 수주율 */}
-            {posWinData && posWinData.positioning.length > 0 && (
+            {widgetConfig.positioning && posWinData && posWinData.positioning.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
                 <h2 className="text-sm font-semibold text-[#ededed] mb-3">포지셔닝별 수주율</h2>
                 <div className="space-y-2">
@@ -578,7 +642,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── 공고 모니터링 위젯 ── */}
-          {!bidsLoading && (bidCounts.S > 0 || bidCounts.A > 0) && (
+          {widgetConfig.bids && !bidsLoading && (bidCounts.S > 0 || bidCounts.A > 0) && (
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -650,7 +714,7 @@ export default function DashboardPage() {
           )}
 
           {/* ── RFP 캘린더 ── */}
-          <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+          {widgetConfig.calendar && <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-[#ededed]">
@@ -831,10 +895,12 @@ export default function DashboardPage() {
                 })}
               </div>
             )}
-          </div>
+          </div>}
 
         </main>
       </div>
+      {/* 권고 #2: 초보 사용자 가이드 투어 */}
+      <GuidedTour tourId="dashboard" steps={TOUR_DASHBOARD} />
     </div>
   );
 }

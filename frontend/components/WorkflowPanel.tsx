@@ -17,6 +17,7 @@ import {
   type WorkflowResumeData,
 } from "@/lib/api";
 import GoNoGoPanel from "@/components/GoNoGoPanel";
+import { HelpTooltip } from "@/components/GuidedTour";
 
 // ── 리뷰 게이트 정의 ──
 
@@ -324,6 +325,7 @@ function ReviewPanel({
         <h2 className="text-sm font-semibold text-[#ededed]">
           {gate?.title ?? "리뷰"}
         </h2>
+        <HelpTooltip text={gate?.perspective ?? "AI 결과를 검토하고 승인하거나 재작업을 요청하세요."} />
         <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded">
           STEP {gate?.step ?? "?"}
         </span>
