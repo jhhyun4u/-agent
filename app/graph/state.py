@@ -76,11 +76,20 @@ class GoNoGoResult(BaseModel):
     decision: str = "pending"
 
 
+class PriceScoringFormula(BaseModel):
+    """RFP에 명시된 가격점수 산정 방식. 없으면 표준 공식 적용."""
+    formula_type: str = ""  # "lowest_ratio" | "fixed_rate" | "budget_ratio" | "custom" | ""
+    description: str = ""   # RFP 원문 발췌 (가격점수 관련 조항)
+    price_weight: float = 0  # 가격 배점 (예: 20점)
+    parameters: dict = {}   # 공식별 추가 파라미터 (예: {"base_ratio": 87.745})
+
+
 class RFPAnalysis(BaseModel):
     project_name: str
     client: str
     deadline: str
     case_type: Literal["A", "B"]
+    eval_method: str = ""
     eval_items: list[dict]
     tech_price_ratio: dict
     hot_buttons: list[str]
@@ -88,6 +97,7 @@ class RFPAnalysis(BaseModel):
     format_template: dict
     volume_spec: dict
     special_conditions: list[str]
+    price_scoring: PriceScoringFormula | None = None
 
 
 class StrategyAlternative(BaseModel):

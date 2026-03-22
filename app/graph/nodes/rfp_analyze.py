@@ -6,7 +6,7 @@ RFP 텍스트를 분석하여 구조화된 분석 결과 생성.
 
 import logging
 
-from app.graph.state import ComplianceItem, ProposalState, RFPAnalysis
+from app.graph.state import ComplianceItem, PriceScoringFormula, ProposalState, RFPAnalysis
 from app.services.claude_client import claude_generate
 from app.services import prompt_tracker
 
@@ -48,6 +48,13 @@ async def rfp_analyze(state: ProposalState) -> dict:
 6. 서식 템플릿 존재 여부 + 구조
 7. 분량 규격
 8. 특수 조건
+9. 평가방식 (종합심사, 적격심사, 최저가, 수의계약 등)
+10. **가격점수 산정 방식** — RFP에 가격평가 산식이 명시되어 있으면 반드시 추출할 것
+    - formula_type: "lowest_ratio" (가격점수=배점×최저가/입찰가), "fixed_rate" (예정가격 대비 고정 비율), "budget_ratio" (추정가 대비 비율), "custom" (기타 산식)
+    - description: RFP에서 가격점수 관련 원문을 그대로 발췌
+    - price_weight: 가격 배점 (점수)
+    - parameters: 산식에 필요한 추가 값 (예: base_ratio, floor_ratio 등)
+    - RFP에 가격점수 산식이 없으면 null로 설정
 
 ## 출력 형식 (JSON)
 {{
@@ -55,6 +62,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
   "client": "발주기관",
   "deadline": "마감일",
   "case_type": "A 또는 B",
+  "eval_method": "종합심사 | 적격심사 | 최저가 | 수의계약",
   "eval_items": [{{"item": "항목명", "weight": 30, "sub_items": ["세부항목"]}}],
   "tech_price_ratio": {{"tech": 90, "price": 10}},
   "hot_buttons": ["핫버튼 키워드"],
@@ -62,6 +70,12 @@ async def rfp_analyze(state: ProposalState) -> dict:
   "format_template": {{"exists": false, "structure": null}},
   "volume_spec": {{"max_pages": 100, "font_size": "11pt"}},
   "special_conditions": ["특수 조건"],
+  "price_scoring": {{
+    "formula_type": "lowest_ratio",
+    "description": "가격점수 = 가격배점 × (최저입찰가격/입찰가격)",
+    "price_weight": 10,
+    "parameters": {{}}
+  }},
   "compliance_items": [
     {{"req_id": "RFP-001", "content": "요건 내용", "source_step": "rfp_analyze"}}
   ]
@@ -92,6 +106,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
         client=result.get("client", ""),
         deadline=result.get("deadline", ""),
         case_type=result.get("case_type", "A"),
+        eval_method=result.get("eval_method", ""),
         eval_items=result.get("eval_items", []),
         tech_price_ratio=result.get("tech_price_ratio", {"tech": 90, "price": 10}),
         hot_buttons=result.get("hot_buttons", []),
@@ -99,6 +114,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
         format_template=result.get("format_template", {"exists": False, "structure": None}),
         volume_spec=result.get("volume_spec", {}),
         special_conditions=result.get("special_conditions", []),
+        price_scoring=PriceScoringFormula(**result["price_scoring"]) if result.get("price_scoring") else None,
     )
 
     # Compliance Matrix 초안

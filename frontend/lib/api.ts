@@ -2065,6 +2065,34 @@ export interface SensitivityPoint {
   expected_payoff: number;
 }
 
+export interface PriceScoreDetail {
+  price_score: number;
+  price_weight: number;
+  score_ratio: number;
+  total_score: number;
+  formula_used: string;
+  estimated_min_bid: number;
+  is_disqualified: boolean;
+}
+
+export interface ScoreSimulationRow {
+  bid_ratio: number;
+  bid_price: number;
+  bid_price_fmt: string;
+  price_score: number;
+  price_weight: number;
+  tech_score: number;
+  tech_weight: number;
+  total_score: number;
+  total_weight: number;
+  score_ratio: number;
+  formula_used: string;
+  is_disqualified: boolean;
+  disqualification_reason: string;
+  estimated_min_bid: number;
+  price_gain_per_point: number;
+}
+
 export interface PricingScenario {
   name: string;
   label: string;
@@ -2073,6 +2101,7 @@ export interface PricingScenario {
   win_probability: number;
   expected_payoff: number;
   risk_level: string;
+  price_score_detail?: PriceScoreDetail | null;
 }
 
 export interface CostBreakdownDetail {
@@ -2121,6 +2150,7 @@ export interface PricingSimulationResult {
   optimal_ratio: number;
   scenarios: PricingScenario[];
   market_context: MarketContext | null;
+  score_simulation: ScoreSimulationRow[];
   data_quality: string;
   created_at: string;
 }
@@ -2420,5 +2450,72 @@ export const bidSubmissionApi = {
   },
   async getBiddingWorkspace(proposalId: string): Promise<BiddingWorkspace> {
     return request("GET", `/proposals/${proposalId}/bidding-workspace`);
+  },
+};
+
+// ── 산출내역서 API ──
+
+export interface CostSheetDraft {
+  project_name: string;
+  client: string;
+  proposer_name: string;
+  cost_standard: string;
+  labor_breakdown: LaborItem[];
+  labor_total: number;
+  expense_items: ExpenseItem[];
+  expense_total: number;
+  overhead_rate: number;
+  overhead_total: number;
+  profit_rate: number;
+  profit_total: number;
+  total_cost: number;
+  budget_narrative: BudgetNarrativeItem[];
+}
+
+export interface LaborItem {
+  grade: string;
+  role?: string;
+  monthly_rate: number;
+  mm: number;
+  subtotal: number;
+}
+
+export interface ExpenseItem {
+  name: string;
+  amount: number;
+  basis: string;
+}
+
+export interface BudgetNarrativeItem {
+  cost_item: string;
+  linked_activity: string;
+  justification: string;
+}
+
+export const costSheetApi = {
+  async getDraft(proposalId: string): Promise<CostSheetDraft> {
+    return request("GET", `/proposals/${proposalId}/cost-sheet/draft`);
+  },
+  async generate(proposalId: string, data: {
+    project_name: string;
+    client: string;
+    proposer_name: string;
+    cost_standard: string;
+    labor_breakdown: LaborItem[];
+    expense_items: ExpenseItem[];
+    overhead_rate: number;
+    profit_rate: number;
+    budget_narrative: BudgetNarrativeItem[];
+  }): Promise<Blob> {
+    const res = await fetch(`${BASE}/proposals/${proposalId}/cost-sheet/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error(`산출내역서 생성 실패: ${res.status}`);
+    return res.blob();
   },
 };

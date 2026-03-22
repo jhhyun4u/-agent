@@ -1,0 +1,23 @@
+{
+  "project_name": "클라우드 기반 ERP 시스템 구축",
+  "client": "ABC 주식회사",
+  "deadline": "2026-06-30",
+  "case_type": "A",
+  "eval_method": "기술+발표심사",
+  "eval_items": [
+    {"item": "기술 이해도", "weight": 30, "sub_items": ["요구사항 분석", "시스템 아키텍처"]},
+    {"item": "수행 방안", "weight": 40, "sub_items": ["구축 방법론", "품질 관리"]},
+    {"item": "프로젝트 관리", "weight": 30, "sub_items": ["일정 관리", "위험 관리"]}
+  ],
+  "tech_price_ratio": {"tech": 90, "price": 10},
+  "hot_buttons": ["클라우드 전환 경험", "보안 인증", "유지보수 체계"],
+  "mandatory_reqs": ["ISO 27001 인증", "5년 이상 ERP 구축 경험"],
+  "format_template": {"exists": false, "structure": null},
+  "volume_spec": {"max_pages": 100, "font_size": "11pt"},
+  "special_conditions": ["하도급 제한"],
+  "compliance_items": [
+    {"req_id": "RFP-001", "content": "클라우드 전환 경험 3건 이상", "source_step": "rfp_analyze"},
+    {"req_id": "RFP-002", "content": "ISO 27001 인증 보유", "source_step": "rfp_analyze"},
+    {"req_id": "RFP-003", "content": "PM 기술사 자격 보유", "source_step": "rfp_analyze"}
+  ]
+}

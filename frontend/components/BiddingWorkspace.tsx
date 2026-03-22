@@ -17,6 +17,7 @@ import {
   type BiddingWorkspace as BiddingWorkspaceType,
   type BidPriceHistoryEntry,
 } from "@/lib/api";
+import CostSheetEditor from "./pricing/CostSheetEditor";
 
 interface Props {
   proposalId: string;
@@ -227,6 +228,13 @@ export default function BiddingWorkspace({ proposalId }: Props) {
               {adjusting ? "처리 중..." : "가격 조정"}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* 산출내역서 편집 시뮬레이터 */}
+      {bs?.bid_confirmed_price && (
+        <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+          <CostSheetEditor proposalId={proposalId} />
         </div>
       )}
 

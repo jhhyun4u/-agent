@@ -9,10 +9,11 @@
  */
 
 import { useState } from "react";
+import PriceScoreTable from "./PriceScoreTable";
 import ScenarioCards from "./ScenarioCards";
 import SensitivityChart from "./SensitivityChart";
 import WinProbabilityGauge from "./WinProbabilityGauge";
-import type { PricingScenario, SensitivityPoint } from "@/lib/api";
+import type { PricingScenario, ScoreSimulationRow, SensitivityPoint } from "@/lib/api";
 
 interface BidPlanData {
   recommended_bid: number;
@@ -26,6 +27,7 @@ interface BidPlanData {
   data_quality: string;
   user_override_price: number | null;
   user_override_reason: string;
+  score_simulation?: ScoreSimulationRow[];
 }
 
 interface Props {
@@ -128,6 +130,14 @@ export default function BidPlanReviewPanel({ artifact, onResume }: Props) {
         <SensitivityChart
           points={artifact.sensitivity_curve}
           optimalRatio={artifact.recommended_ratio}
+        />
+      )}
+
+      {/* 가격점수 시뮬레이션 테이블 */}
+      {(artifact.score_simulation ?? []).length > 0 && (
+        <PriceScoreTable
+          rows={artifact.score_simulation!}
+          recommendedRatio={artifact.recommended_ratio}
         />
       )}
 

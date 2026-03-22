@@ -1,0 +1,30 @@
+{
+  "recommended_bid": 450000000,
+  "recommended_ratio": 0.75,
+  "scenarios": [
+    {"name": "conservative", "bid_price": 480000000, "bid_ratio": 0.80, "win_probability": 0.45, "margin": 0.15},
+    {"name": "balanced", "bid_price": 450000000, "bid_ratio": 0.75, "win_probability": 0.60, "margin": 0.10},
+    {"name": "aggressive", "bid_price": 420000000, "bid_ratio": 0.70, "win_probability": 0.75, "margin": 0.05}
+  ],
+  "selected_scenario": "balanced",
+  "cost_breakdown": {
+    "labor_cost": 350000000,
+    "overhead": 60000000,
+    "profit": 40000000,
+    "cost_standard": "KOSA"
+  },
+  "sensitivity_curve": [
+    {"bid_ratio": 0.65, "win_probability": 0.85},
+    {"bid_ratio": 0.75, "win_probability": 0.60},
+    {"bid_ratio": 0.85, "win_probability": 0.35}
+  ],
+  "win_probability": 0.60,
+  "market_context": {
+    "market_avg_ratio": 0.73,
+    "comparable_cases": 5,
+    "market_research": {"existing_count": 3, "crawled_count": 2, "search_keywords": ["ERP 구축"]}
+  },
+  "data_quality": "hybrid",
+  "user_override_price": null,
+  "user_override_reason": null
+}

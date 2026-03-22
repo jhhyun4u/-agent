@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: uv sync --frozen --dev
-      - run: uv run pytest tests/unit/ -v --tb=short
+      - run: uv run pytest tests/unit/ tests/workflow/ -v --tb=short
         env:
           ANTHROPIC_API_KEY: "test-key"
           SUPABASE_URL: "https://test.supabase.co"

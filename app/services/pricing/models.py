@@ -31,6 +31,8 @@ class PricingSimulationRequest(BaseModel):
     client_name: str | None = None
     rfp_text: str | None = None  # RFP 텍스트 (비용 기준 자동 탐색)
     proposal_id: str | None = None
+    price_scoring_formula: dict | None = None  # RFP에서 추출한 가격점수 산식
+    assumed_tech_score: float | None = None     # 가정 기술점수 (시뮬레이션용)
 
 
 class QuickEstimateRequest(BaseModel):
@@ -90,6 +92,17 @@ class SensitivityPoint(BaseModel):
     expected_payoff: int
 
 
+class PriceScoreDetail(BaseModel):
+    """시나리오별 가격점수 산출 결과."""
+    price_score: float = 0       # 가격점수
+    price_weight: float = 0      # 가격 배점
+    score_ratio: float = 0       # 득점률
+    total_score: float = 0       # 기술 + 가격 총점 (기술점수 가정 시)
+    formula_used: str = ""       # 적용 공식
+    estimated_min_bid: int = 0   # 추정 최저입찰가
+    is_disqualified: bool = False
+
+
 class Scenario(BaseModel):
     name: str  # conservative | balanced | aggressive
     label: str  # 보수적 | 균형 | 공격적
@@ -98,6 +111,7 @@ class Scenario(BaseModel):
     win_probability: float
     expected_payoff: int
     risk_level: str  # low | medium | high
+    price_score_detail: PriceScoreDetail | None = None
 
 
 class MarketContext(BaseModel):
@@ -150,6 +164,8 @@ class PricingSimulationResult(BaseModel):
     # 경쟁사/발주기관
     competitor_profiles: list[CompetitorPricingProfile] = Field(default_factory=list)
     client_preference: ClientPricingPreference | None = None
+    # 가격점수 시뮬레이션
+    score_simulation: list[dict] = Field(default_factory=list)  # PriceScoreCalculator 결과
     # 메타
     data_quality: str = "rule_based"  # rule_based | statistical | hybrid
     created_at: datetime = Field(default_factory=datetime.utcnow)

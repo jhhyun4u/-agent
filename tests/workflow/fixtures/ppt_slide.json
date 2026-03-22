@@ -1,0 +1,19 @@
+{
+  "toc": [
+    {"slide_num": 1, "layout": "cover", "title": "클라우드 기반 ERP 시스템 구축 제안", "eval_badge": "", "target_section": "", "score_weight": 0},
+    {"slide_num": 2, "layout": "agenda", "title": "목차", "eval_badge": "", "target_section": "", "score_weight": 0},
+    {"slide_num": 3, "layout": "key_message", "title": "발주처의 핵심 니즈를 정확히 파악했습니다", "eval_badge": "기술 이해도 30점", "target_section": "understand", "score_weight": 30},
+    {"slide_num": 4, "layout": "assertion", "title": "검증된 방법론이 성공을 보장합니다", "eval_badge": "수행 방안 40점", "target_section": "strategy", "score_weight": 40},
+    {"slide_num": 5, "layout": "closing", "title": "함께 성공하겠습니다", "eval_badge": "", "target_section": "", "score_weight": 0}
+  ],
+  "total_slides": 5,
+  "visual_briefs": [
+    {"slide_num": 1, "layout": "cover", "title": "표지", "visual_strategy": "중앙 정렬", "chart_type": "none", "key_visual": "로고 + 프로젝트명", "color_palette": ["#1a365d", "#2b6cb0"], "emphasis_area": "프로젝트명"},
+    {"slide_num": 3, "layout": "key_message", "title": "핵심 이해도", "visual_strategy": "F-Pattern", "chart_type": "table", "key_visual": "요구사항 매핑 표", "color_palette": ["#2b6cb0"], "emphasis_area": "핵심 요구사항"}
+  ],
+  "slides": [
+    {"slide_num": 1, "layout": "cover", "title": "클라우드 기반 ERP 시스템 구축 제안", "content": "TENOPA\n2026년 6월", "speaker_notes": "인사말과 함께 시작", "visual_elements": ["로고"], "data_sources": [], "key_metrics": null},
+    {"slide_num": 3, "layout": "key_message", "title": "핵심 이해도", "content": "- 현행 시스템 분석 완료\n- 3건 유사 프로젝트 경험", "speaker_notes": "발주처 니즈 강조", "visual_elements": ["표"], "data_sources": ["프로젝트 실적"], "key_metrics": {"metric": "유사 프로젝트", "value": "3건", "source": "사내 실적"}}
+  ],
+  "eval_coverage": {"기술 이해도": 2, "수행 방안": 2, "프로젝트 관리": 1}
+}

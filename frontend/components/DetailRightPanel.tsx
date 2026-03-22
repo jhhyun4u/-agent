@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, Comment_, ProposalFile, ProposalSummary } from "@/lib/api";
 import StepArtifactViewer from "@/components/StepArtifactViewer";
+import CostSheetEditor from "@/components/pricing/CostSheetEditor";
 import QaPanel from "@/components/QaPanel";
 import VersionCompareModal from "@/components/VersionCompareModal";
 
@@ -72,6 +73,7 @@ export default function DetailRightPanel({
   onRetryFromPhase,
 }: DetailRightPanelProps) {
   const [activeTab, setActiveTab] = useState<Tab>("result");
+  const [costSheetOpen, setCostSheetOpen] = useState(false);
 
   // ── 댓글 ──
   const [newComment, setNewComment] = useState("");
@@ -400,6 +402,19 @@ export default function DetailRightPanel({
                     </div>
                   </button>
                 )}
+
+                {/* 산출내역서 */}
+                <button
+                  onClick={() => setCostSheetOpen(true)}
+                  className="flex items-center gap-3 px-3 py-2.5 bg-[#111111] hover:bg-[#262626] border border-[#262626] hover:border-amber-500/40 rounded-xl text-xs text-[#ededed] transition-colors w-full text-left"
+                >
+                  <span className="w-7 h-7 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center text-sm shrink-0">$</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium">산출내역서</p>
+                    <p className="text-[10px] text-[#8c8c8c]">비용 편집 및 DOCX 다운로드</p>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#555] shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             )}
 
@@ -878,6 +893,73 @@ export default function DetailRightPanel({
           </div>
         )}
       </div>
+
+      {/* ═══ 산출내역서 슬라이드 패널 (Claude Desktop 스타일) ═══ */}
+      <div
+        className="fixed top-0 right-0 h-full flex transition-transform duration-300 ease-in-out"
+        style={{
+          zIndex: 50,
+          transform: costSheetOpen ? "translateX(0)" : "translateX(100%)",
+        }}
+      >
+        {/* 토글 핸들 — 패널 왼쪽 가장자리에 붙은 세로 탭 */}
+        <button
+          onClick={() => setCostSheetOpen((v) => !v)}
+          className="relative -ml-8 self-center w-8 h-24 flex items-center justify-center group"
+          aria-label={costSheetOpen ? "산출내역서 닫기" : "산출내역서 열기"}
+        >
+          {/* 탭 배경 */}
+          <div className="absolute inset-y-0 right-0 w-7 rounded-l-xl bg-[#1c1c1c] border border-r-0 border-[#333] shadow-lg group-hover:bg-[#262626] group-hover:border-[#444] transition-colors" />
+          {/* 화살표 아이콘 */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`relative z-10 text-[#8c8c8c] group-hover:text-[#ededed] transition-all duration-300 ${
+              costSheetOpen ? "rotate-0" : "rotate-180"
+            }`}
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+
+        {/* 패널 본체 */}
+        <div className="w-[680px] max-w-[85vw] h-full bg-[#141414] border-l border-[#262626] shadow-2xl flex flex-col">
+          {/* 헤더 */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-[#262626] shrink-0">
+            <div className="flex items-center gap-2.5">
+              <span className="w-6 h-6 rounded bg-amber-500/15 text-amber-400 flex items-center justify-center text-xs font-medium">$</span>
+              <h2 className="text-sm font-semibold text-[#ededed]">산출내역서</h2>
+            </div>
+            <button
+              onClick={() => setCostSheetOpen(false)}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8c8c8c] hover:text-[#ededed] hover:bg-[#262626] transition-colors"
+              aria-label="닫기"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          {/* 본문 (스크롤) */}
+          <div className="flex-1 overflow-y-auto p-5">
+            {costSheetOpen && <CostSheetEditor proposalId={proposalId} />}
+          </div>
+        </div>
+      </div>
+
+      {/* 배경 딤 (열렸을 때만) */}
+      {costSheetOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 transition-opacity duration-300"
+          style={{ zIndex: 49 }}
+          onClick={() => setCostSheetOpen(false)}
+        />
+      )}
     </div>
   );
 }

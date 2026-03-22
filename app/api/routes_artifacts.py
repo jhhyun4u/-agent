@@ -8,6 +8,9 @@ POST /api/proposals/{id}/ai-assist                                 — AI 인라
 GET  /api/proposals/{id}/download/docx                             — DOCX 다운로드
 GET  /api/proposals/{id}/download/hwpx                             — HWPX 다운로드
 GET  /api/proposals/{id}/download/pptx                             — PPTX 다운로드
+GET  /api/proposals/{id}/download/cost-sheet                       — 산출내역서 DOCX 다운로드 (기본)
+GET  /api/proposals/{id}/cost-sheet/draft                          — 산출내역서 초안 데이터 (편집용)
+POST /api/proposals/{id}/cost-sheet/generate                       — 편집된 데이터로 DOCX 생성
 GET  /api/proposals/{id}/compliance                                — Compliance Matrix
 POST /api/proposals/{id}/compliance/check                          — Compliance AI 체크 실행
 """
@@ -613,6 +616,184 @@ async def download_pptx(
     return Response(
         content=pptx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.get("/{proposal_id}/download/cost-sheet")
+async def download_cost_sheet(
+    proposal_id: str,
+    user=Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """산출내역서 DOCX 다운로드 — bid_plan + plan_price 데이터 기반."""
+    from app.api.routes_workflow import _get_graph
+    from app.config import settings
+    from app.services.cost_sheet_builder import build_cost_sheet
+
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+
+    snapshot = await graph.aget_state(config)
+    if not snapshot:
+        raise PropNotFoundError(proposal_id)
+
+    state = snapshot.values
+    bid_plan = state.get("bid_plan")
+    plan = state.get("plan") or {}
+    rfp = state.get("rfp_analysis")
+    proposal_name = state.get("project_name", "제안서")
+
+    bid_plan_data = bid_plan.model_dump() if hasattr(bid_plan, "model_dump") else (bid_plan or {})
+    plan_price_data = plan.get("bid_price", {}) if isinstance(plan, dict) else {}
+
+    # RFP 정보
+    client = ""
+    if rfp:
+        client = rfp.client if hasattr(rfp, "client") else rfp.get("client", "") if isinstance(rfp, dict) else ""
+
+    cost_standard = bid_plan_data.get("cost_breakdown", {}).get("cost_standard", "KOSA")
+    if not cost_standard:
+        cost_standard = "KOSA"
+
+    buf = build_cost_sheet(
+        project_name=proposal_name,
+        client=client,
+        proposer_name=settings.proposer_name or "TENOPA",
+        bid_plan_data=bid_plan_data,
+        plan_price_data=plan_price_data,
+        cost_standard=cost_standard,
+    )
+
+    filename = f"{proposal_name}_산출내역서.docx"
+    return Response(
+        content=buf.read(),
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.get("/{proposal_id}/cost-sheet/draft")
+async def get_cost_sheet_draft(
+    proposal_id: str,
+    user=Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """산출내역서 초안 데이터 — 프론트엔드 편집용 JSON 반환."""
+    from app.api.routes_workflow import _get_graph
+    from app.config import settings
+
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+    snapshot = await graph.aget_state(config)
+    if not snapshot:
+        raise PropNotFoundError(proposal_id)
+
+    state = snapshot.values
+    bid_plan = state.get("bid_plan")
+    plan = state.get("plan") or {}
+    rfp = state.get("rfp_analysis")
+
+    bid_plan_data = bid_plan.model_dump() if hasattr(bid_plan, "model_dump") else (bid_plan or {})
+    plan_price = plan.get("bid_price", {}) if isinstance(plan, dict) else {}
+
+    cost_breakdown = bid_plan_data.get("cost_breakdown", {})
+    labor_cost = plan_price.get("labor_cost", {})
+    labor_breakdown = labor_cost.get("breakdown", [])
+    direct_expenses = plan_price.get("direct_expenses", {})
+    overhead = plan_price.get("overhead", {})
+    profit = plan_price.get("profit", {})
+
+    client = ""
+    if rfp:
+        client = rfp.client if hasattr(rfp, "client") else rfp.get("client", "") if isinstance(rfp, dict) else ""
+
+    cost_standard = cost_breakdown.get("cost_standard", plan_price.get("cost_standard", "KOSA")) or "KOSA"
+
+    return {
+        "project_name": state.get("project_name", ""),
+        "client": client,
+        "proposer_name": settings.proposer_name or "TENOPA",
+        "cost_standard": cost_standard,
+        "labor_breakdown": labor_breakdown,
+        "labor_total": labor_cost.get("total", cost_breakdown.get("direct_labor", 0)),
+        "expense_items": direct_expenses.get("items", []),
+        "expense_total": direct_expenses.get("total", 0),
+        "overhead_rate": overhead.get("rate", 1.10) if isinstance(overhead, dict) else 1.10,
+        "overhead_total": overhead.get("total", 0) if isinstance(overhead, dict) else 0,
+        "profit_rate": profit.get("rate", 0.22) if isinstance(profit, dict) else 0.22,
+        "profit_total": profit.get("total", 0) if isinstance(profit, dict) else 0,
+        "total_cost": plan_price.get("total_cost", bid_plan_data.get("recommended_bid", 0)),
+        "budget_narrative": plan_price.get("budget_narrative", []),
+    }
+
+
+class CostSheetGenerateRequest(BaseModel):
+    """산출내역서 편집 후 DOCX 생성 요청."""
+    project_name: str = ""
+    client: str = ""
+    proposer_name: str = ""
+    cost_standard: str = "KOSA"
+    labor_breakdown: list[dict] = []
+    expense_items: list[dict] = []
+    overhead_rate: float = 1.10
+    profit_rate: float = 0.22
+    budget_narrative: list[dict] = []
+
+
+@router.post("/{proposal_id}/cost-sheet/generate")
+async def generate_cost_sheet(
+    proposal_id: str,
+    body: CostSheetGenerateRequest,
+    user=Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """편집된 산출내역서 데이터로 DOCX 생성·다운로드."""
+    from app.services.cost_sheet_builder import build_cost_sheet
+
+    # 편집된 데이터에서 합계 재계산
+    labor_total = sum(
+        item.get("subtotal", item.get("amount", 0)) for item in body.labor_breakdown
+    )
+    expense_total = sum(item.get("amount", 0) for item in body.expense_items)
+
+    overhead_rate = body.overhead_rate if body.overhead_rate < 2 else body.overhead_rate - 1
+    overhead_total = int(labor_total * overhead_rate)
+    profit_total = int((labor_total + overhead_total) * body.profit_rate)
+
+    subtotal = labor_total + expense_total + overhead_total + profit_total
+    vat = int(subtotal * 0.10)
+    total_cost = subtotal + vat
+
+    plan_price_data = {
+        "cost_standard": body.cost_standard,
+        "labor_cost": {
+            "breakdown": body.labor_breakdown,
+            "total": labor_total,
+        },
+        "direct_expenses": {
+            "items": body.expense_items,
+            "total": expense_total,
+        },
+        "overhead": {"rate": body.overhead_rate, "total": overhead_total},
+        "profit": {"rate": body.profit_rate, "total": profit_total},
+        "total_cost": total_cost,
+        "budget_narrative": body.budget_narrative,
+    }
+
+    buf = build_cost_sheet(
+        project_name=body.project_name,
+        client=body.client,
+        proposer_name=body.proposer_name,
+        bid_plan_data={},
+        plan_price_data=plan_price_data,
+        cost_standard=body.cost_standard,
+    )
+
+    filename = f"{body.project_name or '제안서'}_산출내역서.docx"
+    return Response(
+        content=buf.read(),
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 

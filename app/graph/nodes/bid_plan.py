@@ -75,6 +75,13 @@ async def bid_plan(state: ProposalState) -> dict:
 
         if budget_val and budget_val > 0:
             engine = PricingEngine()
+            # RFP에서 추출한 가격점수 산식 전달
+            price_scoring_raw = None
+            if rfp and hasattr(rfp, "price_scoring") and rfp.price_scoring:
+                price_scoring_raw = rfp.price_scoring.model_dump()
+            elif isinstance(rfp_dict.get("price_scoring"), dict):
+                price_scoring_raw = rfp_dict["price_scoring"]
+
             sim = await engine.simulate(PricingSimulationRequest(
                 budget=budget_val,
                 domain=domain,
@@ -85,6 +92,7 @@ async def bid_plan(state: ProposalState) -> dict:
                 personnel=[],  # 팀 구성 전이므로 인력 없음
                 client_name=rfp_dict.get("client"),
                 proposal_id=state.get("project_id"),
+                price_scoring_formula=price_scoring_raw,
             ))
 
             result.recommended_bid = sim.recommended_bid

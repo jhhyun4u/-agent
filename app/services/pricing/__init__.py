@@ -7,9 +7,11 @@ from app.services.pricing.models import (
     QuickEstimateRequest,
     QuickEstimateResult,
 )
+from app.services.pricing.price_score import PriceScoreCalculator
 
 __all__ = [
     "PricingEngine",
+    "PriceScoreCalculator",
     "PricingSimulationRequest",
     "PricingSimulationResult",
     "QuickEstimateRequest",

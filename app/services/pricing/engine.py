@@ -15,12 +15,14 @@ from app.services.pricing.cost_standard_selector import CostStandardSelector
 from app.services.pricing.models import (
     BidRange,
     MarketContext,
+    PriceScoreDetail,
     PricingSimulationRequest,
     PricingSimulationResult,
     QuickEstimateRequest,
     QuickEstimateResult,
     Scenario,
 )
+from app.services.pricing.price_score import PriceScoreCalculator
 from app.services.pricing.sensitivity import SensitivityAnalyzer
 from app.services.pricing.win_probability import WinProbabilityModel
 
@@ -37,6 +39,7 @@ class PricingEngine:
         self._sensitivity = SensitivityAnalyzer()
         self._competitor = CompetitorPricingAnalyzer()
         self._client_pref = ClientPreferenceAnalyzer()
+        self._price_scorer = PriceScoreCalculator()
 
     async def simulate(self, req: PricingSimulationRequest) -> PricingSimulationResult:
         """풀 시뮬레이션 수행."""
@@ -136,7 +139,43 @@ class PricingEngine:
         # 9. 시장 컨텍스트
         result.market_context = await self._get_market_context(req.domain)
 
-        # 10. 경쟁사/발주기관 분석
+        # 10. 가격점수 시뮬레이션
+        price_weight = req.tech_price_ratio.get("price", 20)
+        tech_weight = req.tech_price_ratio.get("tech", 80)
+        assumed_tech = req.assumed_tech_score or (tech_weight * 0.85)  # 기본: 배점의 85%
+
+        # 시나리오별 가격점수 부착
+        for scenario in result.scenarios:
+            ps = self._price_scorer.calculate(
+                bid_price=scenario.bid_price,
+                budget=req.budget,
+                evaluation_method=req.evaluation_method,
+                price_weight=price_weight,
+                price_scoring_formula=req.price_scoring_formula,
+                competitor_count=req.competitor_count,
+            )
+            scenario.price_score_detail = PriceScoreDetail(
+                price_score=ps.price_score,
+                price_weight=ps.price_weight,
+                score_ratio=ps.score_ratio,
+                total_score=round(assumed_tech + ps.price_score, 2),
+                formula_used=ps.formula_used,
+                estimated_min_bid=ps.estimated_min_bid,
+                is_disqualified=ps.is_disqualified,
+            )
+
+        # 가격점수 시뮬레이션 테이블 (입찰가별)
+        result.score_simulation = self._price_scorer.simulate_score_table(
+            budget=req.budget,
+            evaluation_method=req.evaluation_method,
+            price_weight=price_weight,
+            tech_score=assumed_tech,
+            tech_weight=tech_weight,
+            price_scoring_formula=req.price_scoring_formula,
+            competitor_count=req.competitor_count,
+        )
+
+        # 11. 경쟁사/발주기관 분석
         if req.proposal_id:
             try:
                 from app.utils.supabase_client import get_async_client
