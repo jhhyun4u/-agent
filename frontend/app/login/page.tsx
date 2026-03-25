@@ -75,7 +75,7 @@ function LoginContent() {
         </div>
         <div>
           <blockquote className="text-[#ededed] text-xl font-medium leading-relaxed mb-4">
-            &ldquo;이기는 제안서,<br />동료와 함께 만듭니다.&rdquo;
+            &ldquo;이기는 제안서,<br />AI Coworker와 함께 만듭니다.&rdquo;
           </blockquote>
           <p className="text-[#8c8c8c] text-sm">프로젝트 수주 성공률을 높이는 AI Coworker</p>
         </div>

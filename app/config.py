@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     enable_hitl: bool = True
     hitl_gates: list[str] = ["strategy", "personnel", "final"]
 
+    # 개발 모드 (인증 바이패스)
+    dev_mode: bool = False
+
     # 세션 (AUTH-04)
     session_timeout_minutes: int = 30
 
@@ -54,7 +57,7 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
 
     # CORS 허용 오리진
-    cors_origins: list[str] = Field(default=["http://localhost:3000"])
+    cors_origins: list[str] = Field(default=["http://localhost:3000", "http://127.0.0.1:3000"])
 
     # 나라장터 API 키
     g2b_api_key: str = ""

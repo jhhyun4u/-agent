@@ -20,8 +20,8 @@ test.describe("Smoke Tests — 주요 페이지 렌더링", () => {
   });
 
   test("공고 목록 페이지 로드", async ({ page }) => {
-    await page.goto("/bids");
-    await expect(page).toHaveURL(/bids/);
+    await page.goto("/monitoring");
+    await expect(page).toHaveURL(/monitoring/);
   });
 
   test("분석 페이지 로드", async ({ page }) => {

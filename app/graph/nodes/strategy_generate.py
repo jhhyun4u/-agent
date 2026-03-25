@@ -59,6 +59,28 @@ async def strategy_generate(state: ProposalState) -> dict:
         include_competitor_history=True,
     )
 
+    # 과거 전략 레코드 조회 (C-2)
+    past_strategy_text = ""
+    try:
+        from app.utils.supabase_client import get_async_client as _get_db
+        db = await _get_db()
+        past = await (
+            db.table("content_library")
+            .select("title, body, tags")
+            .eq("type", "strategy_record")
+            .ilike("title", f"%{rfp_dict.get('client', '')}%")
+            .order("created_at", desc=True)
+            .limit(2)
+            .execute()
+        )
+        if past.data:
+            parts = []
+            for p in past.data:
+                parts.append(f"- {p['title']}\n  {(p.get('body') or '')[:300]}")
+            past_strategy_text = "\n\n## 과거 전략 레코드 (이 발주기관)\n" + "\n".join(parts)
+    except Exception:
+        pass
+
     # 리서치 브리프 + credibility 필터링
     research_text = extract_credible_research(
         state.get("research_brief"), max_evidence=20
@@ -125,6 +147,10 @@ async def strategy_generate(state: ProposalState) -> dict:
         strategy_research_framework=STRATEGY_RESEARCH_FRAMEWORK,
     )
 
+    # 과거 전략 참조 추가 (C-2)
+    if past_strategy_text:
+        prompt += past_strategy_text
+
     # 가격전략 시장 데이터 추가
     if pricing_strategy_context:
         prompt += f"\n\n{pricing_strategy_context}\n위 시장 데이터를 price_strategy 설정 시 참고하세요."
@@ -176,6 +202,19 @@ async def strategy_generate(state: ProposalState) -> dict:
         competitor_analysis=result.get("competitor_analysis", {}),
         risks=[],
     )
+
+    # KB 자동 축적 (A-3: 전략 결과)
+    try:
+        from app.services.kb_updater import save_strategy_to_kb
+        await save_strategy_to_kb(
+            org_id=state.get("org_id", ""),
+            proposal_id=state.get("project_id", ""),
+            client_name=rfp_dict.get("client", ""),
+            positioning=positioning,
+            strategy_result=result,
+        )
+    except Exception as e:
+        logger.debug(f"전략 KB 축적 실패 (무시): {e}")
 
     return {
         "strategy": strategy,

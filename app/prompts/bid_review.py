@@ -30,7 +30,8 @@ PREPROCESSOR_SYSTEM = """# Role
   "summary_metadata": {
     "organization": "발주 기관명",
     "budget_detail": "정확한 예산 규모(부가가치세 포함 여부)",
-    "period": "전체 수행 기간"
+    "period": "전체 수행 기간",
+    "purpose": "사업 목적/배경 1~2문장 요약"
   },
   "core_tasks": [
     "과업 1: 핵심 내용 요약 (명사형)",

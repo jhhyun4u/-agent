@@ -167,6 +167,7 @@ class BidSummary(BaseModel):
     organization: str = ""
     budget_detail: str = ""
     period: str = ""
+    purpose: str = ""
     core_tasks: list[str] = []
     required_license: str = ""
     experience_needed: str = ""

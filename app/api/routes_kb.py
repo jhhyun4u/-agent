@@ -107,6 +107,26 @@ async def list_content(
     return {"items": result.data or [], "total": len(result.data or [])}
 
 
+@router.get("/content/duplicates")
+async def kb_content_duplicates(
+    threshold: float = Query(0.9, ge=0.5, le=1.0),
+    limit: int = Query(20, ge=1, le=100),
+    user=Depends(get_current_user),
+):
+    """코사인 유사도 기준 중복 콘텐츠 쌍 검출 (D-3)."""
+    client = await get_async_client()
+    try:
+        result = await client.rpc("find_content_duplicates", {
+            "match_org_id": user["org_id"],
+            "threshold": threshold,
+            "match_limit": limit,
+        }).execute()
+        return result.data or []
+    except Exception as e:
+        logger.warning(f"중복 탐지 RPC 실패: {e}")
+        return []
+
+
 @router.get("/content/{content_id}")
 async def get_content(content_id: str, user=Depends(get_current_user)):
     """콘텐츠 상세."""
@@ -733,3 +753,80 @@ async def export_kb(
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=kb_{part}.csv"},
     )
+
+
+# ════════════════════════════════════════
+# KB 건강도 · 재인덱싱 · 중복 탐지 (Phase D)
+# ════════════════════════════════════════
+
+
+@router.get("/health")
+async def kb_health(user=Depends(get_current_user)):
+    """KB 건강도 현황: 영역별 건수, 임베딩 커버리지 (D-1)."""
+    client = await get_async_client()
+    org_id = user["org_id"]
+
+    area_tables = {
+        "content": "content_library",
+        "client": "client_intelligence",
+        "competitor": "competitors",
+        "lesson": "lessons_learned",
+        "capability": "capabilities",
+        "qa": "presentation_qa",
+    }
+
+    result = {}
+    for area, table in area_tables.items():
+        try:
+            total_res = await client.table(table).select("id", count="exact").eq("org_id", org_id).execute()
+            total = total_res.count or 0
+
+            # embedding IS NOT NULL 건수 (RPC 대신 not_.is_ 체이닝)
+            embed_res = await (
+                client.table(table)
+                .select("id", count="exact")
+                .eq("org_id", org_id)
+                .not_.is_("embedding", "null")
+                .execute()
+            )
+            with_embed = embed_res.count or 0
+
+            coverage = round(with_embed / total * 100, 1) if total > 0 else 0.0
+            entry: dict = {"total": total, "with_embedding": with_embed, "coverage": coverage}
+
+            # content만 평균 품질 점수
+            if area == "content" and total > 0:
+                avg_res = await (
+                    client.table(table)
+                    .select("quality_score")
+                    .eq("org_id", org_id)
+                    .not_.is_("quality_score", "null")
+                    .execute()
+                )
+                scores = [r["quality_score"] for r in (avg_res.data or []) if r.get("quality_score")]
+                entry["avg_quality"] = round(sum(scores) / len(scores), 1) if scores else 0.0
+
+            result[area] = entry
+        except Exception as e:
+            logger.warning(f"KB health 조회 실패 ({area}): {e}")
+            result[area] = {"total": 0, "with_embedding": 0, "coverage": 0.0}
+
+    return result
+
+
+class ReindexRequest(BaseModel):
+    areas: list[str] = ["content", "capability"]
+
+
+@router.post("/reindex")
+async def kb_reindex(body: ReindexRequest, user=Depends(require_role("admin"))):
+    """임베딩 없는 레코드에 배치 임베딩 생성 (D-2)."""
+    from app.services.embedding_service import batch_reindex
+    result = await batch_reindex(
+        areas=body.areas,
+        org_id=user["org_id"],
+        batch_size=50,
+    )
+    return result
+
+

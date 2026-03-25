@@ -304,6 +304,46 @@ async def query_kb_context(
     return result
 
 
+# ── 유사 사례 검색 (C-1) ──
+
+
+async def find_similar_cases(
+    project_name: str,
+    client_name: str,
+    org_id: str,
+    top_k: int = 3,
+) -> str:
+    """RFP 사업명 기반 유사 과거 사례 시맨틱 검색 → 텍스트 반환."""
+    try:
+        from app.services.knowledge_search import unified_search
+        results = await unified_search(
+            query=f"{project_name} {client_name}",
+            org_id=org_id,
+            filters={"areas": ["lesson"]},
+            top_k=top_k,
+        )
+        lessons = results.get("lesson", [])
+        if not lessons:
+            return ""
+
+        parts = []
+        for ls in lessons:
+            r = "수주" if ls.get("result") == "won" else "패찰"
+            title = ls.get("title", ls.get("strategy_summary", ""))
+            if title and len(title) > 60:
+                title = title[:60] + "..."
+            parts.append(
+                f"- [{r}] {title}"
+                f" (포지셔닝: {ls.get('positioning', '-')})"
+                f" — 강점: {(ls.get('effective_points') or '-')[:80]},"
+                f" 약점: {(ls.get('weak_points') or '-')[:80]}"
+            )
+        return f"\n\n## 유사 과거 사례 (시맨틱 매칭 top {top_k})\n" + "\n".join(parts)
+    except Exception as e:
+        logger.debug(f"유사 사례 검색 실패: {e}")
+        return ""
+
+
 # ── 전략 필드 추출 ──
 
 

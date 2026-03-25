@@ -79,6 +79,74 @@ def embedding_text_for_competitor(company_name: str, primary_area: str = "", str
     return " | ".join(filter(None, [company_name, primary_area, strengths[:2000]]))
 
 
+async def batch_reindex(
+    areas: list[str],
+    org_id: str,
+    batch_size: int = 50,
+) -> dict:
+    """임베딩 없는 레코드에 대해 배치 임베딩 생성 (D-2)."""
+    from app.utils.supabase_client import get_async_client
+    client = await get_async_client()
+
+    area_config = {
+        "content": {
+            "table": "content_library",
+            "select": "id, title, body, tags",
+            "text_fn": lambda r: embedding_text_for_content(r.get("title", ""), r.get("body", ""), r.get("tags")),
+        },
+        "capability": {
+            "table": "capabilities",
+            "select": "id, type, title, detail",
+            "text_fn": lambda r: f"{r.get('type', '')} | {r.get('title', '')} | {r.get('detail', '')}",
+        },
+        "client": {
+            "table": "client_intelligence",
+            "select": "id, client_name, client_type, notes",
+            "text_fn": lambda r: embedding_text_for_client(r.get("client_name", ""), r.get("client_type", ""), r.get("notes", "")),
+        },
+        "competitor": {
+            "table": "competitors",
+            "select": "id, company_name, primary_area, strengths",
+            "text_fn": lambda r: embedding_text_for_competitor(r.get("company_name", ""), r.get("primary_area", ""), r.get("strengths", "")),
+        },
+        "lesson": {
+            "table": "lessons_learned",
+            "select": "id, strategy_summary, effective_points, weak_points, industry",
+            "text_fn": lambda r: embedding_text_for_lesson(r.get("strategy_summary", ""), r.get("effective_points", ""), r.get("weak_points", ""), r.get("industry", "")),
+        },
+    }
+
+    total = 0
+    processed = 0
+    failed = 0
+
+    for area in areas:
+        cfg = area_config.get(area)
+        if not cfg:
+            continue
+
+        # 임베딩 없는 레코드 조회
+        query = client.table(cfg["table"]).select(cfg["select"]).eq("org_id", org_id).is_("embedding", "null").limit(batch_size)
+        result = await query.execute()
+        rows = result.data or []
+        total += len(rows)
+
+        if not rows:
+            continue
+
+        texts = [cfg["text_fn"](r) for r in rows]
+        embeddings = await generate_embeddings_batch(texts)
+
+        for row, emb in zip(rows, embeddings):
+            try:
+                await client.table(cfg["table"]).update({"embedding": emb}).eq("id", row["id"]).execute()
+                processed += 1
+            except Exception:
+                failed += 1
+
+    return {"total": total, "processed": processed, "failed": failed}
+
+
 def embedding_text_for_lesson(
     strategy_summary: str = "",
     effective_points: str = "",

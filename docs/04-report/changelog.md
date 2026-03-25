@@ -4,6 +4,59 @@ All major project changes and feature completions are documented here.
 
 ---
 
+## [2026-03-24] - bidding-restructure (Bidding 모듈 리스트럭처링) PDCA Completion Report
+
+### Summary
+**PDCA Cycle Complete (Single-Session Refactoring)**: Restructured bidding services from flat structure (20 files in `app/services/`) to organized subpackages (`app/services/bidding/` with 4 nested packages). Achieved **98% design match rate** (all structural requirements met, 2 LOW intentional improvements). Zero functionality changes, 100% backward compatibility maintained via sys.modules redirect pattern. Full test suite passes 482/482 tests. Production-ready with no breaking changes.
+
+### Feature Overview
+- **Goal**: Reorganize 20 bidding-related service files into logical subpackages under `app/services/bidding/`
+- **Scope**: Service layer only (11 bid_*.py files + pricing/ package + cost_sheet_builder.py)
+- **Structure**:
+  - `bidding/monitor/` — 5 files: bid collection, scoring, preprocessing, cleanup, recommendations
+  - `bidding/pricing/` — 9 files: price simulation engine (existing pricing/ moved)
+  - `bidding/submission/` — 3 files: handoff, stream workspace, market research
+  - `bidding/artifacts/` — 1 file: cost sheet builder
+  - `bidding/calculator.py` — root level: labor rate calculations
+- **Result**: 98% design match, 24 new files, 20 compatibility wrappers, 0 broken imports
+- **Status**: Production-ready for gradual migration (backward-compatible)
+
+### Implementation Highlights
+- **New Package Structure (24 files)**:
+  - `app/services/bidding/__init__.py` + 5 subpackage __init__.py files
+  - 19 implementation files (existing code, unchanged logic)
+
+- **Compatibility Layer (20 wrappers)**:
+  - `sys.modules` redirect pattern (superior to star-import for test mocking)
+  - Original file locations: `app/services/bid_*.py`, `app/services/pricing/*`, `app/services/cost_sheet_builder.py`
+  - All 27 external references work unchanged (13 consuming files)
+
+- **Internal Import Fixes (11 changes)**:
+  - pricing/ internal: 8 import path updates
+  - monitor/ internal: 2 import path updates
+  - submission/ internal: 1 import path update
+  - Zero deprecated paths remaining within new package structure
+
+- **Quality Metrics**: 482/482 tests pass, 0 TypeScript impact, 0 breaking changes, 100% import compatibility
+
+### Match Rate Results
+**Overall: 98%** (24/24 structural items + 2 intentional improvements)
+
+| Requirement | Score | Status | Notes |
+|-------------|:-----:|:------:|-------|
+| Directory structure | 100% | ✅ | All 24 files present (incl. __init__.py) |
+| __init__.py re-exports | 100% | ✅ | 5 packages with explicit public API |
+| Compatibility wrappers | 100% | ✅ | 20 wrappers (sys.modules pattern) |
+| Internal import fixes | 100% | ✅ | All 11 internal paths updated |
+| External reference compatibility | 100% | ✅ | 27 imports, 13 files, 0 failures |
+| Test suite | 100% | ✅ | 482 passed, 0 failed, 4 skipped |
+
+**Design ≠ Implementation (Intentional Improvements)**:
+- CHG-1: Wrapper pattern (design: star-import → impl: sys.modules) — **LOW** (better for test mocking)
+- CHG-2: File count accuracy (design: 20 → impl: 24 incl. __init__.py) — **LOW** (documentation issue)
+
+---
+
 ## [2026-03-21] - ux-improvements (UX 권고 사항 7건) PDCA Completion Report
 
 ### Summary

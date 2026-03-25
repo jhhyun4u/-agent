@@ -57,6 +57,8 @@ interface DetailCenterPanelProps {
   selectedStep: number | null;
   onStepClick: (idx: number | null) => void;
   onStateChange: () => void;
+  onStartWorkflow: () => void;
+  isStarting: boolean;
   isProcessing: boolean;
   isFailed: boolean;
   isPaused: boolean;
@@ -79,6 +81,8 @@ export default function DetailCenterPanel({
   selectedStep,
   onStepClick,
   onStateChange,
+  onStartWorkflow,
+  isStarting,
   isProcessing,
   isFailed,
   isPaused,
@@ -106,7 +110,7 @@ export default function DetailCenterPanel({
             워크플로를 시작하면 6단계를 자동으로 진행합니다.<br />
             각 단계 완료 후 <span className="text-amber-400">사용자 검토</span> 기회가 주어집니다.
           </p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 mb-5">
             {[
               { step: "1", label: "RFP 분석", hitl: "Go/No-Go 결정" },
               { step: "2", label: "전략 수립", hitl: "전략 검토" },
@@ -127,6 +131,20 @@ export default function DetailCenterPanel({
               </div>
             ))}
           </div>
+          <button
+            onClick={onStartWorkflow}
+            disabled={isStarting}
+            className="w-full bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-50 text-[#0f0f0f] font-semibold rounded-xl py-3 text-sm transition-colors"
+          >
+            {isStarting ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-[#0f0f0f]/30 border-t-[#0f0f0f] rounded-full animate-spin" />
+                워크플로 시작 중...
+              </span>
+            ) : (
+              "AI 워크플로 시작"
+            )}
+          </button>
         </div>
       )}
 
@@ -137,6 +155,15 @@ export default function DetailCenterPanel({
         currentNode={currentNode}
         selectedStep={selectedStep}
         onStepClick={(idx) => onStepClick(selectedStep === idx ? null : idx)}
+        onStartStep={() => onStartWorkflow()}
+        onGateApprove={() => {
+          // Gate 승인 버튼 클릭 → WorkflowPanel 리뷰 패널로 스크롤
+          const panel = document.getElementById("workflow-panel");
+          if (panel) {
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }}
+        isStarting={isStarting}
       />
 
       {/* 워크플로 패널: Go/No-Go + 리뷰 + 병렬 진행 */}

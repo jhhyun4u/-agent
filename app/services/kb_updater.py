@@ -213,3 +213,132 @@ async def generate_lesson_embedding(lesson_id: str, title: str, description: str
 
     except Exception as e:
         logger.warning(f"교훈 임베딩 생성 실패: {e}")
+
+
+async def save_research_to_kb(
+    org_id: str,
+    proposal_id: str,
+    research_brief: dict,
+) -> int:
+    """리서치 결과를 content_library에 축적 (A-2).
+
+    high/medium credibility 데이터만 topic 단위로 저장.
+    """
+    if not org_id or not proposal_id or not research_brief:
+        return 0
+
+    from app.services.embedding_service import embedding_text_for_content, generate_embedding
+
+    topics = research_brief.get("research_topics", [])
+    if not topics:
+        return 0
+
+    client = await get_async_client()
+    saved = 0
+
+    for topic in topics:
+        if not isinstance(topic, dict):
+            continue
+
+        topic_name = topic.get("topic", "")
+        if not topic_name:
+            continue
+
+        # high/medium credibility 데이터만 추출
+        data_points = topic.get("data_points", [])
+        credible = [
+            dp for dp in data_points
+            if isinstance(dp, dict) and dp.get("credibility") in ("high", "medium")
+        ]
+        if not credible:
+            continue
+
+        findings = topic.get("findings", [])
+        body_parts = []
+        if findings:
+            body_parts.append("주요 발견:\n" + "\n".join(f"- {f}" for f in findings))
+        body_parts.append("근거 데이터:\n" + "\n".join(
+            f"- {dp.get('content', '')} [{dp.get('source', '')}] ({dp.get('credibility', '')})"
+            for dp in credible
+        ))
+        body = "\n\n".join(body_parts)
+
+        tags = ["research", topic.get("rfp_alignment", "")]
+        embed_text = embedding_text_for_content(topic_name, body, tags)
+        embedding = await generate_embedding(embed_text)
+
+        try:
+            await client.table("content_library").insert({
+                "org_id": org_id,
+                "title": f"[리서치] {topic_name}",
+                "body": body,
+                "type": "research_data",
+                "source_project_id": proposal_id,
+                "tags": [t for t in tags if t],
+                "status": "draft",
+                "embedding": embedding,
+            }).execute()
+            saved += 1
+        except Exception as e:
+            logger.debug(f"리서치 KB 저장 실패 ({topic_name}): {e}")
+
+    logger.info(f"리서치 KB 축적: {saved}건 (proposal={proposal_id})")
+    return saved
+
+
+async def save_strategy_to_kb(
+    org_id: str,
+    proposal_id: str,
+    client_name: str,
+    positioning: str,
+    strategy_result: dict,
+) -> dict | None:
+    """전략 결과를 content_library에 축적 (A-3).
+
+    SWOT, Win Theme, Ghost Theme, key_messages 등 보존.
+    """
+    if not org_id or not proposal_id or not strategy_result:
+        return None
+
+    from app.services.embedding_service import embedding_text_for_content, generate_embedding
+
+    title = f"전략: {client_name} ({positioning})"
+
+    body_parts = []
+    if strategy_result.get("win_theme"):
+        body_parts.append(f"Win Theme: {strategy_result['win_theme']}")
+    if strategy_result.get("ghost_theme"):
+        body_parts.append(f"Ghost Theme: {strategy_result['ghost_theme']}")
+    if strategy_result.get("key_messages"):
+        body_parts.append("Key Messages:\n" + "\n".join(f"- {m}" for m in strategy_result["key_messages"]))
+    if strategy_result.get("focus_areas"):
+        body_parts.append("Focus Areas:\n" + "\n".join(f"- {a}" for a in strategy_result["focus_areas"]))
+    if strategy_result.get("competitor_analysis"):
+        body_parts.append(f"경쟁 분석: {strategy_result['competitor_analysis']}")
+
+    body = "\n\n".join(body_parts)
+    if not body:
+        return None
+
+    tags = [positioning, client_name, "strategy"]
+    embed_text = embedding_text_for_content(title, body, tags)
+    embedding = await generate_embedding(embed_text)
+
+    try:
+        client = await get_async_client()
+        result = await client.table("content_library").insert({
+            "org_id": org_id,
+            "title": title,
+            "body": body,
+            "type": "strategy_record",
+            "source_project_id": proposal_id,
+            "industry": strategy_result.get("domain", ""),
+            "tags": [t for t in tags if t],
+            "status": "draft",
+            "embedding": embedding,
+        }).execute()
+        logger.info(f"전략 KB 축적: {title} (proposal={proposal_id})")
+        return (result.data or [None])[0]
+    except Exception as e:
+        logger.warning(f"전략 KB 저장 실패: {e}")
+        return None

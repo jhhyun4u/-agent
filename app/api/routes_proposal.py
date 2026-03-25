@@ -151,37 +151,57 @@ async def create_from_rfp(
 
 
 @router.post("/from-bid", status_code=201)
-async def create_from_bid(body: ProposalFromBid, user=Depends(get_current_user)):
-    """공고 모니터링에서 제안 시작 — monitored_bids에서 RFP 추출 후 rfp_analyze 직접 진입."""
+async def create_from_bid(
+    body: ProposalFromBid,
+    background_tasks: BackgroundTasks,
+    user=Depends(get_current_user),
+):
+    """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결."""
     client = await get_async_client()
     proposal_id = str(uuid.uuid4())
 
-    # 1) monitored_bids에서 공고 정보 조회
-    bid_result = await client.table("monitored_bids").select(
-        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, attachments"
+    # 1) bid_announcements에서 공고 정보 조회 (raw_data 포함)
+    bid_result = await client.table("bid_announcements").select(
+        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data"
     ).eq("bid_no", body.bid_no).maybe_single().execute()
 
     bid = bid_result.data if bid_result.data else {}
     title = bid.get("bid_title") or f"공고 {body.bid_no}"
     rfp_text = bid.get("content_text") or ""
+    raw_data = bid.get("raw_data") or {}
 
-    # 2) 프로젝트 생성
-    row = {
+    # 2) 프로젝트 생성 (대기중 — 워크플로 시작 전)
+    row: dict = {
         "id": proposal_id,
         "title": title,
         "owner_id": user["id"],
-        "status": "initialized",
+        "status": "대기중",
         "rfp_content": rfp_text[:10000] if rfp_text else "",
+        "rfp_content_truncated": len(rfp_text) > 10000,
     }
     if user.get("team_id"):
         row["team_id"] = user["team_id"]
+    if user.get("org_id"):
+        row["org_id"] = user["org_id"]
 
     await client.table("proposals").insert(row).execute()
+
+    # 3) 공고 첨부파일 → proposal에 복사 (백그라운드)
+    if raw_data:
+        async def _link_attachments():
+            try:
+                from app.services.bid_attachment_store import copy_bid_attachments_to_proposal
+                await copy_bid_attachments_to_proposal(body.bid_no, proposal_id, raw_data)
+            except Exception as e:
+                logger.warning(f"[{proposal_id}] 첨부파일 연결 실패: {e}")
+
+        background_tasks.add_task(_link_attachments)
 
     return {
         "proposal_id": proposal_id,
         "title": title,
-        "entry_point": "direct_rfp",
+        "status": "대기중",
+        "entry_point": "from_bid",
         "bid_no": body.bid_no,
     }
 
@@ -205,8 +225,18 @@ async def list_proposals(
     C-2: RLS 적용 클라이언트로 사용자 권한 범위만 조회.
     """
     client = rls_client
+    # deadline, client_name은 DB에 없을 수 있으므로 동적 탐지
+    base_cols = "id, title, status, owner_id, team_id, current_phase, phases_completed, positioning, win_result, bid_amount, created_at, updated_at"
+    extra_cols = []
+    for col in ("deadline", "client_name"):
+        try:
+            await client.table("proposals").select(col).limit(0).execute()
+            extra_cols.append(col)
+        except Exception:
+            pass
+    select_cols = base_cols + (", " + ", ".join(extra_cols) if extra_cols else "")
     query = client.table("proposals").select(
-        "id, title, status, owner_id, team_id, current_phase, phases_completed, positioning, win_result, bid_amount, deadline, client_name, created_at, updated_at"
+        select_cols
     ).order("created_at", desc=True).range(skip, skip + limit - 1)
 
     if scope == "my" and user:
@@ -228,7 +258,16 @@ async def list_proposals(
         if user and user.get("team_id"):
             query = query.eq("team_id", user["team_id"])
 
-    if status:
+    # 상태 필터: 가상 그룹 → 실제 DB status 매핑
+    _STATUS_GROUPS = {
+        "processing": ["initialized", "processing", "searching", "analyzing", "strategizing"],
+        "awaiting_result": ["submitted", "presented"],
+        "completed": ["completed", "won", "lost", "retrospect"],
+        "on_hold": ["on_hold", "abandoned"],
+    }
+    if status and status in _STATUS_GROUPS:
+        query = query.in_("status", _STATUS_GROUPS[status])
+    elif status:
         query = query.eq("status", status)
 
     if search:
@@ -245,7 +284,9 @@ async def list_proposals(
     else:
         if user and user.get("team_id"):
             count_query = count_query.eq("team_id", user["team_id"])
-    if status:
+    if status and status in _STATUS_GROUPS:
+        count_query = count_query.in_("status", _STATUS_GROUPS[status])
+    elif status:
         count_query = count_query.eq("status", status)
     if search:
         count_query = count_query.ilike("title", f"%{search}%")

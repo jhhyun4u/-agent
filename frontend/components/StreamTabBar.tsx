@@ -12,7 +12,7 @@ interface StreamInfo {
   progress_pct: number;
 }
 
-export type StreamTab = "proposal" | "bidding" | "documents" | "overview";
+export type StreamTab = "proposal" | "bidding" | "documents" | "overview" | "archive";
 
 interface Props {
   activeTab: StreamTab;
@@ -25,6 +25,7 @@ const TABS: { key: StreamTab; label: string; stream?: string }[] = [
   { key: "bidding", label: "비딩관리", stream: "bidding" },
   { key: "documents", label: "제출서류", stream: "documents" },
   { key: "overview", label: "통합현황" },
+  { key: "archive", label: "산출물 아카이브" },
 ];
 
 const STATUS_BADGE: Record<string, { color: string; label: string }> = {

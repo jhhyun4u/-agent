@@ -21,7 +21,7 @@ GET  /api/proposals/{id}/time-travel/{checkpoint_id} — 특정 체크포인트 
 import csv
 import io
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
@@ -143,7 +143,7 @@ async def list_audit_logs(
 ):
     """감사 로그 조회 (관리자·경영진)."""
     client = await get_async_client()
-    since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
 
     query = client.table("audit_logs").select("*").gte("created_at", since).order(
         "created_at", desc=True
@@ -167,7 +167,7 @@ async def export_audit_logs(
 ):
     """감사 로그 CSV 내보내기."""
     client = await get_async_client()
-    since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
 
     result = await client.table("audit_logs").select("*").gte("created_at", since).order(
         "created_at", desc=True
@@ -434,7 +434,7 @@ async def update_capability_inline(
     client = await get_async_client()
     await client.table("capabilities").update({
         body.field: body.value,
-        "updated_at": datetime.utcnow().isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
     }).eq("id", capability_id).execute()
 
     await log_action(user["id"], "update_inline", "capability", capability_id, {

@@ -307,6 +307,14 @@ function ReviewPanel({
         rework_targets: reworkTargets.length > 0 ? reworkTargets : undefined,
       };
       await api.workflow.resume(proposalId, data);
+
+      // 프롬프트 수정 추적: 승인=accept, 재작업=reject (비동기, 실패 무시)
+      api.prompts.recordEditAction({
+        proposal_id: proposalId,
+        section_id: reviewNode ?? "unknown",
+        action: approved ? "accept" : "reject",
+      }).catch(() => {});
+
       onStateChange?.();
     } catch (e) {
       alert(e instanceof Error ? e.message : "요청 실패");

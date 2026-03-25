@@ -14,6 +14,7 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.config import settings
 from app.exceptions import (
     AuthInsufficientRoleError,
     AuthProjectAccessError,
@@ -26,6 +27,37 @@ logger = logging.getLogger(__name__)
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
+# 개발 모드 mock 사용자 (seed_data.py의 이팀장)
+_DEV_USER_ID = "00000000-0000-0000-0003-000000000003"
+
+
+async def _get_dev_user() -> dict:
+    """개발 모드: DB에서 테스트 사용자 조회, 실패 시 하드코딩 반환."""
+    try:
+        client = await get_async_client()
+        res = (
+            await client.table("users")
+            .select("*")
+            .eq("id", _DEV_USER_ID)
+            .maybe_single()
+            .execute()
+        )
+        if res and res.data:
+            return res.data
+    except Exception:
+        pass
+    # DB 조회 실패 시 최소 프로필
+    return {
+        "id": _DEV_USER_ID,
+        "email": "lead@tenopa.co.kr",
+        "name": "이팀장",
+        "role": "lead",
+        "org_id": None,
+        "team_id": None,
+        "division_id": None,
+        "status": "active",
+    }
+
 
 async def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(_bearer_scheme),
@@ -34,6 +66,10 @@ async def get_current_user(
 
     반환 dict 키: id, email, name, role, team_id, division_id, org_id, ...
     """
+    # 개발 모드: 토큰 없거나 빈 토큰이면 mock 사용자 반환
+    if settings.dev_mode and (not credentials or not credentials.credentials):
+        return await _get_dev_user()
+
     if not credentials:
         raise AuthTokenExpiredError()
 
@@ -43,9 +79,13 @@ async def get_current_user(
         response = await client.auth.get_user(token)
         user_auth = response.user
     except Exception:
+        if settings.dev_mode:
+            return await _get_dev_user()
         raise AuthTokenExpiredError()
 
     if not user_auth:
+        if settings.dev_mode:
+            return await _get_dev_user()
         raise AuthTokenExpiredError()
 
     # DB에서 역할·소속 조회
@@ -98,9 +138,18 @@ async def get_rls_client(
             # rls_client는 해당 사용자의 JWT로 RLS 필터링된 결과 반환
             result = await rls_client.table("proposals").select("*").execute()
     """
+    # 개발 모드: 토큰 없으면 service_role 클라이언트로 폴백 (RLS 우회)
+    if settings.dev_mode and (not credentials or not credentials.credentials):
+        return await get_async_client()
+
     if not credentials:
         raise AuthTokenExpiredError()
-    return await get_user_client(credentials.credentials)
+    try:
+        return await get_user_client(credentials.credentials)
+    except Exception:
+        if settings.dev_mode:
+            return await get_async_client()
+        raise
 
 
 def require_role(*roles: str):

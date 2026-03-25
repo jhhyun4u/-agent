@@ -215,6 +215,12 @@ class ProposalSessionManager:
         try:
             from app.utils.supabase_client import get_async_client
             client = await get_async_client()
+            # deadline 컬럼 존재 확인
+            try:
+                await client.table("proposals").select("deadline").limit(0).execute()
+            except Exception:
+                logger.info("mark_expired_proposals: deadline 컬럼 미존재 — 스킵")
+                return 0
             result = await (
                 client.table("proposals")
                 .update({"status": "expired", "updated_at": datetime.now(timezone.utc).isoformat()})

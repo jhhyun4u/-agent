@@ -184,6 +184,23 @@ async def plan_story(state: ProposalState) -> dict:
     # research_brief에서 고신뢰 근거 추출 (공통 헬퍼)
     evidence_text = extract_evidence_candidates(state.get("research_brief", {}))
 
+    # KB 유사 콘텐츠 보강 (C-4)
+    try:
+        from app.services.content_library import suggest_content_for_section
+        rfp_dict_for_kb = rfp_to_dict(rfp) if rfp else {}
+        suggestions = await suggest_content_for_section(
+            section_topic=rfp_dict_for_kb.get("project_name", ""),
+            org_id=state.get("org_id", ""),
+            top_k=5,
+        )
+        if suggestions:
+            kb_evidence = "\n\n과거 수주 제안서 참고 콘텐츠:\n"
+            for s in suggestions[:5]:
+                kb_evidence += f"- {s.get('title', '')}: {(s.get('body_excerpt') or '')[:200]}\n"
+            evidence_text += kb_evidence
+    except Exception:
+        pass
+
     # 평가항목 ID 목록 (커버리지 검증용)
     eval_item_ids = [item.get("item", "") for item in eval_items if isinstance(item, dict)]
     eval_item_ids_text = ", ".join(eval_item_ids) if eval_item_ids else "(평가항목 미추출)"

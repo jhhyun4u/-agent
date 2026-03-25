@@ -127,6 +127,72 @@ async def calculate_quality_score(content_id: str) -> float:
     return round(score, 2)
 
 
+async def auto_register_section(
+    org_id: str,
+    proposal_id: str,
+    section_id: str,
+    title: str,
+    content: str,
+    section_type: str,
+    self_review_score: int | None = None,
+    rfp_keywords: list[str] | None = None,
+    industry: str | None = None,
+) -> dict | None:
+    """제안서 섹션 완료 시 content_library에 자동 등록 (A-1).
+
+    품질 필터: 500자 미만 또는 자가진단 70점 미만 → 스킵.
+    동일 제안서의 같은 섹션 → upsert (최신만 유지).
+    """
+    if len(content) < 500:
+        return None
+    if self_review_score is not None and self_review_score < 70:
+        return None
+    if not org_id or not proposal_id:
+        return None
+
+    tags = list((rfp_keywords or [])[:10]) + [section_type]
+    embed_text = embedding_text_for_content(title, content, tags)
+    embedding = await generate_embedding(embed_text)
+
+    client = await get_async_client()
+
+    # 동일 제안서+섹션 중복 체크 → upsert
+    existing = await (
+        client.table("content_library")
+        .select("id")
+        .eq("source_project_id", proposal_id)
+        .eq("title", title)
+        .eq("type", "section_block")
+        .limit(1)
+        .execute()
+    )
+
+    row = {
+        "org_id": org_id,
+        "title": title,
+        "body": content,
+        "type": "section_block",
+        "source_project_id": proposal_id,
+        "industry": industry,
+        "tags": tags,
+        "status": "draft",
+        "embedding": embedding,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    if existing.data:
+        result = await (
+            client.table("content_library")
+            .update(row)
+            .eq("id", existing.data[0]["id"])
+            .execute()
+        )
+    else:
+        result = await client.table("content_library").insert(row).execute()
+
+    return (result.data or [None])[0]
+
+
 async def suggest_content_for_section(
     section_topic: str,
     org_id: str,

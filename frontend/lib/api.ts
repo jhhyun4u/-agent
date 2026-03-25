@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
 async function getToken(): Promise<string> {
+  if (process.env.NODE_ENV === "development") return "";
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
   return data.session?.access_token ?? "";
@@ -38,9 +39,12 @@ async function request<T>(
   });
 
   if (res.status === 401) {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
+    if (process.env.NODE_ENV !== "development") {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    }
     throw new Error("Unauthorized");
   }
 
@@ -63,7 +67,19 @@ export type ProposalStatus =
   | "initialized"
   | "processing"
   | "running"
+  | "searching"
+  | "analyzing"
+  | "strategizing"
   | "completed"
+  | "won"
+  | "lost"
+  | "submitted"
+  | "presented"
+  | "on_hold"
+  | "abandoned"
+  | "no_go"
+  | "expired"
+  | "retrospect"
   | "failed"
   | "cancelled"
   | "paused";
@@ -189,6 +205,54 @@ export interface Section {
 
 export interface ArchiveItem extends ProposalSummary {
   notes: string | null;
+  client_name: string | null;
+  deadline: string | null;
+  storage_path_docx: string | null;
+  storage_path_pptx: string | null;
+  storage_path_hwpx: string | null;
+}
+
+// ── 프로젝트 아카이브 (중간 산출물 파일 관리) ──
+export interface ProjectArchiveFile {
+  id: string;
+  category: string;
+  doc_type: string;
+  title: string;
+  file_format: string;
+  storage_path: string | null;
+  file_size: number | null;
+  version: number;
+  source: string;
+  graph_step: string | null;
+  created_by: string | null;
+  created_at: string;
+  _source_table?: string;
+  description?: string;
+  status?: string;
+}
+
+export interface ProjectManifest {
+  proposal_id: string;
+  categories: Record<string, ProjectArchiveFile[]>;
+  total_count: number;
+  total_size: number;
+}
+
+export interface ArchiveSnapshotResult {
+  status: string;
+  archived_count: number;
+  items: { doc_type: string; title: string; version: number }[];
+}
+
+export interface ArchiveVersionEntry {
+  id: string;
+  version: number;
+  file_size: number | null;
+  source: string;
+  graph_step: string | null;
+  is_latest: boolean;
+  created_by: string | null;
+  created_at: string;
 }
 
 export interface AssetItem {
@@ -282,6 +346,9 @@ export const api = {
     updateTeam(teamId: string, data: { name?: string; teams_webhook_url?: string }) {
       return request<{ id: string; name: string }>("PATCH", `/admin/teams/${teamId}`, data);
     },
+    updateDivision(divisionId: string, data: { name?: string }) {
+      return request<{ id: string; name: string }>("PATCH", `/admin/divisions/${divisionId}`, data);
+    },
     // 사용자
     createUser(data: {
       email: string;
@@ -327,6 +394,9 @@ export const api = {
     },
     deactivateUser(userId: string) {
       return request<{ message: string }>("POST", `/admin/users/${userId}/deactivate`);
+    },
+    deleteUser(userId: string) {
+      return request<{ message: string }>("DELETE", `/admin/users/${userId}`);
     },
   },
 
@@ -630,11 +700,12 @@ export const api = {
   },
 
   archive: {
-    list(params?: { scope?: string; win_result?: string; page?: number }) {
+    list(params?: { scope?: string; win_result?: string; page?: number; q?: string }) {
       const qs = new URLSearchParams();
       if (params?.scope) qs.set("scope", params.scope);
       if (params?.win_result) qs.set("win_result", params.win_result);
       if (params?.page) qs.set("page", String(params.page));
+      if (params?.q) qs.set("q", params.q);
       return request<{
         items: ArchiveItem[];
         page: number;
@@ -642,6 +713,34 @@ export const api = {
         total: number;
         pages: number;
       }>("GET", `/archive?${qs}`);
+    },
+  },
+
+  // ── 프로젝트 아카이브 (중간 산출물 파일 관리) ──
+  projectArchive: {
+    /** 마스터 파일 일람 (전체 카테고리 통합 인덱스) */
+    manifest(proposalId: string) {
+      return request<ProjectManifest>("GET", `/proposals/${proposalId}/archive`);
+    },
+    /** 현재 state에서 모든 중간 산출물 파일화 */
+    snapshot(proposalId: string) {
+      return request<ArchiveSnapshotResult>("POST", `/proposals/${proposalId}/archive/snapshot`);
+    },
+    /** 버전 이력 조회 */
+    versions(proposalId: string, docType: string) {
+      return request<{ doc_type: string; versions: ArchiveVersionEntry[]; total: number }>(
+        "GET", `/proposals/${proposalId}/archive/${docType}/versions`
+      );
+    },
+    /** 개별 파일 다운로드 URL 생성 */
+    downloadUrl(proposalId: string, docType: string, version?: number) {
+      const v = version ? `?version=${version}` : "";
+      return `${BASE}/proposals/${proposalId}/archive/${docType}/download${v}`;
+    },
+    /** 전체 ZIP 번들 다운로드 URL */
+    bundleUrl(proposalId: string, category?: string) {
+      const c = category ? `?category=${category}` : "";
+      return `${BASE}/proposals/${proposalId}/archive/bundle${c}`;
     },
   },
 
@@ -1116,6 +1215,15 @@ export const api = {
         `/kb/search?q=${encodeURIComponent(q)}${areas ? `&areas=${areas}` : ""}&top_k=${top_k}`
       );
     },
+    health() {
+      return request<KbHealthResponse>("GET", "/kb/health");
+    },
+    reindex(areas: string[]) {
+      return request<{ total: number; processed: number; failed: number }>("POST", "/kb/reindex", { areas });
+    },
+    duplicates(threshold = 0.9) {
+      return request<KbDuplicatePair[]>("GET", `/kb/content/duplicates?threshold=${threshold}`);
+    },
   },
 
   // PSM-16: Q&A 기록 CRUD + 검색
@@ -1506,8 +1614,16 @@ export interface RiskFactor {
   level: "high" | "medium" | "low";
 }
 
+export interface RfpSection {
+  label: string;
+  value?: string;
+  items?: string[];
+}
+
 export interface BidAnalysis {
   rfp_summary: string[];
+  rfp_sections?: RfpSection[];
+  rfp_period?: string;
   fit_level: "적극 추천" | "추천" | "보통" | "낮음";
   positive: string[];
   negative: string[];
@@ -1990,6 +2106,25 @@ export interface KbLessonCreate {
   client_name?: string;
   industry?: string;
   result?: string;
+}
+
+// ── KB 건강도 타입 (Phase D) ──────────────────────────────────────────
+
+export interface KbHealthArea {
+  total: number;
+  with_embedding: number;
+  coverage: number;
+  avg_quality?: number;
+}
+
+export type KbHealthResponse = Record<string, KbHealthArea>;
+
+export interface KbDuplicatePair {
+  id_a: string;
+  title_a: string;
+  id_b: string;
+  title_b: string;
+  similarity: number;
 }
 
 // ── KB 검색 결과 타입 ─────────────────────────────────────────────────

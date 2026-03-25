@@ -2,11 +2,15 @@
 통합 KB 검색 서비스 (§20-2)
 
 시맨틱(pgvector cosine) + 키워드 하이브리드 검색.
-5개 영역(content, client, competitor, lesson, capability) 병렬 검색 후 그룹화 반환.
+6개 영역(content, client, competitor, lesson, capability, qa) 병렬 검색 후 그룹화 반환.
+B-1: capabilities 시맨틱 검색 전환.
+B-2: 키워드 폴백 body/strategy_summary 추가.
+B-3: 하이브리드 랭킹 (similarity + quality + freshness).
 """
 
 import asyncio
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 from app.services.embedding_service import generate_embedding
@@ -46,7 +50,7 @@ async def unified_search(
     if "lesson" in areas:
         tasks["lesson"] = _search_lessons(query, query_embedding, org_id, top_k)
     if "capability" in areas:
-        tasks["capability"] = _search_capabilities(query, org_id, top_k)
+        tasks["capability"] = _search_capabilities(query, query_embedding, org_id, top_k)
     if "qa" in areas:
         tasks["qa"] = _search_qa(query, query_embedding, org_id, top_k)
 
@@ -60,7 +64,44 @@ async def unified_search(
         else:
             grouped[area] = result
 
+    # B-3: content 영역에 하이브리드 랭킹 적용
+    if "content" in grouped and grouped["content"]:
+        grouped["content"] = _apply_hybrid_ranking(grouped["content"])
+
     return grouped
+
+
+# ── B-3: 하이브리드 랭킹 ──
+
+
+def _apply_hybrid_ranking(items: list[dict]) -> list[dict]:
+    """content 영역에 하이브리드 랭킹 적용.
+
+    final_score = similarity × 0.5 + quality_score × 0.3 + freshness × 0.2
+    """
+    now = datetime.now(timezone.utc)
+    for item in items:
+        sim = item.get("similarity") or 0.0
+        quality = (item.get("quality_score") or 0.0) / 100.0  # 0~1 정규화
+
+        # freshness: 6개월 이내 = 1.0, 이후 감쇠
+        updated = item.get("updated_at", "")
+        try:
+            if updated:
+                dt = datetime.fromisoformat(str(updated).replace("Z", "+00:00"))
+                days = (now - dt).days
+                freshness = max(0.0, 1.0 - max(0, days - 180) * 0.005)
+            else:
+                freshness = 0.5
+        except (ValueError, TypeError):
+            freshness = 0.5
+
+        item["_rank_score"] = sim * 0.5 + quality * 0.3 + freshness * 0.2
+
+    return sorted(items, key=lambda x: x.get("_rank_score", 0), reverse=True)
+
+
+# ── 영역별 검색 함수 ──
 
 
 async def _search_content(
@@ -81,20 +122,24 @@ async def _search_content(
             "match_count": top_k,
             "max_body_length": max_body,
         }).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
     except Exception:
-        # RPC 미등록 시 키워드 폴백
+        # B-2: RPC 미등록 시 키워드 폴백 — body도 검색
         logger.info("search_content_by_embedding RPC 미등록, 키워드 검색 폴백")
         result = await client.table("content_library").select(
-            "id, title, body, quality_score, type, tags"
-        ).eq("org_id", org_id).eq("status", "published").ilike(
-            "title", f"%{query}%"
+            "id, title, body, quality_score, type, tags, updated_at"
+        ).eq("org_id", org_id).eq("status", "published").or_(
+            f"title.ilike.%{query}%,body.ilike.%{query}%"
         ).limit(top_k).execute()
 
         items = result.data or []
         for item in items:
             item["body_excerpt"] = (item.pop("body", "") or "")[:max_body]
             item["similarity"] = None
+            item["match_type"] = "keyword"
         return items
 
 
@@ -113,7 +158,10 @@ async def _search_clients(
             "match_org_id": org_id,
             "match_count": top_k,
         }).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
     except Exception:
         logger.info("search_clients_by_embedding RPC 미등록, 키워드 검색 폴백")
         result = await client.table("client_intelligence").select(
@@ -121,7 +169,10 @@ async def _search_clients(
         ).eq("org_id", org_id).ilike(
             "client_name", f"%{query}%"
         ).limit(top_k).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "keyword"
+        return items
 
 
 async def _search_competitors(
@@ -139,7 +190,10 @@ async def _search_competitors(
             "match_org_id": org_id,
             "match_count": top_k,
         }).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
     except Exception:
         logger.info("search_competitors_by_embedding RPC 미등록, 키워드 검색 폴백")
         result = await client.table("competitors").select(
@@ -147,7 +201,10 @@ async def _search_competitors(
         ).eq("org_id", org_id).ilike(
             "company_name", f"%{query}%"
         ).limit(top_k).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "keyword"
+        return items
 
 
 async def _search_lessons(
@@ -165,28 +222,57 @@ async def _search_lessons(
             "match_org_id": org_id,
             "match_count": top_k,
         }).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
     except Exception:
+        # B-2: 키워드 폴백 — strategy_summary, effective_points, weak_points 검색
         logger.info("search_lessons_by_embedding RPC 미등록, 키워드 검색 폴백")
         result = await client.table("lessons_learned").select(
             "id, strategy_summary, effective_points, weak_points, result, positioning, client_name"
-        ).eq("org_id", org_id).limit(top_k).execute()
-        return result.data or []
+        ).eq("org_id", org_id).or_(
+            f"strategy_summary.ilike.%{query}%,"
+            f"effective_points.ilike.%{query}%,"
+            f"weak_points.ilike.%{query}%"
+        ).limit(top_k).execute()
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "keyword"
+        return items
 
 
 async def _search_capabilities(
     query: str,
+    embedding: list[float],
     org_id: str,
     top_k: int,
 ) -> list[dict]:
-    """역량 DB 키워드 검색 (임베딩 미적용)."""
+    """역량 DB 시맨틱 검색 (B-1: 임베딩 적용)."""
     client = await get_async_client()
-    result = await client.table("capabilities").select(
-        "id, description, tech_area, track_record, keywords"
-    ).eq("org_id", org_id).ilike(
-        "description", f"%{query}%"
-    ).limit(top_k).execute()
-    return result.data or []
+
+    try:
+        result = await client.rpc("search_capabilities_by_embedding", {
+            "query_embedding": embedding,
+            "match_org_id": org_id,
+            "match_count": top_k,
+        }).execute()
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
+    except Exception:
+        # 폴백: title + detail 키워드 검색
+        logger.info("search_capabilities_by_embedding RPC 미등록, 키워드 검색 폴백")
+        result = await client.table("capabilities").select(
+            "id, type, title, detail, keywords"
+        ).eq("org_id", org_id).or_(
+            f"title.ilike.%{query}%,detail.ilike.%{query}%"
+        ).limit(top_k).execute()
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "keyword"
+        return items
 
 
 async def _search_qa(
@@ -203,7 +289,10 @@ async def _search_qa(
             "match_org_id": org_id,
             "match_count": top_k,
         }).execute()
-        return result.data or []
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
     except Exception:
         logger.info("search_qa_by_embedding RPC 미등록, 키워드 검색 폴백")
         result = await client.table("presentation_qa").select(
@@ -215,4 +304,5 @@ async def _search_qa(
         items = result.data or []
         for item in items:
             item.pop("proposals", None)
+            item["match_type"] = "keyword"
         return items

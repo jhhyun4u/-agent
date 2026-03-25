@@ -67,13 +67,14 @@ async def lifespan(app: FastAPI):
         logger.warning(f"lifespan 초기화 경고 (무시): {e}")
 
     # Storage 버킷 자동 생성
-    try:
-        await client.storage.create_bucket(
-            "proposal-files", options={"public": False},
-        )
-        logger.info("proposal-files 버킷 생성 완료")
-    except Exception:
-        logger.info("proposal-files 버킷 이미 존재")
+    for bucket_name in ["proposal-files", "bid-attachments"]:
+        try:
+            await client.storage.create_bucket(
+                bucket_name, options={"public": False},
+            )
+            logger.info(f"{bucket_name} 버킷 생성 완료")
+        except Exception:
+            logger.info(f"{bucket_name} 버킷 이미 존재")
 
     # DB에서 활성 세션 복원
     from app.services.session_manager import session_manager
@@ -193,6 +194,10 @@ app.include_router(qa_router)
 # 프로젝트 파일 관리 (GAP-1~6)
 from app.api.routes_files import router as files_router
 app.include_router(files_router)
+
+# 프로젝트 아카이브 (중간 산출물 파일 관리)
+from app.api.routes_project_archive import router as archive_router
+app.include_router(archive_router)
 
 # 비딩 가격 시뮬레이션
 from app.api.routes_pricing import router as pricing_router

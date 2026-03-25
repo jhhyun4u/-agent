@@ -130,6 +130,12 @@ export default function EditorAiPanel({
         aiQuery || ""
       );
       setRegenResult(`${result.section_title} 재생성 완료`);
+      // 프롬프트 수정 추적: 섹션 재생성
+      api.prompts.recordEditAction({
+        proposal_id: proposalId,
+        section_id: activeSectionId,
+        action: "regenerate",
+      }).catch(() => {});
     } catch (e) {
       setRegenResult(e instanceof Error ? e.message : "재생성 실패");
     } finally {
@@ -311,8 +317,25 @@ export default function EditorAiPanel({
             original={currentContent}
             suggestion={aiResult.suggestion}
             explanation={aiResult.explanation}
-            onAccept={() => onApplySuggestion(aiResult.suggestion)}
-            onReject={() => setAiResult(null)}
+            onAccept={() => {
+              onApplySuggestion(aiResult.suggestion);
+              api.prompts.recordEditAction({
+                proposal_id: proposalId,
+                section_id: activeSectionId ?? "full_proposal",
+                action: "accept",
+                original: currentContent.slice(0, 5000),
+                edited: aiResult.suggestion.slice(0, 5000),
+              }).catch(() => {});
+            }}
+            onReject={() => {
+              setAiResult(null);
+              api.prompts.recordEditAction({
+                proposal_id: proposalId,
+                section_id: activeSectionId ?? "full_proposal",
+                action: "reject",
+                original: currentContent.slice(0, 5000),
+              }).catch(() => {});
+            }}
           />
         ) : aiResult ? (
           <div className="bg-[#111111] border border-[#3ecf8e]/20 rounded-lg px-2.5 py-2 space-y-1.5">

@@ -15,16 +15,35 @@ from app.utils.supabase_client import get_async_client
 logger = logging.getLogger(__name__)
 
 
+def _is_korean_holiday(dt: datetime) -> bool:
+    """한국 공휴일 여부 (주요 법정 공휴일만 체크)."""
+    md = (dt.month, dt.day)
+    fixed_holidays = {
+        (1, 1), (3, 1), (5, 5), (6, 6), (8, 15), (10, 3), (10, 9), (12, 25),
+    }
+    if md in fixed_holidays:
+        return True
+    # 음력 공휴일(설날, 추석)은 매년 변동 → 환경 변수 또는 외부 API로 확장 가능
+    # 현재는 고정 공휴일만 체크
+    return False
+
+
 async def daily_g2b_monitor() -> dict:
     """일일 G2B 공고 모니터링 (v2: 전수 수집 + 적합도 스코어링).
 
-    v1: 키워드별 50건 검색 → 제목 매칭 (누락 95%+)
-    v2: 전체 페이지네이션 수집 → 역할 키워드 + 분류 스코어링 (누락 ~5%)
+    평일 08:00, 15:00에 스케줄러가 호출. 공휴일이면 스킵.
 
     Returns:
         {"teams_checked": int, "new_bids_found": int, "notifications_sent": int,
          "total_fetched": int, "scored_passed": int}
     """
+    # 공휴일 체크
+    now = datetime.now(timezone.utc)
+    if _is_korean_holiday(now):
+        logger.info(f"공휴일 — G2B 모니터링 스킵 ({now.strftime('%m/%d')})")
+        return {"teams_checked": 0, "new_bids_found": 0, "notifications_sent": 0,
+                "total_fetched": 0, "scored_passed": 0, "skipped": "holiday"}
+
     from app.services.bid_scorer import score_and_rank_bids
     from app.services.g2b_service import G2BService
     from app.services.notification_service import (
@@ -145,6 +164,19 @@ async def daily_g2b_monitor() -> dict:
         f"스코어 {stats['scored_passed']}건 → "
         f"{stats['new_bids_found']}건 신규, {stats['notifications_sent']}건 알림"
     )
+
+    # 백그라운드 파이프라인: score >= 70(추천 이상) → 첨부파일 + AI 분석
+    pipeline_targets = [
+        b.bid_no for b in scored if b.score >= 70
+    ]
+    if pipeline_targets:
+        try:
+            from app.services.bid_pipeline import run_pipeline
+            asyncio.create_task(run_pipeline(pipeline_targets))
+            logger.info(f"[Monitor] 파이프라인 큐: {len(pipeline_targets)}건")
+        except Exception as e:
+            logger.warning(f"[Monitor] 파이프라인 시작 실패: {e}")
+
     return stats
 
 
@@ -268,18 +300,19 @@ def setup_scheduler() -> None:
         from apscheduler.triggers.cron import CronTrigger
 
         scheduler = AsyncIOScheduler()
+        # 평일(월~금)만 실행: day_of_week='mon-fri'
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=8, minute=0),
+            trigger=CronTrigger(hour=8, minute=0, day_of_week="mon-fri"),
             id="g2b_monitor_morning",
-            name="G2B 오전 모니터링",
+            name="G2B 오전 모니터링 (평일)",
             replace_existing=True,
         )
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=15, minute=0),
+            trigger=CronTrigger(hour=15, minute=0, day_of_week="mon-fri"),
             id="g2b_monitor_afternoon",
-            name="G2B 오후 모니터링",
+            name="G2B 오후 모니터링 (평일)",
             replace_existing=True,
         )
         # 프롬프트 진화 유지보수 (매일 02:00 — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)

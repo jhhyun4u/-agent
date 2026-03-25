@@ -6,8 +6,9 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { api, Comment_, ProposalFile, ProposalSummary } from "@/lib/api";
+import { api, Comment_, ProposalFile, ProposalSummary, type WorkflowState } from "@/lib/api";
 import StepArtifactViewer from "@/components/StepArtifactViewer";
+import ArtifactReviewPanel from "@/components/ArtifactReviewPanel";
 import CostSheetEditor from "@/components/pricing/CostSheetEditor";
 import QaPanel from "@/components/QaPanel";
 import VersionCompareModal from "@/components/VersionCompareModal";
@@ -22,6 +23,12 @@ const PHASES = [
 ];
 
 type Tab = "result" | "comments" | "win" | "compare" | "qa" | "files";
+
+// 리뷰 게이트 노드 목록
+const REVIEW_NODES = [
+  "review_search", "review_rfp", "review_gng", "review_strategy",
+  "review_bid_plan", "review_plan", "review_section", "review_proposal", "review_ppt",
+];
 
 interface DetailRightPanelProps {
   proposalId: string;
@@ -46,6 +53,7 @@ interface DetailRightPanelProps {
   filesLoading: boolean;
   onFetchFiles: () => void;
   onRetryFromPhase: (phaseN: number) => void;
+  workflowState?: WorkflowState | null;
 }
 
 export default function DetailRightPanel({
@@ -71,6 +79,7 @@ export default function DetailRightPanel({
   filesLoading,
   onFetchFiles,
   onRetryFromPhase,
+  workflowState,
 }: DetailRightPanelProps) {
   const [activeTab, setActiveTab] = useState<Tab>("result");
   const [costSheetOpen, setCostSheetOpen] = useState(false);
@@ -298,6 +307,22 @@ export default function DetailRightPanel({
 
   function versionLabel(idx: number) { return `v${idx + 1}`; }
   const failedPhaseN = phasesCompleted + 1;
+
+  // 리뷰 대기 노드 감지
+  const pendingReviewNode = workflowState?.has_pending_interrupt
+    ? workflowState.next_nodes.find((n) => REVIEW_NODES.includes(n))
+    : null;
+
+  // 리뷰 대기 시: ArtifactReviewPanel이 전체 우측 패널을 차지 (읽기 전용 뷰어)
+  if (pendingReviewNode && workflowState) {
+    return (
+      <ArtifactReviewPanel
+        proposalId={proposalId}
+        reviewNode={pendingReviewNode}
+        workflowState={workflowState}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">

@@ -52,10 +52,10 @@ const PERMISSIONS = [
 ];
 
 const ROLE_PERMISSIONS: Record<string, Set<string>> = {
-  member: new Set(["create_proposal", "edit_proposal"]),
+  member: new Set(["create_proposal", "edit_proposal", "view_team_proposals", "view_analytics"]),
   lead: new Set(["create_proposal", "view_team_proposals", "approve_go_nogo", "edit_proposal", "view_analytics", "manage_kb"]),
-  director: new Set(["create_proposal", "view_team_proposals", "approve_go_nogo", "edit_proposal", "view_analytics", "manage_kb", "view_all_division"]),
-  executive: new Set(["view_team_proposals", "approve_go_nogo", "view_analytics", "manage_kb", "view_all_division", "view_all_company"]),
+  director: new Set(["create_proposal", "view_team_proposals", "approve_go_nogo", "edit_proposal", "view_analytics", "manage_kb", "view_all_division", "view_all_company"]),
+  executive: new Set(PERMISSIONS.map(p => p.key)),
   admin: new Set(PERMISSIONS.map(p => p.key)),
 };
 
@@ -159,25 +159,23 @@ function OrgChartView({ tree, execs }: { tree: TreeDivision[]; execs: TreeMember
                       <p className="text-[9px] text-[#8c8c8c] mt-0.5">{team.members.length}명</p>
                     </div>
 
-                    {/* 팀원 미니 뷰 */}
+                    {/* 팀원 전체 목록 (세로 나열) */}
                     {team.members.length > 0 && (
-                      <div className="mt-1 flex flex-col items-center gap-0.5">
+                      <div className="mt-1 flex flex-col items-center">
                         <div className="w-px h-2 bg-[#262626]" />
-                        <div className="flex flex-wrap gap-1 justify-center max-w-[120px]">
-                          {team.members.slice(0, 5).map((m, i) => (
-                            <span
+                        <div className="flex flex-col gap-0.5 items-center">
+                          {team.members.map((m, i) => (
+                            <div
                               key={i}
-                              className={`text-[8px] px-1.5 py-0.5 rounded border border-[#262626] ${
-                                ROLE_LABELS[m.role]?.color ?? "text-[#8c8c8c]"
-                              }`}
-                              title={`${m.name} (${m.role})`}
+                              className="flex items-center gap-1 px-2 py-0.5 rounded border border-[#262626] bg-[#111111]"
+                              title={`${m.name} (${ROLE_LABELS[m.role]?.label ?? m.role})`}
                             >
-                              {m.name.slice(0, 3)}
-                            </span>
+                              <span className={`text-[8px] ${ROLE_LABELS[m.role]?.color ?? "text-[#8c8c8c]"}`}>
+                                {ROLE_LABELS[m.role]?.label.slice(0, 1) ?? "●"}
+                              </span>
+                              <span className="text-[9px] text-[#ededed]">{m.name}</span>
+                            </div>
                           ))}
-                          {team.members.length > 5 && (
-                            <span className="text-[8px] text-[#8c8c8c]">+{team.members.length - 5}</span>
-                          )}
                         </div>
                       </div>
                     )}

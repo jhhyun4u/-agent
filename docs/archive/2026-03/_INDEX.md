@@ -29,6 +29,7 @@
 | **security-hardening** | **2026-03-20** | **83% (실질91%)** | **2** | **security-hardening/** |
 | **file-management-ux** | **2026-03-21** | **96%** | **0** | **file-management-ux/** |
 | **ux-improvements** | **2026-03-21** | **98%** | **0** | **ux-improvements/** |
+| **functional-testing** | **2026-03-23** | **98%** | **0** | **functional-testing/** |
 
 ---
 
@@ -347,3 +348,38 @@
 | 신규 파일 | 6개 컴포넌트 (~1,145줄) |
 | 수정 파일 | 7개 (proposals/[id], proposals/new, dashboard, kb/content, admin, WorkflowPanel, StreamDashboard) |
 | 잔여 갭 | GAP-1 KB 근사검색(LOW), GAP-2 bid_no 제목매칭(LOW) |
+
+---
+
+## functional-testing — Completed (테스트 인프라 정비)
+
+| 항목 | 내용 |
+|------|------|
+| 완료일 | 2026-03-23 |
+| Match Rate | **98%** |
+| PDCA 반복 | 0회 (first-pass 통과) |
+| PDCA Flow | Do → Check → Report (Plan/Design 생략 — 코드 개선 작업) |
+| Documents | report |
+| Path | docs/archive/2026-03/functional-testing/ |
+| 주요 성과 | 362 테스트 전수 통과, conftest 의존성 오버라이드 3건 추가, API 경로 정합 수정, datetime.utcnow() 6곳 수정, OpenAPI operation_id 중복 해소 |
+| 수정 파일 | 7개 (conftest.py, test_phase1/2, test_document_builders, routes_admin/performance/team) |
+| 경고 감소 | 7개 → 1개 (외부 PyPDF2만 잔존) |
+
+---
+
+## kb-enhancement (2026-03-24)
+
+| 항목 | 내용 |
+|------|------|
+| Feature | kb-enhancement |
+| 완료일 | 2026-03-24 |
+| Match Rate | 100% (19/19) |
+| PDCA 반복 | 0회 (GAP 즉시 해소) |
+| PDCA Flow | Plan → Design → Do → Check → Report (전체 단일 세션) |
+| Documents | plan, design, report |
+| Path | docs/archive/2026-03/kb-enhancement/ |
+| 주요 성과 | KB 선순환 루프 완성: 자동 축적(A) + 검색 개선(B) + 활용 강화(C) + 관리 UX(D) |
+| 수정 파일 | 14개, ~585줄 |
+| 새 함수 | auto_register_section, save_research_to_kb, save_strategy_to_kb, find_similar_cases, batch_reindex, KbHealthWidget |
+| 새 API | GET /api/kb/health, POST /api/kb/reindex, GET /api/kb/content/duplicates |
+| 새 SQL | 012_kb_enhancement.sql (capabilities embedding + 2 RPC) |

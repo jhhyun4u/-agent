@@ -417,6 +417,7 @@ async def list_archive(
     user=Depends(get_current_user),
     scope: str = Query("personal", description="company | team | personal"),
     win_result: Optional[str] = Query(None, description="won | lost | pending"),
+    q: Optional[str] = Query(None, description="프로젝트명/발주기관 검색"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
 ):
@@ -425,8 +426,13 @@ async def list_archive(
 
     query = client.table("proposals").select(
         "id, title, status, owner_id, team_id, win_result, bid_amount, "
-        "notes, current_phase, phases_completed, created_at, updated_at"
+        "notes, current_phase, phases_completed, client_name, deadline, "
+        "storage_path_docx, storage_path_pptx, storage_path_hwpx, "
+        "created_at, updated_at"
     ).eq("status", "completed")
+
+    if q and q.strip():
+        query = query.or_(f"title.ilike.%{q.strip()}%,client_name.ilike.%{q.strip()}%")
 
     if scope == "personal":
         query = query.eq("owner_id", user.id)

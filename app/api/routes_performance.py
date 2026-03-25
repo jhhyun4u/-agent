@@ -18,7 +18,7 @@ GET  /api/dashboard/team/performance         — 팀 성과 요약
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
@@ -73,7 +73,7 @@ async def _resolve_pricing_predictions(client, proposal_id: str, body) -> None:
         if budget and budget > 0:
             actual_ratio = round(body.final_price / budget, 4)
 
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     for pred in preds.data:
         pred_ratio = pred.get("predicted_ratio")
         error = round(abs(pred_ratio - actual_ratio), 4) if pred_ratio and actual_ratio else None
@@ -120,7 +120,7 @@ async def register_proposal_result(
     await client.table("proposal_results").insert(result_row).execute()
 
     # proposals 테이블 상태 업데이트
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     await client.table("proposals").update({
         "status": STATUS_MAP[body.result],
         "result": {"won": "수주", "lost": "패찰", "void": "유찰"}[body.result],
@@ -178,7 +178,7 @@ async def update_proposal_result(
     if not update_data:
         return {"status": "ok", "message": "변경 없음"}
 
-    update_data["updated_at"] = datetime.utcnow().isoformat()
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
     await client.table("proposal_results").update(update_data).eq("proposal_id", proposal_id).execute()
 
     # proposals 테이블도 동기화

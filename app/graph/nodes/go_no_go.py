@@ -46,6 +46,19 @@ async def go_no_go(state: ProposalState) -> dict:
             include_positioning_overrides=True,
         )
 
+    # 유사 과거 사례 시맨틱 매칭 (C-1)
+    similar_cases_text = ""
+    if mode == "full":
+        try:
+            from app.graph.context_helpers import find_similar_cases
+            similar_cases_text = await find_similar_cases(
+                project_name=rfp_dict.get("project_name", ""),
+                client_name=rfp_dict.get("client", ""),
+                org_id=state.get("org_id", ""),
+            )
+        except Exception:
+            pass
+
     # 리서치 브리프 (v3.2) + credibility 필터링 (v3.7)
     research_text = extract_credible_research(
         state.get("research_brief"), max_evidence=15
@@ -109,6 +122,7 @@ async def go_no_go(state: ProposalState) -> dict:
 ## 포지셔닝 오버라이드 이력 (사람이 AI 판정을 변경한 선례)
 {kb.get("positioning_overrides", "(오버라이드 이력 없음)")}
 {pricing_context}
+{similar_cases_text}
 ## 지시사항
 1. 포지셔닝 판정: defensive(수성) / offensive(공격) / adjacent(인접)
    - **과거 포지셔닝별 성과 데이터가 있으면 반드시 참고하세요**

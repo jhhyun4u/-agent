@@ -356,6 +356,29 @@ async def deactivate_user_endpoint(
     return {"message": "사용자가 비활성화되었습니다.", "user": result}
 
 
+@router.delete("/api/admin/users/{user_id}")
+async def delete_user_endpoint(
+    user_id: str,
+    user: dict = Depends(require_role("admin", "executive")),
+):
+    """사용자 삭제 (admin/executive only). 본인 삭제 불가."""
+    if user_id == user["id"]:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail="본인 계정은 삭제할 수 없습니다.")
+
+    client = await get_async_client()
+    # 사용자 존재 확인
+    res = await client.table("users").select("id, name").eq("id", user_id).maybe_single().execute()
+    if not res.data:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="사용자를 찾을 수 없습니다.")
+
+    await client.table("users").delete().eq("id", user_id).execute()
+    from app.services.audit_service import log_action
+    await log_action(user["id"], "delete", "user", user_id, {"deleted_name": res.data.get("name", "")})
+    return {"message": "사용자가 삭제되었습니다."}
+
+
 # ══════════════════════════════════════════════
 # 프로젝트 참여자 관리
 # ══════════════════════════════════════════════

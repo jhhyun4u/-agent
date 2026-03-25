@@ -90,7 +90,7 @@ def _passthrough(state: ProposalState) -> dict:
 
 
 def _stream1_complete_hook(state: ProposalState) -> dict:
-    """Stream 1(정성제안서) 완료 훅 — END 도달 시 스트림 상태 갱신."""
+    """Stream 1(정성제안서) 완료 훅 — END 도달 시 스트림 상태 갱신 + 아카이브 스냅샷."""
     import asyncio
 
     proposal_id = state.get("project_id", "")
@@ -116,6 +116,18 @@ def _stream1_complete_hook(state: ProposalState) -> dict:
         except Exception as e:
             import logging
             logging.getLogger(__name__).warning(f"산출물 자동 연결 실패: {e}")
+
+        # 프로젝트 아카이브 전체 스냅샷
+        try:
+            from app.services.project_archive_service import snapshot_from_state
+            await snapshot_from_state(
+                proposal_id,
+                state,
+                created_by=state.get("created_by"),
+            )
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"아카이브 스냅샷 실패: {e}")
 
     try:
         loop = asyncio.get_running_loop()

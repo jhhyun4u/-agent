@@ -470,8 +470,8 @@ class WinResultUpdate(BaseModel):
     notes: Optional[str] = None
 
 
-@router.get("/proposals")
-async def list_proposals(
+@router.get("/proposals", operation_id="list_proposals_legacy")
+async def list_proposals_legacy(
     user=Depends(get_current_user),
     q: Optional[str] = Query(None, description="제목 검색"),
     status: Optional[str] = Query(None, description="상태 필터"),

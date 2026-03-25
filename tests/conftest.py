@@ -97,6 +97,7 @@ class MockQueryBuilder:
     lte = property(lambda self: lambda *a, **kw: self._chain())
     ilike = property(lambda self: lambda *a, **kw: self._chain())
     in_ = property(lambda self: lambda *a, **kw: self._chain())
+    is_ = property(lambda self: lambda *a, **kw: self._chain())
     or_ = property(lambda self: lambda *a, **kw: self._chain())
     contains = property(lambda self: lambda *a, **kw: self._chain())
     not_ = property(lambda self: MagicMock(is_=lambda *a, **kw: self._chain()))
@@ -182,13 +183,15 @@ _get_test_app()
 async def client(mock_user):
     """FastAPI 테스트 클라이언트 (인증 mock + Supabase mock)."""
     from httpx import AsyncClient, ASGITransport
-    from app.api.deps import get_current_user
+    from app.api.deps import get_current_user, get_rls_client, require_project_access
 
     app = _get_test_app()
     supabase_mock = make_supabase_mock()
 
     # FastAPI dependency override — 모든 엔드포인트에서 인증 우회
     app.dependency_overrides[get_current_user] = lambda: mock_user
+    app.dependency_overrides[get_rls_client] = lambda: supabase_mock
+    app.dependency_overrides[require_project_access] = lambda: {"id": "test-id", "title": "테스트", "status": "initialized"}
 
     with patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
         transport = ASGITransport(app=app)
@@ -198,6 +201,8 @@ async def client(mock_user):
 
     # cleanup
     app.dependency_overrides.pop(get_current_user, None)
+    app.dependency_overrides.pop(get_rls_client, None)
+    app.dependency_overrides.pop(require_project_access, None)
 
 
 # ── 기존 fixtures 유지 ──

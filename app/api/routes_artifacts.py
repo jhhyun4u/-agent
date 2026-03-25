@@ -38,6 +38,7 @@ async def _upload_to_storage_with_tracking(
     """Storage 업로드 + proposals.storage_upload_failed 추적 (설계 §8 finally 패턴).
 
     업로드 성공 시 storage_path 업데이트, 실패 시 storage_upload_failed=True 설정.
+    아카이브 테이블에도 바이너리 산출물 등록.
     """
     from app.utils.supabase_client import get_async_client
 
@@ -45,6 +46,30 @@ async def _upload_to_storage_with_tracking(
     storage_path = f"{proposal_id}/proposal.{file_key}"
     col_map = {"docx": "storage_path_docx", "pptx": "storage_path_pptx", "hwpx": "storage_path_hwpx"}
     db_col = col_map.get(file_key)
+
+    # 아카이브 등록 (바이너리 산출물)
+    archive_map = {
+        "docx": ("proposal_docx", "proposal", "제안서 DOCX", "proposal/proposal.docx"),
+        "hwpx": ("proposal_hwpx", "proposal", "제안서 HWPX", "proposal/proposal.hwpx"),
+        "pptx": ("ppt_pptx", "presentation", "발표자료 PPTX", "presentation/proposal.pptx"),
+    }
+    archive_info = archive_map.get(file_key)
+    if archive_info:
+        try:
+            from app.services.project_archive_service import archive_binary_artifact
+            await archive_binary_artifact(
+                proposal_id,
+                doc_type=archive_info[0],
+                category=archive_info[1],
+                title=archive_info[2],
+                file_format=file_key,
+                file_bytes=file_bytes,
+                storage_subpath=archive_info[3],
+                graph_step="download",
+                source="ai",
+            )
+        except Exception as e:
+            logger.warning(f"[{proposal_id}] archive 등록 실패 ({file_key}): {e}")
 
     try:
         client = await get_async_client()
@@ -665,9 +690,28 @@ async def download_cost_sheet(
         cost_standard=cost_standard,
     )
 
+    cost_bytes = buf.read()
+
+    # 아카이브 등록 (산출내역서)
+    try:
+        from app.services.project_archive_service import archive_binary_artifact
+        await archive_binary_artifact(
+            proposal_id,
+            doc_type="cost_sheet",
+            category="bidding",
+            title="산출내역서",
+            file_format="docx",
+            file_bytes=cost_bytes,
+            storage_subpath="bidding/cost_sheet.docx",
+            graph_step="cost_sheet",
+            source="ai",
+        )
+    except Exception as e:
+        logger.warning(f"[{proposal_id}] 산출내역서 archive 등록 실패: {e}")
+
     filename = f"{proposal_name}_산출내역서.docx"
     return Response(
-        content=buf.read(),
+        content=cost_bytes,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )

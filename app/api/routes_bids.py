@@ -369,62 +369,156 @@ async def list_announcements(
     }
 
 
+# ── 파이프라인 상태 조회 ────────────────────────────────
+
+@router.get("/api/bids/pipeline/status")
+async def pipeline_status(
+    bid_no: str = Query(default=None),
+):
+    """파이프라인 진행 상태 조회. bid_no 지정 시 해당 건만."""
+    from app.services.bid_pipeline import get_pipeline_status, get_all_pipeline_status
+
+    if bid_no:
+        status = get_pipeline_status(bid_no)
+        return {"data": {bid_no: status} if status else {}}
+    return {"data": get_all_pipeline_status()}
+
+
+@router.post("/api/bids/pipeline/trigger")
+async def pipeline_trigger(
+    background_tasks: BackgroundTasks,
+    bid_nos: list[str] | None = None,
+    current_user=Depends(get_current_user_or_none),
+):
+    """수동 파이프라인 트리거. bid_nos 미지정 시 DB 최근 공고 대상."""
+    from app.services.bid_pipeline import run_pipeline
+
+    if not bid_nos:
+        try:
+            client = await get_async_client()
+            res = await (
+                client.table("bid_announcements")
+                .select("bid_no")
+                .is_("content_text", "null")
+                .order("created_at", desc=True)
+                .limit(20)
+                .execute()
+            )
+            bid_nos = [r["bid_no"] for r in (res.data or [])]
+        except Exception:
+            bid_nos = []
+
+    if bid_nos:
+        background_tasks.add_task(run_pipeline, bid_nos)
+    return {"status": "ok", "queued": len(bid_nos or [])}
+
+
 # ── 적합도 스코어링 기반 공고 조회 (v2) ────────────────
 
 @router.get("/api/bids/scored")
 async def get_scored_bids(
-    date_from: Optional[str] = Query(None, description="시작일 (YYYYMMDD). 미지정 시 오늘"),
-    date_to: Optional[str] = Query(None, description="종료일 (YYYYMMDD). 미지정 시 오늘"),
-    days: int = Query(1, ge=1, le=30, description="조회 일수 (date_from 미지정 시 사용)"),
+    days: int = Query(7, ge=1, le=30, description="조회 일수 (최근 N일)"),
     min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
-    min_score: float = Query(20, description="최소 적합도 점수"),
     max_results: int = Query(100, ge=1, le=300, description="최대 반환 건수"),
     current_user=Depends(get_current_user_or_none),
 ):
     """
-    적합도 스코어링 기반 공고 추천 (v2).
+    DB 저장된 공고 목록 조회 (적합도 스코어링 기반).
 
-    G2B 전수 수집 → 역할 키워드 + 분류 가중치 + 도메인 스코어링.
-    tenopa upfront research(전략/기획/연구/분석) 특화 랭킹.
+    정기 스케줄러(평일 08:00, 15:00)가 수집한 데이터 조회.
+    실시간 G2B 호출 없음 — 수동 크롤링은 POST /bids/crawl 사용.
+    """
+    client = await get_async_client()
+
+    from_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+    query = client.table("bid_announcements").select(
+        "bid_no, bid_title, agency, budget_amount, deadline_date, "
+        "days_remaining, bid_type, created_at, raw_data"
+    ).gte("created_at", from_date).order("created_at", desc=True).limit(max_results)
+
+    if min_budget > 0:
+        query = query.gte("budget_amount", min_budget)
+
+    result = await query.execute()
+    db_rows = result.data or []
+
+    # raw_data가 있으면 scorer용으로 사용, 없으면 DB 필드를 G2B 형식으로 매핑
+    data = []
+    for row in db_rows:
+        if row.get("raw_data"):
+            data.append(row["raw_data"])
+        else:
+            data.append({
+                "bidNtceNo": row.get("bid_no", ""),
+                "bidNtceNm": row.get("bid_title", ""),
+                "ntceInsttNm": row.get("agency", ""),
+                "presmptPrce": str(row.get("budget_amount") or "0"),
+                "bidClseDt": row.get("deadline_date", ""),
+            })
+
+    # 적합도 스코어링 (G2B raw 형식 기반)
+    from app.services.bid_scorer import score_and_rank_bids
+    scored = score_and_rank_bids(
+        data,
+        reference_date=datetime.now(timezone.utc).date(),
+        min_score=0,
+        exclude_expired=True,
+        max_results=max_results,
+    )
+
+    return {
+        "total_count": len(scored),
+        "source": "db",
+        "data": scored,
+    }
+
+
+@router.post("/api/bids/crawl")
+async def manual_crawl(
+    background_tasks: BackgroundTasks,
+    days: int = Query(1, ge=1, le=7, description="수집 일수"),
+    current_user=Depends(get_current_user_or_none),
+):
+    """
+    수동 크롤링 — G2B에서 최신 공고 수집 후 DB 저장 + 백그라운드 파이프라인.
+
+    프론트엔드 "새로고침" 버튼에서만 호출.
     """
     from app.services.bid_fetcher import BidFetcher
 
     try:
-        # 날짜 범위 결정
-        if not date_to:
-            date_to_dt = datetime.now(timezone.utc)
-            date_to_str = date_to_dt.strftime("%Y%m%d") + "2359"
-        else:
-            date_to_str = date_to + "2359"
-
-        if not date_from:
-            date_from_dt = datetime.now(timezone.utc) - timedelta(days=days - 1)
-            date_from_str = date_from_dt.strftime("%Y%m%d") + "0000"
-        else:
-            date_from_str = date_from + "0000"
+        date_to_dt = datetime.now(timezone.utc)
+        date_from_dt = date_to_dt - timedelta(days=days - 1)
+        date_from_str = date_from_dt.strftime("%Y%m%d") + "0000"
+        date_to_str = date_to_dt.strftime("%Y%m%d") + "2359"
 
         async with G2BService() as g2b:
             fetcher = BidFetcher(g2b_service=g2b, supabase_client=None)
             results = await fetcher.fetch_bids_scored(
                 date_from=date_from_str,
                 date_to=date_to_str,
-                min_budget=min_budget,
-                min_score=min_score,
-                max_results=max_results,
+                min_budget=0,
+                min_score=0,
+                max_results=300,
             )
 
-        data = results["data"]
+        # 백그라운드 파이프라인: 상위 scored 공고 DB 저장 + 첨부파일 + AI 분석
+        scored_data = results.get("data", [])
+        top_bid_nos = [b["bid_no"] for b in scored_data[:50] if b.get("score", 0) >= 80]
+        if top_bid_nos:
+            from app.services.bid_pipeline import run_pipeline
+            raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in scored_data if b["bid_no"] in set(top_bid_nos)}
+            background_tasks.add_task(run_pipeline, top_bid_nos, raw_map)
+
         return {
-            "date_from": date_from_str[:8],
-            "date_to": date_to_str[:8],
-            "total_count": len(data),
+            "status": "ok",
             "total_fetched": results["total_fetched"],
-            "sources": results.get("sources", {}),
-            "data": data,
+            "scored_count": len(results["data"]),
+            "pipeline_queued": len(top_bid_nos),
         }
     except Exception as e:
-        logger.error(f"scored bids 오류: {e}")
-        raise HTTPException(status_code=500, detail="공고 스코어링 중 오류가 발생했습니다.")
+        logger.error(f"수동 크롤링 오류: {e}")
+        raise HTTPException(status_code=500, detail="공고 수집 중 오류가 발생했습니다.")
 
 
 @router.get("/api/bids/monitor")
@@ -811,44 +905,100 @@ async def analyze_bid_for_proposal(
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_file = cache_dir / f"{bid_no}.json"
 
-    # 파일 캐시 확인
+    # 파일 캐시 확인 (유효한 분석 결과가 있는 캐시만 사용)
     if cache_file.exists():
         try:
             cached = _json.loads(cache_file.read_text(encoding="utf-8"))
-            logger.info(f"[{bid_no}] 분석 캐시 히트")
-            return {"data": cached}
+            # rfp_sections 또는 유효한 rfp_summary가 있어야 유효 캐시
+            has_sections = bool(cached.get("rfp_sections"))
+            has_summary = cached.get("rfp_summary") and cached["rfp_summary"] != ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
+            has_score = cached.get("suitability_score") and cached["suitability_score"] > 0
+            if (has_sections or has_summary) and has_score:
+                logger.info(f"[{bid_no}] 분석 캐시 히트")
+                return {"data": cached}
+            else:
+                logger.info(f"[{bid_no}] 분석 캐시 무효 (빈 결과) → 재분석")
+                cache_file.unlink(missing_ok=True)
         except Exception:
             pass
 
-    client = await get_async_client()
+    bid = None
+    try:
+        client = await get_async_client()
+        res = (
+            await client.table("bid_announcements")
+            .select("bid_title, agency, budget_amount, deadline_date, content_text, raw_data")
+            .eq("bid_no", bid_no)
+            .maybe_single()
+            .execute()
+        )
+        if res:
+            bid = res.data
+    except Exception as e:
+        logger.warning(f"[{bid_no}] DB 조회 실패: {e}")
 
-    res = (
-        await client.table("bid_announcements")
-        .select("bid_title, agency, budget_amount, deadline_date, content_text, raw_data")
-        .eq("bid_no", bid_no)
-        .maybe_single()
-        .execute()
-    )
-    if not res.data:
-        raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+    raw = {}
+    content = ""
 
-    bid = res.data
-    raw = bid.get("raw_data") or {}
-    content = bid.get("content_text") or ""
+    if bid:
+        raw = bid.get("raw_data") or {}
+        content = bid.get("content_text") or ""
+        if not content:
+            # raw_data에서 content 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl > bidNtceNm
+            content = (
+                raw.get("ntceSpecCn")
+                or raw.get("bidNtceDtlCn")
+                or raw.get("specDocCn")
+                or raw.get("bidNtceDtl")
+                or ""
+            )
+            if not content:
+                parts = [raw.get("bidNtceNm", "")]
+                content = "\n".join(p for p in parts if p)
+    else:
+        # DB에 없는 공고 → G2B API에서 실시간 조회
+        logger.info(f"[{bid_no}] DB 미존재 → G2B 실시간 조회")
+        try:
+            async with G2BService() as g2b:
+                g2b_detail = await g2b.get_bid_detail(bid_no)
+            if g2b_detail:
+                bid = {
+                    "bid_title": g2b_detail.get("bidNtceNm", ""),
+                    "agency": g2b_detail.get("dminsttNm", "") or g2b_detail.get("ntceInsttNm", ""),
+                    "budget_amount": int(g2b_detail.get("presmptPrce", 0) or 0) or None,
+                }
+                raw = g2b_detail
+                # content 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl > bidNtceNm
+                content = (
+                    raw.get("ntceSpecCn")
+                    or raw.get("bidNtceDtlCn")
+                    or raw.get("specDocCn")
+                    or raw.get("bidNtceDtl")
+                    or raw.get("bidNtceNm", "")
+                )
+        except Exception as e:
+            logger.warning(f"[{bid_no}] G2B 조회 실패: {e}")
 
-    if not content:
-        parts = [raw.get("bidNtceNm", ""), raw.get("bidNtceDtl", "")]
-        content = "\n".join(p for p in parts if p)
+        if not bid:
+            raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
 
-    # NEW: content가 부족하면 첨부파일에서 텍스트 추출
+    # content 부족 시 첨부파일 다운로드 + Storage 업로드 + 텍스트 추출
     if len(content.strip()) < 200:
         try:
-            attachment_text = await _extract_text_from_attachments(raw)
+            from app.services.bid_attachment_store import download_bid_attachments
+            attachment_text = await download_bid_attachments(bid_no, raw)
             if attachment_text:
                 content = attachment_text
-                logger.info(f"[{bid_no}] 첨부파일에서 텍스트 추출 성공 ({len(attachment_text)}자)")
+                # 추출 텍스트를 DB에 저장 (다음 조회 시 재추출 불필요)
+                try:
+                    await client.table("bid_announcements").update(
+                        {"content_text": attachment_text}
+                    ).eq("bid_no", bid_no).execute()
+                except Exception:
+                    pass
+                logger.info(f"[{bid_no}] 첨부파일 다운로드+추출 성공 ({len(attachment_text)}자)")
         except Exception as e:
-            logger.warning(f"[{bid_no}] 첨부파일 텍스트 추출 실패 (무시): {e}")
+            logger.warning(f"[{bid_no}] 첨부파일 처리 실패 (무시): {e}")
 
     # 팀 목록 조회 (적합 팀 추천용)
     teams_list: list[str] = []
@@ -874,24 +1024,20 @@ async def analyze_bid_for_proposal(
     preprocessor = BidPreprocessor()
     summary = await preprocessor.preprocess(bid_ann) if content.strip() else None
 
-    # rfp_summary 구성: 전처리 결과 기반
-    # NOTE: 발주기관은 상단 "공고 정보" 섹션에 이미 표시되므로 중복 제거
-    rfp_summary: list[str] = []
+    # rfp_sections: 목적 + 주요 과업만 표시 (나머지는 공고 정보에서 확인)
+    # 사업기간은 공고 정보 패널로 이동 → period 별도 반환
+    rfp_sections: list[dict] = []
+    rfp_summary: list[str] = []  # 레거시 호환 (flat 리스트)
+    rfp_period: str = ""
     if summary:
-        if summary.budget_detail:
-            rfp_summary.append(f"예산: {summary.budget_detail}")
-        if summary.period:
-            rfp_summary.append(f"사업기간: {summary.period}")
-        for task in summary.core_tasks:
-            rfp_summary.append(f"과업: {task}")
-        if summary.required_license:
-            rfp_summary.append(f"필수면허: {summary.required_license}")
-        if summary.experience_needed:
-            rfp_summary.append(f"실적요건: {summary.experience_needed}")
-        if summary.restriction:
-            rfp_summary.append(f"제한사항: {summary.restriction}")
-        if summary.evaluation_points:
-            rfp_summary.append(f"평가배점: {summary.evaluation_points}")
+        rfp_period = summary.period or ""
+        if summary.purpose:
+            rfp_sections.append({"label": "목적", "value": summary.purpose})
+            rfp_summary.append(f"목적: {summary.purpose}")
+        if summary.core_tasks:
+            rfp_sections.append({"label": "주요 과업", "items": summary.core_tasks})
+            for t in summary.core_tasks:
+                rfp_summary.append(f"과업: {t}")
     else:
         rfp_summary = ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
 
@@ -929,6 +1075,8 @@ async def analyze_bid_for_proposal(
 
     result = {
         "rfp_summary": rfp_summary,
+        "rfp_sections": rfp_sections,
+        "rfp_period": rfp_period,
         "fit_level": fit_level,
         "positive": positive,
         "negative": negative,
@@ -980,23 +1128,81 @@ async def get_bid_detail(
     team_id: Optional[str] = Query(default=None),
     current_user=Depends(get_current_user_or_none),
 ):
-    """공고 상세 + AI 분석 결과"""
+    """공고 상세 + AI 분석 결과. DB에 없으면 G2B API에서 실시간 조회 + DB 저장."""
     if not _BID_NO_PATTERN.match(bid_no):
         raise HTTPException(status_code=400, detail="유효하지 않은 공고번호 형식입니다.")
 
-    client = await get_async_client()
+    # DB 조회 시도
+    res_data = None
+    try:
+        client = await get_async_client()
+        res = (
+            await client.table("bid_announcements")
+            .select("*")
+            .eq("bid_no", bid_no)
+            .maybe_single()
+            .execute()
+        )
+        if res and res.data:
+            res_data = res.data
+    except Exception as e:
+        logger.warning(f"DB 조회 실패 ({bid_no}): {e}")
 
-    res = (
-        await client.table("bid_announcements")
-        .select("*")
-        .eq("bid_no", bid_no)
-        .maybe_single()
-        .execute()
-    )
-    if not res.data:
-        raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+    # DB에 없으면 G2B API로 실시간 조회
+    if not res_data:
+        try:
+            async with G2BService() as g2b:
+                g2b_detail = await g2b.get_bid_detail(bid_no)
+            if not g2b_detail:
+                raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
 
-    result = {"data": {"announcement": res.data, "recommendation": None}}
+            # G2B 응답 → bid_announcements 형태로 매핑
+            # content_text 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl
+            content_text = (
+                g2b_detail.get("ntceSpecCn")
+                or g2b_detail.get("bidNtceDtlCn")
+                or g2b_detail.get("specDocCn")
+                or g2b_detail.get("bidNtceDtl")
+                or None
+            )
+            row = {
+                "bid_no": bid_no,
+                "bid_title": g2b_detail.get("bidNtceNm", ""),
+                "agency": g2b_detail.get("dminsttNm", ""),
+                "budget_amount": int(float(g2b_detail["presmptPrce"])) if g2b_detail.get("presmptPrce") else None,
+                "deadline_date": None,
+                "content_text": content_text,
+                "raw_data": g2b_detail,
+            }
+            bid_close = g2b_detail.get("bidClseDt", "")
+            if bid_close:
+                row["deadline_date"] = bid_close[:10]
+
+            # DB 저장 시도 (실패해도 무시)
+            try:
+                client = await get_async_client()
+                await client.table("bid_announcements").upsert(row, on_conflict="bid_no").execute()
+                res = (
+                    await client.table("bid_announcements")
+                    .select("*")
+                    .eq("bid_no", bid_no)
+                    .maybe_single()
+                    .execute()
+                )
+                if res and res.data:
+                    res_data = res.data
+            except Exception as e:
+                logger.warning(f"DB upsert 실패 ({bid_no}): {e}")
+
+            if not res_data:
+                res_data = row
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.warning(f"G2B fallback 실패 ({bid_no}): {e}")
+            raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+
+    result = {"data": {"announcement": res_data, "recommendation": None}}
 
     # 팀 AI 분석 결과 포함 (team_id 파라미터가 있는 경우)
     if team_id and current_user:

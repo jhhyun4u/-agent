@@ -168,6 +168,25 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
 
     total_pages = rfp_dict.get("volume_spec", {}).get("max_pages", 100)
 
+    # 유사 콘텐츠 자동 추천 (C-3)
+    reference_content = ""
+    try:
+        from app.services.content_library import suggest_content_for_section
+        suggestions = await suggest_content_for_section(
+            section_topic=f"{section_id} {section_type}",
+            org_id=state.get("org_id", ""),
+            top_k=3,
+        )
+        if suggestions:
+            parts = []
+            for s in suggestions[:3]:
+                excerpt = (s.get("body_excerpt") or s.get("body", ""))[:300]
+                score = s.get("quality_score", 0)
+                parts.append(f"- [{score}점] {s.get('title', '')}: {excerpt}")
+            reference_content = "\n\n## 참고 콘텐츠 (KB 유사 콘텐츠, 참고하되 그대로 복사 금지)\n" + "\n".join(parts)
+    except Exception:
+        pass
+
     return {
         "section_id": section_id,
         "rfp_summary": rfp_summary,
@@ -186,6 +205,7 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
         "eval_item_detail": eval_item_detail,
         "recommended_pages": get_recommended_pages(eval_weight, total_pages),
         "volume_spec": str(rfp_dict.get("volume_spec", {})),
+        "reference_content": reference_content,
         # 케이스 B 전용
         "template_structure": "",
         "section_type_name": "",
@@ -271,6 +291,22 @@ async def proposal_write_next(state: ProposalState) -> dict:
         template_structure=result.get("template_structure") if case_type == "B" else None,
         self_review_score=result.get("self_check"),
     )
+
+    # KB 자동 축적 (A-1: fire-and-forget)
+    try:
+        from app.services.content_library import auto_register_section
+        await auto_register_section(
+            org_id=state.get("org_id", ""),
+            proposal_id=state.get("project_id", ""),
+            section_id=section_id,
+            title=new_section.title,
+            content=new_section.content,
+            section_type=section_type,
+            rfp_keywords=rfp_dict.get("tech_keywords", []),
+            industry=rfp_dict.get("domain", None),
+        )
+    except Exception as e:
+        logger.debug(f"섹션 KB 자동 축적 실패 (무시): {e}")
 
     # 기존 섹션 목록에서 같은 section_id가 있으면 교체, 없으면 추가
     existing_sections = list(state.get("proposal_sections", []))
