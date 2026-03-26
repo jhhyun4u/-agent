@@ -80,9 +80,9 @@ export default function ArchivePage() {
         win_result: winResult || undefined,
         page,
       });
-      setItems(res.items);
-      setTotalPages(res.pages);
-      setTotal(res.total);
+      setItems(res.data);
+      setTotalPages(res.meta?.pages ?? 1);
+      setTotal(res.meta?.total ?? 0);
     } catch (e) {
       setError(e instanceof Error ? e.message : "목록 로드 실패");
     } finally {

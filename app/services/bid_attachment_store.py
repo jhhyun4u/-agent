@@ -12,13 +12,15 @@ from pathlib import Path
 
 import aiohttp
 
+from app.config import settings
+
 logger = logging.getLogger(__name__)
 
 ATTACHMENT_DIR = Path("data/bid_attachments")
 BUCKET = "bid-attachments"
 SUPPORTED_EXTS = {"pdf", "hwp", "hwpx", "docx"}
 MAX_FILES = 5
-DOWNLOAD_TIMEOUT = 30
+DOWNLOAD_TIMEOUT = settings.file_download_timeout_seconds
 
 # 파일 분류 우선순위 (작을수록 먼저)
 _TYPE_MAP = {
@@ -148,7 +150,7 @@ async def get_attachment_download_url(bid_no: str, filename: str) -> str | None:
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
         signed = await client.storage.from_(BUCKET).create_signed_url(
-            f"{bid_no}/{filename}", expires_in=3600
+            f"{bid_no}/{filename}", expires_in=settings.signed_url_expiry_seconds
         )
         return signed.get("signedURL") or signed.get("signedUrl") or signed.get("data", {}).get("signedUrl", "")
     except Exception as e:
@@ -180,7 +182,7 @@ async def copy_bid_attachments_to_proposal(bid_no: str, proposal_id: str, raw_da
         src_path = f"{bid_no}/{att['name']}"
         try:
             data = await client.storage.from_(BUCKET).download(src_path)
-            await client.storage.from_("proposal-files").upload(
+            await client.storage.from_(settings.storage_bucket_proposals).upload(
                 path=storage_path,
                 file=data,
                 file_options={"content-type": "application/octet-stream", "upsert": "true"},
@@ -192,7 +194,7 @@ async def copy_bid_attachments_to_proposal(bid_no: str, proposal_id: str, raw_da
                     async with session.get(att["url"], timeout=aiohttp.ClientTimeout(total=DOWNLOAD_TIMEOUT)) as resp:
                         if resp.status == 200:
                             file_bytes = await resp.read()
-                            await client.storage.from_("proposal-files").upload(
+                            await client.storage.from_(settings.storage_bucket_proposals).upload(
                                 path=storage_path,
                                 file=file_bytes,
                                 file_options={"content-type": "application/octet-stream", "upsert": "true"},

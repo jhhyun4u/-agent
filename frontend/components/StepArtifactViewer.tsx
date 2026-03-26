@@ -17,15 +17,25 @@ interface StepArtifactViewerProps {
   className?: string;
 }
 
-// STEP → artifact key 매핑
+// STEP index → artifact key 매핑
+// WORKFLOW_STEPS 배열 index 기준 (step 번호 아님):
+//   [0] step 1   RFP 분석    → rfp_analyze, research_gather, go_no_go
+//   [1] step 2   전략 수립   → strategy
+//   [2] step 2.5 가격 결정   → bid_plan, bid_budget_constraint
+//   [3] step 3   실행 계획   → plan
+//   [4] step 4   제안서 작성  → proposal, self_review
+//   [5] step 5   PPT 생성    → presentation_strategy, ppt_storyboard
 const STEP_ARTIFACTS: Record<number, { key: string; label: string }[]> = {
-  0: [{ key: "search_results", label: "공고 검색 결과" }],
-  1: [
+  0: [
     { key: "rfp_analyze", label: "RFP 분석" },
     { key: "research_gather", label: "리서치 결과" },
     { key: "go_no_go", label: "Go/No-Go 판정" },
   ],
-  2: [{ key: "strategy", label: "제안 전략" }],
+  1: [{ key: "strategy", label: "제안 전략" }],
+  2: [
+    { key: "bid_plan", label: "입찰가격 계획" },
+    { key: "bid_budget_constraint", label: "예산 제약" },
+  ],
   3: [
     { key: "plan", label: "실행 계획" },
   ],
@@ -105,7 +115,7 @@ export default function StepArtifactViewer({
       {/* 산출물 탭 */}
       <div className="flex items-center gap-1.5 mb-3">
         <span className="text-[10px] text-[#8c8c8c] uppercase tracking-wider mr-2">
-          STEP {stepIndex} 산출물
+          STEP {WORKFLOW_STEPS[stepIndex]?.step ?? stepIndex} 산출물
         </span>
         {artifacts.map((a) => (
           <button
@@ -281,30 +291,104 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
 function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
   const caseType = data.case_type as string | undefined;
   const hotButtons = data.hot_buttons as string[] | undefined;
-  const evalItems = data.eval_items as Array<{ item: string; weight: number }> | undefined;
+  const evalItems = data.eval_items as Array<{ item: string; weight: number; sub_items?: string[] }> | undefined;
   const mandatoryReqs = data.mandatory_reqs as string[] | undefined;
+  const domain = data.domain as string | undefined;
+  const budget = data.budget as string | undefined;
+  const duration = data.duration as string | undefined;
+  const contractType = data.contract_type as string | undefined;
+  const evalMethod = data.eval_method as string | undefined;
+  const techPriceRatio = data.tech_price_ratio as { tech?: number; price?: number } | undefined;
+  const qualReqs = data.qualification_requirements as string[] | undefined;
+  const similarReqs = data.similar_project_requirements as string[] | undefined;
+  const keyPersonnel = data.key_personnel_requirements as Array<{ role: string; grade: string; certifications?: string[] }> | undefined;
+  const deliveryPhases = data.delivery_phases as Array<{ phase: string; period: string; deliverables?: string[] }> | undefined;
+  const projectScope = data.project_scope as string | undefined;
+  const priceScoring = data.price_scoring as { formula_type?: string; price_weight?: number } | undefined;
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] text-[#8c8c8c]">케이스 유형:</span>
-        <span className="text-xs font-bold text-[#ededed]">{caseType || "A"}</span>
+      {/* 사업 개요 뱃지 */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-[10px] px-2 py-0.5 rounded bg-[#262626] text-[#ededed] font-medium">
+          케이스 {caseType || "A"}
+        </span>
+        {domain && (
+          <span className="text-[10px] px-2 py-0.5 rounded bg-[#3ecf8e]/10 text-[#3ecf8e] border border-[#3ecf8e]/20">
+            {domain}
+          </span>
+        )}
+        {evalMethod && (
+          <span className="text-[10px] px-2 py-0.5 rounded bg-[#262626] text-[#8c8c8c]">
+            {evalMethod}
+          </span>
+        )}
+        {contractType && (
+          <span className="text-[10px] px-2 py-0.5 rounded bg-[#262626] text-[#8c8c8c]">
+            {contractType}
+          </span>
+        )}
       </div>
 
+      {/* 예산·기간 */}
+      {(budget || duration) && (
+        <div className="flex items-center gap-4 bg-[#111111] rounded-lg px-3 py-2">
+          {budget && (
+            <div>
+              <span className="text-[9px] text-[#5c5c5c] block">예산</span>
+              <span className="text-xs font-bold text-[#ededed]">{budget}</span>
+            </div>
+          )}
+          {duration && (
+            <div>
+              <span className="text-[9px] text-[#5c5c5c] block">기간</span>
+              <span className="text-xs font-bold text-[#ededed]">{duration}</span>
+            </div>
+          )}
+          {techPriceRatio && (
+            <div>
+              <span className="text-[9px] text-[#5c5c5c] block">기술:가격</span>
+              <span className="text-xs font-bold text-[#ededed]">{techPriceRatio.tech}:{techPriceRatio.price}</span>
+            </div>
+          )}
+          {priceScoring?.formula_type && (
+            <div>
+              <span className="text-[9px] text-[#5c5c5c] block">가격산식</span>
+              <span className="text-xs font-medium text-amber-400">{priceScoring.formula_type} ({priceScoring.price_weight}점)</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 사업 범위 */}
+      {projectScope && (
+        <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
+          <p className="text-[9px] text-[#5c5c5c] uppercase mb-0.5">사업 범위</p>
+          <p className="text-[10px] text-[#ededed] leading-relaxed">{projectScope}</p>
+        </div>
+      )}
+
+      {/* 평가항목 */}
       {evalItems && evalItems.length > 0 && (
         <div>
           <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">평가항목 ({evalItems.length}개)</p>
           <div className="space-y-1">
             {evalItems.map((e, i) => (
-              <div key={i} className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5">
-                <span className="text-[10px] text-[#ededed]">{e.item}</span>
-                <span className="text-[10px] font-bold text-[#3ecf8e]">{e.weight}점</span>
+              <div key={i} className="bg-[#111111] rounded px-2.5 py-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-[#ededed]">{e.item}</span>
+                  <span className="text-[10px] font-bold text-[#3ecf8e]">{e.weight}점</span>
+                </div>
+                {e.sub_items && e.sub_items.length > 0 && (
+                  <p className="text-[9px] text-[#5c5c5c] mt-0.5">{e.sub_items.join(", ")}</p>
+                )}
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* 핫버튼 */}
       {hotButtons && hotButtons.length > 0 && (
         <div>
           <p className="text-[9px] text-amber-400 uppercase mb-1">핫버튼</p>
@@ -318,12 +402,68 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
         </div>
       )}
 
+      {/* 필수 요건 */}
       {mandatoryReqs && mandatoryReqs.length > 0 && (
         <div>
           <p className="text-[9px] text-red-400 uppercase mb-1">필수 요건</p>
           {mandatoryReqs.map((r, i) => (
             <p key={i} className="text-[10px] text-[#8c8c8c]">- {r}</p>
           ))}
+        </div>
+      )}
+
+      {/* 업체 자격 + 유사 실적 */}
+      {(qualReqs?.length || similarReqs?.length) ? (
+        <div className="grid grid-cols-2 gap-2">
+          {qualReqs && qualReqs.length > 0 && (
+            <div>
+              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">업체 자격</p>
+              {qualReqs.map((q, i) => (
+                <p key={i} className="text-[10px] text-[#8c8c8c]">- {q}</p>
+              ))}
+            </div>
+          )}
+          {similarReqs && similarReqs.length > 0 && (
+            <div>
+              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">유사 실적</p>
+              {similarReqs.map((s, i) => (
+                <p key={i} className="text-[10px] text-[#8c8c8c]">- {s}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : null}
+
+      {/* 핵심인력 요건 */}
+      {keyPersonnel && keyPersonnel.length > 0 && (
+        <div>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">핵심인력 요건</p>
+          <div className="space-y-1">
+            {keyPersonnel.map((p, i) => (
+              <div key={i} className="flex items-center gap-2 bg-[#111111] rounded px-2.5 py-1.5">
+                <span className="text-[10px] font-medium text-[#ededed]">{p.role}</span>
+                <span className="text-[10px] text-[#8c8c8c]">{p.grade}</span>
+                {p.certifications && (
+                  <span className="text-[10px] text-[#3ecf8e]">{p.certifications.join(", ")}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 수행 단계 */}
+      {deliveryPhases && deliveryPhases.length > 0 && (
+        <div>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">수행 단계</p>
+          <div className="space-y-1">
+            {deliveryPhases.map((ph, i) => (
+              <div key={i} className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5">
+                <span className="text-[10px] text-[#ededed]">{ph.phase}</span>
+                <span className="text-[10px] text-[#8c8c8c]">{ph.period}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -12,7 +12,7 @@ from typing import List, Optional
 
 import json as _json
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Form, HTTPException, UploadFile, File
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, UploadFile, File
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
@@ -21,7 +21,11 @@ from app.services.session_manager import session_manager
 from app.models.phase_schemas import Phase1Artifact, Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.services.phase_executor import PhaseExecutor
 from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
-from app.exceptions import SessionNotFoundError
+from app.exceptions import (
+    FileSizeExceededError, FileFormatError, FileNotFoundError_,
+    InvalidRequestError, ConflictError, InternalServiceError, PropNotFoundError,
+    ResourceNotFoundError,
+)
 from app.services.template_service import get_available_templates, get_template_toc, clear_toc_cache
 from app.api.deps import get_current_user
 
@@ -81,19 +85,16 @@ async def generate_proposal_v31(
         content = await rfp_file.read()
         max_bytes = settings.max_file_size_mb * 1024 * 1024
         if len(content) > max_bytes:
-            raise HTTPException(status_code=413, detail=f"파일 크기가 {settings.max_file_size_mb}MB를 초과합니다.")
+            raise FileSizeExceededError(settings.max_file_size_mb, len(content) / (1024 * 1024))
         # 확장자 검증
         ext = os.path.splitext(rfp_file.filename or "")[1].lower()
         if ext not in settings.allowed_file_extensions:
-            raise HTTPException(
-                status_code=415,
-                detail=f"지원하지 않는 파일 형식입니다. 허용: {', '.join(settings.allowed_file_extensions)}"
-            )
+            raise FileFormatError(ext, list(settings.allowed_file_extensions))
         rfp_text = content.decode("utf-8", errors="ignore")
     elif rfp_content:
         rfp_text = rfp_content
     else:
-        raise HTTPException(status_code=400, detail="RFP 콘텐츠가 필요합니다.")
+        raise InvalidRequestError("RFP 콘텐츠가 필요합니다.")
 
     # section_ids JSON 파싱
     parsed_section_ids: Optional[List[str]] = None
@@ -133,16 +134,13 @@ async def generate_proposal_v31(
         }
     except Exception as e:
         logger.error(f"세션 생성 오류: {proposal_id} — {e}")
-        raise HTTPException(status_code=500, detail="제안서 세션 생성 중 오류가 발생했습니다.")
+        raise InternalServiceError("제안서 세션 생성 중 오류가 발생했습니다.")
 
 
 @router.get("/proposals/{proposal_id}/status")
 async def get_proposal_status_v31(proposal_id: str, current_user=Depends(get_current_user)):
     """제안서 진행 상태 조회"""
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+    session = await session_manager.aget_session(proposal_id)
 
     return {
         "proposal_id": proposal_id,
@@ -159,10 +157,7 @@ async def get_proposal_status_v31(proposal_id: str, current_user=Depends(get_cur
 @router.get("/proposals/{proposal_id}/result")
 async def get_proposal_result_v31(proposal_id: str, current_user=Depends(get_current_user)):
     """제안서 최종 결과 조회"""
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+    session = await session_manager.aget_session(proposal_id)
 
     artifacts = {
         "phase_1_research": session.get("phase_artifact_1", {}),
@@ -195,23 +190,20 @@ async def execute_proposal_phase_v31(
     current_user=Depends(get_current_user),
 ):
     """5-Phase 파이프라인 비동기 실행 (즉시 202 반환, 백그라운드 실행)"""
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+    session = await session_manager.aget_session(proposal_id)
 
     current_status = session.get("status", "initialized")
     if current_status == "processing":
-        raise HTTPException(status_code=409, detail="이미 실행 중입니다.")
+        raise ConflictError("이미 실행 중입니다.")
     if current_status == "completed":
-        raise HTTPException(status_code=409, detail="이미 완료된 제안서입니다.")
+        raise ConflictError("이미 완료된 제안서입니다.")
 
     if start_phase not in range(1, 6):
-        raise HTTPException(status_code=400, detail="start_phase는 1~5여야 합니다.")
+        raise InvalidRequestError("start_phase는 1~5여야 합니다.")
 
     rfp_content = session.get("proposal_state", {}).get("rfp_content", "")
     if not rfp_content:
-        raise HTTPException(status_code=400, detail="RFP 콘텐츠가 없습니다.")
+        raise InvalidRequestError("RFP 콘텐츠가 없습니다.")
 
     if start_phase == 1:
         background_tasks.add_task(_run_phases, proposal_id, rfp_content)
@@ -240,18 +232,15 @@ async def download_document(proposal_id: str, file_type: str, current_user=Depen
     from app.utils.supabase_client import get_async_client
 
     if file_type not in ("docx", "pptx", "hwpx"):
-        raise HTTPException(status_code=400, detail="file_type은 docx, pptx, hwpx 중 하나여야 합니다.")
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+        raise InvalidRequestError("file_type은 docx, pptx, hwpx 중 하나여야 합니다.")
+    session = await session_manager.aget_session(proposal_id)
 
     # 1. Storage 서명 URL 시도
     storage_path = session.get(f"{file_type}_storage_path", "")
     if storage_path:
         try:
             client = await get_async_client()
-            signed = await client.storage.from_("proposal-files").create_signed_url(
+            signed = await client.storage.from_(settings.storage_bucket_proposals).create_signed_url(
                 storage_path, expires_in=300  # 5분 유효
             )
             url = signed.get("signedURL") or signed.get("signed_url", "")
@@ -263,9 +252,9 @@ async def download_document(proposal_id: str, file_type: str, current_user=Depen
     # 2. 로컬 파일 폴백
     path = session.get(f"{file_type}_path", "")
     if not path:
-        raise HTTPException(status_code=404, detail="파일이 아직 생성되지 않았습니다.")
+        raise FileNotFoundError_("파일이 아직 생성되지 않았습니다.")
     if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="파일을 찾을 수 없습니다.")
+        raise FileNotFoundError_("파일을 찾을 수 없습니다.")
     return FileResponse(path, filename=f"proposal_{proposal_id}.{file_type}")
 
 
@@ -350,26 +339,22 @@ async def run_single_phase(proposal_id: str, phase_num: int, current_user=Depend
       POST /generate  →  POST /phase/1  →  POST /phase/2  →  ...  →  POST /phase/5
     """
     if phase_num not in range(1, 6):
-        raise HTTPException(status_code=400, detail="phase_num은 1~5여야 합니다.")
+        raise InvalidRequestError("phase_num은 1~5여야 합니다.")
 
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+    session = await session_manager.aget_session(proposal_id)
 
     if session.get("status") == "processing":
-        raise HTTPException(status_code=409, detail="이미 실행 중입니다.")
+        raise ConflictError("이미 실행 중입니다.")
 
     phases_completed = session.get("phases_completed", 0)
     if phase_num > 1 and phases_completed < phase_num - 1:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Phase {phase_num - 1}을 먼저 실행해야 합니다. 현재 완료: Phase {phases_completed}",
+        raise InvalidRequestError(
+            f"Phase {phase_num - 1}을 먼저 실행해야 합니다. 현재 완료: Phase {phases_completed}",
         )
 
     rfp_content = session.get("proposal_state", {}).get("rfp_content", "")
     if not rfp_content:
-        raise HTTPException(status_code=400, detail="RFP 콘텐츠가 없습니다.")
+        raise InvalidRequestError("RFP 콘텐츠가 없습니다.")
 
     executor = PhaseExecutor(proposal_id, session_manager)
 
@@ -427,7 +412,7 @@ async def run_single_phase(proposal_id: str, phase_num: int, current_user=Depend
     except Exception as e:
         session_manager.update_session(proposal_id, {"status": "failed", "error": str(e)})
         logger.error(f"[{proposal_id}] Phase {phase_num} 실패: {e}")
-        raise HTTPException(status_code=500, detail=f"Phase {phase_num} 실행 중 오류가 발생했습니다.")
+        raise InternalServiceError(f"Phase {phase_num} 실행 중 오류가 발생했습니다.")
 
 
 @router.get("/proposals/{proposal_id}/versions")
@@ -442,7 +427,7 @@ async def get_proposal_versions(proposal_id: str, current_user=Depends(get_curre
     while True:
         resp = client.table("proposals").select("id, parent_id").eq("id", current_id).single().execute()
         if not resp.data:
-            raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
+            raise PropNotFoundError(current_id)
         if resp.data.get("parent_id") is None:
             root_id = current_id
             break
@@ -494,7 +479,7 @@ async def create_new_version(proposal_id: str, current_user=Depends(get_current_
         .execute()
     )
     if not src_resp.data:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
+        raise PropNotFoundError(proposal_id)
     src = src_resp.data
 
     # 루트 ID 결정
@@ -537,7 +522,7 @@ async def create_new_version(proposal_id: str, current_user=Depends(get_current_
     }
     ins_resp = client.table("proposals").insert(insert_data).execute()
     if not ins_resp.data:
-        raise HTTPException(status_code=500, detail="새 버전 생성에 실패했습니다.")
+        raise InternalServiceError("새 버전 생성에 실패했습니다.")
 
     # 세션 초기화 (rfp_content 포함)
     try:
@@ -569,18 +554,14 @@ async def create_new_version(proposal_id: str, current_user=Depends(get_current_
 async def get_phase_artifact(proposal_id: str, phase_num: int, current_user=Depends(get_current_user)):
     """특정 Phase 아티팩트 조회"""
     if phase_num not in range(1, 6):
-        raise HTTPException(status_code=400, detail="phase_num은 1~5여야 합니다.")
-    try:
-        session = await session_manager.aget_session(proposal_id)
-    except SessionNotFoundError as e:
-        raise HTTPException(status_code=404, detail=str(e.message))
+        raise InvalidRequestError("phase_num은 1~5여야 합니다.")
+    session = await session_manager.aget_session(proposal_id)
 
     key = f"phase_artifact_{phase_num}"
     artifact = session.get(key)
     if not artifact:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Phase {phase_num} 아티팩트가 없습니다. 먼저 POST /phase/{phase_num}을 실행하세요.",
+        raise ResourceNotFoundError(
+            f"Phase {phase_num} 아티팩트",
         )
     return {
         "proposal_id": proposal_id,

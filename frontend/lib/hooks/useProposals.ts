@@ -42,8 +42,8 @@ export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult
     try {
       const data = await api.proposals.list({ q, status, page });
       if (!cancelledRef.current) {
-        setProposals(data.items);
-        setTotal(data.total ?? data.items.length);
+        setProposals(data.data);
+        setTotal(data.meta?.total ?? data.data.length);
       }
     } catch (err) {
       if (!cancelledRef.current) {

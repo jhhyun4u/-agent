@@ -57,7 +57,10 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--ignore=tests/integration"
+addopts = "--ignore=tests/integration/live"
+markers = [
+    "live: 실제 외부 서비스 연결 필요 (로컬/스테이징 전용)",
+]
 
 [dependency-groups]
 dev = [

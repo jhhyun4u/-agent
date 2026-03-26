@@ -59,7 +59,7 @@ async def send_teams_notification(
     }
 
     try:
-        async with httpx.AsyncClient(timeout=10.0) as http:
+        async with httpx.AsyncClient(timeout=float(settings.webhook_timeout_seconds)) as http:
             resp = await http.post(webhook_url, json=card)
             if resp.status_code != 200:
                 logger.warning(f"Teams 알림 전송 실패: {resp.status_code}")
@@ -206,7 +206,7 @@ async def notify_ai_complete(
         user_id=created_by,
         proposal_id=proposal_id,
         type="ai_complete",
-        title=f"AI 작업 완료",
+        title="AI 작업 완료",
         body=f"{step} 단계 AI 생성이 완료되었습니다. 검토해 주세요.",
         link=f"/projects/{proposal_id}/review/{step}",
     )

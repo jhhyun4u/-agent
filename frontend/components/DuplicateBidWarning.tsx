@@ -28,7 +28,7 @@ export default function DuplicateBidWarning({ bidNo, rfpTitle }: Props) {
       try {
         // 제안서 목록에서 같은 제목이나 bid_no로 검색
         const res = await api.proposals.list({ page: 1, search: bidNo });
-        const matches = res.items.filter(
+        const matches = res.data.filter(
           (p) => p.title?.includes(bidNo) || p.title === rfpTitle
         );
         setExisting(matches);

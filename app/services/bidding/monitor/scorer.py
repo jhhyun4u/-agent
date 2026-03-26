@@ -232,7 +232,7 @@ def score_bid(raw: Dict[str, Any], reference_date: Optional[date] = None) -> Bid
 
     title = raw.get("bidNtceNm", "")
     title_lower = title.lower()
-    agency = raw.get("ntceInsttNm", "") or raw.get("dminsttNm", "")
+    agency = raw.get("dminsttNm", "") or raw.get("ntceInsttNm", "")
     cls_detail = (raw.get("pubPrcrmntClsfcNm") or "").strip()
     cls_large = (raw.get("pubPrcrmntLrgClsfcNm") or "").strip()
 

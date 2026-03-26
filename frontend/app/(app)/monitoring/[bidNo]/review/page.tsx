@@ -51,10 +51,14 @@ export default function BidReviewPage() {
 
   const [bidInfo, setBidInfo] = useState<BidInfo | null>(null);
   const [analysis, setAnalysis] = useState<BidAnalysis | null>(() => {
-    // sessionStorage에서 캐시된 분석 결과 복원
+    // sessionStorage에서 캐시된 분석 결과 복원 (유효한 AI 분석만)
     try {
       const cached = typeof window !== "undefined" ? sessionStorage.getItem(`bid_analysis_${bidNo}`) : null;
-      return cached ? JSON.parse(cached) : null;
+      if (!cached) return null;
+      const parsed = JSON.parse(cached);
+      // suitability_score가 없거나 0이면 fallback 결과 → 무효 캐시
+      if (!parsed.suitability_score || parsed.suitability_score <= 0) return null;
+      return parsed;
     } catch { return null; }
   });
   const [loading, setLoading] = useState(true);
@@ -62,6 +66,7 @@ export default function BidReviewPage() {
   const [deciding, setDeciding] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [analysisFailed, setAnalysisFailed] = useState(false);
 
   // 분석 결과를 sessionStorage에 캐싱하는 래퍼
   function setAnalysisWithCache(data: BidAnalysis | null) {
@@ -79,6 +84,14 @@ export default function BidReviewPage() {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
       console.log("[review] baseUrl:", baseUrl, "bidNo:", bidNo);
       let loaded = false;
+
+      // 인증 토큰 (실패해도 계속 진행)
+      let token = "";
+      try { token = await getToken(); } catch (e) { console.warn("[review] getToken 실패:", e); }
+      const authHeaders: Record<string, string> = {};
+      if (token) authHeaders["Authorization"] = `Bearer ${token}`;
+
+     try {  // ← 최상위 try: 어떤 에러든 loading/analyzing 상태 복구 보장
 
       // 1) sessionStorage 데이터 우선 (scored 또는 monitor에서 전달)
       try {
@@ -100,9 +113,6 @@ export default function BidReviewPage() {
       } catch { /* 파싱 실패 무시 */ }
 
       // 2) DB에서 공고 상세 조회 (10초 타임아웃)
-      const token = await getToken();
-      const authHeaders: Record<string, string> = {};
-      if (token) authHeaders["Authorization"] = `Bearer ${token}`;
       try {
         console.log("[review] Step 2: fetching /bids/" + bidNo);
         const controller = new AbortController();
@@ -183,13 +193,13 @@ export default function BidReviewPage() {
         return;
       }
 
-      // AI 분석 (별도, 30초 타임아웃 — Claude API 2회 호출 소요)
+      // AI 분석 (별도, 60초 타임아웃 — 통합 단일 Claude 호출 45s + 마진)
       setAnalyzing(true);
       let analysisLoaded = false;
       try {
         console.log("[review] Step 4: fetching /bids/" + bidNo + "/analysis");
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000);
+        const timeout = setTimeout(() => controller.abort(), 60000);
         const res = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
           signal: controller.signal,
           headers: authHeaders,
@@ -206,13 +216,16 @@ export default function BidReviewPage() {
         }
       } catch (e) {
         if (e instanceof DOMException && e.name === "AbortError") {
-          console.warn("AI 분석 타임아웃 (30초 초과)");
+          console.warn("AI 분석 타임아웃 (60초 초과)");
         } else {
           console.warn("AI 분석 오류:", e);
         }
       }
 
       // analysis API 실패 시 → scored/bidInfo 기반 간이 분석 생성
+      if (!analysisLoaded && !cancelled) {
+        setAnalysisFailed(true);
+      }
       if (!analysisLoaded) {
         // scored 데이터 시도
         let score = 0;
@@ -261,7 +274,8 @@ export default function BidReviewPage() {
         }
       }
 
-      // 파이프라인 진행 중이면 폴링
+      // 파이프라인 진행 중이면 폴링 (최대 24회 = 2분)
+      const MAX_POLL = 24;
       if (!analysisLoaded && !cancelled) {
         try {
           const pRes = await fetch(`${baseUrl}/bids/pipeline/status?bid_no=${bidNo}`, { signal: AbortSignal.timeout(5000) });
@@ -269,24 +283,37 @@ export default function BidReviewPage() {
             const pData = await pRes.json();
             const pStatus = pData.data?.[bidNo];
             if (pStatus && pStatus.step !== "done" && !pStatus.error) {
-              // 파이프라인 진행 중 → 5초 폴링
+              let pollCount = 0;
               pollTimer = setInterval(async () => {
-                if (cancelled) { if (pollTimer) clearInterval(pollTimer); return; }
+                pollCount++;
+                if (cancelled || pollCount > MAX_POLL) {
+                  if (pollTimer) clearInterval(pollTimer);
+                  pollTimer = null;
+                  if (!cancelled) {
+                    console.warn(`폴링 ${pollCount > MAX_POLL ? "최대 횟수 초과" : "취소"}`);
+                    setAnalyzing(false);
+                  }
+                  return;
+                }
                 try {
                   const r = await fetch(`${baseUrl}/bids/pipeline/status?bid_no=${bidNo}`, { signal: AbortSignal.timeout(5000) });
                   if (r.ok) {
                     const p = await r.json();
                     const s = p.data?.[bidNo];
-                    if (!s || s.step === "done") {
+                    if (!s || s.step === "done" || s.error) {
                       if (pollTimer) clearInterval(pollTimer);
                       pollTimer = null;
                       if (cancelled) return;
-                      const aRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, { signal: AbortSignal.timeout(30000) });
-                      if (aRes.ok && !cancelled) setAnalysisWithCache((await aRes.json()).data);
-                      if (!cancelled) setAnalyzing(false);
+                      if (!s?.error) {
+                        try {
+                          const aRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, { signal: AbortSignal.timeout(30000) });
+                          if (aRes.ok) setAnalysisWithCache((await aRes.json()).data);
+                        } catch { /* 재조회 실패 무시 */ }
+                      }
+                      setAnalyzing(false);
                     }
                   }
-                } catch { /* 폴링 실패 무시 */ }
+                } catch { /* 폴링 단건 실패 무시 — 다음 폴링에서 재시도 */ }
               }, 5000);
               return; // analyzing 상태 유지
             }
@@ -295,6 +322,16 @@ export default function BidReviewPage() {
       }
 
       if (!cancelled) setAnalyzing(false);
+
+     } catch (e) {
+       // 최상위 에러 핸들러: 어떤 에러든 UI 상태 복구
+       console.error("[review] 치명적 오류:", e);
+       if (!cancelled) {
+         setLoading(false);
+         setAnalyzing(false);
+         setError("분석 중 오류가 발생했습니다. 페이지를 새로고침해주세요.");
+       }
+     }
     })();
 
     return () => {
@@ -584,6 +621,43 @@ export default function BidReviewPage() {
                         ))}
                     </div>
                   </div>
+                )}
+                {/* 분석 실패 시 재분석 버튼 */}
+                {analysisFailed && !analyzing && (
+                  <button
+                    onClick={() => {
+                      sessionStorage.removeItem(`bid_analysis_${bidNo}`);
+                      setAnalysis(null);
+                      setAnalysisFailed(false);
+                      setAnalyzing(true);
+                      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+                      (async () => {
+                        try {
+                          const tk = await getToken();
+                          const headers: Record<string, string> = {};
+                          if (tk) headers["Authorization"] = `Bearer ${tk}`;
+                          const res = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
+                            signal: AbortSignal.timeout(120000),
+                            headers,
+                          });
+                          if (res.ok) {
+                            const json = await res.json();
+                            setAnalysisWithCache(json.data);
+                            setAnalysisFailed(false);
+                          } else {
+                            setAnalysisFailed(true);
+                          }
+                        } catch {
+                          setAnalysisFailed(true);
+                        } finally {
+                          setAnalyzing(false);
+                        }
+                      })();
+                    }}
+                    className="w-full text-xs text-blue-400 border border-blue-900/50 bg-blue-950/20 rounded-lg py-2 hover:bg-blue-950/40 transition-colors"
+                  >
+                    AI 재분석 요청
+                  </button>
                 )}
               </div>
             )}

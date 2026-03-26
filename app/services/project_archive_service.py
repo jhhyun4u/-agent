@@ -10,11 +10,12 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
+from app.config import settings
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
-BUCKET = "proposal-files"
+BUCKET = settings.storage_bucket_proposals
 
 # ═══════════════════════════════════════════
 # 산출물 정의 레지스트리
@@ -209,28 +210,164 @@ def _to_dict(obj: Any) -> Any:
 
 
 def _render_rfp_analysis(data: Any) -> str:
+    """RFP 분석 결과 → 제안전략 수립 기초자료 MD 보고서."""
     d = _to_dict(data)
-    lines = [
-        f"# RFP 분석 결과",
-        f"\n## 사업명: {d.get('project_name', '')}",
-        f"- 발주기관: {d.get('client', '')}",
-        f"- 마감일: {d.get('deadline', '')}",
-        f"- 케이스: {d.get('case_type', '')}",
-        f"- 평가방법: {d.get('eval_method', '')}",
-        f"- 기술/가격 비율: {json.dumps(d.get('tech_price_ratio', {}), ensure_ascii=False)}",
-        f"\n## Hot Buttons",
+    lines: list[str] = ["# RFP 분석 보고서 — 제안전략 수립 기초자료", ""]
+
+    # ── 1. 사업 개요 ──
+    lines.append("## 1. 사업 개요\n")
+    lines.append("| 항목 | 내용 |")
+    lines.append("|------|------|")
+    overview = [
+        ("사업명", d.get("project_name", "")),
+        ("발주기관", d.get("client", "")),
+        ("사업 분류", d.get("domain", "") or "(미분류)"),
+        ("예산", d.get("budget", "") or "(미명시)"),
+        ("수행 기간", d.get("duration", "") or "(미명시)"),
+        ("마감일", d.get("deadline", "")),
+        ("계약 유형", d.get("contract_type", "") or "(미명시)"),
+        ("케이스 유형", f"{d.get('case_type', 'A')} ({'자유양식' if d.get('case_type') == 'A' else '지정서식'})"),
+        ("평가 방식", d.get("eval_method", "") or "(미명시)"),
     ]
+    for label, value in overview:
+        lines.append(f"| {label} | {value} |")
+
+    # ── 2. 사업 범위 ──
+    lines.append("\n## 2. 사업 범위\n")
+    scope = d.get("project_scope", "")
+    lines.append(scope if scope else "(RFP에 미명시)")
+
+    # ── 3. 평가 구조 ──
+    lines.append("\n## 3. 평가 구조\n")
+    tpr = d.get("tech_price_ratio", {})
+    if tpr:
+        lines.append(f"- **기술 : 가격 = {tpr.get('tech', '?')} : {tpr.get('price', '?')}**\n")
+    eval_items = d.get("eval_items", [])
+    if eval_items:
+        lines.append("| 평가항목 | 배점 | 세부항목 |")
+        lines.append("|----------|------|----------|")
+        for item in eval_items:
+            name = item.get("item", "") if isinstance(item, dict) else str(item)
+            weight = item.get("weight", "") if isinstance(item, dict) else ""
+            subs = ", ".join(item.get("sub_items", [])) if isinstance(item, dict) else ""
+            lines.append(f"| {name} | {weight} | {subs} |")
+    else:
+        lines.append("(평가항목 미추출)")
+
+    # ── 4. 가격평가 산식 ──
+    lines.append("\n## 4. 가격평가 산식\n")
+    ps = d.get("price_scoring")
+    if ps and isinstance(ps, dict) and ps.get("formula_type"):
+        lines.append(f"- 산식 유형: **{ps.get('formula_type', '')}**")
+        lines.append(f"- 설명: {ps.get('description', '')}")
+        lines.append(f"- 가격 배점: {ps.get('price_weight', 0)}점")
+        params = ps.get("parameters", {})
+        if params:
+            lines.append(f"- 파라미터: {json.dumps(params, ensure_ascii=False)}")
+    else:
+        lines.append("(RFP에 가격평가 산식 미명시 — 표준 공식 적용)")
+
+    # ── 5. 핫버튼 ──
+    lines.append("\n## 5. 핫버튼 (발주처 핵심 관심사)\n")
     for hb in d.get("hot_buttons", []):
         lines.append(f"- {hb}")
-    lines.append("\n## 필수 요구사항")
+    if not d.get("hot_buttons"):
+        lines.append("(미추출)")
+
+    # ── 6. 필수 요구사항 ──
+    lines.append("\n## 6. 필수 요구사항 (미충족 시 탈락)\n")
     for req in d.get("mandatory_reqs", []):
         lines.append(f"- {req}")
-    lines.append("\n## 평가항목")
-    for item in d.get("eval_items", []):
-        lines.append(f"- {json.dumps(item, ensure_ascii=False)}")
-    lines.append("\n## 특수조건")
+    if not d.get("mandatory_reqs"):
+        lines.append("(미추출)")
+
+    # ── 7. 업체 자격 요건 ──
+    lines.append("\n## 7. 업체 자격 요건\n")
+    quals = d.get("qualification_requirements", [])
+    if quals:
+        for q in quals:
+            lines.append(f"- {q}")
+    else:
+        lines.append("(RFP에 미명시)")
+
+    # ── 8. 유사 수행실적 요건 ──
+    lines.append("\n## 8. 유사 수행실적 요건\n")
+    similar = d.get("similar_project_requirements", [])
+    if similar:
+        for s in similar:
+            lines.append(f"- {s}")
+    else:
+        lines.append("(RFP에 미명시)")
+
+    # ── 9. 핵심인력 요건 ──
+    lines.append("\n## 9. 핵심인력 요건\n")
+    personnel = d.get("key_personnel_requirements", [])
+    if personnel:
+        lines.append("| 역할 | 등급 | 자격/인증 |")
+        lines.append("|------|------|-----------|")
+        for p in personnel:
+            if isinstance(p, dict):
+                role = p.get("role", "")
+                grade = p.get("grade", "")
+                certs = ", ".join(p.get("certifications", [])) if isinstance(p.get("certifications"), list) else str(p.get("certifications", ""))
+                lines.append(f"| {role} | {grade} | {certs} |")
+            else:
+                lines.append(f"| {p} | | |")
+    else:
+        lines.append("(RFP에 미명시)")
+
+    # ── 10. 수행 단계 및 마일스톤 ──
+    lines.append("\n## 10. 수행 단계 및 마일스톤\n")
+    phases = d.get("delivery_phases", [])
+    if phases:
+        lines.append("| 단계 | 기간 | 산출물 |")
+        lines.append("|------|------|--------|")
+        for ph in phases:
+            if isinstance(ph, dict):
+                name = ph.get("phase", "")
+                period = ph.get("period", "")
+                delivs = ", ".join(ph.get("deliverables", [])) if isinstance(ph.get("deliverables"), list) else str(ph.get("deliverables", ""))
+                lines.append(f"| {name} | {period} | {delivs} |")
+    else:
+        lines.append("(RFP에 미명시)")
+
+    # ── 11. 서식 템플릿 ──
+    lines.append("\n## 11. 서식 템플릿\n")
+    ft = d.get("format_template", {})
+    if ft and ft.get("exists"):
+        lines.append("- **지정 서식 있음** (케이스 B)")
+        structure = ft.get("structure")
+        if structure and isinstance(structure, dict):
+            for k, v in structure.items():
+                lines.append(f"  - {k}: {v}")
+    else:
+        lines.append("- 자유양식 (케이스 A)")
+
+    # ── 12. 분량 규격 ──
+    lines.append("\n## 12. 분량 규격\n")
+    vs = d.get("volume_spec", {})
+    if vs:
+        for k, v in (vs.items() if isinstance(vs, dict) else []):
+            lines.append(f"- {k}: {v}")
+    else:
+        lines.append("(미명시)")
+
+    # ── 13. 하도급 조건 ──
+    lines.append("\n## 13. 하도급 조건\n")
+    subs = d.get("subcontracting_conditions", [])
+    if subs:
+        for s in subs:
+            lines.append(f"- {s}")
+    else:
+        lines.append("(RFP에 미명시)")
+
+    # ── 14. 특수 조건 ──
+    lines.append("\n## 14. 특수 조건\n")
     for sc in d.get("special_conditions", []):
         lines.append(f"- {sc}")
+    if not d.get("special_conditions"):
+        lines.append("(없음)")
+
     return "\n".join(lines)
 
 

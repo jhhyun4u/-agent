@@ -122,8 +122,8 @@ function ArtifactsView() {
         page,
         q: debouncedQ || undefined,
       });
-      setItems(res.items);
-      setTotalPages(res.pages);
+      setItems(res.data);
+      setTotalPages(res.meta?.pages ?? 1);
     } catch {
       setItems([]);
     } finally {

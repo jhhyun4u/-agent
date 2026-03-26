@@ -4,8 +4,7 @@
 PricingSimulationRequest/Result 및 하위 모델 정의.
 """
 
-from datetime import datetime
-from typing import Literal
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
@@ -168,7 +167,7 @@ class PricingSimulationResult(BaseModel):
     score_simulation: list[dict] = Field(default_factory=list)  # PriceScoreCalculator 결과
     # 메타
     data_quality: str = "rule_based"  # rule_based | statistical | hybrid
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     def to_prompt_context(self) -> str:
         """LangGraph 노드 프롬프트에 주입할 텍스트 생성."""
@@ -189,7 +188,7 @@ class PricingSimulationResult(BaseModel):
             for s in self.scenarios:
                 lines.append(f"- {s.label}: {s.bid_ratio:.1f}% → 수주확률 {s.win_probability:.0%}")
         if self.market_context and self.market_context.avg_bid_ratio:
-            lines.append(f"\n### 시장 컨텍스트")
+            lines.append("\n### 시장 컨텍스트")
             lines.append(f"- 도메인 평균 낙찰률: {self.market_context.avg_bid_ratio:.1f}%")
             lines.append(f"- 평균 참여 업체: {self.market_context.avg_num_bidders:.1f}개")
         return "\n".join(lines)

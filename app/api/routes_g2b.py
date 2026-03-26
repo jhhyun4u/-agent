@@ -16,10 +16,25 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 
 from app.api.deps import get_current_user
+from app.exceptions import G2BExternalError, G2BServiceError, InternalServiceError, TenopAPIError
 from app.services.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
+
+
+def _classify_g2b_error(e: RuntimeError) -> TenopAPIError:
+    """RuntimeError 메시지 기반 G2B 에러 분류."""
+    msg = str(e)
+    if "타임아웃" in msg or "시간 초과" in msg:
+        return G2BExternalError("나라장터 API 응답 시간 초과")
+    if "클라이언트 오류" in msg:
+        return G2BExternalError(msg)
+    if "연결 실패" in msg:
+        return G2BExternalError("나라장터 API 서버 연결 실패")
+    if "API_KEY" in msg:
+        return G2BServiceError("G2B API 키가 설정되지 않았습니다.")
+    return G2BExternalError(msg)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/g2b", tags=["g2b"])
@@ -61,10 +76,10 @@ async def bid_search(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-search 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -95,10 +110,10 @@ async def bid_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-results 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -155,10 +170,10 @@ async def bid_award_info(
             ],
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-award-info 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰정보 조회 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰정보 조회 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -241,10 +256,10 @@ async def bid_stats(
             },
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-stats 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰 통계 조회 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰 통계 조회 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -311,10 +326,10 @@ async def contract_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"contract-results 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -345,10 +360,10 @@ async def company_history(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"company-history 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -381,10 +396,10 @@ async def competitors(
             )
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"competitors 분석 오류: {e}")
-        raise HTTPException(status_code=500, detail="경쟁사 분석 중 오류가 발생했습니다.")
+        raise G2BServiceError("경쟁사 분석 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -401,7 +416,7 @@ async def bulk_sync(
         return result
     except Exception as e:
         logger.error(f"낙찰정보 일괄 동기화 오류: {e}")
-        raise HTTPException(status_code=500, detail="일괄 동기화 중 오류가 발생했습니다.")
+        raise InternalServiceError("일괄 동기화 중 오류가 발생했습니다.")
 
 
 @router.post("/bid-results/{bid_notice_id}")
@@ -415,7 +430,73 @@ async def collect_bid_result(
         result = await fetch_and_store_bid_result(bid_notice_id, domain)
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"낙찰정보 수집 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰정보 수집 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰정보 수집 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 모니터링 진단 + 수동 트리거
+# ─────────────────────────────────────────────
+
+@router.get("/monitor/diagnostics")
+async def monitor_diagnostics(current_user=Depends(get_current_user)):
+    """모니터링 시스템 상태 진단."""
+    from app.config import settings
+    from app.utils.supabase_client import get_async_client
+
+    diag: dict = {"scheduler": "unknown", "g2b_api_key": False, "teams_count": 0,
+                  "teams_with_keywords": 0, "g2b_api_reachable": False, "errors": []}
+
+    # 1) APScheduler
+    try:
+        from apscheduler.schedulers.asyncio import AsyncIOScheduler
+        diag["scheduler"] = "installed"
+    except ImportError:
+        diag["scheduler"] = "NOT_INSTALLED"
+        diag["errors"].append("apscheduler 미설치 — 스케줄러 비활성 상태")
+
+    # 2) G2B API 키
+    diag["g2b_api_key"] = bool(settings.g2b_api_key)
+    if not settings.g2b_api_key:
+        diag["errors"].append("G2B_API_KEY 미설정")
+
+    # 3) 팀 + 키워드
+    try:
+        client = await get_async_client()
+        teams_res = await client.table("teams").select("id, name, monitor_keywords").execute()
+        teams = teams_res.data or []
+        diag["teams_count"] = len(teams)
+        diag["teams_with_keywords"] = sum(
+            1 for t in teams if t.get("monitor_keywords") and len(t["monitor_keywords"]) > 0
+        )
+        if diag["teams_with_keywords"] == 0:
+            diag["errors"].append("monitor_keywords가 설정된 팀이 없음")
+    except Exception as e:
+        diag["errors"].append(f"teams 테이블 조회 실패: {e}")
+
+    # 4) G2B API 연결 테스트 (1건만)
+    if settings.g2b_api_key:
+        try:
+            async with G2BService() as g2b:
+                test = await g2b.search_bid_announcements("테스트", num_of_rows=1)
+                diag["g2b_api_reachable"] = True
+                diag["g2b_test_result_count"] = len(test)
+        except Exception as e:
+            diag["errors"].append(f"G2B API 호출 실패: {e}")
+
+    diag["status"] = "ok" if not diag["errors"] else "issues_found"
+    return diag
+
+
+@router.post("/monitor/trigger")
+async def trigger_monitor(current_user=Depends(get_current_user)):
+    """모니터링 수동 실행 (디버깅용)."""
+    from app.services.scheduled_monitor import daily_g2b_monitor
+    try:
+        result = await daily_g2b_monitor()
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        logger.error(f"수동 모니터링 실행 오류: {e}", exc_info=True)
+        raise InternalServiceError(f"모니터링 실행 실패: {e}")

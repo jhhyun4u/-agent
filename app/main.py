@@ -1,5 +1,5 @@
 """
-FastAPI 애플리케이션 진입점 (v3.4)
+FastAPI 애플리케이션 진입점 (v4.0)
 
 Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker
 - LangGraph StateGraph 기반 다단계 파이프라인
@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """애플리케이션 생명주기"""
-    logger.info("Proposal Architect v3.4 시스템 시작")
+    logger.info("Proposal Architect v4.0 시스템 시작")
     import os
     os.makedirs(settings.output_dir, exist_ok=True)
 
@@ -67,7 +67,7 @@ async def lifespan(app: FastAPI):
         logger.warning(f"lifespan 초기화 경고 (무시): {e}")
 
     # Storage 버킷 자동 생성
-    for bucket_name in ["proposal-files", "bid-attachments"]:
+    for bucket_name in [settings.storage_bucket_proposals, settings.storage_bucket_attachments]:
         try:
             await client.storage.create_bucket(
                 bucket_name, options={"public": False},
@@ -83,6 +83,22 @@ async def lifespan(app: FastAPI):
 
     # PSM-05: 마감 초과 제안서 expired 전환
     await session_manager.mark_expired_proposals()
+
+    # Dev mode: mock user 자동 생성 (FK 제약 충족)
+    if settings.dev_mode:
+        try:
+            from app.api.deps import _DEV_USER_ID
+            check = await client.table("users").select("id").eq("id", _DEV_USER_ID).maybe_single().execute()
+            if not (check and check.data):
+                await client.table("users").upsert({
+                    "id": _DEV_USER_ID,
+                    "email": "lead@tenopa.co.kr",
+                    "name": "이팀장",
+                    "role": "lead",
+                }).execute()
+                logger.info(f"Dev mock user 생성: {_DEV_USER_ID}")
+        except Exception as e:
+            logger.warning(f"Dev mock user 생성 실패 (auth.users FK 필요): {e}")
 
     # §25-2: G2B 정기 모니터링 스케줄러
     from app.services.scheduled_monitor import setup_scheduler
@@ -113,8 +129,8 @@ _is_production = settings.log_format == "json"
 
 app = FastAPI(
     title="Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker",
-    description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v3.4)",
-    version="3.4.0",
+    description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v4.0)",
+    version="4.0.0",
     lifespan=lifespan,
     docs_url=None if _is_production else "/docs",
     redoc_url=None if _is_production else "/redoc",
@@ -156,7 +172,7 @@ async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
 # Phase 0: 인증·사용자
 from app.api.routes_auth import router as auth_router
 from app.api.routes_users import router as users_router
-app.include_router(auth_router, prefix="/api")
+app.include_router(auth_router)
 app.include_router(users_router)
 
 # Phase 1: 제안서 CRUD + 워크플로
@@ -217,10 +233,40 @@ from app.api.routes_submission_docs import router as submission_docs_router
 app.include_router(streams_router)
 app.include_router(submission_docs_router)
 
-# 기존 라우터
-from app.api.routes import router as main_router
+# 팀 협업: /api/teams/*, /api/proposals/comments/*, /api/invitations/*
+from app.api.routes_team import router as team_router
+app.include_router(team_router)
+
+# 나라장터 프록시: /api/g2b/* (router prefix="/g2b", 여기서 /api 추가)
+from app.api.routes_g2b import router as g2b_router
+app.include_router(g2b_router, prefix="/api")
+
+# 섹션 라이브러리 + 아카이브: /api/resources/*, /api/assets, /api/archive
+from app.api.routes_resources import router as resources_router
+app.include_router(resources_router)
+
+# 공통서식 라이브러리: /api/form-templates/*
+from app.api.routes_templates import router as templates_router
+app.include_router(templates_router)
+
+# 낙찰률 통계: /api/stats/*
+from app.api.routes_stats import router as stats_router
+app.include_router(stats_router)
+
+# RFP 일정 관리: /api/calendar/*
+from app.api.routes_calendar import router as calendar_router
+app.include_router(calendar_router)
+
+# v3.1 레거시 파이프라인: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
+from app.api.routes_v31 import router as v31_router
+app.include_router(v31_router, prefix="/api")
+
+# 발표 자료 생성: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
+from app.api.routes_presentation import router as presentation_router
+app.include_router(presentation_router, prefix="/api")
+
+# 입찰 관리: /api/teams/*/bids/*, /api/bids/*
 from app.api.routes_bids import router as bids_router
-app.include_router(main_router, prefix="/api")
 app.include_router(bids_router)
 
 
@@ -229,7 +275,7 @@ app.include_router(bids_router)
 @app.get("/health")
 async def health_check():
     """시스템 상태 확인 (OPS-02: DB 연결 포함)"""
-    health = {"status": "ok", "version": "3.4.0"}
+    health = {"status": "ok", "version": "4.0.0"}
     try:
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
@@ -247,7 +293,7 @@ async def status():
     from app.services.session_manager import session_manager
     return {
         "status": "operational",
-        "version": "3.4.0",
+        "version": "4.0.0",
         "active_sessions": session_manager.get_session_count(),
     }
 

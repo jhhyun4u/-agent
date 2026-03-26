@@ -13,15 +13,26 @@ import re
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, Query
+
+from app.exceptions import (
+    BidNotFoundError,
+    BidValidationError,
+    FileNotFoundError_,
+    InternalServiceError,
+    InvalidRequestError,
+    RateLimitError,
+    ResourceNotFoundError,
+)
 
 from app.api.deps import get_current_user, get_current_user_or_none
+from app.api.response import ok, ok_list
+from app.config import settings
+from app.models.auth_schemas import CurrentUser
 from app.models.bid_schemas import (
     BidAnnouncement,
     BidRecommendation,
-    ExcludedBid,
     QualificationResult,
-    RecommendedBid,
     SearchPreset,
     SearchPresetCreate,
     TeamBidProfile,
@@ -33,38 +44,26 @@ from app.services.g2b_service import G2BService
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["bids"])
+router = APIRouter(prefix="/api", tags=["bids"])
 
 _BID_NO_PATTERN = re.compile(r'^[A-Za-z0-9\-]+$')
 _FETCH_COOLDOWN_HOURS = 1
 
 
-# ── 권한 헬퍼 ────────────────────────────────────────────────
-
-async def _require_team_member(client, team_id: str, user_id: str):
-    res = (
-        await client.table("team_members")
-        .select("role")
-        .eq("team_id", team_id)
-        .eq("user_id", user_id)
-        .maybe_single()
-        .execute()
-    )
-    if not res.data:
-        raise HTTPException(status_code=403, detail="팀 멤버만 접근 가능합니다.")
-    return res.data["role"]
+# ── 권한 헬퍼 (app/api/permissions.py 공유 모듈) ──
+from app.api.permissions import require_team_member as _require_team_member
 
 
 # ── F-02: 팀 프로필 ──────────────────────────────────────────
 
-@router.get("/api/teams/{team_id}/bid-profile")
+@router.get("/teams/{team_id}/bid-profile")
 async def get_bid_profile(
     team_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """팀 AI 매칭 프로필 조회"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     res = (
         await client.table("team_bid_profiles")
@@ -74,19 +73,19 @@ async def get_bid_profile(
         .execute()
     )
     if not res.data:
-        return {"data": None}
-    return {"data": res.data}
+        return ok(None)
+    return ok(res.data)
 
 
-@router.put("/api/teams/{team_id}/bid-profile")
+@router.put("/teams/{team_id}/bid-profile")
 async def upsert_bid_profile(
     team_id: str,
     body: TeamBidProfileCreate,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """팀 AI 매칭 프로필 생성/수정 (upsert)"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     now = datetime.now(timezone.utc).isoformat()
     row = {
@@ -104,19 +103,19 @@ async def upsert_bid_profile(
     # 프로필 변경 시 캐시 무효화 (bid_recommendations expires_at을 과거로 설정)
     await _invalidate_recommendations_cache(client, team_id)
 
-    return {"data": res.data[0] if res.data else row}
+    return ok(res.data[0] if res.data else row)
 
 
 # ── F-02: 검색 프리셋 CRUD ───────────────────────────────────
 
-@router.get("/api/teams/{team_id}/search-presets")
+@router.get("/teams/{team_id}/search-presets")
 async def list_search_presets(
     team_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """검색 프리셋 목록 조회"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     res = (
         await client.table("search_presets")
@@ -125,18 +124,18 @@ async def list_search_presets(
         .order("created_at", desc=False)
         .execute()
     )
-    return {"data": res.data or []}
+    return ok(res.data or [])
 
 
-@router.post("/api/teams/{team_id}/search-presets", status_code=201)
+@router.post("/teams/{team_id}/search-presets", status_code=201)
 async def create_search_preset(
     team_id: str,
     body: SearchPresetCreate,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """검색 프리셋 생성"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     now = datetime.now(timezone.utc).isoformat()
     row = {
@@ -147,19 +146,19 @@ async def create_search_preset(
     }
 
     res = await client.table("search_presets").insert(row).execute()
-    return {"data": res.data[0]}
+    return ok(res.data[0])
 
 
-@router.put("/api/teams/{team_id}/search-presets/{preset_id}")
+@router.put("/teams/{team_id}/search-presets/{preset_id}")
 async def update_search_preset(
     team_id: str,
     preset_id: str,
     body: SearchPresetCreate,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """검색 프리셋 수정"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     await _get_preset_or_404(client, team_id, preset_id)
 
@@ -170,18 +169,18 @@ async def update_search_preset(
         .eq("team_id", team_id)
         .execute()
     )
-    return {"data": res.data[0]}
+    return ok(res.data[0])
 
 
-@router.delete("/api/teams/{team_id}/search-presets/{preset_id}", status_code=204)
+@router.delete("/teams/{team_id}/search-presets/{preset_id}", status_code=204)
 async def delete_search_preset(
     team_id: str,
     preset_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """검색 프리셋 삭제"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     await _get_preset_or_404(client, team_id, preset_id)
 
@@ -194,15 +193,15 @@ async def delete_search_preset(
     )
 
 
-@router.post("/api/teams/{team_id}/search-presets/{preset_id}/activate")
+@router.post("/teams/{team_id}/search-presets/{preset_id}/activate")
 async def activate_search_preset(
     team_id: str,
     preset_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """활성 프리셋 전환 (팀당 1개 보장)"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     await _get_preset_or_404(client, team_id, preset_id)
 
@@ -222,20 +221,20 @@ async def activate_search_preset(
         .eq("id", preset_id)
         .execute()
     )
-    return {"data": res.data[0]}
+    return ok(res.data[0])
 
 
 # ── F-04: 공고 수집 트리거 ───────────────────────────────────
 
-@router.post("/api/teams/{team_id}/bids/fetch")
+@router.post("/teams/{team_id}/bids/fetch")
 async def trigger_fetch(
     team_id: str,
     background_tasks: BackgroundTasks,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """활성 프리셋 기준 공고 수집 트리거 (백그라운드 실행)"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     preset = await _get_active_preset_or_422(client, team_id)
 
@@ -247,10 +246,9 @@ async def trigger_fetch(
         elapsed = datetime.now(timezone.utc) - last
         if elapsed < timedelta(hours=_FETCH_COOLDOWN_HOURS):
             remaining_min = int((_FETCH_COOLDOWN_HOURS * 60) - elapsed.total_seconds() / 60)
-            raise HTTPException(
-                status_code=429,
-                detail=f"마지막 수집: {int(elapsed.total_seconds()/60)}분 전. "
-                       f"{remaining_min}분 후 다시 시도하세요.",
+            raise RateLimitError(
+                f"마지막 수집: {int(elapsed.total_seconds()/60)}분 전. "
+                f"{remaining_min}분 후 다시 시도하세요."
             )
 
     # last_fetched_at 업데이트 (즉시)
@@ -290,20 +288,20 @@ async def trigger_fetch(
         _run_fetch_and_analyze, team_id, preset_obj, profile_obj
     )
 
-    return {"status": "fetching", "message": "공고 수집을 시작합니다."}
+    return ok(None, message="공고 수집을 시작합니다.")
 
 
 # ── F-04: 추천 공고 목록 ─────────────────────────────────────
 
-@router.get("/api/teams/{team_id}/bids/recommendations")
+@router.get("/teams/{team_id}/bids/recommendations")
 async def get_recommendations(
     team_id: str,
     refresh: bool = Query(default=False),
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """추천 공고 목록 (캐시 우선, match_score 내림차순)"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     preset = await _get_active_preset_or_422(client, team_id)
     await _get_profile_or_422(client, team_id)
@@ -321,7 +319,7 @@ async def get_recommendations(
     return await _build_recommendations_response(client, team_id, preset["id"])
 
 
-@router.get("/api/teams/{team_id}/bids/announcements")
+@router.get("/teams/{team_id}/bids/announcements")
 async def list_announcements(
     team_id: str,
     keyword: Optional[str] = Query(default=None),
@@ -331,11 +329,11 @@ async def list_announcements(
     agency: Optional[str] = Query(default=None),
     page: int = Query(default=1, ge=1),
     per_page: int = Query(default=20, ge=1, le=100),
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """수집된 공고 목록 (필터/페이징)"""
     client = await get_async_client()
-    await _require_team_member(client, team_id, current_user["id"])
+    await _require_team_member(client, team_id, current_user.id)
 
     query = client.table("bid_announcements").select("*", count="exact")
 
@@ -359,19 +357,12 @@ async def list_announcements(
         .execute()
     )
 
-    return {
-        "data": res.data or [],
-        "meta": {
-            "total": res.count or 0,
-            "page": page,
-            "per_page": per_page,
-        },
-    }
+    return ok_list(res.data or [], total=res.count or 0, offset=offset, limit=per_page)
 
 
 # ── 파이프라인 상태 조회 ────────────────────────────────
 
-@router.get("/api/bids/pipeline/status")
+@router.get("/bids/pipeline/status")
 async def pipeline_status(
     bid_no: str = Query(default=None),
 ):
@@ -380,15 +371,15 @@ async def pipeline_status(
 
     if bid_no:
         status = get_pipeline_status(bid_no)
-        return {"data": {bid_no: status} if status else {}}
-    return {"data": get_all_pipeline_status()}
+        return ok({bid_no: status} if status else {})
+    return ok(get_all_pipeline_status())
 
 
-@router.post("/api/bids/pipeline/trigger")
+@router.post("/bids/pipeline/trigger")
 async def pipeline_trigger(
     background_tasks: BackgroundTasks,
     bid_nos: list[str] | None = None,
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """수동 파이프라인 트리거. bid_nos 미지정 시 DB 최근 공고 대상."""
     from app.services.bid_pipeline import run_pipeline
@@ -410,17 +401,17 @@ async def pipeline_trigger(
 
     if bid_nos:
         background_tasks.add_task(run_pipeline, bid_nos)
-    return {"status": "ok", "queued": len(bid_nos or [])}
+    return ok({"queued": len(bid_nos or [])})
 
 
 # ── 적합도 스코어링 기반 공고 조회 (v2) ────────────────
 
-@router.get("/api/bids/scored")
+@router.get("/bids/scored")
 async def get_scored_bids(
     days: int = Query(7, ge=1, le=30, description="조회 일수 (최근 N일)"),
     min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
     max_results: int = Query(100, ge=1, le=300, description="최대 반환 건수"),
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
     DB 저장된 공고 목록 조회 (적합도 스코어링 기반).
@@ -433,7 +424,7 @@ async def get_scored_bids(
     from_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
     query = client.table("bid_announcements").select(
         "bid_no, bid_title, agency, budget_amount, deadline_date, "
-        "days_remaining, bid_type, created_at, raw_data"
+        "days_remaining, bid_type, created_at, raw_data, proposal_status, decided_by"
     ).gte("created_at", from_date).order("created_at", desc=True).limit(max_results)
 
     if min_budget > 0:
@@ -466,18 +457,18 @@ async def get_scored_bids(
         max_results=max_results,
     )
 
-    return {
+    return ok({
         "total_count": len(scored),
         "source": "db",
-        "data": scored,
-    }
+        "items": scored,
+    })
 
 
-@router.post("/api/bids/crawl")
+@router.post("/bids/crawl")
 async def manual_crawl(
     background_tasks: BackgroundTasks,
     days: int = Query(1, ge=1, le=7, description="수집 일수"),
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
     수동 크롤링 — G2B에서 최신 공고 수집 후 DB 저장 + 백그라운드 파이프라인.
@@ -510,24 +501,23 @@ async def manual_crawl(
             raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in scored_data if b["bid_no"] in set(top_bid_nos)}
             background_tasks.add_task(run_pipeline, top_bid_nos, raw_map)
 
-        return {
-            "status": "ok",
+        return ok({
             "total_fetched": results["total_fetched"],
             "scored_count": len(results["data"]),
             "pipeline_queued": len(top_bid_nos),
-        }
+        })
     except Exception as e:
         logger.error(f"수동 크롤링 오류: {e}")
-        raise HTTPException(status_code=500, detail="공고 수집 중 오류가 발생했습니다.")
+        raise InternalServiceError("공고 수집 중 오류가 발생했습니다.")
 
 
-@router.get("/api/bids/monitor")
+@router.get("/bids/monitor")
 async def get_monitored_bids(
     scope: str = Query(default="company", pattern="^(my|team|division|company)$"),
     page: int = Query(default=1, ge=1),
     per_page: int = Query(default=30, ge=1, le=100),
     show_all: bool = Query(default=False),
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """공고 모니터링 — 스코프별 공고 목록.
 
@@ -537,7 +527,7 @@ async def get_monitored_bids(
     - company: 전체 조직 추천 공고 (모든 팀 합산)
     """
     client = await get_async_client()
-    user_id = current_user["id"] if current_user else None
+    user_id = current_user.id if current_user else None
     offset = (page - 1) * per_page
 
     # 미인증 사용자는 company 스코프만 허용
@@ -620,7 +610,7 @@ async def get_monitored_bids(
             if scope == "team":
                 team_id = user_data.get("team_id")
                 if not team_id:
-                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                    return ok_list([], total=0, offset=offset, limit=per_page)
                 rec_res = (
                     await client.table("bid_recommendations")
                     .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
@@ -633,7 +623,7 @@ async def get_monitored_bids(
             else:
                 division_id = user_data.get("division_id")
                 if not division_id:
-                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                    return ok_list([], total=0, offset=offset, limit=per_page)
                 teams_res = (
                     await client.table("teams")
                     .select("id")
@@ -642,7 +632,7 @@ async def get_monitored_bids(
                 )
                 team_ids = [t["id"] for t in (teams_res.data or [])]
                 if not team_ids:
-                    return {"data": [], "meta": {"total": 0, "page": page, "scope": scope}}
+                    return ok_list([], total=0, offset=offset, limit=per_page)
                 rec_res = (
                     await client.table("bid_recommendations")
                     .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
@@ -816,12 +806,18 @@ async def get_monitored_bids(
         for b in data:
             b["is_bookmarked"] = False
 
-    # 제안여부 (파일 캐시에서 조회)
+    # 제안여부 (DB 우선, 파일 캐시 폴백)
+    # DB에 proposal_status가 이미 있으면 그대로 사용
+    # DB에 없는 건만 파일 캐시에서 보충
     import json as _status_json
     from pathlib import Path as _StatusPath
     status_dir = _StatusPath("data/bid_status")
-    if status_dir.exists():
-        for b in data:
+    for b in data:
+        # DB 컬럼에서 이미 proposal_status가 내려온 경우
+        if b.get("proposal_status"):
+            continue
+        # 파일 캐시 폴백
+        if status_dir.exists():
             sf = status_dir / f"{b['bid_no']}.json"
             if sf.exists():
                 try:
@@ -837,33 +833,35 @@ async def get_monitored_bids(
         data = [b for b in data if b.get("proposal_status") not in hidden]
         total = len(data)
 
-    return {
-        "data": data,
-        "meta": {"total": total, "page": page, "scope": scope, "show_all": show_all},
-    }
+    return ok_list(data, total=total, offset=offset, limit=per_page)
 
 
-@router.put("/api/bids/{bid_no}/status")
+from pydantic import BaseModel as _BM
+
+class _BidStatusBody(_BM):
+    status: str
+
+@router.put("/bids/{bid_no}/status")
 async def update_bid_status(
     bid_no: str,
-    body: dict,
-    current_user=Depends(get_current_user_or_none),
+    body: _BidStatusBody,
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
-    """공고 제안여부 상태 변경 (파일 캐시 기반)"""
+    """공고 제안여부 상태 변경 (DB + 파일 캐시 이중 저장)"""
     import json as _json
     from pathlib import Path
 
-    status = body.get("status", "")
+    status = body.status
     valid = ("검토중", "제안결정", "제안포기", "제안유보", "제안착수", "관련없음")
     if status not in valid:
-        raise HTTPException(status_code=400, detail=f"유효하지 않은 상태입니다. ({'/'.join(valid)})")
+        raise InvalidRequestError(f"유효하지 않은 상태입니다. ({'/'.join(valid)})")
 
     # 의사결정자 이름 조회
     decided_by = ""
-    user_id = current_user["id"] if current_user else None
+    client = await get_async_client()
+    user_id = current_user.id if current_user else None
     if user_id:
         try:
-            client = await get_async_client()
             u_res = (
                 await client.table("users")
                 .select("name")
@@ -875,7 +873,19 @@ async def update_bid_status(
         except Exception:
             pass
 
-    # 파일 캐시에 저장
+    # 1) DB bid_announcements.proposal_status 업데이트
+    try:
+        await (
+            client.table("bid_announcements")
+            .update({"proposal_status": status, "decided_by": decided_by})
+            .eq("bid_no", bid_no)
+            .execute()
+        )
+    except Exception as e:
+        # DB 컬럼이 아직 마이그레이션되지 않은 경우 — 파일 캐시로 폴백
+        logger.warning(f"bid_announcements DB 업데이트 실패 (파일 캐시로 폴백): {e}")
+
+    # 2) 파일 캐시에도 저장 (하위 호환)
     cache_dir = Path("data/bid_status")
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_file = cache_dir / f"{bid_no}.json"
@@ -884,13 +894,13 @@ async def update_bid_status(
         encoding="utf-8",
     )
 
-    return {"bid_no": bid_no, "status": status, "decided_by": decided_by}
+    return ok({"bid_no": bid_no, "status": status, "decided_by": decided_by})
 
 
-@router.get("/api/bids/{bid_no}/analysis")
+@router.get("/bids/{bid_no}/analysis")
 async def analyze_bid_for_proposal(
     bid_no: str,
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
     RFP 요약 + TENOPA 적합성 분석 (2단계 파이프라인)
@@ -915,7 +925,7 @@ async def analyze_bid_for_proposal(
             has_score = cached.get("suitability_score") and cached["suitability_score"] > 0
             if (has_sections or has_summary) and has_score:
                 logger.info(f"[{bid_no}] 분석 캐시 히트")
-                return {"data": cached}
+                return ok(cached)
             else:
                 logger.info(f"[{bid_no}] 분석 캐시 무효 (빈 결과) → 재분석")
                 cache_file.unlink(missing_ok=True)
@@ -980,7 +990,7 @@ async def analyze_bid_for_proposal(
             logger.warning(f"[{bid_no}] G2B 조회 실패: {e}")
 
         if not bid:
-            raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+            raise BidNotFoundError(bid_no=bid_no)
 
     # content 부족 시 첨부파일 다운로드 + Storage 업로드 + 텍스트 추출
     if len(content.strip()) < 200:
@@ -1000,78 +1010,121 @@ async def analyze_bid_for_proposal(
         except Exception as e:
             logger.warning(f"[{bid_no}] 첨부파일 처리 실패 (무시): {e}")
 
-    # 팀 목록 조회 (적합 팀 추천용)
-    teams_list: list[str] = []
+    # 팀 조직도 로드 (팀명 + 전문분야 → AI 프롬프트에 주입)
+    teams_info_text = ""
+    valid_team_names: set[str] = set()
     try:
-        t_res = await client.table("teams").select("name").execute()
-        if t_res.data:
-            teams_list = [t["name"] for t in t_res.data]
+        import pathlib as _pathlib
+        _team_file = _pathlib.Path("data/team_structure.json")
+        if _team_file.exists():
+            _team_data = _json.loads(_team_file.read_text(encoding="utf-8"))
+            _lines = []
+            for t in _team_data.get("teams", []):
+                name = t.get("name", "")
+                div = t.get("division", "")
+                specs = t.get("specializations", [])
+                if name and specs:
+                    valid_team_names.add(name)
+                    _lines.append(f"- {name} ({div}): {', '.join(specs)}")
+            teams_info_text = "\n".join(_lines)
     except Exception:
         pass
 
-    # ── Stage 1: 전처리 에이전트 ──
-    from app.models.bid_schemas import BidAnnouncement
-    from app.services.bid_preprocessor import BidPreprocessor
+    # ── 통합 단일 호출: 전처리 + TENOPA 리뷰 (Claude 1회) ──
+    import asyncio
+    from anthropic import AsyncAnthropic
+    from app.prompts.bid_review import build_unified_analysis_system, UNIFIED_ANALYSIS_USER
 
-    bid_ann = BidAnnouncement(
-        bid_no=bid_no,
-        bid_title=bid.get("bid_title", ""),
-        agency=bid.get("agency", ""),
-        budget_amount=bid.get("budget_amount"),
-        content_text=content,
-    )
-
-    preprocessor = BidPreprocessor()
-    summary = await preprocessor.preprocess(bid_ann) if content.strip() else None
-
-    # rfp_sections: 목적 + 주요 과업만 표시 (나머지는 공고 정보에서 확인)
-    # 사업기간은 공고 정보 패널로 이동 → period 별도 반환
     rfp_sections: list[dict] = []
-    rfp_summary: list[str] = []  # 레거시 호환 (flat 리스트)
+    rfp_summary: list[str] = []
     rfp_period: str = ""
-    if summary:
-        rfp_period = summary.period or ""
-        if summary.purpose:
-            rfp_sections.append({"label": "목적", "value": summary.purpose})
-            rfp_summary.append(f"목적: {summary.purpose}")
-        if summary.core_tasks:
-            rfp_sections.append({"label": "주요 과업", "items": summary.core_tasks})
-            for t in summary.core_tasks:
-                rfp_summary.append(f"과업: {t}")
-    else:
+    score = 0
+    verdict = "제외"
+    fit_level = "보통"
+    positive: list[str] = []
+    negative: list[str] = []
+    action_plan = ""
+    recommended_teams: list[str] = []
+
+    if content.strip():
+        try:
+            ai_client = AsyncAnthropic(api_key=settings.anthropic_api_key)
+            # 팀 조직도를 포함한 시스템 프롬프트 동적 생성
+            system_prompt = build_unified_analysis_system(teams_info=teams_info_text)
+            user_msg = UNIFIED_ANALYSIS_USER.format(
+                bid_no=bid_no,
+                bid_title=bid.get("bid_title", ""),
+                agency=bid.get("agency", ""),
+                content_text=content[:8000],
+            )
+            response = await asyncio.wait_for(
+                ai_client.messages.create(
+                    model="claude-sonnet-4-5-20250929",
+                    max_tokens=2000,
+                    timeout=40.0,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_msg}],
+                ),
+                timeout=45,
+            )
+            text = response.content[0].text
+
+            # JSON 파싱
+            start = text.find("{")
+            end = text.rfind("}") + 1
+            if start >= 0 and end > start:
+                data = _json.loads(text[start:end])
+
+                # summary 부분
+                s = data.get("summary", {})
+                rfp_period = s.get("period", "")
+                if s.get("purpose"):
+                    rfp_sections.append({"label": "목적", "value": s["purpose"]})
+                    rfp_summary.append(f"목적: {s['purpose']}")
+                if s.get("core_tasks"):
+                    rfp_sections.append({"label": "주요 과업", "items": s["core_tasks"]})
+                    for t in s["core_tasks"]:
+                        rfp_summary.append(f"과업: {t}")
+
+                # review 부분
+                r = data.get("review", {})
+                score = max(0, min(100, int(r.get("suitability_score", 0))))
+                verdict = r.get("verdict", "제외")
+                if verdict not in ("추천", "검토 필요", "제외"):
+                    verdict = "검토 필요" if score >= 40 else "제외"
+                positive = r.get("strengths", [])
+                negative = r.get("risks", [])
+                action_plan = r.get("action_plan", "")
+
+                if score >= 80:
+                    fit_level = "적극 추천"
+                elif score >= 70:
+                    fit_level = "추천"
+                elif score >= 40:
+                    fit_level = "보통"
+                else:
+                    fit_level = "낮음"
+
+                # AI 추천팀 파싱 — 조직도에 있는 실제 팀명만 허용
+                ai_teams = r.get("recommended_teams", [])
+                if isinstance(ai_teams, list) and valid_team_names:
+                    recommended_teams = [t for t in ai_teams if t in valid_team_names][:2]
+                elif isinstance(ai_teams, list):
+                    recommended_teams = ai_teams[:2]
+
+                logger.info(f"[{bid_no}] 통합 분석 완료: {score}점 ({verdict}), 추천팀: {recommended_teams}")
+            else:
+                logger.warning(f"[{bid_no}] 통합 분석 JSON 미발견")
+
+        except asyncio.TimeoutError:
+            logger.warning(f"[{bid_no}] 통합 분석 타임아웃 (45초)")
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 통합 분석 실패: {e}")
+
+    if not rfp_summary:
         rfp_summary = ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
-
-    # ── Stage 2: TENOPA 수주 심의위원 ──
-    from app.services.bid_recommender import BidRecommender
-
-    recommender = BidRecommender()
-    review = await recommender.review_single(bid_ann)
-
-    # 결과 매핑
-    if review:
-        score = review.suitability_score
-        verdict = review.verdict
-        if score >= 80:
-            fit_level = "적극 추천"
-        elif score >= 70:
-            fit_level = "추천"
-        elif score >= 40:
-            fit_level = "보통"
-        else:
-            fit_level = "낮음"
-        positive = review.reason_analysis.strengths
-        negative = review.reason_analysis.risks
-        action_plan = review.action_plan
-    else:
-        score = 0
-        verdict = "제외"
-        fit_level = "보통"
-        positive = []
-        negative = ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
-        action_plan = ""
-
-    # 적합 팀 추천 (간이: positive 키워드와 팀명 매칭, 없으면 빈 배열)
-    recommended_teams = teams_list[:2] if fit_level in ("적극 추천", "추천") else []
+    if score == 0:
+        negative = negative or ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
 
     result = {
         "rfp_summary": rfp_summary,
@@ -1086,24 +1139,27 @@ async def analyze_bid_for_proposal(
         "action_plan": action_plan,
     }
 
-    # 분석 결과 파일 캐시 저장
-    try:
-        cache_file.write_text(_json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-        logger.info(f"[{bid_no}] 분석 캐시 저장 완료")
-    except Exception as e:
-        logger.warning(f"분석 캐시 저장 실패 (무시): {e}")
+    # 캐시 저장 (score=0 부분 결과는 캐시하지 않아 다음에 재시도)
+    if score > 0:
+        try:
+            cache_file.write_text(_json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            logger.info(f"[{bid_no}] 분석 캐시 저장 완료")
+        except Exception as e:
+            logger.warning(f"분석 캐시 저장 실패 (무시): {e}")
+    else:
+        logger.info(f"[{bid_no}] 부분 결과 반환 (캐시 미저장, 다음에 재시도)")
 
-    return {"data": result}
+    return ok(result)
 
 
-@router.post("/api/bids/{bid_no}/bookmark")
+@router.post("/bids/{bid_no}/bookmark")
 async def toggle_bookmark(
     bid_no: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """공고 북마크 토글"""
     client = await get_async_client()
-    user_id = current_user["id"]
+    user_id = current_user.id
 
     existing = (
         await client.table("bid_bookmarks")
@@ -1116,21 +1172,21 @@ async def toggle_bookmark(
 
     if existing.data:
         await client.table("bid_bookmarks").delete().eq("id", existing.data["id"]).execute()
-        return {"bookmarked": False}
+        return ok({"bookmarked": False})
     else:
         await client.table("bid_bookmarks").insert({"user_id": user_id, "bid_no": bid_no}).execute()
-        return {"bookmarked": True}
+        return ok({"bookmarked": True})
 
 
-@router.get("/api/bids/{bid_no}")
+@router.get("/bids/{bid_no}")
 async def get_bid_detail(
     bid_no: str,
     team_id: Optional[str] = Query(default=None),
-    current_user=Depends(get_current_user_or_none),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """공고 상세 + AI 분석 결과. DB에 없으면 G2B API에서 실시간 조회 + DB 저장."""
     if not _BID_NO_PATTERN.match(bid_no):
-        raise HTTPException(status_code=400, detail="유효하지 않은 공고번호 형식입니다.")
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     # DB 조회 시도
     res_data = None
@@ -1154,7 +1210,7 @@ async def get_bid_detail(
             async with G2BService() as g2b:
                 g2b_detail = await g2b.get_bid_detail(bid_no)
             if not g2b_detail:
-                raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+                raise BidNotFoundError(bid_no=bid_no)
 
             # G2B 응답 → bid_announcements 형태로 매핑
             # content_text 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl
@@ -1196,17 +1252,17 @@ async def get_bid_detail(
 
             if not res_data:
                 res_data = row
-        except HTTPException:
+        except BidNotFoundError:
             raise
         except Exception as e:
             logger.warning(f"G2B fallback 실패 ({bid_no}): {e}")
-            raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
+            raise BidNotFoundError(bid_no=bid_no)
 
-    result = {"data": {"announcement": res_data, "recommendation": None}}
+    result = {"announcement": res_data, "recommendation": None}
 
     # 팀 AI 분석 결과 포함 (team_id 파라미터가 있는 경우)
     if team_id and current_user:
-        await _require_team_member(client, team_id, current_user["id"])
+        await _require_team_member(client, team_id, current_user.id)
         rec_res = (
             await client.table("bid_recommendations")
             .select("*")
@@ -1217,31 +1273,31 @@ async def get_bid_detail(
             .execute()
         )
         if rec_res.data:
-            result["data"]["recommendation"] = rec_res.data[0]
+            result["recommendation"] = rec_res.data[0]
 
-    return result
+    return ok(result)
 
 
 # ── F-04: 제안서 연동 ────────────────────────────────────────
 
 # ── 첨부파일 조회 + 다운로드 ────────────────────────────────
 
-@router.get("/api/bids/{bid_no}/attachments")
+@router.get("/bids/{bid_no}/attachments")
 async def list_bid_attachments(
     bid_no: str,
     proposal_id: Optional[str] = Query(default=None),
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """공고 첨부파일 목록 (Storage 저장된 파일 포함)"""
     if not _BID_NO_PATTERN.match(bid_no):
-        raise HTTPException(status_code=400, detail="유효하지 않은 공고번호 형식입니다.")
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     client = await get_async_client()
 
     # proposal이 지정된 경우 해당 프로젝트의 첨부파일 확인
     lookup_id = proposal_id or bid_no
     try:
-        files = await client.storage.from_("proposal-files").list(
+        files = await client.storage.from_(settings.storage_bucket_proposals).list(
             path=f"{lookup_id}/attachments"
         )
         stored = [
@@ -1276,79 +1332,45 @@ async def list_bid_attachments(
         if detail_url:
             g2b_urls.insert(0, {"index": 0, "url": detail_url, "label": "나라장터 공고 상세"})
 
-    return {
-        "data": {
-            "stored_files": stored,
-            "g2b_urls": g2b_urls,
-        }
-    }
+    return ok({
+        "stored_files": stored,
+        "g2b_urls": g2b_urls,
+    })
 
 
-@router.get("/api/bids/{bid_no}/attachments/{file_name}")
+@router.get("/bids/{bid_no}/attachments/{file_name}")
 async def download_bid_attachment(
     bid_no: str,
     file_name: str,
     proposal_id: Optional[str] = Query(default=None),
-    current_user=Depends(get_current_user),
+    current_user: CurrentUser = Depends(get_current_user),
 ):
     """첨부파일 다운로드 (Supabase Storage에서 Signed URL 발급)"""
     if not _BID_NO_PATTERN.match(bid_no):
-        raise HTTPException(status_code=400, detail="유효하지 않은 공고번호 형식입니다.")
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     client = await get_async_client()
     lookup_id = proposal_id or bid_no
     storage_path = f"{lookup_id}/attachments/{file_name}"
 
     try:
-        result = await client.storage.from_("proposal-files").create_signed_url(
+        result = await client.storage.from_(settings.storage_bucket_proposals).create_signed_url(
             path=storage_path,
-            expires_in=3600,  # 1시간 유효
+            expires_in=settings.signed_url_expiry_seconds,
         )
         signed_url = result.get("signedURL") or result.get("signedUrl", "")
         if not signed_url:
-            raise HTTPException(status_code=404, detail="파일을 찾을 수 없습니다.")
-        return {"data": {"url": signed_url, "file_name": file_name, "expires_in": 3600}}
-    except HTTPException:
+            raise FileNotFoundError_("파일을 찾을 수 없습니다.")
+        return ok({"url": signed_url, "file_name": file_name, "expires_in": settings.signed_url_expiry_seconds})
+    except FileNotFoundError_:
         raise
     except Exception as e:
         logger.warning(f"첨부파일 다운로드 URL 생성 실패: {e}")
-        raise HTTPException(status_code=404, detail="파일을 찾을 수 없습니다.")
+        raise FileNotFoundError_("파일을 찾을 수 없습니다.")
 
 
-@router.post("/api/proposals/from-bid/{bid_no}", status_code=201)
-async def create_proposal_from_bid(
-    bid_no: str,
-    current_user=Depends(get_current_user),
-):
-    """공고 → 제안서 생성 (bid 원문을 RFP 내용으로 주입)"""
-    if not _BID_NO_PATTERN.match(bid_no):
-        raise HTTPException(status_code=400, detail="유효하지 않은 공고번호 형식입니다.")
-
-    client = await get_async_client()
-
-    res = (
-        await client.table("bid_announcements")
-        .select("bid_title, content_text, agency, budget_amount")
-        .eq("bid_no", bid_no)
-        .maybe_single()
-        .execute()
-    )
-    if not res.data:
-        raise HTTPException(status_code=404, detail="공고를 찾을 수 없습니다.")
-
-    bid = res.data
-    rfp_content = bid.get("content_text") or f"{bid['bid_title']} ({bid['agency']})"
-
-    # 기존 제안서 생성 플로우에 bid 정보 주입
-    # (실제 구현: POST /api/proposals/generate 재사용)
-    return {
-        "data": {
-            "bid_no": bid_no,
-            "bid_title": bid["bid_title"],
-            "rfp_content": rfp_content,
-            "message": "제안서 생성 페이지로 이동하여 내용을 확인하세요.",
-        }
-    }
+# NOTE: POST /api/proposals/from-bid는 routes_proposal.py에서 처리 (제안 프로젝트 생성 + 첨부파일 연결)
+# 이 파일의 레거시 라우트는 2026-03-25 제거됨 (라우트 충돌 해소)
 
 
 # ── 내부 헬퍼 ────────────────────────────────────────────────
@@ -1421,7 +1443,7 @@ async def _get_preset_or_404(client, team_id: str, preset_id: str) -> dict:
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="프리셋을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("프리셋")
     return res.data
 
 
@@ -1435,10 +1457,7 @@ async def _get_active_preset_or_422(client, team_id: str) -> dict:
         .execute()
     )
     if not res.data:
-        raise HTTPException(
-            status_code=422,
-            detail="검색 조건 프리셋을 먼저 생성하고 활성화하세요.",
-        )
+        raise InvalidRequestError("검색 조건 프리셋을 먼저 생성하고 활성화하세요.")
     return res.data
 
 
@@ -1451,10 +1470,7 @@ async def _get_profile_or_422(client, team_id: str) -> dict:
         .execute()
     )
     if not res.data:
-        raise HTTPException(
-            status_code=422,
-            detail="팀 프로필을 먼저 설정하세요.",
-        )
+        raise InvalidRequestError("팀 프로필을 먼저 설정하세요.")
     return res.data
 
 
@@ -1528,13 +1544,12 @@ async def _build_recommendations_response(
                 "recommended_action": row.get("recommended_action"),
             })
 
-    return {
-        "data": {"recommended": recommended, "excluded": excluded},
-        "meta": {
-            "total_fetched": len(rows),
-            "analyzed_at": analyzed_at or datetime.now(timezone.utc).isoformat(),
-        },
-    }
+    return ok({
+        "recommended": recommended,
+        "excluded": excluded,
+        "total_fetched": len(rows),
+        "analyzed_at": analyzed_at or datetime.now(timezone.utc).isoformat(),
+    })
 
 
 async def _run_fetch_and_analyze(

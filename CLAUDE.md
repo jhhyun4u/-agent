@@ -38,21 +38,24 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/api/routes_bid_submission.py` — 투찰 관리 (투찰 기록/확인/상태/이력)
 
 ### LangGraph (app/graph/)
-- `app/graph/state.py` — ProposalState TypedDict + 서브 모델 (§3)
-- `app/graph/edges.py` — Conditional Edge 라우팅 함수 12개 (§11 + v3.5 route_after_section_review + v3.8 route_after_bid_plan_review)
-- `app/graph/graph.py` — StateGraph 정의 + 컴파일 (§4, 30개 노드, v3.8 bid_plan 추가)
-- `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가
-- `app/graph/nodes/rfp_fetch.py` — STEP 0→1: G2B 상세 수집 + RFP 업로드 게이트
+- `app/graph/state.py` — ProposalState TypedDict + 14 서브 모델 + Annotated reducers (§3)
+- `app/graph/edges.py` — 라우팅 함수 15개: 8개 팩토리(_approval_router) + 7개 개별 (§11, v4.0)
+- `app/graph/graph.py` — StateGraph v4.0 (40 노드, A/B 분기 워크플로). 인라인 함수 없이 gate_nodes에서 import
+- `app/graph/nodes/gate_nodes.py` — 게이트·Fan-out·훅 (passthrough, fork, convergence, stream1_complete_hook 등)
+- `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가 (그래프 외부, API 직접 호출)
+- `app/graph/nodes/rfp_fetch.py` — STEP 0→1: G2B 상세 수집 + RFP 업로드 게이트 (그래프 외부)
 - `app/graph/nodes/rfp_analyze.py` — STEP 1-①: RFP 분석 + Compliance Matrix
-- `app/graph/nodes/research_gather.py` — v3.2: 7차원 리서치 (자동 통과)
+- `app/graph/nodes/research_gather.py` — v3.2: RFP 기반 동적 리서치
 - `app/graph/nodes/go_no_go.py` — STEP 1-②: Go/No-Go + 포지셔닝 판정
 - `app/graph/nodes/review_node.py` — 공통 리뷰 게이트 (Shipley Color Team) + plan 리뷰 (목차+스토리라인)
-- `app/graph/nodes/merge_nodes.py` — plan/ppt 병합 (부분 재작업 지원) + storylines→dynamic_sections 동기화
+- `app/graph/nodes/merge_nodes.py` — plan 병합 (부분 재작업) + storylines→dynamic_sections 동기화
 - `app/graph/nodes/strategy_generate.py` — STEP 2: 포지셔닝 기반 제안전략
-- `app/graph/nodes/bid_plan.py` — STEP 2.5: 입찰가격계획 (PricingEngine + 시나리오)
-- `app/graph/nodes/plan_nodes.py` — STEP 3: 팀/담당/일정/스토리/가격 (5개 병렬, bid_budget_constraint 반영)
-- `app/graph/nodes/proposal_nodes.py` — STEP 4: 순차 섹션 작성 (v3.5) + 케이스 A/B
-- `app/graph/nodes/ppt_nodes.py` — STEP 5: 발표전략 + PPT 슬라이드
+- `app/graph/nodes/bid_plan.py` — STEP 2.5 (Path B-4B): 입찰가격계획 (PricingEngine + 시나리오)
+- `app/graph/nodes/plan_nodes.py` — STEP 3A: 팀/담당/일정/스토리 (4개 병렬) + 가격(plan_price, 그래프 미등록)
+- `app/graph/nodes/proposal_nodes.py` — STEP 4A: 순차 섹션 작성 + 자가진단
+- `app/graph/nodes/ppt_nodes.py` — STEP 5A: 발표전략 + PPT toc/visual_brief/storyboard
+- `app/graph/nodes/submission_nodes.py` — Path B: 제출서류 계획(3B) + 산출내역서(5B) + 제출확인(6B)
+- `app/graph/nodes/evaluation_nodes.py` — 6A 모의평가 + 7 평가결과 + 8 Closing
 
 ### 서비스
 - `app/services/claude_client.py` — Claude API 클라이언트 (JSON 파싱 + 스트리밍)
@@ -124,5 +127,5 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 
 ## 설계 문서
 - 요구사항: `docs/01-plan/features/proposal-agent-v1.requirements.md` (v4.9)
-- 설계: `docs/02-design/features/proposal-agent-v1/_index.md` (v3.5, modular 18 files)
+- 설계: `docs/02-design/features/proposal-agent-v1/_index.md` (v3.6, archived, modular 18 files)
 - 갭 분석: `docs/03-analysis/features/proposal-agent-v1.analysis.md` (97%)

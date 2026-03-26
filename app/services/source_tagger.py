@@ -5,7 +5,7 @@
 """
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Literal
 
 from app.prompts.trustworthiness import FORBIDDEN_EXPRESSIONS
@@ -93,7 +93,7 @@ def calculate_grounding_ratio(text: str) -> dict:
 
     kb_tags = sum(tag_counts.get(t, 0) for t in ("KB", "역량DB", "콘텐츠", "RFP", "G2B"))
     general_tags = tag_counts.get("일반지식", 0) + tag_counts.get("추정", 0)
-    total_tags = kb_tags + general_tags
+    kb_tags + general_tags
 
     kb_ratio = round(kb_tags / total_claims, 2) if total_claims else 0
     general_ratio = round(general_tags / total_claims, 2) if total_claims else 0

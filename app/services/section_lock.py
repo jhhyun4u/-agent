@@ -8,12 +8,13 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from app.config import settings
 from app.exceptions import SectLockConflictError
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
-LOCK_DURATION_MINUTES = 5
+LOCK_DURATION_MINUTES = settings.section_lock_duration_minutes
 
 
 async def acquire_lock(

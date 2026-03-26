@@ -30,7 +30,15 @@ class Settings(BaseSettings):
     hitl_gates: list[str] = ["strategy", "personnel", "final"]
 
     # 개발 모드 (인증 바이패스)
+    # WARNING: 운영 환경에서는 반드시 false. is_production과 동시 활성화 시 서버 시작 거부.
     dev_mode: bool = False
+
+    # 프로덕션 환경 플래그 (Railway/Render에서 ENVIRONMENT=production 설정)
+    environment: str = "development"
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment.lower() in ("production", "prod")
 
     # 세션 (AUTH-04)
     session_timeout_minutes: int = 30
@@ -69,6 +77,32 @@ class Settings(BaseSettings):
     max_file_size_mb: int = 50
     allowed_file_extensions: list[str] = [".pdf", ".docx", ".hwp", ".hwpx", ".txt", ".pptx"]
 
+    # Storage 버킷
+    storage_bucket_proposals: str = "proposal-files"
+    storage_bucket_attachments: str = "bid-attachments"
+
+    # Timeout (초)
+    claude_api_timeout: int = 40
+    bid_analysis_timeout: int = 45
+    file_download_timeout_seconds: int = 30
+    edge_function_timeout_seconds: int = 10
+    webhook_timeout_seconds: int = 10
+    g2b_api_timeout_seconds: int = 15
+    bid_pipeline_timeout_seconds: int = 120
+    heartbeat_timeout_seconds: int = 60
+
+    # Signed URL / 캐시 TTL
+    signed_url_expiry_seconds: int = 3600
+    g2b_cache_ttl_hours: int = 24
+    bid_fetch_cooldown_hours: int = 1
+    section_lock_duration_minutes: int = 5
+
+    # 나라장터 API 파라미터
+    g2b_api_base_url: str = "https://apis.data.go.kr/1230000"
+    g2b_max_retries: int = 3
+    g2b_default_lookback_days: int = 14
+    g2b_historical_days: int = 180
+
     # 출력 디렉토리
     output_dir: str = "output"
 
@@ -92,10 +126,19 @@ class Settings(BaseSettings):
             missing.append("SUPABASE_URL")
         if not self.supabase_key:
             missing.append("SUPABASE_KEY")
+        if not self.g2b_api_key:
+            missing.append("G2B_API_KEY")
         return missing
 
 
 settings = Settings()
+
+# ── H-1 보안 가드: 프로덕션에서 DEV_MODE=true 차단 ──
+if settings.is_production and settings.dev_mode:
+    raise RuntimeError(
+        "SECURITY: DEV_MODE=true는 프로덕션 환경(ENVIRONMENT=production)에서 사용할 수 없습니다. "
+        "DEV_MODE=false로 설정하거나 ENVIRONMENT를 변경하세요."
+    )
 
 # 시작 시 필수 키 경고
 _missing = settings.validate_required_keys()
@@ -103,4 +146,10 @@ if _missing:
     import logging as _logging
     _logging.getLogger(__name__).warning(
         f"필수 환경변수 누락: {', '.join(_missing)} — 기능이 제한될 수 있습니다."
+    )
+
+if settings.dev_mode:
+    import logging as _logging
+    _logging.getLogger(__name__).warning(
+        "⚠️ DEV_MODE=true: 인증이 우회됩니다. 개발 환경에서만 사용하세요."
     )

@@ -12,10 +12,12 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.response import ok
+from app.exceptions import InternalServiceError, TenopAPIError
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["stats"])
+router = APIRouter(prefix="/api", tags=["stats"])
 
 
 # ── 응답 스키마 ───────────────────────────────────────────────────────
@@ -106,7 +108,7 @@ def _aggregate(records: list) -> WinRateResponse:
 
 # ── 엔드포인트 ────────────────────────────────────────────────────────
 
-@router.get("/stats/win-rate", response_model=WinRateResponse)
+@router.get("/stats/win-rate")
 async def get_win_rate(
     user=Depends(get_current_user),
     scope: str = Query("personal", description="personal | team | company"),
@@ -118,44 +120,51 @@ async def get_win_rate(
     - company: 접근 가능한 모든 proposals
     win_result IN ('won', 'lost') 인 레코드만 집계.
     """
-    client = await get_async_client()
+    try:
+        client = await get_async_client()
 
-    # proposals 기본 쿼리: win_result 확정된 건만
-    query = client.table("proposals").select(
-        "id, win_result, client_name, owner_id, team_id, created_at"
-    ).in_("win_result", ["won", "lost"])
+        # proposals 기본 쿼리: win_result 확정된 건만
+        query = client.table("proposals").select(
+            "id, win_result, client_name, owner_id, team_id, created_at"
+        ).in_("win_result", ["won", "lost"])
 
-    if scope == "personal":
-        query = query.eq("owner_id", user.id)
-    elif scope == "team":
-        team_res = (
-            await client.table("team_members")
-            .select("team_id")
-            .eq("user_id", user.id)
-            .execute()
-        )
-        my_team_ids = [r["team_id"] for r in (team_res.data or [])]
-        if my_team_ids:
-            team_ids_csv = ",".join(my_team_ids)
-            query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
-        else:
+        if scope == "personal":
             query = query.eq("owner_id", user.id)
-    else:
-        # company: 본인 소유 + 팀 소속
-        team_res = (
-            await client.table("team_members")
-            .select("team_id")
-            .eq("user_id", user.id)
-            .execute()
-        )
-        my_team_ids = [r["team_id"] for r in (team_res.data or [])]
-        if my_team_ids:
-            team_ids_csv = ",".join(my_team_ids)
-            query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
+        elif scope == "team":
+            team_res = (
+                await client.table("team_members")
+                .select("team_id")
+                .eq("user_id", user.id)
+                .execute()
+            )
+            my_team_ids = [r["team_id"] for r in (team_res.data or [])]
+            if my_team_ids:
+                team_ids_csv = ",".join(my_team_ids)
+                query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
+            else:
+                query = query.eq("owner_id", user.id)
         else:
-            query = query.eq("owner_id", user.id)
+            # company: 본인 소유 + 팀 소속
+            team_res = (
+                await client.table("team_members")
+                .select("team_id")
+                .eq("user_id", user.id)
+                .execute()
+            )
+            my_team_ids = [r["team_id"] for r in (team_res.data or [])]
+            if my_team_ids:
+                team_ids_csv = ",".join(my_team_ids)
+                query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
+            else:
+                query = query.eq("owner_id", user.id)
 
-    res = await query.execute()
-    records = res.data or []
+        res = await query.execute()
+        records = res.data or []
 
-    return _aggregate(records)
+        result = _aggregate(records)
+        return ok(result.model_dump())
+    except TenopAPIError:
+        raise
+    except Exception as e:
+        logger.error(f"낙찰률 통계 조회 실패 (scope={scope}): {e}", exc_info=True)
+        raise InternalServiceError("낙찰률 통계 조회 중 오류가 발생했습니다.")

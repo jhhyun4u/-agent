@@ -28,7 +28,15 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_role
+from app.api.response import ok, ok_list
 from app.exceptions import PropNotFoundError, TenopAPIError
+from app.models.auth_schemas import CurrentUser
+from app.models.common import ItemsResponse, StatusResponse
+from app.models.admin_schemas import (
+    SystemStatsResponse, RoleUpdateResponse, StatusUpdateResponse,
+    DivisionDashboardResponse, ExecutiveDashboardResponse, ReopenResponse,
+    ProposalVersionsResponse, TimeTravelResponse,
+)
 from app.services.audit_service import log_action
 from app.utils.supabase_client import get_async_client
 
@@ -39,19 +47,19 @@ router = APIRouter(tags=["admin"])
 
 # ── 관리자: 사용자 관리 ──
 
-@router.get("/api/admin/users")
+@router.get("/api/admin/users", response_model=ItemsResponse)
 async def list_users(
     status: str | None = None,
     role: str | None = None,
     skip: int = 0,
     limit: int = 50,
-    user=Depends(require_role("admin")),
+    user: CurrentUser = Depends(require_role("admin")),
 ):
     """사용자 목록 (관리자 전용)."""
     client = await get_async_client()
     query = client.table("users").select(
         "id, email, name, role, team_id, division_id, org_id, status, created_at"
-    ).eq("org_id", user["org_id"]).order("created_at", desc=True).range(skip, skip + limit - 1)
+    ).eq("org_id", user.org_id).order("created_at", desc=True).range(skip, skip + limit - 1)
 
     if status:
         query = query.eq("status", status)
@@ -59,56 +67,70 @@ async def list_users(
         query = query.eq("role", role)
 
     result = await query.execute()
-    return {"items": result.data or [], "total": len(result.data or [])}
+    return ok_list(result.data or [], total=len(result.data or []))
 
 
 class RoleUpdateBody(BaseModel):
     role: str  # member | lead | director | executive | admin
 
 
-@router.put("/api/admin/users/{user_id}/role")
+@router.put("/api/admin/users/{user_id}/role", response_model=RoleUpdateResponse)
 async def update_user_role(
     user_id: str,
     body: RoleUpdateBody,
-    user=Depends(require_role("admin")),
+    user: CurrentUser = Depends(require_role("admin")),
 ):
     """사용자 역할 변경."""
     valid_roles = {"member", "lead", "director", "executive", "admin"}
     if body.role not in valid_roles:
         raise TenopAPIError("ADMIN_001", f"유효하지 않은 역할: {body.role}", 400)
 
+    # H-3: 같은 조직의 사용자만 변경 가능
     client = await get_async_client()
+    target = await client.table("users").select("org_id").eq("id", user_id).maybe_single().execute()
+    if not target or not target.data:
+        raise TenopAPIError("ADMIN_003", "대상 사용자를 찾을 수 없습니다.", 404)
+    if target.data.get("org_id") != user.org_id:
+        raise TenopAPIError("ADMIN_004", "다른 조직의 사용자를 수정할 수 없습니다.", 403)
+
     await client.table("users").update({"role": body.role}).eq("id", user_id).execute()
-    await log_action(user["id"], "update_role", "user", user_id, {"new_role": body.role})
-    return {"status": "ok", "user_id": user_id, "role": body.role}
+    await log_action(user.id, "update_role", "user", user_id, {"new_role": body.role})
+    return ok({"user_id": user_id, "role": body.role})
 
 
 class StatusUpdateBody(BaseModel):
     status: str  # active | inactive | suspended
 
 
-@router.put("/api/admin/users/{user_id}/status")
+@router.put("/api/admin/users/{user_id}/status", response_model=StatusUpdateResponse)
 async def update_user_status(
     user_id: str,
     body: StatusUpdateBody,
-    user=Depends(require_role("admin")),
+    user: CurrentUser = Depends(require_role("admin")),
 ):
     """사용자 상태 변경 (활성/비활성/정지)."""
     valid_statuses = {"active", "inactive", "suspended"}
     if body.status not in valid_statuses:
         raise TenopAPIError("ADMIN_002", f"유효하지 않은 상태: {body.status}", 400)
 
+    # H-3: 같은 조직의 사용자만 변경 가능
     client = await get_async_client()
+    target = await client.table("users").select("org_id").eq("id", user_id).maybe_single().execute()
+    if not target or not target.data:
+        raise TenopAPIError("ADMIN_003", "대상 사용자를 찾을 수 없습니다.", 404)
+    if target.data.get("org_id") != user.org_id:
+        raise TenopAPIError("ADMIN_004", "다른 조직의 사용자를 수정할 수 없습니다.", 403)
+
     await client.table("users").update({"status": body.status}).eq("id", user_id).execute()
-    await log_action(user["id"], "update_status", "user", user_id, {"new_status": body.status})
-    return {"status": "ok", "user_id": user_id, "user_status": body.status}
+    await log_action(user.id, "update_status", "user", user_id, {"new_status": body.status})
+    return ok({"user_id": user_id, "user_status": body.status})
 
 
-@router.get("/api/admin/stats")
-async def get_system_stats(user=Depends(require_role("admin"))):
+@router.get("/api/admin/stats", response_model=SystemStatsResponse)
+async def get_system_stats(user: CurrentUser = Depends(require_role("admin"))):
     """시스템 통계 (사용자·프로젝트·세션)."""
     client = await get_async_client()
-    org_id = user["org_id"]
+    org_id = user.org_id
 
     users = await client.table("users").select("role, status").eq("org_id", org_id).execute()
     proposals = await client.table("proposals").select("status").eq("org_id", org_id).execute()
@@ -131,7 +153,7 @@ async def get_system_stats(user=Depends(require_role("admin"))):
 
 # ── 감사 로그 ──
 
-@router.get("/api/audit-logs")
+@router.get("/api/audit-logs", response_model=ItemsResponse)
 async def list_audit_logs(
     action: str | None = None,
     resource_type: str | None = None,
@@ -139,7 +161,7 @@ async def list_audit_logs(
     days: int = Query(30, ge=1, le=365),
     skip: int = 0,
     limit: int = 50,
-    user=Depends(require_role("admin", "executive")),
+    user: CurrentUser = Depends(require_role("admin", "executive")),
 ):
     """감사 로그 조회 (관리자·경영진)."""
     client = await get_async_client()
@@ -157,13 +179,13 @@ async def list_audit_logs(
         query = query.eq("user_id", user_id_filter)
 
     result = await query.execute()
-    return {"items": result.data or [], "total": len(result.data or [])}
+    return ok_list(result.data or [], total=len(result.data or []))
 
 
 @router.get("/api/audit-logs/export")
 async def export_audit_logs(
     days: int = Query(30, ge=1, le=365),
-    user=Depends(require_role("admin")),
+    user: CurrentUser = Depends(require_role("admin")),
 ):
     """감사 로그 CSV 내보내기."""
     client = await get_async_client()
@@ -197,11 +219,11 @@ async def export_audit_logs(
 
 # ── 본부장 대시보드 ──
 
-@router.get("/api/dashboard/division")
-async def division_dashboard(user=Depends(require_role("director", "executive", "admin"))):
+@router.get("/api/dashboard/division", response_model=DivisionDashboardResponse)
+async def division_dashboard(user: CurrentUser = Depends(require_role("director", "executive", "admin"))):
     """본부장 대시보드 — 본부 내 팀별 KPI + 결재 대기."""
     client = await get_async_client()
-    division_id = user.get("division_id", "")
+    division_id = user.division_id or ""
 
     # 본부 내 팀 목록
     teams = await client.table("teams").select("id, name").eq("division_id", division_id).execute()
@@ -231,7 +253,7 @@ async def division_dashboard(user=Depends(require_role("director", "executive", 
     # 결재 대기 건
     pending_approvals = await client.table("approval_requests").select(
         "id, proposal_id, step, requested_at"
-    ).eq("approver_id", user["id"]).eq("status", "pending").order(
+    ).eq("approver_id", user.id).eq("status", "pending").order(
         "requested_at", desc=True
     ).limit(20).execute()
 
@@ -244,11 +266,11 @@ async def division_dashboard(user=Depends(require_role("director", "executive", 
 
 # ── 경영진 대시보드 ──
 
-@router.get("/api/dashboard/executive")
-async def executive_dashboard(user=Depends(require_role("executive", "admin"))):
+@router.get("/api/dashboard/executive", response_model=ExecutiveDashboardResponse)
+async def executive_dashboard(user: CurrentUser = Depends(require_role("executive", "admin"))):
     """경영진 대시보드 — 전사 KPI + 포지셔닝별 수주율 + 추이."""
     client = await get_async_client()
-    org_id = user["org_id"]
+    org_id = user.org_id
 
     proposals = await client.table("proposals").select(
         "status, result, result_amount, positioning, created_at, team_id"
@@ -311,11 +333,11 @@ class ReopenBody(BaseModel):
     reason: str = ""
 
 
-@router.patch("/api/proposals/{proposal_id}/reopen")
+@router.patch("/api/proposals/{proposal_id}/reopen", response_model=ReopenResponse)
 async def reopen_proposal(
     proposal_id: str,
     body: ReopenBody,
-    user=Depends(require_role("lead", "director", "executive", "admin")),
+    user: CurrentUser = Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """No-Go 프로젝트 재전환 (reopen) — 팀장 이상."""
     client = await get_async_client()
@@ -331,14 +353,14 @@ async def reopen_proposal(
         "current_step": "go_no_go_complete",
     }).eq("id", proposal_id).execute()
 
-    await log_action(user["id"], "reopen", "proposal", proposal_id, {"reason": body.reason})
-    return {"status": "ok", "proposal_id": proposal_id, "new_status": "draft"}
+    await log_action(user.id, "reopen", "proposal", proposal_id, {"reason": body.reason})
+    return ok({"proposal_id": proposal_id, "new_status": "draft"})
 
 
 # ── 버전 비교 ──
 
-@router.get("/api/proposals/{proposal_id}/versions")
-async def get_proposal_versions(proposal_id: str, user=Depends(get_current_user)):
+@router.get("/api/proposals/{proposal_id}/versions", response_model=ProposalVersionsResponse)
+async def get_proposal_versions(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
     """프로젝트 체크포인트 목록 (버전 비교용)."""
     from app.api.routes_workflow import _get_graph
 
@@ -367,11 +389,11 @@ async def get_proposal_versions(proposal_id: str, user=Depends(get_current_user)
 
 # ── Time-travel ──
 
-@router.get("/api/proposals/{proposal_id}/time-travel/{checkpoint_id}")
+@router.get("/api/proposals/{proposal_id}/time-travel/{checkpoint_id}", response_model=TimeTravelResponse)
 async def time_travel(
     proposal_id: str,
     checkpoint_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """특정 체크포인트 시점의 상태 조회."""
     from app.api.routes_workflow import _get_graph
@@ -420,11 +442,11 @@ class CapabilityUpdateBody(BaseModel):
     value: str      # 새 값
 
 
-@router.put("/api/capabilities/{capability_id}")
+@router.put("/api/capabilities/{capability_id}", response_model=StatusResponse)
 async def update_capability_inline(
     capability_id: str,
     body: CapabilityUpdateBody,
-    user=Depends(require_role("lead", "director", "admin")),
+    user: CurrentUser = Depends(require_role("lead", "director", "admin")),
 ):
     """역량 DB 인라인 편집 — 팀장 이상."""
     allowed_fields = {"description", "tech_area", "track_record", "keywords", "notes"}
@@ -437,10 +459,10 @@ async def update_capability_inline(
         "updated_at": datetime.now(timezone.utc).isoformat(),
     }).eq("id", capability_id).execute()
 
-    await log_action(user["id"], "update_inline", "capability", capability_id, {
+    await log_action(user.id, "update_inline", "capability", capability_id, {
         "field": body.field, "value_preview": body.value[:100],
     })
-    return {"status": "ok", "capability_id": capability_id}
+    return ok({"capability_id": capability_id})
 
 
 # ── 헬퍼 ──

@@ -12,6 +12,10 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.response import ok, ok_list
+from app.models.auth_schemas import CurrentUser
+from app.models.common import StatusResponse
+from app.models.notification_schemas import NotificationListResponse, NotificationSettingsResponse
 from app.utils.supabase_client import get_async_client
 
 router = APIRouter(prefix="/api/notifications", tags=["notifications"])
@@ -22,19 +26,19 @@ class NotificationSettingsUpdate(BaseModel):
     in_app: bool | None = None
 
 
-@router.get("")
+@router.get("", response_model=NotificationListResponse)
 async def list_notifications(
     is_read: bool | None = None,
     skip: int = 0,
     limit: int = 20,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """내 알림 목록 (최신순)."""
     client = await get_async_client()
     query = (
         client.table("notifications")
         .select("id, proposal_id, type, title, body, link, is_read, teams_sent, created_at")
-        .eq("user_id", user["id"])
+        .eq("user_id", user.id)
         .order("created_at", desc=True)
         .range(skip, skip + limit - 1)
     )
@@ -45,14 +49,14 @@ async def list_notifications(
         result = await query.execute()
     except Exception as e:
         if "PGRST205" in str(e):
-            return {"items": [], "unread_count": 0}
+            return ok_list([], total=0)
         raise
 
     # 안 읽은 알림 수
     unread = await (
         client.table("notifications")
         .select("id", count="exact")
-        .eq("user_id", user["id"])
+        .eq("user_id", user.id)
         .eq("is_read", False)
         .execute()
     )
@@ -63,52 +67,52 @@ async def list_notifications(
     }
 
 
-@router.put("/{notification_id}/read")
-async def mark_as_read(notification_id: str, user=Depends(get_current_user)):
+@router.put("/{notification_id}/read", response_model=StatusResponse)
+async def mark_as_read(notification_id: str, user: CurrentUser = Depends(get_current_user)):
     """알림 읽음 처리."""
     client = await get_async_client()
     await (
         client.table("notifications")
         .update({"is_read": True})
         .eq("id", notification_id)
-        .eq("user_id", user["id"])
+        .eq("user_id", user.id)
         .execute()
     )
-    return {"status": "ok"}
+    return ok(None, message="읽음 처리 완료")
 
 
-@router.put("/read-all")
-async def mark_all_as_read(user=Depends(get_current_user)):
+@router.put("/read-all", response_model=StatusResponse)
+async def mark_all_as_read(user: CurrentUser = Depends(get_current_user)):
     """전체 읽음 처리."""
     client = await get_async_client()
     await (
         client.table("notifications")
         .update({"is_read": True})
-        .eq("user_id", user["id"])
+        .eq("user_id", user.id)
         .eq("is_read", False)
         .execute()
     )
-    return {"status": "ok"}
+    return ok(None, message="전체 읽음 처리 완료")
 
 
-@router.get("/settings")
-async def get_notification_settings(user=Depends(get_current_user)):
+@router.get("/settings", response_model=NotificationSettingsResponse)
+async def get_notification_settings(user: CurrentUser = Depends(get_current_user)):
     """알림 설정 조회."""
     client = await get_async_client()
     result = await (
         client.table("users")
         .select("notification_settings")
-        .eq("id", user["id"])
+        .eq("id", user.id)
         .single()
         .execute()
     )
     return result.data.get("notification_settings", {"teams": True, "in_app": True}) if result.data else {"teams": True, "in_app": True}
 
 
-@router.put("/settings")
+@router.put("/settings", response_model=NotificationSettingsResponse)
 async def update_notification_settings(
     body: NotificationSettingsUpdate,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """알림 설정 변경."""
     client = await get_async_client()
@@ -117,7 +121,7 @@ async def update_notification_settings(
     current = await (
         client.table("users")
         .select("notification_settings")
-        .eq("id", user["id"])
+        .eq("id", user.id)
         .single()
         .execute()
     )
@@ -132,7 +136,7 @@ async def update_notification_settings(
     await (
         client.table("users")
         .update({"notification_settings": settings})
-        .eq("id", user["id"])
+        .eq("id", user.id)
         .execute()
     )
     return settings

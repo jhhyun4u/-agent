@@ -41,6 +41,7 @@ CREATE TABLE teams (
     division_id UUID REFERENCES divisions(id) NOT NULL,
     name        TEXT NOT NULL,
     teams_webhook_url TEXT,  -- 팀별 Teams Incoming Webhook URL
+    monitor_keywords  TEXT[] DEFAULT '{}',  -- G2B 모니터링 검색 키워드
     created_at  TIMESTAMPTZ DEFAULT now()
 );
 
@@ -219,9 +220,19 @@ CREATE TABLE search_results (
 
 CREATE TABLE g2b_cache (
     cache_key       TEXT PRIMARY KEY,
+    endpoint        TEXT,
     response        JSONB NOT NULL,
     expires_at      TIMESTAMPTZ NOT NULL,
     created_at      TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE g2b_monitor_log (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    team_id         UUID REFERENCES teams(id),
+    bid_notice_no   TEXT NOT NULL,          -- 공고번호
+    title           TEXT,                   -- 공고명
+    notified_at     TIMESTAMPTZ DEFAULT now(),
+    UNIQUE(team_id, bid_notice_no)
 );
 
 CREATE TABLE notifications (

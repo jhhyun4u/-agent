@@ -99,6 +99,18 @@ class RFPAnalysis(BaseModel):
     special_conditions: list[str]
     price_scoring: PriceScoringFormula | None = None
 
+    # v3.9: 전략·계획 수립 기초자료 확장 필드 (하위 호환 — 모두 Optional)
+    domain: str = ""                              # 사업 분류: SI/SW개발, 컨설팅, 감리, 인프라구축, 운영유지보수
+    project_scope: str = ""                       # 사업 범위 요약 (3~5문장)
+    budget: str = ""                              # RFP 원문 예산 발췌
+    duration: str = ""                            # 수행 기간 (예: "12개월", "2026.07~2027.06")
+    contract_type: str = ""                       # 정액, 실비정산, T&M 등
+    delivery_phases: list[dict] = []              # 단계별 마일스톤·산출물
+    qualification_requirements: list[str] = []    # 업체 자격 요건 (참가자격, 인증)
+    similar_project_requirements: list[str] = []  # 유사 수행실적 요건
+    key_personnel_requirements: list[dict] = []   # 핵심인력 자격/인증 요건
+    subcontracting_conditions: list[str] = []     # 하도급 조건 (구조화)
+
 
 class StrategyAlternative(BaseModel):
     """전략 대안 — 최소 2가지."""
@@ -240,6 +252,9 @@ class ProposalState(TypedDict):
     # 피드백 이력
     feedback_history: Annotated[list[dict], _append_list]
 
+    # 품질 게이트 경고 (Pre-Flight Check + self_check)
+    quality_warnings: Annotated[list[dict], _append_list]
+
     # 부분 재작업 대상
     rework_targets: list[str]
 
@@ -275,6 +290,14 @@ class ProposalState(TypedDict):
     # v3.8: 입찰가격계획
     bid_plan: Optional[BidPlanResult]
     bid_budget_constraint: Optional[dict]
+
+    # v4.0: 분기 워크플로 신규 노드
+    submission_plan: Optional[dict]      # 3B: 제출서류 계획
+    cost_sheet: Optional[dict]           # 5B: 산출내역서
+    submission_checklist_result: Optional[dict]  # 6B: 제출서류 확인 결과
+    mock_evaluation_result: Optional[dict]       # 6A: 모의 평가 결과
+    eval_result: Optional[dict]          # 7: 평가결과
+    project_closing_result: Optional[dict]       # 8: Closing
 
     # Phase 4: 3단계 PPT 파이프라인 최종 결과
     ppt_storyboard: Optional[dict]

@@ -2,7 +2,6 @@
 
 import json
 import logging
-import os
 import zipfile
 from pathlib import Path
 from typing import Optional
@@ -167,7 +166,7 @@ async def get_template_toc(prefer_filename: Optional[str] = None) -> list[str]:
         text = _read_hwpx_text(selected)
 
     if not text.strip():
-        logger.warning(f"텍스트 추출 실패 — 기본 목차 사용")
+        logger.warning("텍스트 추출 실패 — 기본 목차 사용")
         return DEFAULT_TOC
 
     # Claude로 TOC 추출

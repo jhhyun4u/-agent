@@ -7,7 +7,6 @@ PricingEngine — 비딩 가격 산정 오케스트레이터
 
 import logging
 
-from app.services.bidding.calculator import _fmt
 from app.services.bidding.pricing.client_preference import ClientPreferenceAnalyzer
 from app.services.bidding.pricing.competitor_pricing import CompetitorPricingAnalyzer
 from app.services.bidding.pricing.cost_estimator import EnhancedCostEstimator

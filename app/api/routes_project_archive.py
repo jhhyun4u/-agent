@@ -17,17 +17,20 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Query
 from fastapi.responses import Response, StreamingResponse
 
 from app.api.deps import get_current_user, require_project_access
+from app.api.response import ok, ok_list
+from app.config import settings
+from app.models.auth_schemas import CurrentUser
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/proposals", tags=["project-archive"])
 
-BUCKET = "proposal-files"
+BUCKET = settings.storage_bucket_proposals
 
 
 @router.get("/{proposal_id}/archive")
 async def get_project_manifest(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """프로젝트 마스터 파일 일람 (전체 카테고리 통합 인덱스).
@@ -36,14 +39,15 @@ async def get_project_manifest(
              bidding, review, submission, reference
     """
     from app.services.project_archive_service import get_project_manifest
-    return await get_project_manifest(proposal_id)
+    manifest = await get_project_manifest(proposal_id)
+    return ok(manifest)
 
 
 @router.post("/{proposal_id}/archive/snapshot", status_code=201)
 async def create_snapshot(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """현재 LangGraph state에서 모든 중간 산출물을 파일화하여 아카이브.
@@ -67,17 +71,16 @@ async def create_snapshot(
     archived = await snapshot_from_state(
         proposal_id,
         state,
-        created_by=user.get("id"),
+        created_by=user.id,
     )
 
-    return {
-        "status": "ok",
+    return ok({
         "archived_count": len(archived),
         "items": [
             {"doc_type": r.get("doc_type"), "title": r.get("title"), "version": r.get("version")}
             for r in archived
         ],
-    }
+    }, message="완료")
 
 
 @router.get("/{proposal_id}/archive/{doc_type}/download")
@@ -85,7 +88,7 @@ async def download_archive_file(
     proposal_id: str,
     doc_type: str,
     version: int | None = Query(None, description="특정 버전 (미지정 시 최신)"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """아카이브 파일 개별 다운로드.
@@ -138,20 +141,19 @@ async def download_archive_file(
 
     defn = _DEF_MAP.get(doc_type)
     if not defn:
-        from fastapi import HTTPException
-        raise HTTPException(404, f"알 수 없는 문서 유형: {doc_type}")
+        from app.exceptions import InvalidRequestError
+        raise InvalidRequestError(f"알 수 없는 문서 유형: {doc_type}")
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
     snapshot = await graph.aget_state(config)
     if not snapshot or not snapshot.values:
-        from fastapi import HTTPException
-        raise HTTPException(404, "해당 프로젝트의 워크플로 데이터가 없습니다")
+        from app.exceptions import ResourceNotFoundError
+        raise ResourceNotFoundError("워크플로 데이터")
 
     content = render_artifact(defn, snapshot.values)
     if content is None:
-        from fastapi import HTTPException
-        raise HTTPException(404, f"해당 단계({doc_type})의 산출물이 아직 없습니다")
+        raise ResourceNotFoundError(f"{doc_type} 산출물")
 
     file_format = defn["file_format"]
     return Response(
@@ -165,7 +167,7 @@ async def download_archive_file(
 async def list_archive_versions(
     proposal_id: str,
     doc_type: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """산출물 버전 이력 조회."""
@@ -176,18 +178,15 @@ async def list_archive_versions(
         "id, version, file_size, source, graph_step, is_latest, created_by, created_at"
     ).eq("proposal_id", proposal_id).eq("doc_type", doc_type).order("version", desc=True).execute()
 
-    return {
-        "doc_type": doc_type,
-        "versions": result.data or [],
-        "total": len(result.data or []),
-    }
+    versions = result.data or []
+    return ok_list(versions, total=len(versions))
 
 
 @router.get("/{proposal_id}/archive/bundle")
 async def download_archive_bundle(
     proposal_id: str,
     category: str | None = Query(None, description="카테고리 필터 (미지정 시 전체)"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """프로젝트 전체 산출물 ZIP 번들 다운로드."""
@@ -204,8 +203,8 @@ async def download_archive_bundle(
     files = result.data or []
 
     if not files:
-        from fastapi import HTTPException
-        raise HTTPException(404, "다운로드할 아카이브 파일이 없습니다")
+        from app.exceptions import FileNotFoundError_
+        raise FileNotFoundError_("다운로드할 아카이브 파일이 없습니다")
 
     async def generate_zip() -> AsyncGenerator[bytes, None]:
         buf = io.BytesIO()

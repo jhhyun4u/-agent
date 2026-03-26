@@ -40,7 +40,7 @@ export default function ContentPage() {
       if (filterType) params.type = filterType;
       if (filterStatus) params.status = filterStatus;
       const res = await api.kb.content.list(params);
-      setItems(res.items);
+      setItems(res.data);
     } catch { setItems([]); }
     finally { setLoading(false); }
   }, [filterType, filterStatus]);

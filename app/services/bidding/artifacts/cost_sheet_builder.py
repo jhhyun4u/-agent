@@ -16,7 +16,6 @@ bid_plan(STEP 2.5) + plan_price(STEP 3)의 원가 데이터를 기반으로
 import logging
 from datetime import datetime
 from io import BytesIO
-from pathlib import Path
 
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT

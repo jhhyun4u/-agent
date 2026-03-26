@@ -117,5 +117,5 @@ async def _update_client_history(
             notification_type="kb_update_suggestion",
             title=f"발주기관 관계 업데이트 제안: {client_name}",
             body=f"수주 성공! 관계 수준을 '{current_rel}' → '{suggested}'로 변경하시겠습니까?",
-            link=f"/kb/clients",
+            link="/kb/clients",
         )

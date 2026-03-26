@@ -1,85 +1,40 @@
 "use client";
 
 /**
- * 프롬프트 관리 대시보드
+ * 프롬프트 학습 대시보드 (v2.0)
  *
  * /admin/prompts
- * - 전체 프롬프트 테이블: ID, 활성 버전, 사용 횟수, 승률, 수정율, 평균 자가평가
- * - 섹션 유형별 히트맵 (Recharts)
- * - "주의 필요" 프롬프트 하이라이트 (수정율 > 50%)
+ * - 전체 건강 지표 (수주율/품질/수정율 추이)
+ * - 개선 필요 TOP N (자동 분석)
+ * - 추이 차트
+ * - 최근 학습 이력
  */
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  api,
-  type PromptDashboard,
-  type SectionHeatmapItem,
-} from "@/lib/api";
+import { api, type LearningDashboard } from "@/lib/api";
+import TrendChart from "@/components/prompt/TrendChart";
 
-// ── DEV 모드 시드 데이터 ──
-const SEED_SECTION_TYPES = [
-  "UNDERSTAND", "STRATEGY", "METHODOLOGY", "TECHNICAL", "MANAGEMENT",
-  "PERSONNEL", "TRACK_RECORD", "SECURITY", "MAINTENANCE", "ADDED_VALUE",
-];
-
-const SEED_DASHBOARD: PromptDashboard = {
-  total_prompts: SEED_SECTION_TYPES.length + 4,
-  prompts: [
-    ...SEED_SECTION_TYPES.map((id) => ({
-      prompt_id: `section.${id}`, version: 1, source_file: `section_prompts.py`,
-      status: "active", content_hash: "-", metadata: {}, created_at: "2026-03-01", created_by: "system",
-    })),
-    { prompt_id: "strategy.positioning", version: 1, source_file: "strategy.py", status: "active", content_hash: "-", metadata: {}, created_at: "2026-03-01", created_by: "system" },
-    { prompt_id: "plan.story", version: 1, source_file: "plan.py", status: "active", content_hash: "-", metadata: {}, created_at: "2026-03-01", created_by: "system" },
-    { prompt_id: "plan.price", version: 1, source_file: "plan.py", status: "active", content_hash: "-", metadata: {}, created_at: "2026-03-01", created_by: "system" },
-    { prompt_id: "self_review", version: 1, source_file: "proposal_prompts.py", status: "active", content_hash: "-", metadata: {}, created_at: "2026-03-01", created_by: "system" },
-  ],
-  effectiveness: [
-    { prompt_id: "section.UNDERSTAND", prompt_version: 1, proposals_used: 12, won: 8, lost: 4, win_rate: 66.7, avg_quality_score: 82, avg_input_tokens: 4200, avg_output_tokens: 1800, avg_duration_ms: 3200 },
-    { prompt_id: "section.STRATEGY", prompt_version: 1, proposals_used: 12, won: 8, lost: 4, win_rate: 66.7, avg_quality_score: 79, avg_input_tokens: 5100, avg_output_tokens: 2200, avg_duration_ms: 4100 },
-    { prompt_id: "section.METHODOLOGY", prompt_version: 1, proposals_used: 10, won: 7, lost: 3, win_rate: 70.0, avg_quality_score: 85, avg_input_tokens: 4800, avg_output_tokens: 2000, avg_duration_ms: 3800 },
-    { prompt_id: "section.TECHNICAL", prompt_version: 1, proposals_used: 11, won: 6, lost: 5, win_rate: 54.5, avg_quality_score: 75, avg_input_tokens: 5500, avg_output_tokens: 2500, avg_duration_ms: 4500 },
-    { prompt_id: "section.PERSONNEL", prompt_version: 1, proposals_used: 9, won: 6, lost: 3, win_rate: 66.7, avg_quality_score: 80, avg_input_tokens: 3800, avg_output_tokens: 1500, avg_duration_ms: 2800 },
-  ],
-  edit_stats: [
-    { prompt_id: "section.TECHNICAL", edit_count: 18, avg_edit_ratio: 0.62, actions: { rewrite: 8, refine: 10 } },
-    { prompt_id: "section.UNDERSTAND", edit_count: 5, avg_edit_ratio: 0.25, actions: { refine: 5 } },
-    { prompt_id: "section.STRATEGY", edit_count: 8, avg_edit_ratio: 0.35, actions: { rewrite: 2, refine: 6 } },
-    { prompt_id: "section.MAINTENANCE", edit_count: 12, avg_edit_ratio: 0.55, actions: { rewrite: 6, refine: 6 } },
-  ],
-  running_experiments: [],
+const PRIORITY_STYLE: Record<string, { label: string; color: string; bg: string }> = {
+  high: { label: "HIGH", color: "#ff6b6b", bg: "bg-[#2a1a1a] border-[#4a2020]" },
+  medium: { label: "MED", color: "#f5a623", bg: "bg-[#2a2a1a] border-[#4a4020]" },
+  low: { label: "LOW", color: "#3ecf8e", bg: "bg-[#1a2a1a] border-[#204a20]" },
 };
 
-const SEED_HEATMAP: SectionHeatmapItem[] = SEED_SECTION_TYPES.map((id, i) => ({
-  section_id: id,
-  usage_count: 12 - i,
-  avg_quality: [82, 79, 85, 75, 78, 80, 72, 77, 70, 83][i] ?? 75,
-  unique_prompts: 1,
-}));
-
-export default function PromptsPage() {
+export default function PromptLearningDashboard() {
   const [loading, setLoading] = useState(true);
-  const [dashboard, setDashboard] = useState<PromptDashboard | null>(null);
-  const [heatmap, setHeatmap] = useState<SectionHeatmapItem[]>([]);
-  const [source, setSource] = useState<"api" | "seed">("api");
+  const [data, setData] = useState<LearningDashboard | null>(null);
+  const [trendMetric, setTrendMetric] = useState<"quality" | "edit_ratio" | "win_rate">("edit_ratio");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [dashRes, heatRes] = await Promise.allSettled([
-      api.prompts.dashboard(),
-      api.prompts.sectionHeatmap(),
-    ]);
-    if (dashRes.status === "fulfilled") {
-      setDashboard(dashRes.value);
-      setSource("api");
-    } else {
-      // DEV 폴백: API 실패 시 시드 데이터
-      setDashboard(SEED_DASHBOARD);
-      setSource("seed");
+    try {
+      const result = await api.prompts.learningDashboard();
+      setData(result);
+    } catch {
+      // 개발 모드: 빈 상태 표시
+      setData(null);
     }
-    if (heatRes.status === "fulfilled") setHeatmap(heatRes.value.heatmap);
-    else setHeatmap(SEED_HEATMAP);
     setLoading(false);
   }, []);
 
@@ -87,43 +42,30 @@ export default function PromptsPage() {
     fetchData();
   }, [fetchData]);
 
-  // 프롬프트별 effectiveness 매핑
-  const effMap = new Map(
-    (dashboard?.effectiveness ?? []).map((e) => [
-      `${e.prompt_id}:${e.prompt_version}`,
-      e,
-    ])
-  );
-  const editMap = new Map(
-    (dashboard?.edit_stats ?? []).map((e) => [e.prompt_id, e])
-  );
-
-  // "주의 필요" 프롬프트
-  const attentionPrompts = (dashboard?.prompts ?? []).filter((p) => {
-    const es = editMap.get(p.prompt_id);
-    return es && es.avg_edit_ratio > 0.5;
-  });
-
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-[#ededed]">
       <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link
-              href="/admin"
-              className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"
-            >
+            <Link href="/admin" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">
               &larr; 관리자
             </Link>
-            <h1 className="text-sm font-semibold">프롬프트 관리 대시보드</h1>
-            {source === "seed" && <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">초기 데이터</span>}
+            <h1 className="text-sm font-semibold">프롬프트 학습 현황</h1>
           </div>
-          <Link
-            href="/admin/prompts/experiments"
-            className="px-3 py-1.5 bg-[#262626] hover:bg-[#333] rounded-lg text-xs transition-colors"
-          >
-            A/B 실험
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/prompts/catalog"
+              className="px-3 py-1.5 bg-[#262626] hover:bg-[#333] rounded-lg text-xs transition-colors"
+            >
+              카탈로그
+            </Link>
+            <Link
+              href="/admin/prompts/experiments"
+              className="px-3 py-1.5 bg-[#262626] hover:bg-[#333] rounded-lg text-xs transition-colors"
+            >
+              A/B 실험
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -131,161 +73,191 @@ export default function PromptsPage() {
         {loading && (
           <div className="flex items-center justify-center py-20 text-[#8c8c8c] text-sm">
             <div className="w-5 h-5 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin mr-3" />
-            데이터 로딩 중...
+            분석 중...
           </div>
         )}
 
-        {!loading && dashboard && (
+        {!loading && !data && (
+          <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-8 text-center">
+            <div className="text-[#8c8c8c] text-sm mb-4">
+              프롬프트 사용 데이터가 아직 축적되지 않았습니다.
+            </div>
+            <div className="text-xs text-[#666]">
+              제안서를 2건 이상 작성하면 학습 분석이 시작됩니다.
+            </div>
+            <Link
+              href="/admin/prompts/catalog"
+              className="inline-block mt-4 px-4 py-2 bg-[#262626] hover:bg-[#333] rounded-lg text-xs transition-colors"
+            >
+              프롬프트 카탈로그 보기
+            </Link>
+          </div>
+        )}
+
+        {!loading && data && (
           <>
-            {/* 요약 카드 */}
+            {/* 전체 건강 지표 */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard label="전체 프롬프트" value={dashboard.total_prompts} />
-              <StatCard
+              <HealthCard
+                label="평균 수주율"
+                value={`${data.overview.avg_win_rate || 0}%`}
+                delta={data.overview.delta?.win_rate}
+                good="high"
+              />
+              <HealthCard
+                label="평균 품질"
+                value={`${data.overview.avg_quality || 0}점`}
+                delta={data.overview.delta?.quality}
+                good="high"
+              />
+              <HealthCard
+                label="평균 수정율"
+                value={`${((data.overview.avg_edit_ratio || 0) * 100).toFixed(0)}%`}
+                delta={data.overview.delta?.edit_ratio ? data.overview.delta.edit_ratio * 100 : undefined}
+                good="low"
+              />
+              <HealthCard
                 label="진행 중 실험"
-                value={dashboard.running_experiments.length}
-              />
-              <StatCard
-                label="주의 필요"
-                value={attentionPrompts.length}
-                alert={attentionPrompts.length > 0}
-              />
-              <StatCard
-                label="성과 데이터"
-                value={dashboard.effectiveness.length}
+                value={`${data.overview.running_experiments}건`}
               />
             </div>
 
-            {/* 주의 필요 프롬프트 */}
-            {attentionPrompts.length > 0 && (
-              <section className="bg-[#2a1a1a] rounded-2xl border border-[#4a2020] p-5">
-                <h2 className="text-sm font-semibold text-[#ff6b6b] mb-3">
-                  주의 필요 (수정율 &gt; 50%)
-                </h2>
-                <div className="space-y-2">
-                  {attentionPrompts.map((p) => {
-                    const es = editMap.get(p.prompt_id);
+            {/* 개선 필요 TOP N */}
+            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+              <h2 className="text-sm font-semibold mb-4">개선 필요 프롬프트</h2>
+              {data.top_needs_improvement.length === 0 ? (
+                <div className="text-xs text-[#8c8c8c] py-4">
+                  현재 개선이 필요한 프롬프트가 없습니다. 데이터가 더 축적되면 자동 분석됩니다.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {data.top_needs_improvement.map((item, i) => {
+                    const ps = PRIORITY_STYLE[item.priority] || PRIORITY_STYLE.low;
                     return (
-                      <Link
-                        key={p.prompt_id}
-                        href={`/admin/prompts/${encodeURIComponent(p.prompt_id)}`}
-                        className="block bg-[#1c1c1c] rounded-lg px-4 py-2 hover:bg-[#262626] transition-colors"
+                      <div
+                        key={item.prompt_id}
+                        className={`rounded-xl border p-4 ${ps.bg}`}
                       >
-                        <span className="text-xs font-mono text-[#ededed]">
-                          {p.prompt_id}
-                        </span>
-                        <span className="ml-3 text-xs text-[#ff6b6b]">
-                          수정율: {((es?.avg_edit_ratio ?? 0) * 100).toFixed(1)}%
-                        </span>
-                      </Link>
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold text-[#8c8c8c]">{i + 1}.</span>
+                            <div>
+                              <div className="text-sm font-semibold">{item.label}</div>
+                              <div className="text-xs text-[#8c8c8c] font-mono">{item.prompt_id}</div>
+                            </div>
+                          </div>
+                          <span
+                            className="text-[10px] px-2 py-0.5 rounded-full font-bold"
+                            style={{ color: ps.color, backgroundColor: `${ps.color}15` }}
+                          >
+                            {ps.label}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 text-xs text-[#8c8c8c] mb-3">
+                          <span>
+                            수정율: <span style={{ color: (item.metrics.edit_ratio || 0) > 0.5 ? "#ff6b6b" : "#ededed" }}>
+                              {((item.metrics.edit_ratio || 0) * 100).toFixed(0)}%
+                            </span>
+                          </span>
+                          <span>품질: {item.metrics.quality || "-"}점</span>
+                          <span>수주율: {item.metrics.win_rate || "-"}%</span>
+                        </div>
+
+                        {item.top_pattern && (
+                          <div className="text-xs text-[#f5a623] mb-2">
+                            패턴: &quot;{item.top_pattern.pattern}&quot; {item.top_pattern.count}건
+                          </div>
+                        )}
+                        {item.feedback_theme && (
+                          <div className="text-xs text-[#8c8c8c] mb-3">
+                            피드백: &quot;{item.feedback_theme}&quot;
+                          </div>
+                        )}
+
+                        <Link
+                          href={`/admin/prompts/${encodeURIComponent(item.prompt_id)}/improve`}
+                          className="inline-block px-4 py-1.5 bg-[#3ecf8e] text-black rounded-lg text-xs font-medium hover:bg-[#35b87d] transition-colors"
+                        >
+                          개선 시작하기
+                        </Link>
+                      </div>
                     );
                   })}
                 </div>
-              </section>
-            )}
-
-            {/* 프롬프트 테이블 */}
-            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-              <h2 className="text-sm font-semibold mb-4">프롬프트 목록</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-[#8c8c8c] border-b border-[#262626]">
-                      <th className="text-left pb-2 pr-4">ID</th>
-                      <th className="text-right pb-2 pr-4">버전</th>
-                      <th className="text-right pb-2 pr-4">사용</th>
-                      <th className="text-right pb-2 pr-4">승률</th>
-                      <th className="text-right pb-2 pr-4">수정율</th>
-                      <th className="text-right pb-2 pr-4">평균 품질</th>
-                      <th className="text-right pb-2">토큰</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(dashboard.prompts ?? []).map((p) => {
-                      const eff = effMap.get(
-                        `${p.prompt_id}:${p.version}`
-                      );
-                      const es = editMap.get(p.prompt_id);
-                      return (
-                        <tr
-                          key={p.prompt_id}
-                          className="border-b border-[#1a1a1a] hover:bg-[#222]"
-                        >
-                          <td className="py-2 pr-4">
-                            <Link
-                              href={`/admin/prompts/${encodeURIComponent(p.prompt_id)}`}
-                              className="text-[#3ecf8e] hover:underline font-mono"
-                            >
-                              {p.prompt_id}
-                            </Link>
-                          </td>
-                          <td className="text-right pr-4">v{p.version}</td>
-                          <td className="text-right pr-4">
-                            {eff?.proposals_used ?? 0}
-                          </td>
-                          <td className="text-right pr-4">
-                            {eff?.win_rate != null
-                              ? `${eff.win_rate}%`
-                              : "-"}
-                          </td>
-                          <td className="text-right pr-4">
-                            <span
-                              className={
-                                (es?.avg_edit_ratio ?? 0) > 0.5
-                                  ? "text-[#ff6b6b]"
-                                  : ""
-                              }
-                            >
-                              {es
-                                ? `${(es.avg_edit_ratio * 100).toFixed(1)}%`
-                                : "-"}
-                            </span>
-                          </td>
-                          <td className="text-right pr-4">
-                            {eff?.avg_quality_score?.toFixed(1) ?? "-"}
-                          </td>
-                          <td className="text-right text-[#8c8c8c]">
-                            {eff?.avg_input_tokens
-                              ? `${Math.round(eff.avg_input_tokens)}/${Math.round(eff.avg_output_tokens ?? 0)}`
-                              : "-"}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              )}
             </section>
 
-            {/* 섹션 히트맵 */}
-            {heatmap.length > 0 && (
-              <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-                <h2 className="text-sm font-semibold mb-4">
-                  섹션 유형별 히트맵
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {heatmap.map((h) => (
-                    <div
-                      key={h.section_id}
-                      className="bg-[#111] rounded-lg p-3 border border-[#262626]"
-                      style={{
-                        borderLeftColor: heatColor(h.avg_quality),
-                        borderLeftWidth: 3,
-                      }}
+            {/* 추이 차트 */}
+            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-sm font-semibold">추이 (최근 6개월)</h2>
+                <div className="flex gap-1 bg-[#111] rounded-lg p-0.5">
+                  {(["edit_ratio", "quality", "win_rate"] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setTrendMetric(m)}
+                      className={`px-2 py-0.5 rounded text-[10px] transition-colors ${
+                        trendMetric === m ? "bg-[#262626] text-[#ededed]" : "text-[#8c8c8c]"
+                      }`}
                     >
-                      <div className="text-xs font-mono text-[#ededed] truncate">
-                        {h.section_id}
-                      </div>
-                      <div className="text-[#8c8c8c] text-xs mt-1">
-                        사용 {h.usage_count}회
-                        {h.avg_quality != null && (
-                          <> | 품질 {h.avg_quality.toFixed(1)}</>
-                        )}
-                      </div>
+                      {{ edit_ratio: "수정율", quality: "품질", win_rate: "수주율" }[m]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <TrendChart
+                data={(data.trend || []).map((t) => ({
+                  period: t.period,
+                  quality: t.avg_quality,
+                  edit_ratio: t.avg_edit_ratio,
+                  win_rate: t.avg_win_rate,
+                }))}
+                metric={trendMetric}
+              />
+              {(!data.trend || data.trend.length === 0) && (
+                <div className="text-xs text-[#8c8c8c] text-center py-4">
+                  분석 데이터가 축적되면 추이 차트가 표시됩니다.
+                </div>
+              )}
+            </section>
+
+            {/* 최근 학습 이력 */}
+            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
+              <h2 className="text-sm font-semibold mb-4">최근 학습 이력</h2>
+              {(!data.recent_learnings || data.recent_learnings.length === 0) ? (
+                <div className="text-xs text-[#8c8c8c] py-2">
+                  A/B 실험 승격·롤백 이력이 표시됩니다.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {data.recent_learnings.map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 py-2 border-b border-[#1a1a1a] last:border-0 text-xs"
+                    >
+                      <span className="text-[#8c8c8c] min-w-[70px]">{item.date}</span>
+                      <Link
+                        href={`/admin/prompts/${encodeURIComponent(item.prompt_id)}/improve`}
+                        className="text-[#60a5fa] hover:underline"
+                      >
+                        {item.prompt_id.split(".").pop()?.replace("_", " ")}
+                      </Link>
+                      <span className={
+                        item.event === "승격" ? "text-[#3ecf8e]" :
+                        item.event === "롤백" ? "text-[#ff6b6b]" :
+                        "text-[#f5a623]"
+                      }>
+                        {item.event}
+                      </span>
+                      {item.experiment_name && (
+                        <span className="text-[#8c8c8c]">({item.experiment_name})</span>
+                      )}
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </section>
           </>
         )}
       </main>
@@ -293,38 +265,30 @@ export default function PromptsPage() {
   );
 }
 
-function StatCard({
+function HealthCard({
   label,
   value,
-  alert,
+  delta,
+  good,
 }: {
   label: string;
-  value: number;
-  alert?: boolean;
+  value: string;
+  delta?: number;
+  good?: "high" | "low";
 }) {
+  const isPositive = delta != null && ((good === "low" && delta < 0) || (good !== "low" && delta > 0));
+  const isNegative = delta != null && ((good === "low" && delta > 0) || (good !== "low" && delta < 0));
+
   return (
-    <div
-      className={`rounded-2xl border p-4 ${
-        alert
-          ? "bg-[#2a1a1a] border-[#4a2020]"
-          : "bg-[#1c1c1c] border-[#262626]"
-      }`}
-    >
+    <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-4">
       <div className="text-[#8c8c8c] text-xs">{label}</div>
-      <div
-        className={`text-2xl font-bold mt-1 ${
-          alert ? "text-[#ff6b6b]" : "text-[#ededed]"
-        }`}
-      >
-        {value}
-      </div>
+      <div className="text-2xl font-bold mt-1">{value}</div>
+      {delta != null && delta !== 0 && (
+        <div className={`text-xs mt-0.5 ${isPositive ? "text-[#3ecf8e]" : isNegative ? "text-[#ff6b6b]" : "text-[#8c8c8c]"}`}>
+          {delta > 0 ? "+" : ""}{typeof delta === "number" ? delta.toFixed(1) : delta}
+          {isPositive ? " ↑" : isNegative ? " ↓" : ""}
+        </div>
+      )}
     </div>
   );
-}
-
-function heatColor(quality: number | null): string {
-  if (quality == null) return "#262626";
-  if (quality >= 80) return "#3ecf8e";
-  if (quality >= 60) return "#f5a623";
-  return "#ff6b6b";
 }

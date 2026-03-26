@@ -154,8 +154,13 @@ class RecommendationsMeta(BaseModel):
     analyzed_at: datetime
 
 
+class RecommendationsData(BaseModel):
+    recommended: list[RecommendedBid] = []
+    excluded: list[ExcludedBid] = []
+
+
 class RecommendationsResponse(BaseModel):
-    data: dict  # {recommended: list[RecommendedBid], excluded: list[ExcludedBid]}
+    data: RecommendationsData
     meta: RecommendationsMeta
 
 

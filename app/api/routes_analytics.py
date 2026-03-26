@@ -12,11 +12,15 @@ GET /api/analytics/client-win-rate       — 기관별 수주 현황 (바 차트
 """
 
 import logging
-from datetime import datetime
 
 from fastapi import APIRouter, Depends, Query
 
 from app.api.deps import get_current_user
+from app.models.auth_schemas import CurrentUser
+from app.models.analytics_schemas import (
+    FailureReasonsResponse, PositioningWinRateResponse, MonthlyTrendsResponse,
+    WinRateResponse, TeamPerformanceResponse, CompetitorResponse, ClientWinRateResponse,
+)
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -28,11 +32,11 @@ router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 # 공통 헬퍼
 # ════════════════════════════════════════
 
-def _resolve_scope(user: dict, scope: str | None) -> str:
+def _resolve_scope(user: CurrentUser, scope: str | None) -> str:
     """사용자 역할에 따라 기본 스코프 결정."""
     if scope:
         return scope
-    role = user.get("role", "member")
+    role = user.role
     if role in ("executive", "admin"):
         return "company"
     if role == "director":
@@ -68,7 +72,7 @@ def _period_to_date_range(period: str | None) -> tuple[str | None, str | None]:
 
 
 async def _fetch_proposals(
-    user: dict,
+    user: CurrentUser,
     scope: str,
     date_start: str | None = None,
     date_end: str | None = None,
@@ -79,10 +83,10 @@ async def _fetch_proposals(
     query = client.table("proposals").select(fields)
 
     if scope == "team":
-        team_id = user.get("team_id", "")
+        team_id = user.team_id or ""
         query = query.eq("team_id", team_id)
     elif scope == "division":
-        div_id = user.get("division_id", "")
+        div_id = user.division_id or ""
         # 본부 소속 팀 ID 조회
         teams = await client.table("teams").select("id").eq("division_id", div_id).execute()
         team_ids = [t["id"] for t in (teams.data or [])]
@@ -105,11 +109,11 @@ async def _fetch_proposals(
 # 실패 원인 분포
 # ════════════════════════════════════════
 
-@router.get("/failure-reasons")
+@router.get("/failure-reasons", response_model=FailureReasonsResponse)
 async def failure_reasons(
     period: str | None = Query(None, description="기간 (예: 2026Q1, 2026H1, 2025)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """실패 원인 분포 (파이 차트 데이터)."""
     resolved_scope = _resolve_scope(user, scope)
@@ -158,11 +162,11 @@ async def failure_reasons(
 # 포지셔닝별 수주율
 # ════════════════════════════════════════
 
-@router.get("/positioning-win-rate")
+@router.get("/positioning-win-rate", response_model=PositioningWinRateResponse)
 async def positioning_win_rate(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """포지셔닝별 수주율 (바 차트 데이터)."""
     resolved_scope = _resolve_scope(user, scope)
@@ -202,12 +206,12 @@ async def positioning_win_rate(
 # 월별 수주율 추이
 # ════════════════════════════════════════
 
-@router.get("/monthly-trends")
+@router.get("/monthly-trends", response_model=MonthlyTrendsResponse)
 async def monthly_trends(
     date_from: str | None = Query(None, alias="from", description="시작월 (YYYY-MM)"),
     date_to: str | None = Query(None, alias="to", description="종료월 (YYYY-MM)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """월별 수주율 추이 (라인 차트 데이터)."""
     resolved_scope = _resolve_scope(user, scope)
@@ -256,12 +260,12 @@ async def monthly_trends(
 # 수주율 트렌드 (분기별/연도별) — Phase 4-4
 # ════════════════════════════════════════
 
-@router.get("/win-rate")
+@router.get("/win-rate", response_model=WinRateResponse)
 async def win_rate_trend(
     granularity: str = Query("quarterly", pattern="^(quarterly|yearly)$"),
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """수주율 트렌드 (분기별/연도별)."""
     resolved_scope = _resolve_scope(user, scope)
@@ -305,11 +309,11 @@ async def win_rate_trend(
 # 부서/팀별 성과 비교 — Phase 4-4
 # ════════════════════════════════════════
 
-@router.get("/team-performance")
+@router.get("/team-performance", response_model=TeamPerformanceResponse)
 async def team_performance(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """부서/팀별 성과 비교."""
     resolved_scope = _resolve_scope(user, scope)
@@ -346,11 +350,11 @@ async def team_performance(
 # 경쟁사별 대전 기록 — Phase 4-4
 # ════════════════════════════════════════
 
-@router.get("/competitor")
+@router.get("/competitor", response_model=CompetitorResponse)
 async def competitor_record(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """경쟁사별 대전 기록 (패찰 시 낙찰업체 기준)."""
     resolved_scope = _resolve_scope(user, scope)
@@ -394,12 +398,12 @@ async def competitor_record(
 # 기관별 수주 현황
 # ════════════════════════════════════════
 
-@router.get("/client-win-rate")
+@router.get("/client-win-rate", response_model=ClientWinRateResponse)
 async def client_win_rate(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
     top_k: int = Query(15, ge=1, le=50, description="상위 기관 수"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """기관별 수주 현황 (바 차트 데이터)."""
     resolved_scope = _resolve_scope(user, scope)

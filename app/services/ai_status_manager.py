@@ -9,11 +9,12 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Literal
 
+from app.config import settings
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
-HEARTBEAT_TIMEOUT = 60  # 초 (AGT-08)
+HEARTBEAT_TIMEOUT = settings.heartbeat_timeout_seconds  # (AGT-08)
 
 StatusType = Literal[
     "running", "complete", "error", "paused", "no_response", "waiting_approval"

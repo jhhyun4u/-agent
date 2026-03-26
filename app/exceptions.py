@@ -10,6 +10,10 @@
 - AI_: AI 서비스
 - FILE_: 파일 처리
 - ADMIN_: 관리자 기능
+- TEAM_: 팀·초대·댓글
+- BID_: 입찰·공고
+- G2B_: 나라장터 외부 API
+- GEN_: 범용 (리소스·일정·서식 등)
 """
 
 from typing import Any
@@ -219,3 +223,116 @@ class FileFormatError(TenopAPIError):
             "FILE_002", f"지원하지 않는 파일 형식: {extension}", 415,
             {"extension": extension, "allowed_formats": allowed},
         )
+
+
+class FileNotFoundError_(TenopAPIError):
+    """FILE_003: 파일 없음"""
+    def __init__(self, message: str = "파일을 찾을 수 없습니다"):
+        super().__init__("FILE_003", message, 404)
+
+
+class FileUploadError(TenopAPIError):
+    """FILE_004: 파일 업로드 실패"""
+    def __init__(self, message: str = "파일 업로드에 실패했습니다"):
+        super().__init__("FILE_004", message, 500)
+
+
+# ── TEAM 에러 ──
+
+class TeamNotFoundError(TenopAPIError):
+    """TEAM_001: 팀 없음"""
+    def __init__(self, team_id: str = ""):
+        super().__init__(
+            "TEAM_001", "팀을 찾을 수 없습니다.", 404,
+            {"team_id": team_id} if team_id else None,
+        )
+
+
+class TeamAccessDeniedError(TenopAPIError):
+    """TEAM_002: 팀 접근 권한 부족 (멤버/관리자)"""
+    def __init__(self, message: str = "팀 멤버만 접근 가능합니다."):
+        super().__init__("TEAM_002", message, 403)
+
+
+class TeamInviteError(TenopAPIError):
+    """TEAM_003: 초대 관련 오류 (만료, 중복, 불일치 등)"""
+    def __init__(self, message: str, status_code: int = 409):
+        super().__init__("TEAM_003", message, status_code)
+
+
+# ── BID 에러 ──
+
+class BidNotFoundError(TenopAPIError):
+    """BID_001: 공고 없음"""
+    def __init__(self, bid_no: str = ""):
+        super().__init__(
+            "BID_001", "공고를 찾을 수 없습니다.", 404,
+            {"bid_no": bid_no} if bid_no else None,
+        )
+
+
+class BidValidationError(TenopAPIError):
+    """BID_002: 입찰 데이터 검증 실패"""
+    def __init__(self, message: str):
+        super().__init__("BID_002", message, 400)
+
+
+# ── G2B 에러 ──
+
+class G2BExternalError(TenopAPIError):
+    """G2B_001: 나라장터 외부 API 통신 오류"""
+    def __init__(self, message: str = "외부 API 호출 중 오류가 발생했습니다."):
+        super().__init__("G2B_001", message, 502)
+
+
+class G2BServiceError(TenopAPIError):
+    """G2B_002: 나라장터 관련 내부 처리 오류"""
+    def __init__(self, message: str = "나라장터 API 호출 중 오류가 발생했습니다."):
+        super().__init__("G2B_002", message, 500)
+
+
+# ── GEN 범용 에러 ──
+
+class ResourceNotFoundError(TenopAPIError):
+    """GEN_001: 범용 리소스 없음 (일정, 서식, 섹션, 댓글 등)"""
+    def __init__(self, resource: str, resource_id: str = ""):
+        super().__init__(
+            "GEN_001", f"{resource}을(를) 찾을 수 없습니다.", 404,
+            {"resource": resource, "resource_id": resource_id} if resource_id else {"resource": resource},
+        )
+
+
+class OwnershipRequiredError(TenopAPIError):
+    """GEN_002: 소유자 권한 필요 (본인만 수정/삭제)"""
+    def __init__(self, message: str = "본인 리소스만 수정/삭제할 수 있습니다."):
+        super().__init__("GEN_002", message, 403)
+
+
+class InvalidRequestError(TenopAPIError):
+    """GEN_003: 범용 잘못된 요청"""
+    def __init__(self, message: str):
+        super().__init__("GEN_003", message, 400)
+
+
+class ConflictError(TenopAPIError):
+    """GEN_004: 범용 충돌 (이미 존재, 이미 실행 중 등)"""
+    def __init__(self, message: str):
+        super().__init__("GEN_004", message, 409)
+
+
+class InternalServiceError(TenopAPIError):
+    """GEN_005: 범용 내부 서비스 오류"""
+    def __init__(self, message: str = "내부 오류가 발생했습니다."):
+        super().__init__("GEN_005", message, 500)
+
+
+class RateLimitError(TenopAPIError):
+    """GEN_006: 요청 한도 초과"""
+    def __init__(self, message: str = "요청 한도를 초과했습니다."):
+        super().__init__("GEN_006", message, 429)
+
+
+class ExpiredError(TenopAPIError):
+    """GEN_007: 만료된 리소스"""
+    def __init__(self, message: str = "만료되었습니다."):
+        super().__init__("GEN_007", message, 410)

@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, BidAnalysis } from "@/lib/api";
+import { api, pricingApi, BidAnalysis, type QuickEstimateResult } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import DuplicateBidWarning from "@/components/DuplicateBidWarning";
 
@@ -60,6 +60,10 @@ export default function NewProposalPage() {
   const [rfpTitle, setRfpTitle] = useState("");
   const [analysis, setAnalysis] = useState<BidAnalysis | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  // 빠른 견적
+  const [quickEstimate, setQuickEstimate] = useState<QuickEstimateResult | null>(null);
+  const [estimating, setEstimating] = useState(false);
 
   // Path B: RFP 파일 업로드
   const [rfpFile, setRfpFile] = useState<File | null>(null);
@@ -318,6 +322,64 @@ export default function NewProposalPage() {
                 </div>
               </div>
             </div>
+
+            {/* 빠른 견적 */}
+            {bidPrefill.budget_amount && bidPrefill.budget_amount > 0 && (
+              <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-amber-400 text-sm">{"$"}</span>
+                    <p className="text-xs font-medium text-[#ededed]">빠른 견적</p>
+                  </div>
+                  {!quickEstimate && (
+                    <button
+                      onClick={async () => {
+                        setEstimating(true);
+                        try {
+                          const res = await pricingApi.quickEstimate({
+                            budget: bidPrefill.budget_amount!,
+                          });
+                          setQuickEstimate(res);
+                        } catch { /* ignore */ }
+                        finally { setEstimating(false); }
+                      }}
+                      disabled={estimating}
+                      className="text-[10px] px-2.5 py-1 rounded border border-amber-900/50 bg-amber-950/30 text-amber-400 hover:bg-amber-950/50 disabled:opacity-50 transition-colors"
+                    >
+                      {estimating ? "분석 중..." : "견적 확인"}
+                    </button>
+                  )}
+                </div>
+                {quickEstimate ? (
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-[#ededed] font-mono">{formatBudget(quickEstimate.recommended_bid)}</p>
+                      <p className="text-[10px] text-[#8c8c8c]">추천 입찰가</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-[#ededed] font-mono">{quickEstimate.recommended_ratio.toFixed(1)}%</p>
+                      <p className="text-[10px] text-[#8c8c8c]">추천 낙찰률</p>
+                    </div>
+                    <div className="text-center">
+                      <p className={`text-lg font-bold font-mono ${
+                        quickEstimate.win_probability >= 0.7 ? "text-green-400" : quickEstimate.win_probability >= 0.4 ? "text-yellow-400" : "text-red-400"
+                      }`}>
+                        {Math.round(quickEstimate.win_probability * 100)}%
+                      </p>
+                      <p className="text-[10px] text-[#8c8c8c]">수주확률</p>
+                    </div>
+                    <div className="col-span-3 text-[10px] text-[#555] text-center">
+                      {quickEstimate.data_quality === "statistical" ? "통계 기반" : "규칙 기반"} · 유사 사례 {quickEstimate.comparable_cases}건
+                      {quickEstimate.positioning_adjustment && ` · ${quickEstimate.positioning_adjustment}`}
+                    </div>
+                  </div>
+                ) : !estimating ? (
+                  <p className="text-xs text-[#5c5c5c]">
+                    예산({formatBudget(bidPrefill.budget_amount)}) 기반으로 추천 입찰가와 수주확률을 빠르게 확인합니다.
+                  </p>
+                ) : null}
+              </div>
+            )}
 
             {/* RFP 주요내용 */}
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">

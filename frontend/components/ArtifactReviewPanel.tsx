@@ -29,6 +29,12 @@ const ARTIFACT_MAP: Record<string, ArtifactConfig> = {
   review_section:  { title: "제안서 섹션",      artifactKey: "proposal",           icon: "D", step: 4 },
   review_proposal: { title: "제안서 최종본",    artifactKey: "proposal",           icon: "D", step: 4 },
   review_ppt:      { title: "PPT 발표자료",     artifactKey: "ppt_storyboard",     icon: "T", step: 5 },
+  // v4.0: 분기 워크플로 신규 리뷰 게이트
+  review_submission_plan: { title: "제출서류 계획",  artifactKey: "submission_plan",    icon: "F", step: 3 },
+  review_cost_sheet:      { title: "산출내역서",     artifactKey: "cost_sheet",         icon: "C", step: 5 },
+  review_submission:      { title: "제출서류 확인",  artifactKey: "submission_checklist", icon: "V", step: 6 },
+  review_mock_eval:       { title: "모의 평가",      artifactKey: "mock_evaluation",    icon: "E", step: 6 },
+  review_eval_result:     { title: "평가결과",       artifactKey: "eval_result",        icon: "7", step: 7 },
 };
 
 const ICON_COLORS: Record<string, { bg: string; text: string }> = {
@@ -40,6 +46,11 @@ const ICON_COLORS: Record<string, { bg: string; text: string }> = {
   P: { bg: "bg-cyan-500/15",    text: "text-cyan-400" },
   D: { bg: "bg-blue-500/15",    text: "text-blue-400" },
   T: { bg: "bg-indigo-500/15",  text: "text-indigo-400" },
+  F: { bg: "bg-pink-500/15",    text: "text-pink-400" },
+  C: { bg: "bg-green-500/15",   text: "text-green-400" },
+  V: { bg: "bg-teal-500/15",    text: "text-teal-400" },
+  E: { bg: "bg-violet-500/15",  text: "text-violet-400" },
+  "7": { bg: "bg-rose-500/15",  text: "text-rose-400" },
 };
 
 // ── Props ──
@@ -135,7 +146,7 @@ export default function ArtifactReviewPanel({
           </div>
         ) : (
           <div className="p-4">
-            <ArtifactContent artifactKey={config.artifactKey} data={artifactData} />
+            <ArtifactContent artifactKey={config.artifactKey} data={artifactData} proposalId={proposalId} />
           </div>
         )}
       </div>
@@ -147,14 +158,17 @@ export default function ArtifactReviewPanel({
 // 콘텐츠 렌더러
 // ══════════════════════════════════════════════════════════
 
-function ArtifactContent({ artifactKey, data }: { artifactKey: string; data: Record<string, unknown> }) {
+function ArtifactContent({ artifactKey, data, proposalId }: { artifactKey: string; data: Record<string, unknown>; proposalId?: string }) {
   switch (artifactKey) {
     case "go_no_go":        return <GoNoGoContent data={data} />;
     case "rfp_analyze":     return <RfpAnalyzeContent data={data} />;
+    case "search_results":  return <SearchResultsContent data={data} />;
     case "strategy":        return <StrategyContent data={data} />;
+    case "bid_plan":        return <BidPlanContent data={data} />;
     case "plan":            return <PlanContent data={data} />;
-    case "proposal":        return <ProposalContent data={data} />;
+    case "proposal":        return <ProposalContent data={data} proposalId={proposalId} />;
     case "self_review":     return <SelfReviewContent data={data} />;
+    case "ppt_storyboard":  return <PptStoryboardContent data={data} />;
     default:                return <GenericContent data={data} />;
   }
 }
@@ -381,37 +395,172 @@ function PlanContent({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-// ── 제안서 ──
+// ── 공고 검색 결과 (GAP-04) ──
 
-function ProposalContent({ data }: { data: Record<string, unknown> }) {
+function SearchResultsContent({ data }: { data: Record<string, unknown> }) {
+  const results = data.results as Array<{ bid_no: string; title: string; org: string; deadline?: string; budget?: number }> | undefined;
+  const total = data.total_count as number | undefined;
+
+  return (
+    <div>
+      {total != null && <div className="mb-3 pb-3 border-b border-[#262626]"><KV label="검색 건수" value={`${total}건`} /></div>}
+      {results && results.length > 0 ? (
+        <div className="space-y-2">
+          {results.map((r, i) => (
+            <div key={i} className="border border-[#262626] rounded-xl px-3.5 py-2.5">
+              <p className="text-xs font-medium text-[#ededed] mb-1">{r.title}</p>
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+                <span className="text-[10px] text-[#8c8c8c]">{r.bid_no}</span>
+                <span className="text-[10px] text-[#8c8c8c]">{r.org}</span>
+                {r.deadline && <span className="text-[10px] text-amber-400">{r.deadline}</span>}
+                {r.budget && <span className="text-[10px] text-[#3ecf8e]">{r.budget.toLocaleString()}원</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <GenericContent data={data} />
+      )}
+    </div>
+  );
+}
+
+// ── 입찰가격 계획 (GAP-05) ──
+
+function BidPlanContent({ data }: { data: Record<string, unknown> }) {
+  const targetPrice = data.target_price as number | undefined;
+  const strategy = data.pricing_strategy as string | undefined;
+  const costBasis = data.cost_basis as Record<string, unknown> | undefined;
+  const laborCost = data.labor_cost as number | undefined;
+  const directCost = data.direct_cost as number | undefined;
+  const overhead = data.overhead as number | undefined;
+  const profit = data.profit as number | undefined;
+
+  return (
+    <div>
+      {targetPrice && (
+        <div className="text-center mb-4 pb-4 border-b border-[#262626]">
+          <p className="text-3xl font-bold text-[#3ecf8e]">{targetPrice.toLocaleString()}원</p>
+          <p className="text-[10px] text-[#8c8c8c] mt-1">목표 투찰가</p>
+        </div>
+      )}
+      {strategy && <Section title="가격 전략"><p className="text-xs text-[#ededed] leading-relaxed">{strategy}</p></Section>}
+      <Section title="비용 구성">
+        {laborCost && <KV label="인건비" value={`${laborCost.toLocaleString()}원`} />}
+        {directCost && <KV label="직접경비" value={`${directCost.toLocaleString()}원`} />}
+        {overhead && <KV label="간접경비" value={`${overhead.toLocaleString()}원`} />}
+        {profit && <KV label="이윤" value={`${profit.toLocaleString()}원`} />}
+      </Section>
+      {costBasis && <GenericContent data={costBasis as Record<string, unknown>} />}
+    </div>
+  );
+}
+
+// ── 제안서 (GAP-02: AI 이슈 플래그 추가) ──
+
+function ProposalContent({ data, proposalId }: { data: Record<string, unknown>; proposalId?: string }) {
   const sections = data.sections as Array<{ title: string; content: string }> | undefined;
   const summary = data.summary as string | undefined;
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
 
+  // GAP-02: AI issue flags — self_review에서 취약 섹션 자동 표시
+  const [aiIssues, setAiIssues] = useState<Array<{ section: string; score: number; issue: string }>>([]);
+  useEffect(() => {
+    if (!proposalId) return;
+    api.artifacts.get(proposalId, "self_review").then((a) => {
+      const d = a.data as Record<string, unknown>;
+      const scores = d.section_scores as Array<{ section: string; score: number; issue?: string }> | undefined;
+      if (Array.isArray(scores)) {
+        setAiIssues(scores.filter((s) => s.score < 70).map((s) => ({ section: s.section, score: s.score, issue: s.issue ?? "자가진단 점수 미달" })));
+      }
+    }).catch(() => {});
+  }, [proposalId]);
+
+  // 섹션별 이슈 매핑
+  const issueMap = new Map(aiIssues.map((i) => [i.section, i]));
+
   return (
     <div>
       {summary && <Section title="요약"><p className="text-xs text-[#ededed] leading-relaxed">{summary}</p></Section>}
+
+      {/* GAP-02: AI 이슈 플래그 배너 */}
+      {aiIssues.length > 0 && (
+        <Section title={`AI 이슈 (${aiIssues.length}건)`} variant="warning">
+          <div className="space-y-1">
+            {aiIssues.map((issue, i) => (
+              <div key={i} className="flex items-center gap-2 text-[10px]">
+                <span className="text-red-400 font-bold shrink-0">{issue.score}점</span>
+                <span className="text-[#ededed]">{issue.section}</span>
+                <span className="text-[#8c8c8c] truncate">{issue.issue}</span>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {sections && sections.length > 0 ? (
         <div className="space-y-2">
-          {sections.map((sec, i) => (
-            <div key={i} className="border border-[#262626] rounded-xl overflow-hidden">
-              <button
-                onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-[#1c1c1c] transition-colors text-left"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-[10px] font-bold text-[#3ecf8e] bg-[#3ecf8e]/10 rounded w-5 h-5 flex items-center justify-center shrink-0">{i + 1}</span>
-                  <span className="text-xs font-medium text-[#ededed] truncate">{sec.title}</span>
-                </div>
-                <svg className={`w-3.5 h-3.5 text-[#5c5c5c] transition-transform shrink-0 ${expandedIdx === i ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {expandedIdx === i && (
-                <div className="px-3.5 pb-3 border-t border-[#1c1c1c]">
-                  <div className="pt-3 text-xs text-[#ededed] leading-relaxed whitespace-pre-wrap">{sec.content}</div>
-                </div>
-              )}
+          {sections.map((sec, i) => {
+            const issue = issueMap.get(sec.title);
+            return (
+              <div key={i} className={`border rounded-xl overflow-hidden ${issue ? "border-red-500/30" : "border-[#262626]"}`}>
+                <button
+                  onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
+                  className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-[#1c1c1c] transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className={`text-[10px] font-bold rounded w-5 h-5 flex items-center justify-center shrink-0 ${
+                      issue ? "text-red-400 bg-red-500/10" : "text-[#3ecf8e] bg-[#3ecf8e]/10"
+                    }`}>{i + 1}</span>
+                    <span className="text-xs font-medium text-[#ededed] truncate">{sec.title}</span>
+                    {issue && <span className="text-[8px] text-red-400 bg-red-500/10 rounded px-1.5 py-0.5 shrink-0">{issue.score}점</span>}
+                  </div>
+                  <svg className={`w-3.5 h-3.5 text-[#5c5c5c] transition-transform shrink-0 ${expandedIdx === i ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {expandedIdx === i && (
+                  <div className="px-3.5 pb-3 border-t border-[#1c1c1c]">
+                    {issue && (
+                      <div className="mt-2 mb-2 bg-red-500/5 border border-red-500/20 rounded-lg px-3 py-2">
+                        <p className="text-[10px] text-red-400">{issue.issue}</p>
+                      </div>
+                    )}
+                    <div className="pt-2 text-xs text-[#ededed] leading-relaxed whitespace-pre-wrap">{sec.content}</div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <GenericContent data={data} />
+      )}
+    </div>
+  );
+}
+
+// ── PPT 스토리보드 (GAP-03) ──
+
+function PptStoryboardContent({ data }: { data: Record<string, unknown> }) {
+  const slides = data.slides as Array<{ slide_no: number; title: string; content: string; visual_hint?: string }> | undefined;
+  const totalSlides = data.total_slides as number | undefined;
+  const strategy = data.presentation_strategy as string | undefined;
+
+  return (
+    <div>
+      {strategy && <Section title="발표 전략" variant="success"><p className="text-xs text-[#ededed] leading-relaxed">{strategy}</p></Section>}
+      {totalSlides && <div className="mb-3"><KV label="슬라이드 수" value={`${totalSlides}장`} /></div>}
+      {slides && slides.length > 0 ? (
+        <div className="space-y-2">
+          {slides.map((s) => (
+            <div key={s.slide_no} className="border border-[#262626] rounded-xl px-3.5 py-2.5">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 rounded w-5 h-5 flex items-center justify-center shrink-0">{s.slide_no}</span>
+                <span className="text-xs font-medium text-[#ededed]">{s.title}</span>
+              </div>
+              <p className="text-[10px] text-[#8c8c8c] leading-relaxed">{s.content}</p>
+              {s.visual_hint && <p className="text-[10px] text-indigo-400/60 mt-1">{s.visual_hint}</p>}
             </div>
           ))}
         </div>

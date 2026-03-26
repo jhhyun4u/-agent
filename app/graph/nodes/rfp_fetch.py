@@ -9,11 +9,12 @@ import logging
 
 from langgraph.types import interrupt
 
+from app.config import settings
 from app.graph.state import BidDetail, ProposalState
 
 logger = logging.getLogger(__name__)
 
-STORAGE_BUCKET = "proposal-files"
+STORAGE_BUCKET = settings.storage_bucket_proposals
 
 
 async def rfp_fetch(state: ProposalState) -> dict:

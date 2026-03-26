@@ -1,0 +1,109 @@
+{
+  "rfp_text": "정보전략계획(ISP) 수립 용역 제안요청서.\n\n1. 사업개요\n- 사업명: 차세대 정보시스템 구축을 위한 ISP 수립\n- 사업기간: 2026.07 ~ 2026.12 (6개월)\n- 사업예산: 300,000,000원 (부가세 포함)\n- 발주기관: 한국공공기관\n\n2. 주요 과업 내용\n- 현행 정보시스템 분석 및 진단\n- 목표 아키텍처 설계 (EA)\n- ISP 수립 및 이행 로드맵 작성\n- 투자 우선순위 및 예산 계획\n\n3. 평가 방법\n- 기술능력평가 90점 + 입찰가격 10점\n- 기술능력평가 세부: 사업이해(20), 추진전략(25), 수행방안(25), 인력/실적(20)\n\n4. 참여 자격\n- SW사업자 등록 기업\n- 최근 3년 내 유사 ISP 수행 실적 2건 이상\n- 기술책임자 정보관리기술사 또는 동등 자격\n\n5. 제출 서류\n- 제안서 (50매 이내)\n- 참여인력 경력증명서\n- 유사실적 증명서\n- 사업자등록증 사본",
+  "rfp_analysis": {
+    "project_name": "차세대 정보시스템 ISP 수립",
+    "budget": 300000000,
+    "duration_months": 6,
+    "eval_method": "기술+가격 분리평가",
+    "eval_weights": {
+      "사업이해": 20,
+      "추진전략": 25,
+      "수행방안": 25,
+      "인력실적": 20,
+      "가격": 10
+    },
+    "key_requirements": [
+      "현행 정보시스템 분석 및 진단",
+      "목표 아키텍처(EA) 설계",
+      "ISP 수립 및 이행 로드맵",
+      "투자 우선순위 및 예산 계획"
+    ],
+    "compliance_items": [
+      "SW사업자 등록",
+      "유사 ISP 실적 2건 이상",
+      "기술책임자 정보관리기술사",
+      "제안서 50매 이내"
+    ]
+  },
+  "go_no_go": {
+    "verdict": "go",
+    "confidence": 85,
+    "positioning": "offensive",
+    "rationale": "ISP 도메인 전문성 보유, 발주기관 이전 사업 수행 경험 있음"
+  },
+  "strategy": {
+    "win_theme": "발주기관 맞춤형 EA 방법론과 검증된 ISP 수행 역량",
+    "ghost_theme": "경쟁사의 범용 컨설팅 프레임워크는 기관 고유 요구를 충족하지 못함",
+    "positioning": "offensive",
+    "differentiation": [
+      "공공기관 ISP 전문 방법론 (TEAF-K)",
+      "발주기관 도메인 이해도 (이전 유사 사업 수행)",
+      "AI 기반 아키텍처 진단 도구 활용"
+    ],
+    "alternatives": [
+      {
+        "approach": "범용 EA 프레임워크 적용",
+        "our_approach": "기관 맞춤형 TEAF-K 방법론",
+        "why_better": "기관 고유 업무 프로세스를 반영한 목표 모델 도출 가능"
+      }
+    ]
+  },
+  "positioning_guide": "공격적 포지셔닝: ISP 전문 역량과 기관별 맞춤 경험을 전면에 배치. 평가 배점이 높은 '추진전략(25점)'과 '수행방안(25점)'에 차별화 집중.",
+  "plan": {
+    "team": {
+      "total_members": 10,
+      "roles": [
+        {"role": "PM", "name": "김기술", "grade": "특급", "cert": "정보관리기술사"},
+        {"role": "EA 아키텍트", "name": "이설계", "grade": "특급"},
+        {"role": "비즈니스 분석가", "name": "박분석", "grade": "고급", "count": 3},
+        {"role": "기술 분석가", "name": "정기술", "grade": "고급", "count": 2},
+        {"role": "데이터 분석가", "name": "최데이터", "grade": "중급", "count": 2},
+        {"role": "PMO", "name": "한관리", "grade": "중급"}
+      ]
+    },
+    "schedule": {
+      "phases": [
+        {"phase": "1단계: 착수/현황분석", "duration": "2개월", "deliverables": ["현행 시스템 분석서", "업무 프로세스 분석서"]},
+        {"phase": "2단계: 목표 아키텍처", "duration": "2개월", "deliverables": ["목표 EA 모델", "갭 분석서"]},
+        {"phase": "3단계: 이행계획", "duration": "2개월", "deliverables": ["ISP 최종 보고서", "이행 로드맵", "투자계획서"]}
+      ]
+    },
+    "budget": {
+      "total": 300000000,
+      "labor": 240000000,
+      "overhead": 48000000,
+      "profit": 12000000
+    }
+  },
+  "dynamic_sections": [
+    {"id": "sec-1", "title": "사업 이해 및 환경 분석", "type": "understand"},
+    {"id": "sec-2", "title": "추진 전략", "type": "strategy"},
+    {"id": "sec-3", "title": "수행 방법론", "type": "methodology"},
+    {"id": "sec-4", "title": "기술 아키텍처", "type": "technical"},
+    {"id": "sec-5", "title": "프로젝트 관리 방안", "type": "management"},
+    {"id": "sec-6", "title": "투입 인력", "type": "personnel"},
+    {"id": "sec-7", "title": "수행 실적", "type": "track_record"}
+  ],
+  "storylines": {
+    "sections": [
+      {
+        "section_id": "sec-1",
+        "key_message": "발주기관의 디지털 전환 현황과 과제를 정확히 이해하고 있습니다",
+        "narrative_arc": "현황(노후 시스템)→문제(비효율)→비전(디지털 전환)",
+        "supporting_points": ["현행 시스템 노후화 현황", "업무 비효율 정량 분석", "디지털 전환 비전"],
+        "win_theme_connection": "발주기관 맞춤형 이해도",
+        "transition_to_next": "이러한 현황 분석을 바탕으로 최적의 추진 전략을 수립합니다."
+      },
+      {
+        "section_id": "sec-2",
+        "key_message": "TEAF-K 방법론 기반의 체계적 ISP 추진 전략",
+        "narrative_arc": "방법론 소개→적용 전략→차별화 포인트",
+        "supporting_points": ["TEAF-K 방법론 개요", "기관 맞춤 적용 방안", "AI 진단 도구 활용"],
+        "win_theme_connection": "검증된 ISP 수행 역량",
+        "transition_to_next": "이 전략을 구체적인 수행 방법론으로 전개합니다."
+      }
+    ]
+  },
+  "prev_sections_context": "",
+  "storyline_context": ""
+}

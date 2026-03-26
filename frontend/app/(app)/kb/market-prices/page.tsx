@@ -72,7 +72,7 @@ export default function MarketPricesPage() {
     setLoading(true);
     try {
       const res = await api.kb.marketPrices.list(filterValues);
-      setData(res.items);
+      setData(res.data);
     } catch {
       setData([]);
     } finally {

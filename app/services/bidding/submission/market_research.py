@@ -10,7 +10,7 @@ bid_plan 실행 전, 유사과제 낙찰정보가 충분한지 확인하고
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from app.utils.supabase_client import get_async_client
 

@@ -11,6 +11,8 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.config import settings
+
 logger = logging.getLogger(__name__)
 
 _SEMAPHORE = asyncio.Semaphore(5)
@@ -46,26 +48,35 @@ async def _process_single(bid_no: str, raw_data: dict | None) -> bool:
             "error": None,
         }
         try:
-            # Step 1: DB 저장
-            await _ensure_bid_in_db(bid_no, raw_data)
-            _update_status(bid_no, "attachment", "2/4")
-
-            # Step 2: 첨부파일 다운로드 + 텍스트 추출
-            await _download_and_extract(bid_no)
-            _update_status(bid_no, "analysis", "3/4")
-
-            # Step 3: AI 분석 (캐시 없는 경우만)
-            await _run_analysis_if_needed(bid_no)
+            # 건당 전체 타임아웃 (DB + 첨부 + AI)
+            await asyncio.wait_for(_run_all_steps(bid_no, raw_data), timeout=settings.bid_pipeline_timeout_seconds)
             _update_status(bid_no, "done", "4/4")
-
             return True
+        except asyncio.TimeoutError:
+            logger.error(f"[Pipeline][{bid_no}] 전체 타임아웃 ({settings.bid_pipeline_timeout_seconds}초)")
+            _pipeline_status[bid_no]["error"] = "처리 시간 초과"
+            return False
         except Exception as e:
-            logger.warning(f"[Pipeline][{bid_no}] 실패: {e}")
+            logger.error(f"[Pipeline][{bid_no}] 실패: {e}")
             _pipeline_status[bid_no]["error"] = str(e)
             return False
         finally:
             loop = asyncio.get_event_loop()
             loop.call_later(1800, lambda: _pipeline_status.pop(bid_no, None))
+
+
+async def _run_all_steps(bid_no: str, raw_data: dict | None):
+    """파이프라인 3단계 순차 실행."""
+    # Step 1: DB 저장
+    await _ensure_bid_in_db(bid_no, raw_data)
+    _update_status(bid_no, "attachment", "2/4")
+
+    # Step 2: 첨부파일 다운로드 + 텍스트 추출
+    await _download_and_extract(bid_no)
+    _update_status(bid_no, "analysis", "3/4")
+
+    # Step 3: AI 분석 (캐시 없는 경우만)
+    await _run_analysis_if_needed(bid_no)
 
 
 def _update_status(bid_no: str, step: str, progress: str):
@@ -259,17 +270,32 @@ async def _run_analysis_if_needed(bid_no: str):
     except Exception as e:
         logger.warning(f"[Pipeline][{bid_no}] 적합성 평가 실패: {e}")
 
+    # TenopaBidReview → 프론트엔드 포맷 변환
+    if review:
+        score = review.suitability_score
+        if score >= 80: fit_level = "적극 추천"
+        elif score >= 70: fit_level = "추천"
+        elif score >= 40: fit_level = "보통"
+        else: fit_level = "낮음"
+        positive = review.reason_analysis.strengths
+        negative = review.reason_analysis.risks
+    else:
+        score = 0
+        fit_level = "보통"
+        positive = []
+        negative = ["AI 분석을 수행할 수 없습니다."]
+
     result = {
         "rfp_summary": rfp_summary or ["텍스트 추출 불가"],
         "rfp_sections": rfp_sections,
         "rfp_period": rfp_period,
-        "fit_level": getattr(review, "fit_level", "보통"),
-        "positive": getattr(review, "positive", []),
-        "negative": getattr(review, "negative", []),
-        "recommended_teams": getattr(review, "recommended_teams", []),
-        "suitability_score": getattr(review, "suitability_score", None),
-        "verdict": getattr(review, "verdict", None),
-        "action_plan": getattr(review, "action_plan", None),
+        "fit_level": fit_level,
+        "positive": positive,
+        "negative": negative,
+        "recommended_teams": [],
+        "suitability_score": score if review else None,
+        "verdict": review.verdict if review else None,
+        "action_plan": review.action_plan if review else None,
     }
 
     cache_dir.mkdir(parents=True, exist_ok=True)

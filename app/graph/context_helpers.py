@@ -33,27 +33,46 @@ def rfp_to_dict(rfp: Any) -> dict:
 
 
 def get_rfp_summary(rfp_dict: dict) -> str:
-    """RFP dict에서 표준 요약 텍스트 생성."""
+    """RFP dict에서 표준 요약 텍스트 생성 (전략·Go/No-Go 등 주요 노드용)."""
     if not rfp_dict:
         return "(RFP 분석 없음)"
-    return f"""사업명: {rfp_dict.get('project_name', '')}
-발주기관: {rfp_dict.get('client', '')}
-핫버튼: {rfp_dict.get('hot_buttons', [])}
-평가항목: {rfp_dict.get('eval_items', [])}
-기술:가격 비중: {rfp_dict.get('tech_price_ratio', {})}
-필수요건: {rfp_dict.get('mandatory_reqs', [])}
-특수조건: {rfp_dict.get('special_conditions', [])}"""
+    parts = [
+        f"사업명: {rfp_dict.get('project_name', '')}",
+        f"발주기관: {rfp_dict.get('client', '')}",
+        f"사업유형: {rfp_dict.get('domain', '')}" if rfp_dict.get("domain") else None,
+        f"예산: {rfp_dict.get('budget', '')}" if rfp_dict.get("budget") else None,
+        f"마감일: {rfp_dict.get('deadline', '')}" if rfp_dict.get("deadline") else None,
+        f"수행기간: {rfp_dict.get('duration', '')}" if rfp_dict.get("duration") else None,
+        f"계약유형: {rfp_dict.get('contract_type', '')}" if rfp_dict.get("contract_type") else None,
+        f"케이스: {rfp_dict.get('case_type', '')}",
+        f"평가방식: {rfp_dict.get('eval_method', '')}" if rfp_dict.get("eval_method") else None,
+        f"핫버튼: {rfp_dict.get('hot_buttons', [])}",
+        f"평가항목: {rfp_dict.get('eval_items', [])}",
+        f"기술:가격 비중: {rfp_dict.get('tech_price_ratio', {})}",
+        f"필수요건: {rfp_dict.get('mandatory_reqs', [])}",
+        f"업체자격요건: {rfp_dict.get('qualification_requirements', [])}" if rfp_dict.get("qualification_requirements") else None,
+        f"유사실적요건: {rfp_dict.get('similar_project_requirements', [])}" if rfp_dict.get("similar_project_requirements") else None,
+        f"특수조건: {rfp_dict.get('special_conditions', [])}",
+    ]
+    return "\n".join(p for p in parts if p is not None)
 
 
 def get_rfp_summary_compact(rfp_dict: dict) -> str:
     """RFP dict에서 간결한 요약 (plan_nodes 등에서 사용)."""
     if not rfp_dict:
         return "(RFP 분석 없음)"
-    return f"""사업명: {rfp_dict.get('project_name', '')}
-발주기관: {rfp_dict.get('client', '')}
-핫버튼: {rfp_dict.get('hot_buttons', [])}
-평가항목: {rfp_dict.get('eval_items', [])}
-필수요건: {rfp_dict.get('mandatory_reqs', [])}"""
+    parts = [
+        f"사업명: {rfp_dict.get('project_name', '')}",
+        f"발주기관: {rfp_dict.get('client', '')}",
+        f"사업유형: {rfp_dict.get('domain', '')}" if rfp_dict.get("domain") else None,
+        f"예산: {rfp_dict.get('budget', '')}" if rfp_dict.get("budget") else None,
+        f"마감일: {rfp_dict.get('deadline', '')}" if rfp_dict.get("deadline") else None,
+        f"평가방식: {rfp_dict.get('eval_method', '')}" if rfp_dict.get("eval_method") else None,
+        f"핫버튼: {rfp_dict.get('hot_buttons', [])}",
+        f"평가항목: {rfp_dict.get('eval_items', [])}",
+        f"필수요건: {rfp_dict.get('mandatory_reqs', [])}",
+    ]
+    return "\n".join(p for p in parts if p is not None)
 
 
 # ── 리서치 브리프 ──

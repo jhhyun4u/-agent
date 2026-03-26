@@ -12,7 +12,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import tempfile
-from io import BytesIO
 from pathlib import Path
 
 from lxml import etree

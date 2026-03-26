@@ -14,7 +14,6 @@ __all__ = ["_score_to_grade", "BidRecommender"]
 
 import json
 import logging
-from datetime import datetime, timezone
 
 from anthropic import AsyncAnthropic
 
@@ -31,8 +30,6 @@ from app.models.bid_schemas import (
     TenopaBidReview,
 )
 from app.prompts.bid_review import (
-    PREPROCESSOR_SYSTEM,
-    PREPROCESSOR_USER,
     REVIEWER_SYSTEM,
     REVIEWER_USER_BATCH,
     VERDICT_TO_ACTION,
@@ -170,10 +167,20 @@ class BidRecommender:
 
         return results
 
-    async def review_single(self, bid: BidAnnouncement) -> TenopaBidReview | None:
-        """단일 공고 TENOPA 리뷰 (전처리 포함). API/테스트용."""
-        summary = await self.preprocessor.preprocess(bid) if bid.content_text else None
-        summaries = {bid.bid_no: summary} if summary else {}
+    async def review_single(
+        self,
+        bid: BidAnnouncement,
+        pre_summary: "BidSummary | None" = None,
+    ) -> TenopaBidReview | None:
+        """단일 공고 TENOPA 리뷰.
+
+        Args:
+            bid: 공고 정보
+            pre_summary: 이미 전처리된 요약. None이면 내부에서 전처리 수행.
+        """
+        if pre_summary is None:
+            pre_summary = await self.preprocessor.preprocess(bid) if bid.content_text else None
+        summaries = {bid.bid_no: pre_summary} if pre_summary else {}
         reviews = await self._call_tenopa_review([bid], summaries)
         return reviews[0] if reviews else None
 

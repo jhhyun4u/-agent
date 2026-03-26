@@ -63,7 +63,7 @@ export default function LaborRatesPage() {
     setLoading(true);
     try {
       const res = await api.kb.laborRates.list(filterValues);
-      setData(res.items);
+      setData(res.data);
     } catch {
       setData([]);
     } finally {

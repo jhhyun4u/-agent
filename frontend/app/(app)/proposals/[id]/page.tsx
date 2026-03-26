@@ -9,7 +9,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { api, Comment_, ProposalFile, ProposalSummary, streamsApi, type StreamProgress, type WorkflowState } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
@@ -24,7 +23,8 @@ import BiddingWorkspace from "@/components/BiddingWorkspace";
 import StreamDashboard from "@/components/StreamDashboard";
 import WorkflowResumeBanner from "@/components/WorkflowResumeBanner";
 import GuidedTour, { TOUR_PROPOSAL_DETAIL } from "@/components/GuidedTour";
-import ProjectArchivePanel from "@/components/ProjectArchivePanel";
+import ProjectContextHeader from "@/components/ProjectContextHeader";
+import FileHubPanel from "@/components/FileHubPanel";
 
 // ── 경과 시간 훅 ──
 function useElapsedTime(running: boolean) {
@@ -38,34 +38,6 @@ function useElapsedTime(running: boolean) {
   }, [running]);
   const m = Math.floor(elapsed / 60), s = elapsed % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
-}
-
-// ── 상태 배지 ──
-const STATUS_BADGE_MAP: Record<string, { label: string; bg: string; text: string; border: string; pulse?: boolean }> = {
-  processing:  { label: "진행중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30", pulse: true },
-  initialized: { label: "대기중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30" },
-  running:     { label: "진행중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30", pulse: true },
-  searching:   { label: "진행중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30", pulse: true },
-  analyzing:   { label: "진행중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30", pulse: true },
-  strategizing:{ label: "진행중", bg: "bg-blue-500/15", text: "text-blue-400", border: "border-blue-500/30", pulse: true },
-  completed:   { label: "완료",   bg: "bg-[#3ecf8e]/15", text: "text-[#3ecf8e]", border: "border-[#3ecf8e]/30" },
-  won:         { label: "수주",   bg: "bg-[#3ecf8e]/15", text: "text-[#3ecf8e]", border: "border-[#3ecf8e]/30" },
-  lost:        { label: "패찰",   bg: "bg-red-500/15", text: "text-red-400", border: "border-red-500/30" },
-  submitted:   { label: "결과대기", bg: "bg-purple-500/15", text: "text-purple-400", border: "border-purple-500/30" },
-  presented:   { label: "결과대기", bg: "bg-purple-500/15", text: "text-purple-400", border: "border-purple-500/30" },
-  on_hold:     { label: "중단",   bg: "bg-orange-500/15", text: "text-orange-400", border: "border-orange-500/30" },
-  abandoned:   { label: "포기",   bg: "bg-red-500/15", text: "text-red-400", border: "border-red-500/30" },
-  no_go:       { label: "No-Go",  bg: "bg-red-500/15", text: "text-red-300", border: "border-red-500/30" },
-};
-
-function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_BADGE_MAP[status] ?? { label: status, bg: "bg-[#262626]", text: "text-[#8c8c8c]", border: "border-[#262626]" };
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${cfg.bg} ${cfg.text} border ${cfg.border} ${cfg.pulse ? "animate-pulse" : ""}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${cfg.text.replace("text-", "bg-")}`} />
-      {cfg.label}
-    </span>
-  );
 }
 
 // ── HITL 리뷰 게이트 라벨 ──
@@ -124,8 +96,6 @@ export default function ProposalDetailPage() {
 
   // 버전 드롭다운
   const [versions, setVersions] = useState<ProposalSummary[]>([]);
-  const [versionOpen, setVersionOpen] = useState(false);
-  const versionRef = useRef<HTMLDivElement>(null);
 
   // 댓글
   const [comments, setComments] = useState<Comment_[]>([]);
@@ -146,6 +116,7 @@ export default function ProposalDetailPage() {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [aborting, setAborting] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [activeDocId, setActiveDocId] = useState<string | null>(null);
 
   const isProcessing = isRunning;
   const isCompleted = status?.status === "completed";
@@ -243,14 +214,6 @@ export default function ProposalDetailPage() {
   }, [id]);
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
-  // 드롭다운 외부 클릭
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (versionRef.current && !versionRef.current.contains(e.target as Node)) setVersionOpen(false);
-    }
-    if (versionOpen) document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [versionOpen]);
 
   // ── 액션 핸들러 ──
   async function handleStartWorkflow() {
@@ -273,7 +236,6 @@ export default function ProposalDetailPage() {
   }
 
   async function handleNewVersion() {
-    setVersionOpen(false);
     try {
       const res = await (api.proposals as any).newVersion(id);
       if (res?.proposal_id) router.push(`/proposals/${res.proposal_id}`);
@@ -329,111 +291,17 @@ export default function ProposalDetailPage() {
   // ── 렌더 ──
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#0f0f0f] text-[#ededed]">
-      {/* 헤더 */}
-      <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 shrink-0 z-20">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/proposals"
-            className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors shrink-0"
-          >
-            ← 목록
-          </Link>
-
-          <h1 className="text-sm font-semibold text-[#ededed] truncate flex-1 min-w-0">
-            제안 작업 workflow
-          </h1>
-
-          <StatusBadge status={status.status} />
-
-          {/* 3-Stream 진행 헤더 */}
-          {streamsData.length > 0 && (
-            <StreamProgressHeader
-              streams={streamsData}
-              onStreamClick={(stream) => {
-                const tabMap: Record<string, StreamTab> = { proposal: "proposal", bidding: "bidding", documents: "documents" };
-                setActiveTab(tabMap[stream] || "proposal");
-              }}
-            />
-          )}
-
-          {/* 전체 진행률 */}
-          {!isCompleted && !isFailed && (
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="w-20 h-1.5 bg-[#262626] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#3ecf8e] rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, ((status.phases_completed ?? 0) / 6) * 100)}%` }}
-                />
-              </div>
-              <span className="text-[10px] text-[#8c8c8c]">
-                {status.phases_completed ?? 0}/6
-              </span>
-            </div>
-          )}
-
-          {/* 버전 드롭다운 */}
-          <div className="relative shrink-0" ref={versionRef}>
-            <button
-              onClick={() => setVersionOpen((o) => !o)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1c1c1c] border border-[#262626] text-xs text-[#ededed] hover:border-[#3ecf8e]/40 transition-colors"
-            >
-              {currentVersionLabel()}
-              <svg className={`w-3 h-3 text-[#8c8c8c] transition-transform ${versionOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {versionOpen && (
-              <div className="absolute right-0 mt-1.5 w-40 bg-[#1c1c1c] border border-[#262626] rounded-xl shadow-xl overflow-hidden z-30">
-                <div className="py-1">
-                  {versions.length === 0 && <p className="px-3 py-2 text-xs text-[#8c8c8c]">버전 없음</p>}
-                  {versions.map((v, idx) => (
-                    <button
-                      key={v.id}
-                      onClick={() => { setVersionOpen(false); router.push(`/proposals/${v.id}`); }}
-                      className={`w-full text-left px-3 py-2 text-xs transition-colors ${
-                        v.id === id ? "text-[#3ecf8e] bg-[#3ecf8e]/10" : "text-[#ededed] hover:bg-[#262626]"
-                      }`}
-                    >
-                      {versionLabel(idx)}{v.id === id && <span className="ml-1 text-[#8c8c8c]">(현재)</span>}
-                    </button>
-                  ))}
-                </div>
-                <div className="border-t border-[#262626]">
-                  <button
-                    onClick={handleNewVersion}
-                    className="w-full text-left px-3 py-2 text-xs text-[#3ecf8e] hover:bg-[#3ecf8e]/10 transition-colors"
-                  >
-                    + 새 버전
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* 편집 버튼 — 별도 창 */}
-          <button
-            onClick={() => window.open(`/editor/${id}`, "_blank")}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 transition-colors shrink-0"
-          >
-            편집
-          </button>
-
-          {/* 우측 패널 토글 */}
-          <button
-            onClick={() => setRightPanelOpen((o) => !o)}
-            className="p-1.5 rounded-lg text-[#8c8c8c] hover:text-[#ededed] hover:bg-[#262626] transition-colors shrink-0"
-            title={rightPanelOpen ? "패널 접기" : "패널 펼치기"}
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              {rightPanelOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7M19 19l-7-7 7-7" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </header>
+      {/* ═══ 상단: 프로젝트 컨텍스트 헤더 ═══ */}
+      <ProjectContextHeader
+        proposalId={id}
+        status={status}
+        versions={versions}
+        currentVersionLabel={currentVersionLabel}
+        versionLabel={versionLabel}
+        onNewVersion={handleNewVersion}
+        rightPanelOpen={rightPanelOpen}
+        onToggleRightPanel={() => setRightPanelOpen((o) => !o)}
+      />
 
       {/* 워크플로 재진입 요약 배너 */}
       <WorkflowResumeBanner
@@ -531,8 +399,29 @@ export default function ProposalDetailPage() {
             <StreamDashboard proposalId={id} deadline={status.current_phase} />
           )}
 
-          {activeTab === "archive" && (
-            <ProjectArchivePanel proposalId={id} className="p-4" />
+          {activeTab === "filehub" && (
+            <div className="max-w-3xl mx-auto">
+              <FileHubPanel
+                proposalId={id}
+                phasesCompleted={status.phases_completed ?? 0}
+                onSelectArtifact={(stepIndex, artifactKey) => {
+                  setActiveDocId(`artifact-${artifactKey}`);
+                  setSelectedStep(stepIndex);
+                  if (!rightPanelOpen) setRightPanelOpen(true);
+                }}
+                onSelectFile={(file) => {
+                  setActiveDocId(`file-${file.id}`);
+                  const viewable = ["pdf", "png", "jpg", "jpeg"];
+                  if (file.file_type && viewable.includes(file.file_type.toLowerCase())) {
+                    if (!rightPanelOpen) setRightPanelOpen(true);
+                  } else {
+                    api.proposals.getFileUrl(id, file.id)
+                      .then((r) => window.open(r.url, "_blank"))
+                      .catch(() => alert("다운로드 실패"));
+                  }
+                }}
+              />
+            </div>
           )}
         </main>
 
@@ -542,9 +431,14 @@ export default function ProposalDetailPage() {
             {/* 리사이즈 핸들 */}
             <div
               onMouseDown={handleResizeStart}
-              className="absolute left-0 top-0 bottom-0 w-1 cursor-col-resize z-10 group hover:bg-[#3ecf8e]/30 active:bg-[#3ecf8e]/50 transition-colors"
+              className="absolute left-0 top-0 bottom-0 w-[6px] cursor-col-resize z-10 group flex items-center justify-center hover:bg-[#3ecf8e]/20 active:bg-[#3ecf8e]/40 transition-colors"
+              title="좌우 드래그로 패널 크기 조절"
             >
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-full bg-[#363636] group-hover:bg-[#3ecf8e] transition-colors" />
+              <div className="flex flex-col gap-1 items-center">
+                <span className="w-1 h-1 rounded-full bg-[#4a4a4a] group-hover:bg-[#3ecf8e] transition-colors" />
+                <span className="w-1 h-1 rounded-full bg-[#4a4a4a] group-hover:bg-[#3ecf8e] transition-colors" />
+                <span className="w-1 h-1 rounded-full bg-[#4a4a4a] group-hover:bg-[#3ecf8e] transition-colors" />
+              </div>
             </div>
           <aside className="flex-1 border-l border-[#262626] bg-[#111111] flex flex-col overflow-hidden">
             <DetailRightPanel

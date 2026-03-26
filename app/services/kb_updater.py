@@ -161,7 +161,7 @@ async def _update_content_library_counters(client, proposal_id: str, result: str
         if not links.data:
             return
 
-        section_ids = list({l["section_id"] for l in links.data if l.get("section_id")})
+        section_ids = list({lnk["section_id"] for lnk in links.data if lnk.get("section_id")})
         if not section_ids:
             return
 

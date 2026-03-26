@@ -6,7 +6,6 @@ KB 콘텐츠/발주기관/경쟁사/교훈의 시맨틱 검색에 사용.
 """
 
 import logging
-from typing import Any
 
 from app.config import settings
 

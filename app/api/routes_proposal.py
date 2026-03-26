@@ -9,19 +9,22 @@ GET  /api/proposals/{id}     — 상세
 """
 
 import uuid
-from datetime import datetime
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user, get_rls_client, require_role
+from app.api.deps import get_current_user, get_rls_client
+from app.api.response import ok_list
 from app.config import settings
 from app.exceptions import PropNotFoundError
+from app.models.auth_schemas import CurrentUser
+from app.models.common import ItemsResponse
+from app.models.proposal_schemas import ProposalCreateResponse, ProposalDetail, ProposalListItem
 from app.utils.supabase_client import get_async_client
 
 logger = __import__("logging").getLogger(__name__)
 
-BUCKET = "proposal-files"
+BUCKET = settings.storage_bucket_proposals
 
 
 async def _upload_file_to_storage(storage_path: str, content: bytes, content_type: str) -> None:
@@ -57,14 +60,14 @@ class ProposalListResponse(BaseModel):
 # ── 생성 ──
 
 
-@router.post("/from-rfp", status_code=201)
+@router.post("/from-rfp", status_code=201, response_model=ProposalCreateResponse)
 async def create_from_rfp(
     background_tasks: BackgroundTasks,
     rfp_file: UploadFile = File(...),
     rfp_title: str = Form(""),
     client_name: str = Form(""),
     mode: str = Form("lite"),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """RFP 파일 업로드로 프로젝트 생성 — STEP 1 직접 진입. RFP 원본 Storage 보존 (GAP-1)."""
     client = await get_async_client()
@@ -97,8 +100,8 @@ async def create_from_rfp(
         rfp_text = content.decode("utf-8", errors="replace")
 
     project_name = rfp_title or (filename.rsplit(".", 1)[0] if filename else "RFP 직접 업로드")
-    user_id = user["id"]
-    team_id = user.get("team_id")
+    user_id = user.id
+    team_id = user.team_id
 
     # GAP-1: RFP 원본 Storage 경로
     storage_path_rfp = f"{proposal_id}/rfp/{filename}" if filename else None
@@ -150,11 +153,11 @@ async def create_from_rfp(
     }
 
 
-@router.post("/from-bid", status_code=201)
+@router.post("/from-bid", status_code=201, response_model=ProposalCreateResponse)
 async def create_from_bid(
     body: ProposalFromBid,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결."""
     client = await get_async_client()
@@ -174,15 +177,15 @@ async def create_from_bid(
     row: dict = {
         "id": proposal_id,
         "title": title,
-        "owner_id": user["id"],
+        "owner_id": user.id,
         "status": "대기중",
         "rfp_content": rfp_text[:10000] if rfp_text else "",
         "rfp_content_truncated": len(rfp_text) > 10000,
     }
-    if user.get("team_id"):
-        row["team_id"] = user["team_id"]
-    if user.get("org_id"):
-        row["org_id"] = user["org_id"]
+    if user.team_id:
+        row["team_id"] = user.team_id
+    if user.org_id:
+        row["org_id"] = user.org_id
 
     await client.table("proposals").insert(row).execute()
 
@@ -208,14 +211,14 @@ async def create_from_bid(
 
 # ── 조회 ──
 
-@router.get("")
+@router.get("", response_model=ItemsResponse[ProposalListItem])
 async def list_proposals(
     status: str | None = None,
     scope: str | None = None,
     search: str | None = None,
     skip: int = 0,
     limit: int = 20,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     rls_client=Depends(get_rls_client),
 ):
     """프로젝트 목록.
@@ -240,13 +243,13 @@ async def list_proposals(
     ).order("created_at", desc=True).range(skip, skip + limit - 1)
 
     if scope == "my" and user:
-        query = query.eq("owner_id", user["id"])
-    elif scope == "team" and user and user.get("team_id"):
-        query = query.eq("team_id", user["team_id"])
-    elif scope == "division" and user and user.get("division_id"):
+        query = query.eq("owner_id", user.id)
+    elif scope == "team" and user and user.team_id:
+        query = query.eq("team_id", user.team_id)
+    elif scope == "division" and user and user.division_id:
         # 같은 본부 소속 팀들의 프로젝트
         teams_result = await client.table("teams").select("id").eq(
-            "division_id", user["division_id"]
+            "division_id", user.division_id
         ).execute()
         team_ids = [t["id"] for t in (teams_result.data or [])]
         if team_ids:
@@ -255,8 +258,8 @@ async def list_proposals(
         pass  # 필터 없음 — 전체
     else:
         # 기본: 팀 필터 (기존 동작)
-        if user and user.get("team_id"):
-            query = query.eq("team_id", user["team_id"])
+        if user and user.team_id:
+            query = query.eq("team_id", user.team_id)
 
     # 상태 필터: 가상 그룹 → 실제 DB status 매핑
     _STATUS_GROUPS = {
@@ -276,14 +279,14 @@ async def list_proposals(
     # total count (same filters, no pagination)
     count_query = client.table("proposals").select("id", count="exact")
     if scope == "my" and user:
-        count_query = count_query.eq("owner_id", user["id"])
-    elif scope == "team" and user and user.get("team_id"):
-        count_query = count_query.eq("team_id", user["team_id"])
+        count_query = count_query.eq("owner_id", user.id)
+    elif scope == "team" and user and user.team_id:
+        count_query = count_query.eq("team_id", user.team_id)
     elif scope == "company":
         pass
     else:
-        if user and user.get("team_id"):
-            count_query = count_query.eq("team_id", user["team_id"])
+        if user and user.team_id:
+            count_query = count_query.eq("team_id", user.team_id)
     if status and status in _STATUS_GROUPS:
         count_query = count_query.in_("status", _STATUS_GROUPS[status])
     elif status:
@@ -294,13 +297,13 @@ async def list_proposals(
     total = count_result.count if count_result.count is not None else len(count_result.data or [])
 
     result = await query.execute()
-    return {"items": result.data or [], "total": total}
+    return ok_list(result.data or [], total=total, offset=skip, limit=limit)
 
 
-@router.get("/{proposal_id}")
+@router.get("/{proposal_id}", response_model=ProposalDetail)
 async def get_proposal(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     rls_client=Depends(get_rls_client),
 ):
     """프로젝트 상세. C-2: RLS 적용 — 접근 권한 없으면 404."""
@@ -312,7 +315,7 @@ async def get_proposal(
 
 
 @router.delete("/{proposal_id}", status_code=204)
-async def delete_proposal(proposal_id: str, user=Depends(get_current_user)):
+async def delete_proposal(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
     """프로젝트 삭제 + Storage 정리 (GAP-5). 소유자만 가능, 실행 중 삭제 방지."""
     client = await get_async_client()
 
@@ -320,7 +323,7 @@ async def delete_proposal(proposal_id: str, user=Depends(get_current_user)):
     prop = await client.table("proposals").select("id, owner_id, status").eq("id", proposal_id).maybe_single().execute()
     if not prop.data:
         raise PropNotFoundError(proposal_id)
-    if prop.data["owner_id"] != user.get("id"):
+    if prop.data["owner_id"] != user.id:
         raise HTTPException(403, "프로젝트 소유자만 삭제할 수 있습니다")
     if prop.data["status"] == "running":
         raise HTTPException(409, "실행 중인 프로젝트는 삭제할 수 없습니다")

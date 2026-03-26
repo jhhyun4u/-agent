@@ -21,10 +21,17 @@ import logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_role
+from app.api.response import ok, ok_list
 from app.exceptions import PropNotFoundError, TenopAPIError
+from app.models.auth_schemas import CurrentUser
+from app.models.proposal_schemas import ProposalResultResponse
+from app.models.common import ItemsResponse, StatusResponse
+from app.models.performance_schemas import (
+    IndividualPerformance, TeamQuarterPerformance, DivisionPerformance,
+    CompanyPerformance, PerformanceTrends, MyProjectsDashboard, TeamDashboard,
+)
 from app.models.schemas import ProposalResultCreate, ProposalResultUpdate, LessonCreate
 from app.utils.supabase_client import get_async_client
 
@@ -88,11 +95,11 @@ async def _resolve_pricing_predictions(client, proposal_id: str, body) -> None:
     logger.info(f"가격 예측 {len(preds.data)}건 해소: proposal={proposal_id}")
 
 
-@router.post("/api/proposals/{proposal_id}/result", status_code=201)
+@router.post("/api/proposals/{proposal_id}/result", status_code=201, response_model=StatusResponse)
 async def register_proposal_result(
     proposal_id: str,
     body: ProposalResultCreate,
-    user=Depends(require_role("lead", "director", "executive", "admin")),
+    user: CurrentUser = Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """제안 결과 등록 (수주/패찰/유찰) — 팀장 이상."""
     client = await get_async_client()
@@ -115,7 +122,7 @@ async def register_proposal_result(
         "total_score": body.total_score,
         "feedback_notes": body.feedback_notes,
         "won_by": body.won_by,
-        "registered_by": user["id"],
+        "registered_by": user.id,
     }
     await client.table("proposal_results").insert(result_row).execute()
 
@@ -145,11 +152,11 @@ async def register_proposal_result(
     except Exception:
         logger.warning("가격 예측 해소 실패 (무시)")
 
-    return {"status": "ok", "result": body.result, "proposal_id": proposal_id}
+    return ok({"result": body.result, "proposal_id": proposal_id})
 
 
-@router.get("/api/proposals/{proposal_id}/result")
-async def get_proposal_result(proposal_id: str, user=Depends(get_current_user)):
+@router.get("/api/proposals/{proposal_id}/result", response_model=ProposalResultResponse)
+async def get_proposal_result(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
     """제안 결과 조회."""
     client = await get_async_client()
     await _get_proposal_or_404(client, proposal_id)
@@ -160,11 +167,11 @@ async def get_proposal_result(proposal_id: str, user=Depends(get_current_user)):
     return result.data
 
 
-@router.put("/api/proposals/{proposal_id}/result")
+@router.put("/api/proposals/{proposal_id}/result", response_model=StatusResponse)
 async def update_proposal_result(
     proposal_id: str,
     body: ProposalResultUpdate,
-    user=Depends(require_role("lead", "director", "executive", "admin")),
+    user: CurrentUser = Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """제안 결과 수정 — 팀장 이상."""
     client = await get_async_client()
@@ -176,7 +183,7 @@ async def update_proposal_result(
 
     update_data = {k: v for k, v in body.model_dump().items() if v is not None}
     if not update_data:
-        return {"status": "ok", "message": "변경 없음"}
+        return ok(None, message="변경 없음")
 
     update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
     await client.table("proposal_results").update(update_data).eq("proposal_id", proposal_id).execute()
@@ -191,18 +198,18 @@ async def update_proposal_result(
 
     await _refresh_views(client)
 
-    return {"status": "ok", "proposal_id": proposal_id}
+    return ok({"proposal_id": proposal_id})
 
 
 # ════════════════════════════════════════
 # 4-5. 교훈(Lessons Learned) 등록/조회
 # ════════════════════════════════════════
 
-@router.post("/api/proposals/{proposal_id}/lessons", status_code=201)
+@router.post("/api/proposals/{proposal_id}/lessons", status_code=201, response_model=StatusResponse)
 async def create_lesson(
     proposal_id: str,
     body: LessonCreate,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """프로젝트 교훈 등록."""
     client = await get_async_client()
@@ -224,7 +231,7 @@ async def create_lesson(
         "client_name": p.get("client_name"),
         "industry": ", ".join(body.applicable_domains) if body.applicable_domains else None,
         "result": p.get("result"),
-        "author_id": user["id"],
+        "author_id": user.id,
     }
     result = await client.table("lessons_learned").insert(lesson_row).execute()
     lesson_id = result.data[0]["id"] if result.data else None
@@ -236,27 +243,27 @@ async def create_lesson(
     except Exception:
         logger.warning(f"교훈 임베딩 생성 실패 (무시): {lesson_id}")
 
-    return {"status": "ok", "lesson_id": lesson_id}
+    return ok({"lesson_id": lesson_id})
 
 
-@router.get("/api/proposals/{proposal_id}/lessons")
-async def get_proposal_lessons(proposal_id: str, user=Depends(get_current_user)):
+@router.get("/api/proposals/{proposal_id}/lessons", response_model=ItemsResponse)
+async def get_proposal_lessons(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
     """프로젝트 교훈 조회."""
     client = await get_async_client()
     result = await client.table("lessons_learned").select(
         "id, strategy_summary, failure_category, failure_detail, improvements, positioning, result, created_at"
     ).eq("proposal_id", proposal_id).order("created_at", desc=True).execute()
-    return {"items": result.data or [], "total": len(result.data or [])}
+    return ok_list(result.data or [], total=len(result.data or []))
 
 
-@router.get("/api/lessons")
+@router.get("/api/lessons", response_model=ItemsResponse)
 async def search_lessons(
     keyword: str | None = Query(None, description="키워드 검색"),
     category: str | None = Query(None, description="카테고리 필터"),
     domain: str | None = Query(None, description="도메인 필터"),
     skip: int = 0,
     limit: int = 20,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """교훈 검색 (키워드, 카테고리, 도메인)."""
     client = await get_async_client()
@@ -272,15 +279,15 @@ async def search_lessons(
         query = query.or_(f"strategy_summary.ilike.%{keyword}%,failure_detail.ilike.%{keyword}%")
 
     result = await query.execute()
-    return {"items": result.data or [], "total": len(result.data or [])}
+    return ok_list(result.data or [], total=len(result.data or []))
 
 
 # ════════════════════════════════════════
 # 성과 추적 API (§12-9)
 # ════════════════════════════════════════
 
-@router.get("/api/performance/individual/{user_id}")
-async def get_individual_performance(user_id: str, user=Depends(get_current_user)):
+@router.get("/api/performance/individual/{user_id}", response_model=IndividualPerformance)
+async def get_individual_performance(user_id: str, user: CurrentUser = Depends(get_current_user)):
     """개인 성과 (참여·완료·수주 건수)."""
     client = await get_async_client()
 
@@ -329,8 +336,8 @@ async def get_individual_performance(user_id: str, user=Depends(get_current_user
     }
 
 
-@router.get("/api/performance/team/{team_id}")
-async def get_team_performance(team_id: str, user=Depends(get_current_user)):
+@router.get("/api/performance/team/{team_id}", response_model=TeamQuarterPerformance)
+async def get_team_performance(team_id: str, user: CurrentUser = Depends(get_current_user)):
     """팀 성과 (수주율·건수·평균 점수)."""
     client = await get_async_client()
 
@@ -374,8 +381,8 @@ async def get_team_performance(team_id: str, user=Depends(get_current_user)):
     }
 
 
-@router.get("/api/performance/division/{div_id}")
-async def get_division_performance(div_id: str, user=Depends(get_current_user)):
+@router.get("/api/performance/division/{div_id}", response_model=DivisionPerformance)
+async def get_division_performance(div_id: str, user: CurrentUser = Depends(get_current_user)):
     """본부 성과 (수주율·누적 수주액)."""
     client = await get_async_client()
 
@@ -427,8 +434,8 @@ async def get_division_performance(div_id: str, user=Depends(get_current_user)):
     }
 
 
-@router.get("/api/performance/company")
-async def get_company_performance(user=Depends(get_current_user)):
+@router.get("/api/performance/company", response_model=CompanyPerformance)
+async def get_company_performance(user: CurrentUser = Depends(get_current_user)):
     """전사 성과 (포지셔닝별 수주율)."""
     client = await get_async_client()
 
@@ -467,11 +474,11 @@ async def get_company_performance(user=Depends(get_current_user)):
     return {"by_positioning": result, "total_proposals": len(data)}
 
 
-@router.get("/api/performance/trends")
+@router.get("/api/performance/trends", response_model=PerformanceTrends)
 async def get_performance_trends(
     period: str = Query("monthly", pattern="^(monthly|quarterly|yearly)$"),
     months: int = Query(12, ge=1, le=60),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """기간별 추이 (월/분기/연)."""
     client = await get_async_client()
@@ -507,16 +514,16 @@ async def get_performance_trends(
 # 대시보드 API (§12-8)
 # ════════════════════════════════════════
 
-@router.get("/api/dashboard/my-projects")
-async def my_projects(user=Depends(get_current_user)):
+@router.get("/api/dashboard/my-projects", response_model=MyProjectsDashboard)
+async def my_projects(user: CurrentUser = Depends(get_current_user)):
     """내 참여 프로젝트 현황."""
     client = await get_async_client()
 
     created = await client.table("proposals").select(
         "id, title, status, positioning, current_phase, created_at"
-    ).eq("owner_id", user["id"]).order("created_at", desc=True).limit(20).execute()
+    ).eq("owner_id", user.id).order("created_at", desc=True).limit(20).execute()
 
-    participated = await client.table("project_participants").select("proposal_id").eq("user_id", user["id"]).execute()
+    participated = await client.table("project_participants").select("proposal_id").eq("user_id", user.id).execute()
     participated_ids = [p["proposal_id"] for p in (participated.data or [])]
 
     participant_proposals = []
@@ -532,11 +539,11 @@ async def my_projects(user=Depends(get_current_user)):
     }
 
 
-@router.get("/api/dashboard/team")
-async def team_dashboard(user=Depends(get_current_user)):
+@router.get("/api/dashboard/team", response_model=TeamDashboard)
+async def team_dashboard(user: CurrentUser = Depends(get_current_user)):
     """팀 제안 파이프라인 (STEP별 분포)."""
     client = await get_async_client()
-    team_id = user.get("team_id", "")
+    team_id = user.team_id or ""
 
     proposals = await client.table("proposals").select(
         "id, title, status, current_phase, positioning"
@@ -556,8 +563,8 @@ async def team_dashboard(user=Depends(get_current_user)):
     }
 
 
-@router.get("/api/dashboard/team/performance")
-async def team_performance_summary(user=Depends(get_current_user)):
+@router.get("/api/dashboard/team/performance", response_model=TeamQuarterPerformance)
+async def team_performance_summary(user: CurrentUser = Depends(get_current_user)):
     """팀 성과 요약 (수주율·건수)."""
-    team_id = user.get("team_id", "")
+    team_id = user.team_id or ""
     return await get_team_performance(team_id, user)

@@ -97,8 +97,9 @@ def _mock_patches():
 
 def _rfp_analysis_obj():
     """fixture 기반 RFPAnalysis 객체 생성."""
-    from app.graph.state import RFPAnalysis
+    from app.graph.state import RFPAnalysis, PriceScoringFormula
     fix = load_fixture("rfp_analyze.json")
+    ps = fix.get("price_scoring")
     return RFPAnalysis(
         project_name=fix.get("project_name", "테스트"),
         client=fix.get("client", "ABC"),
@@ -112,6 +113,17 @@ def _rfp_analysis_obj():
         format_template=fix.get("format_template", {"exists": False, "structure": None}),
         volume_spec=fix.get("volume_spec", {}),
         special_conditions=fix.get("special_conditions", []),
+        price_scoring=PriceScoringFormula(**ps) if ps else None,
+        domain=fix.get("domain", ""),
+        project_scope=fix.get("project_scope", ""),
+        budget=fix.get("budget", ""),
+        duration=fix.get("duration", ""),
+        contract_type=fix.get("contract_type", ""),
+        delivery_phases=fix.get("delivery_phases", []),
+        qualification_requirements=fix.get("qualification_requirements", []),
+        similar_project_requirements=fix.get("similar_project_requirements", []),
+        key_personnel_requirements=fix.get("key_personnel_requirements", []),
+        subcontracting_conditions=fix.get("subcontracting_conditions", []),
     )
 
 
@@ -226,6 +238,32 @@ class TestRfpAnalyze:
 
         assert isinstance(result["rfp_analysis"], RFPAnalysis)
         assert result["rfp_analysis"].case_type in ("A", "B")
+
+    @pytest.mark.asyncio
+    async def test_rfp_analyze_v39_extended_fields(self):
+        """v3.9 확장 필드가 정상 추출되는지 검증."""
+        from app.graph.nodes.rfp_analyze import rfp_analyze
+
+        state = _base_state(rfp_raw="제안요청서\n사업명: ERP 구축\n예산: 30억")
+
+        with ExitStack() as stack:
+            for p in _mock_patches():
+                stack.enter_context(p)
+
+            result = await rfp_analyze(state)
+
+        rfp = result["rfp_analysis"]
+        # fixture에 신규 필드가 포함되어 있으므로 값이 있어야 함
+        assert rfp.domain == "SI/SW개발"
+        assert rfp.project_scope != ""
+        assert rfp.budget != ""
+        assert rfp.duration != ""
+        assert rfp.contract_type != ""
+        assert len(rfp.delivery_phases) > 0
+        assert len(rfp.qualification_requirements) > 0
+        assert len(rfp.similar_project_requirements) > 0
+        assert len(rfp.key_personnel_requirements) > 0
+        assert len(rfp.subcontracting_conditions) > 0
 
 
 # ══════════════════════════════════════════════════════════

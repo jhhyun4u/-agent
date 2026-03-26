@@ -173,8 +173,8 @@ function ProposalsContent() {
       if (statusFilter !== "all") params.status = statusFilter;
       if (search.trim()) params.search = search.trim();
       const res = await api.proposals.list(params as Parameters<typeof api.proposals.list>[0]);
-      setProposals(res.items);
-      setTotalCount(res.total ?? res.items.length);
+      setProposals(res.data);
+      setTotalCount(res.meta?.total ?? res.data.length);
     } catch {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
@@ -187,8 +187,8 @@ function ProposalsContent() {
         const res = await fetch(`${baseUrl}/proposals?${qs}`);
         if (res.ok) {
           const data = await res.json();
-          setProposals(data.items || []);
-          setTotalCount(data.total ?? data.items?.length ?? 0);
+          setProposals(data.data || []);
+          setTotalCount(data.meta?.total ?? data.data?.length ?? 0);
         }
       } catch {
         setProposals([]);

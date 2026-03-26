@@ -192,7 +192,7 @@ export default function DashboardPage() {
   const loadProposals = useCallback(async () => {
     try {
       const res = await api.proposals.list({ page: 1 });
-      setProposals(res.items);
+      setProposals(res.data);
     } catch {
       setProposals([]);
     }
@@ -202,7 +202,7 @@ export default function DashboardPage() {
     setCalLoading(true);
     try {
       const data = await api.calendar.list({ scope });
-      const sorted = [...data.items].sort(
+      const sorted = [...data.data].sort(
         (a, b) =>
           new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
       );

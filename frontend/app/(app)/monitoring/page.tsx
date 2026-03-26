@@ -92,12 +92,30 @@ function extractDomain(title: string): string[] {
   return found;
 }
 
+// TENOPA 실제 조직도 기반 팀 추천
+const TEAM_SPECS: { name: string; division: string; keywords: RegExp }[] = [
+  { name: "혁신1팀", division: "혁신전략본부", keywords: /과학기술인재|신산업정책|AI안전|탄소소재|국토교통|탄소중립|기후변화|탄소|교통|국토/i },
+  { name: "혁신2팀", division: "혁신전략본부", keywords: /성과분석|정밀의료|동향조사|감염병|바이오빅데이터|바이오헬스|성과|동향|바이오|감염|방역|보건|의약|제약/i },
+  { name: "혁신3팀", division: "혁신전략본부", keywords: /건강관리|재생의료|정신건강|의료기기|마약류|고령친화|만성질환|의료|건강|복지|고령|재활/i },
+  { name: "버티컬AX1팀", division: "버티컬AX본부", keywords: /AI시티|AI빅데이터|피지컬AI|정신건강|필수의료|예타기획|AI|인공지능|빅데이터|스마트시티|스마트|디지털|데이터|ICT/i },
+  { name: "공공1팀", division: "공공AX본부", keywords: /재난안전|원자력|토양지하수|환경보험|유해물질|재생의료|양자|자율제조|지역혁신|재난|원자력|환경|에너지|안전|폐기물|유해|양자|지역/i },
+  { name: "기술사업화1팀", division: "기술사업화본부", keywords: /스케일업|기술사업화|벤처성장|딥테크|PMO|프로젝트관리|벤처|창업|기술이전|사업화|스타트업|중소기업|성장지원/i },
+  { name: "AX혁신팀", division: "AX허브연구소", keywords: /AI업무자동화|AI\s?교육|AX컨설팅|업무자동화|교육훈련|컨설팅|DX|디지털전환|SW|소프트웨어|정보화|ISP/i },
+];
+
 function guessTeam(title: string, classification: string): string {
-  const text = `${title} ${classification}`.toLowerCase();
-  if (/ai|인공지능|데이터|클라우드|sw|소프트웨어|ict|디지털|스마트|정보/.test(text)) return "AI사업팀";
-  if (/전략|기획|경영|정책|제도|평가|성과/.test(text)) return "전략컨설팅팀";
-  if (/클라우드|인프라|네트워크|보안/.test(text)) return "클라우드팀";
-  return "AI사업팀";
+  const text = `${title} ${classification}`;
+  let bestTeam = "혁신1팀";
+  let bestScore = 0;
+  for (const t of TEAM_SPECS) {
+    const matches = text.match(t.keywords);
+    const score = matches ? matches.length : 0;
+    if (score > bestScore) {
+      bestScore = score;
+      bestTeam = t.name;
+    }
+  }
+  return bestTeam;
 }
 
 function DdayBadge({ days }: { days: number | null }) {
@@ -342,10 +360,11 @@ export default function BidsMonitorPage() {
     setCrawling(true);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-      await fetch(`${baseUrl}/bids/crawl?days=1`, { method: "POST" });
+      const res = await fetch(`${baseUrl}/bids/crawl?days=1`, { method: "POST" });
+      if (!res.ok) console.warn("[crawl] 실패:", res.status);
       setRefreshKey((k) => k + 1);
-    } catch {
-      // 무시 — 데이터 갱신만 시도
+    } catch (e) {
+      console.warn("[crawl] 오류:", e);
     } finally {
       setCrawling(false);
     }

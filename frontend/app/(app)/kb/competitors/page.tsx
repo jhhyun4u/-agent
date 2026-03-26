@@ -29,7 +29,7 @@ export default function CompetitorsPage() {
       const params: Record<string, string> = {};
       if (filterScale) params.scale = filterScale;
       const res = await api.kb.competitors.list(params);
-      setItems(res.items);
+      setItems(res.data);
     } catch { setItems([]); }
     finally { setLoading(false); }
   }, [filterScale]);

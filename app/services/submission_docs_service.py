@@ -13,6 +13,7 @@ import logging
 import zipfile
 from datetime import date, datetime, timezone
 
+from app.config import settings
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -413,7 +414,7 @@ async def build_copy_bundle(proposal_id: str) -> tuple[bytes, str]:
 
     for doc in copy_docs:
         try:
-            res = await client.storage.from_("proposal-files").download(doc["file_path"])
+            res = await client.storage.from_(settings.storage_bucket_proposals).download(doc["file_path"])
             fname = doc.get("file_name") or doc["file_path"].rsplit("/", 1)[-1]
             files.append((fname, res))
         except Exception as e:

@@ -5,20 +5,30 @@
 """
 
 import logging
-import math
 import mimetypes
 from typing import List, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Query, UploadFile
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.response import ok, ok_list
+from app.config import settings
+from app.exceptions import (
+    FileUploadError,
+    InvalidRequestError,
+    OwnershipRequiredError,
+    ResourceNotFoundError,
+    TeamAccessDeniedError,
+)
+from app.utils.file_utils import validate_extension
+from app.utils.pagination import PageParams
 from app.services.asset_extractor import extract_sections_from_asset
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["resources"])
+router = APIRouter(prefix="/api", tags=["resources"])
 
 
 # ── 스키마 ────────────────────────────────────────────────────────────
@@ -105,16 +115,16 @@ async def list_sections(
 
     query = query.order("created_at", desc=True)
     res = await query.execute()
-    return {"sections": res.data or []}
+    items = res.data or []
+    return ok_list(items, total=len(items))
 
 
 @router.post("/resources/sections", status_code=201)
 async def create_section(body: SectionCreate, user=Depends(get_current_user)):
     """섹션 생성"""
     if body.category not in VALID_CATEGORIES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"category는 {', '.join(VALID_CATEGORIES)} 중 하나여야 합니다.",
+        raise InvalidRequestError(
+            f"category는 {', '.join(VALID_CATEGORIES)} 중 하나여야 합니다.",
         )
     client = await get_async_client()
 
@@ -129,7 +139,7 @@ async def create_section(body: SectionCreate, user=Depends(get_current_user)):
             .execute()
         )
         if not team_res.data:
-            raise HTTPException(status_code=403, detail="해당 팀의 멤버가 아닙니다.")
+            raise TeamAccessDeniedError("해당 팀의 멤버가 아닙니다.")
 
     section_id = str(uuid4())
     insert_data = {
@@ -145,7 +155,7 @@ async def create_section(body: SectionCreate, user=Depends(get_current_user)):
         insert_data["team_id"] = body.team_id
 
     await client.table("sections").insert(insert_data).execute()
-    return {"section_id": section_id, "title": body.title, "category": body.category}
+    return ok({"section_id": section_id, "title": body.title, "category": body.category})
 
 
 @router.put("/resources/sections/{section_id}")
@@ -154,9 +164,8 @@ async def update_section(
 ):
     """섹션 수정 (소유자만)"""
     if body.category is not None and body.category not in VALID_CATEGORIES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"category는 {', '.join(VALID_CATEGORIES)} 중 하나여야 합니다.",
+        raise InvalidRequestError(
+            f"category는 {', '.join(VALID_CATEGORIES)} 중 하나여야 합니다.",
         )
     client = await get_async_client()
 
@@ -168,13 +177,13 @@ async def update_section(
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="섹션을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("섹션")
     if res.data["owner_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 섹션만 수정할 수 있습니다.")
+        raise OwnershipRequiredError("본인 섹션만 수정할 수 있습니다.")
 
     update_data = {k: v for k, v in body.model_dump().items() if v is not None}
     if not update_data:
-        raise HTTPException(status_code=400, detail="수정할 필드가 없습니다.")
+        raise InvalidRequestError("수정할 필드가 없습니다.")
 
     await (
         client.table("sections")
@@ -183,7 +192,7 @@ async def update_section(
         .eq("owner_id", user.id)
         .execute()
     )
-    return {"section_id": section_id, **update_data}
+    return ok({"section_id": section_id, **update_data})
 
 
 @router.delete("/resources/sections/{section_id}", status_code=204)
@@ -199,9 +208,9 @@ async def delete_section(section_id: str, user=Depends(get_current_user)):
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="섹션을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("섹션")
     if res.data["owner_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 섹션만 삭제할 수 있습니다.")
+        raise OwnershipRequiredError("본인 섹션만 삭제할 수 있습니다.")
 
     await (
         client.table("sections")
@@ -214,10 +223,6 @@ async def delete_section(section_id: str, user=Depends(get_current_user)):
 
 # ── 회사 자료 ─────────────────────────────────────────────────────────
 
-ALLOWED_ASSET_TYPES = {"application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
-ALLOWED_EXTENSIONS = {".pdf", ".docx"}
-
-
 @router.post("/assets", status_code=201)
 async def upload_asset(
     background_tasks: BackgroundTasks,
@@ -229,11 +234,8 @@ async def upload_asset(
     업로드 완료 후 백그라운드에서 AI 섹션 자동 추출을 실행합니다.
     추출 진행 중 status는 'processing', 완료 시 'done', 실패 시 'failed'로 변경됩니다.
     """
-    import os
-
-    ext = os.path.splitext(file.filename or "")[1].lower()
-    if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(status_code=400, detail="PDF 또는 DOCX 파일만 업로드 가능합니다.")
+    ext_raw = validate_extension(file.filename or "", "asset")
+    ext = f".{ext_raw}"
 
     mime_type = mimetypes.types_map.get(ext) or file.content_type or "application/octet-stream"
 
@@ -245,12 +247,12 @@ async def upload_asset(
 
     # Supabase Storage 업로드
     try:
-        await client.storage.from_("proposal-files").upload(
+        await client.storage.from_(settings.storage_bucket_proposals).upload(
             storage_path, content, {"content-type": mime_type}
         )
     except Exception as exc:
         logger.error("Storage upload failed: %s", exc)
-        raise HTTPException(status_code=500, detail="파일 업로드에 실패했습니다.")
+        raise FileUploadError()
 
     # 팀 ID 조회 (첫 번째 팀 소속 기준)
     team_res = (
@@ -285,7 +287,7 @@ async def upload_asset(
         filename=file.filename or "",
     )
 
-    return {"asset_id": asset_id, "filename": file.filename, "status": "pending"}
+    return ok({"asset_id": asset_id, "filename": file.filename, "status": "pending"})
 
 
 async def _run_extraction(
@@ -375,7 +377,8 @@ async def list_assets(user=Depends(get_current_user)):
         query = query.eq("owner_id", user.id)
 
     res = await query.order("created_at", desc=True).execute()
-    return {"assets": res.data or []}
+    items = res.data or []
+    return ok_list(items, total=len(items))
 
 
 @router.delete("/assets/{asset_id}", status_code=204)
@@ -391,13 +394,13 @@ async def delete_asset(asset_id: str, user=Depends(get_current_user)):
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="자료를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("자료")
     if res.data["owner_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 자료만 삭제할 수 있습니다.")
+        raise OwnershipRequiredError("본인 자료만 삭제할 수 있습니다.")
 
     # Storage 파일 삭제 (실패해도 DB는 삭제)
     try:
-        await client.storage.from_("proposal-files").remove([res.data["storage_path"]])
+        await client.storage.from_(settings.storage_bucket_proposals).remove([res.data["storage_path"]])
     except Exception as exc:
         logger.warning("Storage delete failed (continuing): %s", exc)
 
@@ -418,8 +421,7 @@ async def list_archive(
     scope: str = Query("personal", description="company | team | personal"),
     win_result: Optional[str] = Query(None, description="won | lost | pending"),
     q: Optional[str] = Query(None, description="프로젝트명/발주기관 검색"),
-    page: int = Query(1, ge=1),
-    page_size: int = Query(20, ge=1, le=100),
+    pg: PageParams = Depends(),
 ):
     """제안서 아카이브 조회 (완료된 제안서 중심)"""
     client = await get_async_client()
@@ -466,25 +468,15 @@ async def list_archive(
 
     if win_result:
         if win_result not in ("won", "lost", "pending"):
-            raise HTTPException(
-                status_code=400, detail="win_result는 won, lost, pending 중 하나여야 합니다."
-            )
+            raise InvalidRequestError("win_result는 won, lost, pending 중 하나여야 합니다.")
         query = query.eq("win_result", win_result)
 
-    offset = (page - 1) * page_size
-    query = query.order("created_at", desc=True).range(offset, offset + page_size - 1)
+    query = pg.apply(query.order("created_at", desc=True))
 
     res = await query.execute()
     items = res.data or []
 
     # 전체 건수 (간이 방식: 반환된 결과 기반)
-    total = len(items) + offset if len(items) == page_size else offset + len(items)
-    pages = math.ceil(total / page_size) if page_size > 0 else 1
+    total = len(items) + pg.offset if len(items) == pg.page_size else pg.offset + len(items)
 
-    return {
-        "items": items,
-        "page": page,
-        "page_size": page_size,
-        "total": total,
-        "pages": pages,
-    }
+    return ok_list(items, total=total, offset=pg.offset, limit=pg.page_size)

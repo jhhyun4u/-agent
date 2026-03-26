@@ -23,7 +23,14 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_project_access
+from app.config import settings
 from app.exceptions import PropNotFoundError
+from app.models.auth_schemas import CurrentUser
+from app.models.artifact_schemas import (
+    ArtifactResponse, ArtifactSaveResponse,
+    SectionRegenerateResponse, AiAssistResponse, CostSheetDraftResponse,
+    ComplianceMatrixResponse, ComplianceCheckResponse,
+)
 
 router = APIRouter(prefix="/api/proposals", tags=["artifacts"])
 logger = logging.getLogger(__name__)
@@ -42,7 +49,7 @@ async def _upload_to_storage_with_tracking(
     """
     from app.utils.supabase_client import get_async_client
 
-    bucket = "proposal-files"
+    bucket = settings.storage_bucket_proposals
     storage_path = f"{proposal_id}/proposal.{file_key}"
     col_map = {"docx": "storage_path_docx", "pptx": "storage_path_pptx", "hwpx": "storage_path_hwpx"}
     db_col = col_map.get(file_key)
@@ -102,11 +109,11 @@ async def _upload_to_storage_with_tracking(
             pass
 
 
-@router.get("/{proposal_id}/artifacts/{step}")
+@router.get("/{proposal_id}/artifacts/{step}", response_model=ArtifactResponse)
 async def get_artifacts(
     proposal_id: str,
     step: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """단계별 산출물 조회 (그래프 상태에서 추출)."""
@@ -163,12 +170,12 @@ class ArtifactSaveRequest(BaseModel):
     change_source: str = "human_edit"  # 변경 출처
 
 
-@router.put("/{proposal_id}/artifacts/{step}")
+@router.put("/{proposal_id}/artifacts/{step}", response_model=ArtifactSaveResponse)
 async def save_artifact(
     proposal_id: str,
     step: str,
     body: ArtifactSaveRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """에디터에서 수정한 산출물을 그래프 상태에 저장."""
@@ -202,7 +209,7 @@ async def save_artifact(
         update = {
             state_key: existing,
             "_edited_html": body.content,
-            "_last_editor": user.get("name", user.get("id", "unknown")),
+            "_last_editor": user.name or user.id,
         }
 
         # Phase C: 사람 수정 추적
@@ -220,7 +227,7 @@ async def save_artifact(
                 action="edit",
                 original=old_html[:10000],
                 edited=body.content[:10000],
-                user_id=user.get("id"),
+                user_id=user.id,
             )
         except Exception as e:
             logger.debug(f"수정 추적 실패 (무시): {e}")
@@ -231,7 +238,7 @@ async def save_artifact(
 
     logger.info(
         f"산출물 저장: proposal={proposal_id}, step={step}, "
-        f"source={body.change_source}, user={user.get('id')}"
+        f"source={body.change_source}, user={user.id}"
     )
 
     # GAP-4: artifacts 테이블에 버전 기록
@@ -252,7 +259,7 @@ async def save_artifact(
             "content": content_str[:50000],
             "change_source": body.change_source,
             "change_summary": f"{step} v{next_ver}",
-            "created_by": user.get("id"),
+            "created_by": user.id,
         }).execute()
     except Exception as e:
         logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
@@ -269,13 +276,13 @@ class SectionRegenerateRequest(BaseModel):
     instructions: str = ""  # 재생성 시 추가 지시사항
 
 
-@router.post("/{proposal_id}/artifacts/{step}/sections/{section_id}/regenerate")
+@router.post("/{proposal_id}/artifacts/{step}/sections/{section_id}/regenerate", response_model=SectionRegenerateResponse)
 async def regenerate_section(
     proposal_id: str,
     step: str,
     section_id: str,
     body: SectionRegenerateRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """특정 섹션만 AI로 재생성 (§12-4-1).
@@ -375,12 +382,12 @@ async def regenerate_section(
                 proposal_id=proposal_id,
                 section_id=section_id,
                 action="regenerate",
-                user_id=user.get("id"),
+                user_id=user.id,
             )
         except Exception:
             pass
 
-        logger.info(f"섹션 재생성: proposal={proposal_id}, section={section_id}, user={user.get('id')}")
+        logger.info(f"섹션 재생성: proposal={proposal_id}, section={section_id}, user={user.id}")
 
         # GAP-4: artifacts 버전 기록 (ai_regenerate)
         try:
@@ -399,7 +406,7 @@ async def regenerate_section(
                 "content": json.dumps(result, ensure_ascii=False)[:50000],
                 "change_source": "ai_regenerate",
                 "change_summary": f"{section_title} AI 재생성 v{next_ver}",
-                "created_by": user.get("id"),
+                "created_by": user.id,
             }).execute()
         except Exception as e:
             logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
@@ -422,11 +429,11 @@ class AiAssistRequest(BaseModel):
     context: str = ""  # 주변 컨텍스트 (선택)
 
 
-@router.post("/{proposal_id}/ai-assist")
+@router.post("/{proposal_id}/ai-assist", response_model=AiAssistResponse)
 async def ai_assist(
     proposal_id: str,
     body: AiAssistRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """에디터에서 선택한 텍스트에 대한 AI 개선 제안 (§12-4-2)."""
@@ -475,7 +482,7 @@ async def ai_assist(
 async def download_docx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """DOCX 다운로드 (중간 버전 포함) + Storage 업로드 (§8 finally 패턴)."""
@@ -522,7 +529,7 @@ async def download_docx(
 async def download_hwpx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """HWPX 다운로드 (hwpxskill 기반 템플릿 조립)."""
@@ -585,7 +592,7 @@ async def download_hwpx(
 async def download_pptx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """PPTX 다운로드 — 컨설팅급(ppt_storyboard) 또는 경량(ppt_slides) 폴백 + Storage 업로드."""
@@ -648,7 +655,7 @@ async def download_pptx(
 @router.get("/{proposal_id}/download/cost-sheet")
 async def download_cost_sheet(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """산출내역서 DOCX 다운로드 — bid_plan + plan_price 데이터 기반."""
@@ -717,10 +724,10 @@ async def download_cost_sheet(
     )
 
 
-@router.get("/{proposal_id}/cost-sheet/draft")
+@router.get("/{proposal_id}/cost-sheet/draft", response_model=CostSheetDraftResponse)
 async def get_cost_sheet_draft(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """산출내역서 초안 데이터 — 프론트엔드 편집용 JSON 반환."""
@@ -789,7 +796,7 @@ class CostSheetGenerateRequest(BaseModel):
 async def generate_cost_sheet(
     proposal_id: str,
     body: CostSheetGenerateRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """편집된 산출내역서 데이터로 DOCX 생성·다운로드."""
@@ -842,10 +849,10 @@ async def generate_cost_sheet(
     )
 
 
-@router.get("/{proposal_id}/compliance")
+@router.get("/{proposal_id}/compliance", response_model=ComplianceMatrixResponse)
 async def get_compliance_matrix(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """Compliance Matrix 현재 상태."""
@@ -879,10 +886,10 @@ async def get_compliance_matrix(
     }
 
 
-@router.post("/{proposal_id}/compliance/check")
+@router.post("/{proposal_id}/compliance/check", response_model=ComplianceCheckResponse)
 async def run_compliance_check(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """Compliance Matrix AI 체크 실행."""

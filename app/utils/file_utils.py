@@ -1,13 +1,14 @@
-"""파일 처리 관련 유틸리티"""
+"""파일 처리 관련 유틸리티 — 텍스트 추출 + 업로드 검증"""
 
 import logging
+import os
 from pathlib import Path
 from typing import Union
 
 from PyPDF2 import PdfReader
 
 from app.config import settings
-from app.exceptions import FileProcessingError
+from app.exceptions import FileFormatError, FileProcessingError, FileSizeExceededError, InvalidRequestError
 
 logger = logging.getLogger(__name__)
 
@@ -187,3 +188,60 @@ def extract_text_from_file(file_path: Union[str, Path]) -> str:
             f"파일을 읽는 중 오류가 발생했습니다: {file_path}",
             details={"path": str(file_path), "error": str(e)}
         )
+
+
+# ── 업로드 검증 ──────────────────────────────────────────────
+
+# 카테고리별 허용 확장자 (점 없이 소문자)
+UPLOAD_ALLOWED_EXTENSIONS: dict[str, frozenset[str]] = {
+    "project_file": frozenset({
+        "pdf", "docx", "hwp", "hwpx", "xlsx", "pptx", "png", "jpg", "jpeg",
+    }),
+    "asset": frozenset({"pdf", "docx"}),
+    "template": frozenset({"pdf", "docx"}),
+    "submission": frozenset({
+        "pdf", "hwp", "hwpx", "doc", "docx", "xls", "xlsx",
+        "ppt", "pptx", "jpg", "jpeg", "png", "zip", "txt",
+    }),
+}
+
+
+def sanitize_filename(filename: str | None) -> str:
+    """파일명 보안 검증 (경로 탐색 방지). 안전한 파일명 반환."""
+    raw = filename or "upload"
+    safe = os.path.basename(raw).strip()
+    if not safe or safe.startswith("."):
+        raise InvalidRequestError("잘못된 파일명입니다.")
+    return safe
+
+
+def get_extension(filename: str) -> str:
+    """파일명에서 확장자 추출 (소문자, 점 없이)."""
+    return filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+
+
+def validate_extension(filename: str, category: str) -> str:
+    """확장자 검증. 유효하면 확장자 반환, 아니면 FileFormatError."""
+    allowed = UPLOAD_ALLOWED_EXTENSIONS.get(category)
+    if allowed is None:
+        raise ValueError(f"알 수 없는 파일 카테고리: {category}")
+    ext = get_extension(filename)
+    if ext not in allowed:
+        raise FileFormatError(ext, sorted(allowed))
+    return ext
+
+
+def validate_file_size(content: bytes, max_mb: int | None = None):
+    """파일 크기 검증. 초과 시 FileSizeExceededError."""
+    limit = max_mb or settings.max_file_size_mb
+    max_bytes = limit * 1024 * 1024
+    if len(content) > max_bytes:
+        raise FileSizeExceededError(limit, len(content) / (1024 * 1024))
+
+
+def validate_upload(filename: str | None, content: bytes, category: str, max_mb: int | None = None) -> tuple[str, str]:
+    """파일명 + 확장자 + 크기 통합 검증. (safe_filename, extension) 반환."""
+    safe = sanitize_filename(filename)
+    ext = validate_extension(safe, category)
+    validate_file_size(content, max_mb)
+    return safe, ext

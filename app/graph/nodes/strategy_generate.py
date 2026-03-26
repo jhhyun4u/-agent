@@ -155,7 +155,7 @@ async def strategy_generate(state: ProposalState) -> dict:
     if pricing_strategy_context:
         prompt += f"\n\n{pricing_strategy_context}\n위 시장 데이터를 price_strategy 설정 시 참고하세요."
 
-    result = await claude_generate(prompt, max_tokens=8000)
+    result = await claude_generate(prompt, max_tokens=8000, step_name="strategy_generate")
 
     # 프롬프트 사용 기록
     if proposal_id:

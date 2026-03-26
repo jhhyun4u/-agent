@@ -37,7 +37,7 @@ export default function ClientsPage() {
       const params: Record<string, string> = {};
       if (filterRel) params.relationship = filterRel;
       const res = await api.kb.clients.list(params);
-      setItems(res.items);
+      setItems(res.data);
     } catch { setItems([]); }
     finally { setLoading(false); }
   }, [filterRel]);

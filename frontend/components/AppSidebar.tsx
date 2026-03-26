@@ -69,7 +69,6 @@ const NAV: NavEntry[] = [
   { href: "/dashboard", label: "대시보드", icon: "dashboard" },
   { href: "/monitoring", label: "공고 모니터링", icon: "bids" },
   { href: "/proposals", label: "제안 프로젝트", icon: "proposals" },
-  { href: "/pricing", label: "가격 시뮬레이터", icon: "pricing" },
   {
     label: "지식 베이스", icon: "kb", basePath: "/kb",
     children: [
@@ -103,6 +102,7 @@ export default function AppSidebar() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [kbOpen, setKbOpen] = useState(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem("sidebar-kb-expanded") === "true";
@@ -180,11 +180,11 @@ export default function AppSidebar() {
 
   const fetchRecent = useCallback(async () => {
     try {
-      const { items } = await api.proposals.list({ scope: "my" });
+      const { data } = await api.proposals.list({ scope: "my" });
       setRecentProposals(
-        items
-          .filter(p => ACTIVE_STATUSES.has(p.status))
-          .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+        data
+          .filter((p: ProposalSummary) => ACTIVE_STATUSES.has(p.status))
+          .sort((a: ProposalSummary, b: ProposalSummary) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
           .slice(0, 3)
       );
     } catch { /* 실패 시 빈 상태 유지 */ }
@@ -208,7 +208,6 @@ export default function AppSidebar() {
     if (href === "/proposals") return pathname.startsWith("/proposals");
     if (href === "/dashboard") return pathname.startsWith("/dashboard");
     if (href === "/monitoring") return pathname.startsWith("/monitoring");
-    if (href === "/pricing") return pathname.startsWith("/pricing");
     if (href === "/analytics") return pathname.startsWith("/analytics");
     // Admin 하위 메뉴: 정확 매칭 (그룹 하이라이트는 basePath로 처리)
     if (href === "/admin") return pathname === "/admin";
@@ -217,197 +216,234 @@ export default function AppSidebar() {
     return pathname === href;
   }
 
-  const linkCls = (active: boolean) =>
-    `flex items-center ${collapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
-      active ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-    }`;
+  // 모바일에서 페이지 이동 시 오버레이 닫기
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
-  const childLinkCls = (active: boolean) =>
-    `flex items-center ${collapsed ? "justify-center" : "gap-2"} px-3 py-1.5 rounded-md text-[11px] transition-colors ${
-      active ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-    }`;
+  /** 사이드바 내부 콘텐츠 (데스크톱/모바일 공용) */
+  function renderSidebarContent(forMobile: boolean) {
+    const isCollapsed = forMobile ? false : collapsed;
+    const lCls = (active: boolean) =>
+      `flex items-center ${isCollapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
+        active ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+      }`;
+    const cLCls = (active: boolean) =>
+      `flex items-center ${isCollapsed ? "justify-center" : "gap-2"} px-3 py-1.5 rounded-md text-[11px] transition-colors ${
+        active ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+      }`;
 
+    return (
+      <>
+        {/* 로고 */}
+        <div className="px-3 py-4 border-b border-[#262626] flex items-center overflow-hidden">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="w-6 h-6 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0">
+              PA
+            </div>
+            {!isCollapsed && (
+              <span className="text-sm font-semibold text-[#ededed] whitespace-nowrap">
+                Proposal Architect
+              </span>
+            )}
+          </div>
+          {forMobile && (
+            <button onClick={() => setMobileOpen(false)} className="ml-auto p-1 text-[#8c8c8c] hover:text-[#ededed]" aria-label="메뉴 닫기">
+              <SvgIcon d="M18 6L6 18M6 6l12 12" />
+            </button>
+          )}
+        </div>
+
+        {/* 네비게이션 */}
+        <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
+          {/* 대시보드 */}
+          <Link href={(NAV[0] as NavItem).href} className={lCls(isActive((NAV[0] as NavItem).href))} title={isCollapsed ? (NAV[0] as NavItem).label : undefined} aria-label={(NAV[0] as NavItem).label}>
+            <SvgIcon d={ICONS[(NAV[0] as NavItem).icon] || ""} className="opacity-70 shrink-0" />
+            {!isCollapsed && <span>{(NAV[0] as NavItem).label}</span>}
+          </Link>
+
+          {/* 최근 작업 */}
+          {isCollapsed ? (
+            recentProposals.length > 0 && (
+              <button
+                title={`최근 작업 ${recentProposals.length}건`}
+                onClick={() => router.push("/proposals")}
+                className="relative w-full flex justify-center px-3 py-2 rounded-md text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
+              >
+                <SvgIcon d={ICONS.recent} className="opacity-70" />
+                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#3ecf8e] text-black text-[8px] font-bold flex items-center justify-center">{recentProposals.length}</span>
+              </button>
+            )
+          ) : (
+            recentProposals.length > 0 && (
+              <div className="mt-2 mb-2">
+                <p className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-[#555]">최근 작업</p>
+                {recentProposals.map(p => {
+                  const d = calcDDay(p.deadline);
+                  const dotColor = p.status === "initialized" ? "#f59e0b" : "#3ecf8e";
+                  return (
+                    <Link key={p.id} href={`/proposals/${p.id}`}
+                      className="flex items-start gap-2 px-3 py-1.5 rounded-md text-sm transition-colors text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+                    >
+                      <span className="mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor }} />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[#cdcdcd] text-[13px]">{p.title}</p>
+                        <p className="text-[10px]">
+                          {d !== null && <span className={dDayColor(d)}>D{d <= 0 ? d : `-${d}`}</span>}
+                          {d !== null && " · "}
+                          <span>Phase {p.phases_completed}/5</span>
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )
+          )}
+
+          {/* 나머지 NAV (공고~아카이브) */}
+          {NAV.slice(1).map((entry, i) => {
+            if (isGroup(entry)) {
+              const groupActive = pathname.startsWith(entry.basePath);
+              return (
+                <div key={i}>
+                  <button
+                    onClick={() => isCollapsed ? router.push("/kb/search") : toggleKb()}
+                    className={`w-full flex items-center ${isCollapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
+                      groupActive && !kbOpen ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+                    }`}
+                    title={isCollapsed ? entry.label : undefined}
+                  >
+                    <SvgIcon d={ICONS[entry.icon] || ""} className="opacity-70 shrink-0" />
+                    {!isCollapsed && <span className="flex-1 text-left">{entry.label}</span>}
+                    {!isCollapsed && <span className="text-[10px] text-[#555]">{kbOpen ? "▾" : "▸"}</span>}
+                  </button>
+                  {kbOpen && !isCollapsed && (
+                    <div className="ml-3 mt-0.5 space-y-0.5">
+                      {entry.children.map(child => (
+                        <Link key={child.href} href={child.href} className={cLCls(isActive(child.href))} title={isCollapsed ? child.label : undefined}>
+                          <SvgIcon d={ICONS[child.icon] || ""} className="opacity-50 shrink-0 w-3.5 h-3.5" />
+                          {!isCollapsed && <span>{child.label}</span>}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <Link key={(entry as NavItem).href} href={(entry as NavItem).href} className={lCls(isActive((entry as NavItem).href))} title={isCollapsed ? (entry as NavItem).label : undefined} aria-label={(entry as NavItem).label}>
+                <SvgIcon d={ICONS[(entry as NavItem).icon] || ""} className="opacity-70 shrink-0" />
+                {!isCollapsed && <span>{(entry as NavItem).label}</span>}
+              </Link>
+            );
+          })}
+
+          {/* Admin (role 조건부, 접이식 하위 메뉴) */}
+          {(userRole === "admin" || userRole === "manager") && (
+            <div>
+              <button
+                onClick={() => isCollapsed ? router.push("/admin") : toggleAdmin()}
+                className={`w-full flex items-center ${isCollapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
+                  pathname.startsWith("/admin") && !adminOpen ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+                }`}
+                title={isCollapsed ? ADMIN_GROUP.label : undefined}
+              >
+                <SvgIcon d={ICONS[ADMIN_GROUP.icon] || ""} className="opacity-70 shrink-0" />
+                {!isCollapsed && <span className="flex-1 text-left">{ADMIN_GROUP.label}</span>}
+                {!isCollapsed && <span className="text-[10px] text-[#555]">{adminOpen ? "▾" : "▸"}</span>}
+              </button>
+              {adminOpen && !isCollapsed && (
+                <div className="ml-3 mt-0.5 space-y-0.5">
+                  {ADMIN_GROUP.children.map(child => (
+                    <Link key={child.href} href={child.href} className={cLCls(isActive(child.href))} title={isCollapsed ? child.label : undefined}>
+                      <SvgIcon d={ICONS[child.icon] || ""} className="opacity-50 shrink-0 w-3.5 h-3.5" />
+                      {!isCollapsed && <span>{child.label}</span>}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </nav>
+
+        {/* 유저 + 테마 + 알림 */}
+        <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
+          <ThemeToggle collapsed={isCollapsed} />
+          {isCollapsed ? (
+            <div className="flex flex-col items-center gap-1">
+              <NotificationBell />
+              <button onClick={signOut} className="p-2 rounded-md text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors" title="로그아웃" aria-label="로그아웃">
+                <SvgIcon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9" className="opacity-70 shrink-0" />
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between px-3 py-1.5">
+                <p className="text-xs text-[#5c5c5c] truncate flex-1">{email}</p>
+                <NotificationBell />
+              </div>
+              <button
+                onClick={signOut}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
+                aria-label="로그아웃"
+              >
+                <SvgIcon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9" className="opacity-70 shrink-0" />
+                <span>로그아웃</span>
+              </button>
+            </>
+          )}
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-    <div className="flex shrink-0 relative group/sidebar">
-      <aside className={`${collapsed ? "w-14" : "w-52"} flex flex-col border-r border-[#262626] bg-[#111111] transition-all duration-200`}>
-      {/* 로고 */}
-      <div className="px-3 py-4 border-b border-[#262626] flex items-center overflow-hidden">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-6 h-6 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0">
-            PA
-          </div>
-          {!collapsed && (
-            <span className="text-sm font-semibold text-[#ededed] whitespace-nowrap">
-              Proposal Architect
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* 네비게이션 */}
-      <nav className="flex-1 px-2 py-3 space-y-0.5">
-        {/* 대시보드 */}
-        <Link href={(NAV[0] as NavItem).href} className={linkCls(isActive((NAV[0] as NavItem).href))} title={collapsed ? (NAV[0] as NavItem).label : undefined} aria-label={(NAV[0] as NavItem).label}>
-          <SvgIcon d={ICONS[(NAV[0] as NavItem).icon] || ""} className="opacity-70 shrink-0" />
-          {!collapsed && <span>{(NAV[0] as NavItem).label}</span>}
-        </Link>
-
-        {/* 최근 작업 — collapsed: 시계 아이콘, expanded: 목록 */}
-        {collapsed ? (
-          recentProposals.length > 0 && (
-            <button
-              title={`최근 작업 ${recentProposals.length}건`}
-              onClick={() => router.push("/proposals")}
-              className="relative w-full flex justify-center px-3 py-2 rounded-md text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
-            >
-              <SvgIcon d={ICONS.recent} className="opacity-70" />
-              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#3ecf8e] text-black text-[8px] font-bold flex items-center justify-center">{recentProposals.length}</span>
-            </button>
-          )
-        ) : (
-          recentProposals.length > 0 && (
-            <div className="mt-2 mb-2">
-              <p className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-[#555]">최근 작업</p>
-              {recentProposals.map(p => {
-                const d = calcDDay(p.deadline);
-                const dotColor = p.status === "initialized" ? "#f59e0b" : "#3ecf8e";
-                return (
-                  <Link key={p.id} href={`/proposals/${p.id}`}
-                    className="flex items-start gap-2 px-3 py-1.5 rounded-md text-sm transition-colors text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-                  >
-                    <span className="mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor }} />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[#cdcdcd] text-[13px]">{p.title}</p>
-                      <p className="text-[10px]">
-                        {d !== null && <span className={dDayColor(d)}>D{d <= 0 ? d : `-${d}`}</span>}
-                        {d !== null && " · "}
-                        <span>Phase {p.phases_completed}/5</span>
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )
-        )}
-
-        {/* 나머지 NAV (공고~아카이브) */}
-        {NAV.slice(1).map((entry, i) => {
-          if (isGroup(entry)) {
-            const groupActive = pathname.startsWith(entry.basePath);
-            return (
-              <div key={i}>
-                <button
-                  onClick={() => collapsed ? router.push("/kb/search") : toggleKb()}
-                  className={`w-full flex items-center ${collapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
-                    groupActive && !kbOpen ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-                  }`}
-                  title={collapsed ? entry.label : undefined}
-                >
-                  <SvgIcon d={ICONS[entry.icon] || ""} className="opacity-70 shrink-0" />
-                  {!collapsed && <span className="flex-1 text-left">{entry.label}</span>}
-                  {!collapsed && <span className="text-[10px] text-[#555]">{kbOpen ? "▾" : "▸"}</span>}
-                </button>
-                {kbOpen && !collapsed && (
-                  <div className="ml-3 mt-0.5 space-y-0.5">
-                    {entry.children.map(child => (
-                      <Link key={child.href} href={child.href} className={childLinkCls(isActive(child.href))} title={collapsed ? child.label : undefined}>
-                        <SvgIcon d={ICONS[child.icon] || ""} className="opacity-50 shrink-0 w-3.5 h-3.5" />
-                        {!collapsed && <span>{child.label}</span>}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          }
-          return (
-            <Link key={(entry as NavItem).href} href={(entry as NavItem).href} className={linkCls(isActive((entry as NavItem).href))} title={collapsed ? (entry as NavItem).label : undefined} aria-label={(entry as NavItem).label}>
-              <SvgIcon d={ICONS[(entry as NavItem).icon] || ""} className="opacity-70 shrink-0" />
-              {!collapsed && <span>{(entry as NavItem).label}</span>}
-            </Link>
-          );
-        })}
-
-        {/* Admin (role 조건부, 접이식 하위 메뉴) */}
-        {(userRole === "admin" || userRole === "manager") && (
-          <div>
-            <button
-              onClick={() => collapsed ? router.push("/admin") : toggleAdmin()}
-              className={`w-full flex items-center ${collapsed ? "justify-center" : "gap-2.5"} px-3 py-2 rounded-md text-sm transition-colors ${
-                pathname.startsWith("/admin") && !adminOpen ? "bg-[#1c1c1c] text-[#ededed]" : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-              }`}
-              title={collapsed ? ADMIN_GROUP.label : undefined}
-            >
-              <SvgIcon d={ICONS[ADMIN_GROUP.icon] || ""} className="opacity-70 shrink-0" />
-              {!collapsed && <span className="flex-1 text-left">{ADMIN_GROUP.label}</span>}
-              {!collapsed && <span className="text-[10px] text-[#555]">{adminOpen ? "▾" : "▸"}</span>}
-            </button>
-            {adminOpen && !collapsed && (
-              <div className="ml-3 mt-0.5 space-y-0.5">
-                {ADMIN_GROUP.children.map(child => (
-                  <Link key={child.href} href={child.href} className={childLinkCls(isActive(child.href))} title={collapsed ? child.label : undefined}>
-                    <SvgIcon d={ICONS[child.icon] || ""} className="opacity-50 shrink-0 w-3.5 h-3.5" />
-                    {!collapsed && <span>{child.label}</span>}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </nav>
-
-      {/* 유저 + 테마 + 알림 */}
-      <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
-        <ThemeToggle collapsed={collapsed} />
-        {collapsed ? (
-          <div className="flex flex-col items-center gap-1">
-            <NotificationBell />
-            <button onClick={signOut} className="p-2 rounded-md text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors" title="로그아웃" aria-label="로그아웃">
-              <SvgIcon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9" className="opacity-70 shrink-0" />
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center justify-between px-3 py-1.5">
-              <p className="text-xs text-[#5c5c5c] truncate flex-1">{email}</p>
-              <NotificationBell />
-            </div>
-            <button
-              onClick={signOut}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
-              aria-label="로그아웃"
-            >
-              <SvgIcon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4 M16 17l5-5-5-5 M21 12H9" className="opacity-70 shrink-0" />
-              <span>로그아웃</span>
-            </button>
-          </>
-        )}
-      </div>
-    </aside>
-      {/* Claude Desktop 스타일 토글 — 사이드바 오른쪽 경계에 세로 핸들 */}
+      {/* 모바일 햄버거 (lg 미만) */}
       <button
-        onClick={() => {
-          setCollapsed(prev => {
-            const next = !prev;
-            localStorage.setItem("sidebar-collapsed", String(next));
-            return next;
-          });
-        }}
-        className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 w-6 h-12 flex items-center justify-center rounded-md bg-[#1c1c1c] border border-[#333] text-[#666] hover:text-[#ededed] hover:bg-[#262626] hover:border-[#444] transition-all duration-150 opacity-0 hover:opacity-100 group-hover/sidebar:opacity-100"
-        title={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
-        aria-label={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-3 left-3 z-40 p-2 bg-[#1c1c1c] border border-[#262626] rounded-lg"
+        aria-label="메뉴 열기"
       >
-        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          {collapsed
-            ? <path d="M9 18l6-6-6-6" />
-            : <path d="M15 18l-6-6 6-6" />
-          }
-        </svg>
+        <SvgIcon d="M3 12h18M3 6h18M3 18h18" />
       </button>
-    </div>
+
+      {/* 모바일 오버레이 드로어 (lg 미만) */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-[#0f0f0f]/60" onClick={() => setMobileOpen(false)}>
+          <aside className="w-64 h-full bg-[#111111] border-r border-[#262626] flex flex-col" onClick={e => e.stopPropagation()}>
+            {renderSidebarContent(true)}
+          </aside>
+        </div>
+      )}
+
+      {/* 데스크톱 사이드바 (lg 이상) */}
+      <div className="hidden lg:flex shrink-0 relative group/sidebar">
+        <aside className={`${collapsed ? "w-14" : "w-52"} flex flex-col border-r border-[#262626] bg-[#111111] transition-all duration-200`}>
+          {renderSidebarContent(false)}
+        </aside>
+        {/* Claude Desktop 스타일 토글 — 사이드바 오른쪽 경계에 세로 핸들 */}
+        <button
+          onClick={() => {
+            setCollapsed(prev => {
+              const next = !prev;
+              localStorage.setItem("sidebar-collapsed", String(next));
+              return next;
+            });
+          }}
+          className="absolute top-1/2 -translate-y-1/2 -right-3 z-10 w-6 h-12 flex items-center justify-center rounded-md bg-[#1c1c1c] border border-[#333] text-[#666] hover:text-[#ededed] hover:bg-[#262626] hover:border-[#444] transition-all duration-150 opacity-0 hover:opacity-100 group-hover/sidebar:opacity-100"
+          title={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
+          aria-label={collapsed ? "사이드바 펼치기" : "사이드바 접기"}
+        >
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed
+              ? <path d="M9 18l6-6-6-6" />
+              : <path d="M15 18l-6-6 6-6" />
+            }
+          </svg>
+        </button>
+      </div>
     </>
   );
 }

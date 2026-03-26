@@ -1,11 +1,8 @@
 import ipaddress
-import json
 import logging
 from pathlib import Path
 from urllib.parse import urlparse
 
-import anthropic
-from PyPDF2 import PdfReader
 
 from app.config import settings
 from app.models.schemas import RFPData
@@ -160,7 +157,7 @@ async def parse_rfp_from_url(url: str, file_type: str = "pdf") -> str:
     _validate_url(url)  # H-3: SSRF 방지
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=settings.file_download_timeout_seconds)) as resp:
             if resp.status != 200:
                 return ""
             content_bytes = await resp.read()

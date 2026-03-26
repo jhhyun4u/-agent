@@ -8,7 +8,7 @@
 import logging
 import math
 
-from app.services.bidding.calculator import BidCalculator, ProcurementMethod
+from app.services.bidding.calculator import ProcurementMethod
 
 logger = logging.getLogger(__name__)
 

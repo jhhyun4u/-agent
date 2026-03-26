@@ -8,7 +8,6 @@ import json
 import logging
 from uuid import uuid4
 
-from app.config import settings
 from app.utils import create_anthropic_client
 from app.utils.supabase_client import get_async_client
 

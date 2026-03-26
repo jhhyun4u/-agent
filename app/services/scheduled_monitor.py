@@ -129,7 +129,6 @@ async def daily_g2b_monitor() -> dict:
                 # 알림 발송 (상위 10건 요약)
                 bid_summary = _format_scored_bid_summary(new_bids[:10])
 
-                from urllib.parse import quote
                 search_link = f"{settings.frontend_url}/bids"
 
                 # Teams 알림
@@ -298,28 +297,30 @@ def setup_scheduler() -> None:
     try:
         from apscheduler.schedulers.asyncio import AsyncIOScheduler
         from apscheduler.triggers.cron import CronTrigger
+        from zoneinfo import ZoneInfo
 
-        scheduler = AsyncIOScheduler()
-        # 평일(월~금)만 실행: day_of_week='mon-fri'
+        kst = ZoneInfo("Asia/Seoul")
+        scheduler = AsyncIOScheduler(timezone=kst)
+        # 평일(월~금)만 실행: day_of_week='mon-fri' (KST 기준)
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=8, minute=0, day_of_week="mon-fri"),
+            trigger=CronTrigger(hour=8, minute=0, day_of_week="mon-fri", timezone=kst),
             id="g2b_monitor_morning",
             name="G2B 오전 모니터링 (평일)",
             replace_existing=True,
         )
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=15, minute=0, day_of_week="mon-fri"),
+            trigger=CronTrigger(hour=15, minute=0, day_of_week="mon-fri", timezone=kst),
             id="g2b_monitor_afternoon",
             name="G2B 오후 모니터링 (평일)",
             replace_existing=True,
         )
-        # 프롬프트 진화 유지보수 (매일 02:00 — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)
+        # 프롬프트 진화 유지보수 (매일 02:00 KST — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)
         from app.services.prompt_tracker import periodic_maintenance
         scheduler.add_job(
             periodic_maintenance,
-            trigger=CronTrigger(hour=2, minute=0),
+            trigger=CronTrigger(hour=2, minute=0, timezone=kst),
             id="prompt_evolution_maintenance",
             name="프롬프트 진화 유지보수",
             replace_existing=True,

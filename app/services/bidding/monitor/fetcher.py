@@ -7,7 +7,7 @@ G2BService 래퍼 + 후처리 필터 + Supabase upsert.
 
 import asyncio
 import logging
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from typing import Optional
 
 from app.models.bid_schemas import BidAnnouncement, SearchPreset
@@ -339,7 +339,9 @@ class BidFetcher:
         try:
             bid_no = raw.get("bidNtceNo", "").strip()
             bid_title = raw.get("bidNtceNm", "").strip()
-            agency = (raw.get("ntceInsttNm") or raw.get("dminsttNm") or "").strip()
+            # dminsttNm(수요기관=실제 발주처)을 우선 사용.
+            # ntceInsttNm(공고기관)은 조달청 등 대행기관인 경우가 많아 발주처와 다름.
+            agency = (raw.get("dminsttNm") or raw.get("ntceInsttNm") or "").strip()
             if not bid_no or not bid_title or not agency:
                 return None
 

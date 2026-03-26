@@ -10,8 +10,6 @@ from datetime import datetime
 
 from app.services.bidding.calculator import (
     BidCalculator,
-    CostBreakdown,
-    PersonnelInput as LegacyPersonnelInput,
     _fmt,
 )
 from app.services.bidding.pricing.models import (

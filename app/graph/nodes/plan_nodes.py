@@ -336,6 +336,21 @@ async def plan_price(state: ProposalState) -> dict:
     if bid_plan_context:
         prompt += f"\n\n{bid_plan_context}\n위 확정된 입찰가를 앵커로 하여, 상세 원가 구조와 가격 경쟁력 내러티브(Budget Narrative)를 작성하세요."
 
+    # v3.9: RFP 가격점수 산식 주입 (price_scoring이 있으면 산식 준수 필수)
+    if rfp:
+        ps = rfp.price_scoring if hasattr(rfp, "price_scoring") else (rfp.get("price_scoring") if isinstance(rfp, dict) else None)
+        if ps:
+            ps_dict = ps.model_dump() if hasattr(ps, "model_dump") else (ps if isinstance(ps, dict) else {})
+            if ps_dict.get("formula_type"):
+                prompt += (
+                    f"\n\n## RFP 가격점수 산식 (반드시 준수)\n"
+                    f"- 산식 유형: {ps_dict.get('formula_type', '')}\n"
+                    f"- 설명: {ps_dict.get('description', '')}\n"
+                    f"- 가격 배점: {ps_dict.get('price_weight', 0)}점\n"
+                    f"- 파라미터: {ps_dict.get('parameters', {})}\n"
+                    f"\n위 산식에 따라 가격점수가 계산되므로, 입찰가 산정 시 이를 반영하세요."
+                )
+
     # 알고리즘 분석 결과를 프롬프트에 추가
     if algorithmic_pricing != "(알고리즘 분석 미수행)":
         prompt += f"\n\n{algorithmic_pricing}\n\n위 알고리즘 분석 결과를 참고하되, 정성적 판단(발주기관 특성, 전략적 맥락)을 추가하여 최종 원가 내역을 작성하세요."

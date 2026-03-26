@@ -43,7 +43,7 @@ export default function LessonsPage() {
       if (filterResult) params.result = filterResult;
       if (filterPos) params.positioning = filterPos;
       const res = await api.kb.lessons.list(params);
-      setItems(res.items);
+      setItems(res.data);
     } catch { setItems([]); }
     finally { setLoading(false); }
   }, [filterResult, filterPos]);

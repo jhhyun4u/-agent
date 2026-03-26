@@ -22,7 +22,7 @@ const PHASES = [
   { n: 5, name: "품질 검증" },
 ];
 
-type Tab = "result" | "comments" | "win" | "compare" | "qa" | "files";
+type Tab = "result" | "comments" | "win" | "compare" | "qa";
 
 // 리뷰 게이트 노드 목록
 const REVIEW_NODES = [
@@ -324,14 +324,20 @@ export default function DetailRightPanel({
     );
   }
 
+  // H3: 진행 중일 때 직전 완료 Step 산출물 자동 표시
+  const autoShowStep = selectedStep ?? (isProcessing && phasesCompleted > 0 ? phasesCompleted - 1 : null);
+
   return (
     <div className="flex flex-col h-full">
       {/* STEP 산출물 뷰어 */}
-      {selectedStep !== null && (
+      {autoShowStep !== null && (
         <div className="border-b border-[#262626] p-4">
+          {isProcessing && selectedStep === null && (
+            <p className="text-[10px] text-[#5c5c5c] mb-2">이전 단계 결과물</p>
+          )}
           <StepArtifactViewer
             proposalId={proposalId}
-            stepIndex={selectedStep}
+            stepIndex={autoShowStep}
             onGoto={onGoto}
           />
         </div>
@@ -367,7 +373,6 @@ export default function DetailRightPanel({
             [
               { key: "win" as Tab, label: "수주결과" },
               { key: "compare" as Tab, label: "비교" },
-              { key: "files" as Tab, label: `파일${files.length > 0 ? ` (${files.length})` : ""}` },
             ] as const
           ).map(({ key, label }) => (
             <button
@@ -713,210 +718,7 @@ export default function DetailRightPanel({
           <QaPanel proposalId={proposalId} />
         )}
 
-        {/* 파일 */}
-        {activeTab === "files" && (
-          <div>
-            {/* 헤더: 제목 + 일괄다운로드 + 업로드 버튼 */}
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-semibold text-[#ededed]">
-                파일 <span className="text-[#8c8c8c] font-normal">({files.length})</span>
-              </h3>
-              <div className="flex items-center gap-1.5">
-                {files.length > 0 && (
-                  <a
-                    href={api.proposals.filesBundleUrl(proposalId)}
-                    className="px-2.5 py-1 rounded-lg text-[10px] font-medium border border-[#262626] text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3ecf8e]/40 transition-colors"
-                    title="전체 ZIP 다운로드"
-                  >
-                    ZIP
-                  </a>
-                )}
-                <label className="cursor-pointer px-2.5 py-1 rounded-lg text-[10px] font-medium bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 transition-colors">
-                  추가
-                  <input
-                    type="file"
-                    multiple
-                    className="hidden"
-                    onChange={handleMultiFileUpload}
-                    accept=".pdf,.docx,.hwp,.hwpx,.xlsx,.pptx,.png,.jpg,.jpeg"
-                  />
-                </label>
-              </div>
-            </div>
-
-            {/* 검색 + 정렬 (#7) */}
-            {files.length > 0 && (
-              <div className="flex gap-1.5 mb-2">
-                <input
-                  type="text"
-                  value={fileSearch}
-                  onChange={(e) => setFileSearch(e.target.value)}
-                  placeholder="파일 검색..."
-                  className="flex-1 bg-[#111111] border border-[#262626] rounded-lg px-2 py-1 text-[10px] text-[#ededed] placeholder-[#8c8c8c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40"
-                />
-                <select
-                  value={fileSort}
-                  onChange={(e) => setFileSort(e.target.value as "name"|"date"|"size")}
-                  className="bg-[#111111] border border-[#262626] rounded-lg px-1.5 py-1 text-[10px] text-[#8c8c8c] focus:outline-none"
-                >
-                  <option value="date">최신순</option>
-                  <option value="name">이름순</option>
-                  <option value="size">크기순</option>
-                </select>
-              </div>
-            )}
-
-            {/* 업로드 큐 (프로그레스 바 #3 + GAP-1 aria-live) */}
-            {uploadQueue.length > 0 && (
-              <div className="space-y-1 mb-3" aria-live="polite" aria-label="업로드 진행 상태">
-                {uploadQueue.map((item, idx) => (
-                  <div key={idx} className="bg-[#111111] border border-[#262626] rounded-lg px-2 py-1.5">
-                    <div className="flex items-center gap-2">
-                      <p className="text-[10px] text-[#ededed] truncate flex-1">{item.file.name}</p>
-                      <span className="text-[10px] text-[#8c8c8c] shrink-0">
-                        {item.status === "uploading" ? `${item.progress}%` : item.status === "done" ? "완료" : item.status === "error" ? "실패" : "대기"}
-                      </span>
-                      {item.status === "uploading" && item.abort && (
-                        <button onClick={item.abort} className="text-[10px] text-red-400/70 hover:text-red-400" aria-label={`${item.file.name} 업로드 취소`}>취소</button>
-                      )}
-                    </div>
-                    {item.status === "uploading" && (
-                      <div className="mt-1 h-1 bg-[#262626] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#3ecf8e] transition-all duration-200 rounded-full" style={{ width: `${item.progress}%` }} />
-                      </div>
-                    )}
-                    {item.status === "error" && (
-                      <p className="text-[10px] text-red-400 mt-0.5">{item.error}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* 드래그&드롭 영역 (#5) */}
-            <div
-              onDragOver={(e) => { e.preventDefault(); setFileDragOver(true); }}
-              onDragLeave={() => setFileDragOver(false)}
-              onDrop={handleFileDrop}
-              className={`transition-colors rounded-lg ${fileDragOver ? "ring-2 ring-[#3ecf8e]/50 bg-[#3ecf8e]/5" : ""}`}
-            >
-              {filesLoading ? (
-                <p className="text-xs text-[#8c8c8c] py-4 text-center">불러오는 중...</p>
-              ) : files.length === 0 ? (
-                <div className="border-2 border-dashed border-[#262626] rounded-lg py-8 text-center">
-                  <p className="text-xs text-[#8c8c8c]">파일을 드래그하거나 추가 버튼을 눌러주세요</p>
-                  <p className="text-[10px] text-[#8c8c8c]/60 mt-1">PDF, DOCX, HWP, HWPX, XLSX, PPTX, PNG, JPG (최대 50MB)</p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {(["rfp", "reference", "attachment"] as const).map((cat) => {
-                    const catFiles = getFilteredSortedFiles(files.filter((f) => f.category === cat));
-                    if (catFiles.length === 0) return null;
-                    const catLabels = { rfp: "RFP 원본", reference: "참고자료", attachment: "G2B 첨부" };
-                    return (
-                      <div key={cat} className="mb-2">
-                        <p className="text-[10px] font-semibold text-[#8c8c8c] uppercase tracking-wider mb-1">
-                          {catLabels[cat]} ({catFiles.length})
-                        </p>
-                        <ul className="space-y-0.5">
-                          {catFiles.map((f) => (
-                            <li key={f.id} className="flex items-center gap-2 px-2 py-1.5 bg-[#111111] border border-[#262626] rounded-lg group hover:border-[#3ecf8e]/20 transition-colors">
-                              {/* 확장자 아이콘 */}
-                              <span className={`text-[10px] uppercase w-8 shrink-0 font-medium ${
-                                f.file_type === "pdf" ? "text-red-400" :
-                                f.file_type === "docx" ? "text-blue-400" :
-                                f.file_type === "hwpx" || f.file_type === "hwp" ? "text-[#3ecf8e]" :
-                                f.file_type === "pptx" ? "text-orange-400" :
-                                f.file_type === "xlsx" ? "text-green-400" :
-                                ["png","jpg","jpeg"].includes(f.file_type || "") ? "text-purple-400" :
-                                "text-[#8c8c8c]"
-                              }`}>
-                                {f.file_type || "?"}
-                              </span>
-                              {/* 파일명 + 메타데이터 (#1) */}
-                              <div className="flex-1 min-w-0">
-                                <button
-                                  onClick={() => handleFilePreview(f)}
-                                  className="text-xs text-[#ededed] truncate block w-full text-left hover:text-[#3ecf8e] transition-colors"
-                                  title={f.filename}
-                                >
-                                  {f.filename}
-                                </button>
-                                <p className="text-[10px] text-[#8c8c8c]/70 mt-0.5">
-                                  {formatFileSize(f.file_size)}
-                                  {f.created_at && <> · {formatDate(f.created_at)}</>}
-                                  {f.description && <> · {f.description}</>}
-                                </p>
-                              </div>
-                              {/* 액션 버튼 */}
-                              <button
-                                onClick={() => handleFileDownload(f.id)}
-                                className="text-[10px] text-[#3ecf8e] hover:text-[#49e59e] opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                                title="다운로드"
-                                aria-label={`${f.filename} 다운로드`}
-                              >
-                                DL
-                              </button>
-                              {f.category !== "rfp" && (
-                                <button
-                                  onClick={() => handleFileDelete(f.id)}
-                                  className="text-[10px] text-red-400/70 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                                  title="삭제"
-                                  aria-label={`${f.filename} 삭제`}
-                                >
-                                  X
-                                </button>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-
-                  {/* 드래그&드롭 힌트 (파일 있을 때) */}
-                  {fileDragOver && (
-                    <div className="border-2 border-dashed border-[#3ecf8e]/50 rounded-lg py-4 text-center mt-2">
-                      <p className="text-xs text-[#3ecf8e]">여기에 놓으세요</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* 파일 미리보기 모달 (#6 + GAP-1 접근성) */}
-            {previewFile && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
-                role="dialog"
-                aria-modal="true"
-                aria-label={`파일 미리보기: ${previewFile.filename}`}
-                onClick={() => setPreviewFile(null)}
-                onKeyDown={(e) => { if (e.key === "Escape") setPreviewFile(null); }}
-                tabIndex={-1}
-                ref={(el) => el?.focus()}
-              >
-                <div className="bg-[#1a1a1a] border border-[#262626] rounded-xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#262626]">
-                    <p className="text-xs text-[#ededed] font-medium truncate">{previewFile.filename}</p>
-                    <div className="flex items-center gap-2">
-                      <a href={previewFile.url} target="_blank" rel="noopener noreferrer"
-                        className="text-[10px] text-[#3ecf8e] hover:text-[#49e59e]">새 탭에서 열기</a>
-                      <button onClick={() => setPreviewFile(null)} className="text-[#8c8c8c] hover:text-[#ededed] text-sm" aria-label="미리보기 닫기">X</button>
-                    </div>
-                  </div>
-                  <div className="flex-1 overflow-auto p-4 flex items-center justify-center">
-                    {["png","jpg","jpeg"].includes(previewFile.type) ? (
-                      <img src={previewFile.url} alt={previewFile.filename} className="max-w-full max-h-[70vh] object-contain rounded" />
-                    ) : previewFile.type === "pdf" ? (
-                      <iframe src={previewFile.url} className="w-full h-[70vh] rounded" title={previewFile.filename} />
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+        {/* 파일 탭은 FileHubPanel로 이관됨 */}
       </div>
 
       {/* ═══ 산출내역서 슬라이드 패널 (Claude Desktop 스타일) ═══ */}

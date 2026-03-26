@@ -1,0 +1,63 @@
+{
+  "rfp_text": "소규모 정보시스템 개발 용역 제안요청서.\n\n1. 사업개요\n- 사업명: 내부 업무포털 시스템 개발\n- 사업기간: 2026.08 ~ 2026.11 (4개월)\n- 사업예산: 50,000,000원 (부가세 포함)\n- 발주기관: 중소공공기관\n\n2. 주요 과업\n- 인사/급여 조회 웹포털 개발\n- 전자결재 연동\n- 모바일 대응 반응형 UI\n\n3. 평가 방법\n- 서류심사 (적격심사제)\n- 기술능력평가 100점\n\n4. 참여 자격\n- SW사업자 등록 기업\n- 유사 웹개발 실적 1건 이상",
+  "rfp_analysis": {
+    "project_name": "내부 업무포털 시스템 개발",
+    "budget": 50000000,
+    "duration_months": 4,
+    "eval_method": "서류심사 (적격심사제)",
+    "eval_weights": {"기술": 100},
+    "key_requirements": ["인사/급여 조회 웹포털", "전자결재 연동", "모바일 반응형 UI"],
+    "compliance_items": ["SW사업자 등록", "유사 웹개발 실적 1건"]
+  },
+  "go_no_go": {
+    "verdict": "go",
+    "confidence": 90,
+    "positioning": "defensive",
+    "rationale": "소규모 안정적 수주 가능, 기존 포트폴리오 활용"
+  },
+  "strategy": {
+    "win_theme": "검증된 웹 개발 역량과 빠른 납기 보장",
+    "ghost_theme": "소규모 업체의 유지보수 리스크",
+    "positioning": "defensive",
+    "differentiation": ["표준 UI 컴포넌트 라이브러리 보유", "4개월 내 안정 납품 실적"]
+  },
+  "positioning_guide": "방어적 포지셔닝: 안정적 수행 능력과 유지보수 체계 강조.",
+  "plan": {
+    "team": {
+      "total_members": 3,
+      "roles": [
+        {"role": "PM/PL", "name": "홍개발", "grade": "고급"},
+        {"role": "풀스택 개발자", "name": "김프론트", "grade": "중급"},
+        {"role": "퍼블리셔", "name": "이디자인", "grade": "초급"}
+      ]
+    },
+    "schedule": {
+      "phases": [
+        {"phase": "1단계: 분석/설계", "duration": "1개월", "deliverables": ["요구사항 정의서", "화면 설계서"]},
+        {"phase": "2단계: 개발", "duration": "2개월", "deliverables": ["시스템 개발 완료", "연동 테스트"]},
+        {"phase": "3단계: 시험운영", "duration": "1개월", "deliverables": ["사용자 매뉴얼", "안정화 보고서"]}
+      ]
+    },
+    "budget": {"total": 50000000, "labor": 40000000, "overhead": 8000000, "profit": 2000000}
+  },
+  "dynamic_sections": [
+    {"id": "sec-1", "title": "사업 이해", "type": "understand"},
+    {"id": "sec-2", "title": "추진 전략", "type": "strategy"},
+    {"id": "sec-3", "title": "수행 방안", "type": "methodology"},
+    {"id": "sec-4", "title": "투입 인력", "type": "personnel"}
+  ],
+  "storylines": {
+    "sections": [
+      {
+        "section_id": "sec-1",
+        "key_message": "발주기관의 업무 효율화 요구를 정확히 이해합니다",
+        "narrative_arc": "현황→문제→해결 방향",
+        "supporting_points": ["기존 수작업 비효율", "통합 포털 필요성"],
+        "win_theme_connection": "검증된 역량",
+        "transition_to_next": "이 이해를 바탕으로 효과적인 추진 전략을 제시합니다."
+      }
+    ]
+  },
+  "prev_sections_context": "",
+  "storyline_context": ""
+}

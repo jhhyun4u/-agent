@@ -9,6 +9,21 @@ import { createClient } from "@/lib/supabase/client";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
+/** 표준 API 응답 */
+export interface ApiResponse<T> {
+  data: T;
+  meta: {
+    total?: number;
+    offset?: number;
+    limit?: number;
+    timestamp: string;
+    message?: string;
+  };
+}
+
+/** 리스트 응답 */
+export type ApiListResponse<T> = ApiResponse<T[]>;
+
 async function getToken(): Promise<string> {
   if (process.env.NODE_ENV === "development") return "";
   const supabase = createClient();
@@ -170,6 +185,14 @@ export interface ProposalStatus_ {
   phases_completed: number;
   created_at: string;
   error: string;
+  // 프로젝트 컨텍스트 헤더용 (백엔드 SELECT * 반환)
+  title?: string;
+  deadline?: string | null;
+  positioning?: string | null;
+  bid_amount?: number | null;
+  bid_number?: string | null;
+  budget?: number | null;
+  evaluation_method?: string | null;
 }
 
 // ── 프로젝트 파일 타입 ────────────────────────────────────────────────
@@ -408,7 +431,7 @@ export const api = {
       if (params?.page) qs.set("page", String(params.page));
       if (params?.scope) qs.set("scope", params.scope);
       if (params?.search) qs.set("search", params.search);
-      return request<{ items: ProposalSummary[]; total: number }>(
+      return request<ApiListResponse<ProposalSummary>>(
         "GET",
         `/proposals?${qs}`
       );
@@ -472,7 +495,7 @@ export const api = {
       return request("PUT", `/proposals/${id}/result`, data);
     },
     getLessons(id: string) {
-      return request<{ items: Lesson[]; total: number }>(
+      return request<ApiListResponse<Lesson>>(
         "GET",
         `/proposals/${id}/lessons`
       );
@@ -706,13 +729,7 @@ export const api = {
       if (params?.win_result) qs.set("win_result", params.win_result);
       if (params?.page) qs.set("page", String(params.page));
       if (params?.q) qs.set("q", params.q);
-      return request<{
-        items: ArchiveItem[];
-        page: number;
-        page_size: number;
-        total: number;
-        pages: number;
-      }>("GET", `/archive?${qs}`);
+      return request<ApiListResponse<ArchiveItem> & { meta: { page: number; page_size: number; pages: number } }>("GET", `/archive?${qs}`);
     },
   },
 
@@ -974,6 +991,23 @@ export const api = {
         { instructions }
       );
     },
+    diff(proposalId: string, step: string, v1?: number, v2?: number) {
+      const params = new URLSearchParams();
+      if (v1) params.set("v1", String(v1));
+      if (v2) params.set("v2", String(v2));
+      const qs = params.toString() ? `?${params.toString()}` : "";
+      return request<{
+        step: string;
+        old_version: number;
+        new_version: number;
+        old_content: string;
+        new_content: string;
+        old_meta: { change_source: string; created_at: string; created_by: string };
+        new_meta: { change_source: string; created_at: string; created_by: string };
+        diff?: null;
+        message?: string;
+      }>("GET", `/proposals/${proposalId}/artifacts/${step}/diff${qs}`);
+    },
     aiAssist(
       proposalId: string,
       text: string,
@@ -997,7 +1031,7 @@ export const api = {
   // ── 교훈 전체 검색 ────────────────────────────────────────────────
   lessons: {
     search(params?: { positioning?: string; category?: string; limit?: number; offset?: number }) {
-      return request<{ items: Lesson[]; total: number }>(
+      return request<ApiListResponse<Lesson>>(
         "GET",
         `/lessons${_qs(params)}`
       );
@@ -1056,7 +1090,7 @@ export const api = {
       const qs = new URLSearchParams(
         params as Record<string, string>
       ).toString();
-      return request<{ items: CalendarItem[] }>(
+      return request<ApiListResponse<CalendarItem>>(
         "GET",
         `/calendar${qs ? "?" + qs : ""}`
       );
@@ -1090,7 +1124,7 @@ export const api = {
 
   notifications: {
     list(params?: { is_read?: boolean; skip?: number; limit?: number }) {
-      return request<{ items: Notification[]; unread_count: number }>(
+      return request<ApiListResponse<Notification> & { meta: { unread_count: number } }>(
         "GET",
         `/notifications${_qs(params)}`
       );
@@ -1118,7 +1152,7 @@ export const api = {
   kb: {
     laborRates: {
       list(params?: { agency?: string; year?: string; grade?: string }) {
-        return request<{ items: LaborRate[] }>("GET", `/kb/labor-rates${_qs(params)}`);
+        return request<ApiListResponse<LaborRate>>("GET", `/kb/labor-rates${_qs(params)}`);
       },
       create(data: Omit<LaborRate, "id" | "created_at" | "updated_at">) {
         return request<LaborRate>("POST", "/kb/labor-rates", data);
@@ -1132,7 +1166,7 @@ export const api = {
     },
     marketPrices: {
       list(params?: { domain?: string; year?: string }) {
-        return request<{ items: MarketPrice[] }>("GET", `/kb/market-prices${_qs(params)}`);
+        return request<ApiListResponse<MarketPrice>>("GET", `/kb/market-prices${_qs(params)}`);
       },
       create(data: Omit<MarketPrice, "id" | "created_at" | "updated_at">) {
         return request<MarketPrice>("POST", "/kb/market-prices", data);
@@ -1146,7 +1180,7 @@ export const api = {
     },
     content: {
       list(params?: { status?: string; type?: string }) {
-        return request<{ items: KbContent[]; total: number }>("GET", `/kb/content${_qs(params)}`);
+        return request<ApiListResponse<KbContent>>("GET", `/kb/content${_qs(params)}`);
       },
       get(id: string) {
         return request<KbContentDetail>("GET", `/kb/content/${id}`);
@@ -1166,7 +1200,7 @@ export const api = {
     },
     clients: {
       list(params?: { relationship?: string; client_type?: string }) {
-        return request<{ items: KbClient[]; total: number }>("GET", `/kb/clients${_qs(params)}`);
+        return request<ApiListResponse<KbClient>>("GET", `/kb/clients${_qs(params)}`);
       },
       get(id: string) {
         return request<KbClientDetail>("GET", `/kb/clients/${id}`);
@@ -1183,7 +1217,7 @@ export const api = {
     },
     competitors: {
       list(params?: { scale?: string }) {
-        return request<{ items: KbCompetitor[]; total: number }>("GET", `/kb/competitors${_qs(params)}`);
+        return request<ApiListResponse<KbCompetitor>>("GET", `/kb/competitors${_qs(params)}`);
       },
       get(id: string) {
         return request<KbCompetitorDetail>("GET", `/kb/competitors/${id}`);
@@ -1200,7 +1234,7 @@ export const api = {
     },
     lessons: {
       list(params?: { result?: string; positioning?: string }) {
-        return request<{ items: KbLesson[]; total: number }>("GET", `/kb/lessons${_qs(params)}`);
+        return request<ApiListResponse<KbLesson>>("GET", `/kb/lessons${_qs(params)}`);
       },
       get(id: string) {
         return request<KbLessonDetail>("GET", `/kb/lessons/${id}`);
@@ -1308,6 +1342,50 @@ export const api = {
       rollback(id: string) {
         return request<{ rolled_back: boolean }>("POST", `/prompts/experiments/${id}/rollback`);
       },
+    },
+    // ── Admin: 카테고리 + 시뮬레이션 ──
+    categories() {
+      return request<{ categories: PromptCategory[]; total_prompts: number }>("GET", "/prompts/categories");
+    },
+    worstPerformers(limit = 5) {
+      return request<PromptWorstPerformers>("GET", `/prompts/worst-performers?limit=${limit}`);
+    },
+    simulationQuota() {
+      return request<SimulationQuota>("GET", "/prompts/simulation-quota");
+    },
+    // v2.0: 학습 분석 API
+    learningDashboard() {
+      return request<LearningDashboard>("GET", "/prompts/learning-dashboard");
+    },
+    workflowMap() {
+      return request<WorkflowMapData>("GET", "/prompts/workflow-map");
+    },
+    analysis(promptId: string) {
+      return request<PromptAnalysis>("GET", `/prompts/${encodeURIComponent(promptId)}/analysis`);
+    },
+    runAnalysis(promptId: string) {
+      return request<PromptAnalysis>("POST", `/prompts/${encodeURIComponent(promptId)}/run-analysis`);
+    },
+    simulate(promptId: string, body: SimulationRequestBody) {
+      return request<SimulationResult>("POST", `/prompts/${encodeURIComponent(promptId)}/simulate`, body);
+    },
+    simulateCompare(promptId: string, body: CompareRequestBody) {
+      return request<CompareResult>("POST", `/prompts/${encodeURIComponent(promptId)}/simulate-compare`, body);
+    },
+    simulations(promptId: string, limit = 20) {
+      return request<{ simulations: SimulationHistoryItem[] }>(
+        "GET", `/prompts/${encodeURIComponent(promptId)}/simulations?limit=${limit}`
+      );
+    },
+    suggestionHistory(promptId: string) {
+      return request<{ suggestions: SuggestionHistoryItem[] }>(
+        "GET", `/prompts/${encodeURIComponent(promptId)}/suggestions`
+      );
+    },
+    suggestionFeedback(promptId: string, suggestionId: string, body: { accepted_index: number | null; feedback: string }) {
+      return request<{ updated: boolean }>(
+        "POST", `/prompts/${encodeURIComponent(promptId)}/suggestions/${suggestionId}/feedback`, body
+      );
     },
   },
 };
@@ -1433,6 +1511,163 @@ export interface ExperimentEvaluation {
   improvement?: number;
   recommendation?: "promote" | "rollback" | "continue";
   error?: string;
+}
+
+// ── 프롬프트 v2.0 학습 타입 ──────────────────────────────────────────
+
+export interface LearningDashboard {
+  overview: {
+    avg_win_rate: number;
+    avg_quality: number;
+    avg_edit_ratio: number;
+    running_experiments: number;
+    delta: Record<string, number>;
+  };
+  top_needs_improvement: {
+    prompt_id: string;
+    label: string;
+    priority: string;
+    metrics: { edit_ratio: number; quality: number; win_rate: number; proposals_used?: number };
+    top_pattern: { pattern: string; count: number; pct?: number } | null;
+    feedback_theme: string | null;
+  }[];
+  recent_learnings: {
+    date: string;
+    prompt_id: string;
+    event: string;
+    experiment_name: string;
+  }[];
+  trend: {
+    period: string;
+    avg_quality: number | null;
+    avg_edit_ratio: number | null;
+    avg_win_rate: number | null;
+  }[];
+}
+
+export interface PromptAnalysis {
+  prompt_id: string;
+  label: string;
+  priority: string;
+  metrics: { proposals_used: number; win_rate: number | null; avg_quality: number | null; avg_edit_ratio: number | null; edit_count: number };
+  edit_patterns: { pattern: string; count: number; pct: number; examples?: string[] }[];
+  feedback_summary: { keywords: { word: string; count: number }[]; themes: string[] };
+  win_loss_comparison: { win_avg_quality: number; loss_avg_quality: number; win_count: number; loss_count: number; key_differences: string[] };
+  trend: { period: string; quality: number | null; edit_ratio: number | null; win_rate: number | null }[];
+  hypothesis: string;
+}
+
+export interface WorkflowMapData {
+  nodes: { id: string; label: string; prompts: string[]; prompt_count: number }[];
+  edges: { from: string; to: string }[];
+}
+
+// ── 프롬프트 Admin 타입 ──────────────────────────────────────────────
+
+export interface PromptCategory {
+  id: string;
+  label: string;
+  icon: string;
+  description: string;
+  prompt_count: number;
+  prompts: PromptCategoryItem[];
+}
+
+export interface PromptCategoryItem {
+  prompt_id: string;
+  label: string;
+  source_file: string;
+  const_name: string;
+  active_version: number;
+  status: string;
+  token_estimate: number;
+  variables: string[];
+  category: string;
+  node_usage: string[];
+}
+
+export interface PromptWorstPerformers {
+  worst_by_edit_ratio: { prompt_id: string; avg_edit_ratio: number; edit_count: number }[];
+  worst_by_quality: { prompt_id: string; avg_quality_score: number; proposals_used: number }[];
+}
+
+export interface SimulationRequestBody {
+  prompt_text?: string | null;
+  data_source: "sample" | "project" | "custom";
+  data_source_id?: string | null;
+  custom_variables?: Record<string, unknown> | null;
+  run_quality_check?: boolean;
+}
+
+export interface SimulationResult {
+  simulation_id: string;
+  output_text: string;
+  tokens_input: number;
+  tokens_output: number;
+  duration_ms: number;
+  model: string;
+  quality_score: number | null;
+  quality_detail: {
+    compliance: number;
+    strategy: number;
+    quality: number;
+    trustworthiness: number;
+    total?: number;
+  } | null;
+  variables_used: string[];
+  variables_missing: string[];
+  format_valid: boolean;
+  format_errors: string[];
+  quota_remaining: number;
+}
+
+export interface CompareRequestBody {
+  version_a?: number | null;
+  text_a?: string | null;
+  version_b?: number | null;
+  text_b?: string | null;
+  data_source: string;
+  data_source_id?: string | null;
+  run_quality_check?: boolean;
+}
+
+export interface CompareResult {
+  result_a: SimulationResult;
+  result_b: SimulationResult;
+  comparison: {
+    quality_diff: number;
+    token_diff: number;
+    duration_diff: number;
+    recommendation: string;
+  };
+}
+
+export interface SimulationQuota {
+  daily_limit: number;
+  used_today: number;
+  remaining: number;
+  tokens_used_today: { input: number; output: number };
+}
+
+export interface SimulationHistoryItem {
+  id: string;
+  prompt_version: number | null;
+  data_source: string;
+  data_source_id: string | null;
+  quality_score: number | null;
+  output_meta: Record<string, unknown>;
+  compared_with: number | null;
+  created_at: string;
+}
+
+export interface SuggestionHistoryItem {
+  id: string;
+  prompt_version: number;
+  analysis: string;
+  suggestions: { title: string; rationale: string; key_changes: string[]; prompt_text: string }[];
+  accepted_index: number | null;
+  feedback: string | null;
+  created_at: string;
 }
 
 // ── PSM-16: Q&A 타입 ─────────────────────────────────────────────────
@@ -2157,18 +2392,46 @@ export type WorkflowStep =
   | "ppt_visual_brief"
   | "ppt_storyboard";
 
-export const WORKFLOW_STEPS: Array<{
+export interface WorkflowStepDef {
   step: number;
+  /** 표시 번호 (3A, 4B 등) */
+  stepLabel: string;
   label: string;
   nodes: string[];
-}> = [
-  { step: 1, label: "RFP 분석", nodes: ["rfp_analyze", "research_gather", "go_no_go"] },
-  { step: 2, label: "전략 수립", nodes: ["strategy_generate"] },
-  { step: 2.5, label: "가격 결정", nodes: ["bid_plan"] },
-  { step: 3, label: "실행 계획", nodes: ["plan_team", "plan_assign", "plan_schedule", "plan_story", "plan_price"] },
-  { step: 4, label: "제안서 작성", nodes: ["proposal_write_next", "self_review"] },
-  { step: 5, label: "PPT 생성", nodes: ["presentation_strategy", "ppt_toc", "ppt_visual_brief", "ppt_storyboard"] },
+  /** 경로: "head" (1~2), "proposal" (A), "bidding" (B), "tail" (7~8) */
+  path: "head" | "proposal" | "bidding" | "tail";
+}
+
+/**
+ * 워크플로 전체 구조:
+ * 1 → 2 → ┬─ 3A→4A→5A→6A ─┐→ 7
+ *          └─ 3B→4B→5B→6B ─┘
+ */
+export const WORKFLOW_STEPS: WorkflowStepDef[] = [
+  // ── Head (공통) ──
+  { step: 1, stepLabel: "1",  label: "RFP 분석",    nodes: ["rfp_analyze", "research_gather", "go_no_go"], path: "head" },
+  { step: 2, stepLabel: "2",  label: "전략 수립",    nodes: ["strategy_generate"],                          path: "head" },
+  // ── Path A: 제안서 ──
+  { step: 3, stepLabel: "3A", label: "제안 계획",    nodes: ["plan_team", "plan_assign", "plan_schedule", "plan_story", "plan_price"], path: "proposal" },
+  { step: 4, stepLabel: "4A", label: "제안서 작성",  nodes: ["proposal_write_next", "self_review"],         path: "proposal" },
+  { step: 5, stepLabel: "5A", label: "PPT 생성",    nodes: ["presentation_strategy", "ppt_toc", "ppt_visual_brief", "ppt_storyboard"], path: "proposal" },
+  { step: 6, stepLabel: "6A", label: "모의 평가",    nodes: ["mock_evaluation"],                            path: "proposal" },
+  // ── Path B: 입찰·제출 ──
+  { step: 3, stepLabel: "3B", label: "제출서류 계획", nodes: ["submission_plan"],                            path: "bidding" },
+  { step: 4, stepLabel: "4B", label: "입찰가 결정",   nodes: ["bid_plan"],                                   path: "bidding" },
+  { step: 5, stepLabel: "5B", label: "산출내역서",    nodes: ["cost_sheet_generate"],                       path: "bidding" },
+  { step: 6, stepLabel: "6B", label: "제출서류 확인", nodes: ["submission_checklist"],                       path: "bidding" },
+  // ── Tail (통합) ──
+  { step: 7, stepLabel: "7",  label: "평가결과·Closing", nodes: ["eval_result", "project_closing"],          path: "tail" },
 ];
+
+/** 편의: 경로별 step 필터 */
+export const HEAD_STEPS     = WORKFLOW_STEPS.filter((s) => s.path === "head");
+export const PROPOSAL_STEPS = WORKFLOW_STEPS.filter((s) => s.path === "proposal");
+export const BIDDING_STEPS  = WORKFLOW_STEPS.filter((s) => s.path === "bidding");
+export const TAIL_STEPS     = WORKFLOW_STEPS.filter((s) => s.path === "tail");
+// 하위 호환
+export const COMMON_STEPS = HEAD_STEPS;
 
 
 // ── 비딩 가격 시뮬레이션 ─────────────────────────────────────────────
@@ -2348,7 +2611,7 @@ export const pricingApi = {
   async quickEstimate(params: { budget: number; evaluation_method?: string; domain?: string; positioning?: string; competitor_count?: number }): Promise<QuickEstimateResult> {
     return request("POST", "/pricing/quick-estimate", params);
   },
-  async getPricingSimulations(proposalId?: string): Promise<{ items: PricingSimulationSummary[]; total: number }> {
+  async getPricingSimulations(proposalId?: string): Promise<ApiListResponse<PricingSimulationSummary>> {
     const qs = proposalId ? `?proposal_id=${proposalId}` : "";
     return request("GET", `/pricing/simulations${qs}`);
   },
@@ -2364,6 +2627,9 @@ export const pricingApi = {
   },
   async getPredictionAccuracy(): Promise<{ total_resolved: number; avg_error: number | null; accuracy_by_result: Record<string, { count: number; avg_error: number | null }> }> {
     return request("GET", "/pricing/prediction-accuracy");
+  },
+  async applyToProposal(simulationId: string, proposalId: string): Promise<{ applied: boolean; proposal_id: string; simulation_id: string; recommended_bid: number }> {
+    return request("POST", `/pricing/simulations/${simulationId}/apply/${proposalId}`);
   },
 };
 
