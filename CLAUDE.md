@@ -75,7 +75,7 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/services/token_manager.py` — STEP별 토큰 예산 관리 + 컨텍스트 빌더 (§21)
 - `app/services/ai_status_manager.py` — AI 작업 상태 추적 + 하트비트 + DB 로깅 (§22)
 - `app/services/section_lock.py` — 섹션 동시 편집 잠금 (§24, 5분 자동 해제)
-- `app/services/scheduled_monitor.py` — G2B 정기 모니터링 스케줄러 (§25-2, 매일 09:00)
+- `app/services/scheduled_monitor.py` — G2B 정기 모니터링 스케줄러 (§25-2, 평일 08~18시 매시 정각)
 - `app/services/source_tagger.py` — 출처 태깅 + 근거 비율 분석 + 신뢰성 평가 (§16-3-2)
 
 ### 모델

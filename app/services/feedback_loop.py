@@ -10,7 +10,8 @@
 
 import logging
 
-from app.services.notification_service import create_notification
+from app.config import settings as app_settings
+from app.services.notification_service import _try_send_email, create_notification
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -45,20 +46,38 @@ async def process_project_completion(proposal_id: str, result: str) -> dict:
     if result == "수주":
         await create_notification(
             user_id=created_by,
-            notification_type="content_suggestion",
+            proposal_id=proposal_id,
+            type="content_suggestion",
             title=f"콘텐츠 등록 후보: {project_name}",
             body=f"수주 제안서 '{project_name}'의 섹션을 콘텐츠 라이브러리에 등록하시겠습니까?",
             link=f"/projects/{proposal_id}/artifacts/proposal",
+        )
+        # 이메일 (옵트인 — 지식·학습)
+        await _try_send_email(
+            created_by, "email_learning",
+            f"[콘텐츠 등록 추천] {project_name}",
+            f"콘텐츠 등록 후보: {project_name}",
+            f"수주 제안서 '{project_name}'의 섹션을 콘텐츠 라이브러리에 등록하시겠습니까?",
+            f"{app_settings.frontend_url}/projects/{proposal_id}/artifacts/proposal",
         )
         actions.append("content_suggestion_sent")
 
     # 3. 회고 워크시트 작성 알림
     await create_notification(
         user_id=created_by,
-        notification_type="retrospect_reminder",
+        proposal_id=proposal_id,
+        type="retrospect_reminder",
         title=f"회고 작성 요청: {project_name}",
         body="프로젝트 결과가 등록되었습니다. 7일 이내에 회고 워크시트를 작성해 주세요.",
         link=f"/projects/{proposal_id}/retrospect",
+    )
+    # 이메일 (옵트인 — 지식·학습)
+    await _try_send_email(
+        created_by, "email_learning",
+        f"[회고 요청] {project_name}",
+        f"회고 작성 요청: {project_name}",
+        "프로젝트 결과가 등록되었습니다. 7일 이내에 회고 워크시트를 작성해 주세요.",
+        f"{app_settings.frontend_url}/projects/{proposal_id}/retrospect",
     )
     actions.append("retrospect_reminder_sent")
 
@@ -70,10 +89,19 @@ async def process_project_completion(proposal_id: str, result: str) -> dict:
         if pt["user_id"] != created_by:
             await create_notification(
                 user_id=pt["user_id"],
-                notification_type="project_result",
+                proposal_id=proposal_id,
+                type="project_result",
                 title=f"프로젝트 결과: {project_name}",
                 body=f"'{project_name}' 프로젝트가 '{result}' 처리되었습니다.",
                 link=f"/projects/{proposal_id}",
+            )
+            # 이메일 (옵트인 — 입찰·성과)
+            await _try_send_email(
+                pt["user_id"], "email_bidding",
+                f"[프로젝트 결과] {project_name}",
+                f"프로젝트 결과: {project_name}",
+                f"'{project_name}' 프로젝트가 '{result}' 처리되었습니다.",
+                f"{app_settings.frontend_url}/projects/{proposal_id}",
             )
     actions.append("participants_notified")
 
@@ -114,8 +142,17 @@ async def _update_client_history(
         suggested = "friendly" if current_rel == "neutral" else "neutral"
         await create_notification(
             user_id=created_by,
-            notification_type="kb_update_suggestion",
+            proposal_id=proposal_id,
+            type="kb_update_suggestion",
             title=f"발주기관 관계 업데이트 제안: {client_name}",
             body=f"수주 성공! 관계 수준을 '{current_rel}' → '{suggested}'로 변경하시겠습니까?",
             link="/kb/clients",
+        )
+        # 이메일 (옵트인 — 지식·학습)
+        await _try_send_email(
+            created_by, "email_learning",
+            f"[발주기관 업데이트] {client_name}",
+            f"발주기관 관계 업데이트 제안: {client_name}",
+            f"수주 성공! 관계 수준을 '{current_rel}' → '{suggested}'로 변경하시겠습니까?",
+            f"{app_settings.frontend_url}/kb/clients",
         )

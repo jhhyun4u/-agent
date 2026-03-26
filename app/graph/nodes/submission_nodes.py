@@ -76,10 +76,17 @@ async def submission_plan(state: ProposalState) -> dict:
             "current_step": "submission_plan_complete",
         }
     except Exception as e:
-        logger.error(f"submission_plan 실패: {e}")
+        logger.error(f"[NODE CRITICAL] submission_plan: {e}", exc_info=True)
         return {
             "submission_plan": {"error": str(e), "documents": []},
             "current_step": "submission_plan_error",
+            "node_errors": {
+                **state.get("node_errors", {}),
+                "submission_plan": {
+                    "error": f"{type(e).__name__}: {str(e)[:300]}",
+                    "step": "submission_plan",
+                },
+            },
         }
 
 
@@ -148,10 +155,17 @@ async def cost_sheet_generate(state: ProposalState) -> dict:
             "current_step": "cost_sheet_complete",
         }
     except Exception as e:
-        logger.error(f"cost_sheet_generate 실패: {e}")
+        logger.error(f"[NODE CRITICAL] cost_sheet_generate: {e}", exc_info=True)
         return {
             "cost_sheet": {"error": str(e)},
             "current_step": "cost_sheet_error",
+            "node_errors": {
+                **state.get("node_errors", {}),
+                "cost_sheet_generate": {
+                    "error": f"{type(e).__name__}: {str(e)[:300]}",
+                    "step": "cost_sheet_generate",
+                },
+            },
         }
 
 

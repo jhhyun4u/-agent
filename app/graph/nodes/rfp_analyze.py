@@ -117,8 +117,8 @@ async def rfp_analyze(state: ProposalState) -> dict:
                 prompt_version=0,
                 prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"프롬프트 트래커 기록 실패 (무시): {e}")
 
     # RFP 분석 결과 구성
     rfp_analysis = RFPAnalysis(

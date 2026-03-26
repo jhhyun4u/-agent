@@ -28,12 +28,19 @@ async def rfp_fetch(state: ProposalState) -> dict:
     try:
         detail = await get_bid_detail(bid_no)
     except Exception as e:
-        logger.warning(f"G2B 상세 수집 실패: {e}")
+        logger.warning(f"[NODE CRITICAL] rfp_fetch G2B 상세 수집 실패: {e}", exc_info=True)
         detail = {
             "project_name": state.get("project_name", bid_no),
             "client": "", "budget": "", "deadline": "",
             "description": "", "requirements_summary": "",
             "attachments": [],
+        }
+        # MON-02: node_errors에 실패 기록 (프론트엔드 표시용)
+        # rfp_fetch는 track_tokens 외부이므로 state 직접 업데이트
+        state_node_errors = state.get("node_errors", {})
+        state_node_errors["rfp_fetch"] = {
+            "error": f"{type(e).__name__}: {str(e)[:300]}",
+            "step": "rfp_fetch",
         }
 
     bid_detail = BidDetail(
@@ -80,8 +87,8 @@ async def rfp_fetch(state: ProposalState) -> dict:
             try:
                 from app.services.rfp_parser import parse_rfp_from_url
                 auto_rfp_text = await parse_rfp_from_url(url, file_type)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"첨부파일 자동 파싱 실패 (무시): {e}")
 
     bid_detail.attachments = stored_attachments
     bid_detail.rfp_auto_text = auto_rfp_text
@@ -108,12 +115,16 @@ async def rfp_fetch(state: ProposalState) -> dict:
     else:
         rfp_raw = f"[공고 상세 기반]\n{bid_detail.description}\n\n{bid_detail.requirements_summary}"
 
-    return {
+    result = {
         "bid_detail": bid_detail,
         "rfp_raw": rfp_raw,
         "project_name": bid_detail.project_name,
         "current_step": "rfp_fetch_complete",
     }
+    # MON-02: G2B 수집 실패 시 node_errors 전파
+    if state.get("node_errors", {}).get("rfp_fetch"):
+        result["node_errors"] = state.get("node_errors", {})
+    return result
 
 
 async def _upload_attachment_to_storage(

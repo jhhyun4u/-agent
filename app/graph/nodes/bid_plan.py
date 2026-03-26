@@ -44,8 +44,8 @@ async def bid_plan(state: ProposalState) -> dict:
     try:
         from app.services.bid_calculator import parse_budget_string
         budget_val = parse_budget_string(budget_str) if budget_str else None
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"예산 파싱 실패 (무시): {e}")
 
     # 3. 시장 조사: 유사과제 낙찰정보 확인 + 부족하면 G2B 크롤링
     market_research = {}

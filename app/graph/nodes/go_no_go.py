@@ -1,10 +1,12 @@
 """
 STEP 1-②: Go/No-Go 판정 노드 (§7)
 
-RFP 분석 + 역량 DB + 리서치 브리프 → 포지셔닝 추천 + 수주 가능성 점수.
-Full/Lite 모드 분기. v3.2: research_brief + 발주기관 인텔리전스 5단계.
+v4.0: 3축 정량 분석(유사실적·자격·경쟁) + AI 전략가산 = 100점 합산.
+70점 게이트: ≥85 적극참여 / ≥70 일반참여 / <70 No-Go 추천.
+Fatal: 필수 자격 미충족 또는 필수 유사실적 0건 → 점수 무관 No-Go.
 """
 
+import hashlib
 import logging
 
 from app.graph.state import GoNoGoResult, ProposalState
@@ -13,6 +15,9 @@ from app.graph.context_helpers import (
     get_rfp_summary,
     query_kb_context,
     rfp_to_dict,
+    score_competition,
+    score_qualification,
+    score_similar_performance,
 )
 from app.services.claude_client import claude_generate
 from app.services import prompt_tracker
@@ -21,50 +26,124 @@ logger = logging.getLogger(__name__)
 
 
 async def go_no_go(state: ProposalState) -> dict:
-    """STEP 1-②: Go/No-Go 평가 (Full: 역량+리서치 기반, Lite: RFP만)."""
+    """STEP 1-②: Go/No-Go 4축 정량 스코어링."""
 
     rfp = state.get("rfp_analysis")
     if not rfp:
-        return {"current_step": "go_no_go_error"}
+        return {
+            "current_step": "go_no_go_error",
+            "node_errors": {
+                **state.get("node_errors", {}),
+                "go_no_go": {
+                    "error": "rfp_analysis가 없어 Go/No-Go 수행 불가",
+                    "step": "go_no_go",
+                },
+            },
+        }
 
     mode = state.get("mode", "full")
     rfp_dict = rfp_to_dict(rfp)
+    org_id = state.get("org_id", "")
+
+    # ── 축 1~3: 정량 스코어링 (DB 기반, Full 모드) ──
+    if mode == "full" and org_id:
+        perf = await score_similar_performance(rfp_dict, org_id)
+        qual = await score_qualification(rfp_dict, org_id)
+        comp = await score_competition(rfp_dict, org_id)
+    else:
+        perf = {"score": 0, "is_fatal": False, "required_items": [], "coverage_rate": 0.0,
+                "same_client_wins": 0, "same_domain_win_rate": None, "fatal_reason": None}
+        qual = {"score": 0, "is_fatal": False, "mandatory": [], "preferred": [],
+                "fatal_reason": None, "summary": "Lite 모드 — 자격 검증 스킵"}
+        comp = {"score": 10, "intensity_level": "medium", "estimated_competitors": 5,
+                "top_competitors": [], "our_win_rate_at_client": None, "rationale": "Lite 모드"}
+
+    # ── 축 4: AI 전략 가산 (20점) ──
+    strategic = await _ai_strategic_assessment(state, rfp_dict, org_id, mode)
+
+    # ── 합산 + 게이트 판정 ──
+    total = perf["score"] + qual["score"] + comp["score"] + strategic["score"]
+
+    if qual.get("is_fatal") or perf.get("is_fatal"):
+        recommendation = "no-go"
+        score_tag = "disqualified"
+        fatal_flaw = qual.get("fatal_reason") or perf.get("fatal_reason")
+    elif total >= 85:
+        recommendation = "go"
+        score_tag = "priority"
+        fatal_flaw = None
+    elif total >= 70:
+        recommendation = "go"
+        score_tag = "standard"
+        fatal_flaw = None
+    else:
+        recommendation = "no-go"
+        score_tag = "below_threshold"
+        fatal_flaw = f"합산 {total}점 (기준: 70점)"
+
+    gng = GoNoGoResult(
+        rfp_analysis_ref=f"rfp_{state.get('project_id', '')}",
+        positioning=strategic.get("positioning", "defensive"),
+        positioning_rationale=strategic.get("positioning_rationale", ""),
+        feasibility_score=total,
+        score_breakdown={
+            "similar_performance": perf["score"],
+            "qualification": qual["score"],
+            "competition": comp["score"],
+            "strategic": strategic["score"],
+        },
+        pros=strategic.get("pros", []),
+        risks=strategic.get("risks", []),
+        recommendation=recommendation,
+        fatal_flaw=fatal_flaw,
+        strategic_focus=strategic.get("strategic_focus"),
+        score_tag=score_tag,
+        performance_detail=perf,
+        qualification_detail=qual,
+        competition_detail=comp,
+    )
+
+    return {
+        "go_no_go": gng,
+        "positioning": gng.positioning,
+        "current_step": "go_no_go_complete",
+    }
+
+
+async def _ai_strategic_assessment(
+    state: ProposalState,
+    rfp_dict: dict,
+    org_id: str,
+    mode: str,
+) -> dict:
+    """AI 기반 전략 평가 (20점 만점).
+
+    기술 적합도(8) + 발주처 관계(6) + 가격 경쟁력(6)
+    + 포지셔닝 추천 + 강점/리스크 + 핵심 승부수.
+    """
     rfp_summary = get_rfp_summary(rfp_dict)
 
-    # KB 조회 (Full 모드)
+    # KB 조회 (축소: capabilities + client_intel + lessons)
     kb: dict[str, str] = {}
-    if mode == "full":
+    if mode == "full" and org_id:
         kb = await query_kb_context(
-            org_id=state.get("org_id", ""),
+            org_id=org_id,
             client_name=rfp_dict.get("client", ""),
             include_capabilities=True,
             include_client_intel=True,
-            include_competitors=True,
+            include_competitors=False,
             include_lessons=True,
             include_competitor_history=False,
-            include_past_performance=True,
-            include_positioning_overrides=True,
+            include_past_performance=False,
+            include_positioning_overrides=False,
         )
 
-    # 유사 과거 사례 시맨틱 매칭 (C-1)
-    similar_cases_text = ""
-    if mode == "full":
-        try:
-            from app.graph.context_helpers import find_similar_cases
-            similar_cases_text = await find_similar_cases(
-                project_name=rfp_dict.get("project_name", ""),
-                client_name=rfp_dict.get("client", ""),
-                org_id=state.get("org_id", ""),
-            )
-        except Exception:
-            pass
-
-    # 리서치 브리프 (v3.2) + credibility 필터링 (v3.7)
+    # 리서치 브리프
     research_text = extract_credible_research(
-        state.get("research_brief"), max_evidence=15
+        state.get("research_brief"), max_evidence=10
     )
 
-    # 가격경쟁력 시장 분석 (PricingEngine 연동)
+    # 가격경쟁력 시장 분석
     pricing_context = ""
     try:
         from app.services.bid_calculator import parse_budget_string
@@ -82,110 +161,81 @@ async def go_no_go(state: ProposalState) -> dict:
                 competitor_count=5,
             ))
             pricing_context = (
-                f"\n## 시장 기반 가격 분석 (알고리즘)\n"
+                f"\n## 시장 기반 가격 분석\n"
                 f"- 추천 낙찰률: {qe.recommended_ratio}%\n"
                 f"- 수주확률: {qe.win_probability:.0%} (신뢰도: {qe.win_probability_confidence})\n"
-                f"- 분석 기반: {qe.data_quality} (유사 사례 {qe.comparable_cases}건)\n"
             )
-            if qe.market_avg_ratio:
-                pricing_context += f"- 시장 평균 낙찰률: {qe.market_avg_ratio * 100:.1f}%\n"
-            if qe.positioning_adjustment:
-                pricing_context += f"- 포지셔닝 조정: {qe.positioning_adjustment}\n"
     except Exception as e:
-        logger.debug(f"PricingEngine quick_estimate 실패 (무시): {e}")
+        logger.debug(f"PricingEngine 실패 (무시): {e}")
 
-    prompt = f"""다음 RFP에 대한 Go/No-Go 판정을 수행하세요.
+    prompt = f"""다음 RFP에 대한 전략적 평가를 수행하세요. (20점 만점)
 
 ## RFP 분석 요약
 {rfp_summary}
 
 ## 자사 역량
-{kb.get("capabilities", "(역량 DB 없음 — Lite 모드)")}
+{kb.get("capabilities", "(역량 DB 없음)")}
 
-## 발주기관 인텔리전스 (v3.2: 5단계 프레임워크)
+## 발주기관 인텔리전스
 {kb.get("client_intel", "(발주기관 정보 없음)")}
-분석 관점: 1) 기관 미션·전략 방향, 2) 조직 구조·의사결정 체계,
-3) 과거 발주 패턴·선호 특성, 4) 평가위원 성향 추정, 5) 관계 이력·접점
 
-## 경쟁 환경
-{kb.get("competitors", "(경쟁사 정보 없음)")}
+## 과거 교훈
+{kb.get("lessons", "(교훈 없음)")}
 
-## 사전조사 리서치 브리프 (v3.2)
+## 리서치 브리프
 {research_text or "(리서치 미수행)"}
-
-## 과거 교훈 (동일 발주기관에서의 수주/패찰 경험)
-{kb.get("lessons", "(이 발주기관 대상 과거 교훈 없음)")}
-
-## 포지셔닝별 과거 성과 (조직 전체)
-{kb.get("past_performance", "(과거 입찰 성과 데이터 없음)")}
-
-## 포지셔닝 오버라이드 이력 (사람이 AI 판정을 변경한 선례)
-{kb.get("positioning_overrides", "(오버라이드 이력 없음)")}
 {pricing_context}
-{similar_cases_text}
 ## 지시사항
-1. 포지셔닝 판정: defensive(수성) / offensive(공격) / adjacent(인접)
-   - **과거 포지셔닝별 성과 데이터가 있으면 반드시 참고하세요**
-   - 예: defensive 승률 80%이면 defensive 우선 고려, 승률 20%이면 다른 포지셔닝 검토
-   - 과거 교훈에서 동일 발주기관의 패찰 사유가 있으면 같은 실수를 반복하지 않도록 전략 조정
-2. 수주 가능성 점수 (0~100)와 항목별 분석
-3. 강점(pros) 3~5개, 리스크 3~5개
-4. Go/No-Go 추천 및 근거
+1. 기술 적합도 (0~8점): RFP 핫버튼·평가항목 ↔ 자사 역량 부합도
+2. 발주처 관계 (0~6점): 기관 인텔리전스 기반 관계 수준 + 접점 이력
+3. 가격 경쟁력 (0~6점): 예산 대비 시장 분석 + 낙찰률 추정
+4. 포지셔닝: defensive | offensive | adjacent (근거 포함)
+5. 강점(pros) 3개, 리스크(risks) 3개
+6. 핵심 승부수(strategic_focus) 1줄
 
 ## 출력 형식 (JSON)
 {{
-  "positioning": "defensive|offensive|adjacent",
-  "positioning_rationale": "포지셔닝 판단 근거",
-  "feasibility_score": 75,
-  "score_breakdown": {{
-    "기술역량": 80,
-    "수행실적": 70,
-    "가격경쟁력": 75,
-    "발주처관계": 60,
-    "경쟁환경": 65
-  }},
+  "score": 15,
+  "tech_fit": 7,
+  "client_relationship": 4,
+  "price_competitiveness": 4,
+  "positioning": "defensive",
+  "positioning_rationale": "근거",
   "pros": ["강점1", "강점2", "강점3"],
   "risks": ["리스크1", "리스크2", "리스크3"],
-  "recommendation": "go 또는 no-go",
-  "recommendation_rationale": "추천 근거",
-  "fatal_flaw": "no-go 판정 시 가장 치명적인 결격 사유 1줄. go일 경우 null",
-  "strategic_focus": "go 판정 시 제안서에서 가장 뾰족하게 강조할 승부수(Winning Theme) 1줄. no-go일 경우 null"
+  "strategic_focus": "핵심 승부수 1줄"
 }}
 """
 
     result = await claude_generate(prompt)
 
-    # 프롬프트 사용 기록 (인라인 프롬프트)
+    # 프롬프트 사용 기록
     proposal_id = state.get("project_id", "")
     if proposal_id:
         try:
-            import hashlib
             await prompt_tracker.record_usage(
                 proposal_id=proposal_id,
                 artifact_step="go_no_go",
                 section_id=None,
-                prompt_id="_inline.go_no_go",
+                prompt_id="_inline.go_no_go_strategic_v4",
                 prompt_version=0,
                 prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"프롬프트 트래커 기록 실패 (무시): {e}")
 
-    gng = GoNoGoResult(
-        rfp_analysis_ref=f"rfp_{state.get('project_id', '')}",
-        positioning=result.get("positioning", "defensive"),
-        positioning_rationale=result.get("positioning_rationale", ""),
-        feasibility_score=result.get("feasibility_score", 0) if mode == "full" else 0,
-        score_breakdown=result.get("score_breakdown", {}) if mode == "full" else {},
-        pros=result.get("pros", []),
-        risks=result.get("risks", []),
-        recommendation=result.get("recommendation", "go"),
-        fatal_flaw=result.get("fatal_flaw"),
-        strategic_focus=result.get("strategic_focus"),
-    )
+    # score 범위 보정
+    raw_score = result.get("score", 10)
+    score = max(0, min(int(raw_score) if isinstance(raw_score, (int, float)) else 10, 20))
 
     return {
-        "go_no_go": gng,
-        "positioning": gng.positioning,
-        "current_step": "go_no_go_complete",
+        "score": score,
+        "tech_fit": result.get("tech_fit", 0),
+        "client_relationship": result.get("client_relationship", 0),
+        "price_competitiveness": result.get("price_competitiveness", 0),
+        "positioning": result.get("positioning", "defensive"),
+        "positioning_rationale": result.get("positioning_rationale", ""),
+        "pros": result.get("pros", []),
+        "risks": result.get("risks", []),
+        "strategic_focus": result.get("strategic_focus"),
     }

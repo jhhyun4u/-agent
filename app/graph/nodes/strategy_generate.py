@@ -78,7 +78,8 @@ async def strategy_generate(state: ProposalState) -> dict:
             for p in past.data:
                 parts.append(f"- {p['title']}\n  {(p.get('body') or '')[:300]}")
             past_strategy_text = "\n\n## 과거 전략 레코드 (이 발주기관)\n" + "\n".join(parts)
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         pass
 
     # 리서치 브리프 + credibility 필터링
@@ -125,7 +126,8 @@ async def strategy_generate(state: ProposalState) -> dict:
         reg_text, _, _ = await prompt_registry.get_prompt_for_experiment(
             "strategy.GENERATE_PROMPT", proposal_id
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         reg_text = ""
 
     prompt = (reg_text or STRATEGY_GENERATE_PROMPT).format(
@@ -169,7 +171,8 @@ async def strategy_generate(state: ProposalState) -> dict:
                 prompt_version=sg_ver,
                 prompt_hash=sg_hash,
             )
-        except Exception:
+        except Exception as e:
+            logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
             pass
 
     # 전략 대안 구성

@@ -35,7 +35,8 @@ async def _get_evolved_prompt(state: ProposalState, prompt_id: str, fallback: st
         proposal_id = state.get("project_id", "")
         text, _, _ = await prompt_registry.get_prompt_for_experiment(prompt_id, proposal_id)
         return text or fallback
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         return fallback
 
 
@@ -54,8 +55,8 @@ async def _track_plan_prompt(state: ProposalState, step: str, prompt_id: str) ->
             prompt_version=ver,
             prompt_hash=hash_,
         )
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
 
 
 def _get_rfp_summary(state: ProposalState) -> str:
@@ -198,8 +199,8 @@ async def plan_story(state: ProposalState) -> dict:
             for s in suggestions[:5]:
                 kb_evidence += f"- {s.get('title', '')}: {(s.get('body_excerpt') or '')[:200]}\n"
             evidence_text += kb_evidence
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
 
     # 평가항목 ID 목록 (커버리지 검증용)
     eval_item_ids = [item.get("item", "") for item in eval_items if isinstance(item, dict)]

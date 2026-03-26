@@ -443,8 +443,8 @@ def review_section_node(state: ProposalState) -> dict:
         if current_section:
             try:
                 _auto_register_to_content_library(state, current_section, current_section_id)
-            except Exception:
-                pass  # 콘텐츠 등록 실패는 워크플로 차단하지 않음
+            except Exception as e:
+                logger.debug(f"콘텐츠 라이브러리 등록 실패 (무시): {e}")
 
         new_index = index + 1
         if new_index >= len(sections_to_write):
@@ -641,8 +641,8 @@ def _auto_register_to_content_library(state: ProposalState, section, section_id:
                 "change_source": "human_approved_section",
                 "status": "draft",
             }).execute()
-        except Exception:
-            pass  # fire-and-forget
+        except Exception as e:
+            logger.debug(f"DB fire-and-forget 실패 (무시): {e}")
 
     try:
         loop = asyncio.get_running_loop()

@@ -423,3 +423,459 @@ def build_prev_sections_context(
             parts.append(f"### {sd.get('section_id', '')}: {sd.get('title', '')}\n{preview}")
 
     return "\n\n## 이전에 작성된 섹션 (참고하여 일관성 유지)\n" + "\n\n".join(parts)
+
+
+# ── Go/No-Go 4축 정량 스코어링 (v4.0) ──
+
+
+def _match_qualification(req_keywords: list[str], capabilities: list[dict]) -> dict | None:
+    """자격 요건 키워드 ↔ capabilities 매칭. 가장 유사한 1건 반환."""
+    for cap in capabilities:
+        cap_text = f"{cap.get('title', '')} {cap.get('detail', '')}".lower()
+        cap_kws = [k.lower() for k in (cap.get("keywords") or [])]
+        for kw in req_keywords:
+            kw_lower = kw.lower()
+            if kw_lower in cap_text or kw_lower in cap_kws:
+                return cap
+    return None
+
+
+async def score_similar_performance(
+    rfp_dict: dict,
+    org_id: str,
+) -> dict:
+    """축①: RFP 유사실적 요건 ↔ 자사 수주 이력 정량 매칭 (30점 만점)."""
+    result: dict[str, Any] = {
+        "score": 0,
+        "required_items": [],
+        "coverage_rate": 0.0,
+        "same_client_wins": 0,
+        "same_domain_win_rate": None,
+        "is_fatal": False,
+        "fatal_reason": None,
+    }
+
+    similar_reqs: list[str] = rfp_dict.get("similar_project_requirements") or []
+    client_name: str = rfp_dict.get("client", "")
+    domain: str = rfp_dict.get("domain", "")
+
+    try:
+        from app.utils.supabase_client import get_async_client
+        db = await get_async_client()
+    except Exception as e:
+        logger.warning(f"score_similar_performance DB 연결 실패: {e}")
+        result["score"] = 15  # fallback
+        return result
+
+    # ── 유사실적 요건이 없으면 기본 20점 ──
+    if not similar_reqs:
+        result["score"] = 20
+        return result
+
+    # ── Step 1: AI 파싱으로 요건 구조화 ──
+    parsed_reqs: list[dict] = []
+    try:
+        from app.services.claude_client import claude_generate
+        parse_prompt = (
+            "다음 유사실적 요건을 JSON 배열로 구조화하세요.\n"
+            "각 요건: {\"raw_text\": str, \"period_years\": int, "
+            "\"min_amount\": int(원 단위), \"min_count\": int, "
+            "\"domain_keywords\": [str]}\n"
+            "금액은 원 단위 정수로 변환 (예: 10억→1000000000).\n"
+            "기간이 명시 안 되면 period_years=5.\n"
+            "건수가 명시 안 되면 min_count=1.\n\n"
+            "요건 목록:\n" + "\n".join(f"- {r}" for r in similar_reqs)
+        )
+        parsed_reqs = await claude_generate(parse_prompt)
+        if not isinstance(parsed_reqs, list):
+            parsed_reqs = [parsed_reqs] if isinstance(parsed_reqs, dict) else []
+    except Exception as e:
+        logger.debug(f"유사실적 AI 파싱 실패 (fallback): {e}")
+
+    if not parsed_reqs:
+        # AI 파싱 실패 시 기본 구조
+        parsed_reqs = [
+            {"raw_text": r, "period_years": 5, "min_amount": 0, "min_count": 1, "domain_keywords": []}
+            for r in similar_reqs
+        ]
+
+    # ── Step 2: DB 정량 매칭 (각 요건별) ──
+    met_count = 0
+    for req in parsed_reqs:
+        period = req.get("period_years", 5)
+        min_amount = req.get("min_amount", 0)
+        min_count = req.get("min_count", 1)
+        kws = req.get("domain_keywords", [])
+
+        try:
+            query = (
+                db.table("proposal_results")
+                .select("proposals!inner(title, bid_amount, created_at, client_name)")
+                .eq("result", "won")
+                .eq("proposals.org_id", org_id)
+            )
+            rows = await query.limit(50).execute()
+
+            matched = []
+            from datetime import datetime, timedelta, timezone
+            cutoff = datetime.now(timezone.utc) - timedelta(days=period * 365)
+            for row in rows.data or []:
+                p = row.get("proposals", {})
+                # 기간 필터
+                created = p.get("created_at", "")
+                if created and created < cutoff.isoformat():
+                    continue
+                # 금액 필터
+                amt = p.get("bid_amount") or 0
+                if min_amount and amt < min_amount:
+                    continue
+                # 키워드 필터 (OR)
+                if kws:
+                    title = (p.get("title") or "").lower()
+                    if not any(kw.lower() in title for kw in kws):
+                        continue
+                matched.append({
+                    "title": p.get("title", ""),
+                    "amount": amt,
+                    "year": created[:4] if created else "",
+                    "client": p.get("client_name", ""),
+                })
+
+            is_met = len(matched) >= min_count
+            if is_met:
+                met_count += 1
+
+            req["matched_count"] = len(matched)
+            req["matched_projects"] = matched[:5]
+            req["is_met"] = is_met
+        except Exception as e:
+            logger.debug(f"유사실적 DB 매칭 실패: {e}")
+            req["matched_count"] = 0
+            req["matched_projects"] = []
+            req["is_met"] = False
+
+    result["required_items"] = parsed_reqs
+    total_reqs = len(parsed_reqs)
+    result["coverage_rate"] = met_count / total_reqs if total_reqs else 0.0
+
+    # ── Step 3: 동일 발주기관 수주 보너스 ──
+    try:
+        if client_name:
+            client_wins = await (
+                db.table("proposal_results")
+                .select("proposals!inner(client_name)", count="exact")
+                .eq("result", "won")
+                .eq("proposals.org_id", org_id)
+                .ilike("proposals.client_name", f"%{client_name}%")
+                .execute()
+            )
+            result["same_client_wins"] = client_wins.count or 0
+    except Exception as e:
+        logger.debug(f"동일 발주기관 수주 조회 실패: {e}")
+
+    # ── Step 4: 동일 사업유형 승률 ──
+    try:
+        if domain:
+            domain_lessons = await (
+                db.table("lessons_learned")
+                .select("result")
+                .eq("org_id", org_id)
+                .ilike("industry", f"%{domain}%")
+                .execute()
+            )
+            if domain_lessons.data:
+                won = sum(1 for dl in domain_lessons.data if dl.get("result") == "won")
+                total = sum(1 for dl in domain_lessons.data if dl.get("result") in ("won", "lost"))
+                result["same_domain_win_rate"] = won / total if total else None
+    except Exception as e:
+        logger.debug(f"사업유형 승률 조회 실패: {e}")
+
+    # ── Step 5: 점수 산정 ──
+    coverage = result["coverage_rate"]
+    if coverage >= 1.0:
+        base = 25
+    elif coverage > 0:
+        base = round(coverage * 25)
+    else:
+        base = 0
+        if total_reqs > 0:
+            result["is_fatal"] = True
+            result["fatal_reason"] = (
+                f"필수 유사실적 요건 {total_reqs}건 중 0건 충족 — 참가자격 미달 가능"
+            )
+
+    bonus = 0
+    if result["same_client_wins"] >= 1:
+        bonus += 3
+    if result.get("same_domain_win_rate") is not None and result["same_domain_win_rate"] >= 0.6:
+        bonus += 2
+
+    result["score"] = min(base + bonus, 30)
+    return result
+
+
+async def score_qualification(
+    rfp_dict: dict,
+    org_id: str,
+) -> dict:
+    """축②: RFP 자격 요건 ↔ 자사 보유 자격(capabilities) 자동 대조 (30점 만점)."""
+    result: dict[str, Any] = {
+        "score": 0,
+        "mandatory": [],
+        "preferred": [],
+        "is_fatal": False,
+        "fatal_reason": None,
+        "summary": "",
+    }
+
+    qual_reqs: list[str] = rfp_dict.get("qualification_requirements") or []
+
+    # 요건 없으면 25점 (요건 자체가 없는 공고 → 자격 통과)
+    if not qual_reqs:
+        result["score"] = 25
+        result["summary"] = "자격 요건 없음 (기본 통과)"
+        return result
+
+    try:
+        from app.utils.supabase_client import get_async_client
+        db = await get_async_client()
+    except Exception as e:
+        logger.warning(f"score_qualification DB 연결 실패: {e}")
+        result["score"] = 15  # fallback
+        return result
+
+    # ── Step 1: AI 파싱으로 mandatory/preferred 분류 ──
+    classified: dict = {"mandatory": [], "preferred": []}
+    try:
+        from app.services.claude_client import claude_generate
+        classify_prompt = (
+            "다음 자격 요건을 mandatory(필수 참가자격)와 preferred(가점/우대)로 분류하세요.\n"
+            "mandatory 판단 기준: '필수', '참가자격', '등록 업체', '보유 업체', '면허' 포함\n"
+            "preferred 판단 기준: '가점', '우대', '우선' 포함\n"
+            "애매하면 mandatory로 분류하세요.\n\n"
+            "출력 JSON: {\"mandatory\": [{\"requirement\": str, \"keywords\": [str]}], "
+            "\"preferred\": [{\"requirement\": str, \"keywords\": [str]}]}\n\n"
+            "요건 목록:\n" + "\n".join(f"- {r}" for r in qual_reqs)
+        )
+        classified = await claude_generate(classify_prompt)
+        if not isinstance(classified, dict):
+            classified = {"mandatory": [], "preferred": []}
+    except Exception as e:
+        logger.debug(f"자격 분류 AI 파싱 실패: {e}")
+        # fallback: 전체 mandatory
+        classified = {
+            "mandatory": [{"requirement": r, "keywords": [r]} for r in qual_reqs],
+            "preferred": [],
+        }
+
+    # ── Step 2: 자사 보유 자격 조회 ──
+    capabilities: list[dict] = []
+    if org_id:
+        try:
+            caps = await (
+                db.table("capabilities")
+                .select("id, title, type, detail, keywords")
+                .eq("org_id", org_id)
+                .in_("type", ["certification", "license", "registration", "track_record"])
+                .execute()
+            )
+            capabilities = caps.data or []
+        except Exception as e:
+            logger.debug(f"자격 DB 조회 실패: {e}")
+
+    # ── Step 3: 매칭 ──
+    mandatory_results = []
+    for m in classified.get("mandatory", []):
+        kws = m.get("keywords", [m.get("requirement", "")])
+        matched = _match_qualification(kws, capabilities)
+        mandatory_results.append({
+            "requirement": m.get("requirement", ""),
+            "status": "met" if matched else "unmet",
+            "matched_capability": matched["title"] if matched else None,
+            "note": f"매칭: {matched['title']}" if matched else "미보유",
+        })
+
+    preferred_results = []
+    for p in classified.get("preferred", []):
+        kws = p.get("keywords", [p.get("requirement", "")])
+        matched = _match_qualification(kws, capabilities)
+        preferred_results.append({
+            "requirement": p.get("requirement", ""),
+            "status": "met" if matched else "unmet",
+        })
+
+    result["mandatory"] = mandatory_results
+    result["preferred"] = preferred_results
+
+    # ── Step 4: 점수 산정 ──
+    total_mandatory = len(mandatory_results)
+    met_mandatory = sum(1 for m in mandatory_results if m["status"] == "met")
+    met_preferred = sum(1 for p in preferred_results if p["status"] == "met")
+    total_preferred = len(preferred_results)
+
+    if total_mandatory == 0:
+        base = 25
+    elif met_mandatory == total_mandatory:
+        base = 25
+    elif met_mandatory == 0:
+        base = 0
+        result["is_fatal"] = True
+        unmet = [m["requirement"] for m in mandatory_results if m["status"] == "unmet"]
+        result["fatal_reason"] = f"필수 자격 미충족: {', '.join(unmet[:3])}"
+    else:
+        # 부분 충족
+        base = round((met_mandatory / total_mandatory) * 25)
+        unmet = [m["requirement"] for m in mandatory_results if m["status"] == "unmet"]
+        if any("필수" in m["requirement"] for m in mandatory_results if m["status"] == "unmet"):
+            result["is_fatal"] = True
+            result["fatal_reason"] = f"필수 자격 미충족: {', '.join(unmet[:3])}"
+
+    # 가점 보너스 (최대 5점)
+    pref_bonus = min(met_preferred * 2, 5) if total_preferred > 0 else 0
+    result["score"] = min(base + pref_bonus, 30)
+    result["summary"] = f"필수 {met_mandatory}/{total_mandatory} 충족, 가점 {met_preferred}/{total_preferred} 보유"
+
+    return result
+
+
+async def score_competition(
+    rfp_dict: dict,
+    org_id: str,
+) -> dict:
+    """축③: 경쟁 강도 분석 — 발주기관 낙찰이력 + 자사 대전 기록 (20점 만점)."""
+    result: dict[str, Any] = {
+        "score": 10,
+        "intensity_level": "medium",
+        "estimated_competitors": 5,
+        "avg_competitors_same_client": None,
+        "top_competitors": [],
+        "our_win_rate_at_client": None,
+        "our_market_share": None,
+        "rationale": "",
+    }
+
+    client_name: str = rfp_dict.get("client", "")
+
+    try:
+        from app.utils.supabase_client import get_async_client
+        db = await get_async_client()
+    except Exception as e:
+        logger.warning(f"score_competition DB 연결 실패: {e}")
+        return result
+
+    # ── Step 1: 동일 발주기관 입찰 이력 ──
+    our_wins_at_client = 0
+    our_total_at_client = 0
+    if client_name and org_id:
+        try:
+            ci = await (
+                db.table("client_intelligence")
+                .select("id")
+                .eq("org_id", org_id)
+                .ilike("client_name", f"%{client_name}%")
+                .limit(1)
+                .execute()
+            )
+            if ci.data:
+                client_id = ci.data[0]["id"]
+                history = await (
+                    db.table("client_bid_history")
+                    .select("positioning, result, bid_year")
+                    .eq("client_id", client_id)
+                    .order("bid_year", desc=True)
+                    .execute()
+                )
+                for h in history.data or []:
+                    if h.get("result") in ("won", "lost"):
+                        our_total_at_client += 1
+                        if h["result"] == "won":
+                            our_wins_at_client += 1
+
+                if our_total_at_client > 0:
+                    result["our_win_rate_at_client"] = our_wins_at_client / our_total_at_client
+        except Exception as e:
+            logger.debug(f"발주기관 이력 조회 실패: {e}")
+
+    # ── Step 2: 예상 참여업체 수 ──
+    try:
+        if client_name and org_id:
+            avg_q = await (
+                db.table("proposal_results")
+                .select("competitor_count, proposals!inner(client_name)")
+                .eq("proposals.org_id", org_id)
+                .ilike("proposals.client_name", f"%{client_name}%")
+                .not_.is_("competitor_count", "null")
+                .execute()
+            )
+            counts = [r["competitor_count"] for r in (avg_q.data or []) if r.get("competitor_count")]
+            if counts:
+                avg_comp = sum(counts) / len(counts)
+                result["avg_competitors_same_client"] = round(avg_comp, 1)
+                result["estimated_competitors"] = round(avg_comp)
+    except Exception as e:
+        logger.debug(f"평균 참여수 조회 실패: {e}")
+
+    # ── Step 3: 경쟁사 대전 기록 ──
+    try:
+        if org_id:
+            ch = await (
+                db.table("competitor_history")
+                .select("competitors!inner(company_name), our_result")
+                .eq("competitors.org_id", org_id)
+                .execute()
+            )
+            comp_stats: dict[str, dict] = {}
+            for row in ch.data or []:
+                name = row.get("competitors", {}).get("company_name", "")
+                if not name:
+                    continue
+                if name not in comp_stats:
+                    comp_stats[name] = {"wins": 0, "losses": 0}
+                if row.get("our_result") == "won":
+                    comp_stats[name]["wins"] += 1
+                elif row.get("our_result") == "lost":
+                    comp_stats[name]["losses"] += 1
+
+            top = sorted(comp_stats.items(), key=lambda x: x[1]["wins"] + x[1]["losses"], reverse=True)[:5]
+            result["top_competitors"] = [
+                {
+                    "name": name,
+                    "wins_at_client": stats["wins"],
+                    "head_to_head": f"{stats['wins']}승 {stats['losses']}패",
+                }
+                for name, stats in top
+            ]
+    except Exception as e:
+        logger.debug(f"경쟁사 대전 기록 조회 실패: {e}")
+
+    # ── Step 4: 점수 산정 ──
+    est = result["estimated_competitors"]
+    if est <= 3:
+        base = 18
+        result["intensity_level"] = "low"
+    elif est <= 7:
+        base = 12
+        result["intensity_level"] = "medium"
+    else:
+        base = 8
+        result["intensity_level"] = "high"
+
+    adj = 0
+    win_rate = result["our_win_rate_at_client"]
+    if win_rate is not None:
+        if win_rate >= 0.5:
+            adj += 2
+        elif win_rate < 0.3:
+            adj -= 2
+
+    # 점유율 (간이): 해당 기관 수주 건수 / 전체 이력 건수
+    if our_total_at_client >= 3 and our_wins_at_client / our_total_at_client >= 0.3:
+        result["our_market_share"] = our_wins_at_client / our_total_at_client
+        adj += 2
+
+    result["score"] = max(0, min(base + adj, 20))
+    result["rationale"] = (
+        f"예상 {est}개사 참여 ({result['intensity_level']}), "
+        f"자사 기관 내 {our_wins_at_client}승/{our_total_at_client}전"
+    )
+    return result

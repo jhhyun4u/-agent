@@ -62,18 +62,23 @@ class BidDetail(BaseModel):
 
 
 class GoNoGoResult(BaseModel):
-    """STEP 1-②: Go/No-Go 의사결정 결과."""
+    """STEP 1-②: Go/No-Go 의사결정 결과. v4.0: 4축 정량 스코어링."""
     rfp_analysis_ref: str = ""
     positioning: Literal["defensive", "offensive", "adjacent"]
     positioning_rationale: str
-    feasibility_score: int
-    score_breakdown: dict
+    feasibility_score: int                   # 4축 합산 (0~100)
+    score_breakdown: dict                    # v4.0: 4축 구조
     pros: list[str]
     risks: list[str]
     recommendation: Literal["go", "no-go"]
     fatal_flaw: Optional[str] = None
     strategic_focus: Optional[str] = None
     decision: str = "pending"
+    # v4.0 신규
+    score_tag: str = ""                      # priority|standard|below_threshold|disqualified
+    performance_detail: dict = {}            # 유사실적 상세
+    qualification_detail: dict = {}          # 자격 적격성 상세
+    competition_detail: dict = {}            # 경쟁 강도 상세
 
 
 class PriceScoringFormula(BaseModel):
@@ -286,6 +291,9 @@ class ProposalState(TypedDict):
 
     # v3.5: 섹션별 순차 작성 인덱스
     current_section_index: Annotated[int, lambda a, b: b]
+
+    # MON-02: 노드별 에러 정보 (프론트엔드 표시용)
+    node_errors: Annotated[dict, lambda a, b: {**a, **b}]
 
     # v3.8: 입찰가격계획
     bid_plan: Optional[BidPlanResult]

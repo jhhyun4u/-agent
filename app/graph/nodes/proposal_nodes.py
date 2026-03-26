@@ -161,7 +161,8 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
                         f"개선={ls.get('improvements', '-')}"
                     )
                 lessons_context = "\n\n## 과거 교훈 (이 발주기관에서의 경험, 반드시 참고)\n" + "\n".join(parts)
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         pass
 
     # ── 평가 배점 + 세부항목 ──
@@ -198,7 +199,8 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
                 score = s.get("quality_score", 0)
                 parts.append(f"- [{score}점] {s.get('title', '')}: {excerpt}")
             reference_content = "\n\n## 참고 콘텐츠 (KB 유사 콘텐츠, 참고하되 그대로 복사 금지)\n" + "\n".join(parts)
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         pass
 
     return {
@@ -268,7 +270,8 @@ async def proposal_write_next(state: ProposalState) -> dict:
         text, ver, hash_ = await prompt_registry.get_prompt_for_experiment(
             prompt_id_str, proposal_id
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         text, ver, hash_ = "", 0, ""
 
     if case_type == "B":
@@ -423,7 +426,8 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
         sr_text, _, _ = await prompt_registry.get_prompt_for_experiment(
             "proposal_prompts.SELF_REVIEW_PROMPT", proposal_id_for_exp
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         sr_text = ""
 
     prompt = (sr_text or SELF_REVIEW_PROMPT).format(
@@ -478,10 +482,10 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
                                 .eq("id", link.data[0]["id"])
                                 .execute()
                             )
-                    except Exception:
-                        pass
-        except Exception:
-            pass
+                    except Exception as e:
+                        logger.debug(f"콘텐츠 라이브러리 업데이트 실패 (무시): {e}")
+        except Exception as e:
+            logger.debug(f"콘텐츠 라이브러리 업데이트 실패 (무시): {e}")
 
     # 총점 계산
     total = score.get("total", 0)

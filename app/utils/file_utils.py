@@ -143,6 +143,73 @@ def extract_text_from_hwp(file_path: Union[str, Path]) -> str:
     return ""
 
 
+def extract_text_from_pptx(file_path: Union[str, Path]) -> str:
+    """
+    PPTX 파일에서 슬라이드별 텍스트 추출
+
+    Args:
+        file_path: PPTX 파일 경로
+
+    Returns:
+        추출된 텍스트 ("[슬라이드 N]" 마커 포함)
+    """
+    try:
+        from pptx import Presentation
+
+        prs = Presentation(str(file_path))
+        slides_text = []
+        for i, slide in enumerate(prs.slides, 1):
+            texts = []
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for para in shape.text_frame.paragraphs:
+                        text = para.text.strip()
+                        if text:
+                            texts.append(text)
+            if texts:
+                slides_text.append(f"[슬라이드 {i}]\n" + "\n".join(texts))
+        return "\n\n".join(slides_text)
+    except Exception as e:
+        logger.error(f"PPTX 텍스트 추출 실패: {e}")
+        raise FileProcessingError(
+            f"PPTX 파일을 읽을 수 없습니다: {file_path}",
+            details={"path": str(file_path), "error": str(e)},
+        )
+
+
+def extract_text_from_xlsx(file_path: Union[str, Path]) -> str:
+    """
+    XLSX 파일에서 시트별 셀 텍스트 추출
+
+    Args:
+        file_path: XLSX 파일 경로
+
+    Returns:
+        추출된 텍스트 (시트별 구분)
+    """
+    try:
+        import openpyxl
+
+        wb = openpyxl.load_workbook(str(file_path), read_only=True, data_only=True)
+        sheets_text = []
+        for ws in wb.worksheets:
+            rows_text = []
+            for row in ws.iter_rows(values_only=True):
+                cells = [str(c).strip() for c in row if c is not None and str(c).strip()]
+                if cells:
+                    rows_text.append(" | ".join(cells))
+            if rows_text:
+                sheets_text.append(f"[{ws.title}]\n" + "\n".join(rows_text))
+        wb.close()
+        return "\n\n".join(sheets_text)
+    except Exception as e:
+        logger.error(f"XLSX 텍스트 추출 실패: {e}")
+        raise FileProcessingError(
+            f"XLSX 파일을 읽을 수 없습니다: {file_path}",
+            details={"path": str(file_path), "error": str(e)},
+        )
+
+
 def extract_text_from_file(file_path: Union[str, Path]) -> str:
     """
     파일에서 텍스트 추출 (통합 함수)
@@ -171,8 +238,12 @@ def extract_text_from_file(file_path: Union[str, Path]) -> str:
             return extract_text_from_pdf(file_path)
         elif suffix == ".docx":
             return extract_text_from_docx(file_path)
-        elif suffix == ".hwp":
+        elif suffix in (".hwp", ".hwpx"):
             return extract_text_from_hwp(file_path)
+        elif suffix == ".pptx":
+            return extract_text_from_pptx(file_path)
+        elif suffix in (".xlsx", ".xls"):
+            return extract_text_from_xlsx(file_path)
         elif suffix == ".txt":
             return file_path.read_text(encoding="utf-8")
         else:
@@ -202,6 +273,9 @@ UPLOAD_ALLOWED_EXTENSIONS: dict[str, frozenset[str]] = {
     "submission": frozenset({
         "pdf", "hwp", "hwpx", "doc", "docx", "xls", "xlsx",
         "ppt", "pptx", "jpg", "jpeg", "png", "zip", "txt",
+    }),
+    "intranet_doc": frozenset({
+        "pdf", "docx", "hwp", "hwpx", "xlsx", "pptx", "txt", "doc", "xls", "ppt",
     }),
 }
 

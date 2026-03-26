@@ -2217,6 +2217,11 @@ export interface Notification {
 export interface NotificationSettings {
   teams: boolean;
   in_app: boolean;
+  email_monitoring: boolean;
+  email_proposal: boolean;
+  email_bidding: boolean;
+  email_learning: boolean;
+  email_enabled: boolean; // 서버 설정 (읽기 전용)
 }
 
 // ── KB 콘텐츠 타입 ────────────────────────────────────────────────────

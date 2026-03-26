@@ -226,22 +226,62 @@ function GoNoGoContent({ data }: { data: Record<string, unknown> }) {
   const strategicFocus = data.strategic_focus as string | null;
   const pros = data.pros as string[] | undefined;
   const risks = data.risks as string[] | undefined;
-  const sc = (score ?? 0) >= 70 ? "text-[#3ecf8e]" : (score ?? 0) >= 50 ? "text-amber-400" : "text-red-400";
+  const scoreTag = data.score_tag as string | undefined;
+  const breakdown = data.score_breakdown as Record<string, number> | undefined;
+  const sc = (score ?? 0) >= 85 ? "text-[#3ecf8e]" : (score ?? 0) >= 70 ? "text-amber-400" : "text-red-400";
+
+  // v4.0 4축 바 차트
+  const axes = breakdown ? [
+    { label: "유사실적", score: breakdown.similar_performance ?? 0, max: 30 },
+    { label: "자격적격", score: breakdown.qualification ?? 0, max: 30 },
+    { label: "경쟁강도", score: breakdown.competition ?? 0, max: 20 },
+    { label: "전략가산", score: breakdown.strategic ?? 0, max: 20 },
+  ] : [];
+
+  const tagLabels: Record<string, string> = {
+    priority: "적극 참여",
+    standard: "일반 참여",
+    below_threshold: "기준 미달",
+    disqualified: "자격 미달",
+  };
 
   return (
     <div>
       <div className="flex items-center gap-4 mb-4 pb-4 border-b border-[#262626]">
         {score != null && (
           <div className="text-center">
-            <p className={`text-3xl font-bold ${sc}`}>{score}%</p>
-            <p className="text-[10px] text-[#8c8c8c] mt-0.5">수주 가능성</p>
+            <p className={`text-3xl font-bold ${sc}`}>{score}</p>
+            <p className="text-[10px] text-[#8c8c8c] mt-0.5">합산 점수</p>
           </div>
         )}
         <div className="flex flex-col gap-1.5">
           {positioning && <Tag color="blue">{positioning}</Tag>}
           {recommendation && <Tag color={recommendation === "go" ? "green" : "red"}>{recommendation.toUpperCase()}</Tag>}
+          {scoreTag && tagLabels[scoreTag] && (
+            <Tag color={scoreTag === "priority" ? "green" : scoreTag === "standard" ? "amber" : "red"}>
+              {tagLabels[scoreTag]}
+            </Tag>
+          )}
         </div>
       </div>
+      {/* 4축 바 차트 */}
+      {axes.length > 0 && (
+        <div className="mb-4 space-y-1.5">
+          {axes.map((a) => {
+            const pct = a.max > 0 ? (a.score / a.max) * 100 : 0;
+            const color = pct >= 70 ? "bg-[#3ecf8e]" : pct >= 50 ? "bg-amber-500" : "bg-red-500";
+            return (
+              <div key={a.label} className="flex items-center gap-2">
+                <span className="text-[10px] text-[#8c8c8c] w-14 shrink-0">{a.label}</span>
+                <div className="flex-1 h-1.5 bg-[#0f0f0f] rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+                </div>
+                <span className="text-[10px] text-[#8c8c8c] w-10 text-right">{a.score}/{a.max}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {fatalFlaw && <Section title="치명적 결격 사유" variant="danger"><p className="text-xs text-[#ededed] leading-relaxed">{fatalFlaw}</p></Section>}
       {strategicFocus && <Section title="핵심 승부수" variant="success"><p className="text-xs text-[#ededed] leading-relaxed">{strategicFocus}</p></Section>}
       {pros && pros.length > 0 && <Section title="강점"><Bullets items={pros} color="text-[#3ecf8e]" /></Section>}

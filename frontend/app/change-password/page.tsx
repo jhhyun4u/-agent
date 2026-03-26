@@ -47,7 +47,7 @@ export default function ChangePasswordPage() {
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-          <span className="text-[#ededed] font-semibold text-sm">Proposal Architect</span>
+          <span className="text-[#ededed] font-semibold text-sm">Proposal Coworker</span>
         </div>
 
         <h2 className="text-xl font-semibold text-[#ededed] mb-1">비밀번호 변경</h2>

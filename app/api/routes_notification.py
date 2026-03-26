@@ -21,9 +21,18 @@ from app.utils.supabase_client import get_async_client
 router = APIRouter(prefix="/api/notifications", tags=["notifications"])
 
 
+_EMAIL_SETTING_KEYS = [
+    "email_monitoring", "email_proposal", "email_bidding", "email_learning",
+]
+
+
 class NotificationSettingsUpdate(BaseModel):
     teams: bool | None = None
     in_app: bool | None = None
+    email_monitoring: bool | None = None
+    email_proposal: bool | None = None
+    email_bidding: bool | None = None
+    email_learning: bool | None = None
 
 
 @router.get("", response_model=NotificationListResponse)
@@ -106,7 +115,10 @@ async def get_notification_settings(user: CurrentUser = Depends(get_current_user
         .single()
         .execute()
     )
-    return result.data.get("notification_settings", {"teams": True, "in_app": True}) if result.data else {"teams": True, "in_app": True}
+    from app.config import settings as app_settings
+    ns = result.data.get("notification_settings", {"teams": True, "in_app": True}) if result.data else {"teams": True, "in_app": True}
+    ns["email_enabled"] = app_settings.email_enabled
+    return ns
 
 
 @router.put("/settings", response_model=NotificationSettingsResponse)
@@ -132,6 +144,10 @@ async def update_notification_settings(
         settings["teams"] = body.teams
     if body.in_app is not None:
         settings["in_app"] = body.in_app
+    for key in _EMAIL_SETTING_KEYS:
+        val = getattr(body, key, None)
+        if val is not None:
+            settings[key] = val
 
     await (
         client.table("users")
@@ -139,4 +155,7 @@ async def update_notification_settings(
         .eq("id", user.id)
         .execute()
     )
+
+    from app.config import settings as app_settings
+    settings["email_enabled"] = app_settings.email_enabled
     return settings
