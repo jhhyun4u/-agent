@@ -8,13 +8,20 @@ API 경로: /api/teams/{team_id}/bid-profile, /api/teams/{team_id}/search-preset
           /api/teams/{team_id}/bids/*, /api/bids/{bid_no}
 """
 
+import asyncio
+import json
 import logging
 import re
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
+from app.api.deps import get_current_user, get_current_user_or_none
+from app.api.permissions import require_team_member as _require_team_member
+from app.api.response import ok, ok_list
+from app.config import settings
 from app.exceptions import (
     BidNotFoundError,
     BidValidationError,
@@ -24,22 +31,24 @@ from app.exceptions import (
     RateLimitError,
     ResourceNotFoundError,
 )
-
-from app.api.deps import get_current_user, get_current_user_or_none
-from app.api.response import ok, ok_list
-from app.config import settings
 from app.models.auth_schemas import CurrentUser
 from app.models.bid_schemas import (
     BidAnnouncement,
     BidRecommendation,
+    BidStatusUpdate,
     QualificationResult,
     SearchPreset,
     SearchPresetCreate,
     TeamBidProfile,
     TeamBidProfileCreate,
 )
+from app.prompts.bid_review import UNIFIED_ANALYSIS_USER, build_unified_analysis_system
+from app.services.bid_attachment_store import download_bid_attachments
 from app.services.bid_fetcher import BidFetcher
+from app.services.bid_pipeline import get_all_pipeline_status, get_pipeline_status, run_pipeline
 from app.services.bid_recommender import BidRecommender
+from app.services.bid_scorer import score_and_rank_bids
+from app.services.claude_client import _get_client as _get_claude_client
 from app.services.g2b_service import G2BService
 from app.utils.supabase_client import get_async_client
 
@@ -50,8 +59,9 @@ _BID_NO_PATTERN = re.compile(r'^[A-Za-z0-9\-]+$')
 _FETCH_COOLDOWN_HOURS = 1
 
 
-# ── 권한 헬퍼 (app/api/permissions.py 공유 모듈) ──
-from app.api.permissions import require_team_member as _require_team_member
+def _escape_like(value: str) -> str:
+    """PostgREST ilike 메타문자(%, _, \\) 이스케이프"""
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 # ── F-02: 팀 프로필 ──────────────────────────────────────────
@@ -199,28 +209,31 @@ async def activate_search_preset(
     preset_id: str,
     current_user: CurrentUser = Depends(get_current_user),
 ):
-    """활성 프리셋 전환 (팀당 1개 보장)"""
+    """활성 프리셋 전환 (팀당 1개 보장, 활성화 우선 → 비활성화 후행)"""
     client = await get_async_client()
     await _require_team_member(client, team_id, current_user.id)
 
     await _get_preset_or_404(client, team_id, preset_id)
 
-    # 기존 활성 프리셋 비활성화
+    # 1) 지정 프리셋 먼저 활성화 (실패 시 기존 활성 프리셋 유지)
+    res = (
+        await client.table("search_presets")
+        .update({"is_active": True, "updated_at": datetime.now(timezone.utc).isoformat()})
+        .eq("id", preset_id)
+        .eq("team_id", team_id)
+        .execute()
+    )
+
+    # 2) 이전 활성 프리셋 비활성화 (방금 활성화한 것 제외)
     await (
         client.table("search_presets")
         .update({"is_active": False})
         .eq("team_id", team_id)
         .eq("is_active", True)
+        .neq("id", preset_id)
         .execute()
     )
 
-    # 지정 프리셋 활성화
-    res = (
-        await client.table("search_presets")
-        .update({"is_active": True, "updated_at": datetime.now(timezone.utc).isoformat()})
-        .eq("id", preset_id)
-        .execute()
-    )
     return ok(res.data[0])
 
 
@@ -338,13 +351,13 @@ async def list_announcements(
     query = client.table("bid_announcements").select("*", count="exact")
 
     if keyword:
-        query = query.ilike("bid_title", f"%{keyword}%")
+        query = query.ilike("bid_title", f"%{_escape_like(keyword)}%")
     if min_budget is not None:
         query = query.gte("budget_amount", min_budget)
     if bid_type:
         query = query.eq("bid_type", bid_type)
     if agency:
-        query = query.ilike("agency", f"%{agency}%")
+        query = query.ilike("agency", f"%{_escape_like(agency)}%")
     if min_days is not None:
         min_deadline = (datetime.now(timezone.utc) + timedelta(days=min_days)).isoformat()
         query = query.gte("deadline_date", min_deadline)
@@ -365,10 +378,9 @@ async def list_announcements(
 @router.get("/bids/pipeline/status")
 async def pipeline_status(
     bid_no: str = Query(default=None),
+    current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """파이프라인 진행 상태 조회. bid_no 지정 시 해당 건만."""
-    from app.services.bid_pipeline import get_pipeline_status, get_all_pipeline_status
-
     if bid_no:
         status = get_pipeline_status(bid_no)
         return ok({bid_no: status} if status else {})
@@ -382,8 +394,6 @@ async def pipeline_trigger(
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """수동 파이프라인 트리거. bid_nos 미지정 시 DB 최근 공고 대상."""
-    from app.services.bid_pipeline import run_pipeline
-
     if not bid_nos:
         try:
             client = await get_async_client()
@@ -416,7 +426,7 @@ async def get_scored_bids(
     """
     DB 저장된 공고 목록 조회 (적합도 스코어링 기반).
 
-    정기 스케줄러(평일 08:00, 15:00)가 수집한 데이터 조회.
+    정기 스케줄러(평일 08~18시 매시 정각)가 수집한 데이터 조회.
     실시간 G2B 호출 없음 — 수동 크롤링은 POST /bids/crawl 사용.
     """
     client = await get_async_client()
@@ -448,7 +458,6 @@ async def get_scored_bids(
             })
 
     # 적합도 스코어링 (G2B raw 형식 기반)
-    from app.services.bid_scorer import score_and_rank_bids
     scored = score_and_rank_bids(
         data,
         reference_date=datetime.now(timezone.utc).date(),
@@ -475,8 +484,6 @@ async def manual_crawl(
 
     프론트엔드 "새로고침" 버튼에서만 호출.
     """
-    from app.services.bid_fetcher import BidFetcher
-
     try:
         date_to_dt = datetime.now(timezone.utc)
         date_from_dt = date_to_dt - timedelta(days=days - 1)
@@ -497,7 +504,6 @@ async def manual_crawl(
         scored_data = results.get("data", [])
         top_bid_nos = [b["bid_no"] for b in scored_data[:50] if b.get("score", 0) >= 80]
         if top_bid_nos:
-            from app.services.bid_pipeline import run_pipeline
             raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in scored_data if b["bid_no"] in set(top_bid_nos)}
             background_tasks.add_task(run_pipeline, top_bid_nos, raw_map)
 
@@ -530,304 +536,21 @@ async def get_monitored_bids(
     user_id = current_user.id if current_user else None
     offset = (page - 1) * per_page
 
-    # 미인증 사용자는 company 스코프만 허용
     if not user_id and scope != "company":
         scope = "company"
 
-    base_fields = (
-        "bid_no, bid_title, agency, budget_amount, deadline_date, "
-        "days_remaining, bid_type, content_text, raw_data"
-    )
-
     if scope == "my":
-        bookmarked = (
-            await client.table("bid_bookmarks")
-            .select("bid_no")
-            .eq("user_id", user_id)
-            .execute()
-        )
-        bookmarked_nos = {b["bid_no"] for b in (bookmarked.data or [])}
-
-        user_res = (
-            await client.table("users")
-            .select("interests, team_id")
-            .eq("id", user_id)
-            .maybe_single()
-            .execute()
-        )
-        user_data = user_res.data or {}
-        interests = user_data.get("interests") or []
-
-        now_iso = datetime.now(timezone.utc).isoformat()
-
-        matched_bids = []
-        if interests:
-            for keyword in interests[:5]:
-                kw_res = (
-                    await client.table("bid_announcements")
-                    .select(base_fields)
-                    .ilike("bid_title", f"%{keyword}%")
-                    .gte("deadline_date", now_iso)
-                    .order("deadline_date", desc=False)
-                    .limit(10)
-                    .execute()
-                )
-                matched_bids.extend(kw_res.data or [])
-
-        if bookmarked_nos:
-            bm_res = (
-                await client.table("bid_announcements")
-                .select(base_fields)
-                .in_("bid_no", list(bookmarked_nos))
-                .order("days_remaining", desc=False)
-                .execute()
-            )
-            matched_bids.extend(bm_res.data or [])
-
-        seen = set()
-        unique = []
-        for b in matched_bids:
-            if b["bid_no"] not in seen:
-                seen.add(b["bid_no"])
-                b["is_bookmarked"] = b["bid_no"] in bookmarked_nos
-                unique.append(b)
-
-        unique.sort(key=lambda x: (not x.get("is_bookmarked", False), x.get("days_remaining") or 999))
-        total = len(unique)
-        data = unique[offset:offset + per_page]
-
+        data, total = await _monitor_my(client, user_id, offset, per_page)
     elif scope in ("team", "division"):
-        user_res = (
-            await client.table("users")
-            .select("team_id, division_id")
-            .eq("id", user_id)
-            .maybe_single()
-            .execute()
-        )
-        user_data = user_res.data or {}
-
-        try:
-            if scope == "team":
-                team_id = user_data.get("team_id")
-                if not team_id:
-                    return ok_list([], total=0, offset=offset, limit=per_page)
-                rec_res = (
-                    await client.table("bid_recommendations")
-                    .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
-                    .eq("team_id", team_id)
-                    .neq("qualification_status", "fail")
-                    .order("match_score", desc=True)
-                    .range(offset, offset + per_page - 1)
-                    .execute()
-                )
-            else:
-                division_id = user_data.get("division_id")
-                if not division_id:
-                    return ok_list([], total=0, offset=offset, limit=per_page)
-                teams_res = (
-                    await client.table("teams")
-                    .select("id")
-                    .eq("division_id", division_id)
-                    .execute()
-                )
-                team_ids = [t["id"] for t in (teams_res.data or [])]
-                if not team_ids:
-                    return ok_list([], total=0, offset=offset, limit=per_page)
-                rec_res = (
-                    await client.table("bid_recommendations")
-                    .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
-                    .in_("team_id", team_ids)
-                    .neq("qualification_status", "fail")
-                    .order("match_score", desc=True)
-                    .range(offset, offset + per_page - 1)
-                    .execute()
-                )
-        except Exception as e:
-            logger.warning(f"bid_recommendations 조회 실패 ({scope}): {e}")
-            rec_res = type("R", (), {"data": []})()
-
-        data = []
-        seen_bids = set()
-        for row in (rec_res.data or []):
-            ann = row.get("bid_announcements") or {}
-            bid_no = ann.get("bid_no") or row.get("bid_no")
-            if bid_no in seen_bids:
-                continue
-            seen_bids.add(bid_no)
-            data.append({
-                **ann,
-                "match_score": row.get("match_score"),
-                "match_grade": row.get("match_grade"),
-                "recommendation_summary": row.get("recommendation_summary"),
-                "recommendation_reasons": row.get("recommendation_reasons") or [],
-                "qualified": row.get("qualification_status") == "pass",
-            })
-        total = len(data)
-
-    else:  # company
-        now_iso = datetime.now(timezone.utc).isoformat()
-        res = (
-            await client.table("bid_announcements")
-            .select(base_fields, count="exact")
-            .gte("deadline_date", now_iso)
-            .order("deadline_date", desc=False)
-            .range(offset, offset + per_page - 1)
-            .execute()
-        )
-        data = res.data or []
-        total = res.count or 0
-
-        if data:
-            bid_nos = [b["bid_no"] for b in data]
-            rec_res = (
-                await client.table("bid_recommendations")
-                .select("bid_no, match_score, match_grade, recommendation_summary, qualification_status")
-                .in_("bid_no", bid_nos)
-                .order("match_score", desc=True)
-                .execute()
-            )
-            rec_map = {}
-            for r in (rec_res.data or []):
-                if r["bid_no"] not in rec_map:
-                    rec_map[r["bid_no"]] = r
-
-            for b in data:
-                rec = rec_map.get(b["bid_no"])
-                if rec:
-                    b["match_score"] = rec.get("match_score")
-                    b["match_grade"] = rec.get("match_grade")
-                    b["recommendation_summary"] = rec.get("recommendation_summary")
-
-    # days_remaining 동적 재계산 (deadline_date 기반)
-    _today = datetime.now(timezone.utc).date()
-    for b in data:
-        dl = b.get("deadline_date")
-        if dl:
-            try:
-                dl_date = datetime.fromisoformat(str(dl).replace("Z", "+00:00")).date()
-                b["days_remaining"] = (dl_date - _today).days
-            except (ValueError, TypeError):
-                pass
-
-    # raw_data에서 첨부파일 + 공고단계 추출
-    for b in data:
-        raw = b.pop("raw_data", None) or {}
-        attachments = []
-        for i in range(1, 11):
-            url = raw.get(f"ntceSpecDocUrl{i}")
-            name = raw.get(f"ntceSpecFileNm{i}")
-            if url and name:
-                attachments.append({"name": name, "url": url})
-        b["attachments"] = attachments
-
-        # 공고 단계: PRE- prefix 또는 ntceKindNm으로 판별
-        bid_no = b.get("bid_no", "")
-        kind = raw.get("ntceKindNm", "")
-        if bid_no.startswith("PRE-") or "사전" in kind or "규격" in kind:
-            b["bid_stage"] = "사전공고"
-        else:
-            b["bid_stage"] = "본공고"
-
-    # 팀 매칭 + 관련성 평가 (팀별 키워드 기반)
-    team_list = []
-    profile_map = {}
-    try:
-        teams_res = (
-            await client.table("teams")
-            .select("id, name")
-            .execute()
-        )
-        team_list = teams_res.data or []
-    except Exception as e:
-        logger.warning(f"팀 조회 실패 (무시): {e}")
-
-    try:
-        profiles_res = (
-            await client.table("team_bid_profiles")
-            .select("team_id, expertise_areas, tech_keywords")
-            .execute()
-        )
-        profile_map = {p["team_id"]: p for p in (profiles_res.data or [])}
-    except Exception as e:
-        logger.warning(f"팀 프로필 조회 실패 (무시): {e}")
-
-    for b in data:
-        title = (b.get("bid_title") or "").lower()
-        content = (b.get("content_text") or "").lower()
-        text = title + " " + content
-
-        matched_teams = []
-        max_score = 0
-
-        for team in team_list:
-            # specialty + profile keywords 합산
-            keywords = []
-            if team.get("specialty"):
-                keywords.extend([k.strip() for k in team["specialty"].split(",") if k.strip()])
-            profile = profile_map.get(team["id"])
-            if profile:
-                keywords.extend(profile.get("expertise_areas") or [])
-                keywords.extend(profile.get("tech_keywords") or [])
-
-            if not keywords:
-                continue
-
-            # 매칭 점수: 키워드 몇 개가 공고에 포함되는지
-            hits = sum(1 for kw in keywords if kw.lower() in text)
-            if hits > 0:
-                matched_teams.append({"name": team["name"], "hits": hits})
-                max_score = max(max_score, hits)
-
-        # 상위 2개 팀
-        matched_teams.sort(key=lambda t: t["hits"], reverse=True)
-        b["related_teams"] = [t["name"] for t in matched_teams[:2]]
-
-        # 관련성 등급
-        if max_score >= 3:
-            b["relevance"] = "적극 추천"
-        elif max_score >= 1:
-            b["relevance"] = "보통"
-        else:
-            b["relevance"] = "낮음"
-
-    # 북마크 정보 (인증된 사용자)
-    # 북마크 + 제안여부 조회
-    if user_id:
-        bm_res = (
-            await client.table("bid_bookmarks")
-            .select("bid_no")
-            .eq("user_id", user_id)
-            .execute()
-        )
-        bm_set = {r["bid_no"] for r in (bm_res.data or [])}
-        for b in data:
-            b["is_bookmarked"] = b["bid_no"] in bm_set
+        result = await _monitor_team_or_division(client, user_id, scope, offset, per_page)
+        if result is None:
+            return ok_list([], total=0, offset=offset, limit=per_page)
+        data, total = result
     else:
-        for b in data:
-            b["is_bookmarked"] = False
+        data, total = await _monitor_company(client, offset, per_page)
 
-    # 제안여부 (DB 우선, 파일 캐시 폴백)
-    # DB에 proposal_status가 이미 있으면 그대로 사용
-    # DB에 없는 건만 파일 캐시에서 보충
-    import json as _status_json
-    from pathlib import Path as _StatusPath
-    status_dir = _StatusPath("data/bid_status")
-    for b in data:
-        # DB 컬럼에서 이미 proposal_status가 내려온 경우
-        if b.get("proposal_status"):
-            continue
-        # 파일 캐시 폴백
-        if status_dir.exists():
-            sf = status_dir / f"{b['bid_no']}.json"
-            if sf.exists():
-                try:
-                    st = _status_json.loads(sf.read_text(encoding="utf-8"))
-                    b["proposal_status"] = st.get("status")
-                    b["decided_by"] = st.get("decided_by")
-                except Exception:
-                    pass
+    await _enrich_monitor_data(client, data, user_id)
 
-    # 제안포기/관련없음 기본 숨김 (show_all=false)
     if not show_all:
         hidden = {"제안포기", "관련없음"}
         data = [b for b in data if b.get("proposal_status") not in hidden]
@@ -836,25 +559,17 @@ async def get_monitored_bids(
     return ok_list(data, total=total, offset=offset, limit=per_page)
 
 
-from pydantic import BaseModel as _BM
-
-class _BidStatusBody(_BM):
-    status: str
-
 @router.put("/bids/{bid_no}/status")
 async def update_bid_status(
     bid_no: str,
-    body: _BidStatusBody,
+    body: BidStatusUpdate,
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """공고 제안여부 상태 변경 (DB + 파일 캐시 이중 저장)"""
-    import json as _json
-    from pathlib import Path
+    if not _BID_NO_PATTERN.match(bid_no):
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     status = body.status
-    valid = ("검토중", "제안결정", "제안포기", "제안유보", "제안착수", "관련없음")
-    if status not in valid:
-        raise InvalidRequestError(f"유효하지 않은 상태입니다. ({'/'.join(valid)})")
 
     # 의사결정자 이름 조회
     decided_by = ""
@@ -890,7 +605,7 @@ async def update_bid_status(
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_file = cache_dir / f"{bid_no}.json"
     cache_file.write_text(
-        _json.dumps({"bid_no": bid_no, "status": status, "decided_by": decided_by}, ensure_ascii=False),
+        json.dumps({"bid_no": bid_no, "status": status, "decided_by": decided_by}, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -908,241 +623,31 @@ async def analyze_bid_for_proposal(
     Stage 1: 전처리 에이전트 — 공고문 핵심 섹션 타겟팅 추출
     Stage 2: TENOPA 수주 심의위원 — 도메인 적합성 0~100점 평가
     """
-    import json as _json
-    from pathlib import Path
+    if not _BID_NO_PATTERN.match(bid_no):
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     cache_dir = Path("data/bid_analyses")
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_file = cache_dir / f"{bid_no}.json"
 
-    # 파일 캐시 확인 (유효한 분석 결과가 있는 캐시만 사용)
-    if cache_file.exists():
+    # 캐시 히트 확인
+    cached = _check_analysis_cache(cache_file, bid_no)
+    if cached is not None:
+        return ok(cached)
+
+    # 공고 데이터 + 본문 로드 (DB → G2B fallback → 첨부파일)
+    bid, content = await _load_bid_content(bid_no)
+
+    # 팀 조직도 로드
+    teams_info_text, valid_team_names = _load_teams_info()
+
+    # AI 통합 분석
+    result = await _run_unified_analysis(bid_no, bid, content, teams_info_text, valid_team_names)
+
+    # 캐시 저장 (score > 0인 경우만)
+    if result["suitability_score"] > 0:
         try:
-            cached = _json.loads(cache_file.read_text(encoding="utf-8"))
-            # rfp_sections 또는 유효한 rfp_summary가 있어야 유효 캐시
-            has_sections = bool(cached.get("rfp_sections"))
-            has_summary = cached.get("rfp_summary") and cached["rfp_summary"] != ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
-            has_score = cached.get("suitability_score") and cached["suitability_score"] > 0
-            if (has_sections or has_summary) and has_score:
-                logger.info(f"[{bid_no}] 분석 캐시 히트")
-                return ok(cached)
-            else:
-                logger.info(f"[{bid_no}] 분석 캐시 무효 (빈 결과) → 재분석")
-                cache_file.unlink(missing_ok=True)
-        except Exception:
-            pass
-
-    bid = None
-    try:
-        client = await get_async_client()
-        res = (
-            await client.table("bid_announcements")
-            .select("bid_title, agency, budget_amount, deadline_date, content_text, raw_data")
-            .eq("bid_no", bid_no)
-            .maybe_single()
-            .execute()
-        )
-        if res:
-            bid = res.data
-    except Exception as e:
-        logger.warning(f"[{bid_no}] DB 조회 실패: {e}")
-
-    raw = {}
-    content = ""
-
-    if bid:
-        raw = bid.get("raw_data") or {}
-        content = bid.get("content_text") or ""
-        if not content:
-            # raw_data에서 content 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl > bidNtceNm
-            content = (
-                raw.get("ntceSpecCn")
-                or raw.get("bidNtceDtlCn")
-                or raw.get("specDocCn")
-                or raw.get("bidNtceDtl")
-                or ""
-            )
-            if not content:
-                parts = [raw.get("bidNtceNm", "")]
-                content = "\n".join(p for p in parts if p)
-    else:
-        # DB에 없는 공고 → G2B API에서 실시간 조회
-        logger.info(f"[{bid_no}] DB 미존재 → G2B 실시간 조회")
-        try:
-            async with G2BService() as g2b:
-                g2b_detail = await g2b.get_bid_detail(bid_no)
-            if g2b_detail:
-                bid = {
-                    "bid_title": g2b_detail.get("bidNtceNm", ""),
-                    "agency": g2b_detail.get("dminsttNm", "") or g2b_detail.get("ntceInsttNm", ""),
-                    "budget_amount": int(g2b_detail.get("presmptPrce", 0) or 0) or None,
-                }
-                raw = g2b_detail
-                # content 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl > bidNtceNm
-                content = (
-                    raw.get("ntceSpecCn")
-                    or raw.get("bidNtceDtlCn")
-                    or raw.get("specDocCn")
-                    or raw.get("bidNtceDtl")
-                    or raw.get("bidNtceNm", "")
-                )
-        except Exception as e:
-            logger.warning(f"[{bid_no}] G2B 조회 실패: {e}")
-
-        if not bid:
-            raise BidNotFoundError(bid_no=bid_no)
-
-    # content 부족 시 첨부파일 다운로드 + Storage 업로드 + 텍스트 추출
-    if len(content.strip()) < 200:
-        try:
-            from app.services.bid_attachment_store import download_bid_attachments
-            attachment_text = await download_bid_attachments(bid_no, raw)
-            if attachment_text:
-                content = attachment_text
-                # 추출 텍스트를 DB에 저장 (다음 조회 시 재추출 불필요)
-                try:
-                    await client.table("bid_announcements").update(
-                        {"content_text": attachment_text}
-                    ).eq("bid_no", bid_no).execute()
-                except Exception:
-                    pass
-                logger.info(f"[{bid_no}] 첨부파일 다운로드+추출 성공 ({len(attachment_text)}자)")
-        except Exception as e:
-            logger.warning(f"[{bid_no}] 첨부파일 처리 실패 (무시): {e}")
-
-    # 팀 조직도 로드 (팀명 + 전문분야 → AI 프롬프트에 주입)
-    teams_info_text = ""
-    valid_team_names: set[str] = set()
-    try:
-        import pathlib as _pathlib
-        _team_file = _pathlib.Path("data/team_structure.json")
-        if _team_file.exists():
-            _team_data = _json.loads(_team_file.read_text(encoding="utf-8"))
-            _lines = []
-            for t in _team_data.get("teams", []):
-                name = t.get("name", "")
-                div = t.get("division", "")
-                specs = t.get("specializations", [])
-                if name and specs:
-                    valid_team_names.add(name)
-                    _lines.append(f"- {name} ({div}): {', '.join(specs)}")
-            teams_info_text = "\n".join(_lines)
-    except Exception:
-        pass
-
-    # ── 통합 단일 호출: 전처리 + TENOPA 리뷰 (Claude 1회) ──
-    import asyncio
-    from anthropic import AsyncAnthropic
-    from app.prompts.bid_review import build_unified_analysis_system, UNIFIED_ANALYSIS_USER
-
-    rfp_sections: list[dict] = []
-    rfp_summary: list[str] = []
-    rfp_period: str = ""
-    score = 0
-    verdict = "제외"
-    fit_level = "보통"
-    positive: list[str] = []
-    negative: list[str] = []
-    action_plan = ""
-    recommended_teams: list[str] = []
-
-    if content.strip():
-        try:
-            ai_client = AsyncAnthropic(api_key=settings.anthropic_api_key)
-            # 팀 조직도를 포함한 시스템 프롬프트 동적 생성
-            system_prompt = build_unified_analysis_system(teams_info=teams_info_text)
-            user_msg = UNIFIED_ANALYSIS_USER.format(
-                bid_no=bid_no,
-                bid_title=bid.get("bid_title", ""),
-                agency=bid.get("agency", ""),
-                content_text=content[:8000],
-            )
-            response = await asyncio.wait_for(
-                ai_client.messages.create(
-                    model="claude-sonnet-4-5-20250929",
-                    max_tokens=2000,
-                    timeout=40.0,
-                    system=system_prompt,
-                    messages=[{"role": "user", "content": user_msg}],
-                ),
-                timeout=45,
-            )
-            text = response.content[0].text
-
-            # JSON 파싱
-            start = text.find("{")
-            end = text.rfind("}") + 1
-            if start >= 0 and end > start:
-                data = _json.loads(text[start:end])
-
-                # summary 부분
-                s = data.get("summary", {})
-                rfp_period = s.get("period", "")
-                if s.get("purpose"):
-                    rfp_sections.append({"label": "목적", "value": s["purpose"]})
-                    rfp_summary.append(f"목적: {s['purpose']}")
-                if s.get("core_tasks"):
-                    rfp_sections.append({"label": "주요 과업", "items": s["core_tasks"]})
-                    for t in s["core_tasks"]:
-                        rfp_summary.append(f"과업: {t}")
-
-                # review 부분
-                r = data.get("review", {})
-                score = max(0, min(100, int(r.get("suitability_score", 0))))
-                verdict = r.get("verdict", "제외")
-                if verdict not in ("추천", "검토 필요", "제외"):
-                    verdict = "검토 필요" if score >= 40 else "제외"
-                positive = r.get("strengths", [])
-                negative = r.get("risks", [])
-                action_plan = r.get("action_plan", "")
-
-                if score >= 80:
-                    fit_level = "적극 추천"
-                elif score >= 70:
-                    fit_level = "추천"
-                elif score >= 40:
-                    fit_level = "보통"
-                else:
-                    fit_level = "낮음"
-
-                # AI 추천팀 파싱 — 조직도에 있는 실제 팀명만 허용
-                ai_teams = r.get("recommended_teams", [])
-                if isinstance(ai_teams, list) and valid_team_names:
-                    recommended_teams = [t for t in ai_teams if t in valid_team_names][:2]
-                elif isinstance(ai_teams, list):
-                    recommended_teams = ai_teams[:2]
-
-                logger.info(f"[{bid_no}] 통합 분석 완료: {score}점 ({verdict}), 추천팀: {recommended_teams}")
-            else:
-                logger.warning(f"[{bid_no}] 통합 분석 JSON 미발견")
-
-        except asyncio.TimeoutError:
-            logger.warning(f"[{bid_no}] 통합 분석 타임아웃 (45초)")
-        except Exception as e:
-            logger.warning(f"[{bid_no}] 통합 분석 실패: {e}")
-
-    if not rfp_summary:
-        rfp_summary = ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
-    if score == 0:
-        negative = negative or ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
-
-    result = {
-        "rfp_summary": rfp_summary,
-        "rfp_sections": rfp_sections,
-        "rfp_period": rfp_period,
-        "fit_level": fit_level,
-        "positive": positive,
-        "negative": negative,
-        "recommended_teams": recommended_teams,
-        "suitability_score": score,
-        "verdict": verdict,
-        "action_plan": action_plan,
-    }
-
-    # 캐시 저장 (score=0 부분 결과는 캐시하지 않아 다음에 재시도)
-    if score > 0:
-        try:
-            cache_file.write_text(_json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+            cache_file.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             logger.info(f"[{bid_no}] 분석 캐시 저장 완료")
         except Exception as e:
             logger.warning(f"분석 캐시 저장 실패 (무시): {e}")
@@ -1158,6 +663,9 @@ async def toggle_bookmark(
     current_user: CurrentUser = Depends(get_current_user),
 ):
     """공고 북마크 토글"""
+    if not _BID_NO_PATTERN.match(bid_no):
+        raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
+
     client = await get_async_client()
     user_id = current_user.id
 
@@ -1189,9 +697,9 @@ async def get_bid_detail(
         raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     # DB 조회 시도
+    client = await get_async_client()
     res_data = None
     try:
-        client = await get_async_client()
         res = (
             await client.table("bid_announcements")
             .select("*")
@@ -1213,14 +721,7 @@ async def get_bid_detail(
                 raise BidNotFoundError(bid_no=bid_no)
 
             # G2B 응답 → bid_announcements 형태로 매핑
-            # content_text 추출: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl
-            content_text = (
-                g2b_detail.get("ntceSpecCn")
-                or g2b_detail.get("bidNtceDtlCn")
-                or g2b_detail.get("specDocCn")
-                or g2b_detail.get("bidNtceDtl")
-                or None
-            )
+            content_text = _extract_content_from_raw(g2b_detail) or None
             row = {
                 "bid_no": bid_no,
                 "bid_title": g2b_detail.get("bidNtceNm", ""),
@@ -1236,7 +737,6 @@ async def get_bid_detail(
 
             # DB 저장 시도 (실패해도 무시)
             try:
-                client = await get_async_client()
                 await client.table("bid_announcements").upsert(row, on_conflict="bid_no").execute()
                 res = (
                     await client.table("bid_announcements")
@@ -1373,51 +873,520 @@ async def download_bid_attachment(
 # 이 파일의 레거시 라우트는 2026-03-25 제거됨 (라우트 충돌 해소)
 
 
-# ── 내부 헬퍼 ────────────────────────────────────────────────
+# ── 모니터 스코프별 헬퍼 ─────────────────────────────────────
 
-async def _extract_text_from_attachments(raw: dict) -> str:
-    """raw_data에서 첨부파일 URL을 찾아 텍스트 추출 (제안요청서/과업지시서 우선)"""
-    from app.services.rfp_parser import parse_rfp_from_url
+_MONITOR_BASE_FIELDS = (
+    "bid_no, bid_title, agency, budget_amount, deadline_date, "
+    "days_remaining, bid_type, content_text, raw_data"
+)
 
-    # 1. 첨부파일 URL + 파일명 수집
-    attachments = []
-    for i in range(1, 11):
-        url = raw.get(f"ntceSpecDocUrl{i}")
-        name = raw.get(f"ntceSpecFileNm{i}", "")
-        if url:
-            attachments.append({"url": url, "name": name})
 
-    if not attachments:
-        return ""
+async def _monitor_my(client, user_id: str, offset: int, per_page: int) -> tuple[list, int]:
+    """my 스코프: 북마크 + 관심분야 매칭 공고"""
+    bookmarked = (
+        await client.table("bid_bookmarks")
+        .select("bid_no")
+        .eq("user_id", user_id)
+        .execute()
+    )
+    bookmarked_nos = {b["bid_no"] for b in (bookmarked.data or [])}
 
-    # 2. 우선순위 정렬: 제안요청서 > 과업지시서 > 공고문 > 기타
-    def priority(att):
-        lower = att["name"].lower()
-        if "제안요청" in lower or "rfp" in lower:
-            return 0
-        if "과업지시" in lower or "과업내용" in lower:
-            return 1
-        if "공고" in lower:
-            return 2
-        return 3
+    user_res = (
+        await client.table("users")
+        .select("interests, team_id")
+        .eq("id", user_id)
+        .maybe_single()
+        .execute()
+    )
+    user_data = user_res.data or {}
+    interests = user_data.get("interests") or []
+    now_iso = datetime.now(timezone.utc).isoformat()
 
-    attachments.sort(key=priority)
+    matched_bids = []
+    if interests:
+        or_filter = ",".join(
+            f"bid_title.ilike.%{_escape_like(kw)}%" for kw in interests[:5]
+        )
+        kw_res = (
+            await client.table("bid_announcements")
+            .select(_MONITOR_BASE_FIELDS)
+            .or_(or_filter)
+            .gte("deadline_date", now_iso)
+            .order("deadline_date", desc=False)
+            .limit(50)
+            .execute()
+        )
+        matched_bids.extend(kw_res.data or [])
 
-    # 3. 상위 2개 파일만 시도 (시간/토큰 절약)
-    extracted_parts = []
-    for att in attachments[:2]:
-        ext = att["name"].rsplit(".", 1)[-1].lower() if "." in att["name"] else "pdf"
-        if ext not in ("pdf", "docx", "hwpx", "hwp"):
+    if bookmarked_nos:
+        bm_res = (
+            await client.table("bid_announcements")
+            .select(_MONITOR_BASE_FIELDS)
+            .in_("bid_no", list(bookmarked_nos))
+            .order("days_remaining", desc=False)
+            .execute()
+        )
+        matched_bids.extend(bm_res.data or [])
+
+    seen: set[str] = set()
+    unique = []
+    for b in matched_bids:
+        if b["bid_no"] not in seen:
+            seen.add(b["bid_no"])
+            b["is_bookmarked"] = b["bid_no"] in bookmarked_nos
+            unique.append(b)
+
+    unique.sort(key=lambda x: (not x.get("is_bookmarked", False), x.get("days_remaining") or 999))
+    return unique[offset:offset + per_page], len(unique)
+
+
+async def _monitor_team_or_division(
+    client, user_id: str, scope: str, offset: int, per_page: int
+) -> tuple[list, int] | None:
+    """team/division 스코프: AI 추천 공고. 팀/본부 미소속이면 None 반환."""
+    user_res = (
+        await client.table("users")
+        .select("team_id, division_id")
+        .eq("id", user_id)
+        .maybe_single()
+        .execute()
+    )
+    user_data = user_res.data or {}
+
+    try:
+        if scope == "team":
+            team_id = user_data.get("team_id")
+            if not team_id:
+                return None
+            rec_res = (
+                await client.table("bid_recommendations")
+                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                .eq("team_id", team_id)
+                .neq("qualification_status", "fail")
+                .order("match_score", desc=True)
+                .range(offset, offset + per_page - 1)
+                .execute()
+            )
+        else:
+            division_id = user_data.get("division_id")
+            if not division_id:
+                return None
+            teams_res = (
+                await client.table("teams")
+                .select("id")
+                .eq("division_id", division_id)
+                .execute()
+            )
+            team_ids = [t["id"] for t in (teams_res.data or [])]
+            if not team_ids:
+                return None
+            rec_res = (
+                await client.table("bid_recommendations")
+                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                .in_("team_id", team_ids)
+                .neq("qualification_status", "fail")
+                .order("match_score", desc=True)
+                .range(offset, offset + per_page - 1)
+                .execute()
+            )
+    except Exception as e:
+        logger.warning(f"bid_recommendations 조회 실패 ({scope}): {e}")
+        rec_res = type("R", (), {"data": []})()
+
+    data = []
+    seen_bids: set[str] = set()
+    for row in (rec_res.data or []):
+        ann = row.get("bid_announcements") or {}
+        bid_no = ann.get("bid_no") or row.get("bid_no")
+        if bid_no in seen_bids:
             continue
+        seen_bids.add(bid_no)
+        data.append({
+            **ann,
+            "match_score": row.get("match_score"),
+            "match_grade": row.get("match_grade"),
+            "recommendation_summary": row.get("recommendation_summary"),
+            "recommendation_reasons": row.get("recommendation_reasons") or [],
+            "qualified": row.get("qualification_status") == "pass",
+        })
+    return data, len(data)
+
+
+async def _monitor_company(client, offset: int, per_page: int) -> tuple[list, int]:
+    """company 스코프: 전체 마감 전 공고 + AI 추천 점수 병합"""
+    now_iso = datetime.now(timezone.utc).isoformat()
+    ann_res = (
+        await client.table("bid_announcements")
+        .select(_MONITOR_BASE_FIELDS, count="exact")
+        .gte("deadline_date", now_iso)
+        .order("deadline_date", desc=False)
+        .range(offset, offset + per_page - 1)
+        .execute()
+    )
+    data = ann_res.data or []
+    total = ann_res.count or 0
+
+    if data:
+        bid_nos = [b["bid_no"] for b in data]
+        rec_res = (
+            await client.table("bid_recommendations")
+            .select("bid_no, match_score, match_grade, recommendation_summary, qualification_status")
+            .in_("bid_no", bid_nos)
+            .order("match_score", desc=True)
+            .execute()
+        )
+        rec_map: dict[str, dict] = {}
+        for r in (rec_res.data or []):
+            if r["bid_no"] not in rec_map:
+                rec_map[r["bid_no"]] = r
+
+        for b in data:
+            rec = rec_map.get(b["bid_no"])
+            if rec:
+                b["match_score"] = rec.get("match_score")
+                b["match_grade"] = rec.get("match_grade")
+                b["recommendation_summary"] = rec.get("recommendation_summary")
+
+    return data, total
+
+
+async def _enrich_monitor_data(client, data: list[dict], user_id: str | None) -> None:
+    """모니터 공통 후처리: days_remaining 재계산, raw_data 추출, 팀매칭, 북마크, 제안여부"""
+    # days_remaining 동적 재계산
+    _today = datetime.now(timezone.utc).date()
+    for b in data:
+        dl = b.get("deadline_date")
+        if dl:
+            try:
+                dl_date = datetime.fromisoformat(str(dl).replace("Z", "+00:00")).date()
+                b["days_remaining"] = (dl_date - _today).days
+            except (ValueError, TypeError):
+                pass
+
+    # raw_data → 첨부파일 + 공고단계 추출
+    for b in data:
+        raw = b.pop("raw_data", None) or {}
+        attachments = []
+        for i in range(1, 11):
+            url = raw.get(f"ntceSpecDocUrl{i}")
+            name = raw.get(f"ntceSpecFileNm{i}")
+            if url and name:
+                attachments.append({"name": name, "url": url})
+        b["attachments"] = attachments
+
+        bid_no = b.get("bid_no", "")
+        kind = raw.get("ntceKindNm", "")
+        if bid_no.startswith("PRE-") or "사전" in kind or "규격" in kind:
+            b["bid_stage"] = "사전공고"
+        else:
+            b["bid_stage"] = "본공고"
+
+    # 팀 매칭 + 관련성 평가
+    team_list = []
+    profile_map: dict[str, dict] = {}
+    try:
+        teams_res = await client.table("teams").select("id, name").execute()
+        team_list = teams_res.data or []
+    except Exception as e:
+        logger.warning(f"팀 조회 실패 (무시): {e}")
+
+    try:
+        profiles_res = (
+            await client.table("team_bid_profiles")
+            .select("team_id, expertise_areas, tech_keywords")
+            .execute()
+        )
+        profile_map = {p["team_id"]: p for p in (profiles_res.data or [])}
+    except Exception as e:
+        logger.warning(f"팀 프로필 조회 실패 (무시): {e}")
+
+    for b in data:
+        text = ((b.get("bid_title") or "") + " " + (b.get("content_text") or "")).lower()
+        matched_teams = []
+        max_score = 0
+
+        for team in team_list:
+            keywords = []
+            if team.get("specialty"):
+                keywords.extend([k.strip() for k in team["specialty"].split(",") if k.strip()])
+            profile = profile_map.get(team["id"])
+            if profile:
+                keywords.extend(profile.get("expertise_areas") or [])
+                keywords.extend(profile.get("tech_keywords") or [])
+            if not keywords:
+                continue
+
+            hits = sum(1 for kw in keywords if kw.lower() in text)
+            if hits > 0:
+                matched_teams.append({"name": team["name"], "hits": hits})
+                max_score = max(max_score, hits)
+
+        matched_teams.sort(key=lambda t: t["hits"], reverse=True)
+        b["related_teams"] = [t["name"] for t in matched_teams[:2]]
+        b["relevance"] = "적극 추천" if max_score >= 3 else ("보통" if max_score >= 1 else "낮음")
+
+    # 북마크 정보
+    if user_id:
+        bm_res = (
+            await client.table("bid_bookmarks")
+            .select("bid_no")
+            .eq("user_id", user_id)
+            .execute()
+        )
+        bm_set = {r["bid_no"] for r in (bm_res.data or [])}
+        for b in data:
+            b.setdefault("is_bookmarked", b["bid_no"] in bm_set)
+    else:
+        for b in data:
+            b.setdefault("is_bookmarked", False)
+
+    # 제안여부 (DB 우선, 파일 캐시 폴백)
+    status_dir = Path("data/bid_status")
+    for b in data:
+        if b.get("proposal_status"):
+            continue
+        if status_dir.exists():
+            sf = status_dir / f"{b['bid_no']}.json"
+            if sf.exists():
+                try:
+                    st = json.loads(sf.read_text(encoding="utf-8"))
+                    b["proposal_status"] = st.get("status")
+                    b["decided_by"] = st.get("decided_by")
+                except Exception:
+                    pass
+
+
+# ── 분석 헬퍼 ────────────────────────────────────────────────
+
+
+def _extract_content_from_raw(raw: dict) -> str:
+    """raw_data에서 공고 본문 텍스트 추출 (우선순위: ntceSpecCn > bidNtceDtlCn > specDocCn > bidNtceDtl > bidNtceNm)"""
+    return (
+        raw.get("ntceSpecCn")
+        or raw.get("bidNtceDtlCn")
+        or raw.get("specDocCn")
+        or raw.get("bidNtceDtl")
+        or raw.get("bidNtceNm", "")
+    )
+
+
+def _check_analysis_cache(cache_file, bid_no: str) -> dict | None:
+    """유효한 분석 캐시가 있으면 반환, 없으면 None"""
+    if not cache_file.exists():
+        return None
+    try:
+        cached = json.loads(cache_file.read_text(encoding="utf-8"))
+        has_sections = bool(cached.get("rfp_sections"))
+        has_summary = cached.get("rfp_summary") and cached["rfp_summary"] != [
+            "공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."
+        ]
+        has_score = cached.get("suitability_score") and cached["suitability_score"] > 0
+        if (has_sections or has_summary) and has_score:
+            logger.info(f"[{bid_no}] 분석 캐시 히트")
+            return cached
+        logger.info(f"[{bid_no}] 분석 캐시 무효 (빈 결과) → 재분석")
+        cache_file.unlink(missing_ok=True)
+    except Exception:
+        pass
+    return None
+
+
+async def _load_bid_content(bid_no: str) -> tuple[dict, str]:
+    """공고 데이터 + 본문 텍스트 로드 (DB → G2B fallback → 첨부파일 추출)"""
+    bid = None
+    client = await get_async_client()
+
+    try:
+        res = (
+            await client.table("bid_announcements")
+            .select("bid_title, agency, budget_amount, deadline_date, content_text, raw_data")
+            .eq("bid_no", bid_no)
+            .maybe_single()
+            .execute()
+        )
+        if res:
+            bid = res.data
+    except Exception as e:
+        logger.warning(f"[{bid_no}] DB 조회 실패: {e}")
+
+    raw = {}
+    content = ""
+
+    if bid:
+        raw = bid.get("raw_data") or {}
+        content = bid.get("content_text") or ""
+        if not content:
+            content = _extract_content_from_raw(raw)
+            if not content:
+                content = raw.get("bidNtceNm", "")
+    else:
+        logger.info(f"[{bid_no}] DB 미존재 → G2B 실시간 조회")
         try:
-            text = await parse_rfp_from_url(att["url"], ext)
-            if text and len(text.strip()) > 100:
-                extracted_parts.append(text)
-        except Exception:
-            continue
+            async with G2BService() as g2b:
+                g2b_detail = await g2b.get_bid_detail(bid_no)
+            if g2b_detail:
+                bid = {
+                    "bid_title": g2b_detail.get("bidNtceNm", ""),
+                    "agency": g2b_detail.get("dminsttNm", "") or g2b_detail.get("ntceInsttNm", ""),
+                    "budget_amount": int(g2b_detail.get("presmptPrce", 0) or 0) or None,
+                }
+                raw = g2b_detail
+                content = _extract_content_from_raw(raw)
+        except Exception as e:
+            logger.warning(f"[{bid_no}] G2B 조회 실패: {e}")
 
-    return "\n\n".join(extracted_parts)
+        if not bid:
+            raise BidNotFoundError(bid_no=bid_no)
 
+    # 본문 부족 시 첨부파일 다운로드 + 텍스트 추출
+    if len(content.strip()) < 200:
+        try:
+            attachment_text = await download_bid_attachments(bid_no, raw)
+            if attachment_text:
+                content = attachment_text
+                try:
+                    await client.table("bid_announcements").update(
+                        {"content_text": attachment_text}
+                    ).eq("bid_no", bid_no).execute()
+                except Exception:
+                    pass
+                logger.info(f"[{bid_no}] 첨부파일 다운로드+추출 성공 ({len(attachment_text)}자)")
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 첨부파일 처리 실패 (무시): {e}")
+
+    return bid, content
+
+
+def _load_teams_info() -> tuple[str, set[str]]:
+    """팀 조직도 파일에서 팀명 + 전문분야 로드"""
+    teams_info_text = ""
+    valid_team_names: set[str] = set()
+    try:
+        team_file = Path("data/team_structure.json")
+        if team_file.exists():
+            team_data = json.loads(team_file.read_text(encoding="utf-8"))
+            lines = []
+            for t in team_data.get("teams", []):
+                name = t.get("name", "")
+                div = t.get("division", "")
+                specs = t.get("specializations", [])
+                if name and specs:
+                    valid_team_names.add(name)
+                    lines.append(f"- {name} ({div}): {', '.join(specs)}")
+            teams_info_text = "\n".join(lines)
+    except Exception:
+        pass
+    return teams_info_text, valid_team_names
+
+
+async def _run_unified_analysis(
+    bid_no: str,
+    bid: dict,
+    content: str,
+    teams_info_text: str,
+    valid_team_names: set[str],
+) -> dict:
+    """Claude 통합 분석 실행 → 결과 dict 반환"""
+    rfp_sections: list[dict] = []
+    rfp_summary: list[str] = []
+    rfp_period = ""
+    score = 0
+    verdict = "제외"
+    fit_level = "보통"
+    positive: list[str] = []
+    negative: list[str] = []
+    action_plan = ""
+    recommended_teams: list[str] = []
+
+    if content.strip():
+        try:
+            ai_client = _get_claude_client()
+            system_prompt = build_unified_analysis_system(teams_info=teams_info_text)
+            user_msg = UNIFIED_ANALYSIS_USER.format(
+                bid_no=bid_no,
+                bid_title=bid.get("bid_title", ""),
+                agency=bid.get("agency", ""),
+                content_text=content[:8000],
+            )
+            response = await asyncio.wait_for(
+                ai_client.messages.create(
+                    model=settings.claude_model,
+                    max_tokens=2000,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_msg}],
+                ),
+                timeout=45,
+            )
+            text = response.content[0].text
+
+            start = text.find("{")
+            end = text.rfind("}") + 1
+            if start >= 0 and end > start:
+                parsed = json.loads(text[start:end])
+
+                s = parsed.get("summary", {})
+                rfp_period = s.get("period", "")
+                if s.get("purpose"):
+                    rfp_sections.append({"label": "목적", "value": s["purpose"]})
+                    rfp_summary.append(f"목적: {s['purpose']}")
+                if s.get("core_tasks"):
+                    rfp_sections.append({"label": "주요 과업", "items": s["core_tasks"]})
+                    for t in s["core_tasks"]:
+                        rfp_summary.append(f"과업: {t}")
+
+                r = parsed.get("review", {})
+                score = max(0, min(100, int(r.get("suitability_score", 0))))
+                verdict = r.get("verdict", "제외")
+                if verdict not in ("추천", "검토 필요", "제외"):
+                    verdict = "검토 필요" if score >= 40 else "제외"
+                positive = r.get("strengths", [])
+                negative = r.get("risks", [])
+                action_plan = r.get("action_plan", "")
+
+                if score >= 80:
+                    fit_level = "적극 추천"
+                elif score >= 70:
+                    fit_level = "추천"
+                elif score >= 40:
+                    fit_level = "보통"
+                else:
+                    fit_level = "낮음"
+
+                ai_teams = r.get("recommended_teams", [])
+                if isinstance(ai_teams, list) and valid_team_names:
+                    recommended_teams = [t for t in ai_teams if t in valid_team_names][:2]
+                elif isinstance(ai_teams, list):
+                    recommended_teams = ai_teams[:2]
+
+                logger.info(f"[{bid_no}] 통합 분석 완료: {score}점 ({verdict}), 추천팀: {recommended_teams}")
+            else:
+                logger.warning(f"[{bid_no}] 통합 분석 JSON 미발견")
+
+        except asyncio.TimeoutError:
+            logger.warning(f"[{bid_no}] 통합 분석 타임아웃 (45초)")
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 통합 분석 실패: {e}")
+
+    if not rfp_summary:
+        rfp_summary = ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
+    if score == 0:
+        negative = negative or ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
+
+    return {
+        "rfp_summary": rfp_summary,
+        "rfp_sections": rfp_sections,
+        "rfp_period": rfp_period,
+        "fit_level": fit_level,
+        "positive": positive,
+        "negative": negative,
+        "recommended_teams": recommended_teams,
+        "suitability_score": score,
+        "verdict": verdict,
+        "action_plan": action_plan,
+    }
+
+
+# ── 내부 헬퍼 ────────────────────────────────────────────────
 
 async def _invalidate_recommendations_cache(client, team_id: str) -> None:
     """팀 프로필 변경 시 bid_recommendations 캐시 즉시 만료"""

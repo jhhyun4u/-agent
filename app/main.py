@@ -253,6 +253,10 @@ app.include_router(templates_router)
 from app.api.routes_stats import router as stats_router
 app.include_router(stats_router)
 
+# 랜딩페이지 공개 통계: /api/public/*
+from app.api.routes_public import router as public_router
+app.include_router(public_router)
+
 # RFP 일정 관리: /api/calendar/*
 from app.api.routes_calendar import router as calendar_router
 app.include_router(calendar_router)
@@ -274,7 +278,7 @@ app.include_router(bids_router)
 
 @app.get("/health")
 async def health_check():
-    """시스템 상태 확인 (OPS-02: DB 연결 포함)"""
+    """시스템 상태 확인 (OPS-02: DB 연결 + 자가검증 요약)"""
     health = {"status": "ok", "version": "4.0.0"}
     try:
         from app.utils.supabase_client import get_async_client
@@ -284,6 +288,34 @@ async def health_check():
     except Exception as e:
         health["status"] = "degraded"
         health["database"] = f"error: {type(e).__name__}"
+        return health
+
+    # 최근 자가검증 요약
+    try:
+        logs = await client.table("health_check_logs").select(
+            "check_id, status, checked_at"
+        ).order("checked_at", desc=True).limit(30).execute()
+
+        latest: dict[str, dict] = {}
+        for row in (logs.data or []):
+            cid = row["check_id"]
+            if cid not in latest:
+                latest[cid] = {"status": row["status"], "at": row["checked_at"]}
+
+        fail_count = sum(1 for v in latest.values() if v["status"] == "fail")
+        health["checks"] = {
+            "total": len(latest),
+            "fail": fail_count,
+            "last_run": logs.data[0]["checked_at"] if logs.data else None,
+        }
+        if fail_count > 0:
+            health["status"] = "degraded"
+            health["checks"]["failing"] = [
+                k for k, v in latest.items() if v["status"] == "fail"
+            ]
+    except Exception:
+        pass
+
     return health
 
 

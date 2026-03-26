@@ -73,6 +73,11 @@ class Settings(BaseSettings):
     # Teams Webhook (기본값, 팀별 webhook은 teams 테이블)
     teams_webhook_url: str = ""
 
+    # 이메일 알림 (Microsoft Graph API)
+    email_enabled: bool = False
+    email_sender: str = ""  # noreply@tenopa.co.kr 또는 공유 사서함
+    email_graph_scope: str = "https://graph.microsoft.com/.default"
+
     # 파일 업로드 설정
     max_file_size_mb: int = 50
     allowed_file_extensions: list[str] = [".pdf", ".docx", ".hwp", ".hwpx", ".txt", ".pptx"]
@@ -105,6 +110,14 @@ class Settings(BaseSettings):
 
     # 출력 디렉토리
     output_dir: str = "output"
+
+    # 자가검증 (Health Check)
+    health_check_enabled: bool = True
+    health_suppress_minutes: int = 30
+    health_resource_warn_pct: int = 75
+    health_resource_fail_pct: int = 90
+    health_mv_max_hours: int = 24
+    health_stale_session_hours: int = 2
 
     # 제안업체명 (HWPX 표지용)
     proposer_name: str = ""

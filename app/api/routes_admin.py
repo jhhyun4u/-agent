@@ -27,7 +27,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user, require_role
+from app.api.deps import get_current_user, get_current_user_or_none, require_role
 from app.api.response import ok, ok_list
 from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
@@ -465,6 +465,74 @@ async def update_capability_inline(
     return ok({"capability_id": capability_id})
 
 
+# ── 프론트엔드 에러 수집 (MON-10) ──
+
+class ClientErrorReport(BaseModel):
+    url: str
+    error: str
+    stack: str | None = None
+    metadata: dict | None = None
+
+
+@router.post("/api/client-errors", status_code=201, response_model=StatusResponse)
+async def report_client_error(
+    body: ClientErrorReport,
+    user: CurrentUser | None = Depends(get_current_user_or_none),
+):
+    """프론트엔드 JS 에러 수집."""
+    client = await get_async_client()
+    await client.table("client_error_logs").insert({
+        "user_id": user.id if user else None,
+        "url": body.url[:500],
+        "error": body.error[:2000],
+        "stack": (body.stack or "")[:5000],
+        "metadata": body.metadata or {},
+    }).execute()
+    return ok({"status": "recorded"})
+
+
+# ── 모니터링 API (MON-08, MON-09) ──
+
+@router.get("/api/admin/monitoring/node-health", response_model=ItemsResponse)
+async def get_node_health(
+    user: CurrentUser = Depends(require_role("admin")),
+):
+    """노드별 헬스 메트릭 조회 (mv_node_health)."""
+    client = await get_async_client()
+    # MV 리프레시 (concurrent)
+    try:
+        await client.rpc("refresh_materialized_view_concurrently", {
+            "view_name": "mv_node_health",
+        }).execute()
+    except Exception as e:
+        logger.debug(f"MV 리프레시 실패 (stale 데이터 반환): {e}")
+
+    result = await client.table("mv_node_health").select("*").execute()
+    return ok_list(result.data or [])
+
+
+@router.get("/api/admin/monitoring/recent-errors", response_model=ItemsResponse)
+async def get_recent_errors(
+    limit: int = Query(20, le=100),
+    node: str | None = Query(None),
+    user: CurrentUser = Depends(require_role("admin")),
+):
+    """최근 에러 로그 조회 (ai_task_logs status='error')."""
+    client = await get_async_client()
+    query = (
+        client.table("ai_task_logs")
+        .select("id, proposal_id, step, error_message, duration_ms, model, created_at")
+        .eq("status", "error")
+        .order("created_at", desc=True)
+        .limit(limit)
+    )
+    if node:
+        query = query.eq("step", node)
+
+    result = await query.execute()
+    return ok_list(result.data or [])
+
+
 # ── 헬퍼 ──
 
 def _count_by(data: list[dict], key: str) -> dict[str, int]:
@@ -474,3 +542,62 @@ def _count_by(data: list[dict], key: str) -> dict[str, int]:
         val = d.get(key, "unknown")
         counts[val] = counts.get(val, 0) + 1
     return counts
+
+
+# ── 자가검증 관리자 API ──────────────────────────────────────
+
+
+@router.get("/api/admin/health/detail")
+async def health_detail(
+    category: str | None = Query(default=None),
+    status: str | None = Query(default=None),
+    hours: int = Query(default=24, ge=1, le=168),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    """최근 검증 이력 상세 (관리자 전용)"""
+    await require_role(current_user, "admin")
+    client = await get_async_client()
+    since = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+
+    query = client.table("health_check_logs").select("*").gte("checked_at", since)
+    if category:
+        query = query.eq("category", category)
+    if status:
+        query = query.eq("status", status)
+
+    res = await query.order("checked_at", desc=True).limit(200).execute()
+    return ok(res.data or [])
+
+
+@router.post("/api/admin/health/run")
+async def health_run(
+    category: str | None = Query(default=None),
+    check_id: str | None = Query(default=None),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    """검증 수동 실행 (관리자 전용)"""
+    await require_role(current_user, "admin")
+
+    from app.services.health_checker import HealthCheckRunner
+    from app.services.alert_manager import AlertManager
+
+    runner = HealthCheckRunner()
+    alerter = AlertManager()
+
+    if check_id:
+        results = [await runner.run_single(check_id)]
+    elif category:
+        results = await runner.run_category(category)
+    else:
+        results = await runner.run_all()
+
+    await alerter.handle_results(results)
+
+    return ok([{
+        "check_id": r.check_id,
+        "category": r.category,
+        "status": r.status,
+        "message": r.message,
+        "auto_recovered": r.auto_recovered,
+        "duration_ms": round(r.duration_ms, 1),
+    } for r in results])
