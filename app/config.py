@@ -85,6 +85,11 @@ class Settings(BaseSettings):
     # Storage 버킷
     storage_bucket_proposals: str = "proposal-files"
     storage_bucket_attachments: str = "bid-attachments"
+    storage_bucket_intranet: str = "intranet-documents"
+
+    # 인트라넷 문서 수집
+    intranet_max_file_size_mb: int = 100
+    intranet_max_batch_size: int = 20
 
     # Timeout (초)
     claude_api_timeout: int = 40

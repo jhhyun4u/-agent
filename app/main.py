@@ -199,6 +199,10 @@ app.include_router(admin_router)
 from app.api.routes_kb import router as kb_router
 app.include_router(kb_router)
 
+# 인트라넷 KB 마이그레이션
+from app.api.routes_intranet import router as intranet_router
+app.include_router(intranet_router)
+
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
 app.include_router(analytics_router)
