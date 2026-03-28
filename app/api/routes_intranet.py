@@ -1,15 +1,17 @@
 """인트라넷 KB 마이그레이션 API.
 
 마이그레이션 스크립트 및 프론트엔드에서 호출하는 엔드포인트.
+동기화 로그 추적 API 포함 (매월 자동 동기화 지원).
 """
 
 import logging
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query, UploadFile
 
 from app.api.deps import get_current_user, require_role
 from app.config import settings
-from app.exceptions import InvalidRequestError, NotFoundError
+from app.exceptions import InvalidRequestError, ResourceNotFoundError
 from app.services.document_ingestion import (
     compute_file_hash,
     import_project,
@@ -29,6 +31,7 @@ router = APIRouter(prefix="/api/kb/intranet", tags=["인트라넷 KB"])
 @router.post("/import-project")
 async def import_project_endpoint(
     body: dict,
+    upsert: bool = Query(False, description="True면 기존 레코드 업데이트 (증분 동기화)"),
     user=Depends(require_role("admin")),
 ):
     """인트라넷 프로젝트 메타데이터 임포트 + KB 자동 시드."""
@@ -37,7 +40,7 @@ async def import_project_endpoint(
     if "legacy_idx" not in body:
         raise InvalidRequestError("legacy_idx는 필수입니다.")
 
-    result = await import_project(user.org_id, body)
+    result = await import_project(user.org_id, body, upsert=upsert)
     return result
 
 
@@ -66,7 +69,7 @@ async def upload_file_endpoint(
         .execute()
     )
     if not proj.data:
-        raise NotFoundError("프로젝트를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("프로젝트를 찾을 수 없습니다.")
 
     # 파일 검증
     content = await file.read()
@@ -185,7 +188,7 @@ async def get_project_detail(
         .execute()
     )
     if not proj.data:
-        raise NotFoundError("프로젝트를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("프로젝트를 찾을 수 없습니다.")
 
     docs = await (
         client.table("intranet_documents")
@@ -216,7 +219,7 @@ async def get_document_detail(
         .execute()
     )
     if not doc.data:
-        raise NotFoundError("문서를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("문서를 찾을 수 없습니다.")
 
     chunks = await (
         client.table("document_chunks")
@@ -247,7 +250,7 @@ async def reprocess_document(
         .execute()
     )
     if not doc.data:
-        raise NotFoundError("문서를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("문서를 찾을 수 없습니다.")
 
     # 텍스트 초기화 → 재추출 유도
     await (
@@ -309,4 +312,109 @@ async def get_migration_stats(user=Depends(get_current_user)):
         "projects_by_status": project_by_status,
         "documents_by_type": doc_by_type,
         "documents_by_processing": doc_by_processing,
+    }
+
+
+# ── 동기화 로그 API (매월 자동 동기화 추적) ──
+
+
+@router.post("/sync/start")
+async def sync_start(
+    body: dict,
+    user=Depends(require_role("admin")),
+):
+    """동기화 시작 기록. 사내 PC 마이그레이션 스크립트가 호출."""
+    client = await get_async_client()
+
+    row = {
+        "org_id": user.org_id,
+        "sync_type": body.get("sync_type", "incremental"),
+        "status": "running",
+        "source_host": body.get("source_host", ""),
+        "triggered_by": body.get("triggered_by", "scheduler"),
+    }
+    result = await client.table("intranet_sync_log").insert(row).execute()
+    sync_id = result.data[0]["id"]
+
+    logger.info(f"인트라넷 동기화 시작: {sync_id} (type={row['sync_type']}, by={row['triggered_by']})")
+    return {"sync_id": sync_id, "status": "running"}
+
+
+@router.post("/sync/{sync_id}/complete")
+async def sync_complete(
+    sync_id: str,
+    body: dict,
+    user=Depends(require_role("admin")),
+):
+    """동기화 완료/실패 기록. 사내 PC 마이그레이션 스크립트가 호출."""
+    client = await get_async_client()
+
+    # 소속 조직 검증
+    existing = await (
+        client.table("intranet_sync_log")
+        .select("id")
+        .eq("id", sync_id)
+        .eq("org_id", user.org_id)
+        .execute()
+    )
+    if not existing.data:
+        raise ResourceNotFoundError("동기화 로그를 찾을 수 없습니다.")
+
+    update = {
+        "status": body.get("status", "completed"),
+        "projects_found": body.get("projects_found", 0),
+        "projects_created": body.get("projects_created", 0),
+        "projects_updated": body.get("projects_updated", 0),
+        "projects_skipped": body.get("projects_skipped", 0),
+        "files_uploaded": body.get("files_uploaded", 0),
+        "files_failed": body.get("files_failed", 0),
+        "error_message": body.get("error_message"),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await client.table("intranet_sync_log").update(update).eq("id", sync_id).execute()
+
+    logger.info(
+        f"인트라넷 동기화 완료: {sync_id} "
+        f"(created={update['projects_created']}, updated={update['projects_updated']})"
+    )
+    return {"sync_id": sync_id, **update}
+
+
+@router.get("/sync/status")
+async def sync_status(user=Depends(get_current_user)):
+    """최근 동기화 상태 조회. 프론트엔드 대시보드용."""
+    client = await get_async_client()
+
+    # 최근 5건 이력
+    logs = await (
+        client.table("intranet_sync_log")
+        .select("*")
+        .eq("org_id", user.org_id)
+        .order("started_at", desc=True)
+        .limit(5)
+        .execute()
+    )
+
+    # 이번 달 동기화 여부
+    now = datetime.now(timezone.utc)
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    this_month = await (
+        client.table("intranet_sync_log")
+        .select("id", count="exact")
+        .eq("org_id", user.org_id)
+        .eq("status", "completed")
+        .gte("started_at", month_start.isoformat())
+        .execute()
+    )
+
+    last_completed = None
+    for log in logs.data or []:
+        if log.get("status") == "completed":
+            last_completed = log.get("completed_at") or log.get("started_at")
+            break
+
+    return {
+        "synced_this_month": (this_month.count or 0) > 0,
+        "last_completed": last_completed,
+        "recent_logs": logs.data or [],
     }

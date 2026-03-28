@@ -140,28 +140,31 @@ async def _update_doc_status(client, document_id: str, status: str, error: str |
 # ── 프로젝트 임포트 + KB 시드 ──
 
 
-async def import_project(org_id: str, project_data: dict) -> dict:
+async def import_project(org_id: str, project_data: dict, *, upsert: bool = False) -> dict:
     """
     마이그레이션 스크립트에서 호출하는 프로젝트 임포트.
 
-    1. intranet_projects 생성 (중복 시 스킵)
+    1. intranet_projects 생성 (중복 시 upsert=True면 업데이트, False면 스킵)
     2. 프로젝트 임베딩 생성
     3. capabilities 시드 (track_record)
     4. client_intelligence 시드
+
+    Args:
+        upsert: True면 기존 레코드를 최신 데이터로 업데이트 (증분 동기화용)
     """
     client = await get_async_client()
 
     # 중복 체크
     existing = await (
         client.table("intranet_projects")
-        .select("id")
+        .select("id, status, progress_pct")
         .eq("org_id", org_id)
         .eq("legacy_idx", project_data["legacy_idx"])
         .eq("board_id", project_data.get("board_id", "PR_PG"))
         .execute()
     )
 
-    if existing.data:
+    if existing.data and not upsert:
         return {"id": existing.data[0]["id"], "action": "skipped"}
 
     # 프로젝트 임베딩 생성
@@ -201,22 +204,38 @@ async def import_project(org_id: str, project_data: dict) -> dict:
         "domain": project_data.get("domain"),
         "embedding": embedding,
     }
-    result = await client.table("intranet_projects").insert(row).execute()
-    project_id = result.data[0]["id"]
+
+    if existing.data and upsert:
+        # 기존 레코드 업데이트
+        project_id = existing.data[0]["id"]
+        row.pop("org_id")
+        row.pop("legacy_idx")
+        row.pop("board_id")
+        row["updated_at"] = "now()"
+        await client.table("intranet_projects").update(row).eq("id", project_id).execute()
+        action = "updated"
+    else:
+        # 신규 생성
+        result = await client.table("intranet_projects").insert(row).execute()
+        project_id = result.data[0]["id"]
+        action = "created"
 
     # KB 시드
     cap_id = await _seed_capability(client, org_id, project_data)
     ci_id = await _seed_client_intelligence(client, org_id, project_data)
+    mp_id = await _seed_market_price_data(client, org_id, project_data)
 
-    if cap_id or ci_id:
-        update = {}
-        if cap_id:
-            update["capability_id"] = cap_id
-        if ci_id:
-            update["client_intel_id"] = ci_id
-        await client.table("intranet_projects").update(update).eq("id", project_id).execute()
+    kb_update = {}
+    if cap_id:
+        kb_update["capability_id"] = cap_id
+    if ci_id:
+        kb_update["client_intel_id"] = ci_id
+    if mp_id:
+        kb_update["market_price_id"] = mp_id
+    if kb_update:
+        await client.table("intranet_projects").update(kb_update).eq("id", project_id).execute()
 
-    return {"id": project_id, "action": "created"}
+    return {"id": project_id, "action": action}
 
 
 async def _seed_capability(client, org_id: str, data: dict) -> str | None:
@@ -293,6 +312,39 @@ async def _seed_client_intelligence(client, org_id: str, data: dict) -> str | No
         "contact_info": contact_info if contact_info else None,
         "relationship": "neutral",
         "embedding": embedding,
+    }).execute()
+
+    return result.data[0]["id"] if result.data else None
+
+
+async def _seed_market_price_data(client, org_id: str, data: dict) -> str | None:
+    """시장가격 자동 시드 (프로젝트 예산 기반, 중복 시 스킵)."""
+    budget = data.get("budget_krw")
+    project_name = data.get("project_name")
+    if not budget or not project_name:
+        return None
+
+    domain = data.get("domain", "")
+    client_name = data.get("client_name", "")
+
+    # 같은 조직·프로젝트명으로 이미 등록되었으면 스킵
+    existing = await (
+        client.table("market_price_data")
+        .select("id")
+        .eq("org_id", org_id)
+        .eq("project_name", project_name)
+        .execute()
+    )
+    if existing.data:
+        return existing.data[0]["id"]
+
+    result = await client.table("market_price_data").insert({
+        "org_id": org_id,
+        "project_name": project_name,
+        "client_name": client_name,
+        "domain": domain,
+        "budget_krw": budget,
+        "source": "intranet_migration",
     }).execute()
 
     return result.data[0]["id"] if result.data else None
