@@ -21,9 +21,12 @@ from app.exceptions import (
     PropNotFoundError,
 )
 from app.config import settings
-from app.utils.file_utils import validate_upload
+from app.utils.file_utils import UPLOAD_ALLOWED_EXTENSIONS, validate_upload
 from app.middleware.rate_limit import limiter
 from app.utils.supabase_client import get_async_client
+
+# 전체 카테고리 통합 허용 확장자 (테스트·문서용)
+ALLOWED_EXTENSIONS: frozenset[str] = frozenset().union(*UPLOAD_ALLOWED_EXTENSIONS.values())
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/proposals", tags=["files"])

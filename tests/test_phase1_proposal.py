@@ -31,8 +31,8 @@ async def test_list_proposals(client):
     resp = await client.get("/api/proposals")
     assert resp.status_code == 200
     data = resp.json()
-    assert "items" in data
-    assert "total" in data
+    assert "data" in data
+    assert "total" in data["meta"]
 
 
 async def test_list_proposals_with_scope(client):
@@ -40,7 +40,7 @@ async def test_list_proposals_with_scope(client):
     resp = await client.get("/api/proposals?scope=my")
     assert resp.status_code == 200
     data = resp.json()
-    assert "items" in data
+    assert "data" in data
 
 
 async def test_get_proposal_not_found(client):

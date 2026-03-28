@@ -87,6 +87,8 @@ def _mock_patches():
         patch("app.graph.nodes.plan_nodes.claude_generate", side_effect=mock_claude),
         patch("app.graph.nodes.proposal_nodes.claude_generate", side_effect=mock_claude),
         patch("app.graph.nodes.ppt_nodes.claude_generate", side_effect=mock_claude),
+        patch("app.graph.nodes.submission_nodes.claude_generate", side_effect=mock_claude),
+        patch("app.graph.nodes.evaluation_nodes.claude_generate", side_effect=mock_claude),
         patch("app.utils.supabase_client.get_async_client", AsyncMock(return_value=mock_sb)),
         patch("app.services.prompt_registry.get_prompt_for_experiment", side_effect=_mock_get_prompt_for_experiment),
         patch("app.services.prompt_registry.get_active_prompt", side_effect=_mock_get_active_prompt),
@@ -354,7 +356,7 @@ class TestGoNoGo:
 
     @pytest.mark.asyncio
     async def test_go_no_go_lite_mode(self):
-        """lite 모드에서도 정상 동작 (feasibility_score=0)."""
+        """lite 모드에서도 정상 동작 (perf=0 + qual=0 + comp=10 + strategic=10 = 20)."""
         from app.graph.nodes.go_no_go import go_no_go
 
         state = _base_state(
@@ -368,7 +370,7 @@ class TestGoNoGo:
 
             result = await go_no_go(state)
 
-        assert result["go_no_go"].feasibility_score == 0
+        assert result["go_no_go"].feasibility_score == 20
 
 
 # ══════════════════════════════════════════════════════════
@@ -994,30 +996,29 @@ class TestGraphHelpers:
     """그래프 내부 헬퍼 함수 테스트."""
 
     def test_proposal_start_gate(self):
-        from app.graph.graph import _proposal_start_gate
-        result = _proposal_start_gate(_base_state())
+        from app.graph.nodes.gate_nodes import proposal_start_gate
+        result = proposal_start_gate(_base_state())
         assert result == {"current_section_index": 0}
 
     def test_passthrough(self):
-        from app.graph.graph import _passthrough
-        result = _passthrough(_base_state())
+        from app.graph.nodes.gate_nodes import passthrough
+        result = passthrough(_base_state())
         assert result == {}
 
     def test_plan_selective_fan_out_all(self):
-        """rework_targets가 비면 5개 전체 fan-out."""
-        from app.graph.graph import plan_selective_fan_out
+        """rework_targets가 비면 4개 전체 fan-out (plan_team/assign/schedule/story)."""
+        from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
         state = _base_state(rework_targets=[])
         sends = plan_selective_fan_out(state)
-        assert len(sends) == 5
+        assert len(sends) == 4
 
     def test_plan_selective_fan_out_partial(self):
-        """rework_targets가 있으면 해당 항목만 fan-out."""
-        from app.graph.graph import plan_selective_fan_out
+        """rework_targets가 있으면 해당 항목만 fan-out (plan_price는 ALL_PLAN_NODES에 없음)."""
+        from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
         state = _base_state(rework_targets=["plan_team", "plan_price"])
         sends = plan_selective_fan_out(state)
-        assert len(sends) == 2
+        assert len(sends) == 1
         node_names = [s.node for s in sends]
         assert "plan_team" in node_names
-        assert "plan_price" in node_names

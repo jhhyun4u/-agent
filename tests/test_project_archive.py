@@ -28,7 +28,7 @@ class TestRenderers:
             "special_conditions": ["지체상금 0.1%/일"],
         }
         md = _render_rfp_analysis(data)
-        assert "# RFP 분석 결과" in md
+        assert "# RFP 분석 보고서" in md
         assert "AI 플랫폼 구축" in md
         assert "클라우드 네이티브" in md
 
@@ -315,7 +315,7 @@ class TestManifestAPI:
                        new_callable=AsyncMock, return_value=mock_manifest):
                 resp = await client.get("/api/proposals/proj-001/archive")
         assert resp.status_code == 200
-        data = resp.json()
+        data = resp.json()["data"]
         assert "categories" in data
         assert "total_count" in data
         assert "total_size" in data
@@ -325,9 +325,8 @@ class TestManifestAPI:
         resp = await client.get("/api/proposals/proj-001/archive/rfp_analysis/versions")
         assert resp.status_code == 200
         data = resp.json()
-        assert "doc_type" in data
-        assert "versions" in data
-        assert data["doc_type"] == "rfp_analysis"
+        assert "data" in data
+        assert isinstance(data["data"], list)
 
 
 # ══════════════════════════════════════════════

@@ -168,7 +168,7 @@ async def test_upload_project_file(client):
         )
 
     assert resp.status_code == 201
-    data = resp.json()
+    data = resp.json()["data"]
     assert "file_id" in data
     assert data["filename"] == "참고자료.pdf"
     assert "references/" in data["storage_path"]
@@ -192,8 +192,8 @@ async def test_upload_file_rejected_extension(client):
             files={"file": ("malware.exe", b"bad", "application/exe")},
         )
 
-    assert resp.status_code == 400
-    assert "허용되지 않는" in resp.json()["detail"]
+    assert resp.status_code == 415
+    assert "지원하지 않는" in resp.json()["message"]
 
 
 async def test_list_project_files(client):
@@ -214,7 +214,7 @@ async def test_list_project_files(client):
 
     assert resp.status_code == 200
     data = resp.json()
-    assert len(data["files"]) == 2
+    assert len(data["data"]) == 2
 
 
 async def test_list_project_files_with_category_filter(client):
@@ -227,7 +227,7 @@ async def test_list_project_files_with_category_filter(client):
         resp = await client.get("/api/proposals/prop-001/files?category=rfp")
 
     assert resp.status_code == 200
-    assert "files" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_delete_project_file(client):
@@ -260,7 +260,7 @@ async def test_delete_rfp_file_forbidden(client):
         resp = await client.delete("/api/proposals/prop-001/files/f1")
 
     assert resp.status_code == 403
-    assert "RFP" in resp.json()["detail"]
+    assert "RFP" in resp.json()["message"]
 
 
 async def test_get_file_download_url(client):
@@ -275,7 +275,7 @@ async def test_get_file_download_url(client):
         resp = await client.get("/api/proposals/prop-001/files/f2/url")
 
     assert resp.status_code == 200
-    data = resp.json()
+    data = resp.json()["data"]
     assert "url" in data
     assert data["filename"] == "참고.docx"
     assert data["expires_in"] == 3600

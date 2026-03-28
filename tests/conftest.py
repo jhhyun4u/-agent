@@ -4,6 +4,8 @@ import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+from app.models.auth_schemas import CurrentUser
+
 
 # ── 이벤트 루프 ──
 
@@ -29,46 +31,46 @@ def output_dir(tmp_path) -> Path:
 @pytest.fixture
 def mock_user():
     """기본 admin 사용자."""
-    return {
-        "id": "user-001",
-        "email": "admin@tenopa.com",
-        "name": "관리자",
-        "role": "admin",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-001",
+        email="admin@tenopa.com",
+        name="관리자",
+        role="admin",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_member_user():
     """일반 멤버 사용자."""
-    return {
-        "id": "user-002",
-        "email": "member@tenopa.com",
-        "name": "팀원",
-        "role": "member",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-002",
+        email="member@tenopa.com",
+        name="팀원",
+        role="member",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_lead_user():
     """팀장 사용자."""
-    return {
-        "id": "user-003",
-        "email": "lead@tenopa.com",
-        "name": "팀장",
-        "role": "lead",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-003",
+        email="lead@tenopa.com",
+        name="팀장",
+        role="lead",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 # ── Supabase Mock ──
