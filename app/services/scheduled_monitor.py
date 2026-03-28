@@ -411,6 +411,113 @@ async def send_daily_summary_email() -> int:
         return 0
 
 
+async def check_monthly_intranet_sync() -> dict:
+    """매월 인트라넷 동기화 실행 여부 체크.
+
+    매월 5일 09:00 KST에 스케줄러가 호출.
+    이번 달 완료된 동기화가 없으면 관리자에게 알림.
+    """
+    from app.services.notification_service import (
+        create_notification,
+        send_teams_notification,
+    )
+
+    client = await get_async_client()
+    stats = {"orgs_checked": 0, "orgs_overdue": 0, "notifications_sent": 0}
+
+    # 활성 조직 조회
+    try:
+        orgs_result = await (
+            client.table("organizations")
+            .select("id, name")
+            .execute()
+        )
+        orgs = orgs_result.data or []
+    except Exception as e:
+        logger.error(f"조직 목록 조회 실패: {e}")
+        return stats
+
+    now = datetime.now(timezone.utc)
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    for org in orgs:
+        org_id = org["id"]
+        stats["orgs_checked"] += 1
+
+        # 이번 달 완료된 동기화 조회
+        try:
+            sync_result = await (
+                client.table("intranet_sync_log")
+                .select("id", count="exact")
+                .eq("org_id", org_id)
+                .eq("status", "completed")
+                .gte("started_at", month_start.isoformat())
+                .execute()
+            )
+        except Exception:
+            continue
+
+        if (sync_result.count or 0) > 0:
+            continue
+
+        # 인트라넷 프로젝트가 있는 조직만 (마이그레이션 한 적 있는 조직)
+        proj_check = await (
+            client.table("intranet_projects")
+            .select("id", count="exact")
+            .eq("org_id", org_id)
+            .limit(1)
+            .execute()
+        )
+        if not (proj_check.count or 0):
+            continue
+
+        stats["orgs_overdue"] += 1
+
+        # 관리자에게 알림
+        try:
+            admins = await (
+                client.table("users")
+                .select("id")
+                .eq("org_id", org_id)
+                .eq("role", "admin")
+                .execute()
+            )
+            for admin in (admins.data or []):
+                admin_id: str = admin["id"]  # type: ignore[index]
+                await create_notification(
+                    user_id=admin_id,
+                    proposal_id=None,
+                    type="system",
+                    title="인트라넷 KB 월간 동기화 미실행",
+                    body=(
+                        "이번 달 인트라넷 KB 동기화가 아직 실행되지 않았습니다. "
+                        "사내 PC에서 migrate_intranet.py --incremental을 실행해주세요."
+                    ),
+                    link="/kb/intranet",
+                )
+                stats["notifications_sent"] += 1
+
+            # Teams 알림 (기본 webhook으로 전송)
+            org_name = org.get("name", "") if isinstance(org, dict) else ""
+            await send_teams_notification(
+                team_id="",
+                title="인트라넷 KB 월간 동기화 미실행",
+                body=(
+                    f"[{org_name}] 이번 달 인트라넷 KB 동기화가 미실행 상태입니다.\n"
+                    "사내 PC에서 migrate_intranet.py --incremental --triggered-by scheduler를 실행하세요."
+                ),
+                link=f"{settings.frontend_url}/kb/intranet",
+            )
+        except Exception as e:
+            logger.warning(f"동기화 미실행 알림 발송 실패 (org={org_id}): {e}")
+
+    logger.info(
+        f"인트라넷 동기화 체크: {stats['orgs_checked']}개 조직 확인, "
+        f"{stats['orgs_overdue']}개 미실행, {stats['notifications_sent']}건 알림"
+    )
+    return stats
+
+
 def setup_scheduler() -> None:
     """APScheduler 기반 스케줄러 설정.
 
@@ -449,6 +556,15 @@ def setup_scheduler() -> None:
             trigger=CronTrigger(hour=9, minute=0, day_of_week="mon-fri", timezone=kst),
             id="daily_summary_email",
             name="일일 요약 이메일 (평일 09:00)",
+            replace_existing=True,
+        )
+
+        # 인트라넷 KB 매월 동기화 체크 (매월 5일 09:00 KST)
+        scheduler.add_job(
+            check_monthly_intranet_sync,
+            trigger=CronTrigger(day=5, hour=9, minute=0, timezone=kst),
+            id="intranet_sync_monthly_check",
+            name="인트라넷 KB 매월 동기화 체크 (5일 09:00)",
             replace_existing=True,
         )
 

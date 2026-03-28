@@ -211,7 +211,7 @@ async def create_from_bid(
 
 # ── 조회 ──
 
-@router.get("", response_model=ItemsResponse[ProposalListItem])
+@router.get("")
 async def list_proposals(
     status: str | None = None,
     scope: str | None = None,
@@ -300,7 +300,7 @@ async def list_proposals(
     return ok_list(result.data or [], total=total, offset=skip, limit=limit)
 
 
-@router.get("/{proposal_id}", response_model=ProposalDetail)
+@router.get("/{proposal_id}")
 async def get_proposal(
     proposal_id: str,
     user: CurrentUser = Depends(get_current_user),

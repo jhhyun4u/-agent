@@ -76,7 +76,7 @@ async def _fetch_proposals(
     scope: str,
     date_start: str | None = None,
     date_end: str | None = None,
-    fields: str = "id, result, result_amount, positioning, client_name, result_note, created_at, team_id",
+    fields: str = "id, win_result, bid_amount, positioning, status, created_at, team_id",
 ) -> list[dict]:
     """스코프에 따라 제안서 목록 조회."""
     client = await get_async_client()
@@ -86,14 +86,18 @@ async def _fetch_proposals(
         team_id = user.team_id or ""
         query = query.eq("team_id", team_id)
     elif scope == "division":
-        div_id = user.division_id or ""
-        # 본부 소속 팀 ID 조회
-        teams = await client.table("teams").select("id").eq("division_id", div_id).execute()
-        team_ids = [t["id"] for t in (teams.data or [])]
-        if team_ids:
-            query = query.in_("team_id", team_ids)
-        else:
-            return []
+        # division_id가 teams에 없을 수 있으므로 안전하게 처리
+        try:
+            div_id = user.division_id or ""
+            teams = await client.table("teams").select("id").eq("division_id", div_id).execute()
+            team_ids = [t["id"] for t in (teams.data or [])]
+            if team_ids:
+                query = query.in_("team_id", team_ids)
+            else:
+                return []
+        except Exception:
+            # division_id 컬럼 없으면 company 스코프로 폴백
+            pass
     # scope == "company" → 필터 없음
 
     if date_start:
@@ -122,7 +126,7 @@ async def failure_reasons(
     data = await _fetch_proposals(user, resolved_scope, date_start, date_end)
 
     # 패찰 건만 필터
-    failed = [d for d in data if d.get("result") == "패찰"]
+    failed = [d for d in data if d.get("win_result") == "lost"]
     total_failed = len(failed)
 
     if total_failed == 0:
@@ -175,7 +179,7 @@ async def positioning_win_rate(
     data = await _fetch_proposals(user, resolved_scope, date_start, date_end)
 
     # 결과 확정 건만 (수주 or 패찰)
-    decided = [d for d in data if d.get("result") in ("수주", "패찰")]
+    decided = [d for d in data if d.get("win_result") in ("won", "lost")]
 
     by_pos: dict[str, dict] = {}
     for d in decided:
@@ -183,7 +187,7 @@ async def positioning_win_rate(
         if pos not in by_pos:
             by_pos[pos] = {"total": 0, "won": 0}
         by_pos[pos]["total"] += 1
-        if d.get("result") == "수주":
+        if d.get("win_result") == "won":
             by_pos[pos]["won"] += 1
 
     positionings = []
@@ -230,10 +234,10 @@ async def monthly_trends(
         if month not in by_month:
             by_month[month] = {"month": month, "submitted": 0, "won": 0, "lost": 0, "won_amount": 0}
         by_month[month]["submitted"] += 1
-        if d.get("result") == "수주":
+        if d.get("win_result") == "won":
             by_month[month]["won"] += 1
             by_month[month]["won_amount"] += d.get("result_amount", 0) or 0
-        elif d.get("result") == "패찰":
+        elif d.get("win_result") == "lost":
             by_month[month]["lost"] += 1
 
     # 수주율 계산 + 정렬
@@ -272,7 +276,7 @@ async def win_rate_trend(
     date_start, date_end = _period_to_date_range(period)
 
     data = await _fetch_proposals(user, resolved_scope, date_start, date_end)
-    decided = [d for d in data if d.get("result") in ("수주", "패찰")]
+    decided = [d for d in data if d.get("win_result") in ("won", "lost")]
 
     by_period: dict[str, dict] = {}
     for d in decided:
@@ -290,7 +294,7 @@ async def win_rate_trend(
         if key not in by_period:
             by_period[key] = {"period": key, "total": 0, "won": 0, "lost": 0, "won_amount": 0}
         by_period[key]["total"] += 1
-        if d.get("result") == "수주":
+        if d.get("win_result") == "won":
             by_period[key]["won"] += 1
             by_period[key]["won_amount"] += d.get("result_amount", 0) or 0
         else:
@@ -309,7 +313,7 @@ async def win_rate_trend(
 # 부서/팀별 성과 비교 — Phase 4-4
 # ════════════════════════════════════════
 
-@router.get("/team-performance", response_model=TeamPerformanceResponse)
+@router.get("/team-performance")
 async def team_performance(
     period: str | None = Query(None, description="기간 (예: 2026Q1)"),
     scope: str | None = Query(None, pattern="^(team|division|company)$"),
@@ -321,19 +325,19 @@ async def team_performance(
 
     data = await _fetch_proposals(
         user, resolved_scope, date_start, date_end,
-        fields="id, result, result_amount, team_id, created_at",
+        fields="id, win_result, bid_amount, team_id, created_at",
     )
 
     by_team: dict[str, dict] = {}
     for d in data:
-        tid = d.get("team_id", "unknown")
+        tid = d.get("team_id") or "unassigned"
         if tid not in by_team:
             by_team[tid] = {"team_id": tid, "total": 0, "won": 0, "lost": 0, "won_amount": 0}
         by_team[tid]["total"] += 1
-        if d.get("result") == "수주":
+        if d.get("win_result") == "won":
             by_team[tid]["won"] += 1
             by_team[tid]["won_amount"] += d.get("result_amount", 0) or 0
-        elif d.get("result") == "패찰":
+        elif d.get("win_result") == "lost":
             by_team[tid]["lost"] += 1
 
     teams = []
@@ -362,9 +366,9 @@ async def competitor_record(
 
     # proposal_results에서 won_by 필드 활용
     client = await get_async_client()
-    data = await _fetch_proposals(user, resolved_scope, date_start, date_end, fields="id, result, result_amount")
+    data = await _fetch_proposals(user, resolved_scope, date_start, date_end, fields="id, win_result, bid_amount")
 
-    proposal_ids = [d["id"] for d in data if d.get("result") in ("수주", "패찰")]
+    proposal_ids = [d["id"] for d in data if d.get("win_result") in ("won", "lost")]
     if not proposal_ids:
         return {"period": period, "scope": resolved_scope, "competitors": []}
 
@@ -412,7 +416,7 @@ async def client_win_rate(
     data = await _fetch_proposals(user, resolved_scope, date_start, date_end)
 
     # 결과 확정 건만
-    decided = [d for d in data if d.get("result") in ("수주", "패찰")]
+    decided = [d for d in data if d.get("win_result") in ("won", "lost")]
 
     by_client: dict[str, dict] = {}
     for d in decided:
@@ -422,7 +426,7 @@ async def client_win_rate(
         if client_name not in by_client:
             by_client[client_name] = {"total": 0, "won": 0, "amount": 0}
         by_client[client_name]["total"] += 1
-        if d.get("result") == "수주":
+        if d.get("win_result") == "won":
             by_client[client_name]["won"] += 1
             by_client[client_name]["amount"] += d.get("result_amount", 0) or 0
 

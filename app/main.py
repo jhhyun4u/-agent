@@ -167,6 +167,18 @@ async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
         content=exc.to_dict(),
     )
 
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """미처리 예외 → 500 + 로그 출력 (디버깅용)"""
+    import traceback
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc), "path": str(request.url.path)},
+    )
+
 # ── 라우터 등록 ──
 
 # Phase 0: 인증·사용자
