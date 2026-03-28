@@ -217,31 +217,31 @@ class ProposalState(TypedDict):
     """LangGraph 워크플로 전체 상태."""
 
     # 프로젝트 메타
-    project_id: str
-    project_name: str
+    project_id: Annotated[str, _replace]
+    project_name: Annotated[str, _replace]
 
     # v2.0: 소유·조직 컨텍스트
-    team_id: str
-    division_id: str
-    created_by: str
-    participants: list[str]
+    team_id: Annotated[str, _replace]
+    division_id: Annotated[str, _replace]
+    created_by: Annotated[str, _replace]
+    participants: Annotated[list[str], _replace]
 
     # 실행 모드
-    mode: Literal["lite", "full"]
+    mode: Annotated[Literal["lite", "full"], _replace]
 
     # 포지셔닝 (STEP 1-②에서 확정, STEP 2에서 변경 가능)
-    positioning: Literal["defensive", "offensive", "adjacent"]
+    positioning: Annotated[Literal["defensive", "offensive", "adjacent"], _replace]
 
     # 단계별 산출물
-    search_query: dict
+    search_query: Annotated[dict, _replace]
     search_results: Annotated[list[RfpRecommendation], _replace]
-    picked_bid_no: str
-    bid_detail: Optional[BidDetail]
-    go_no_go: Optional[GoNoGoResult]
-    rfp_raw: str
-    rfp_analysis: Optional[RFPAnalysis]
-    strategy: Optional[Strategy]
-    plan: Optional[ProposalPlan]
+    picked_bid_no: Annotated[str, _replace]
+    bid_detail: Annotated[Optional[BidDetail], _replace]
+    go_no_go: Annotated[Optional[GoNoGoResult], _replace]
+    rfp_raw: Annotated[str, _replace]
+    rfp_analysis: Annotated[Optional[RFPAnalysis], _replace]
+    strategy: Annotated[Optional[Strategy], _replace]
+    plan: Annotated[Optional[ProposalPlan], _replace]
     proposal_sections: Annotated[list[ProposalSection], _replace]
     ppt_slides: Annotated[list[PPTSlide], _replace]
 
@@ -251,8 +251,8 @@ class ProposalState(TypedDict):
     # 단계별 승인 상태
     approval: Annotated[dict[str, ApprovalStatus], _merge_dict]
 
-    # 현재 실행 중인 단계
-    current_step: str
+    # 현재 실행 중인 단계 (fork 병렬 실행 시 last-write-wins)
+    current_step: Annotated[str, _replace]
 
     # 피드백 이력
     feedback_history: Annotated[list[dict], _append_list]
@@ -260,34 +260,34 @@ class ProposalState(TypedDict):
     # 품질 게이트 경고 (Pre-Flight Check + self_check)
     quality_warnings: Annotated[list[dict], _append_list]
 
-    # 부분 재작업 대상
-    rework_targets: list[str]
+    # 부분 재작업 대상 (fork 병렬 실행 시 last-write-wins)
+    rework_targets: Annotated[list[str], _replace]
 
-    # 동적 섹션 목록
-    dynamic_sections: list[str]
+    # 동적 섹션 목록 (fork 병렬 실행 시 last-write-wins)
+    dynamic_sections: Annotated[list[str], _replace]
 
     # 병렬 작업 중간 결과
     parallel_results: Annotated[dict, _merge_dict]
 
     # v3.0: KB 참조
     kb_references: Annotated[list[dict], _append_list]
-    client_intel_ref: Optional[dict]
-    competitor_refs: list[dict]
+    client_intel_ref: Annotated[Optional[dict], _replace]
+    competitor_refs: Annotated[list[dict], _replace]
 
     # v3.0: AI 상태 추적
-    ai_task_id: str
+    ai_task_id: Annotated[str, _replace]
 
     # v3.0: 토큰 사용 추적
     token_usage: Annotated[dict, _merge_dict]
 
     # v3.0: 피드백 윈도우
-    feedback_window_size: int
+    feedback_window_size: Annotated[int, _replace]
 
     # v3.2: ProposalForge 통합
-    research_brief: Optional[dict]
-    presentation_strategy: Optional[dict]
-    budget_detail: Optional[dict]
-    evaluation_simulation: Optional[dict]
+    research_brief: Annotated[Optional[dict], _replace]
+    presentation_strategy: Annotated[Optional[dict], _replace]
+    budget_detail: Annotated[Optional[dict], _replace]
+    evaluation_simulation: Annotated[Optional[dict], _replace]
 
     # v3.5: 섹션별 순차 작성 인덱스
     current_section_index: Annotated[int, lambda a, b: b]

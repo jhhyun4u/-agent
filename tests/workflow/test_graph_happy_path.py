@@ -69,7 +69,6 @@ async def _resume_all_pending(graph, config, resume_data):
 # ── Happy Path: Case A + PPT ──
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="fork_gate 병렬 실행 시 current_step state 충돌 — 그래프 구현 수정 필요")
 async def test_happy_path_full_workflow(initial_state, workflow_patches):
     """전체 워크플로 Happy Path: RFP 분석 → 전략 → fork(A+B) → 통합 → END."""
     patches_list, mock_claude, mock_sb = workflow_patches()
@@ -166,7 +165,6 @@ async def test_no_go_terminates_workflow(initial_state, workflow_patches):
 # ── Document-Only (PPT 스킵) ──
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(reason="fork_gate 병렬 실행 시 current_step state 충돌 — 그래프 구현 수정 필요")
 async def test_document_only_skips_ppt(initial_state_doc_only, workflow_patches):
     """서류심사(document_only) 시 PPT 노드를 건너뛰고 END에 도달한다.
 
