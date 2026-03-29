@@ -165,20 +165,18 @@ async def list_documents(
 
         result = await query.execute()
 
-        # 전체 개수 조회
-        count_result = await (
+        # 전체 개수 조회 (필터 적용)
+        count_query = (
             client.table("intranet_documents")
             .select("id")
             .eq("org_id", current_user.org_id)
-        ).execute()
+        )
         if status_filter:
-            count_result = await (
-                client.table("intranet_documents")
-                .select("id")
-                .eq("org_id", current_user.org_id)
-                .eq("processing_status", status_filter)
-            ).execute()
+            count_query = count_query.eq("processing_status", status_filter)
+        if doc_type:
+            count_query = count_query.eq("doc_type", doc_type)
 
+        count_result = await count_query.execute()
         total = len(count_result.data) if count_result.data else 0
 
         items = [
