@@ -41,7 +41,7 @@ if settings.log_format == "json":
                 log_entry["exc"] = self.formatException(record.exc_info)
             return _json.dumps(log_entry, ensure_ascii=False)
 
-    _handler = logging.StreamHandler()
+    _handler = logging.StreamHandler(encoding='utf-8')
     _handler.setFormatter(_JsonFormatter())
     logging.basicConfig(level=settings.log_level, handlers=[_handler])
 else:
@@ -111,6 +111,18 @@ async def lifespan(app: FastAPI):
         logger.info(f"공고 자동 정리 완료: {cleaned}")
     except Exception as e:
         logger.warning(f"공고 자동 정리 경고 (무시): {e}")
+
+    # DB 마이그레이션: bid_announcements 테이블 자동 생성
+    try:
+        await client.rpc("create_bid_announcements_table").execute()
+        logger.info("bid_announcements 테이블 생성 완료")
+    except Exception as e:
+        # RPC가 없으면 direct SQL 시도 (Supabase REST API 제한)
+        try:
+            await client.table("bid_announcements").select("id").limit(1).execute()
+            logger.info("bid_announcements 테이블 이미 존재")
+        except Exception as e2:
+            logger.warning(f"bid_announcements 테이블 생성 실패 (수동 실행 필요): {e}")
 
     # 프롬프트 레지스트리 동기화 (코드 → DB)
     try:
@@ -213,7 +225,9 @@ app.include_router(kb_router)
 
 # 인트라넷 KB 마이그레이션
 from app.api.routes_intranet import router as intranet_router
+from app.api.routes_documents import router as documents_router
 app.include_router(intranet_router)
+app.include_router(documents_router)
 
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
