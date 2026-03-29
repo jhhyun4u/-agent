@@ -26,7 +26,7 @@ import GuidedTour, { TOUR_DASHBOARD } from "@/components/GuidedTour";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
-type Scope = "personal" | "team" | "division" | "company";
+type Scope = "team" | "division" | "company";
 
 type ActionItem =
   | { type: "calendar"; item: CalendarItem; days: number }
@@ -90,8 +90,8 @@ function getPrevMonth(): string {
 export default function DashboardPage() {
   const router = useRouter();
 
-  // 스코프
-  const [scope, setScope] = useState<Scope>("personal");
+  // 스코프 (팀/본부/전체만 제공, 개인 제거)
+  const [scope, setScope] = useState<Scope>("team");
 
   // 통계
   const [stats, setStats] = useState<WinRateStats | null>(null);
@@ -386,7 +386,6 @@ export default function DashboardPage() {
           <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-1 border border-[#262626]">
             {(
               [
-                { key: "personal" as Scope, label: "개인" },
                 { key: "team" as Scope, label: "팀" },
                 { key: "division" as Scope, label: "본부" },
                 { key: "company" as Scope, label: "전체" },
@@ -410,6 +409,147 @@ export default function DashboardPage() {
 
         {/* 스크롤 본문 */}
         <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+
+          {/* ── 결재 대기 (팀장용) ── */}
+          {scope === "team" && (() => {
+            const pendingReviews = proposals.filter(
+              (p) => p.status === "paused" || p.status === "on_hold"
+            );
+            if (pendingReviews.length === 0) return null;
+            return (
+              <div className="bg-[#1c1c1c] border border-amber-500/20 rounded-2xl p-5">
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  결재 대기
+                  <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded">
+                    {pendingReviews.length}건
+                  </span>
+                </h2>
+                <div className="space-y-2">
+                  {pendingReviews.map((p) => {
+                    const days = p.deadline ? calcDDay(p.deadline) : null;
+                    return (
+                      <div
+                        key={p.id}
+                        onClick={() => router.push(`/proposals/${p.id}`)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626] cursor-pointer hover:border-amber-500/30 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-[#ededed] truncate">{p.title}</p>
+                          <p className="text-xs text-[#8c8c8c] mt-0.5">
+                            {p.current_phase ?? "리뷰 대기"}
+                          </p>
+                        </div>
+                        {days != null && (
+                          <span className={`shrink-0 text-xs font-bold ${dDayColor(days)}`}>
+                            {dDayLabel(days)}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ── 마감 임박 경고 (팀장용) ── */}
+          {scope === "team" && (() => {
+            const urgentItems = calItems
+              .filter((c) => {
+                const d = calcDDay(c.deadline);
+                return d >= 0 && d <= 7;
+              })
+              .sort((a, b) => calcDDay(a.deadline) - calcDDay(b.deadline));
+            if (urgentItems.length === 0) return null;
+            return (
+              <div className="bg-[#1c1c1c] border border-red-500/20 rounded-2xl p-5">
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
+                  <span className="text-red-400">!</span>
+                  마감 임박
+                  <span className="text-[10px] text-red-400/80 bg-red-500/10 px-2 py-0.5 rounded">
+                    D-7 이내 {urgentItems.length}건
+                  </span>
+                </h2>
+                <div className="space-y-2">
+                  {urgentItems.map((c) => {
+                    const days = calcDDay(c.deadline);
+                    const relatedProposal = c.proposal_id
+                      ? proposals.find((p) => p.id === c.proposal_id)
+                      : null;
+                    return (
+                      <div
+                        key={c.id}
+                        onClick={() =>
+                          c.proposal_id
+                            ? router.push(`/proposals/${c.proposal_id}`)
+                            : undefined
+                        }
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626] ${c.proposal_id ? "cursor-pointer hover:border-red-500/30" : ""} transition-colors`}
+                      >
+                        <span className={`shrink-0 text-xs font-bold w-10 text-center ${days <= 3 ? "text-red-400" : "text-yellow-400"}`}>
+                          {dDayLabel(days)}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-[#ededed] truncate">{c.title}</p>
+                          <p className="text-xs text-[#8c8c8c] mt-0.5">
+                            {relatedProposal
+                              ? relatedProposal.current_phase ?? relatedProposal.status
+                              : "제안서 미생성"}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ── 본부별 성과 비교 (경영진용) ── */}
+          {scope === "company" && teamPerfData && teamPerfData.teams.length > 0 && (
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+              <h2 className="text-sm font-semibold text-[#ededed] mb-3">본부별 성과 비교</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-[#8c8c8c] border-b border-[#262626]">
+                      <th className="text-left py-2 pr-3 font-medium">본부/팀</th>
+                      <th className="text-right py-2 px-3 font-medium">진행건</th>
+                      <th className="text-right py-2 px-3 font-medium">수주율</th>
+                      <th className="text-right py-2 px-3 font-medium">평균 소요</th>
+                      <th className="text-right py-2 pl-3 font-medium">전월 대비</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(() => {
+                      const avgRate = teamPerfData.teams.length > 0
+                        ? teamPerfData.teams.reduce((s, t) => s + t.rate, 0) / teamPerfData.teams.length
+                        : 0;
+                      return [...teamPerfData.teams]
+                        .sort((a, b) => b.rate - a.rate)
+                        .map((t) => {
+                          const diff = t.rate - avgRate;
+                          return (
+                            <tr key={t.team_id} className="border-b border-[#1a1a1a] hover:bg-[#111111]">
+                              <td className="py-2 pr-3 text-[#ededed] font-medium">{t.team_name}</td>
+                              <td className="py-2 px-3 text-right text-[#8c8c8c]">{t.total}건</td>
+                              <td className={`py-2 px-3 text-right font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}>
+                                {(t.rate * 100).toFixed(0)}%
+                              </td>
+                              <td className="py-2 px-3 text-right text-[#5c5c5c]">{t.avg_duration_days}일</td>
+                              <td className={`py-2 pl-3 text-right text-xs font-medium ${diff > 0 ? "text-[#3ecf8e]" : diff < 0 ? "text-red-400" : "text-[#5c5c5c]"}`}>
+                                {diff > 0 ? `▲ +${(diff * 100).toFixed(0)}%p` : diff < 0 ? `▼ ${(diff * 100).toFixed(0)}%p` : "-"}
+                              </td>
+                            </tr>
+                          );
+                        });
+                    })()}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {/* ── 오늘 할 일 ── */}
           {widgetConfig.action && actionItems.length > 0 && (
