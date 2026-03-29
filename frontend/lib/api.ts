@@ -118,6 +118,7 @@ export interface ProposalSummary {
   positioning: string | null;
   win_result: string | null;
   bid_amount: number | null;
+  budget: number | null;
   deadline: string | null;
   client_name: string | null;
   created_at: string;
@@ -2923,5 +2924,109 @@ export const costSheetApi = {
     });
     if (!res.ok) throw new Error(`산출내역서 생성 실패: ${res.status}`);
     return res.blob();
+  },
+};
+
+// ── 인트라넷 문서 관리 API ──
+
+export interface DocumentResponse {
+  id: string;
+  filename: string;
+  doc_type: string;
+  storage_path: string;
+  processing_status: string; // extracting|chunking|embedding|completed|failed
+  total_chars: number;
+  chunk_count: number;
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DocumentDetailResponse extends DocumentResponse {
+  extracted_text?: string;
+}
+
+export interface DocumentListResponse {
+  items: DocumentResponse[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface ChunkResponse {
+  id: string;
+  chunk_index: number;
+  chunk_type: string; // title|heading|body|table|image
+  section_title?: string;
+  content: string;
+  char_count: number;
+  created_at: string;
+}
+
+export interface ChunkListResponse {
+  items: ChunkResponse[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export const documentsApi = {
+  async list(params?: {
+    status?: string;
+    doc_type?: string;
+    search?: string;
+    sort_by?: "created_at" | "updated_at" | "filename" | "total_chars";
+    order?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<DocumentListResponse> {
+    const query = new URLSearchParams();
+    if (params?.status) query.append("status", params.status);
+    if (params?.doc_type) query.append("doc_type", params.doc_type);
+    if (params?.search) query.append("search", params.search);
+    if (params?.sort_by) query.append("sort_by", params.sort_by);
+    if (params?.order) query.append("order", params.order);
+    if (params?.limit) query.append("limit", params.limit.toString());
+    if (params?.offset) query.append("offset", params.offset.toString());
+    const queryStr = query.toString();
+    return request("GET", `/documents${queryStr ? "?" + queryStr : ""}`);
+  },
+
+  async get(documentId: string): Promise<DocumentDetailResponse> {
+    return request("GET", `/documents/${documentId}`);
+  },
+
+  async upload(file: File, doc_type: string, doc_subtype?: string, project_id?: string): Promise<DocumentResponse> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("doc_type", doc_type);
+    if (doc_subtype) formData.append("doc_subtype", doc_subtype);
+    if (project_id) formData.append("project_id", project_id);
+    return request("POST", `/documents/upload`, formData, true);
+  },
+
+  async reprocess(documentId: string): Promise<{ id: string; processing_status: string; message: string }> {
+    return request("POST", `/documents/${documentId}/process`);
+  },
+
+  async getChunks(documentId: string, params?: {
+    chunk_type?: string;
+    sort_by?: "chunk_index" | "created_at" | "char_count";
+    order?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<ChunkListResponse> {
+    const query = new URLSearchParams();
+    if (params?.chunk_type) query.append("chunk_type", params.chunk_type);
+    if (params?.sort_by) query.append("sort_by", params.sort_by);
+    if (params?.order) query.append("order", params.order);
+    if (params?.limit) query.append("limit", params.limit.toString());
+    if (params?.offset) query.append("offset", params.offset.toString());
+    const queryStr = query.toString();
+    return request("GET", `/documents/${documentId}/chunks${queryStr ? "?" + queryStr : ""}`);
+  },
+
+  async delete(documentId: string): Promise<void> {
+    return request("DELETE", `/documents/${documentId}`);
   },
 };
