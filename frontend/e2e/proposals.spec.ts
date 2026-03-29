@@ -74,16 +74,16 @@ test.describe("새 제안서 생성 페이지", () => {
 test.describe("제안서 목록 — 사이드바 네비게이션", () => {
   test("사이드바에 제안 프로젝트 메뉴 활성", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByLabel("제안 프로젝트")).toBeVisible();
+    await expect(page.getByLabel("제안 프로젝트").first()).toBeVisible();
   });
 
   test("사이드바에 공고 모니터링 링크 존재", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByText("공고 모니터링")).toBeVisible();
+    await expect(page.getByText("공고 모니터링").first()).toBeVisible();
   });
 
   test("사이드바에 대시보드 링크 존재", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByText("대시보드")).toBeVisible();
+    await expect(page.getByText("대시보드").first()).toBeVisible();
   });
 });
