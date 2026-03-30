@@ -518,6 +518,34 @@ async def check_monthly_intranet_sync() -> dict:
     return stats
 
 
+async def run_scheduled_migration() -> None:
+    """인트라넷 문서 정기 배치 마이그레이션 (매월 1일 00:00 KST).
+
+    기존 app/scheduler.py + app/jobs/migration_jobs.py에서 통합.
+    실패 시 에러 로깅 후 조용히 종료 (스케줄러 루프 유지).
+    """
+    try:
+        logger.info("정기 마이그레이션 잡 시작...")
+
+        from app.services.migration_service import MigrationService
+        db = await get_async_client()
+        migration_service = MigrationService(db=db, notification_service=None)
+
+        batch = await migration_service.batch_import_intranet_documents(
+            batch_type="monthly",
+            include_failed=True,
+        )
+
+        logger.info(
+            f"정기 마이그레이션 완료: batch_id={batch.id if batch else 'N/A'}, "
+            f"processed={batch.processed_documents if batch else 0}, "
+            f"failed={batch.failed_documents if batch else 0}"
+        )
+
+    except Exception as e:
+        logger.error(f"정기 마이그레이션 실패: {e}", exc_info=True)
+
+
 def setup_scheduler() -> None:
     """APScheduler 기반 스케줄러 설정.
 
@@ -566,6 +594,17 @@ def setup_scheduler() -> None:
             id="intranet_sync_monthly_check",
             name="인트라넷 KB 매월 동기화 체크 (5일 09:00)",
             replace_existing=True,
+        )
+
+        # 인트라넷 문서 배치 마이그레이션 (매월 1일 00:00 KST)
+        scheduler.add_job(
+            run_scheduled_migration,
+            trigger=CronTrigger(day=1, hour=0, minute=0, timezone=kst),
+            id="monthly_migration",
+            name="인트라넷 문서 월간 배치 마이그레이션 (1일 00:00)",
+            replace_existing=True,
+            coalesce=True,
+            max_instances=1,
         )
 
         # ── 자가검증 잡 ──

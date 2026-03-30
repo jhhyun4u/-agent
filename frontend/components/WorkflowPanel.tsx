@@ -329,10 +329,7 @@ function ReviewPanel({
     setFeedbackHistoryLoaded(true);
 
     // API 엔드포인트: GET /api/proposals/{id}/feedbacks?step={reviewNode}
-    api.request<{ feedbacks: typeof feedbackHistory }>(
-      "GET",
-      `/api/proposals/${proposalId}/feedbacks?step=${reviewNode}`
-    )
+    api.workflow.feedbacks(proposalId, reviewNode)
       .then((res) => {
         if (res.feedbacks && Array.isArray(res.feedbacks)) {
           setFeedbackHistory(res.feedbacks);

@@ -132,6 +132,23 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"프롬프트 레지스트리 동기화 경고 (무시): {e}")
 
+    # DB 마이그레이션: apply_migrations.py 자동 실행 (000~019)
+    try:
+        from scripts.apply_migrations import apply_all_migrations
+        logger.info("DB 마이그레이션 시작...")
+
+        result = await apply_all_migrations(dry_run=False)
+
+        if result['status'] in ['up_to_date', 'completed']:
+            logger.info(f"DB 마이그레이션 완료: {result['applied']}/{result['total']} 적용됨")
+        else:
+            logger.warning(f"DB 마이그레이션 부분 실패: {result['failed']} 오류, {result['applied']} 성공")
+    except ImportError as e:
+        logger.warning(f"DB 마이그레이션 모듈 미발견 (무시): {e}")
+    except Exception as e:
+        logger.warning(f"DB 마이그레이션 초기화 경고 (무시): {e}")
+        # 마이그레이션 실패해도 앱 시작하도록 (경고만)
+
     yield
     logger.info("시스템 종료")
 
@@ -229,6 +246,14 @@ from app.api.routes_documents import router as documents_router
 app.include_router(intranet_router)
 app.include_router(documents_router)
 
+# Phase 4: 배치 마이그레이션 관리 (scheduler-integration)
+from app.api.routes_migrations import router as migrations_router
+app.include_router(migrations_router)
+
+# DB 마이그레이션 상태 API (설계 §4.4 — GAP-H3/H4/H5)
+from app.api.routes_migration_status import router as migration_status_router
+app.include_router(migration_status_router)
+
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
 app.include_router(analytics_router)
@@ -302,6 +327,10 @@ app.include_router(presentation_router, prefix="/api")
 # 입찰 관리: /api/teams/*/bids/*, /api/bids/*
 from app.api.routes_bids import router as bids_router
 app.include_router(bids_router)
+
+# STEP 8A-8F: 새 노드 + 아티팩트 버전 관리 (DB-backed implementation)
+from app.api.routes_step8a import router as step8a_router
+app.include_router(step8a_router)
 
 
 # ── 헬스체크 ──

@@ -11,6 +11,8 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { SEED_ORG, SEED_EXECUTIVES, type SeedDivision } from "@/lib/org-seed-data";
 import AdminOrgChart from "@/components/AdminOrgChart";
+import { Button } from "@/components/ui/Button";
+import { TextInput, Select } from "@/components/ui/FormField";
 
 // ── 타입 ──
 interface Division { id: string; org_id: string; name: string }
@@ -818,12 +820,7 @@ function InlineInput({ value, onChange, onBlur, autoFocus, placeholder }: { valu
 }
 
 function Btn({ children, onClick, variant = "default" }: { children: React.ReactNode; onClick: () => void; variant?: "default" | "primary" | "ghost" }) {
-  const cls = variant === "primary"
-    ? "bg-[#3ecf8e] hover:bg-[#36b87e] text-black font-medium"
-    : variant === "ghost"
-    ? "text-[#888] hover:text-[#ededed] border border-[#333]"
-    : "bg-[#1c1c1c] hover:bg-[#262626] text-[#aaa] border border-[#333]";
-  return <button onClick={onClick} className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${cls}`}>{children}</button>;
+  return <Button onClick={onClick} variant={variant === "default" ? "secondary" : variant} size="sm">{children}</Button>;
 }
 
 function Sep() { return <div className="w-px h-5 bg-[#333] mx-1" />; }
@@ -839,16 +836,14 @@ function Overlay({ onClose, children }: { onClose: () => void; children: React.R
 function Inp({ placeholder, value, onChange, type = "text", required, autoFocus }: {
   placeholder: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; autoFocus?: boolean;
 }) {
-  return <input type={type} required={required} autoFocus={autoFocus} placeholder={placeholder} value={value}
-    onChange={e => onChange(e.target.value)}
-    className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#555] focus:outline-none focus:border-[#3ecf8e]" />;
+  return <TextInput type={type} required={required} autoFocus={autoFocus} placeholder={placeholder} value={value}
+    onChange={e => onChange(e.target.value)} />;
 }
 
 function Sel({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: { value: string; label: string }[] }) {
-  return <select value={value} onChange={e => onChange(e.target.value)}
-    className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed]">
-    {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-  </select>;
+  // Select 컴포넌트는 내부에 기본 option을 포함하지만 options prop을 요구하므로 필터링해서 넘깁니다.
+  const validOptions = options.filter(o => o.value !== "");
+  return <Select value={value} onChange={e => onChange(e.target.value)} options={validOptions} />;
 }
 
 function FileInput({ onChange, accept = ".csv,.xlsx,.xls" }: { onChange: (f: File | null) => void; accept?: string }) {
@@ -859,8 +854,8 @@ function FileInput({ onChange, accept = ".csv,.xlsx,.xls" }: { onChange: (f: Fil
 function FormActions({ onCancel, label, disabled }: { onCancel: () => void; label: string; disabled?: boolean }) {
   return (
     <div className="flex justify-end gap-2 pt-2">
-      <button type="button" onClick={onCancel} className="text-sm text-[#888] hover:text-[#ededed] px-3 py-1.5">취소</button>
-      <button type="submit" disabled={disabled} className="bg-[#3ecf8e] hover:bg-[#36b87e] disabled:opacity-50 text-black text-sm font-medium px-4 py-1.5 rounded-lg">{label}</button>
+      <Button type="button" onClick={onCancel} variant="ghost" size="sm">취소</Button>
+      <Button type="submit" disabled={disabled} variant="primary" size="sm">{label}</Button>
     </div>
   );
 }

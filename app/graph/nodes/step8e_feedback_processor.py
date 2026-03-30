@@ -1,111 +1,73 @@
 """
 Node 8E: mock_evaluation_feedback_processor
 
-Process mock evaluation results into actionable feedback.
+Process mock evaluation feedback and generate improvement recommendations.
 
-Input: mock_eval_result, proposal_sections
+Input: mock_evaluation_result
 Output: feedback_summary (versioned artifact)
 
-Purpose: Prioritize issues, generate rewrite guidance per section,
-estimate effort and improvement potential.
+Purpose: Convert evaluation results into actionable improvement plan.
 """
 
 import logging
 from uuid import UUID
 
-from app.graph.state import ProposalState, FeedbackSummary
+from app.graph.state import ProposalState, FeedbackSummary, FeedbackItem
 from app.services.version_manager import execute_node_and_create_version
 from app.services.claude_client import claude_generate
-from app.prompts.step8e import FEEDBACK_PROCESSING_PROMPT
-from app.graph.nodes._constants import (
-    SECTION_CONTENT_LIMIT_FEEDBACK,
-    COMBINED_SECTIONS_LIMIT,
-    normalize_proposal_section,
-)
+from app.prompts.step8e import FEEDBACK_PROCESSOR_PROMPT
 
 logger = logging.getLogger(__name__)
 
 
+def _convert_priority_to_int(priority_str: str) -> int:
+    """Convert priority string to 1-10 integer scale."""
+    priority_map = {
+        "critical": 10,
+        "high": 8,
+        "medium": 5,
+        "low": 2,
+    }
+    return priority_map.get(priority_str.lower(), 5)
+
+
 async def mock_evaluation_feedback_processor(state: ProposalState) -> dict:
     """
-    Process mock evaluation results into actionable feedback.
+    Process mock evaluation feedback into improvement plan.
 
     Input:
-        - mock_eval_result: Mock evaluation scoring results
-        - proposal_sections: Current proposal sections
+        - mock_evaluation_result: Evaluation scores and feedback
 
     Output:
-        - feedback_summary: Prioritized feedback for improvements (versioned)
+        - feedback_summary: Actionable improvements (versioned)
 
     Returns:
         Updated state dict with feedback_summary and version info
     """
     try:
-        # Step 1: Validate required inputs
-        mock_eval_result = state.get("mock_eval_result")
-        proposal_sections = state.get("proposal_sections", [])
-
-        if not mock_eval_result:
-            logger.warning(
-                "No mock evaluation result available for feedback processing"
-            )
+        eval_result = state.get("mock_eval_result")
+        if not eval_result:
+            logger.warning("No evaluation result for feedback processing")
             return {
                 "feedback_summary": None,
                 "node_errors": {
                     **state.get("node_errors", {}),
-                    "mock_evaluation_feedback_processor": "Missing mock_eval_result input",
+                    "mock_evaluation_feedback_processor": "No evaluation to process",
                 },
             }
 
-        if not proposal_sections:
-            logger.warning("No proposal sections available for feedback")
-            return {
-                "feedback_summary": None,
-                "node_errors": {
-                    **state.get("node_errors", {}),
-                    "mock_evaluation_feedback_processor": "No proposal sections available",
-                },
-            }
-
-        # Step 2: Build feedback context
-        rfp_analysis = state.get("rfp_analysis")
-
-        # Build sections text for Claude
-        sections_text = []
-        for section in proposal_sections:
-            section_dict = normalize_proposal_section(section)
-            section_title = section_dict.get("title", "Untitled")
-            section_content = section_dict.get("content", "")
-            if len(section_content) > SECTION_CONTENT_LIMIT_FEEDBACK:
-                logger.warning(
-                    f"Section '{section_title}' truncated: "
-                    f"{len(section_content)} → {SECTION_CONTENT_LIMIT_FEEDBACK} chars"
-                )
-            section_content = section_content[:SECTION_CONTENT_LIMIT_FEEDBACK]
-            sections_text.append(f"## {section_title}\n{section_content}")
-
-        sections_combined = "\n\n".join(sections_text)
-        if len(sections_combined) > COMBINED_SECTIONS_LIMIT:
-            logger.info(
-                f"Combined sections text truncated: "
-                f"{len(sections_combined)} → {COMBINED_SECTIONS_LIMIT} chars"
-            )
-
-        # Step 3: Call Claude for feedback processing
-
-        prompt = FEEDBACK_PROCESSING_PROMPT.format(
-            mock_eval_result=mock_eval_result.model_dump_json()
-            if hasattr(mock_eval_result, "model_dump_json")
-            else str(mock_eval_result),
-            proposal_sections=sections_combined[:COMBINED_SECTIONS_LIMIT],
-            rfp_analysis=rfp_analysis.model_dump_json()
-            if rfp_analysis and hasattr(rfp_analysis, "model_dump_json")
-            else "{}",
+        eval_content = (
+            eval_result.model_dump_json()
+            if hasattr(eval_result, "model_dump_json")
+            else str(eval_result)
         )
 
-        logger.info(
-            f"Calling Claude for feedback processing (proposal {state.get('project_id')})"
+        prompt = FEEDBACK_PROCESSOR_PROMPT.format(
+            evaluation_result=eval_content,
+            current_score=eval_result.estimated_percentage,
         )
+
+        logger.info(f"Processing feedback from evaluation (score: {eval_result.estimated_percentage:.1f}%)")
 
         response = await claude_generate(
             prompt=prompt,
@@ -114,20 +76,60 @@ async def mock_evaluation_feedback_processor(state: ProposalState) -> dict:
             step_name="mock_evaluation_feedback_processor",
         )
 
-        # Step 4: Parse response into FeedbackSummary
-        feedback_summary = FeedbackSummary(**response)
+        # Parse improvement actions into FeedbackItems
+        actions_data = response.get("improvement_actions", [])
+        actions = []
+        for action in actions_data:
+            try:
+                # Map response fields to FeedbackItem fields
+                feedback_item = FeedbackItem(
+                    section_id=action.get("target_section", action.get("section_id", "unknown")),
+                    section_title=action.get("section_title", action.get("target_section", "Unknown")),
+                    issue_category=action.get("issue_category", "improvement"),
+                    priority=_convert_priority_to_int(action.get("priority", "medium")),
+                    issue_description=action.get("action", action.get("issue_description", "")),
+                    rewrite_guidance=action.get("improvement_guidance", action.get("rewrite_guidance", "")),
+                    example_improvement=action.get("example", action.get("example_improvement")),
+                    estimated_effort=action.get("effort_estimate", action.get("estimated_effort", "medium")),
+                )
+                actions.append(feedback_item)
+            except Exception as e:
+                logger.warning(f"Failed to parse feedback item: {e}")
 
-        logger.info(
-            f"Feedback processing complete: {len(feedback_summary.critical_gaps)} critical gaps, "
-            f"potential improvement: +{feedback_summary.estimated_score_improvement} points"
+        # Separate actions into critical gaps and improvement opportunities
+        critical_gaps = [a for a in actions if a.issue_category == "critical_gap"]
+        improvement_opportunities = [a for a in actions if a.issue_category == "improvement"]
+
+        # Add missing fields for state.py FeedbackSummary
+        from datetime import datetime
+        feedback = FeedbackSummary(
+            proposal_id=state["project_id"],
+            critical_gaps=critical_gaps,
+            improvement_opportunities=improvement_opportunities,
+            section_feedback=response.get("section_feedback", {}),
+            highest_impact_issues=response.get("key_findings", [])[:5],
+            rewrite_strategy=response.get("rewrite_strategy", ""),
+            affected_sections=response.get("affected_sections", []),
+            estimated_total_effort=response.get("estimated_effort", "medium"),
+            critical_path_effort=response.get("critical_effort", "medium"),
+            estimated_score_improvement=int(response.get("estimated_improvement", 0)),
+            estimated_new_score=int(eval_result.estimated_total_score + response.get("estimated_improvement", 0)),
+            estimated_new_rank=response.get("estimated_new_rank", ""),
+            recommended_timeline=response.get("timeline", ""),
+            processed_at=datetime.utcnow().isoformat(),
         )
 
-        # Step 5: Create version artifact
+        logger.info(
+            f"Generated {len(actions)} improvement actions "
+            f"({len(critical_gaps)} critical_gap, "
+            f"{len(improvement_opportunities)} improvement)"
+        )
+
         version_num, artifact_version = await execute_node_and_create_version(
             proposal_id=UUID(state["project_id"]),
             node_name="mock_evaluation_feedback_processor",
             output_key="feedback_summary",
-            artifact_data=feedback_summary.model_dump(),
+            artifact_data=feedback.model_dump(),
             user_id=UUID(state["created_by"]),
             state=state,
             parent_node_name="mock_evaluation_analysis",
@@ -135,13 +137,11 @@ async def mock_evaluation_feedback_processor(state: ProposalState) -> dict:
 
         logger.info(f"Created feedback_summary v{version_num}")
 
-        # Step 6: Return state update
         return {
-            "feedback_summary": feedback_summary,
+            "feedback_summary": feedback,
             "artifact_versions": {"feedback_summary": [artifact_version]},
             "active_versions": {
-                **state.get("active_versions", {}),
-                "mock_evaluation_feedback_processor_feedback_summary": version_num,
+                "mock_evaluation_feedback_processor_feedback_summary": version_num
             },
         }
 
@@ -151,6 +151,6 @@ async def mock_evaluation_feedback_processor(state: ProposalState) -> dict:
             "feedback_summary": None,
             "node_errors": {
                 **state.get("node_errors", {}),
-                "mock_evaluation_feedback_processor": f"Feedback processing failed: {str(e)}",
+                "mock_evaluation_feedback_processor": f"Processing failed: {str(e)}",
             },
         }

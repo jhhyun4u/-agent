@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     session_timeout_minutes: int = 30
 
     # 로깅 (OPS-03: 구조화 로깅)
-    log_level: str = "INFO"
+    log_level: str = "DEBUG"  # 개발 환경에서 디버그 정보 확인
     log_format: Literal["text", "json"] = "text"  # 프로덕션 배포 시 "json"
     log_token_usage: bool = True
 
@@ -65,7 +65,10 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
 
     # CORS 허용 오리진
-    cors_origins: list[str] = Field(default=["http://localhost:3000", "http://127.0.0.1:3000"])
+    cors_origins: list[str] = Field(default=[
+        "http://localhost:3000", "http://127.0.0.1:3000",
+        "http://localhost:3001", "http://127.0.0.1:3001",
+    ])
 
     # 나라장터 API 키
     g2b_api_key: str = ""

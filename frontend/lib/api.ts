@@ -1005,6 +1005,14 @@ export const api = {
         `/proposals/${proposalId}/artifact-versions`
       );
     },
+
+    // 피드백 이력 조회 (Phase 2-2)
+    feedbacks(proposalId: string, step: string) {
+      return request<{ feedbacks: Array<{ id: string; feedback: string; created_at: string; approved?: boolean }> }>(
+        "GET",
+        `/proposals/${proposalId}/feedbacks?step=${step}`
+      );
+    },
   },
 
   // ── 산출물 (§12-3) ────────────────────────────────────────────────

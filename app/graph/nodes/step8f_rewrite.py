@@ -16,7 +16,7 @@ from uuid import UUID
 from app.graph.state import ProposalState
 from app.services.version_manager import execute_node_and_create_version
 from app.services.claude_client import claude_generate
-from app.prompts.step8f import PROPOSAL_REWRITE_PROMPT
+from app.prompts.step8f import WRITE_NEXT_V2_PROMPT
 from app.graph.nodes._constants import (
     FEEDBACK_GUIDANCE_LIMIT,
     ORIGINAL_SECTION_LIMIT,
@@ -115,17 +115,16 @@ async def proposal_write_next_v2(state: ProposalState) -> dict:
                 ]
             )
 
-        # Step 6: Get strategy for context
-        strategy = state.get("strategy")
+        # Step 6: Get strategy for context (used in prompt formatting below)
+        # strategy = state.get("strategy")
 
         # Step 7: Call Claude for section rewrite
 
-        prompt = PROPOSAL_REWRITE_PROMPT.format(
-            original_section=original_content[:ORIGINAL_SECTION_LIMIT],
-            feedback_guidance=guidance_text[:FEEDBACK_GUIDANCE_LIMIT],
-            strategy=strategy.model_dump_json()
-            if strategy and hasattr(strategy, "model_dump_json")
-            else "{}",
+        prompt = WRITE_NEXT_V2_PROMPT.format(
+            section_name=section_title,
+            current_content=original_content[:ORIGINAL_SECTION_LIMIT],
+            improvement_actions=guidance_text[:FEEDBACK_GUIDANCE_LIMIT],
+            feedback=feedback_data.get("key_findings", ""),
         )
 
         logger.info(f"Calling Claude for section rewrite: {section_title}")

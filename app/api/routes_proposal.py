@@ -16,7 +16,7 @@ from pydantic import BaseModel
 from app.api.deps import get_current_user, get_rls_client
 from app.api.response import ok_list
 from app.config import settings
-from app.exceptions import PropNotFoundError
+from app.exceptions import PropNotFoundError, G2BServiceError
 from app.models.auth_schemas import CurrentUser
 from app.models.common import ItemsResponse
 from app.models.proposal_schemas import ProposalCreateResponse, ProposalDetail, ProposalListItem
@@ -159,28 +159,76 @@ async def create_from_bid(
     background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
 ):
-    """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결."""
+    """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결.
+
+    Flow:
+    1. bid_announcements에서 공고 정보 조회
+    2. decision 확인 (Go만 허용)
+    3. 분석 마크다운 문서 3가지 로드 (RFP分析, 공고문, 과업지시서)
+    4. 마크다운 통합하여 rfp_content 설정
+    5. 제안 프로젝트 생성
+    6. 공고 첨부파일 연결 (백그라운드)
+    """
     client = await get_async_client()
     proposal_id = str(uuid.uuid4())
 
-    # 1) bid_announcements에서 공고 정보 조회 (raw_data 포함)
+    # 1) bid_announcements에서 공고 정보 조회 (마크다운 경로 포함)
     bid_result = await client.table("bid_announcements").select(
-        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data"
+        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data, "
+        "decision, md_rfp_analysis_path, md_notice_path, md_instruction_path"
     ).eq("bid_no", body.bid_no).maybe_single().execute()
 
     bid = bid_result.data if bid_result.data else {}
+
+    # Go/No-Go 의사결정 확인
+    decision = bid.get("decision", "pending")
+    if decision != "Go":
+        raise G2BServiceError(f"'Go' 결정이 된 공고만 제안을 시작할 수 있습니다. (현재: {decision})")
+
     title = bid.get("bid_title") or f"공고 {body.bid_no}"
-    rfp_text = bid.get("content_text") or ""
     raw_data = bid.get("raw_data") or {}
 
-    # 2) 프로젝트 생성 (대기중 — 워크플로 시작 전)
+    # 2) 마크다운 문서 로드 및 통합
+    rfp_content_parts = []
+
+    # 원본 공고문 (있으면 추가)
+    if bid.get("content_text"):
+        rfp_content_parts.append(bid["content_text"])
+
+    # Storage에서 마크다운 문서 다운로드
+    md_paths = {
+        "RFP分析": bid.get("md_rfp_analysis_path"),
+        "공고문": bid.get("md_notice_path"),
+        "과업지시서": bid.get("md_instruction_path"),
+    }
+
+    for doc_name, path in md_paths.items():
+        if path:
+            try:
+                # Storage에서 파일 다운로드
+                response = await client.storage.from_("documents").download(path)
+                if response:
+                    md_content = response.decode("utf-8") if isinstance(response, bytes) else response
+                    # 마크다운 섹션 분리
+                    rfp_content_parts.append(f"\n\n## {doc_name}\n\n{md_content}")
+                    logger.info(f"✓ 마크다운 로드: {doc_name} ({path})")
+            except Exception as e:
+                logger.warning(f"! 마크다운 로드 실패 [{doc_name}]: {str(e)}")
+                # 개별 문서 로드 실패는 계속 진행
+
+    # 모든 콘텐츠 통합 (최대 50,000자)
+    rfp_content = "\n".join(rfp_content_parts) if rfp_content_parts else ""
+    rfp_content_truncated = len(rfp_content) > 50000
+    rfp_content = rfp_content[:50000]
+
+    # 3) 프로젝트 생성 (대기중 — 워크플로 시작 전)
     row: dict = {
         "id": proposal_id,
         "title": title,
         "owner_id": user.id,
         "status": "대기중",
-        "rfp_content": rfp_text[:10000] if rfp_text else "",
-        "rfp_content_truncated": len(rfp_text) > 10000,
+        "rfp_content": rfp_content,
+        "rfp_content_truncated": rfp_content_truncated,
     }
     if user.team_id:
         row["team_id"] = user.team_id
@@ -189,7 +237,7 @@ async def create_from_bid(
 
     await client.table("proposals").insert(row).execute()
 
-    # 3) 공고 첨부파일 → proposal에 복사 (백그라운드)
+    # 4) 공고 첨부파일 → proposal에 복사 (백그라운드)
     if raw_data:
         async def _link_attachments():
             try:
@@ -199,6 +247,8 @@ async def create_from_bid(
                 logger.warning(f"[{proposal_id}] 첨부파일 연결 실패: {e}")
 
         background_tasks.add_task(_link_attachments)
+
+    logger.info(f"✓ 제안 생성 (from-bid): {proposal_id}, rfp_content={len(rfp_content)}자")
 
     return {
         "proposal_id": proposal_id,
@@ -325,7 +375,9 @@ async def delete_proposal(proposal_id: str, user: CurrentUser = Depends(get_curr
         raise PropNotFoundError(proposal_id)
     if prop.data["owner_id"] != user.id:
         raise HTTPException(403, "프로젝트 소유자만 삭제할 수 있습니다")
-    if prop.data["status"] == "running":
+    # HOTFIX: Check for active workflow states (Phase 0 - was checking for "running" which violates CHECK constraint)
+    active_states = ('processing', 'searching', 'analyzing', 'strategizing', 'submitted', 'presented')
+    if prop.data["status"] in active_states:
         raise HTTPException(409, "실행 중인 프로젝트는 삭제할 수 없습니다")
 
     # Storage 파일 목록 조회 + 삭제 (best-effort)

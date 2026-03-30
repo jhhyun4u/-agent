@@ -23,6 +23,9 @@ import {
   ClientWinRateBar,
 } from "@/components/AnalyticsCharts";
 import GuidedTour, { TOUR_DASHBOARD } from "@/components/GuidedTour";
+import { Card, CardHeader, CardBody } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { TEXT_SIZES } from "@/lib/typography";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
@@ -508,9 +511,9 @@ export default function DashboardPage() {
 
           {/* ── 본부별 성과 비교 (경영진용) ── */}
           {scope === "company" && teamPerfData && teamPerfData.teams.length > 0 && (
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-3">본부별 성과 비교</h2>
-              <div className="overflow-x-auto">
+            <Card>
+              <CardHeader title="본부별 성과 비교" />
+              <div className="overflow-x-auto px-5 pb-5">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-[#8c8c8c] border-b border-[#262626]">
@@ -548,7 +551,7 @@ export default function DashboardPage() {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </Card>
           )}
 
           {/* ── 오늘 할 일 ── */}
@@ -583,12 +586,14 @@ export default function DashboardPage() {
                             {item.agency ? `${item.agency} · ` : ""}제안서 미생성
                           </p>
                         </div>
-                        <button
+                        <Button
+                          variant="primary"
+                          size="sm"
                           onClick={() => router.push("/proposals/new")}
-                          className="shrink-0 px-3 py-1.5 rounded-lg bg-[#3ecf8e] hover:bg-[#49e59e] text-[#0f0f0f] text-xs font-semibold transition-colors"
+                          className="shrink-0"
                         >
                           지금 시작
-                        </button>
+                        </Button>
                       </div>
                     );
                   }
@@ -617,12 +622,14 @@ export default function DashboardPage() {
                             : "생성 시작 전"}
                         </p>
                       </div>
-                      <button
+                      <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() => router.push(`/proposals/${item.id}`)}
-                        className="shrink-0 px-3 py-1.5 rounded-lg bg-[#262626] hover:bg-[#333] text-[#ededed] text-xs font-semibold transition-colors"
+                        className="shrink-0"
                       >
                         {isProcessing ? "확인" : "시작"}
-                      </button>
+                      </Button>
                     </div>
                   );
                 })}
@@ -669,16 +676,19 @@ export default function DashboardPage() {
           {/* ── 제안 분석 (3개 카드 — 연도별) ── */}
           {widgetConfig.kpi && <div className="grid grid-cols-3 gap-4">
             {/* 총 제안건수 */}
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
-              <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 총 제안건수</p>
-              <p className="text-3xl font-bold text-[#ededed]">
-                {stats?.overall.total ?? 0}
-                <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
-              </p>
-            </div>
+            <Card>
+              <CardBody className="p-4">
+                <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 총 제안건수</p>
+                <p className="text-3xl font-bold text-[#ededed]">
+                  {stats?.overall.total ?? 0}
+                  <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
+                </p>
+              </CardBody>
+            </Card>
 
             {/* 수주 성공 건수 */}
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
+            <Card>
+              <CardBody className="p-4">
               <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 수주 성공</p>
               <p className="text-3xl font-bold text-[#3ecf8e]">
                 {stats?.overall.won ?? 0}
@@ -689,10 +699,12 @@ export default function DashboardPage() {
                   수주율 {(stats.overall.rate * 100).toFixed(1)}%
                 </p>
               )}
-            </div>
+              </CardBody>
+            </Card>
 
             {/* 이번달 수주율 */}
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-4">
+            <Card>
+              <CardBody className="p-4">
               <p className="text-xs text-[#8c8c8c] mb-2">이번달 수주율</p>
               {thisMonthData ? (
                 <>
@@ -707,19 +719,24 @@ export default function DashboardPage() {
               ) : (
                 <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
               )}
-            </div>
+              </CardBody>
+            </Card>
           </div>}
 
           {/* ── 분석 차트 (월별 추이 + 실패원인) ── */}
           {widgetConfig.charts && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-4">월별 수주율 추이</h2>
-              <MonthlyTrendsLine data={trendsData} />
-            </div>
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-4">실패 원인 분석</h2>
-              <FailureReasonsPie data={failureData} />
-            </div>
+            <Card>
+              <CardHeader title="월별 수주율 추이" className="pb-0" />
+              <CardBody className="pt-2">
+                <MonthlyTrendsLine data={trendsData} />
+              </CardBody>
+            </Card>
+            <Card>
+              <CardHeader title="실패 원인 분석" className="pb-0" />
+              <CardBody className="pt-2">
+                <FailureReasonsPie data={failureData} />
+              </CardBody>
+            </Card>
           </div>}
 
           {/* ── 기관별 수주 현황 차트 ── */}

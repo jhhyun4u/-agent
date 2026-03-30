@@ -136,3 +136,68 @@ class ImpactResponse(BaseModel):
     affected_steps: list[int] = []
     message: str | None = None
     error: str | None = None
+
+
+# ── Phase 2: Unified State System Responses ──
+
+
+class TimelineEntry(BaseModel):
+    """proposal_timelines 테이블 항목 (상태 전환 기록)."""
+
+    id: str
+    proposal_id: str
+    event_type: str  # 'status_change', 'phase_change', 'approval', 'review', 'ai_status'
+    from_status: str | None = None
+    to_status: str | None = None
+    from_phase: str | None = None
+    to_phase: str | None = None
+    triggered_by: str | None = None
+    actor_type: str | None = None  # 'user', 'system', 'ai', 'workflow'
+    trigger_reason: str | None = None
+    notes: str | None = None
+    metadata: dict | None = None
+    created_at: str
+
+
+class EnhancedWorkflowStateResponse(BaseModel):
+    """Enhanced GET /{proposal_id}/state 응답 (3-layer state)."""
+
+    proposal_id: str
+    # Layer 1: Business Status (proposals.status)
+    business_status: str = ""
+    # Layer 2: Workflow Phase (proposals.current_phase)
+    workflow_phase: str = ""
+    # Layer 3: AI Runtime Status (latest ai_task_logs entry)
+    ai_status: dict = {}
+    # Timestamps
+    timestamps: dict = {
+        "created_at": None,
+        "started_at": None,
+        "last_activity_at": None,
+        "completed_at": None,
+    }
+    # Recent transitions
+    recent_transitions: list[TimelineEntry] = []
+    # Legacy fields (backward compatibility)
+    current_step: str = ""
+    positioning: str | None = None
+    approval: dict = {}
+    has_pending_interrupt: bool = False
+    next_nodes: list[str] = []
+    token_summary: TokenSummary = TokenSummary()
+    streams_status: dict | None = None
+    error: str | None = None
+
+
+class StateHistoryResponse(BaseModel):
+    """GET /{proposal_id}/state-history 응답 (전체 상태 전환 기록)."""
+
+    proposal_id: str
+    total_events: int = 0
+    history: list[TimelineEntry] = []
+    pagination: dict = {
+        "limit": 50,
+        "offset": 0,
+        "has_more": False,
+    }
+    error: str | None = None

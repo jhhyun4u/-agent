@@ -11,87 +11,20 @@
 
 import { Suspense, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { api, ProposalSummary, MonitoredBid } from "@/lib/api";
-
-/* ── 포지셔닝 ── */
-const POS_LABELS: Record<string, { label: string; icon: string; color: string }> = {
-  offensive:  { label: "공격", icon: "⚔️", color: "text-red-400" },
-  defensive:  { label: "수성", icon: "🛡️", color: "text-blue-400" },
-  adjacent:   { label: "인접", icon: "🔄", color: "text-amber-400" },
-};
-
-/* ── 워크플로 단계 매핑 ── */
-const STEP_MAP: Record<string, { step: number; label: string }> = {
-  rfp_analyze: { step: 1, label: "RFP 분석" },
-  research_gather: { step: 1, label: "리서치" },
-  go_no_go: { step: 1, label: "Go/No-Go" },
-  strategy_generate: { step: 2, label: "전략수립" },
-  plan_team: { step: 3, label: "팀구성" },
-  plan_assign: { step: 3, label: "역할배정" },
-  plan_schedule: { step: 3, label: "일정계획" },
-  plan_story: { step: 3, label: "스토리" },
-  plan_price: { step: 3, label: "가격산정" },
-  proposal_write_next: { step: 4, label: "제안서작성" },
-  self_review: { step: 4, label: "자가진단" },
-  presentation_strategy: { step: 5, label: "발표전략" },
-  ppt_slide: { step: 5, label: "PPT" },
-};
-
-function getStepInfo(phase: string | null): { step: number; label: string } {
-  if (!phase) return { step: 0, label: "—" };
-  return STEP_MAP[phase] ?? { step: 0, label: phase };
-}
-
-/* ── 상태 ── */
-function deriveStatus(p: ProposalSummary): { label: string; dotColor: string; textColor: string; tooltip: string } {
-  if (p.status === "on_hold") return { label: "중단", dotColor: "bg-orange-400", textColor: "text-orange-400", tooltip: "작업 중단됨" };
-  if (p.status === "abandoned") return { label: "포기", dotColor: "bg-red-400", textColor: "text-red-400", tooltip: "제안 포기" };
-  if (p.status === "submitted") return { label: "결과대기", dotColor: "bg-purple-400", textColor: "text-purple-400", tooltip: "제안서 제출 완료 — 평가 결과 대기" };
-  if (p.status === "presented") return { label: "결과대기", dotColor: "bg-purple-400", textColor: "text-purple-400", tooltip: "발표 완료 — 평가 결과 대기" };
-  if (p.status === "completed" || p.status === "won") return { label: "완료", dotColor: "bg-emerald-400", textColor: "text-emerald-400", tooltip: p.status === "won" ? "수주 완료" : "제안서 완료" };
-  if (p.status === "lost") return { label: "패찰", dotColor: "bg-red-400", textColor: "text-red-300", tooltip: "낙찰 실패" };
-  if (p.win_result === "no_go") return { label: "No-Go", dotColor: "bg-red-400", textColor: "text-red-300", tooltip: "Go/No-Go 결정: No-Go" };
-  if (p.win_result === "not_interested") return { label: "관심없음", dotColor: "bg-[#5c5c5c]", textColor: "text-[#5c5c5c]", tooltip: "관심 과제에서 제외" };
-  if (p.status === "initialized") return { label: "대기중", dotColor: "bg-blue-400", textColor: "text-blue-400", tooltip: "제안결정 완료 — 워크플로 시작 대기" };
-  const stepInfo = getStepInfo(p.current_phase);
-  if (p.positioning && stepInfo.step > 1) {
-    if (p.phases_completed > 0 && (p.status === "processing" || p.status === "running")) {
-      return { label: "재작업", dotColor: "bg-amber-400", textColor: "text-amber-400", tooltip: "섹션 재작업 진행 중" };
-    }
-    return { label: "진행중", dotColor: "bg-[#3ecf8e]", textColor: "text-[#3ecf8e]", tooltip: "Go 결정 후 작업 진행 중" };
-  }
-  return { label: "대기", dotColor: "bg-[#5c5c5c]", textColor: "text-[#8c8c8c]", tooltip: "RFP 검토 대기 중" };
-}
-
-/* ── 마감일 포맷 ── */
-function formatDeadline(deadline: string | null): { text: string; urgent: boolean; dDay: string } {
-  if (!deadline) return { text: "—", urgent: false, dDay: "" };
-  const d = new Date(deadline);
-  const now = new Date();
-  const diffDays = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-  const text = `${d.getMonth() + 1}/${d.getDate()}`;
-  const dDay = diffDays > 0 ? `D-${diffDays}` : diffDays === 0 ? "D-Day" : `D+${Math.abs(diffDays)}`;
-  return { text: `${text} (${dDay})`, urgent: diffDays >= 0 && diffDays <= 3, dDay };
-}
-
-/* ── 유틸 ── */
-function formatBudget(amount: number | null | undefined): string {
-  if (!amount) return "미기재";
-  if (amount >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
-  if (amount >= 10_000) return `${(amount / 10_000).toFixed(0)}만원`;
-  return `${amount.toLocaleString()}원`;
-}
-
-/* ── 스코프 탭 ── */
-type Scope = "my" | "team" | "division" | "company";
-
-const SCOPE_LABELS: Record<Scope, { label: string; desc: string }> = {
-  my: { label: "개인", desc: "내가 생성한 프로젝트" },
-  team: { label: "팀", desc: "우리 팀 프로젝트" },
-  division: { label: "본부", desc: "우리 본부 프로젝트" },
-  company: { label: "전체", desc: "전사 프로젝트" },
-};
+import {
+  SCOPE_LABELS,
+  Scope,
+  getStepInfo,
+  deriveStatus,
+  formatDeadline,
+  formatBudgetCompact,
+  GRID_LAYOUT_CLASS,
+  createSortComparator,
+} from "@/lib/proposals-utils";
+import { ProposalsTableHeader } from "@/components/ProposalsTableHeader";
+import { ProposalsTableRow } from "@/components/ProposalsTableRow";
+import { ProposalsTableSkeleton } from "@/components/ProposalsTableSkeleton";
 
 /* ── 메인 컨텐츠 ── */
 function ProposalsContent() {
@@ -581,24 +514,7 @@ function ProposalsContent() {
           </p>
 
           {loading ? (
-            <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-hidden">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="grid grid-cols-[1fr_80px_100px_100px_110px_36px] gap-4 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 animate-pulse">
-                  <div className="space-y-2">
-                    <div className="h-4 bg-[#1c1c1c] rounded w-3/4" />
-                    <div className="h-3 bg-[#1c1c1c] rounded w-1/2" />
-                  </div>
-                  <div className="h-4 bg-[#1c1c1c] rounded w-12" />
-                  <div className="space-y-1.5">
-                    <div className="h-3 bg-[#1c1c1c] rounded w-14" />
-                    <div className="flex gap-0.5">{[...Array(5)].map((_, j) => <div key={j} className="w-3 h-1 bg-[#1c1c1c] rounded-full" />)}</div>
-                  </div>
-                  <div className="h-4 bg-[#1c1c1c] rounded w-16" />
-                  <div className="h-4 bg-[#1c1c1c] rounded w-14" />
-                  <div className="h-4 bg-[#1c1c1c] rounded w-6" />
-                </div>
-              ))}
-            </div>
+            <ProposalsTableSkeleton rows={5} />
           ) : fetchError ? (
             <div className="flex flex-col items-center justify-center py-12 text-center border border-red-900/40 rounded-xl bg-red-950/10">
               <p className="text-sm text-red-400 mb-2">프로젝트 목록을 불러올 수 없습니다</p>
@@ -621,119 +537,35 @@ function ProposalsContent() {
           ) : (
             <>
               <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-x-auto">
-                <div className="grid grid-cols-[1fr_80px_100px_100px_110px_36px] gap-4 px-4 py-2.5 border-b border-[#262626] bg-[#0f0f0f]">
-                  <span className="text-xs font-medium text-[#5c5c5c] uppercase tracking-wider">프로젝트명</span>
-                  <span className="text-xs font-medium text-[#5c5c5c] uppercase tracking-wider">포지셔닝</span>
-                  <button onClick={() => toggleSort("step")} className={`text-xs font-medium uppercase tracking-wider text-left transition-colors ${sortKey === "step" ? "text-[#ededed]" : "text-[#5c5c5c] hover:text-[#8c8c8c]"}`}>
-                    단계 {sortKey === "step" ? (sortAsc ? "↑" : "↓") : ""}
-                  </button>
-                  <button onClick={() => toggleSort("deadline")} className={`text-xs font-medium uppercase tracking-wider text-left transition-colors ${sortKey === "deadline" ? "text-[#ededed]" : "text-[#5c5c5c] hover:text-[#8c8c8c]"}`}>
-                    마감일 {sortKey === "deadline" ? (sortAsc ? "↑" : "↓") : ""}
-                  </button>
-                  <span className="text-xs font-medium text-[#5c5c5c] uppercase tracking-wider">상태</span>
-                  <span />
-                </div>
-                {[...proposals].sort((a, b) => {
-                  if (!sortKey) return 0;
-                  const dir = sortAsc ? 1 : -1;
-                  if (sortKey === "deadline") {
-                    const da = a.deadline ? new Date(a.deadline).getTime() : Infinity;
-                    const db = b.deadline ? new Date(b.deadline).getTime() : Infinity;
-                    return (da - db) * dir;
-                  }
-                  if (sortKey === "step") {
-                    return (getStepInfo(a.current_phase).step - getStepInfo(b.current_phase).step) * dir;
-                  }
-                  if (sortKey === "created_at") {
-                    return (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) * dir;
-                  }
-                  return 0;
-                }).map((p) => {
-                  const pos = p.positioning ? POS_LABELS[p.positioning] : null;
-                  const stepInfo = getStepInfo(p.current_phase);
-                  const dl = formatDeadline(p.deadline);
-                  const st = deriveStatus(p);
-
-                  return (
-                    <Link
+                <ProposalsTableHeader
+                  sortKey={sortKey}
+                  sortAsc={sortAsc}
+                  onSort={toggleSort}
+                />
+                {[...proposals]
+                  .sort(
+                    sortKey
+                      ? createSortComparator(sortKey, sortAsc ? 1 : -1)
+                      : () => 0,
+                  )
+                  .map((p) => (
+                    <ProposalsTableRow
                       key={p.id}
-                      href={`/proposals/${p.id}`}
-                      className={`grid grid-cols-[1fr_80px_100px_100px_110px_36px] gap-4 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center ${
-                        p.status === "completed" || p.status === "failed" || p.win_result === "no_go" ? "opacity-60" : ""
-                      }`}
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm text-[#ededed] truncate font-medium">{p.title}</p>
-                        <p className="text-xs text-[#5c5c5c] mt-0.5 truncate">
-                          {p.client_name || "발주처 미지정"}
-                          {p.win_result && p.win_result !== "no_go" && p.win_result !== "not_interested" && (
-                            <span className="text-[#8c8c8c] ml-2">
-                              {p.win_result === "won" ? "· 수주" : p.win_result === "lost" ? "· 낙찰 실패" : "· 결과 대기"}
-                              {p.bid_amount ? ` · ${p.bid_amount.toLocaleString()}원` : ""}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                      <span className={`text-xs font-medium ${pos?.color ?? "text-[#3c3c3c]"}`}>
-                        {pos ? `${pos.icon} ${pos.label}` : "—"}
-                      </span>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[11px] text-[#8c8c8c]">{stepInfo.label}</span>
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <div
-                              key={s}
-                              className={`w-3 h-1 rounded-full ${
-                                s <= stepInfo.step
-                                  ? "bg-[#3ecf8e]"
-                                  : "bg-[#262626]"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <span className={`text-xs ${dl.urgent ? "text-red-400 font-semibold" : "text-[#5c5c5c]"}`}>
-                        {dl.text}
-                      </span>
-                      <span className="flex items-center gap-1.5" title={st.tooltip}>
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${st.dotColor}`} />
-                        <span className={`text-xs font-medium ${st.textColor}`}>{st.label}</span>
-                      </span>
-                      <div className="relative">
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMenuOpen(menuOpen === p.id ? null : p.id); }}
-                          className="w-7 h-7 flex items-center justify-center rounded-md text-[#5c5c5c] hover:text-[#ededed] hover:bg-[#1c1c1c] transition-colors"
-                        >
-                          ⋯
-                        </button>
-                        {menuOpen === p.id && (
-                          <div className="absolute right-0 top-8 z-50 bg-[#1c1c1c] border border-[#262626] rounded-lg shadow-xl py-1 min-w-[140px] animate-in fade-in slide-in-from-top-1 duration-150">
-                            <button
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/proposals/${p.id}`); setMenuOpen(null); }}
-                              className="w-full px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] text-left transition-colors"
-                            >
-                              상세 보기
-                            </button>
-                            {p.status !== "completed" && p.status !== "failed" && (
-                              <button
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/proposals/${p.id}`); setMenuOpen(null); }}
-                                className="w-full px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] text-left transition-colors"
-                              >
-                                워크플로 재개
-                              </button>
-                            )}
-                            <button
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMenuOpen(null); }}
-                              className="w-full px-3 py-1.5 text-xs text-red-400 hover:bg-red-950/30 text-left transition-colors"
-                            >
-                              삭제
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
+                      proposal={p}
+                      menuOpen={menuOpen}
+                      onMenuToggle={(id) =>
+                        setMenuOpen(menuOpen === id ? null : id)
+                      }
+                      onMenuAction={(id, action) => {
+                        if (action === "view" || action === "resume") {
+                          router.push(`/proposals/${id}`);
+                        } else if (action === "delete") {
+                          // TODO: Implement delete functionality
+                        }
+                        setMenuOpen(null);
+                      }}
+                    />
+                  ))}
               </div>
 
               {totalCount > 20 && (() => {

@@ -12,6 +12,11 @@ import { useCallback, useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import Placeholder from "@tiptap/extension-placeholder";
 
 interface ProposalEditorProps {
   content: string;
@@ -39,6 +44,13 @@ export default function ProposalEditor({
         HTMLAttributes: {
           class: "bg-amber-500/20 text-amber-200 rounded px-0.5",
         },
+      }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableCell,
+      TableHeader,
+      Placeholder.configure({
+        placeholder: "이 섹션의 내용을 작성하세요...",
       }),
     ],
     content,
@@ -156,6 +168,13 @@ function Toolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
 
       {btn("하이라이트", editor.isActive("highlight"), () =>
         editor.chain().focus().toggleHighlight().run()
+      )}
+
+      <div className="w-px h-4 bg-[#262626] mx-1" />
+
+      {btn("표 삽입", false, () =>
+        editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+        "표 삽입"
       )}
     </div>
   );

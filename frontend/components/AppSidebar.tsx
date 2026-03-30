@@ -22,7 +22,18 @@ import ThemeToggle from "@/components/ThemeToggle";
 /* ── SVG 아이콘 ── */
 function SvgIcon({ d, className = "" }: { d: string; className?: string }) {
   return (
-    <svg aria-hidden="true" focusable="false" className={`w-4 h-4 ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      className={`w-4 h-4 ${className}`}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ color: 'inherit' }}
+    >
       <path d={d} />
     </svg>
   );
@@ -45,6 +56,7 @@ const ICONS: Record<string, string> = {
   org: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
   prompt: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
   experiment: "M9 3h6v2H9z M10 5v6l-4 7h12l-4-7V5",
+  settings: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
 };
 
 interface NavItem { href: string; label: string; icon: string; }
@@ -61,24 +73,20 @@ const NAV_REST: NavEntry[] = [
   {
     label: "지식 베이스", icon: "kb", basePath: "/kb",
     children: [
-      { href: "/kb/search", label: "통합 검색", icon: "search" },
-      { href: "/kb/content", label: "콘텐츠", icon: "content" },
-      { href: "/kb/clients", label: "발주기관", icon: "clients" },
-      { href: "/kb/competitors", label: "경쟁사", icon: "competitors" },
-      { href: "/kb/lessons", label: "교훈", icon: "lessons" },
-      { href: "/kb/qa", label: "Q&A", icon: "qa" },
-      { href: "/kb/labor-rates", label: "노임단가", icon: "labor" },
-      { href: "/kb/market-prices", label: "시장가격", icon: "market" },
+      { href: "/kb/content", label: "자료함", icon: "content" },
+      { href: "/kb/market", label: "시장 분석", icon: "market" },
+      { href: "/kb/pricing", label: "예산/단가 가이드", icon: "labor" },
     ],
   },
 ];
 
 const ADMIN_GROUP: NavGroup = {
-  label: "Admin", icon: "admin", basePath: "/admin",
+  label: "관리", icon: "admin", basePath: "/admin",
   children: [
     { href: "/admin", label: "이용자 관리", icon: "org" },
     { href: "/admin/prompts", label: "프롬프트 관리", icon: "prompt" },
     { href: "/admin/prompts/experiments", label: "A/B 실험", icon: "experiment" },
+    { href: "/settings", label: "설정", icon: "settings" },
   ],
 };
 
@@ -113,7 +121,7 @@ export default function AppSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // ── SSR 안전: 초기값 기본 → 마운트 후 localStorage 복원 ──
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_WIDTH);
   const [kbOpen, setKbOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -122,12 +130,18 @@ export default function AppSidebar() {
 
   // 마운트 시 localStorage → state 복원
   useEffect(() => {
+    if (typeof window === "undefined") return; // SSR 방어
+
     const savedCollapsed = safeGetItem("sidebar-collapsed");
+    let initialCollapsed = false; // 기본값: 열려있음
+
     if (savedCollapsed !== null) {
-      setCollapsed(savedCollapsed === "true");
-    } else if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      setCollapsed(true);
+      initialCollapsed = savedCollapsed === "true";
+    } else if (window.innerWidth < 1024) {
+      initialCollapsed = true; // 모바일이면 닫혀있음
     }
+
+    setCollapsed(initialCollapsed);
 
     const savedWidth = safeGetItem("sidebar-width");
     if (savedWidth) {
@@ -174,9 +188,10 @@ export default function AppSidebar() {
   // ── 토글 함수들 (M-3: 일관되게 useCallback) ──
   const toggleSidebar = useCallback(() => {
     setCollapsed(prev => {
-      const next = !prev;
-      safeSetItem("sidebar-collapsed", String(next));
-      return next;
+      // null이면 닫혀있는 상태(true)로 시작
+      if (prev === null) return true;
+      // 그 후는 토글
+      return !prev;
     });
   }, []);
 
@@ -195,6 +210,12 @@ export default function AppSidebar() {
       return next;
     });
   }, []);
+
+  // collapsed 상태 변경 → localStorage 저장
+  useEffect(() => {
+    if (collapsed === null) return; // 초기화 전 무시
+    safeSetItem("sidebar-collapsed", String(collapsed));
+  }, [collapsed]);
 
   // KB / Admin 하위 페이지 첫 진입 시만 자동 펼침 (M-4: 사용자 닫기 의도 존중)
   const prevPathRef = useRef(pathname);
@@ -312,7 +333,8 @@ export default function AppSidebar() {
           <button
             onClick={forMobile ? () => setMobileOpen(false) : toggleSidebar}
             className="flex items-center gap-2 overflow-hidden group/logo"
-            title="사이드바 열기/닫기"
+            title={forMobile ? "메뉴 닫기" : "사이드바 열기/닫기"}
+            aria-label={forMobile ? "메뉴 닫기" : collapsed ? "사이드바 펼치기" : "사이드바 접기"}
           >
             <div className="w-6 h-6 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0 group-hover/logo:bg-[#4fe0a0] transition-colors">
               PA
@@ -330,32 +352,6 @@ export default function AppSidebar() {
             <SvgIcon d={ICONS[DASHBOARD.icon] || ""} className="opacity-70 shrink-0" />
             <span>{DASHBOARD.label}</span>
           </Link>
-
-          {/* 최근 작업 */}
-          {recentProposals.length > 0 && (
-            <div className="mt-2 mb-2">
-              <p className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-[#555]">최근 작업</p>
-              {recentProposals.map(p => {
-                const d = calcDDay(p.deadline);
-                const dotColor = p.status === "initialized" ? "#f59e0b" : "#3ecf8e";
-                return (
-                  <Link key={p.id} href={`/proposals/${p.id}`}
-                    className="flex items-start gap-2 px-3 py-1.5 rounded-md text-sm transition-colors text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-                  >
-                    <span className="mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor }} />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[#cdcdcd] text-[13px]">{p.title}</p>
-                      <p className="text-[10px]">
-                        {d !== null && <span className={dDayColor(d)}>{formatDDay(d)}</span>}
-                        {d !== null && " · "}
-                        <span>Phase {p.phases_completed}/5</span>
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
 
           {/* 나머지 NAV (공고~지식 베이스) — M-8: basePath/href를 key로 사용 */}
           {NAV_REST.map(entry => {
@@ -397,9 +393,44 @@ export default function AppSidebar() {
             );
           })}
 
-          {/* Admin — L-2: aria-expanded 추가 */}
+          {/* 최근 작업 — KB 아래로 이동 */}
+          {recentProposals.length > 0 && (
+            <div className="mt-2 mb-2">
+              <p className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-[#555]">최근 작업</p>
+              {recentProposals.map(p => {
+                const d = calcDDay(p.deadline);
+                const dotColor = p.status === "initialized" ? "#f59e0b" : "#3ecf8e";
+                return (
+                  <Link key={p.id} href={`/proposals/${p.id}`}
+                    className="flex items-start gap-2 px-3 py-1.5 rounded-md text-sm transition-colors text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+                  >
+                    <span className="mt-1.5 w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor }} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[#cdcdcd] text-[13px]">{p.title}</p>
+                      <p className="text-[10px]">
+                        {d !== null && <span className={dDayColor(d)}>{formatDDay(d)}</span>}
+                        {d !== null && " · "}
+                        <span>Phase {p.phases_completed}/5</span>
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </nav>
+
+        {/* 하단: 유저 + 테마 + 알림 + Admin */}
+        <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
+          <ThemeToggle collapsed={false} />
+          <div className="flex items-center justify-between px-3 py-1.5">
+            <span className="text-xs text-[#5c5c5c] truncate flex-1">{email}</span>
+            <NotificationBell />
+          </div>
+
+          {/* Admin 관리 메뉴 (하단) */}
           {(userRole === "admin" || userRole === "manager") && (
-            <div>
+            <div className="mt-2 pt-2 border-t border-[#262626]">
               <button
                 onClick={toggleAdmin}
                 aria-expanded={adminOpen}
@@ -423,17 +454,7 @@ export default function AppSidebar() {
               )}
             </div>
           )}
-        </nav>
 
-        {/* 하단: 유저 + 테마 + 알림 */}
-        <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
-          <ThemeToggle collapsed={false} />
-          <div className="flex items-center justify-between px-3 py-1.5">
-            <Link href="/settings" className="text-xs text-[#5c5c5c] truncate flex-1 hover:text-[#ededed] transition-colors">
-              {email}
-            </Link>
-            <NotificationBell />
-          </div>
           <button
             onClick={signOut}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
@@ -447,8 +468,8 @@ export default function AppSidebar() {
     );
   }
 
-  const showCollapsed = mounted ? collapsed : false;
-  const currentWidth = mounted ? sidebarWidth : DEFAULT_WIDTH;
+  const showCollapsed = collapsed === true; // collapsed가 true일 때만 닫혀있음
+  const currentWidth = sidebarWidth;
 
   return (
     <>
@@ -489,7 +510,8 @@ export default function AppSidebar() {
             <button
               onClick={toggleSidebar}
               className="w-7 h-7 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0 hover:bg-[#4fe0a0] transition-colors"
-              title="사이드바 열기"
+              title="사이드바 펼치기"
+              aria-label="사이드바 펼치기"
             >
               PA
             </button>

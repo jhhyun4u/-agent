@@ -429,48 +429,50 @@ async def get_scored_bids(
     정기 스케줄러(평일 08~18시 매시 정각)가 수집한 데이터 조회.
     실시간 G2B 호출 없음 — 수동 크롤링은 POST /bids/crawl 사용.
     """
-    client = await get_async_client()
+    try:
+        # G2B API에서 직접 공고 검색 (최근 N일)
+        from app.services.g2b_service import G2BService
 
-    from_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
-    query = client.table("bid_announcements").select(
-        "bid_no, bid_title, agency, budget_amount, deadline_date, "
-        "days_remaining, bid_type, created_at, raw_data, proposal_status, decided_by"
-    ).gte("created_at", from_date).order("created_at", desc=True).limit(max_results)
+        g2b = G2BService()
+        bids = await g2b.search_bids(lookback_days=days)
 
-    if min_budget > 0:
-        query = query.gte("budget_amount", min_budget)
+        # 적합도 스코어링
+        scored = score_and_rank_bids(
+            bids,
+            reference_date=datetime.now(timezone.utc).date(),
+            min_score=0,
+            exclude_expired=True,
+            max_results=max_results,
+            min_days_remaining=3,
+        )
 
-    result = await query.execute()
-    db_rows = result.data or []
+        # "관련없음" 공고 제외 (파일 캐시 기반)
+        try:
+            cache_dir = Path("data/bid_status")
+            excluded_nos: set[str] = set()
+            if cache_dir.exists():
+                for cache_file in cache_dir.glob("*.json"):
+                    try:
+                        data = json.loads(cache_file.read_text(encoding="utf-8"))
+                        if data.get("status") == "관련없음":
+                            excluded_nos.add(data.get("bid_no", ""))
+                    except Exception:
+                        pass
+            if excluded_nos:
+                scored = [bs for bs in scored if bs.bid_no not in excluded_nos]
+        except Exception as e:
+            logger.warning(f"bid_status 캐시 읽기 실패 (필터링 건너뜀): {e}")
 
-    # raw_data가 있으면 scorer용으로 사용, 없으면 DB 필드를 G2B 형식으로 매핑
-    data = []
-    for row in db_rows:
-        if row.get("raw_data"):
-            data.append(row["raw_data"])
-        else:
-            data.append({
-                "bidNtceNo": row.get("bid_no", ""),
-                "bidNtceNm": row.get("bid_title", ""),
-                "ntceInsttNm": row.get("agency", ""),
-                "presmptPrce": str(row.get("budget_amount") or "0"),
-                "bidClseDt": row.get("deadline_date", ""),
-            })
-
-    # 적합도 스코어링 (G2B raw 형식 기반)
-    scored = score_and_rank_bids(
-        data,
-        reference_date=datetime.now(timezone.utc).date(),
-        min_score=0,
-        exclude_expired=True,
-        max_results=max_results,
-    )
-
-    return ok({
-        "total_count": len(scored),
-        "source": "db",
-        "items": scored,
-    })
+        return ok({
+            "data": scored,
+            "total_fetched": len(bids),
+            "date_from": (datetime.now(timezone.utc) - timedelta(days=days)).isoformat(),
+            "date_to": datetime.now(timezone.utc).isoformat(),
+            "sources": {"입찰공고": len(bids)},
+        })
+    except Exception as e:
+        logger.error(f"get_scored_bids 오류: {e}", exc_info=True)
+        return error("G2B 공고 조회 실패", code="BID_FETCH_ERROR")
 
 
 @router.post("/bids/crawl")

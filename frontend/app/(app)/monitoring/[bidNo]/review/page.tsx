@@ -10,6 +10,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Markdown from "markdown-to-jsx";
 import { api, BidAnalysis } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 
@@ -67,6 +68,15 @@ export default function BidReviewPage() {
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [analysisFailed, setAnalysisFailed] = useState(false);
+
+  // 마크다운 탭 상태
+  const [markdownTab, setMarkdownTab] = useState<"rfp" | "notice" | "instruction">("rfp");
+  const [markdownContent, setMarkdownContent] = useState<Record<string, string>>({
+    rfp: "",
+    notice: "",
+    instruction: "",
+  });
+  const [markdownLoading, setMarkdownLoading] = useState(false);
 
   // 분석 결과를 sessionStorage에 캐싱하는 래퍼
   function setAnalysisWithCache(data: BidAnalysis | null) {
@@ -341,51 +351,149 @@ export default function BidReviewPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bidNo]);
 
+  // 마크다운 문서 로드 함수
+  async function loadMarkdownDocuments() {
+    setMarkdownLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const supabase = createClient();
+
+      // Supabase Storage에서 마크다운 파일 다운로드
+      const paths = {
+        rfp: `bids/${bidNo}/RFP分析.md`,
+        notice: `bids/${bidNo}/공고문.md`,
+        instruction: `bids/${bidNo}/과업지시서.md`,
+      };
+
+      const contents: Record<string, string> = {};
+
+      for (const [key, path] of Object.entries(paths)) {
+        try {
+          const { data, error } = await supabase.storage
+            .from("documents")
+            .download(path);
+
+          if (error || !data) {
+            console.warn(`[markdown] ${key} 다운로드 실패:`, error?.message || "Unknown error");
+            contents[key] = `## ${key}\n\n문서를 찾을 수 없습니다.`;
+          } else {
+            const text = await data.text();
+            contents[key] = text;
+            console.log(`✓ 마크다운 로드: ${key}`);
+          }
+        } catch (e) {
+          console.warn(`[markdown] ${key} 처리 실패:`, e);
+          contents[key] = `## ${key}\n\n문서 로드 중 오류가 발생했습니다.`;
+        }
+      }
+
+      setMarkdownContent(contents);
+    } catch (e) {
+      console.error("[markdown] 로드 실패:", e);
+      setError("마크다운 문서 로드 중 오류가 발생했습니다.");
+    } finally {
+      setMarkdownLoading(false);
+    }
+  }
+
   async function handleDecision(status: "제안결정" | "제안포기" | "제안유보" | "관련없음") {
     setDeciding(true);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
       const tk = await getToken();
-
-      // 1) 공고 상태 변경
-      const res = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tk}`,
-        },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || err.message || "상태 변경 실패");
-      }
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tk}`,
+      };
 
       setSelectedStatus(status);
 
-      // 2) "제안결정" → 제안 프로젝트 생성 + 제안서 목록으로 이동
+      // "제안결정" → 분석 + Go 결정 + 제안 프로젝트 생성
       if (status === "제안결정") {
-        const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${tk}`,
-          },
-          body: JSON.stringify({ bid_no: bidNo }),
-        });
-        if (createRes.ok) {
+        try {
+          // 1) 공고 분석 (RFP分析, 공고문, 과업지시서 생성)
+          console.log(`[review] 공고 분석 시작: ${bidNo}`);
+          const analyzeRes = await fetch(`${baseUrl}/g2b/bid/${bidNo}/analyze`, {
+            method: "POST",
+            headers,
+          });
+          if (!analyzeRes.ok) {
+            const err = await analyzeRes.json().catch(() => ({}));
+            console.warn("[review] 공고 분석 실패:", err.detail || err.message);
+            // 분석 실패해도 계속 진행 (fallback)
+          } else {
+            console.log(`✓ 공고 분석 완료: ${bidNo}`);
+            // 분석 완료 후 마크다운 문서 로드
+            await loadMarkdownDocuments();
+          }
+
+          // 2) Go 의사결정 기록
+          console.log(`[review] Go 의사결정 기록: ${bidNo}`);
+          const decisionRes = await fetch(`${baseUrl}/g2b/bid/${bidNo}/decision`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+              decision: "Go",
+              decision_comment: "AI 검토 후 제안 진행으로 의사결정",
+            }),
+          });
+          if (!decisionRes.ok) {
+            const err = await decisionRes.json().catch(() => ({}));
+            throw new Error(err.detail || err.message || "의사결정 기록 실패");
+          }
+          console.log(`✓ Go 의사결정 기록 완료: ${bidNo}`);
+
+          // 3) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
+          console.log(`[review] 제안 프로젝트 생성: ${bidNo}`);
+          const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ bid_no: bidNo }),
+          });
+          if (!createRes.ok) {
+            const err = await createRes.json().catch(() => ({}));
+            console.warn("[review] 제안 프로젝트 생성 실패:", err.detail || err.message);
+            // 프로젝트 생성 실패해도 의사결정은 완료 → 목록으로 이동
+          }
+          console.log(`✓ 제안 프로젝트 생성 완료, 목록으로 이동`);
           router.push("/proposals");
-        } else {
-          // 프로젝트 생성 실패해도 상태 변경은 완료 → 목록으로 이동
-          console.warn("제안 프로젝트 생성 실패:", createRes.status);
-          router.push("/proposals");
+        } catch (e: unknown) {
+          const msg = e instanceof Error ? e.message : "제안 프로세스 중 오류 발생";
+          console.error("[review] 제안 프로세스 오류:", msg);
+          setError(msg);
+          setDeciding(false);
         }
       } else {
-        // 제안포기/제안유보/관련없음 → 공고 모니터링으로 돌아감
+        // "제안포기" / "제안유보" / "관련없음" → No-Go 기록 후 목록으로
+        try {
+          const noGoReason = {
+            "제안포기": "최종 제안 포기",
+            "제안유보": "추가 검토 후 결정 필요",
+            "관련없음": "당사 사업 분야와 무관",
+          } as const;
+
+          const decisionRes = await fetch(`${baseUrl}/g2b/bid/${bidNo}/decision`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+              decision: "No-Go",
+              decision_comment: noGoReason[status] || `${status}로 의사결정`,
+            }),
+          });
+          if (!decisionRes.ok) {
+            console.warn("[review] No-Go 의사결정 기록 실패");
+            // 실패해도 목록으로 이동
+          }
+          console.log(`✓ No-Go 의사결정 기록 완료: ${bidNo} (${status})`);
+        } catch (e) {
+          console.warn("[review] No-Go 기록 중 오류:", e);
+          // 오류 무시하고 목록으로 이동
+        }
         router.push("/monitoring");
       }
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "상태 변경 실패");
+      const msg = e instanceof Error ? e.message : "상태 변경 실패";
+      setError(msg);
       setDeciding(false);
     }
   }
@@ -662,6 +770,82 @@ export default function BidReviewPage() {
               </div>
             )}
           </div>
+
+          {/* 공고 분석 마크다운 문서 */}
+          {Object.keys(markdownContent).some((k) => markdownContent[k]) && (
+            <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-blue-400 text-sm">📄</span>
+                <p className="text-xs font-medium text-[#ededed]">공고 분석 문서</p>
+              </div>
+
+              {/* 탭 */}
+              <div className="flex items-center gap-2 mb-4 border-b border-[#262626]">
+                {[
+                  { key: "rfp", label: "RFP分析", icon: "🔍" },
+                  { key: "notice", label: "공고문", icon: "📋" },
+                  { key: "instruction", label: "과업지시서", icon: "📝" },
+                ].map(({ key, label, icon }) => (
+                  <button
+                    key={key}
+                    onClick={() => setMarkdownTab(key as typeof markdownTab)}
+                    className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors ${
+                      markdownTab === key
+                        ? "text-[#3ecf8e] border-[#3ecf8e]"
+                        : "text-[#5c5c5c] border-transparent hover:text-[#8c8c8c]"
+                    }`}
+                  >
+                    {icon} {label}
+                  </button>
+                ))}
+              </div>
+
+              {/* 마크다운 콘텐츠 */}
+              {markdownLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <p className="text-xs text-[#5c5c5c]">문서 로드 중...</p>
+                </div>
+              ) : (
+                <div className="bg-[#111111] border border-[#262626] rounded-lg p-4 max-h-96 overflow-y-auto prose prose-invert max-w-none text-xs">
+                  <Markdown
+                    options={{
+                      overrides: {
+                        h1: {
+                          component: "h2",
+                          props: { className: "text-sm font-bold text-[#ededed] mt-4 mb-2" },
+                        },
+                        h2: {
+                          component: "h3",
+                          props: { className: "text-xs font-bold text-[#e0e0e0] mt-3 mb-1.5" },
+                        },
+                        h3: {
+                          component: "h4",
+                          props: { className: "text-xs font-semibold text-[#d0d0d0] mt-2 mb-1" },
+                        },
+                        p: {
+                          props: { className: "text-xs text-[#8c8c8c] leading-relaxed mb-2" },
+                        },
+                        ul: {
+                          props: { className: "list-disc list-inside text-xs text-[#8c8c8c] mb-2 space-y-1" },
+                        },
+                        li: {
+                          props: { className: "text-xs text-[#8c8c8c]" },
+                        },
+                        code: {
+                          props: { className: "bg-[#1a1a1a] px-2 py-1 rounded text-[#3ecf8e] text-[10px]" },
+                        },
+                        blockquote: {
+                          props: { className: "border-l-2 border-[#3ecf8e]/30 pl-3 italic text-[#5c5c5c] my-2" },
+                        },
+                      },
+                    }}
+                  >
+                    {markdownContent[markdownTab] || "문서를 찾을 수 없습니다."}
+                  </Markdown>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 첨부파일 */}
           {bidInfo.attachments.length > 0 && (

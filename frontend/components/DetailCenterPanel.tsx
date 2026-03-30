@@ -6,10 +6,12 @@
  */
 
 import { useCallback, useState } from "react";
+import { useToast } from "@/components/ui/Toast";
 import PhaseGraph from "@/components/PhaseGraph";
 import WorkflowPanel from "@/components/WorkflowPanel";
 import WorkflowLogPanel from "@/components/WorkflowLogPanel";
-import { api, type WorkflowState } from "@/lib/api";
+import { VersionSelectionModal } from "@/components/VersionSelectionModal";
+import { api, type WorkflowState, type VersionConflict } from "@/lib/api";
 import type { NodeProgress, StreamEvent } from "@/lib/hooks/useWorkflowStream";
 
 const NODE_LABELS: Record<string, string> = {
@@ -69,9 +71,51 @@ export default function DetailCenterPanel({
   onRetryFromPhase,
   aborting,
 }: DetailCenterPanelProps) {
+  const toast = useToast();
   const [logCollapsed, setLogCollapsed] = useState(false);
   const [gateApproving, setGateApproving] = useState(false);
   const failedPhaseN = phasesCompleted + 1;
+
+  // ── 노드 이동 (Artifact Versioning Phase 1) ──
+  const [showVersionModal, setShowVersionModal] = useState(false);
+  const [versionConflicts, setVersionConflicts] = useState<VersionConflict[]>([]);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [moveLoading, setMoveLoading] = useState(false);
+
+  const handleMoveToNode = useCallback(async (targetNode: string) => {
+    try {
+      const feasibility = await api.workflow.checkMoveFeasibility(proposalId, targetNode);
+      if (feasibility.needs_modal && feasibility.conflicts.length > 0) {
+        setVersionConflicts(feasibility.conflicts);
+        setSelectedNode(targetNode);
+        setShowVersionModal(true);
+      } else if (feasibility.can_move) {
+        // 충돌 없음 — 즉시 이동
+        await api.workflow.moveToNode(proposalId, targetNode, {});
+        onStateChange();
+      } else {
+        toast.error("이동 불가: " + feasibility.message);
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "이동 가능 여부 확인 실패");
+    }
+  }, [proposalId, onStateChange]);
+
+  const handleVersionSelect = useCallback(async (selections: Record<string, number>) => {
+    if (!selectedNode) return;
+    setMoveLoading(true);
+    try {
+      await api.workflow.moveToNode(proposalId, selectedNode, selections);
+      setShowVersionModal(false);
+      setSelectedNode(null);
+      setVersionConflicts([]);
+      onStateChange();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "노드 이동 실패");
+    } finally {
+      setMoveLoading(false);
+    }
+  }, [proposalId, selectedNode, onStateChange]);
 
   const handleGateApprove = useCallback(async () => {
     setGateApproving(true);
@@ -79,7 +123,7 @@ export default function DetailCenterPanel({
       await api.workflow.resume(proposalId, { approved: true, quick_approve: true });
       onStateChange();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "승인 실패");
+      toast.error(e instanceof Error ? e.message : "승인 실패");
     } finally {
       setGateApproving(false);
     }
@@ -145,12 +189,28 @@ export default function DetailCenterPanel({
           onStepClick={(idx) => onStepClick(selectedStep === idx ? null : idx)}
           onStartStep={() => onStartWorkflow()}
           onGateApprove={handleGateApprove}
+          onMoveToNode={handleMoveToNode}
           isStarting={isStarting}
           isGateApproving={gateApproving}
           isPaused={isPaused}
           elapsed={elapsed}
           onAbort={onAbort}
           aborting={aborting}
+        />
+      )}
+
+      {/* 버전 선택 모달 */}
+      {showVersionModal && (
+        <VersionSelectionModal
+          conflicts={versionConflicts}
+          availableVersions={{}}
+          onSelect={handleVersionSelect}
+          onCancel={() => {
+            setShowVersionModal(false);
+            setSelectedNode(null);
+            setVersionConflicts([]);
+          }}
+          loading={moveLoading}
         />
       )}
 

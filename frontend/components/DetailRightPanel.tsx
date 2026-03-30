@@ -83,6 +83,7 @@ export default function DetailRightPanel({
   onRetryFromPhase,
   workflowState,
 }: DetailRightPanelProps) {
+  const toast = useToast();
   const [activeTab, setActiveTab] = useState<Tab>("result");
   const [costSheetOpen, setCostSheetOpen] = useState(false);
 
@@ -99,7 +100,7 @@ export default function DetailRightPanel({
       setNewComment("");
       onFetchComments();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "댓글 작성 실패");
+      toast.error(err instanceof Error ? err.message : "댓글 작성 실패");
     } finally {
       setSubmittingComment(false);
     }
@@ -111,7 +112,7 @@ export default function DetailRightPanel({
       await api.comments.delete(commentId);
       onFetchComments();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "삭제 실패");
+      toast.error(err instanceof Error ? err.message : "댓글 삭제 실패");
     }
   }
 
@@ -129,7 +130,7 @@ export default function DetailRightPanel({
       });
       setWinSaved(true);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "저장 실패");
+      toast.error(err instanceof Error ? err.message : "수주결과 저장 실패");
     }
   }
 
@@ -229,7 +230,7 @@ export default function DetailRightPanel({
       const res = await api.proposals.getFileUrl(proposalId, fileId);
       window.open(res.url, "_blank");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "다운로드 실패");
+      toast.error(err instanceof Error ? err.message : "파일 다운로드 실패");
     }
   }
 
@@ -239,7 +240,7 @@ export default function DetailRightPanel({
       await api.proposals.deleteFile(proposalId, fileId);
       onFetchFiles();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "삭제 실패");
+      toast.error(err instanceof Error ? err.message : "파일 삭제 실패");
     }
   }
 
@@ -256,7 +257,7 @@ export default function DetailRightPanel({
       const res = await api.proposals.getFileUrl(proposalId, file.id);
       setPreviewFile({ url: res.url, filename: file.filename, type: file.file_type.toLowerCase() });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "미리보기 실패");
+      toast.error(err instanceof Error ? err.message : "파일 미리보기 실패");
     }
   }
 
@@ -288,8 +289,6 @@ export default function DetailRightPanel({
   }
 
   // ── 다운로드 ──
-  const toast = useToast();
-
   async function handleDownload(type: "docx" | "pptx" | "hwpx") {
     try {
       const res = await fetch(
@@ -746,7 +745,7 @@ export default function DetailRightPanel({
                 dependencyMismatches={workflowState.dependency_mismatches}
                 onVersionSelect={async (key, ver) => {
                   console.log(`Version selected: ${key} v${ver}`);
-                  alert(`선택하신 산출물(${key})의 버전(v${ver})으로 전환을 요청합니다.\n(API 연동 대기 중)`);
+                  toast.info(`산출물(${key}) v${ver} 버전 전환을 요청합니다. (API 연동 대기 중)`);
                 }}
               />
             ) : (

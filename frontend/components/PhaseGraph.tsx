@@ -128,6 +128,7 @@ interface Props {
   onStepClick?: (i: number) => void;
   onStartStep?: (i: number) => void;
   onGateApprove?: (i: number) => void;
+  onMoveToNode?: (nodeKey: string) => void;
   isStarting?: boolean;
   isGateApproving?: boolean;
   isPaused?: boolean;
@@ -139,7 +140,7 @@ interface Props {
 
 export default function PhaseGraph({
   workflowState, nodeProgress, currentNode = "", selectedStep = null,
-  onStepClick, onStartStep, onGateApprove,
+  onStepClick, onStartStep, onGateApprove, onMoveToNode,
   isStarting = false, isGateApproving = false,
   isPaused = false, elapsed, onAbort, aborting = false, className = "",
 }: Props) {
@@ -190,7 +191,7 @@ export default function PhaseGraph({
 
           {/* ── 1행: Head + A ── */}
           <div className="flex items-start">
-            <Row steps={HEAD_STEPS} sts={hS} gates={HEAD_G} gs={hG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} />
+            <Row steps={HEAD_STEPS} sts={hS} gates={HEAD_G} gs={hG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} move={onMoveToNode} />
             {/* 분기선 → A */}
             <div className="flex items-center mt-[16px] mx-0.5 shrink-0">
               <div className="h-[2px] w-1.5 bg-[#363636]" />
@@ -201,12 +202,12 @@ export default function PhaseGraph({
             <div className="flex items-center mt-[16px] mr-0.5 shrink-0">
               <div className="h-[2px] w-1 bg-[#363636]" />
             </div>
-            <Row steps={PROPOSAL_STEPS} sts={aS} gates={A_G} gs={aG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} />
+            <Row steps={PROPOSAL_STEPS} sts={aS} gates={A_G} gs={aG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} move={onMoveToNode} />
             {/* 통합선 + convergence gate → Tail */}
             <Ln ok={tG[0] === "passed"} />
             <Gt g={TAIL_G[0]} s={tG[0]} approve={() => onGateApprove?.(WORKFLOW_STEPS.indexOf(TAIL_STEPS[0]))} ap={isGateApproving} />
             <Ln ok={tG[0] === "passed"} />
-            <Row steps={TAIL_STEPS} sts={tS} gates={[]} gs={[]} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} />
+            <Row steps={TAIL_STEPS} sts={tS} gates={[]} gs={[]} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} move={onMoveToNode} />
           </div>
 
           {/* ── 분기 수직선 ── */}
@@ -221,7 +222,7 @@ export default function PhaseGraph({
               <span className="text-[7px] text-amber-400 bg-amber-500/10 rounded px-1 py-px font-bold mx-0.5">B</span>
               <div className="h-[2px] w-1 bg-[#363636]" />
             </div>
-            <Row steps={BIDDING_STEPS} sts={bS} gates={B_G} gs={bG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} />
+            <Row steps={BIDDING_STEPS} sts={bS} gates={B_G} gs={bG} np={nextP} sel={selectedStep} st={isStarting} ap={isGateApproving} clk={clk} start={onStartStep} gate={onGateApprove} move={onMoveToNode} />
             {/* 통합 올라가는 선 */}
             <div className="flex items-center mt-[16px] ml-0.5 shrink-0">
               <div className="h-[2px] w-3 bg-[#363636]" />
@@ -265,6 +266,12 @@ export default function PhaseGraph({
         <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#262626] border border-[#363636]" />미시작</span>
         <span className="ml-1 pl-2 border-l border-[#363636] flex items-center gap-1"><span className="text-blue-400 font-bold">A</span>제안서</span>
         <span className="flex items-center gap-1"><span className="text-amber-400 font-bold">B</span>입찰·제출</span>
+        {onMoveToNode && (
+          <span className="flex items-center gap-1 pl-2 border-l border-[#363636]">
+            <span className="w-3 h-3 rounded-full bg-blue-500 text-white text-[7px] font-bold flex items-center justify-center">↩</span>
+            완료 노드 hover → 재이동
+          </span>
+        )}
       </div>
     </div>
   );
@@ -272,10 +279,11 @@ export default function PhaseGraph({
 
 // ── Row ──
 
-function Row({ steps, sts, gates, gs, np, sel, st, ap, clk, start, gate }: {
+function Row({ steps, sts, gates, gs, np, sel, st, ap, clk, start, gate, move }: {
   steps: readonly WorkflowStepDef[]; sts: NS[]; gates: GDef[]; gs: GS[];
   np: number; sel: number | null; st: boolean; ap: boolean;
   clk: (i: number, s: NS) => void; start?: (i: number) => void; gate?: (i: number) => void;
+  move?: (nodeKey: string) => void;
 }) {
   return (
     <div className="flex items-start">
@@ -288,7 +296,8 @@ function Row({ steps, sts, gates, gs, np, sel, st, ap, clk, start, gate }: {
         return (
           <div key={`${step.path}-${step.stepLabel}`} className="flex items-start shrink-0">
             <Dot step={step} gi={gi} s={s} sel={sel === gi} nxt={gi === np} st={st}
-              clk={() => clk(gi, s)} start={start ? () => start(gi) : undefined} />
+              clk={() => clk(gi, s)} start={start ? () => start(gi) : undefined}
+              move={move ? () => move(step.nodes[0] ?? step.stepLabel) : undefined} />
             {!last && g && (
               <>
                 <Ln ok={gst === "passed"} />
@@ -311,13 +320,18 @@ function Ln({ ok }: { ok: boolean }) {
 
 const SZ = 38;
 
-function Dot({ step, gi, s, sel, nxt, st, clk, start }: {
+function Dot({ step, gi, s, sel, nxt, st, clk, start, move }: {
   step: WorkflowStepDef; gi: number; s: NS; sel: boolean; nxt: boolean; st: boolean;
-  clk: () => void; start?: () => void;
+  clk: () => void; start?: () => void; move?: () => void;
 }) {
   const prog = useProg(s === "active", EST[step.label] ?? 120);
+  const [hovered, setHovered] = useState(false);
   return (
-    <div className="flex flex-col items-center w-[50px]">
+    <div
+      className="flex flex-col items-center w-[50px] relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <div className="relative" style={{ width: SZ, height: SZ }}>
         {s === "active" && <Ring p={prog} sz={SZ} />}
         <button onClick={clk} aria-label={step.label}
@@ -332,6 +346,16 @@ function Dot({ step, gi, s, sel, nxt, st, clk, start }: {
           {s === "completed" ? <Chk /> : s === "active" ? `${Math.round(prog * 100)}%`
            : s === "review_pending" ? <Eye /> : step.stepLabel}
         </button>
+        {/* 이 노드로 이동 버튼 — 완료 노드 hover 시 표시 */}
+        {s === "completed" && hovered && move && (
+          <button
+            onClick={(e) => { e.stopPropagation(); move(); }}
+            title="이 노드로 이동"
+            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[7px] font-bold hover:bg-blue-400 z-10 shadow"
+          >
+            ↩
+          </button>
+        )}
       </div>
       <span className={`mt-0.5 text-[8px] font-medium text-center leading-tight w-full truncate ${
         s === "completed" ? "text-[#3ecf8e]" : s === "active" ? "text-[#ededed]"

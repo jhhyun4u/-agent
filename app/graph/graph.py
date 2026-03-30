@@ -23,14 +23,17 @@ from app.graph.edges import (
     route_after_bid_plan_review,
     route_after_cost_sheet_review,
     route_after_eval_result_review,
+    route_after_feedback_processor_review,
     route_after_gng_review,
     route_after_mock_eval_review,
     route_after_plan_review,
     route_after_ppt_review,
     route_after_presentation_strategy,
     route_after_proposal_review,
+    route_after_rewrite_review,
     route_after_rfp_review,
     route_after_section_review,
+    route_after_section_validator_review,
     route_after_self_review,
     route_after_strategy_review,
     route_after_submission_checklist_review,
@@ -57,7 +60,7 @@ from app.graph.nodes.rfp_analyze import rfp_analyze
 from app.graph.nodes.bid_plan import bid_plan
 from app.graph.nodes.strategy_generate import strategy_generate
 from app.graph.nodes.plan_nodes import (
-    plan_assign, plan_schedule, plan_story, plan_team,
+    plan_assign, plan_price, plan_schedule, plan_story, plan_team,
 )
 from app.graph.nodes.proposal_nodes import (
     proposal_write_next, self_review_with_auto_improve,
@@ -71,6 +74,14 @@ from app.graph.nodes.submission_nodes import (
 from app.graph.nodes.evaluation_nodes import (
     mock_evaluation, eval_result_node, project_closing,
 )
+
+# STEP 8A-8F: 신규 분석 노드 (Artifact Versioning System 통합)
+from app.graph.nodes.step8a_customer_analysis import proposal_customer_analysis
+from app.graph.nodes.step8b_section_validator import proposal_section_validator
+from app.graph.nodes.step8c_consolidation import proposal_sections_consolidation
+from app.graph.nodes.step8d_mock_evaluation import mock_evaluation_analysis
+from app.graph.nodes.step8e_feedback_processor import mock_evaluation_feedback_processor
+from app.graph.nodes.step8f_rewrite import proposal_write_next_v2
 
 from app.graph.token_tracking import track_tokens
 
@@ -111,6 +122,7 @@ def build_graph(checkpointer=None):
     g.add_node("plan_assign", track_tokens("plan_assign")(plan_assign))
     g.add_node("plan_schedule", track_tokens("plan_schedule")(plan_schedule))
     g.add_node("plan_story", track_tokens("plan_story")(plan_story))
+    g.add_node("plan_price", track_tokens("plan_price")(plan_price))
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 
@@ -120,6 +132,16 @@ def build_graph(checkpointer=None):
     g.add_node("review_section", review_section_node)
     g.add_node("self_review", track_tokens("self_review")(self_review_with_auto_improve))
     g.add_node("review_proposal", review_node("proposal"))
+
+    # STEP 8A-8F: 품질 게이트 및 최적화 (Artifact Versioning System)
+    g.add_node("proposal_customer_analysis", track_tokens("proposal_customer_analysis")(proposal_customer_analysis))
+    g.add_node("proposal_section_validator", track_tokens("proposal_section_validator")(proposal_section_validator))
+    g.add_node("review_section_validation", review_node("section_validation"))
+    g.add_node("proposal_sections_consolidation", proposal_sections_consolidation)
+    g.add_node("mock_evaluation_analysis", track_tokens("mock_evaluation_analysis")(mock_evaluation_analysis))
+    g.add_node("mock_evaluation_feedback_processor", track_tokens("mock_evaluation_feedback_processor")(mock_evaluation_feedback_processor))
+    g.add_node("proposal_write_next_v2", track_tokens("proposal_write_next_v2")(proposal_write_next_v2))
+    g.add_node("review_rewrite", review_node("rewrite"))
 
     # 5A: PPT
     g.add_node("presentation_strategy", track_tokens("presentation_strategy")(presentation_strategy))
@@ -223,8 +245,35 @@ def build_graph(checkpointer=None):
         "force_review": "review_proposal",
     })
     g.add_conditional_edges("review_proposal", route_after_proposal_review, {
-        "approved": "presentation_strategy",
+        "approved": "proposal_customer_analysis",  # → STEP 8A: 고객 분석
         "rework": "proposal_start_gate",
+    })
+
+    # ── STEP 8A-8F: 품질 게이트 및 최적화 ──
+
+    g.add_edge("proposal_customer_analysis", "proposal_section_validator")
+
+    g.add_edge("proposal_section_validator", "review_section_validation")
+    g.add_conditional_edges("review_section_validation", route_after_section_validator_review, {
+        "approved": "proposal_sections_consolidation",
+        "needs_rework": "proposal_start_gate",  # 섹션 재작성
+        "rejected": "proposal_section_validator",
+    })
+
+    g.add_edge("proposal_sections_consolidation", "mock_evaluation_analysis")
+
+    g.add_edge("mock_evaluation_analysis", "mock_evaluation_feedback_processor")
+
+    g.add_conditional_edges("mock_evaluation_feedback_processor", route_after_feedback_processor_review, {
+        "proceed_rewrite": "proposal_write_next_v2",
+        "skip_to_ppt": "presentation_strategy",  # 우수한 평가 → PPT 직진
+    })
+
+    g.add_edge("proposal_write_next_v2", "review_rewrite")
+    g.add_conditional_edges("review_rewrite", route_after_rewrite_review, {
+        "approved": "presentation_strategy",
+        "needs_more_rewrite": "proposal_write_next_v2",
+        "back_to_validation": "proposal_section_validator",
     })
 
     g.add_conditional_edges("presentation_strategy", route_after_presentation_strategy, {
@@ -242,8 +291,10 @@ def build_graph(checkpointer=None):
     # 6A: 모의 평가
     g.add_edge("mock_evaluation", "review_mock_eval")
     g.add_conditional_edges("review_mock_eval", route_after_mock_eval_review, {
-        "approved": "convergence_gate",  # → 통합
-        "rejected": "mock_evaluation",
+        "approved": "convergence_gate",   # → 통합 (발표 준비)
+        "rework_sections": "proposal_start_gate",  # → 섹션 재작성
+        "rework_strategy": "strategy_generate",    # → 전략 재검토
+        "rejected": "mock_evaluation",    # → 모의평가 재실행
     })
 
     # ── PATH B: 3B→4B→5B→6B ──

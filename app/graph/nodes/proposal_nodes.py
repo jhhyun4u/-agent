@@ -7,6 +7,7 @@ self_review_with_auto_improve: 전체 섹션 완성 후 4축 평가.
 """
 
 import logging
+from uuid import UUID
 
 from app.graph.state import ProposalSection, ProposalState
 from app.graph.context_helpers import (
@@ -26,6 +27,7 @@ from app.prompts.section_prompts import (
 from app.prompts.strategy import POSITIONING_STRATEGY_MATRIX
 from app.services.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
+from app.services.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -369,6 +371,24 @@ async def proposal_write_next(state: ProposalState) -> dict:
             break
     if not replaced:
         existing_sections.append(new_section)
+
+    # Phase 1: Create artifact version for proposal_sections
+    try:
+        sections_data = [
+            s.model_dump() if hasattr(s, "model_dump") else s
+            for s in existing_sections
+        ]
+        version_num, artifact_version = await execute_node_and_create_version(
+            proposal_id=UUID(state.get("project_id")),
+            node_name="proposal_write_next",
+            output_key="proposal_sections",
+            artifact_data=sections_data,
+            user_id=UUID(state.get("created_by")),
+            state=state
+        )
+        logger.info(f"Proposal sections v{version_num} created for proposal {state.get('project_id')}")
+    except Exception as e:
+        logger.warning(f"Proposal sections versioning 실패 (계속 진행): {e}")
 
     update: dict = {
         "proposal_sections": existing_sections,

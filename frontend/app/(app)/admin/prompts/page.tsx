@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { api, type LearningDashboard } from "@/lib/api";
 import TrendChart from "@/components/prompt/TrendChart";
+import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 
 const PRIORITY_STYLE: Record<string, { label: string; color: string; bg: string }> = {
   high: { label: "HIGH", color: "#ff6b6b", bg: "bg-[#2a1a1a] border-[#4a2020]" },
@@ -78,7 +79,8 @@ export default function PromptLearningDashboard() {
         )}
 
         {!loading && !data && (
-          <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-8 text-center">
+          <Card>
+            <CardBody className="p-8 text-center">
             <div className="text-[#8c8c8c] text-sm mb-4">
               프롬프트 사용 데이터가 아직 축적되지 않았습니다.
             </div>
@@ -91,7 +93,8 @@ export default function PromptLearningDashboard() {
             >
               프롬프트 카탈로그 보기
             </Link>
-          </div>
+            </CardBody>
+          </Card>
         )}
 
         {!loading && data && (
@@ -123,8 +126,9 @@ export default function PromptLearningDashboard() {
             </div>
 
             {/* 개선 필요 TOP N */}
-            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-              <h2 className="text-sm font-semibold mb-4">개선 필요 프롬프트</h2>
+            <Card>
+              <CardHeader title="개선 필요 프롬프트" />
+              <CardBody className="px-5 pb-5">
               {data.top_needs_improvement.length === 0 ? (
                 <div className="text-xs text-[#8c8c8c] py-4">
                   현재 개선이 필요한 프롬프트가 없습니다. 데이터가 더 축적되면 자동 분석됩니다.
@@ -186,12 +190,14 @@ export default function PromptLearningDashboard() {
                   })}
                 </div>
               )}
-            </section>
+              </CardBody>
+            </Card>
 
             {/* 추이 차트 */}
-            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <h2 className="text-sm font-semibold">추이 (최근 6개월)</h2>
+            <Card>
+              <CardBody className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="card-title">추이 (최근 6개월)</h3>
                 <div className="flex gap-1 bg-[#111] rounded-lg p-0.5">
                   {(["edit_ratio", "quality", "win_rate"] as const).map((m) => (
                     <button
@@ -220,11 +226,13 @@ export default function PromptLearningDashboard() {
                   분석 데이터가 축적되면 추이 차트가 표시됩니다.
                 </div>
               )}
-            </section>
+              </CardBody>
+            </Card>
 
             {/* 최근 학습 이력 */}
-            <section className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
-              <h2 className="text-sm font-semibold mb-4">최근 학습 이력</h2>
+            <Card>
+              <CardHeader title="최근 학습 이력" />
+              <CardBody className="px-5 pb-5">
               {(!data.recent_learnings || data.recent_learnings.length === 0) ? (
                 <div className="text-xs text-[#8c8c8c] py-2">
                   A/B 실험 승격·롤백 이력이 표시됩니다.
@@ -257,7 +265,8 @@ export default function PromptLearningDashboard() {
                   ))}
                 </div>
               )}
-            </section>
+              </CardBody>
+            </Card>
           </>
         )}
       </main>
@@ -280,7 +289,8 @@ function HealthCard({
   const isNegative = delta != null && ((good === "low" && delta > 0) || (good !== "low" && delta < 0));
 
   return (
-    <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-4">
+    <Card>
+      <CardBody className="p-4">
       <div className="text-[#8c8c8c] text-xs">{label}</div>
       <div className="text-2xl font-bold mt-1">{value}</div>
       {delta != null && delta !== 0 && (
@@ -289,6 +299,7 @@ function HealthCard({
           {isPositive ? " ↑" : isNegative ? " ↓" : ""}
         </div>
       )}
-    </div>
+      </CardBody>
+    </Card>
   );
 }

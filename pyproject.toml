@@ -24,6 +24,9 @@ dependencies = [
     "python-pptx>=1.0.0",
     # Optional: Vector DB support
     "chromadb>=0.5.0",
+    # Database
+    "sqlalchemy>=2.0.0",
+    "asyncpg>=0.28.0",
     # Supabase client
     "supabase>=2.0.0",
     # HTTP 클라이언트 (나라장터 API)

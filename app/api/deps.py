@@ -202,11 +202,11 @@ async def require_project_access(
     role = user.role
 
     # admin / executive: 같은 org면 전사 접근
-    if role in ("admin", "executive") and proposal["org_id"] == user.org_id:
+    if role in ("admin", "executive") and proposal.get("org_id") == user.org_id:
         return proposal
 
     # director: 같은 division
-    if role == "director" and proposal["division_id"] == user.division_id:
+    if role == "director" and proposal.get("division_id") == user.division_id:
         return proposal
 
     # lead: 같은 team
@@ -229,3 +229,8 @@ async def require_project_access(
         return proposal
 
     raise AuthProjectAccessError(proposal_id)
+
+
+async def get_db():
+    """DB 의존성 (레거시 호환 - 실제로 사용되지 않음)"""
+    return None
