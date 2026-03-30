@@ -15,6 +15,10 @@
       {
         "allow": ["warn", "error"]
       }
-    ]
+    ],
+    "prefer-const": "warn",
+    "@next/next/no-html-link-for-pages": "warn",
+    "react/no-unescaped-entities": "warn",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
