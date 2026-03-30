@@ -20,7 +20,7 @@ from uuid import UUID
 from pydantic import BaseModel
 
 from app.graph.state import ArtifactVersion, ProposalState
-from app.utils.supabase_client import supabase_async
+from app.utils.supabase_client import get_async_client
 
 
 class DependencyLevel(str, Enum):
@@ -82,8 +82,9 @@ async def execute_node_and_create_version(
 
     # 2. 중복 확인 (checksum 기반)
     try:
+        supabase = await get_async_client()
         existing_query = (
-            await supabase_async.table("proposal_artifacts")
+            await supabase.table("proposal_artifacts")
             .select("version, is_deprecated")
             .match({
                 "proposal_id": str(proposal_id),
@@ -102,7 +103,7 @@ async def execute_node_and_create_version(
 
             # 기존 artifact 조회하여 ArtifactVersion 생성
             fetch_query = (
-                await supabase_async.table("proposal_artifacts")
+                await supabase.table("proposal_artifacts")
                 .select("*")
                 .match({
                     "proposal_id": str(proposal_id),
@@ -121,8 +122,9 @@ async def execute_node_and_create_version(
 
     # 3. 다음 버전 번호 결정
     try:
+        supabase = await get_async_client()
         max_query = (
-            await supabase_async.table("proposal_artifacts")
+            await supabase.table("proposal_artifacts")
             .select("version")
             .match({
                 "proposal_id": str(proposal_id),
@@ -157,8 +159,9 @@ async def execute_node_and_create_version(
         "created_reason": reason,
     }
 
+    supabase = await get_async_client()
     result = (
-        await supabase_async.table("proposal_artifacts")
+        await supabase.table("proposal_artifacts")
         .insert(artifact_record)
         .execute()
     )
