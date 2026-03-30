@@ -12,7 +12,6 @@ Features:
 
 import hashlib
 import json
-from datetime import datetime
 from enum import Enum
 from typing import Optional
 from uuid import UUID
@@ -25,6 +24,7 @@ from app.utils.supabase_client import get_async_client
 
 class DependencyLevel(str, Enum):
     """버전 충돌 시 심각도 분류."""
+
     NONE = "none"  # 의존성 없음
     LOW = "low"  # 경고만 필요
     MEDIUM = "medium"  # 선택 권고
@@ -34,6 +34,7 @@ class DependencyLevel(str, Enum):
 
 class VersionConflict(BaseModel):
     """버전 충돌 정보."""
+
     input_key: str
     versions: Optional[list[int]] = None
     status: str  # "SINGLE" | "MULTIPLE" | "MISSING"
@@ -42,6 +43,7 @@ class VersionConflict(BaseModel):
 
 class MoveValidationResult(BaseModel):
     """노드 이동 검증 결과."""
+
     can_move: bool
     conflicts: list[VersionConflict] = []
     dependency_level: DependencyLevel = DependencyLevel.NONE
@@ -86,12 +88,14 @@ async def execute_node_and_create_version(
         existing_query = (
             await supabase.table("proposal_artifacts")
             .select("version, is_deprecated")
-            .match({
-                "proposal_id": str(proposal_id),
-                "node_name": node_name,
-                "output_key": output_key,
-                "checksum": checksum,
-            })
+            .match(
+                {
+                    "proposal_id": str(proposal_id),
+                    "node_name": node_name,
+                    "output_key": output_key,
+                    "checksum": checksum,
+                }
+            )
             .order("version", desc=True)
             .limit(1)
             .execute()
@@ -105,12 +109,14 @@ async def execute_node_and_create_version(
             fetch_query = (
                 await supabase.table("proposal_artifacts")
                 .select("*")
-                .match({
-                    "proposal_id": str(proposal_id),
-                    "node_name": node_name,
-                    "output_key": output_key,
-                    "version": existing_version,
-                })
+                .match(
+                    {
+                        "proposal_id": str(proposal_id),
+                        "node_name": node_name,
+                        "output_key": output_key,
+                        "version": existing_version,
+                    }
+                )
                 .single()
                 .execute()
             )
@@ -126,17 +132,19 @@ async def execute_node_and_create_version(
         max_query = (
             await supabase.table("proposal_artifacts")
             .select("version")
-            .match({
-                "proposal_id": str(proposal_id),
-                "node_name": node_name,
-                "output_key": output_key,
-            })
+            .match(
+                {
+                    "proposal_id": str(proposal_id),
+                    "node_name": node_name,
+                    "output_key": output_key,
+                }
+            )
             .order("version", desc=True)
             .limit(1)
             .execute()
         )
 
-        next_version = (max_query.data[0]["version"] + 1 if max_query.data else 1)
+        next_version = max_query.data[0]["version"] + 1 if max_query.data else 1
     except Exception as e:
         print(f"Warning: max version 조회 실패: {e}")
         next_version = 1
@@ -161,9 +169,7 @@ async def execute_node_and_create_version(
 
     supabase = await get_async_client()
     result = (
-        await supabase.table("proposal_artifacts")
-        .insert(artifact_record)
-        .execute()
+        await supabase.table("proposal_artifacts").insert(artifact_record).execute()
     )
 
     artifact_obj = ArtifactVersion(**result.data[0])
@@ -323,7 +329,9 @@ def _calculate_checksum(data: dict) -> str:
     return hashlib.sha256(data_str.encode()).hexdigest()
 
 
-def _determine_reason(node_name: str, version: int, state: Optional[ProposalState]) -> str:
+def _determine_reason(
+    node_name: str, version: int, state: Optional[ProposalState]
+) -> str:
     """
     버전 생성 사유 분류.
 
@@ -423,7 +431,8 @@ async def _get_downstream_nodes(
     # 현재 workflow에서 실제 실행되는 노드만 필터링
     current_step = state.get("current_step", "")
     active_downstream = [
-        node for node in downstream
+        node
+        for node in downstream
         if node in current_step or state.get("parallel_results", {}).get(node)
     ]
 

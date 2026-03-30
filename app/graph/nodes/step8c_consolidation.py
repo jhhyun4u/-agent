@@ -48,8 +48,8 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
                 "consolidated_proposal": None,
                 "node_errors": {
                     **state.get("node_errors", {}),
-                    "proposal_sections_consolidation": "No proposal sections to consolidate"
-                }
+                    "proposal_sections_consolidation": "No proposal sections to consolidate",
+                },
             }
 
         # Step 2: Build final sections list
@@ -59,8 +59,8 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
 
         for section in proposal_sections:
             section_dict = normalize_proposal_section(section)
-            section_id = section_dict.get('section_id', '')
-            original_version = section_dict.get('version', 1)
+            section_id = section_dict.get("section_id", "")
+            original_version = section_dict.get("version", 1)
 
             # Check if user selected a specific version for this section
             # Future: Support per-section version selection via selected_versions[section_id]
@@ -70,22 +70,32 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
             final_sections.append(section_dict)
 
             # Track lineage
-            section_lineage.append(SectionLineage(
-                section_id=section_id,
-                original_version=original_version,
-                selected_version=selected_version,
-                change_notes=None
-            ))
+            section_lineage.append(
+                SectionLineage(
+                    section_id=section_id,
+                    original_version=original_version,
+                    selected_version=selected_version,
+                    change_notes=None,
+                )
+            )
 
             # Count words
-            content = section_dict.get('content', '')
+            content = section_dict.get("content", "")
             word_count = len(content.split())
             total_word_count += word_count
 
         # Step 4: Calculate quality metrics from validation_report
         if validation_report:
             # Coverage: percentage of sections that passed validation
-            coverage = (validation_report.passed_sections / validation_report.total_sections * 100) if validation_report.total_sections > 0 else 0
+            coverage = (
+                (
+                    validation_report.passed_sections
+                    / validation_report.total_sections
+                    * 100
+                )
+                if validation_report.total_sections > 0
+                else 0
+            )
             # Compliance: from validation quality score
             compliance = validation_report.quality_score
             # Style consistency: 100 minus warning count ratio (max 10 warnings = 0 score)
@@ -106,7 +116,7 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
         quality_metrics = {
             "coverage": round(coverage),
             "compliance": round(compliance),
-            "style_score": round(style_score)
+            "style_score": round(style_score),
         }
 
         # Step 5: Determine submission readiness
@@ -136,10 +146,12 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
             submission_ready=submission_ready,
             blockers=blockers,
             warnings=warnings,
-            consolidated_at=datetime.now(timezone.utc).isoformat()
+            consolidated_at=datetime.now(timezone.utc).isoformat(),
         )
 
-        logger.info(f"Created consolidated proposal ({len(final_sections)} sections, {total_word_count} words)")
+        logger.info(
+            f"Created consolidated proposal ({len(final_sections)} sections, {total_word_count} words)"
+        )
 
         # Step 7: Create artifacts for both outputs
         v1_num, art1 = await execute_node_and_create_version(
@@ -162,13 +174,15 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
             artifact_data=[normalize_proposal_section(s) for s in final_sections],
             user_id=UUID(state["created_by"]),
             state=state,
-            parent_node_name="proposal_section_validator"
+            parent_node_name="proposal_section_validator",
         )
 
         logger.info(f"Created proposal_sections v{v2_num}")
 
         # Step 8: Return state update with both artifacts
-        existing_sections_versions = state.get("artifact_versions", {}).get("proposal_sections", [])
+        existing_sections_versions = state.get("artifact_versions", {}).get(
+            "proposal_sections", []
+        )
 
         return {
             "consolidated_proposal": consolidated_proposal,
@@ -176,13 +190,13 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
             "artifact_versions": {
                 **state.get("artifact_versions", {}),
                 "consolidated_proposal": [art1],
-                "proposal_sections": existing_sections_versions + [art2]
+                "proposal_sections": existing_sections_versions + [art2],
             },
             "active_versions": {
                 **state.get("active_versions", {}),
                 "proposal_sections_consolidation_consolidated_proposal": v1_num,
-                "proposal_sections_consolidation_proposal_sections": v2_num
-            }
+                "proposal_sections_consolidation_proposal_sections": v2_num,
+            },
         }
 
     except Exception as e:
@@ -191,6 +205,6 @@ async def proposal_sections_consolidation(state: ProposalState) -> dict:
             "consolidated_proposal": None,
             "node_errors": {
                 **state.get("node_errors", {}),
-                "proposal_sections_consolidation": f"Consolidation failed: {str(e)}"
-            }
+                "proposal_sections_consolidation": f"Consolidation failed: {str(e)}",
+            },
         }
