@@ -16,12 +16,15 @@ import Highlight from "@tiptap/extension-highlight";
 interface ProposalEditorProps {
   content: string;
   onUpdate: (html: string) => void;
+  /** 에디터 내용이 변경될 때 즉시 호출 (debounce 전) */
+  onChange?: () => void;
   className?: string;
 }
 
 export default function ProposalEditor({
   content,
   onUpdate,
+  onChange,
   className = "",
 }: ProposalEditorProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,6 +49,7 @@ export default function ProposalEditor({
       },
     },
     onUpdate({ editor: ed }) {
+      onChange?.();
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         onUpdate(ed.getHTML());
@@ -96,10 +100,12 @@ function Toolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
   const btn = (
     label: string,
     active: boolean,
-    onClick: () => void
+    onClick: () => void,
+    ariaLabel?: string
   ) => (
     <button
       onClick={onClick}
+      aria-label={ariaLabel || label}
       className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
         active
           ? "bg-[#3ecf8e]/20 text-[#3ecf8e]"
@@ -113,13 +119,13 @@ function Toolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
   return (
     <div className="flex items-center gap-0.5 px-3 py-1.5 bg-[#1c1c1c] border-b border-[#262626] flex-wrap">
       {btn("B", editor.isActive("bold"), () =>
-        editor.chain().focus().toggleBold().run()
+        editor.chain().focus().toggleBold().run(), "볼드"
       )}
       {btn("I", editor.isActive("italic"), () =>
-        editor.chain().focus().toggleItalic().run()
+        editor.chain().focus().toggleItalic().run(), "이탤릭"
       )}
       {btn("U̲", editor.isActive("underline"), () =>
-        editor.chain().focus().toggleStrike().run()
+        editor.chain().focus().toggleStrike().run(), "취소선"
       )}
 
       <div className="w-px h-4 bg-[#262626] mx-1" />

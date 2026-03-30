@@ -1,0 +1,18 @@
+{
+  "research_topics": [
+    {
+      "topic": "클라우드 ERP 시장 동향",
+      "relevance": "발주처 요구사항의 핵심 기술 영역",
+      "findings": ["2025년 클라우드 ERP 시장 15% 성장", "공공 클라우드 전환 의무화 확대"],
+      "data_points": [
+        {"content": "2025년 공공 클라우드 ERP 도입률 45%", "credibility": "high", "source": "한국정보화진흥원 2025 보고서"}
+      ],
+      "rfp_alignment": "발주처의 클라우드 전환 니즈와 직접 연관",
+      "proposal_implication": "클라우드 전환 성공 사례 강조 필요"
+    }
+  ],
+  "summary": "클라우드 ERP 시장은 빠르게 성장하고 있으며, 공공부문 전환이 가속화되고 있습니다.",
+  "go_no_go_implications": ["경쟁 심화로 가격 경쟁력 중요"],
+  "differentiation_points": ["클라우드 전환 방법론 보유"],
+  "risk_factors": ["대형 SI 업체와 경쟁"]
+}

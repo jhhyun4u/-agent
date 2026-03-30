@@ -5,68 +5,40 @@
 """
 
 import logging
-import math
 from datetime import datetime, timezone
 from typing import Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.response import ok, ok_list
+from app.exceptions import (
+    TeamNotFoundError,
+    TeamAccessDeniedError,
+    TeamInviteError,
+    OwnershipRequiredError,
+    InvalidRequestError,
+    InternalServiceError,
+    ResourceNotFoundError,
+    ExpiredError,
+)
+from app.utils.pagination import PageParams
 from app.utils.supabase_client import get_async_client
 from app.utils.edge_functions import notify_comment_created
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["team"])
+router = APIRouter(prefix="/api", tags=["team"])
 
 
-# ── 헬퍼 ──────────────────────────────────────────────────────────────
-
-async def _get_member_role(client, team_id: str, user_id: str) -> Optional[str]:
-    """팀에서 사용자 역할 반환. 미소속이면 None."""
-    res = (
-        await client.table("team_members")
-        .select("role")
-        .eq("team_id", team_id)
-        .eq("user_id", user_id)
-        .maybe_single()
-        .execute()
-    )
-    return res.data["role"] if res.data else None
-
-
-async def _require_team_admin(client, team_id: str, user_id: str):
-    role = await _get_member_role(client, team_id, user_id)
-    if role != "admin":
-        raise HTTPException(status_code=403, detail="팀 관리자만 가능합니다.")
-
-
-async def _require_team_member(client, team_id: str, user_id: str):
-    role = await _get_member_role(client, team_id, user_id)
-    if role is None:
-        raise HTTPException(status_code=403, detail="팀 멤버만 접근 가능합니다.")
-
-
-async def _can_access_proposal(client, proposal_id: str, user_id: str) -> dict:
-    """소유자이거나 팀 멤버이면 제안서 dict 반환, 아니면 403."""
-    res = (
-        await client.table("proposals")
-        .select("*")
-        .eq("id", proposal_id)
-        .maybe_single()
-        .execute()
-    )
-    if not res.data:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
-    proposal = res.data
-    if proposal["owner_id"] == user_id:
-        return proposal
-    if proposal.get("team_id"):
-        role = await _get_member_role(client, proposal["team_id"], user_id)
-        if role:
-            return proposal
-    raise HTTPException(status_code=403, detail="접근 권한이 없습니다.")
+# ── 헬퍼 (app/api/permissions.py 공유 모듈) ──
+from app.api.permissions import (
+    get_team_member_role as _get_member_role,
+    require_team_admin as _require_team_admin,
+    require_team_member as _require_team_member,
+    can_access_proposal as _can_access_proposal,
+)
 
 
 # ── 팀 ───────────────────────────────────────────────────────────────
@@ -89,7 +61,7 @@ async def list_my_teams(user=Depends(get_current_user)):
         .eq("user_id", user.id)
         .execute()
     )
-    return {"teams": res.data or []}
+    return ok({"teams": res.data or []})
 
 
 @router.post("/teams", status_code=201)
@@ -103,7 +75,7 @@ async def create_team(body: TeamCreate, user=Depends(get_current_user)):
     await client.table("team_members").insert(
         {"team_id": team_id, "user_id": user.id, "role": "admin"}
     ).execute()
-    return {"team_id": team_id, "name": body.name}
+    return ok({"team_id": team_id, "name": body.name})
 
 
 @router.get("/teams/{team_id}")
@@ -115,8 +87,8 @@ async def get_team(team_id: str, user=Depends(get_current_user)):
         await client.table("teams").select("*").eq("id", team_id).maybe_single().execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="팀을 찾을 수 없습니다.")
-    return res.data
+        raise TeamNotFoundError(team_id=team_id)
+    return ok(res.data)
 
 
 @router.patch("/teams/{team_id}")
@@ -125,7 +97,7 @@ async def update_team(team_id: str, body: TeamUpdate, user=Depends(get_current_u
     client = await get_async_client()
     await _require_team_admin(client, team_id, user.id)
     await client.table("teams").update({"name": body.name}).eq("id", team_id).execute()
-    return {"team_id": team_id, "name": body.name}
+    return ok({"team_id": team_id, "name": body.name})
 
 
 @router.delete("/teams/{team_id}", status_code=204)
@@ -168,7 +140,7 @@ async def list_team_members(team_id: str, user=Depends(get_current_user)):
     for m in members:
         m["email"] = email_map.get(m["user_id"], "")
 
-    return {"members": members}
+    return ok({"members": members})
 
 
 @router.get("/teams/{team_id}/stats")
@@ -192,14 +164,14 @@ async def get_team_stats(team_id: str, user=Depends(get_current_user)):
     won = sum(1 for p in proposals if p.get("win_result") == "won")
     win_rate = round(won / completed * 100, 1) if completed > 0 else 0.0
 
-    return {
+    return ok({
         "total": total,
         "completed": completed,
         "processing": processing,
         "failed": failed,
         "won": won,
         "win_rate": win_rate,
-    }
+    })
 
 
 @router.patch("/teams/{team_id}/members/{target_user_id}")
@@ -211,7 +183,7 @@ async def update_member_role(
 ):
     """역할 변경 (admin only)"""
     if body.role not in ("admin", "member", "viewer"):
-        raise HTTPException(status_code=400, detail="role은 admin, member, viewer 중 하나여야 합니다.")
+        raise InvalidRequestError("role은 admin, member, viewer 중 하나여야 합니다.")
     client = await get_async_client()
     await _require_team_admin(client, team_id, user.id)
     await (
@@ -221,7 +193,7 @@ async def update_member_role(
         .eq("user_id", target_user_id)
         .execute()
     )
-    return {"team_id": team_id, "user_id": target_user_id, "role": body.role}
+    return ok({"team_id": team_id, "user_id": target_user_id, "role": body.role})
 
 
 @router.delete("/teams/{team_id}/members/{target_user_id}", status_code=204)
@@ -260,7 +232,7 @@ async def invite_member(
 ):
     """팀원 초대 (admin only). 실제 이메일은 Supabase Edge Function에서 발송."""
     if body.role not in ("admin", "member", "viewer"):
-        raise HTTPException(status_code=400, detail="role은 admin, member, viewer 중 하나여야 합니다.")
+        raise InvalidRequestError("role은 admin, member, viewer 중 하나여야 합니다.")
     client = await get_async_client()
     await _require_team_admin(client, team_id, user.id)
     inv_id = str(uuid4())
@@ -276,9 +248,9 @@ async def invite_member(
         ).execute()
     except Exception as e:
         if "unique" in str(e).lower() or "duplicate" in str(e).lower():
-            raise HTTPException(status_code=409, detail="이미 초대된 이메일입니다.")
-        raise HTTPException(status_code=500, detail="초대 처리 중 오류가 발생했습니다.")
-    return {"invitation_id": inv_id, "email": body.email, "role": body.role, "status": "pending"}
+            raise TeamInviteError("이미 초대된 이메일입니다.", 409)
+        raise InternalServiceError("초대 처리 중 오류가 발생했습니다.")
+    return ok({"invitation_id": inv_id, "email": body.email, "role": body.role, "status": "pending"})
 
 
 @router.get("/teams/{team_id}/invitations")
@@ -289,7 +261,7 @@ async def list_invitations(team_id: str, user=Depends(get_current_user)):
     res = (
         await client.table("invitations").select("*").eq("team_id", team_id).execute()
     )
-    return {"invitations": res.data or []}
+    return ok({"invitations": res.data or []})
 
 
 @router.delete("/teams/{team_id}/invitations/{invitation_id}", status_code=204)
@@ -321,16 +293,16 @@ async def accept_invitation(body: InvitationAccept, user=Depends(get_current_use
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="초대를 찾을 수 없습니다.")
+        raise ResourceNotFoundError("초대")
     inv = res.data
 
     if inv["status"] != "pending":
-        raise HTTPException(status_code=409, detail="이미 처리된 초대입니다.")
+        raise TeamInviteError("이미 처리된 초대입니다.", 409)
 
     # 초대 이메일 vs 로그인 계정 확인
     user_email = getattr(user, "email", "") or ""
     if inv["email"].lower() != user_email.lower():
-        raise HTTPException(status_code=403, detail="초대 이메일과 로그인 계정이 다릅니다.")
+        raise TeamInviteError("초대 이메일과 로그인 계정이 다릅니다.", 403)
 
     # 만료 확인
     expires_at_str = inv.get("expires_at", "")
@@ -343,7 +315,7 @@ async def accept_invitation(body: InvitationAccept, user=Depends(get_current_use
                 .eq("id", body.invitation_id)
                 .execute()
             )
-            raise HTTPException(status_code=410, detail="만료된 초대입니다.")
+            raise ExpiredError("만료된 초대입니다.")
 
     # 팀 합류
     try:
@@ -356,8 +328,8 @@ async def accept_invitation(body: InvitationAccept, user=Depends(get_current_use
         ).execute()
     except Exception as e:
         if "unique" in str(e).lower() or "duplicate" in str(e).lower():
-            raise HTTPException(status_code=409, detail="이미 팀에 속해 있습니다.")
-        raise HTTPException(status_code=500, detail="멤버 추가 중 오류가 발생했습니다.")
+            raise TeamInviteError("이미 팀에 속해 있습니다.", 409)
+        raise InternalServiceError("멤버 추가 중 오류가 발생했습니다.")
 
     await (
         client.table("invitations")
@@ -365,7 +337,7 @@ async def accept_invitation(body: InvitationAccept, user=Depends(get_current_use
         .eq("id", body.invitation_id)
         .execute()
     )
-    return {"team_id": inv["team_id"], "role": inv.get("role", "member"), "message": "팀에 합류했습니다."}
+    return ok({"team_id": inv["team_id"], "role": inv.get("role", "member")}, message="팀에 합류했습니다.")
 
 
 # ── 댓글 ─────────────────────────────────────────────────────────────
@@ -392,7 +364,7 @@ async def list_comments(proposal_id: str, user=Depends(get_current_user)):
         .order("created_at")
         .execute()
     )
-    return {"comments": res.data or []}
+    return ok({"comments": res.data or []})
 
 
 @router.post("/proposals/{proposal_id}/comments", status_code=201)
@@ -406,7 +378,7 @@ async def create_comment(
     # body 필드 우선, content는 하위 호환성 폴백
     comment_text = body.body or body.content or ""
     if not comment_text:
-        raise HTTPException(status_code=400, detail="body 또는 content 필드가 필요합니다.")
+        raise InvalidRequestError("body 또는 content 필드가 필요합니다.")
     insert_data = {
         "id": comment_id,
         "proposal_id": proposal_id,
@@ -420,7 +392,7 @@ async def create_comment(
     # 팀원 알림 이메일 (BackgroundTasks, 실패해도 무시)
     background_tasks.add_task(notify_comment_created, comment_id)
 
-    return {"comment_id": comment_id, "body": comment_text, "section": body.section}
+    return ok({"comment_id": comment_id, "body": comment_text, "section": body.section})
 
 
 @router.patch("/comments/{comment_id}")
@@ -437,11 +409,11 @@ async def update_comment(
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="댓글을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("댓글")
     if res.data["user_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 댓글만 수정할 수 있습니다.")
+        raise OwnershipRequiredError("본인 댓글만 수정할 수 있습니다.")
     await client.table("comments").update({"content": body.content}).eq("id", comment_id).execute()
-    return {"comment_id": comment_id, "content": body.content}
+    return ok({"comment_id": comment_id, "content": body.content})
 
 
 @router.delete("/comments/{comment_id}", status_code=204)
@@ -456,9 +428,9 @@ async def delete_comment(comment_id: str, user=Depends(get_current_user)):
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="댓글을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("댓글")
     if res.data["user_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 댓글만 삭제할 수 있습니다.")
+        raise OwnershipRequiredError("본인 댓글만 삭제할 수 있습니다.")
     await client.table("comments").delete().eq("id", comment_id).execute()
 
 
@@ -470,14 +442,13 @@ class WinResultUpdate(BaseModel):
     notes: Optional[str] = None
 
 
-@router.get("/proposals")
-async def list_proposals(
+@router.get("/proposals", operation_id="list_proposals_legacy")
+async def list_proposals_legacy(
     user=Depends(get_current_user),
     q: Optional[str] = Query(None, description="제목 검색"),
     status: Optional[str] = Query(None, description="상태 필터"),
     team_id: Optional[str] = Query(None, description="팀 필터"),
-    page: int = Query(1, ge=1),
-    page_size: int = Query(20, ge=1, le=100),
+    pg: PageParams = Depends(),
 ):
     """내 제안서 목록 (검색, 필터, 페이지네이션)"""
     client = await get_async_client()
@@ -527,18 +498,10 @@ async def list_proposals(
     count_res = await count_query.execute()
     total = count_res.count if hasattr(count_res, "count") and count_res.count is not None else len(count_res.data or [])
 
-    offset = (page - 1) * page_size
-    query = query.order("created_at", desc=True).range(offset, offset + page_size - 1)
+    query = pg.apply(query.order("created_at", desc=True))
 
     res = await query.execute()
-    pages = math.ceil(total / page_size) if page_size > 0 else 1
-    return {
-        "items": res.data or [],
-        "page": page,
-        "page_size": page_size,
-        "total": total,
-        "pages": pages,
-    }
+    return ok_list(res.data or [], total=total, offset=pg.offset, limit=pg.page_size)
 
 
 @router.patch("/proposals/{proposal_id}/win-result")
@@ -547,9 +510,7 @@ async def update_win_result(
 ):
     """수주/낙찰 결과 저장"""
     if body.win_result not in ("won", "lost", "pending"):
-        raise HTTPException(
-            status_code=400, detail="win_result는 won, lost, pending 중 하나여야 합니다."
-        )
+        raise InvalidRequestError("win_result는 won, lost, pending 중 하나여야 합니다.")
     client = await get_async_client()
     proposal = await _can_access_proposal(client, proposal_id, user.id)
 
@@ -557,7 +518,7 @@ async def update_win_result(
     if proposal["owner_id"] != user.id and proposal.get("team_id"):
         role = await _get_member_role(client, proposal["team_id"], user.id)
         if role != "admin":
-            raise HTTPException(status_code=403, detail="제안서 소유자 또는 팀 관리자만 수주 결과를 변경할 수 있습니다.")
+            raise TeamAccessDeniedError("제안서 소유자 또는 팀 관리자만 수주 결과를 변경할 수 있습니다.")
 
     update_data: dict = {"win_result": body.win_result}
     if body.bid_amount is not None:
@@ -566,7 +527,7 @@ async def update_win_result(
         update_data["notes"] = body.notes
 
     await client.table("proposals").update(update_data).eq("id", proposal_id).execute()
-    return {"proposal_id": proposal_id, **update_data}
+    return ok({"proposal_id": proposal_id, **update_data})
 
 
 # ── 제안서 상태 변경 ──────────────────────────────────────────────────
@@ -582,10 +543,7 @@ async def update_proposal_status(
     """제안서 상태 변경 (owner 또는 팀 admin)"""
     allowed_statuses = ("pending", "reviewing", "approved", "completed", "failed", "processing")
     if body.status not in allowed_statuses:
-        raise HTTPException(
-            status_code=400,
-            detail=f"status는 {', '.join(allowed_statuses)} 중 하나여야 합니다.",
-        )
+        raise InvalidRequestError(f"status는 {', '.join(allowed_statuses)} 중 하나여야 합니다.")
     client = await get_async_client()
     proposal = await _can_access_proposal(client, proposal_id, user.id)
 
@@ -593,10 +551,10 @@ async def update_proposal_status(
     if proposal.get("team_id"):
         role = await _get_member_role(client, proposal["team_id"], user.id)
         if role not in ("admin",) and proposal["owner_id"] != user.id:
-            raise HTTPException(status_code=403, detail="제안서 소유자 또는 팀 관리자만 상태를 변경할 수 있습니다.")
+            raise TeamAccessDeniedError("제안서 소유자 또는 팀 관리자만 상태를 변경할 수 있습니다.")
 
     await client.table("proposals").update({"status": body.status}).eq("id", proposal_id).execute()
-    return {"proposal_id": proposal_id, "status": body.status}
+    return ok({"proposal_id": proposal_id, "status": body.status})
 
 
 # ── 댓글 resolve ──────────────────────────────────────────────────────
@@ -615,7 +573,7 @@ async def resolve_comment(comment_id: str, user=Depends(get_current_user)):
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="댓글을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("댓글")
     comment = res.data
 
     # 제안서 접근 권한 확인
@@ -623,7 +581,7 @@ async def resolve_comment(comment_id: str, user=Depends(get_current_user)):
 
     new_resolved = not comment.get("resolved", False)
     await client.table("comments").update({"resolved": new_resolved}).eq("id", comment_id).execute()
-    return {"comment_id": comment_id, "resolved": new_resolved}
+    return ok({"comment_id": comment_id, "resolved": new_resolved})
 
 
 # ── 사용량 조회 ────────────────────────────────────────────────────────
@@ -658,16 +616,16 @@ async def get_usage(
     accessible_ids = [r["id"] for r in (proposal_res.data or [])]
 
     if not accessible_ids:
-        return {"items": [], "total_tokens": 0, "page": page, "page_size": page_size}
+        return ok({"items": [], "total_tokens": 0, "page": page, "page_size": page_size})
 
     query = client.table("usage_logs").select("*")
 
     if proposal_id:
         if proposal_id not in accessible_ids:
-            raise HTTPException(status_code=403, detail="접근 권한이 없는 제안서입니다.")
+            raise TeamAccessDeniedError("접근 권한이 없는 제안서입니다.")
         query = query.eq("proposal_id", proposal_id)
     else:
-        ids_csv = ",".join(accessible_ids)
+        ",".join(accessible_ids)
         query = query.in_("proposal_id", accessible_ids)
 
     offset = (page - 1) * page_size
@@ -677,9 +635,9 @@ async def get_usage(
     items = res.data or []
     total_tokens = sum(r.get("total_tokens", 0) for r in items)
 
-    return {
+    return ok({
         "items": items,
         "total_tokens": total_tokens,
         "page": page,
         "page_size": page_size,
-    }
+    })

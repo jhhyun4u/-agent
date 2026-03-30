@@ -17,7 +17,7 @@ import json
 import logging
 import re
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
@@ -27,7 +27,7 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-BASE_URL = "https://apis.data.go.kr/1230000"
+BASE_URL = settings.g2b_api_base_url
 
 # 서비스별 경로 prefix (공고=/ad, 낙찰=/as, 사전규격=/ad)
 SERVICE_PREFIX = {
@@ -86,7 +86,7 @@ async def _get_cache(key: str) -> Optional[List]:
         result = await (
             client.table("g2b_cache")
             .select("response")
-            .eq("query_hash", key)
+            .eq("cache_key", key)
             .gt("expires_at", datetime.now(timezone.utc).isoformat())
             .single()
             .execute()
@@ -102,11 +102,11 @@ async def _set_cache(key: str, endpoint: str, params: dict, data: List) -> None:
     try:
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
-        expires = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
+        expires = (datetime.now(timezone.utc) + timedelta(hours=settings.g2b_cache_ttl_hours)).isoformat()
         await (
             client.table("g2b_cache")
             .upsert({
-                "query_hash": key,
+                "cache_key": key,
                 "endpoint": endpoint,
                 "response": data,
                 "expires_at": expires,
@@ -138,8 +138,18 @@ class G2BService:
 
     # ── 공통 API 호출 ──────────────────────────────
 
+    # 재시도하지 않을 HTTP 상태코드 (인증/권한/잘못된 요청)
+    _NO_RETRY_STATUS = frozenset({400, 401, 403, 404, 405})
+
     async def _call_api(self, endpoint: str, params: dict) -> List[Dict]:
-        """나라장터 API 호출 (Rate Limit + Retry + 캐시)"""
+        """나라장터 API 호출 (Rate Limit + Retry + 캐시)
+
+        재시도 전략:
+        - 429 Rate Limit: 지수 백오프 후 재시도
+        - 500/502/503: 일시적 서버 오류, 재시도
+        - 400/401/403/404: 즉시 실패 (재시도 무의미)
+        - Timeout: 즉시 실패 (15초 타임아웃이면 재시도해도 동일)
+        """
         cache_key = _cache_key(endpoint, params)
         cached = await _get_cache(cache_key)
         if cached is not None:
@@ -161,19 +171,28 @@ class G2BService:
         # type=json을 params에 포함
         params = {**params, "type": "json"}
 
-        for attempt in range(3):
+        for attempt in range(settings.g2b_max_retries):
             await asyncio.sleep(0.1)  # 기본 Rate Limit 간격
             try:
                 async with self.session.get(
                     url,
                     params=params,
-                    timeout=aiohttp.ClientTimeout(total=15),
+                    timeout=aiohttp.ClientTimeout(total=settings.g2b_api_timeout_seconds),
                 ) as resp:
                     if resp.status == 429:
                         wait = 2 ** attempt
-                        logger.warning(f"G2B Rate Limit — {wait}초 대기")
+                        logger.warning(f"G2B Rate Limit — {wait}초 대기 (attempt {attempt + 1}/{settings.g2b_max_retries})")
                         await asyncio.sleep(wait)
                         continue
+
+                    # 재시도 무의미한 클라이언트 에러 → 즉시 실패
+                    if resp.status in self._NO_RETRY_STATUS:
+                        body = await resp.text()
+                        logger.error(f"G2B API {resp.status}: {endpoint} — {body[:200]}")
+                        raise RuntimeError(
+                            f"G2B API 클라이언트 오류 ({resp.status}): {endpoint}"
+                        )
+
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
                     # 응답 구조: {"response": ...} 또는 {"nkoneps...": ...}
@@ -195,14 +214,26 @@ class G2BService:
                         rows = raw if isinstance(raw, list) else [raw]
                     await _set_cache(cache_key, endpoint, params, rows)
                     return rows
+
             except RuntimeError:
                 raise
+            except asyncio.TimeoutError:
+                logger.error(f"G2B API 타임아웃 ({settings.g2b_api_timeout_seconds}초): {endpoint}")
+                raise RuntimeError(f"G2B API 응답 시간 초과: {endpoint}")
+            except aiohttp.ClientError as e:
+                if attempt == settings.g2b_max_retries - 1:
+                    logger.error(f"G2B API 연결 실패 ({settings.g2b_max_retries}회 재시도 소진): {endpoint} — {e}")
+                    raise RuntimeError(f"G2B API 연결 실패: {endpoint}") from e
+                wait = 2 ** attempt
+                logger.warning(f"G2B API 일시 오류 (attempt {attempt + 1}/{settings.g2b_max_retries}, {wait}초 대기): {e}")
+                await asyncio.sleep(wait)
             except Exception as e:
-                if attempt == 2:
-                    raise
+                if attempt == settings.g2b_max_retries - 1:
+                    logger.error(f"G2B API 예상치 못한 오류 ({settings.g2b_max_retries}회 재시도 소진): {endpoint} — {e}")
+                    raise RuntimeError(f"G2B API 호출 실패: {endpoint}") from e
                 await asyncio.sleep(2 ** attempt)
 
-        raise RuntimeError(f"G2B API 호출 실패: {endpoint}")
+        raise RuntimeError(f"G2B API 호출 실패 (재시도 소진): {endpoint}")
 
     # ── 1단계: 입찰공고 검색 ─────────────────────────
 
@@ -229,7 +260,7 @@ class G2BService:
         if not date_to:
             date_to = datetime.now().strftime("%Y%m%d") + "2359"
         if not date_from:
-            date_from = (datetime.now() - timedelta(days=14)).strftime("%Y%m%d") + "0000"
+            date_from = (datetime.now() - timedelta(days=settings.g2b_default_lookback_days)).strftime("%Y%m%d") + "0000"
 
         params: Dict[str, Any] = {
             "numOfRows": num_of_rows,
@@ -321,7 +352,7 @@ class G2BService:
         results = await self._call_api(
             "BidPublicInfoService/getBidPblancListInfoServc",
             {"bidNtceNo": bid_no, "inqryDiv": "2",
-             "inqryBgnDt": (datetime.now() - timedelta(days=14)).strftime("%Y%m%d") + "0000",
+             "inqryBgnDt": (datetime.now() - timedelta(days=settings.g2b_default_lookback_days)).strftime("%Y%m%d") + "0000",
              "inqryEndDt": datetime.now().strftime("%Y%m%d") + "2359",
              "numOfRows": "10", "pageNo": "1"},
         )
@@ -395,7 +426,7 @@ class G2BService:
         company_name: str,
         num_of_rows: int = 20,
         page_no: int = 1,
-        date_range_days: int = 180,
+        date_range_days: int | None = None,
     ) -> List[Dict]:
         """
         업체별 입찰이력 조회 — 낙찰정보에서 업체명 검색
@@ -406,6 +437,8 @@ class G2BService:
         Returns:
             업체 입찰이력 raw 목록
         """
+        if date_range_days is None:
+            date_range_days = settings.g2b_historical_days
         end_dt = datetime.now()
         bgn_dt = end_dt - timedelta(days=date_range_days)
         params: Dict[str, Any] = {
@@ -443,8 +476,8 @@ class G2BService:
         # 날짜 범위 (YYYYMMDDHHMM 포맷)
         end_dt = datetime.now()
         start_dt = end_dt - timedelta(days=date_range_months * 30)
-        date_from = start_dt.strftime("%Y%m%d") + "0000"
-        date_to = end_dt.strftime("%Y%m%d") + "2359"
+        start_dt.strftime("%Y%m%d") + "0000"
+        end_dt.strftime("%Y%m%d") + "2359"
 
         keyword = self._extract_main_keyword(rfp_title)
         logger.info(f"G2B 경쟁사 분석 시작: keyword={keyword}")
@@ -802,7 +835,7 @@ async def search_bids(
                 bid = {
                     "bid_no": r.get("bidNtceNo", ""),
                     "project_name": r.get("bidNtceNm", ""),
-                    "client": r.get("ntceInsttNm", r.get("dminsttNm", "")),
+                    "client": r.get("dminsttNm", r.get("ntceInsttNm", "")),
                     "budget": r.get("presmptPrce", r.get("asignBdgtAmt", "")),
                     "deadline": r.get("bidClseDt", ""),
                 }
@@ -827,7 +860,7 @@ async def get_bid_detail(bid_no: str) -> Dict:
             raw = await svc.get_bid_detail(bid_no)
             return {
                 "project_name": raw.get("bidNtceNm", ""),
-                "client": raw.get("ntceInsttNm", raw.get("dminsttNm", "")),
+                "client": raw.get("dminsttNm", raw.get("ntceInsttNm", "")),
                 "budget": raw.get("presmptPrce", raw.get("asignBdgtAmt", "")),
                 "deadline": raw.get("bidClseDt", ""),
                 "description": raw.get("ntceSpecDocUrl1", raw.get("bidNtceDtlUrl", "")),
@@ -910,7 +943,7 @@ async def fetch_and_store_bid_result(bid_notice_id: str, domain: str = "SI/SW개
 
         bid_ratio = round(winning_price / budget, 4) if budget > 0 else None
         project_title = r.get("bidNtceNm", "")
-        client_org = r.get("ntceInsttNm", r.get("dminsttNm", ""))
+        client_org = r.get("dminsttNm", r.get("ntceInsttNm", ""))
         bid_date = r.get("opengDt", "")
         year = int(bid_date[:4]) if bid_date and len(bid_date) >= 4 else datetime.now().year
 

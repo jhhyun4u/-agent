@@ -6,11 +6,19 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import FileResponse
 
-from app.exceptions import SessionNotFoundError
+from app.config import settings
+from app.exceptions import (
+    ConflictError,
+    InvalidRequestError,
+    PropNotFoundError,
+    ResourceNotFoundError,
+    SessionNotFoundError,
+)
 from app.api.deps import get_current_user
+from app.api.response import ok, ok_list
 from app.models.phase_schemas import Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.models.schemas import RFPData
 from app.services.presentation_generator import generate_presentation_slides
@@ -102,7 +110,7 @@ async def _upload_presentation(proposal_id: str, local_path: str) -> str:
     """PPTX 파일을 Supabase Storage에 업로드하고 공개 URL 반환"""
     try:
         client = await get_async_client()
-        bucket = "proposal-files"
+        bucket = settings.storage_bucket_proposals
         storage_path = f"{proposal_id}/presentation.pptx"
         content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
 
@@ -189,7 +197,7 @@ async def list_presentation_templates(
     for t in _STANDARD_TEMPLATES:
         path = _TEMPLATES_DIR / f"{t['id']}.pptx"
         templates_with_availability.append({**t, "available": path.exists()})
-    return {"templates": templates_with_availability}
+    return ok_list(templates_with_availability, total=len(templates_with_availability))
 
 
 @router.post("/proposals/{proposal_id}/presentation")
@@ -205,29 +213,25 @@ async def generate_presentation(
     try:
         session = await session_manager.aget_session(proposal_id)
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다")
+        raise PropNotFoundError(proposal_id)
 
     if session.get("phases_completed", 0) < 5:
-        raise HTTPException(status_code=400, detail="제안서 생성이 완료되지 않았습니다")
+        raise InvalidRequestError("제안서 생성이 완료되지 않았습니다")
 
     if session.get("presentation_status") == "processing":
-        raise HTTPException(status_code=409, detail="발표 자료를 생성 중입니다")
+        raise ConflictError("발표 자료를 생성 중입니다")
 
     # standard 모드 유효성 검증
     if template_mode == "standard":
         valid_ids = {t["id"] for t in _STANDARD_TEMPLATES}
         if template_id not in valid_ids:
-            raise HTTPException(
-                status_code=400,
-                detail=f"존재하지 않는 템플릿입니다: {template_id}. 사용 가능: {sorted(valid_ids)}",
+            raise InvalidRequestError(
+                f"존재하지 않는 템플릿입니다: {template_id}. 사용 가능: {sorted(valid_ids)}"
             )
 
     # sample 모드 유효성 검증
     if template_mode == "sample" and not sample_storage_path:
-        raise HTTPException(
-            status_code=400,
-            detail="sample 모드에는 sample_storage_path가 필요합니다",
-        )
+        raise InvalidRequestError("sample 모드에는 sample_storage_path가 필요합니다")
 
     session_manager.update_session(proposal_id, {"presentation_status": "processing"})
 
@@ -239,13 +243,12 @@ async def generate_presentation(
         sample_storage_path,
     )
 
-    return {
+    return ok({
         "proposal_id": proposal_id,
         "status": "processing",
         "template_mode": template_mode,
         "template_id": template_id,
-        "message": "발표 자료 생성을 시작합니다",
-    }
+    }, message="발표 자료 생성을 시작합니다")
 
 
 @router.get("/proposals/{proposal_id}/presentation/status")
@@ -257,9 +260,9 @@ async def get_presentation_status(
     try:
         session = await session_manager.aget_session(proposal_id)
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다")
+        raise PropNotFoundError(proposal_id)
 
-    return {
+    return ok({
         "proposal_id": proposal_id,
         "status": session.get("presentation_status", "idle"),
         "pptx_url": session.get("presentation_pptx_url", ""),
@@ -267,7 +270,7 @@ async def get_presentation_status(
         "template_mode": session.get("presentation_template_mode", ""),
         "template_id": session.get("presentation_template_id", ""),
         "error": session.get("presentation_error", ""),
-    }
+    })
 
 
 @router.get("/proposals/{proposal_id}/presentation/download")
@@ -279,11 +282,11 @@ async def download_presentation(
     try:
         session = await session_manager.aget_session(proposal_id)
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다")
+        raise PropNotFoundError(proposal_id)
 
     pptx_path = session.get("presentation_pptx_path", "")
     if not pptx_path or not Path(pptx_path).exists():
-        raise HTTPException(status_code=404, detail="발표 자료가 아직 생성되지 않았습니다")
+        raise ResourceNotFoundError("발표 자료")
 
     rfp_title = session.get("rfp_title", "presentation")
     safe_name = "".join(c for c in rfp_title if c.isalnum() or c in " _-")[:50]

@@ -24,8 +24,8 @@ export default function NotificationBell() {
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await api.notifications.list({ limit: 10 });
-      setItems(res.items);
-      setUnreadCount(res.unread_count);
+      setItems(res.data);
+      setUnreadCount(res.meta?.unread_count ?? 0);
     } catch {
       // silent
     }

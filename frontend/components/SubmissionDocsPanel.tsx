@@ -145,9 +145,26 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
     try {
       await submissionDocsApi.verify(proposalId, docId);
       fetchDocs();
+      fetchReadiness();
     } catch (e) {
       alert(e instanceof Error ? e.message : "검증 실패");
     }
+  }
+
+  // ── 원본 준비 확인 ──
+  async function handleConfirmOriginal(docId: string) {
+    try {
+      await submissionDocsApi.confirmOriginal(proposalId, docId);
+      fetchDocs();
+      fetchReadiness();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "원본 확인 실패");
+    }
+  }
+
+  // ── 사본 묶음 다운로드 ──
+  function handleBundleDownload() {
+    window.open(submissionDocsApi.bundleUrl(proposalId), "_blank");
   }
 
   // ── 삭제 ──
@@ -193,9 +210,16 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
     if (file) await handleUpload(docId, file);
   }
 
-  // 통계
-  const total = docs.filter(d => d.status !== "not_applicable").length;
-  const verified = docs.filter(d => d.status === "verified").length;
+  // 통계 (가중 진행률)
+  const applicable = docs.filter(d => d.status !== "not_applicable");
+  const total = applicable.length;
+  const verified = applicable.filter(d => d.status === "verified").length;
+  const uploaded = applicable.filter(d => d.status === "uploaded").length;
+  const assigned = applicable.filter(d => d.status === "assigned" || d.status === "in_progress").length;
+  const weightedPct = total > 0
+    ? Math.min(Math.round((verified * 1.0 + uploaded * 0.7 + assigned * 0.3) / total * 100), 100)
+    : 0;
+  const hasCopyFiles = docs.some(d => d.file_path && d.source === "template_matched");
 
   if (loading) {
     return (
@@ -229,6 +253,14 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
           >
             + 수동 추가
           </button>
+          {hasCopyFiles && (
+            <button
+              onClick={handleBundleDownload}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 hover:bg-purple-500/25 transition-colors"
+            >
+              사본 묶음 다운로드
+            </button>
+          )}
           <button
             onClick={fetchReadiness}
             className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#3ecf8e]/15 text-[#3ecf8e] border border-[#3ecf8e]/30 hover:bg-[#3ecf8e]/25 transition-colors"
@@ -238,11 +270,19 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
         </div>
       </div>
 
+      {/* 완료 배너 */}
+      {verified === total && total > 0 && (
+        <div className="bg-[#3ecf8e]/10 border border-[#3ecf8e]/30 rounded-xl px-4 py-3 flex items-center gap-2">
+          <span className="text-[#3ecf8e] text-sm font-semibold">제출서류 준비 완료</span>
+          <span className="text-xs text-[#8c8c8c]">모든 서류가 검증 완료되었습니다</span>
+        </div>
+      )}
+
       {/* 진행률 바 */}
       <div className="w-full h-2 bg-[#262626] rounded-full overflow-hidden">
         <div
           className="h-full bg-[#3ecf8e] rounded-full transition-all duration-500"
-          style={{ width: total > 0 ? `${(verified / total) * 100}%` : "0%" }}
+          style={{ width: `${weightedPct}%` }}
         />
       </div>
 
@@ -369,7 +409,18 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
                     </select>
                   </td>
                   <td className="px-4 py-2.5">
-                    {doc.file_name ? (
+                    {doc.required_format === "원본" ? (
+                      <span className="text-[#8c8c8c] text-[10px]">원본 서류</span>
+                    ) : doc.file_name && doc.source === "template_matched" ? (
+                      <div className="flex items-center gap-1">
+                        <span className="text-[#3ecf8e] truncate block max-w-[60px]" title={doc.file_name}>
+                          {doc.file_name}
+                        </span>
+                        <span className="inline-flex px-1.5 py-0.5 rounded text-[9px] font-medium bg-[#3ecf8e]/15 text-[#3ecf8e]">
+                          자동
+                        </span>
+                      </div>
+                    ) : doc.file_name ? (
                       <span className="text-[#3ecf8e] truncate block max-w-[80px]" title={doc.file_name}>
                         {doc.file_name}
                       </span>
@@ -394,7 +445,15 @@ export default function SubmissionDocsPanel({ proposalId }: Props) {
                   </td>
                   <td className="px-4 py-2.5 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {doc.status === "uploaded" && (
+                      {doc.required_format === "원본" && doc.status !== "verified" && (
+                        <button
+                          onClick={() => handleConfirmOriginal(doc.id)}
+                          className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 transition-colors"
+                        >
+                          원본 준비 완료
+                        </button>
+                      )}
+                      {doc.required_format !== "원본" && doc.status === "uploaded" && (
                         <button
                           onClick={() => handleVerify(doc.id)}
                           className="px-2 py-0.5 rounded text-[10px] font-medium bg-[#3ecf8e]/15 text-[#3ecf8e] hover:bg-[#3ecf8e]/25 transition-colors"

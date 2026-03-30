@@ -53,6 +53,27 @@ REVIEW_PERSPECTIVES = {
         "perspective": "Gold Team (최종 품질) 관점",
         "focus": "형식·규격 완벽 준수? 메시지 일관성? 핵심이 3초 안에 전달되는가?",
     },
+    # v4.0: 분기 워크플로 신규 노드
+    "submission_plan": {
+        "perspective": "제출관리 담당자 관점",
+        "focus": "제출서류 목록이 빠짐없는가? 준비 일정은 현실적인가?",
+    },
+    "cost_sheet": {
+        "perspective": "원가관리 전문가 관점",
+        "focus": "산출내역서가 정확한가? 노임단가 기준에 맞는가?",
+    },
+    "submission_checklist": {
+        "perspective": "품질관리 담당자 관점",
+        "focus": "모든 필수 서류가 준비되었는가? 누락 항목은 없는가?",
+    },
+    "mock_evaluation": {
+        "perspective": "Red Team (모의 평가) 관점",
+        "focus": "평가위원이 이 제안서에 높은 점수를 줄 것인가? 약점은?",
+    },
+    "eval_result": {
+        "perspective": "프로젝트 관리자 관점",
+        "focus": "실제 평가결과와 모의평가 대비 차이는? 교훈은?",
+    },
 }
 
 
@@ -422,8 +443,8 @@ def review_section_node(state: ProposalState) -> dict:
         if current_section:
             try:
                 _auto_register_to_content_library(state, current_section, current_section_id)
-            except Exception:
-                pass  # 콘텐츠 등록 실패는 워크플로 차단하지 않음
+            except Exception as e:
+                logger.debug(f"콘텐츠 라이브러리 등록 실패 (무시): {e}")
 
         new_index = index + 1
         if new_index >= len(sections_to_write):
@@ -522,7 +543,7 @@ def _handle_plan_review(state: ProposalState, human_input: dict) -> dict:
         return result
 
     # 거부 + 부분 재작업
-    feedback = state.get("feedback_history", [])
+    state.get("feedback_history", [])
     latest = human_input
     rework_targets = latest.get("rework_targets", [])
 
@@ -571,7 +592,6 @@ def _auto_register_to_content_library(state: ProposalState, section, section_id:
 
     사람이 리뷰하고 승인한 섹션 = 높은 품질 → 다음 제안서에서 재활용 가능.
     """
-    import asyncio
 
     sd = section.model_dump() if hasattr(section, "model_dump") else (section if isinstance(section, dict) else {})
     content_text = sd.get("content", "")
@@ -621,8 +641,8 @@ def _auto_register_to_content_library(state: ProposalState, section, section_id:
                 "change_source": "human_approved_section",
                 "status": "draft",
             }).execute()
-        except Exception:
-            pass  # fire-and-forget
+        except Exception as e:
+            logger.debug(f"DB fire-and-forget 실패 (무시): {e}")
 
     try:
         loop = asyncio.get_running_loop()
@@ -722,7 +742,6 @@ def _handle_bid_plan_review(state: ProposalState, human_input: dict) -> dict:
 
 def _fire_bid_confirmation(state: ProposalState, updates: dict, human_input: dict) -> None:
     """bid_plan 승인 후 DB persist + artifact 저장 + 알림을 비동기 fire-and-forget."""
-    import asyncio
 
     constraint = updates.get("bid_budget_constraint", {})
     bid_price = constraint.get("total_bid_price", 0)
@@ -778,7 +797,6 @@ def _fire_bid_confirmation(state: ProposalState, updates: dict, human_input: dic
 
 def _fire_stream_initialization(state: ProposalState) -> None:
     """Go 결정 시 3-Stream 초기화 + Stream 3(제출서류) 체크리스트 추출을 비동기 실행."""
-    import asyncio
 
     proposal_id = state.get("project_id", "")
     if not proposal_id:
@@ -822,5 +840,10 @@ def _get_artifact(state, step_name):
         "plan": state.get("plan"),
         "proposal": state.get("proposal_sections"),
         "ppt": state.get("ppt_slides"),
+        "submission_plan": state.get("submission_plan"),
+        "cost_sheet": state.get("cost_sheet"),
+        "submission_checklist": state.get("submission_checklist_result"),
+        "mock_evaluation": state.get("mock_evaluation_result"),
+        "eval_result": state.get("eval_result"),
     }
     return mapping.get(step_name)

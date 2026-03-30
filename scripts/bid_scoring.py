@@ -21,7 +21,34 @@ SERVICE_TYPES = {"일반용역", "기술용역", "학술용역", ""}
 
 
 def load_profile() -> dict:
-    """data/company_profile.json 로드."""
+    """DB 우선, JSON 폴백으로 수행실적 프로필 로드.
+
+    intranet_projects(Supabase)에 데이터가 있으면 DB에서 집계.
+    없으면 기존 company_profile.json을 사용.
+    """
+    try:
+        import asyncio
+        import sys
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from app.services.bid_scoring_service import BidScoringService
+        from app.utils.supabase_client import get_async_client
+
+        async def _load_from_db():
+            client = await get_async_client()
+            # org_id 조회 (첫 번째 조직)
+            orgs = await client.table("organizations").select("id").limit(1).execute()
+            if not orgs.data:
+                return None
+            org_id = orgs.data[0]["id"]
+            svc = BidScoringService()
+            return await svc.build_profile_from_db(org_id)
+
+        profile = asyncio.run(_load_from_db())
+        if profile and profile.get("company", {}).get("stats", {}).get("total_projects", 0) > 0:
+            return profile
+    except Exception:
+        pass  # DB 미연결 시 JSON 폴백
+
     with open(PROFILE_PATH, encoding="utf-8") as f:
         return json.load(f)
 

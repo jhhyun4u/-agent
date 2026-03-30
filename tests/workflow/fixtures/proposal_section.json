@@ -1,0 +1,13 @@
+{
+  "section_id": "understand",
+  "title": "사업 이해 및 요구사항 분석",
+  "content": "## 1. 현황 분석\n\n발주처의 현행 ERP 시스템은 온프레미스 환경에서 운영되고 있으며...\n\n## 2. 핵심 과제\n\n- 클라우드 전환 시 데이터 무결성 보장\n- 기존 업무 프로세스와의 호환성\n- 보안 요구사항 충족\n\n## 3. 해결 방향\n\n단계별 클라우드 마이그레이션 전략을 적용하여...",
+  "template_structure": null,
+  "self_check": {
+    "rfp_alignment": true,
+    "win_theme_reflected": true,
+    "evidence_included": true,
+    "volume_appropriate": true,
+    "differentiation_clear": true
+  }
+}

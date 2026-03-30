@@ -6,7 +6,7 @@ RFP 텍스트를 분석하여 구조화된 분석 결과 생성.
 
 import logging
 
-from app.graph.state import ComplianceItem, ProposalState, RFPAnalysis
+from app.graph.state import ComplianceItem, PriceScoringFormula, ProposalState, RFPAnalysis
 from app.services.claude_client import claude_generate
 from app.services import prompt_tracker
 
@@ -32,7 +32,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
 - 마감일: {bid_detail.deadline}
 """
 
-    prompt = f"""다음 RFP 문서를 분석하세요.
+    prompt = f"""다음 RFP 문서를 분석하여 제안전략 수립에 필요한 기초자료를 빠짐없이 추출하세요.
 
 {bid_context}
 
@@ -41,13 +41,30 @@ async def rfp_analyze(state: ProposalState) -> dict:
 
 ## 분석 요구사항
 1. 사업 유형 판단: 케이스 A (자유양식) vs 케이스 B (지정 서식)
-2. 평가 항목 + 배점 역설계
+2. 평가 항목 + 배점 역설계 (세부항목까지)
 3. 기술:가격 비중
 4. Hot Buttons (발주처 핵심 관심사)
-5. 필수 요건 (불충족 시 탈락)
+5. 필수 요건 (불충족 시 탈락하는 제안서 수준 요건)
 6. 서식 템플릿 존재 여부 + 구조
 7. 분량 규격
 8. 특수 조건
+9. 평가방식 (종합심사, 적격심사, 최저가, 수의계약 등)
+10. **가격점수 산정 방식** — RFP에 가격평가 산식이 명시되어 있으면 반드시 추출할 것
+    - formula_type: "lowest_ratio" | "fixed_rate" | "budget_ratio" | "custom"
+    - description: RFP 원문 발췌
+    - price_weight: 가격 배점
+    - parameters: 산식 추가 값
+    - RFP에 가격점수 산식이 없으면 null
+11. **사업 분류(domain)**: SI/SW개발, 컨설팅, 감리, 인프라구축, 운영유지보수, 기타
+12. **사업 범위 요약**: 과업 내용을 3~5문장으로 요약
+13. **예산**: RFP에 명시된 사업 예산 (원문 발췌, 없으면 "미명시")
+14. **수행 기간**: 전체 사업 기간 (예: "12개월", "2026.07~2027.06")
+15. **계약 유형**: 정액, 실비정산, T&M 등
+16. **수행 단계 + 마일스톤**: 단계별 기간, 산출물, 검수 포인트
+17. **업체 자격 요건**: 입찰 참가 자격 (업체 등록, 인증, 매출 기준 등)
+18. **유사 수행실적 요건**: 과거 유사 사업 수행 실적 요구사항
+19. **핵심인력 요건**: 역할별 필수 등급, 자격증, 경력 조건
+20. **하도급 조건**: 하도급 허용 여부, 비율 제한, 특수 조건
 
 ## 출력 형식 (JSON)
 {{
@@ -55,6 +72,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
   "client": "발주기관",
   "deadline": "마감일",
   "case_type": "A 또는 B",
+  "eval_method": "종합심사 | 적격심사 | 최저가 | 수의계약",
   "eval_items": [{{"item": "항목명", "weight": 30, "sub_items": ["세부항목"]}}],
   "tech_price_ratio": {{"tech": 90, "price": 10}},
   "hot_buttons": ["핫버튼 키워드"],
@@ -62,6 +80,22 @@ async def rfp_analyze(state: ProposalState) -> dict:
   "format_template": {{"exists": false, "structure": null}},
   "volume_spec": {{"max_pages": 100, "font_size": "11pt"}},
   "special_conditions": ["특수 조건"],
+  "price_scoring": {{
+    "formula_type": "lowest_ratio",
+    "description": "가격점수 = 가격배점 × (최저입찰가격/입찰가격)",
+    "price_weight": 10,
+    "parameters": {{}}
+  }},
+  "domain": "SI/SW개발",
+  "project_scope": "사업 범위 요약 (3~5문장)",
+  "budget": "예산 금액 원문 발췌",
+  "duration": "수행기간",
+  "contract_type": "정액 | 실비정산 | T&M | 기타",
+  "delivery_phases": [{{"phase": "단계명", "period": "기간", "deliverables": ["산출물"]}}],
+  "qualification_requirements": ["업체 자격 요건"],
+  "similar_project_requirements": ["유사 실적 요건"],
+  "key_personnel_requirements": [{{"role": "역할", "grade": "등급", "certifications": ["자격"]}}],
+  "subcontracting_conditions": ["하도급 조건"],
   "compliance_items": [
     {{"req_id": "RFP-001", "content": "요건 내용", "source_step": "rfp_analyze"}}
   ]
@@ -83,8 +117,8 @@ async def rfp_analyze(state: ProposalState) -> dict:
                 prompt_version=0,
                 prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"프롬프트 트래커 기록 실패 (무시): {e}")
 
     # RFP 분석 결과 구성
     rfp_analysis = RFPAnalysis(
@@ -92,6 +126,7 @@ async def rfp_analyze(state: ProposalState) -> dict:
         client=result.get("client", ""),
         deadline=result.get("deadline", ""),
         case_type=result.get("case_type", "A"),
+        eval_method=result.get("eval_method", ""),
         eval_items=result.get("eval_items", []),
         tech_price_ratio=result.get("tech_price_ratio", {"tech": 90, "price": 10}),
         hot_buttons=result.get("hot_buttons", []),
@@ -99,6 +134,18 @@ async def rfp_analyze(state: ProposalState) -> dict:
         format_template=result.get("format_template", {"exists": False, "structure": None}),
         volume_spec=result.get("volume_spec", {}),
         special_conditions=result.get("special_conditions", []),
+        price_scoring=PriceScoringFormula(**result["price_scoring"]) if result.get("price_scoring") else None,
+        # v3.9 확장 필드
+        domain=result.get("domain", ""),
+        project_scope=result.get("project_scope", ""),
+        budget=result.get("budget", bid_detail.budget if bid_detail else ""),
+        duration=result.get("duration", ""),
+        contract_type=result.get("contract_type", ""),
+        delivery_phases=result.get("delivery_phases", []),
+        qualification_requirements=result.get("qualification_requirements", []),
+        similar_project_requirements=result.get("similar_project_requirements", []),
+        key_personnel_requirements=result.get("key_personnel_requirements", []),
+        subcontracting_conditions=result.get("subcontracting_conditions", []),
     )
 
     # Compliance Matrix 초안
@@ -122,6 +169,21 @@ async def rfp_analyze(state: ProposalState) -> dict:
     section_type_map = {}
     for section_id in sections:
         section_type_map[section_id] = classify_section_type(section_id, section_id)
+
+    # 즉시 MD 보고서 생성 + 아카이브 (review_rfp 전 사용자에게 제공)
+    if proposal_id:
+        try:
+            import asyncio
+            from app.services.project_archive_service import archive_artifact, render_artifact, _DEF_MAP
+            defn = _DEF_MAP.get("rfp_analysis")
+            if defn:
+                content = render_artifact(defn, {"rfp_analysis": rfp_analysis})
+                if content:
+                    asyncio.get_running_loop().create_task(
+                        archive_artifact(proposal_id, "rfp_analysis", content, source="ai")
+                    )
+        except Exception as e:
+            logger.warning(f"RFP 분석 즉시 아카이브 실패 (무시): {e}")
 
     return {
         "rfp_analysis": rfp_analysis,

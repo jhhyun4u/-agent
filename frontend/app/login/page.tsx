@@ -71,11 +71,11 @@ function LoginContent() {
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 border-r border-[#262626]">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-          <span className="text-[#ededed] font-semibold text-sm">Proposal Architect</span>
+          <span className="text-[#ededed] font-semibold text-sm">Proposal Coworker</span>
         </div>
         <div>
           <blockquote className="text-[#ededed] text-xl font-medium leading-relaxed mb-4">
-            &ldquo;이기는 제안서,<br />동료와 함께 만듭니다.&rdquo;
+            &ldquo;이기는 제안서,<br />AI Coworker와 함께 만듭니다.&rdquo;
           </blockquote>
           <p className="text-[#8c8c8c] text-sm">프로젝트 수주 성공률을 높이는 AI Coworker</p>
         </div>
@@ -88,7 +88,7 @@ function LoginContent() {
           {/* 모바일 로고 */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
             <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-            <span className="text-[#ededed] font-semibold text-sm">Proposal Architect</span>
+            <span className="text-[#ededed] font-semibold text-sm">Proposal Coworker</span>
           </div>
 
           <h2 className="text-xl font-semibold text-[#ededed] mb-1">로그인</h2>

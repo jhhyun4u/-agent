@@ -30,6 +30,13 @@ async def get_async_client() -> AsyncClient:
     return _server_client
 
 
+async def reset_client() -> None:
+    """연결 풀 재생성 (I-1 자동 복구용). 다음 get_async_client() 호출 시 새 클라이언트 생성."""
+    global _server_client
+    async with _server_lock:
+        _server_client = None
+
+
 async def get_user_client(user_jwt: str) -> AsyncClient:
     """사용자 JWT 기반 Supabase 클라이언트 반환 (RLS 적용, 요청마다 생성)"""
     client = await acreate_client(

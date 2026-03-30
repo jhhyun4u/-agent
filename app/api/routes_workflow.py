@@ -23,6 +23,13 @@ from app.api.deps import get_current_user, require_project_access
 from app.config import settings
 from app.middleware.rate_limit import limiter
 from app.exceptions import PropNotFoundError, WFAlreadyRunningError, WFResumeValidationError
+from app.models.auth_schemas import CurrentUser
+from app.models.workflow_schemas import (
+    AiActionResponse, AiStatusResponse, GotoResponse, ImpactResponse,
+    SectionLockResponse, SectionUnlockResponse,
+    TokenUsageResponse, WorkflowHistoryResponse,
+    WorkflowResumeResponse, WorkflowStartResponse, WorkflowStateResponse,
+)
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -115,19 +122,19 @@ async def _get_graph():
 
 # ── API 엔드포인트 ──
 
-@router.post("/{proposal_id}/start")
+@router.post("/{proposal_id}/start", response_model=WorkflowStartResponse)
 @limiter.limit("10/minute")
 async def start_workflow(
     request: Request,
     proposal_id: str,
     body: WorkflowStartRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """워크플로 시작 — 그래프 invoke."""
     from app.middleware.request_id import get_request_id
     rid = get_request_id()
-    logger.info(f"[WF_START] proposal={proposal_id}, user={user.get('id','?')}", extra={
+    logger.info(f"[WF_START] proposal={proposal_id}, user={user.id}", extra={
         "request_id": rid,
         "data": {"event": "workflow_start", "proposal_id": proposal_id, "initial_keys": list(body.initial_state.keys())},
     })
@@ -185,8 +192,8 @@ async def start_workflow(
         raise
 
 
-@router.get("/{proposal_id}/state")
-async def get_workflow_state(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
+@router.get("/{proposal_id}/state", response_model=WorkflowStateResponse)
+async def get_workflow_state(proposal_id: str, user: CurrentUser = Depends(get_current_user), _access=Depends(require_project_access)):
     """현재 그래프 상태 조회."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -220,13 +227,13 @@ async def get_workflow_state(proposal_id: str, user=Depends(get_current_user), _
         return {"proposal_id": proposal_id, "error": "상태 조회 중 오류가 발생했습니다."}
 
 
-@router.post("/{proposal_id}/resume")
+@router.post("/{proposal_id}/resume", response_model=WorkflowResumeResponse)
 @limiter.limit("20/minute")
 async def resume_workflow(
     request: Request,
     proposal_id: str,
     body: WorkflowResumeRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """Human 리뷰 결과 입력 → 그래프 재개."""
@@ -245,7 +252,7 @@ async def resume_workflow(
 
     # resume 데이터 구성 (None이 아닌 필드만)
     resume_data = {k: v for k, v in body.model_dump().items() if v is not None}
-    resume_data["approved_by"] = resume_data.get("approved_by") or user.get("name", user["id"])
+    resume_data["approved_by"] = resume_data.get("approved_by") or user.name or user.id
 
     # 비즈니스 이벤트 로깅: 승인/거부/No-Go 분기
     event_type = "resume_approve" if resume_data.get("approved") or resume_data.get("quick_approve") else "resume_reject"
@@ -280,7 +287,7 @@ async def resume_workflow(
                     "feedback": resume_data.get("feedback", ""),
                     "comments": resume_data.get("comments"),
                     "rework_targets": resume_data.get("rework_targets"),
-                    "author_id": user.get("id"),
+                    "author_id": user.id,
                 }).execute()
             except Exception as e:
                 logger.warning(f"피드백 DB 저장 실패 (무시): {e}")
@@ -313,7 +320,7 @@ async def resume_workflow(
 async def stream_workflow(
     proposal_id: str,
     request: Request,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """SSE 스트리밍 — 그래프 실행 상태를 실시간 전송."""
@@ -354,8 +361,8 @@ async def stream_workflow(
     )
 
 
-@router.get("/{proposal_id}/history")
-async def get_workflow_history(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
+@router.get("/{proposal_id}/history", response_model=WorkflowHistoryResponse)
+async def get_workflow_history(proposal_id: str, user: CurrentUser = Depends(get_current_user), _access=Depends(require_project_access)):
     """체크포인트 이력."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -376,8 +383,8 @@ async def get_workflow_history(proposal_id: str, user=Depends(get_current_user),
         return {"proposal_id": proposal_id, "history": [], "error": "이력 조회 중 오류가 발생했습니다."}
 
 
-@router.get("/{proposal_id}/token-usage")
-async def get_token_usage(proposal_id: str, user=Depends(get_current_user), _access=Depends(require_project_access)):
+@router.get("/{proposal_id}/token-usage", response_model=TokenUsageResponse)
+async def get_token_usage(proposal_id: str, user: CurrentUser = Depends(get_current_user), _access=Depends(require_project_access)):
     """노드별 토큰 사용량 + 비용 상세 조회."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -406,35 +413,35 @@ async def get_token_usage(proposal_id: str, user=Depends(get_current_user), _acc
 # ── 섹션 잠금 (§24) ──
 
 
-@router.post("/{proposal_id}/sections/{section_id}/lock")
+@router.post("/{proposal_id}/sections/{section_id}/lock", response_model=SectionLockResponse)
 async def lock_section(
     proposal_id: str,
     section_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """섹션 편집 잠금 획득."""
     from app.services.section_lock import acquire_lock
 
-    return await acquire_lock(proposal_id, section_id, user["id"])
+    return await acquire_lock(proposal_id, section_id, user.id)
 
 
-@router.delete("/{proposal_id}/sections/{section_id}/lock")
+@router.delete("/{proposal_id}/sections/{section_id}/lock", response_model=SectionUnlockResponse)
 async def unlock_section(
     proposal_id: str,
     section_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """섹션 편집 잠금 해제."""
     from app.services.section_lock import release_lock
 
-    released = await release_lock(proposal_id, section_id, user["id"])
+    released = await release_lock(proposal_id, section_id, user.id)
     return {"released": released}
 
 
-@router.get("/{proposal_id}/sections/locks")
+@router.get("/{proposal_id}/sections/locks", response_model=dict)
 async def list_section_locks(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """제안서의 모든 활성 잠금 목록."""
     from app.services.section_lock import get_locks
@@ -446,10 +453,10 @@ async def list_section_locks(
 # ── AI 상태 (§22) ──
 
 
-@router.get("/{proposal_id}/ai-status")
+@router.get("/{proposal_id}/ai-status", response_model=AiStatusResponse)
 async def get_ai_status(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """AI 작업 상태 조회."""
@@ -461,12 +468,12 @@ async def get_ai_status(
 # ── AI 제어 (§22 확장) ──
 
 
-@router.post("/{proposal_id}/ai-abort")
+@router.post("/{proposal_id}/ai-abort", response_model=AiActionResponse)
 @limiter.limit("10/minute")
 async def abort_ai_task(
     request: Request,
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """AI 작업 중단 (paused 상태로 전환, 완료 서브태스크 보존)."""
@@ -489,12 +496,12 @@ async def abort_ai_task(
     return {"proposal_id": proposal_id, "status": result["status"], "step": result["step"]}
 
 
-@router.post("/{proposal_id}/ai-retry")
+@router.post("/{proposal_id}/ai-retry", response_model=AiActionResponse)
 @limiter.limit("5/minute")
 async def retry_ai_task(
     request: Request,
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """중단된 AI 작업 재시도 — 현재 STEP을 처음부터 재실행."""
@@ -529,7 +536,7 @@ async def retry_ai_task(
 async def get_ai_logs(
     proposal_id: str,
     limit: int = 20,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """AI 작업 로그 이력 조회 (ai_task_logs 테이블)."""
@@ -566,11 +573,11 @@ _NODE_ORDER = [
 ]
 
 
-@router.post("/{proposal_id}/goto/{step}")
+@router.post("/{proposal_id}/goto/{step}", response_model=GotoResponse)
 async def goto_step(
     proposal_id: str,
     step: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """특정 체크포인트로 타임트래블 — 이력에서 해당 step의 config를 찾아 복원."""
@@ -621,11 +628,11 @@ async def goto_step(
     }
 
 
-@router.get("/{proposal_id}/impact/{step}")
+@router.get("/{proposal_id}/impact/{step}", response_model=ImpactResponse)
 async def get_impact(
     proposal_id: str,
     step: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """특정 step 변경 시 재실행이 필요한 downstream 노드 목록 반환."""

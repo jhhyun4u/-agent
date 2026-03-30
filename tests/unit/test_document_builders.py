@@ -3,8 +3,8 @@ from pathlib import Path
 from datetime import datetime
 
 from app.models.schemas import ProposalContent
-from app.services.docx_builder import build_docx
-from app.services.pptx_builder import build_pptx
+from app.services.docx_builder import build_docx_legacy as build_docx
+from app.services.pptx_builder import build_pptx_legacy as build_pptx
 
 
 def test_document_builders():
@@ -159,7 +159,7 @@ def test_document_builders():
 
     docx_path = output_dir / f"test_proposal_{timestamp}.docx"
     try:
-        result_path = build_docx(mock_content, "클라우드 ERP 시스템 구축", docx_path)
+        result_path = build_docx(mock_content.model_dump(), docx_path, "클라우드 ERP 시스템 구축")
         print(f"[SUCCESS] DOCX 생성 완료: {result_path}")
         print(f"  - 파일 크기: {result_path.stat().st_size} bytes")
     except Exception as e:
@@ -173,7 +173,7 @@ def test_document_builders():
 
     pptx_path = output_dir / f"test_proposal_{timestamp}.pptx"
     try:
-        result_path = build_pptx(mock_content, "클라우드 ERP 시스템 구축", pptx_path)
+        result_path = build_pptx(mock_content.model_dump(), pptx_path, "클라우드 ERP 시스템 구축")
         print(f"[SUCCESS] PPTX 생성 완료: {result_path}")
         print(f"  - 파일 크기: {result_path.stat().st_size} bytes")
     except Exception as e:

@@ -1,7 +1,7 @@
 """Phase 간 전달되는 산출물 스키마 (v3.4)"""
 
-from datetime import datetime
-from typing import Optional
+from datetime import UTC, datetime
+
 from pydantic import BaseModel, Field
 
 from app.models.schemas import RFPData
@@ -14,14 +14,14 @@ class PhaseArtifact(BaseModel):
     summary: str = Field(description="핵심 내용 요약 (3K 토큰 이하)")
     structured_data: dict = Field(default_factory=dict)
     token_count: int = 0
-    created_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Phase1Artifact(PhaseArtifact):
     """Phase 1 산출물: RFP 파싱 결과"""
     phase_num: int = 1
     phase_name: str = "research"
-    rfp_data: Optional[RFPData] = None
+    rfp_data: RFPData | None = None
     history_summary: str = ""
     g2b_competitor_data: dict = Field(
         default_factory=dict,

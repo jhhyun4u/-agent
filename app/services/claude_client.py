@@ -43,7 +43,9 @@ def get_accumulated_usage() -> list[dict]:
 # TRUSTWORTHINESS_RULES (§16-3-1)를 별도 모듈에서 임포트
 from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
 
-COMMON_SYSTEM_RULES = f"""당신은 전문 용역 제안서 작성 전문가입니다. 한국어로 작성하며 공공기관 제안서 형식과 관행을 따릅니다.
+COMMON_SYSTEM_RULES = f"""당신은 20년 경력의 한국 정부 용역 제안서 작성 전문가이자, 공공기관 제안 평가위원 출신입니다.
+한국어로 작성하며, 공공기관 제안서 형식과 관행을 따릅니다.
+구체적 근거(수치·사례·도표)를 반드시 포함하며, 추상적 미사여구는 사용하지 않습니다.
 
 {TRUSTWORTHINESS_RULES}"""
 
@@ -66,6 +68,7 @@ async def claude_generate(
     temperature: float = 0.3,
     cache_system: bool = True,
     response_format: str = "json",
+    step_name: str = "",
 ) -> dict[str, Any]:
     """Claude API 호출 — JSON 응답 파싱.
 
@@ -77,10 +80,26 @@ async def claude_generate(
         temperature: 생성 온도
         cache_system: 시스템 프롬프트 Prompt Caching 활성화
         response_format: "json" | "text"
+        step_name: Pre-Flight Check용 노드 이름 (빈 문자열이면 검사 스킵)
 
     Returns:
         파싱된 JSON dict 또는 {"text": str}
     """
+    # ── Pre-Flight Check ──
+    from app.services.preflight_check import check_prompt
+    preflight = check_prompt(prompt, step_name=step_name)
+    if preflight.errors:
+        logger.warning(
+            "[PreFlight] step=%s ERRORS=%s (tokens=~%d, empty=%.0f%%)",
+            step_name or "unknown", preflight.errors,
+            preflight.estimated_tokens, preflight.empty_ratio * 100,
+        )
+    elif preflight.warnings:
+        logger.info(
+            "[PreFlight] step=%s warnings=%s (tokens=~%d)",
+            step_name or "unknown", preflight.warnings, preflight.estimated_tokens,
+        )
+
     client = _get_client()
     model = model or settings.claude_model
     max_tokens = max_tokens or settings.max_output_tokens
@@ -148,6 +167,22 @@ async def claude_generate(
             },
         }
 
+    except anthropic.RateLimitError as e:
+        logger.warning(f"Claude API Rate Limit: {e}")
+        from app.exceptions import RateLimitError
+        raise RateLimitError("Claude API 요청 한도 초과: 잠시 후 다시 시도하세요.")
+    except anthropic.AuthenticationError as e:
+        logger.error(f"Claude API 인증 오류: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError("Claude API 인증 오류: API 키를 확인하세요.")
+    except anthropic.APIConnectionError as e:
+        logger.error(f"Claude API 연결 실패: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError("Claude API 서버에 연결할 수 없습니다.")
+    except anthropic.APITimeoutError as e:
+        logger.error(f"Claude API 타임아웃: {e}")
+        from app.exceptions import AITimeoutError
+        raise AITimeoutError(step=step_name or "unknown")
     except anthropic.APIError as e:
         logger.error(f"Claude API 오류: {e}")
         from app.exceptions import AIServiceError
@@ -178,9 +213,25 @@ async def claude_generate_streaming(
         "system": system_content,
     }
 
-    async with client.messages.stream(**stream_kwargs) as stream:
-        async for text in stream.text_stream:
-            yield text
+    try:
+        async with client.messages.stream(**stream_kwargs) as stream:
+            async for text in stream.text_stream:
+                yield text
+    except anthropic.RateLimitError as e:
+        logger.warning(f"Claude 스트리밍 Rate Limit: {e}")
+        yield "\n[ERROR:RATE_LIMIT] Claude API 요청 한도 초과"
+    except anthropic.APIConnectionError as e:
+        logger.error(f"Claude 스트리밍 연결 실패: {e}")
+        yield "\n[ERROR:CONNECTION] Claude API 서버 연결 실패"
+    except anthropic.APITimeoutError as e:
+        logger.error(f"Claude 스트리밍 타임아웃: {e}")
+        yield "\n[ERROR:TIMEOUT] Claude API 응답 시간 초과"
+    except anthropic.APIError as e:
+        logger.error(f"Claude 스트리밍 API 오류: {e}")
+        yield f"\n[ERROR:API] Claude API 오류: {e.message}"
+    except Exception as e:
+        logger.error(f"Claude 스트리밍 예외: {e}", exc_info=True)
+        yield "\n[ERROR:UNKNOWN] 스트리밍 중 오류 발생"
 
 
 def _parse_json_response(text: str) -> dict:

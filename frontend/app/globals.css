@@ -10,6 +10,19 @@
   --text: #ededed;
   --muted: #8c8c8c;
   --accent: #3ecf8e;
+  color-scheme: dark;
+}
+
+/* 라이트 모드 */
+:root.light {
+  --bg: #ffffff;
+  --surface: #f8f9fa;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1a202c;
+  --muted: #718096;
+  --accent: #2b9a6e;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -23,9 +36,13 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+:root.light ::-webkit-scrollbar-track { background: var(--surface); }
+:root.light ::-webkit-scrollbar-thumb { background: var(--border); }
+:root.light ::-webkit-scrollbar-thumb:hover { background: #cbd5e0; }
 
 /* #1 placeholder 가독성 개선 */
 ::placeholder { color: #666 !important; }
+:root.light ::placeholder { color: #a0aec0 !important; }
 
 /* #2 focus-visible ring 강화 — 키보드 탐색 시 명확한 표시 */
 *:focus-visible {

@@ -67,5 +67,13 @@ data/bid_pipeline.json
 data/team_structure.json
 data/*.xlsx
 
+# Bid attachments (binary)
+data/bid_attachments/
+
+# Playwright artifacts
+frontend/playwright-report/
+frontend/screenshots/
+frontend/e2e/.auth/
+
 # bkit state
 .pdca-status.json

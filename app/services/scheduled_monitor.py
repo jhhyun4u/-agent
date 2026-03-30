@@ -1,7 +1,7 @@
 """
 G2B 정기 모니터링 스케줄러 (§25-2)
 
-매일 08:00, 15:00 2회 각 팀의 monitor_keywords로 나라장터 공고를 검색,
+평일 업무시간(08~18시) 1시간마다 각 팀의 monitor_keywords로 나라장터 공고를 검색,
 신규 공고 발견 시 Teams + 인앱 알림.
 """
 
@@ -15,22 +15,45 @@ from app.utils.supabase_client import get_async_client
 logger = logging.getLogger(__name__)
 
 
+def _is_korean_holiday(dt: datetime) -> bool:
+    """한국 공휴일 여부 (주요 법정 공휴일만 체크)."""
+    md = (dt.month, dt.day)
+    fixed_holidays = {
+        (1, 1), (3, 1), (5, 5), (6, 6), (8, 15), (10, 3), (10, 9), (12, 25),
+    }
+    if md in fixed_holidays:
+        return True
+    # 음력 공휴일(설날, 추석)은 매년 변동 → 환경 변수 또는 외부 API로 확장 가능
+    # 현재는 고정 공휴일만 체크
+    return False
+
+
 async def daily_g2b_monitor() -> dict:
     """일일 G2B 공고 모니터링 (v2: 전수 수집 + 적합도 스코어링).
 
-    v1: 키워드별 50건 검색 → 제목 매칭 (누락 95%+)
-    v2: 전체 페이지네이션 수집 → 역할 키워드 + 분류 스코어링 (누락 ~5%)
+    평일 08~18시 매시 정각에 스케줄러가 호출. 공휴일이면 스킵.
 
     Returns:
         {"teams_checked": int, "new_bids_found": int, "notifications_sent": int,
          "total_fetched": int, "scored_passed": int}
     """
+    # 공휴일 체크 (KST 기준)
+    from zoneinfo import ZoneInfo
+    now_kst = datetime.now(ZoneInfo("Asia/Seoul"))
+    if _is_korean_holiday(now_kst):
+        logger.info(f"공휴일 — G2B 모니터링 스킵 ({now_kst.strftime('%m/%d')})")
+        return {"teams_checked": 0, "new_bids_found": 0, "notifications_sent": 0,
+                "total_fetched": 0, "scored_passed": 0, "skipped": "holiday"}
+
     from app.services.bid_scorer import score_and_rank_bids
     from app.services.g2b_service import G2BService
     from app.services.notification_service import (
+        _get_user_email_info,
+        _should_send_email,
         create_notification,
         send_teams_notification,
     )
+    from app.services.email_service import build_email_html, send_email
 
     client = await get_async_client()
     stats = {
@@ -110,7 +133,6 @@ async def daily_g2b_monitor() -> dict:
                 # 알림 발송 (상위 10건 요약)
                 bid_summary = _format_scored_bid_summary(new_bids[:10])
 
-                from urllib.parse import quote
                 search_link = f"{settings.frontend_url}/bids"
 
                 # Teams 알림
@@ -133,6 +155,30 @@ async def daily_g2b_monitor() -> dict:
                         link=search_link,
                     )
 
+                # 이메일 (옵트인 팀원에게)
+                try:
+                    team_members_res = await (
+                        client.table("team_members")
+                        .select("user_id")
+                        .eq("team_id", team_id)
+                        .execute()
+                    )
+                    for member in (team_members_res.data or []):
+                        user_data = await _get_user_email_info(member["user_id"])
+                        if _should_send_email(user_data, "email_monitoring"):
+                            html = build_email_html(
+                                title=f"신규 공고 {len(new_bids)}건 발견",
+                                body=bid_summary[:500],
+                                link=search_link,
+                            )
+                            await send_email(
+                                user_data["email"],
+                                f"신규 공고 {len(new_bids)}건",
+                                html,
+                            )
+                except Exception as email_err:
+                    logger.debug(f"신규 공고 이메일 발송 실패 (무시): {email_err}")
+
                 # 알림 기록 저장 (중복 방지)
                 await _record_notified_bids(client, team_id, new_bids)
                 stats["notifications_sent"] += 1
@@ -145,6 +191,19 @@ async def daily_g2b_monitor() -> dict:
         f"스코어 {stats['scored_passed']}건 → "
         f"{stats['new_bids_found']}건 신규, {stats['notifications_sent']}건 알림"
     )
+
+    # 백그라운드 파이프라인: score >= 70(추천 이상) → 첨부파일 + AI 분석
+    pipeline_targets = [
+        b.bid_no for b in scored if b.score >= 70
+    ]
+    if pipeline_targets:
+        try:
+            from app.services.bid_pipeline import run_pipeline
+            asyncio.create_task(run_pipeline(pipeline_targets))
+            logger.info(f"[Monitor] 파이프라인 큐: {len(pipeline_targets)}건")
+        except Exception as e:
+            logger.warning(f"[Monitor] 파이프라인 시작 실패: {e}")
+
     return stats
 
 
@@ -258,6 +317,207 @@ def _format_scored_bid_summary(bids: list[dict]) -> str:
     return "\n".join(lines)
 
 
+async def send_daily_summary_email() -> int:
+    """일일 공고 요약 이메일 — email_daily_summary 옵트인 사용자 대상.
+
+    평일 09:00 KST에 스케줄러가 호출.
+    """
+    if not settings.email_enabled:
+        return 0
+
+    try:
+        client = await get_async_client()
+
+        # 옵트인 사용자 조회
+        users_res = await (
+            client.table("users")
+            .select("id, email, name, notification_settings")
+            .eq("status", "active")
+            .execute()
+        )
+        recipients = [
+            u for u in (users_res.data or [])
+            if u.get("email")
+            and (u.get("notification_settings") or {}).get("email_monitoring", False)
+        ]
+        if not recipients:
+            logger.debug("일일 요약 이메일 수신자 없음")
+            return 0
+
+        # 통계 집계
+        from datetime import timedelta
+        now = datetime.now(timezone.utc)
+        yesterday = (now - timedelta(days=1)).isoformat()
+
+        new_bids_res = await (
+            client.table("g2b_bids")
+            .select("id", count="exact")
+            .gte("fetched_at", yesterday)
+            .limit(0)
+            .execute()
+        )
+        recommended_res = await (
+            client.table("g2b_bids")
+            .select("id", count="exact")
+            .gte("fetched_at", yesterday)
+            .gte("relevance_score", 70)
+            .limit(0)
+            .execute()
+        )
+        urgent_res = await (
+            client.table("g2b_bids")
+            .select("id", count="exact")
+            .gte("deadline", now.isoformat())
+            .lte("deadline", (now + timedelta(days=3)).isoformat())
+            .eq("status", "active")
+            .limit(0)
+            .execute()
+        )
+        active_res = await (
+            client.table("proposals")
+            .select("id", count="exact")
+            .not_.in_("status", ["won", "lost", "cancelled", "expired"])
+            .limit(0)
+            .execute()
+        )
+
+        new_bids = new_bids_res.count or 0
+        recommended = recommended_res.count or 0
+        urgent = urgent_res.count or 0
+        active_proposals = active_res.count or 0
+
+        from app.services.email_service import build_email_html, send_email_batch
+        body = (
+            f"신규 공고: <b>{new_bids}</b>건<br>"
+            f"AI 추천: <b>{recommended}</b>건 (70점 이상)<br>"
+            f"마감 임박 (D-3 이내): <b>{urgent}</b>건<br>"
+            f"진행중 제안서: <b>{active_proposals}</b>건"
+        )
+        html = build_email_html(
+            title="일일 공고 현황 요약",
+            body=body,
+            link=f"{settings.frontend_url}/monitoring",
+        )
+
+        sent = await send_email_batch(
+            [u["email"] for u in recipients],
+            "일일 공고 현황 요약",
+            html,
+        )
+        logger.info(f"일일 요약 이메일 발송: {sent}/{len(recipients)}명")
+        return sent
+    except Exception as e:
+        logger.warning(f"일일 요약 이메일 실패: {e}")
+        return 0
+
+
+async def check_monthly_intranet_sync() -> dict:
+    """매월 인트라넷 동기화 실행 여부 체크.
+
+    매월 5일 09:00 KST에 스케줄러가 호출.
+    이번 달 완료된 동기화가 없으면 관리자에게 알림.
+    """
+    from app.services.notification_service import (
+        create_notification,
+        send_teams_notification,
+    )
+
+    client = await get_async_client()
+    stats = {"orgs_checked": 0, "orgs_overdue": 0, "notifications_sent": 0}
+
+    # 활성 조직 조회
+    try:
+        orgs_result = await (
+            client.table("organizations")
+            .select("id, name")
+            .execute()
+        )
+        orgs = orgs_result.data or []
+    except Exception as e:
+        logger.error(f"조직 목록 조회 실패: {e}")
+        return stats
+
+    now = datetime.now(timezone.utc)
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    for org in orgs:
+        org_id = org["id"]
+        stats["orgs_checked"] += 1
+
+        # 이번 달 완료된 동기화 조회
+        try:
+            sync_result = await (
+                client.table("intranet_sync_log")
+                .select("id", count="exact")
+                .eq("org_id", org_id)
+                .eq("status", "completed")
+                .gte("started_at", month_start.isoformat())
+                .execute()
+            )
+        except Exception:
+            continue
+
+        if (sync_result.count or 0) > 0:
+            continue
+
+        # 인트라넷 프로젝트가 있는 조직만 (마이그레이션 한 적 있는 조직)
+        proj_check = await (
+            client.table("intranet_projects")
+            .select("id", count="exact")
+            .eq("org_id", org_id)
+            .limit(1)
+            .execute()
+        )
+        if not (proj_check.count or 0):
+            continue
+
+        stats["orgs_overdue"] += 1
+
+        # 관리자에게 알림
+        try:
+            admins = await (
+                client.table("users")
+                .select("id")
+                .eq("org_id", org_id)
+                .eq("role", "admin")
+                .execute()
+            )
+            for admin in (admins.data or []):
+                admin_id: str = admin["id"]  # type: ignore[index]
+                await create_notification(
+                    user_id=admin_id,
+                    proposal_id=None,
+                    type="system",
+                    title="인트라넷 KB 월간 동기화 미실행",
+                    body=(
+                        "이번 달 인트라넷 KB 동기화가 아직 실행되지 않았습니다. "
+                        "사내 PC에서 migrate_intranet.py --incremental을 실행해주세요."
+                    ),
+                    link="/kb/intranet",
+                )
+                stats["notifications_sent"] += 1
+
+            # Teams 알림 (기본 webhook으로 전송)
+            org_name = org.get("name", "") if isinstance(org, dict) else ""
+            await send_teams_notification(
+                team_id="",
+                title="인트라넷 KB 월간 동기화 미실행",
+                body=(
+                    f"[{org_name}] 이번 달 인트라넷 KB 동기화가 미실행 상태입니다.\n"
+                    "사내 PC에서 migrate_intranet.py --incremental --triggered-by scheduler를 실행하세요."
+                ),
+                link=f"{settings.frontend_url}/kb/intranet",
+            )
+        except Exception as e:
+            logger.warning(f"동기화 미실행 알림 발송 실패 (org={org_id}): {e}")
+
+    logger.info(
+        f"인트라넷 동기화 체크: {stats['orgs_checked']}개 조직 확인, "
+        f"{stats['orgs_overdue']}개 미실행, {stats['notifications_sent']}건 알림"
+    )
+    return stats
+
+
 def setup_scheduler() -> None:
     """APScheduler 기반 스케줄러 설정.
 
@@ -266,34 +526,93 @@ def setup_scheduler() -> None:
     try:
         from apscheduler.schedulers.asyncio import AsyncIOScheduler
         from apscheduler.triggers.cron import CronTrigger
+        from zoneinfo import ZoneInfo
 
-        scheduler = AsyncIOScheduler()
+        kst = ZoneInfo("Asia/Seoul")
+        scheduler = AsyncIOScheduler(timezone=kst)
+        # 평일(월~금) 업무시간(08~18시) 1시간마다 실행
         scheduler.add_job(
             daily_g2b_monitor,
-            trigger=CronTrigger(hour=8, minute=0),
-            id="g2b_monitor_morning",
-            name="G2B 오전 모니터링",
+            trigger=CronTrigger(
+                hour="8-18", minute=0, day_of_week="mon-fri", timezone=kst,
+            ),
+            id="g2b_monitor_hourly",
+            name="G2B 1시간 주기 모니터링 (평일 08~18시)",
             replace_existing=True,
         )
-        scheduler.add_job(
-            daily_g2b_monitor,
-            trigger=CronTrigger(hour=15, minute=0),
-            id="g2b_monitor_afternoon",
-            name="G2B 오후 모니터링",
-            replace_existing=True,
-        )
-        # 프롬프트 진화 유지보수 (매일 02:00 — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)
+        # 프롬프트 진화 유지보수 (매일 02:00 KST — MV 갱신 + 주의 프롬프트 감지 + A/B 자동 평가)
         from app.services.prompt_tracker import periodic_maintenance
         scheduler.add_job(
             periodic_maintenance,
-            trigger=CronTrigger(hour=2, minute=0),
+            trigger=CronTrigger(hour=2, minute=0, timezone=kst),
             id="prompt_evolution_maintenance",
             name="프롬프트 진화 유지보수",
             replace_existing=True,
         )
 
+        # 일일 요약 이메일 (평일 09:00 KST)
+        scheduler.add_job(
+            send_daily_summary_email,
+            trigger=CronTrigger(hour=9, minute=0, day_of_week="mon-fri", timezone=kst),
+            id="daily_summary_email",
+            name="일일 요약 이메일 (평일 09:00)",
+            replace_existing=True,
+        )
+
+        # 인트라넷 KB 매월 동기화 체크 (매월 5일 09:00 KST)
+        scheduler.add_job(
+            check_monthly_intranet_sync,
+            trigger=CronTrigger(day=5, hour=9, minute=0, timezone=kst),
+            id="intranet_sync_monthly_check",
+            name="인트라넷 KB 매월 동기화 체크 (5일 09:00)",
+            replace_existing=True,
+        )
+
+        # ── 자가검증 잡 ──
+        if settings.health_check_enabled:
+            from app.services.health_checker import HealthCheckRunner
+            from app.services.alert_manager import AlertManager
+
+            _hc_runner = HealthCheckRunner()
+            _hc_alerter = AlertManager()
+
+            async def _health_run(category: str):
+                results = await _hc_runner.run_category(category)
+                await _hc_alerter.handle_results(results)
+
+            async def _health_run_external_and_api():
+                r1 = await _hc_runner.run_category("external")
+                r2 = await _hc_runner.run_category("api")
+                await _hc_alerter.handle_results(r1 + r2)
+
+            # 인프라: 매 5분
+            scheduler.add_job(
+                lambda: asyncio.ensure_future(_health_run("infra")),
+                trigger=CronTrigger(minute="*/5", timezone=kst),
+                id="health_infra",
+                name="자가검증: 인프라 (5분)",
+                replace_existing=True,
+            )
+            # 데이터 정합성: 매 30분 (05분, 35분)
+            scheduler.add_job(
+                lambda: asyncio.ensure_future(_health_run("data")),
+                trigger=CronTrigger(minute="5,35", timezone=kst),
+                id="health_data",
+                name="자가검증: 데이터 정합성 (30분)",
+                replace_existing=True,
+            )
+            # 외부+API 스모크: 매 1시간 (15분)
+            scheduler.add_job(
+                lambda: asyncio.ensure_future(_health_run_external_and_api()),
+                trigger=CronTrigger(minute=15, timezone=kst),
+                id="health_external_api",
+                name="자가검증: 외부 서비스+API (1시간)",
+                replace_existing=True,
+            )
+            logger.info("자가검증 스케줄러 등록 완료 (인프라 5분, 데이터 30분, 외부+API 1시간)")
+
         scheduler.start()
-        logger.info("스케줄러 시작: G2B 모니터링 (08:00, 15:00) + 프롬프트 유지보수 (02:00)")
+        logger.info("스케줄러 시작: G2B 모니터링 + 일일 요약 + 프롬프트 유지보수 + 자가검증")
     except ImportError:
         logger.info("APScheduler 미설치 — 스케줄러 비활성화")
     except Exception as e:

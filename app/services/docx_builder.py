@@ -5,6 +5,7 @@ DOCX 빌더 (§9-1)
 중간 버전 + 최종 버전 모두 생성 가능.
 """
 
+import asyncio
 import io
 import logging
 import re
@@ -48,9 +49,9 @@ async def build_docx(sections: list, rfp=None, proposal_name: str = "") -> bytes
     case_type = rfp_dict.get("case_type", "A")
 
     if case_type == "B" and rfp_dict.get("format_template", {}).get("structure"):
-        return _build_from_template(sections, rfp_dict["format_template"]["structure"], proposal_name)
+        return await asyncio.to_thread(_build_from_template, sections, rfp_dict["format_template"]["structure"], proposal_name)
     else:
-        return _build_freeform(sections, rfp_dict, proposal_name)
+        return await asyncio.to_thread(_build_freeform, sections, rfp_dict, proposal_name)
 
 
 def _build_freeform(sections: list, rfp_dict: dict, proposal_name: str) -> bytes:

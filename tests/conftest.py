@@ -4,6 +4,8 @@ import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+from app.models.auth_schemas import CurrentUser
+
 
 # ── 이벤트 루프 ──
 
@@ -29,46 +31,46 @@ def output_dir(tmp_path) -> Path:
 @pytest.fixture
 def mock_user():
     """기본 admin 사용자."""
-    return {
-        "id": "user-001",
-        "email": "admin@tenopa.com",
-        "name": "관리자",
-        "role": "admin",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-001",
+        email="admin@tenopa.com",
+        name="관리자",
+        role="admin",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_member_user():
     """일반 멤버 사용자."""
-    return {
-        "id": "user-002",
-        "email": "member@tenopa.com",
-        "name": "팀원",
-        "role": "member",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-002",
+        email="member@tenopa.com",
+        name="팀원",
+        role="member",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_lead_user():
     """팀장 사용자."""
-    return {
-        "id": "user-003",
-        "email": "lead@tenopa.com",
-        "name": "팀장",
-        "role": "lead",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-003",
+        email="lead@tenopa.com",
+        name="팀장",
+        role="lead",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 # ── Supabase Mock ──
@@ -97,6 +99,7 @@ class MockQueryBuilder:
     lte = property(lambda self: lambda *a, **kw: self._chain())
     ilike = property(lambda self: lambda *a, **kw: self._chain())
     in_ = property(lambda self: lambda *a, **kw: self._chain())
+    is_ = property(lambda self: lambda *a, **kw: self._chain())
     or_ = property(lambda self: lambda *a, **kw: self._chain())
     contains = property(lambda self: lambda *a, **kw: self._chain())
     not_ = property(lambda self: MagicMock(is_=lambda *a, **kw: self._chain()))
@@ -182,13 +185,15 @@ _get_test_app()
 async def client(mock_user):
     """FastAPI 테스트 클라이언트 (인증 mock + Supabase mock)."""
     from httpx import AsyncClient, ASGITransport
-    from app.api.deps import get_current_user
+    from app.api.deps import get_current_user, get_rls_client, require_project_access
 
     app = _get_test_app()
     supabase_mock = make_supabase_mock()
 
     # FastAPI dependency override — 모든 엔드포인트에서 인증 우회
     app.dependency_overrides[get_current_user] = lambda: mock_user
+    app.dependency_overrides[get_rls_client] = lambda: supabase_mock
+    app.dependency_overrides[require_project_access] = lambda: {"id": "test-id", "title": "테스트", "status": "initialized"}
 
     with patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
         transport = ASGITransport(app=app)
@@ -198,6 +203,8 @@ async def client(mock_user):
 
     # cleanup
     app.dependency_overrides.pop(get_current_user, None)
+    app.dependency_overrides.pop(get_rls_client, None)
+    app.dependency_overrides.pop(require_project_access, None)
 
 
 # ── 기존 fixtures 유지 ──

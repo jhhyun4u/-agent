@@ -2,18 +2,38 @@
 Conditional Edge 라우팅 함수 (§11)
 
 각 함수는 ProposalState를 받아 다음 노드 결정 문자열 반환.
+
+단순 approved/rejected 패턴은 _approval_router 팩토리로 생성.
+복잡한 다방향 라우팅은 개별 함수로 유지.
 """
+
+from typing import Callable
 
 from app.graph.state import ProposalState
 
 
+def _approval_router(step_key: str, *, reject_label: str = "rejected") -> Callable:
+    """단순 승인/거부 라우팅 팩토리."""
+    def _route(state: ProposalState) -> str:
+        approval = state.get("approval", {}).get(step_key)
+        if approval and approval.status == "approved":
+            return "approved"
+        return reject_label
+    _route.__doc__ = f"{step_key} 승인/거부 라우팅."
+    _route.__name__ = f"route_after_{step_key}_review"
+    return _route
 
-def route_after_rfp_review(state: ProposalState) -> str:
-    """STEP 1-①: RFP 분석 확인 → 리서치 조사 또는 재분석 (v3.2: research_gather 경유)."""
-    approval = state.get("approval", {}).get("rfp")
-    if approval and approval.status == "approved":
-        return "approved"
-    return "rejected"
+
+# ── 단순 패턴 (팩토리 생성) ──
+
+route_after_rfp_review = _approval_router("rfp")
+route_after_proposal_review = _approval_router("proposal", reject_label="rework")
+route_after_ppt_review = _approval_router("ppt", reject_label="rework")
+route_after_submission_plan_review = _approval_router("submission_plan")
+route_after_cost_sheet_review = _approval_router("cost_sheet")
+route_after_submission_checklist_review = _approval_router("submission_checklist")
+route_after_mock_eval_review = _approval_router("mock_evaluation")
+route_after_eval_result_review = _approval_router("eval_result")
 
 
 def route_after_gng_review(state: ProposalState) -> str:
@@ -90,14 +110,6 @@ def route_after_section_review(state: ProposalState) -> str:
     return "rewrite"
 
 
-def route_after_proposal_review(state: ProposalState) -> str:
-    """v3.5: approved → presentation_strategy. rework → 섹션별 재작성 루프."""
-    approval = state.get("approval", {}).get("proposal")
-    if approval and approval.status == "approved":
-        return "approved"
-    return "rework"
-
-
 def route_after_presentation_strategy(state: ProposalState) -> str:
     """v3.2: 발표전략 조건부. 서류심사이면 건너뛰기."""
     rfp = state.get("rfp_analysis")
@@ -112,8 +124,8 @@ def route_after_presentation_strategy(state: ProposalState) -> str:
     return "proceed"
 
 
-def route_after_ppt_review(state: ProposalState) -> str:
-    approval = state.get("approval", {}).get("ppt")
-    if approval and approval.status == "approved":
-        return "approved"
-    return "rework"
+
+# ── 복잡한 다방향 라우팅 (개별 유지) ──
+# route_after_gng_review, route_after_strategy_review, route_after_bid_plan_review,
+# route_after_plan_review, route_after_self_review, route_after_section_review,
+# route_after_presentation_strategy — 위에서 개별 정의됨

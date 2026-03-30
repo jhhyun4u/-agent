@@ -1,5 +1,5 @@
 """
-FastAPI 애플리케이션 진입점 (v3.4)
+FastAPI 애플리케이션 진입점 (v4.0)
 
 Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker
 - LangGraph StateGraph 기반 다단계 파이프라인
@@ -41,7 +41,7 @@ if settings.log_format == "json":
                 log_entry["exc"] = self.formatException(record.exc_info)
             return _json.dumps(log_entry, ensure_ascii=False)
 
-    _handler = logging.StreamHandler()
+    _handler = logging.StreamHandler(encoding='utf-8')
     _handler.setFormatter(_JsonFormatter())
     logging.basicConfig(level=settings.log_level, handlers=[_handler])
 else:
@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """애플리케이션 생명주기"""
-    logger.info("Proposal Architect v3.4 시스템 시작")
+    logger.info("Proposal Architect v4.0 시스템 시작")
     import os
     os.makedirs(settings.output_dir, exist_ok=True)
 
@@ -67,13 +67,14 @@ async def lifespan(app: FastAPI):
         logger.warning(f"lifespan 초기화 경고 (무시): {e}")
 
     # Storage 버킷 자동 생성
-    try:
-        await client.storage.create_bucket(
-            "proposal-files", options={"public": False},
-        )
-        logger.info("proposal-files 버킷 생성 완료")
-    except Exception:
-        logger.info("proposal-files 버킷 이미 존재")
+    for bucket_name in [settings.storage_bucket_proposals, settings.storage_bucket_attachments]:
+        try:
+            await client.storage.create_bucket(
+                bucket_name, options={"public": False},
+            )
+            logger.info(f"{bucket_name} 버킷 생성 완료")
+        except Exception:
+            logger.info(f"{bucket_name} 버킷 이미 존재")
 
     # DB에서 활성 세션 복원
     from app.services.session_manager import session_manager
@@ -82,6 +83,22 @@ async def lifespan(app: FastAPI):
 
     # PSM-05: 마감 초과 제안서 expired 전환
     await session_manager.mark_expired_proposals()
+
+    # Dev mode: mock user 자동 생성 (FK 제약 충족)
+    if settings.dev_mode:
+        try:
+            from app.api.deps import _DEV_USER_ID
+            check = await client.table("users").select("id").eq("id", _DEV_USER_ID).maybe_single().execute()
+            if not (check and check.data):
+                await client.table("users").upsert({
+                    "id": _DEV_USER_ID,
+                    "email": "lead@tenopa.co.kr",
+                    "name": "이팀장",
+                    "role": "lead",
+                }).execute()
+                logger.info(f"Dev mock user 생성: {_DEV_USER_ID}")
+        except Exception as e:
+            logger.warning(f"Dev mock user 생성 실패 (auth.users FK 필요): {e}")
 
     # §25-2: G2B 정기 모니터링 스케줄러
     from app.services.scheduled_monitor import setup_scheduler
@@ -94,6 +111,18 @@ async def lifespan(app: FastAPI):
         logger.info(f"공고 자동 정리 완료: {cleaned}")
     except Exception as e:
         logger.warning(f"공고 자동 정리 경고 (무시): {e}")
+
+    # DB 마이그레이션: bid_announcements 테이블 자동 생성
+    try:
+        await client.rpc("create_bid_announcements_table").execute()
+        logger.info("bid_announcements 테이블 생성 완료")
+    except Exception as e:
+        # RPC가 없으면 direct SQL 시도 (Supabase REST API 제한)
+        try:
+            await client.table("bid_announcements").select("id").limit(1).execute()
+            logger.info("bid_announcements 테이블 이미 존재")
+        except Exception as e2:
+            logger.warning(f"bid_announcements 테이블 생성 실패 (수동 실행 필요): {e}")
 
     # 프롬프트 레지스트리 동기화 (코드 → DB)
     try:
@@ -112,8 +141,8 @@ _is_production = settings.log_format == "json"
 
 app = FastAPI(
     title="Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker",
-    description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v3.4)",
-    version="3.4.0",
+    description="LangGraph 기반 RFP 분석 · 전략 수립 · 제안서 작성 AI 협업 플랫폼 (v4.0)",
+    version="4.0.0",
     lifespan=lifespan,
     docs_url=None if _is_production else "/docs",
     redoc_url=None if _is_production else "/redoc",
@@ -150,12 +179,24 @@ async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
         content=exc.to_dict(),
     )
 
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """미처리 예외 → 500 + 로그 출력 (디버깅용)"""
+    import traceback
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc), "path": str(request.url.path)},
+    )
+
 # ── 라우터 등록 ──
 
 # Phase 0: 인증·사용자
 from app.api.routes_auth import router as auth_router
 from app.api.routes_users import router as users_router
-app.include_router(auth_router, prefix="/api")
+app.include_router(auth_router)
 app.include_router(users_router)
 
 # Phase 1: 제안서 CRUD + 워크플로
@@ -182,6 +223,12 @@ app.include_router(admin_router)
 from app.api.routes_kb import router as kb_router
 app.include_router(kb_router)
 
+# 인트라넷 KB 마이그레이션
+from app.api.routes_intranet import router as intranet_router
+from app.api.routes_documents import router as documents_router
+app.include_router(intranet_router)
+app.include_router(documents_router)
+
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
 app.include_router(analytics_router)
@@ -193,6 +240,10 @@ app.include_router(qa_router)
 # 프로젝트 파일 관리 (GAP-1~6)
 from app.api.routes_files import router as files_router
 app.include_router(files_router)
+
+# 프로젝트 아카이브 (중간 산출물 파일 관리)
+from app.api.routes_project_archive import router as archive_router
+app.include_router(archive_router)
 
 # 비딩 가격 시뮬레이션
 from app.api.routes_pricing import router as pricing_router
@@ -212,10 +263,44 @@ from app.api.routes_submission_docs import router as submission_docs_router
 app.include_router(streams_router)
 app.include_router(submission_docs_router)
 
-# 기존 라우터
-from app.api.routes import router as main_router
+# 팀 협업: /api/teams/*, /api/proposals/comments/*, /api/invitations/*
+from app.api.routes_team import router as team_router
+app.include_router(team_router)
+
+# 나라장터 프록시: /api/g2b/* (router prefix="/g2b", 여기서 /api 추가)
+from app.api.routes_g2b import router as g2b_router
+app.include_router(g2b_router, prefix="/api")
+
+# 섹션 라이브러리 + 아카이브: /api/resources/*, /api/assets, /api/archive
+from app.api.routes_resources import router as resources_router
+app.include_router(resources_router)
+
+# 공통서식 라이브러리: /api/form-templates/*
+from app.api.routes_templates import router as templates_router
+app.include_router(templates_router)
+
+# 낙찰률 통계: /api/stats/*
+from app.api.routes_stats import router as stats_router
+app.include_router(stats_router)
+
+# 랜딩페이지 공개 통계: /api/public/*
+from app.api.routes_public import router as public_router
+app.include_router(public_router)
+
+# RFP 일정 관리: /api/calendar/*
+from app.api.routes_calendar import router as calendar_router
+app.include_router(calendar_router)
+
+# v3.1 레거시 파이프라인: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
+from app.api.routes_v31 import router as v31_router
+app.include_router(v31_router, prefix="/api")
+
+# 발표 자료 생성: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
+from app.api.routes_presentation import router as presentation_router
+app.include_router(presentation_router, prefix="/api")
+
+# 입찰 관리: /api/teams/*/bids/*, /api/bids/*
 from app.api.routes_bids import router as bids_router
-app.include_router(main_router, prefix="/api")
 app.include_router(bids_router)
 
 
@@ -223,8 +308,8 @@ app.include_router(bids_router)
 
 @app.get("/health")
 async def health_check():
-    """시스템 상태 확인 (OPS-02: DB 연결 포함)"""
-    health = {"status": "ok", "version": "3.4.0"}
+    """시스템 상태 확인 (OPS-02: DB 연결 + 자가검증 요약)"""
+    health = {"status": "ok", "version": "4.0.0"}
     try:
         from app.utils.supabase_client import get_async_client
         client = await get_async_client()
@@ -233,6 +318,34 @@ async def health_check():
     except Exception as e:
         health["status"] = "degraded"
         health["database"] = f"error: {type(e).__name__}"
+        return health
+
+    # 최근 자가검증 요약
+    try:
+        logs = await client.table("health_check_logs").select(
+            "check_id, status, checked_at"
+        ).order("checked_at", desc=True).limit(30).execute()
+
+        latest: dict[str, dict] = {}
+        for row in (logs.data or []):
+            cid = row["check_id"]
+            if cid not in latest:
+                latest[cid] = {"status": row["status"], "at": row["checked_at"]}
+
+        fail_count = sum(1 for v in latest.values() if v["status"] == "fail")
+        health["checks"] = {
+            "total": len(latest),
+            "fail": fail_count,
+            "last_run": logs.data[0]["checked_at"] if logs.data else None,
+        }
+        if fail_count > 0:
+            health["status"] = "degraded"
+            health["checks"]["failing"] = [
+                k for k, v in latest.items() if v["status"] == "fail"
+            ]
+    except Exception:
+        pass
+
     return health
 
 
@@ -242,7 +355,7 @@ async def status():
     from app.services.session_manager import session_manager
     return {
         "status": "operational",
-        "version": "3.4.0",
+        "version": "4.0.0",
         "active_sessions": session_manager.get_session_count(),
     }
 

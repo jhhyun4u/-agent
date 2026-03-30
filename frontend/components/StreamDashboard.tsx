@@ -15,6 +15,7 @@ import {
   type StreamsOverview,
   type StreamProgress,
 } from "@/lib/api";
+import StreamDependencyGraph from "@/components/StreamDependencyGraph";
 
 interface Props {
   proposalId: string;
@@ -189,26 +190,8 @@ export default function StreamDashboard({ proposalId, deadline }: Props) {
         })}
       </div>
 
-      {/* 의존성 */}
-      <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-5">
-        <h3 className="text-xs font-medium text-[#8c8c8c] uppercase tracking-wider mb-3">의존성</h3>
-        <div className="space-y-2">
-          {DEPENDENCIES.map((dep, i) => {
-            const depStream = getStream(dep.stream);
-            const resolved = depStream.status === "completed";
-            return (
-              <div key={i} className="flex items-center gap-3 text-xs">
-                <span className={`w-4 text-center ${resolved ? "text-[#3ecf8e]" : "text-amber-400"}`}>
-                  {resolved ? "✅" : "⚠️"}
-                </span>
-                <span className="text-[#ededed] font-medium w-28">{dep.target}</span>
-                <span className="text-[#8c8c8c]">←</span>
-                <span className="text-[#8c8c8c]">{dep.source}: {dep.condition}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {/* 권고 #3: 스트림 간 의존성 시각화 (기존 텍스트 + 그래프) */}
+      <StreamDependencyGraph streams={streams} />
 
       {/* 최종 제출 버튼 */}
       <div className={`border rounded-xl p-5 text-center ${

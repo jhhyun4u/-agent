@@ -87,7 +87,7 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
             for s in storylines.get("sections", []):
                 s_id = s.get("eval_item") or s.get("section_id", "")
                 if s_id == section_id:
-                    parts.append(f"\n### 이 섹션의 스토리라인")
+                    parts.append("\n### 이 섹션의 스토리라인")
                     if s.get("key_message"):
                         parts.append(f"- **핵심 주장 (Assertion Title)**: {s['key_message']}")
                     if s.get("narrative_arc"):
@@ -122,6 +122,19 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
         latest = section_feedback[-1]
         feedback_context = f"\n\n## 이전 리뷰 피드백 (반드시 반영)\n{latest.get('feedback', '')}"
 
+    # ── Compliance Matrix (v3.9: 섹션별 요구사항 체크리스트 주입) ──
+    compliance = state.get("compliance_matrix", [])
+    compliance_context = ""
+    if compliance:
+        relevant = []
+        for c in compliance:
+            cd = c.model_dump() if hasattr(c, "model_dump") else (c if isinstance(c, dict) else {})
+            status = cd.get("status", "미확인")
+            if status != "충족":  # 미확인+미충족 항목만 표시
+                relevant.append(f"- [{cd.get('req_id', '')}] {cd.get('content', '')} (상태: {status})")
+        if relevant:
+            compliance_context = "\n\n## Compliance 체크리스트 (이 섹션에서 커버 가능한 요구사항)\n" + "\n".join(relevant[:15])
+
     # ── 과거 교훈 (동일 발주기관/유사 섹션 유형) ──
     lessons_context = ""
     try:
@@ -148,12 +161,14 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
                         f"개선={ls.get('improvements', '-')}"
                     )
                 lessons_context = "\n\n## 과거 교훈 (이 발주기관에서의 경험, 반드시 참고)\n" + "\n".join(parts)
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         pass
 
     # ── 평가 배점 + 세부항목 ──
     eval_weight = 0
-    eval_item_detail = "(해당 섹션의 평가항목 정보 없음)"
+    from app.prompts.section_prompts import EVAL_ITEM_FALLBACK
+    eval_item_detail = EVAL_ITEM_FALLBACK
     for item in rfp_dict.get("eval_items", []):
         if item.get("item") == section_id:
             eval_weight = item.get("weight", 0)
@@ -168,6 +183,26 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
 
     total_pages = rfp_dict.get("volume_spec", {}).get("max_pages", 100)
 
+    # 유사 콘텐츠 자동 추천 (C-3)
+    reference_content = ""
+    try:
+        from app.services.content_library import suggest_content_for_section
+        suggestions = await suggest_content_for_section(
+            section_topic=f"{section_id} {section_type}",
+            org_id=state.get("org_id", ""),
+            top_k=3,
+        )
+        if suggestions:
+            parts = []
+            for s in suggestions[:3]:
+                excerpt = (s.get("body_excerpt") or s.get("body", ""))[:300]
+                score = s.get("quality_score", 0)
+                parts.append(f"- [{score}점] {s.get('title', '')}: {excerpt}")
+            reference_content = "\n\n## 참고 콘텐츠 (KB 유사 콘텐츠, 참고하되 그대로 복사 금지)\n" + "\n".join(parts)
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
+        pass
+
     return {
         "section_id": section_id,
         "rfp_summary": rfp_summary,
@@ -181,11 +216,12 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
         "hot_buttons": rfp_dict.get("hot_buttons", []),
         "storyline_context": storyline_context,
         "prev_sections_context": prev_context,
-        "feedback_context": feedback_context + lessons_context,
+        "feedback_context": feedback_context + lessons_context + compliance_context,
         "eval_weight": eval_weight,
         "eval_item_detail": eval_item_detail,
         "recommended_pages": get_recommended_pages(eval_weight, total_pages),
         "volume_spec": str(rfp_dict.get("volume_spec", {})),
+        "reference_content": reference_content,
         # 케이스 B 전용
         "template_structure": "",
         "section_type_name": "",
@@ -227,14 +263,15 @@ async def proposal_write_next(state: ProposalState) -> dict:
     ctx = await _build_context(state, section_id, section_type)
 
     # 프롬프트 선택 (레지스트리 연동)
-    prompt_id_str = f"section_prompts.CASE_B" if case_type == "B" else f"section_prompts.{section_type}"
+    prompt_id_str = "section_prompts.CASE_B" if case_type == "B" else f"section_prompts.{section_type}"
     proposal_id = state.get("project_id", "")
 
     try:
         text, ver, hash_ = await prompt_registry.get_prompt_for_experiment(
             prompt_id_str, proposal_id
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         text, ver, hash_ = "", 0, ""
 
     if case_type == "B":
@@ -246,7 +283,7 @@ async def proposal_write_next(state: ProposalState) -> dict:
     else:
         prompt = (text or get_section_prompt(section_type)).format(**ctx)
 
-    result = await claude_generate(prompt, max_tokens=6000)
+    result = await claude_generate(prompt, max_tokens=6000, step_name="proposal_write_next")
 
     # 프롬프트 사용 기록
     if proposal_id and ver:
@@ -272,6 +309,55 @@ async def proposal_write_next(state: ProposalState) -> dict:
         self_review_score=result.get("self_check"),
     )
 
+    # ── self_check 품질 게이트 ──
+    self_check = result.get("self_check", {})
+    depth = self_check.get("depth_score", {})
+    evidence_count = depth.get("evidence_count", 0)
+    tables_count = depth.get("tables_or_diagrams", 0)
+    abstract_pct = depth.get("abstract_ratio_pct", 0)
+
+    quality_issues = []
+    if evidence_count < 3:
+        quality_issues.append(f"근거 부족 ({evidence_count}/3)")
+    if tables_count < 1:
+        quality_issues.append("표/다이어그램 0개")
+    if abstract_pct > 40:
+        quality_issues.append(f"추상적 서술 비율 {abstract_pct}%")
+    # eval_sub_items 미대응 체크
+    if not self_check.get("eval_sub_items_all_addressed", True):
+        quality_issues.append("평가 세부항목 미대응")
+
+    if quality_issues:
+        logger.warning(
+            "[품질게이트] section=%s 품질 이슈: %s (재생성 권장)",
+            section_id, quality_issues,
+        )
+        # state에 품질 경고 기록 (리뷰 노드에서 참조 가능)
+        quality_warnings = list(state.get("quality_warnings", []))
+        quality_warnings.append({
+            "section_id": section_id,
+            "issues": quality_issues,
+            "depth_score": depth,
+        })
+        # 반환 dict에 quality_warnings 추가
+        # (LangGraph Annotated reducer가 병합)
+
+    # KB 자동 축적 (A-1: fire-and-forget)
+    try:
+        from app.services.content_library import auto_register_section
+        await auto_register_section(
+            org_id=state.get("org_id", ""),
+            proposal_id=state.get("project_id", ""),
+            section_id=section_id,
+            title=new_section.title,
+            content=new_section.content,
+            section_type=section_type,
+            rfp_keywords=rfp_dict.get("tech_keywords", []),
+            industry=rfp_dict.get("domain", None),
+        )
+    except Exception as e:
+        logger.debug(f"섹션 KB 자동 축적 실패 (무시): {e}")
+
     # 기존 섹션 목록에서 같은 section_id가 있으면 교체, 없으면 추가
     existing_sections = list(state.get("proposal_sections", []))
     replaced = False
@@ -284,10 +370,13 @@ async def proposal_write_next(state: ProposalState) -> dict:
     if not replaced:
         existing_sections.append(new_section)
 
-    return {
+    update: dict = {
         "proposal_sections": existing_sections,
         "current_step": "section_written",
     }
+    if quality_issues:
+        update["quality_warnings"] = quality_warnings
+    return update
 
 
 async def self_review_with_auto_improve(state: ProposalState) -> dict:
@@ -337,7 +426,8 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
         sr_text, _, _ = await prompt_registry.get_prompt_for_experiment(
             "proposal_prompts.SELF_REVIEW_PROMPT", proposal_id_for_exp
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         sr_text = ""
 
     prompt = (sr_text or SELF_REVIEW_PROMPT).format(
@@ -392,10 +482,10 @@ async def self_review_with_auto_improve(state: ProposalState) -> dict:
                                 .eq("id", link.data[0]["id"])
                                 .execute()
                             )
-                    except Exception:
-                        pass
-        except Exception:
-            pass
+                    except Exception as e:
+                        logger.debug(f"콘텐츠 라이브러리 업데이트 실패 (무시): {e}")
+        except Exception as e:
+            logger.debug(f"콘텐츠 라이브러리 업데이트 실패 (무시): {e}")
 
     # 총점 계산
     total = score.get("total", 0)

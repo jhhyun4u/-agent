@@ -154,8 +154,13 @@ class RecommendationsMeta(BaseModel):
     analyzed_at: datetime
 
 
+class RecommendationsData(BaseModel):
+    recommended: list[RecommendedBid] = []
+    excluded: list[ExcludedBid] = []
+
+
 class RecommendationsResponse(BaseModel):
-    data: dict  # {recommended: list[RecommendedBid], excluded: list[ExcludedBid]}
+    data: RecommendationsData
     meta: RecommendationsMeta
 
 
@@ -167,6 +172,7 @@ class BidSummary(BaseModel):
     organization: str = ""
     budget_detail: str = ""
     period: str = ""
+    purpose: str = ""
     core_tasks: list[str] = []
     required_license: str = ""
     experience_needed: str = ""
@@ -213,3 +219,15 @@ class TenopaBidReview(BaseModel):
     verdict: Literal["추천", "검토 필요", "제외"]
     reason_analysis: ReasonAnalysis = ReasonAnalysis()
     action_plan: str = ""
+
+
+# ── 공고 상태 변경 ───────────────────────────────────────────
+
+BidProposalStatus = Literal[
+    "검토중", "제안결정", "제안포기", "제안유보", "제안착수", "관련없음"
+]
+
+
+class BidStatusUpdate(BaseModel):
+    """공고 제안여부 상태 변경 요청"""
+    status: BidProposalStatus

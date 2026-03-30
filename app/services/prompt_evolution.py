@@ -84,6 +84,20 @@ async def suggest_improvements(prompt_id: str) -> dict:
     from app.services.claude_client import claude_generate
     result = await claude_generate(meta_prompt, max_tokens=8000)
 
+    # DB에 제안 이력 저장 (prompt_improvement_suggestions 테이블)
+    if isinstance(result, dict) and "suggestions" in result:
+        try:
+            from app.utils.supabase_client import get_async_client
+            client = await get_async_client()
+            await client.table("prompt_improvement_suggestions").insert({
+                "prompt_id": prompt_id,
+                "prompt_version": version or 0,
+                "analysis": result.get("analysis", ""),
+                "suggestions": result["suggestions"],
+            }).execute()
+        except Exception as e:
+            logger.warning("제안 이력 저장 실패: %s", e)
+
     return result
 
 
@@ -347,9 +361,9 @@ async def _get_review_feedback_for_prompt(prompt_id: str) -> str:
         if not links.data:
             return ""
 
-        proposal_ids = list({l["proposal_id"] for l in links.data})
+        proposal_ids = list({lnk["proposal_id"] for lnk in links.data})
         # 프롬프트가 사용된 step 파악 (section_prompts → proposal/section, strategy → strategy 등)
-        steps = list({l["artifact_step"] for l in links.data})
+        steps = list({lnk["artifact_step"] for lnk in links.data})
 
         # 해당 proposal의 피드백 조회
         feedbacks = await (
@@ -426,20 +440,20 @@ async def _get_section_quality_patterns(prompt_id: str) -> str:
             return ""
 
         # 품질 점수가 있는 것만 필터
-        scored = [l for l in links.data if l.get("quality_score") is not None]
+        scored = [lnk for lnk in links.data if lnk.get("quality_score") is not None]
         if not scored:
             return ""
 
         # 전체 평균
-        avg_all = sum(l["quality_score"] for l in scored) / len(scored)
+        avg_all = sum(lnk["quality_score"] for lnk in scored) / len(scored)
 
         # 섹션별 집계
         by_section: dict = {}
-        for l in scored:
-            sid = l.get("section_id", "unknown")
+        for lnk in scored:
+            sid = lnk.get("section_id", "unknown")
             if sid not in by_section:
                 by_section[sid] = []
-            by_section[sid].append(l["quality_score"])
+            by_section[sid].append(lnk["quality_score"])
 
         parts = [f"전체 평균 품질: {avg_all:.1f}점 ({len(scored)}건)"]
 

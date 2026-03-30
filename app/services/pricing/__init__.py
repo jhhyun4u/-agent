@@ -1,17 +1,5 @@
-"""비딩 가격 산정 및 전략적 의사결정 모듈."""
-
-from app.services.pricing.engine import PricingEngine
-from app.services.pricing.models import (
-    PricingSimulationRequest,
-    PricingSimulationResult,
-    QuickEstimateRequest,
-    QuickEstimateResult,
-)
-
-__all__ = [
-    "PricingEngine",
-    "PricingSimulationRequest",
-    "PricingSimulationResult",
-    "QuickEstimateRequest",
-    "QuickEstimateResult",
-]
+"""레거시 호환 래퍼 — 실제 구현: app.services.bidding.pricing"""
+import importlib as _importlib
+import sys as _sys
+_real = _importlib.import_module("app.services.bidding.pricing")
+_sys.modules[__name__] = _real

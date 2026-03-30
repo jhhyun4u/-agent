@@ -1,0 +1,65 @@
+# 로컬 통합 개발 환경
+# 사용법: docker compose up -d
+# 프로덕션은 Railway(백엔드) + Vercel(프론트) + Supabase(DB) 사용
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tenopa
+      POSTGRES_USER: tenopa
+      POSTGRES_PASSWORD: tenopa_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema_v3.4.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tenopa"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://tenopa:tenopa_local@postgres:5432/tenopa
+      LOG_FORMAT: text
+      LOG_LEVEL: DEBUG
+      WORKERS: 1  # 로컬 개발: 1 (reload 호환), 프로덕션: 2+
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./app:/app/app:ro
+      - ./output:/app/output
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          cpus: "2.0"
+        reservations:
+          memory: 512m
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  frontend_node_modules:

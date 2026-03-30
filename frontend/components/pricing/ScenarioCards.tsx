@@ -68,6 +68,22 @@ export default function ScenarioCards({ scenarios, selected, onSelect }: Props) 
                   <span className="text-[#8c8c8c]">수주확률</span>
                   <span className="text-[#ededed] font-mono">{Math.round(s.win_probability * 100)}%</span>
                 </div>
+                {s.price_score_detail && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-[#8c8c8c]">가격점수</span>
+                      <span className="text-[#ededed] font-mono">
+                        {s.price_score_detail.price_score.toFixed(1)}/{s.price_score_detail.price_weight}점
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#8c8c8c]">예상총점</span>
+                      <span className="text-[#ededed] font-mono font-medium">
+                        {s.price_score_detail.total_score.toFixed(1)}점
+                      </span>
+                    </div>
+                  </>
+                )}
                 <div className="flex justify-between border-t border-[#333] pt-1 mt-1">
                   <span className="text-[#8c8c8c]">기대수익</span>
                   <span className={`font-mono ${s.expected_payoff >= 0 ? "text-green-400" : "text-red-400"}`}>

@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import path from "path";
+
+const STORAGE_STATE = path.join(__dirname, "e2e/.auth/user.json");
 
 export default defineConfig({
   testDir: "./e2e",
@@ -14,14 +17,28 @@ export default defineConfig({
   },
   projects: [
     {
+      name: "setup",
+      testMatch: /auth\.setup\.ts/,
+    },
+    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testIgnore: /authenticated\.spec\.ts/,
+    },
+    {
+      name: "authenticated",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: STORAGE_STATE,
+      },
+      testMatch: /authenticated\.spec\.ts/,
+      dependencies: ["setup"],
     },
   ],
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
     timeout: 30_000,
   },
 });

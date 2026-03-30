@@ -17,6 +17,7 @@ import {
   type WorkflowResumeData,
 } from "@/lib/api";
 import GoNoGoPanel from "@/components/GoNoGoPanel";
+import { HelpTooltip } from "@/components/GuidedTour";
 
 // ── 리뷰 게이트 정의 ──
 
@@ -306,6 +307,14 @@ function ReviewPanel({
         rework_targets: reworkTargets.length > 0 ? reworkTargets : undefined,
       };
       await api.workflow.resume(proposalId, data);
+
+      // 프롬프트 수정 추적: 승인=accept, 재작업=reject (비동기, 실패 무시)
+      api.prompts.recordEditAction({
+        proposal_id: proposalId,
+        section_id: reviewNode ?? "unknown",
+        action: approved ? "accept" : "reject",
+      }).catch(() => {});
+
       onStateChange?.();
     } catch (e) {
       alert(e instanceof Error ? e.message : "요청 실패");
@@ -324,6 +333,7 @@ function ReviewPanel({
         <h2 className="text-sm font-semibold text-[#ededed]">
           {gate?.title ?? "리뷰"}
         </h2>
+        <HelpTooltip text={gate?.perspective ?? "AI 결과를 검토하고 승인하거나 재작업을 요청하세요."} />
         <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded">
           STEP {gate?.step ?? "?"}
         </span>
@@ -390,13 +400,13 @@ function ReviewPanel({
         </div>
       )}
 
-      {/* 피드백 */}
+      {/* 피드백 — 확대 */}
       <textarea
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
-        placeholder="전체 피드백 (선택)"
-        rows={2}
-        className="w-full bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 text-xs text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-amber-500/40 resize-none mb-3"
+        placeholder="피드백을 작성하세요... (수정 방향, 보완 사항, 추가 요구사항 등)"
+        rows={4}
+        className="w-full bg-[#111111] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-amber-500/40 resize-y mb-4 leading-relaxed"
       />
 
       {/* 섹션별 인라인 피드백 (§13-5 보강) */}
@@ -457,29 +467,21 @@ function ReviewPanel({
         </div>
       )}
 
-      {/* 버튼 */}
-      <div className="flex gap-2">
+      {/* 버튼 — 재작업 / 승인 2개만 */}
+      <div className="flex gap-3">
         <button
           onClick={() => handleResume(false)}
           disabled={submitting}
-          className="px-4 py-2 text-xs font-medium rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 disabled:opacity-40 transition-colors"
+          className="flex-1 px-4 py-2.5 text-sm font-medium rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 disabled:opacity-40 transition-colors"
         >
-          재작업 요청
-        </button>
-        <button
-          onClick={() => handleResume(true, true)}
-          disabled={submitting}
-          title="피드백 없이 AI 결과를 그대로 사용합니다"
-          className="px-4 py-2 text-xs font-medium rounded-lg border border-[#3ecf8e]/30 text-[#3ecf8e] hover:bg-[#3ecf8e]/10 disabled:opacity-40 transition-colors"
-        >
-          빠른 승인
+          재작업
         </button>
         <button
           onClick={() => handleResume(true)}
           disabled={submitting}
-          className="px-4 py-2 text-xs font-bold rounded-lg bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 disabled:opacity-40 transition-colors"
+          className="flex-1 px-4 py-2.5 text-sm font-bold rounded-xl bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 disabled:opacity-40 transition-colors"
         >
-          승인
+          {submitting ? "처리중..." : "승인"}
         </button>
       </div>
     </div>

@@ -3,9 +3,10 @@
 """
 
 from datetime import datetime
-from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field, field_validator
+
+from app.models.types import ProjectRole, UserRole, UserStatus
 
 
 # ── 조직 ──
@@ -39,19 +40,19 @@ class DivisionResponse(BaseModel):
 class TeamCreate(BaseModel):
     name: str
     division_id: str
-    teams_webhook_url: Optional[str] = None
+    teams_webhook_url: str | None = None
 
 
 class TeamUpdate(BaseModel):
-    name: Optional[str] = None
-    teams_webhook_url: Optional[str] = None
+    name: str | None = None
+    teams_webhook_url: str | None = None
 
 
 class TeamResponse(BaseModel):
     id: str
     division_id: str
     name: str
-    teams_webhook_url: Optional[str] = None
+    teams_webhook_url: str | None = None
     created_at: datetime
 
 
@@ -61,39 +62,53 @@ class UserCreate(BaseModel):
     """관리자가 사용자 사전 등록 시 사용"""
     email: str
     name: str
-    role: str = Field(default="member", pattern="^(member|lead|director|executive|admin)$")
-    team_id: Optional[str] = None
-    division_id: Optional[str] = None
+    role: UserRole = "member"
+    team_id: str | None = None
+    division_id: str | None = None
     org_id: str
-    azure_ad_oid: Optional[str] = None
+    azure_ad_oid: str | None = None
 
 
 class UserUpdate(BaseModel):
-    name: Optional[str] = None
-    role: Optional[str] = Field(default=None, pattern="^(member|lead|director|executive|admin)$")
-    team_id: Optional[str] = None
-    division_id: Optional[str] = None
-    notification_settings: Optional[dict] = None
+    name: str | None = None
+    role: UserRole | None = None
+    team_id: str | None = None
+    division_id: str | None = None
+    notification_settings: dict | None = None
 
 
 class UserCreateWithPassword(BaseModel):
     """관리자가 사용자 등록 시 사용 (Supabase Auth 계정 동시 생성)"""
     email: str
     name: str
-    role: str = Field(default="member", pattern="^(member|lead|director|executive|admin)$")
-    team_id: Optional[str] = None
-    division_id: Optional[str] = None
+    role: UserRole = "member"
+    team_id: str | None = None
+    division_id: str | None = None
     org_id: str
-    password: Optional[str] = None  # 미입력 시 임시 비밀번호 자동 생성
+    password: str | None = None  # 미입력 시 임시 비밀번호 자동 생성
 
 
 class PasswordResetRequest(BaseModel):
-    new_password: Optional[str] = None  # 미입력 시 임시 비밀번호 자동 생성
+    new_password: str | None = None  # 미입력 시 임시 비밀번호 자동 생성
 
 
 class PasswordChangeRequest(BaseModel):
     current_password: str
-    new_password: str = Field(min_length=8)
+    new_password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_password_complexity(cls, v: str) -> str:
+        """H-5: 비밀번호 복잡성 — 대문자+소문자+숫자+특수문자 중 3종 이상."""
+        checks = [
+            any(c.isupper() for c in v),
+            any(c.islower() for c in v),
+            any(c.isdigit() for c in v),
+            any(not c.isalnum() for c in v),
+        ]
+        if sum(checks) < 3:
+            raise ValueError("비밀번호는 대문자, 소문자, 숫자, 특수문자 중 3종 이상 포함해야 합니다.")
+        return v
 
 
 class BulkCreateResult(BaseModel):
@@ -107,11 +122,11 @@ class UserResponse(BaseModel):
     id: str
     email: str
     name: str
-    role: str
-    team_id: Optional[str] = None
-    division_id: Optional[str] = None
+    role: UserRole
+    team_id: str | None = None
+    division_id: str | None = None
     org_id: str
-    status: str = "active"
+    status: UserStatus = "active"
     must_change_password: bool = False
     created_at: datetime
     updated_at: datetime
@@ -126,15 +141,15 @@ class UserListResponse(BaseModel):
 
 class ParticipantAdd(BaseModel):
     user_id: str
-    role_in_project: str = Field(default="member", pattern="^(member|section_lead)$")
+    role_in_project: ProjectRole = "member"
 
 
 class ParticipantResponse(BaseModel):
     user_id: str
     role_in_project: str
     assigned_at: datetime
-    user_name: Optional[str] = None
-    user_email: Optional[str] = None
+    user_name: str | None = None
+    user_email: str | None = None
 
 
 # ── 결재 위임 ──
@@ -143,7 +158,7 @@ class DelegationCreate(BaseModel):
     delegate_id: str
     start_date: str  # YYYY-MM-DD
     end_date: str
-    reason: Optional[str] = None
+    reason: str | None = None
 
 
 class DelegationResponse(BaseModel):
@@ -152,6 +167,6 @@ class DelegationResponse(BaseModel):
     delegate_id: str
     start_date: str
     end_date: str
-    reason: Optional[str] = None
+    reason: str | None = None
     is_active: bool
     created_at: datetime
