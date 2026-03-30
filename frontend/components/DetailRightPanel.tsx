@@ -7,11 +7,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api, Comment_, ProposalFile, ProposalSummary, type WorkflowState } from "@/lib/api";
+import { useToast } from "@/components/ui/Toast";
 import StepArtifactViewer from "@/components/StepArtifactViewer";
 import ArtifactReviewPanel from "@/components/ArtifactReviewPanel";
 import CostSheetEditor from "@/components/pricing/CostSheetEditor";
 import QaPanel from "@/components/QaPanel";
 import VersionCompareModal from "@/components/VersionCompareModal";
+import { ArtifactVersionPanel } from "@/components/ArtifactVersionPanel";
 
 // ── 상수 ──
 const PHASES = [
@@ -22,7 +24,7 @@ const PHASES = [
   { n: 5, name: "품질 검증" },
 ];
 
-type Tab = "result" | "comments" | "win" | "compare" | "qa";
+type Tab = "result" | "comments" | "win" | "version" | "compare" | "qa";
 
 // 리뷰 게이트 노드 목록
 const REVIEW_NODES = [
@@ -286,22 +288,39 @@ export default function DetailRightPanel({
   }
 
   // ── 다운로드 ──
+  const toast = useToast();
+
   async function handleDownload(type: "docx" | "pptx" | "hwpx") {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/download/${type}`,
         { headers: { Authorization: `Bearer ${downloadToken}` } },
       );
-      if (!res.ok) throw new Error("다운로드 실패");
+      if (!res.ok) throw new Error(`다운로드 실패 (${res.status})`);
+
+      // Phase 3-3: Content-Disposition 헤더에서 파일명 파싱
+      const disposition = res.headers.get("Content-Disposition") ?? "";
+      const match = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\r\n]+)["']?/i);
+      const filename = match
+        ? decodeURIComponent(match[1])
+        : `proposal-${proposalId}.${type}`;
+
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `proposal-${proposalId}.${type}`;
+      a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
+
+      toast.success(`${filename} 다운로드 완료`);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "다운로드 실패");
+      toast.error(err instanceof Error ? err.message : "다운로드 실패", {
+        action: {
+          label: "다시 시도",
+          handler: () => handleDownload(type),
+        },
+      });
     }
   }
 
@@ -350,7 +369,7 @@ export default function DetailRightPanel({
           {(
             [
               { key: "result" as Tab, label: "결과물" },
-              { key: "comments" as Tab, label: `댓글${comments.length > 0 ? ` (${comments.length})` : ""}` },
+              { key: "comments" as Tab, label: `댓글${comments?.length > 0 ? ` (${comments.length})` : ""}` },
               { key: "qa" as Tab, label: "Q&A" },
             ] as const
           ).map(({ key, label }) => (
@@ -372,6 +391,7 @@ export default function DetailRightPanel({
           {(
             [
               { key: "win" as Tab, label: "수주결과" },
+              { key: "version" as Tab, label: "버전" },
               { key: "compare" as Tab, label: "비교" },
             ] as const
           ).map(({ key, label }) => (
@@ -710,6 +730,28 @@ export default function DetailRightPanel({
               versions={versions}
               currentVersionLabel={currentVersionLabel}
             />
+          </div>
+        )}
+
+        {/* Version */}
+        {activeTab === "version" && (
+          <div>
+            <h3 className="text-xs font-semibold text-[#ededed] mb-3">산출물 버전 히스토리</h3>
+            <p className="text-[10px] text-[#8c8c8c] mb-3">
+              현재 워크플로우에서 생성된 산출물의 모든 버전을 확인할 수 있습니다.
+            </p>
+            {workflowState?.artifact_versions ? (
+              <ArtifactVersionPanel 
+                artifacts={workflowState.artifact_versions}
+                dependencyMismatches={workflowState.dependency_mismatches}
+                onVersionSelect={async (key, ver) => {
+                  console.log(`Version selected: ${key} v${ver}`);
+                  alert(`선택하신 산출물(${key})의 버전(v${ver})으로 전환을 요청합니다.\n(API 연동 대기 중)`);
+                }}
+              />
+            ) : (
+              <p className="text-[10px] text-[#8c8c8c] p-4 text-center">아직 생성된 버전 정보가 없거나 워크플로우가 시작되지 않았습니다.</p>
+            )}
           </div>
         )}
 

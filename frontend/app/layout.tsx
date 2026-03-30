@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ErrorReporterInit from "@/components/ErrorReporterInit";
+import ToastProvider from "@/components/ui/Toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,7 +29,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
         <ErrorReporterInit />
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );

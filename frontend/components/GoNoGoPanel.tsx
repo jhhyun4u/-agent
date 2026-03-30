@@ -9,6 +9,8 @@
 
 import { useEffect, useState } from "react";
 import { api, type WorkflowState, type WorkflowResumeData } from "@/lib/api";
+import { useToast } from "@/components/ui/Toast";
+import PositioningImpactModal from "@/components/PositioningImpactModal";
 
 // ── 타입 ──
 
@@ -117,10 +119,13 @@ export default function GoNoGoPanel({
   onStateChange,
   className = "",
 }: GoNoGoPanelProps) {
+  const toast = useToast();
   const [posOverride, setPosOverride] = useState(workflowState.positioning ?? "");
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirmNoGo, setConfirmNoGo] = useState(false);
+  const [showImpactModal, setShowImpactModal] = useState(false);
+  const [pendingPositioning, setPendingPositioning] = useState("");
 
   // 접기/펼치기
   const [expandPerf, setExpandPerf] = useState(false);
@@ -172,9 +177,10 @@ export default function GoNoGoPanel({
           posOverride !== workflowState.positioning ? posOverride : undefined,
       };
       await api.workflow.resume(proposalId, data);
+      toast.success(approved ? "승인되었습니다. AI가 다음 단계를 시작합니다." : "재작업 지시가 전달되었습니다.");
       onStateChange?.();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "요청 실패");
+      toast.error(e instanceof Error ? e.message : "요청 실패");
     } finally {
       setSubmitting(false);
     }
@@ -191,9 +197,10 @@ export default function GoNoGoPanel({
           posOverride !== workflowState.positioning ? posOverride : undefined,
       };
       await api.workflow.resume(proposalId, data);
+      toast.success("승인되었습니다. AI가 다음 단계를 시작합니다.");
       onStateChange?.();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "요청 실패");
+      toast.error(e instanceof Error ? e.message : "요청 실패");
     } finally {
       setSubmitting(false);
     }
@@ -407,7 +414,12 @@ export default function GoNoGoPanel({
           {POS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => setPosOverride(opt.value)}
+              onClick={() => {
+                if (opt.value !== posOverride) {
+                  setPendingPositioning(opt.value);
+                  setShowImpactModal(true);
+                }
+              }}
               className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-colors ${
                 posOverride === opt.value
                   ? "bg-[#3ecf8e]/15 text-[#3ecf8e] border-[#3ecf8e]/40"
@@ -491,6 +503,23 @@ export default function GoNoGoPanel({
           Go
         </button>
       </div>
+
+      {/* 포지셔닝 변경 영향 모달 */}
+      <PositioningImpactModal
+        open={showImpactModal}
+        onClose={() => {
+          setShowImpactModal(false);
+          setPendingPositioning("");
+        }}
+        onConfirm={(confirmed) => {
+          setPosOverride(confirmed);
+          setShowImpactModal(false);
+          setPendingPositioning("");
+        }}
+        proposalId={proposalId}
+        currentPositioning={posOverride}
+        newPositioning={pendingPositioning}
+      />
     </div>
   );
 }

@@ -35,7 +35,8 @@ async function request<T>(
   method: string,
   path: string,
   body?: unknown,
-  isFormData = false
+  isFormData = false,
+  retryCount = 0
 ): Promise<T> {
   const token = await getToken();
   const headers: Record<string, string> = {
@@ -43,37 +44,75 @@ async function request<T>(
   };
   if (!isFormData) headers["Content-Type"] = "application/json";
 
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers,
-    body: isFormData
-      ? (body as FormData)
-      : body !== undefined
-      ? JSON.stringify(body)
-      : undefined,
-  });
+  // 타임아웃 설정 (GET/POST 등에 따라 다름)
+  // AI 작업 (long-polling): 120초, CRUD: 30초
+  const isLongOperation = method === "GET" && (path.includes("/stream") || path.includes("/download"));
+  const timeout = isLongOperation ? 180000 : 30000; // 3분 vs 30초
 
-  if (res.status === 401) {
-    // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
-    if (process.env.NODE_ENV !== "development") {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      window.location.href = "/login";
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      method,
+      headers,
+      body: isFormData
+        ? (body as FormData)
+        : body !== undefined
+        ? JSON.stringify(body)
+        : undefined,
+      signal: controller.signal,
+    });
+
+    // Issue #3 fix: Clear timeout on success path
+    clearTimeout(timeoutId);
+
+    if (res.status === 401) {
+      // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
+      if (process.env.NODE_ENV !== "development") {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+      }
+      throw new Error("Unauthorized");
     }
-    throw new Error("Unauthorized");
-  }
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    const detail = err.detail;
-    const message = Array.isArray(detail)
-      ? detail.map((d: { msg?: string }) => d.msg ?? JSON.stringify(d)).join(", ")
-      : (typeof detail === "string" ? detail : "API 오류");
-    throw new Error(message);
-  }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      const detail = err.detail;
+      const message = Array.isArray(detail)
+        ? detail.map((d: { msg?: string }) => d.msg ?? JSON.stringify(d)).join(", ")
+        : (typeof detail === "string" ? detail : "API 오류");
+      throw new Error(message);
+    }
 
-  if (res.status === 204) return undefined as T;
-  return res.json();
+    if (res.status === 204) return undefined as T;
+    return res.json();
+  } catch (error) {
+    clearTimeout(timeoutId);
+
+    // AbortError 처리 (타임아웃 또는 사용자 취소)
+    if (error instanceof DOMException && error.name === "AbortError") {
+      // 최대 2회까지 재시도
+      if (retryCount < 2) {
+        console.warn(`Request timeout, retrying (${retryCount + 1}/2): ${path}`);
+        // 재시도 전 1초 대기
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return request<T>(method, path, body, isFormData, retryCount + 1);
+      }
+
+      // 재시도 실패 시 사용자 친화적 메시지
+      const message =
+        isLongOperation
+          ? "작업이 지연되고 있습니다. 잠시 후 다시 시도해주세요"
+          : "네트워크 연결이 끊어졌습니다. 잠시 후 다시 시도해주세요";
+      throw new Error(message);
+    }
+
+    // 다른 에러는 그대로 전파
+    clearTimeout(timeoutId);
+    throw error;
+  }
 }
 
 // ── 제안서 ────────────────────────────────────────────────────────────
@@ -932,6 +971,38 @@ export const api = {
       return request<{ released: boolean }>(
         "DELETE",
         `/proposals/${proposalId}/sections/${sectionId}/lock`
+      );
+    },
+
+    // Artifact Versioning — Phase 1
+    validateMove(proposalId: string, targetNode: string) {
+      return request<MoveValidationResult>(
+        "POST",
+        `/proposals/${proposalId}/validate-move`,
+        { target_node: targetNode }
+      );
+    },
+    checkMoveFeasibility(proposalId: string, targetNode: string) {
+      return request<MoveFeasibilityResult>(
+        "POST",
+        `/proposals/${proposalId}/check-node-move/${targetNode}`
+      );
+    },
+    moveToNode(
+      proposalId: string,
+      targetNode: string,
+      selectedVersions: Record<string, number>
+    ) {
+      return request<MoveToNodeResult>(
+        "POST",
+        `/proposals/${proposalId}/move-to-node/${targetNode}`,
+        { selected_versions: selectedVersions }
+      );
+    },
+    getArtifactVersions(proposalId: string) {
+      return request<{ versions: ArtifactVersionInfo[]; count: number }>(
+        "GET",
+        `/proposals/${proposalId}/artifact-versions`
       );
     },
   },
@@ -2016,6 +2087,8 @@ export interface WorkflowState {
   interrupt_data?: Record<string, unknown> | null;
   review_history?: Array<{ node: string; approved: boolean; feedback?: string; timestamp: string }>;
   streams_status?: StreamsOverview | null;
+  artifact_versions?: Record<string, any[]>;
+  dependency_mismatches?: any[];
 }
 
 export interface WorkflowResumeData {
@@ -2151,6 +2224,52 @@ export interface ClientWinRateData {
     won: number;
     rate: number;
   }>;
+}
+
+// ── Artifact Versioning 타입 (Phase 1) ───────────────────────────────
+
+export interface ArtifactVersionInfo {
+  node_name: string;
+  output_key: string;
+  version: number;
+  created_at: string;
+  created_by: string;
+  is_active: boolean;
+  is_deprecated: boolean;
+  used_by?: Array<{ node: string; count: number }>;
+  created_reason?: string;
+  artifact_size?: number;
+}
+
+export interface VersionConflict {
+  input_key: string;
+  versions?: number[];
+  status: "SINGLE" | "MULTIPLE" | "MISSING";
+  dependency_level?: string;
+}
+
+export interface MoveValidationResult {
+  can_move: boolean;
+  conflicts: VersionConflict[];
+  dependency_level: string;
+  recommendation?: string;
+  downstream_impact: string[];
+  message: string;
+}
+
+export interface MoveFeasibilityResult {
+  can_move: boolean;
+  needs_modal: boolean;
+  message: string;
+  conflicts: VersionConflict[];
+}
+
+export interface MoveToNodeResult {
+  success: boolean;
+  proposal_id: string;
+  target_node: string;
+  selected_versions: Record<string, number>;
+  message: string;
 }
 
 // ── 모의평가 타입 ─────────────────────────────────────────────────────
