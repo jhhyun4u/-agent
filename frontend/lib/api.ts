@@ -600,6 +600,9 @@ export const api = {
     updateResult(id: string, data: Partial<ProposalResultCreate>) {
       return request("PUT", `/proposals/${id}/result`, data);
     },
+    versions(id: string) {
+      return request<ProposalSummary[]>("GET", `/proposals/${id}/versions`);
+    },
     getLessons(id: string) {
       return request<ApiListResponse<Lesson>>(
         "GET",

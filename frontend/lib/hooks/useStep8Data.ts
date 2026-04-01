@@ -92,56 +92,21 @@ export function useStep8Data({
       setError(null);
 
       // Try to fetch from dedicated endpoints first
-      const endpoints: Record<string, (data: any) => void> = {
-        customer_profile: setCustomerProfile,
-        validation_report: setValidationReport,
-        consolidated_proposal: setConsolidatedProposal,
-        mock_eval_result: setMockEvalResult,
-        feedback_summary: setFeedbackSummary,
-        rewrite_history: setRewriteHistory,
-        review_panel: setReviewPanelData,
-      };
-
-      const fetchPromises = Object.entries(endpoints).map(
-        async ([endpoint, setter]) => {
-          try {
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/${endpoint.replace(/_/g, "-")}`,
-            );
-            if (response.ok) {
-              const data = await response.json();
-              setter(data);
-            }
-          } catch {
-            // Fallback: Try to fetch from artifacts
-            try {
-              const nodeMap: Record<string, string> = {
-                customer_profile: "step_8a",
-                validation_report: "step_8b",
-                consolidated_proposal: "step_8c",
-                mock_eval_result: "step_8d",
-                feedback_summary: "step_8e",
-                rewrite_history: "step_8f",
-              };
-
-              if (nodeMap[endpoint]) {
-                const artifact = await api.artifacts.get(
-                  proposalId,
-                  nodeMap[endpoint],
-                );
-                if (artifact && artifact.data) {
-                  setter(artifact.data);
-                }
-              }
-            } catch (fallbackError) {
-              console.warn(`Failed to fetch ${endpoint}:`, fallbackError);
-            }
-          }
-        },
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/status`,
       );
-
-      await Promise.all(fetchPromises);
-      await fetchStatus();
+      if (response.ok) {
+        const data = await response.json();
+        // 각 노드 데이터 분배
+        if (data.customer_profile) setCustomerProfile(data.customer_profile);
+        if (data.validation_report) setValidationReport(data.validation_report);
+        if (data.consolidated_proposal) setConsolidatedProposal(data.consolidated_proposal);
+        if (data.mock_eval_result) setMockEvalResult(data.mock_eval_result);
+        if (data.feedback_summary) setFeedbackSummary(data.feedback_summary);
+        if (data.rewrite_history) setRewriteHistory(data.rewrite_history);
+        if (data.review_panel) setReviewPanelData(data.review_panel);
+        setStatus(data);
+      }
     } catch (e) {
       const err =
         e instanceof Error ? e : new Error("Failed to fetch STEP 8 data");
@@ -149,7 +114,7 @@ export function useStep8Data({
     } finally {
       setIsLoading(false);
     }
-  }, [proposalId, fetchStatus]);
+  }, [proposalId]); // removed fetchStatus as it is no longer used in this scope (or properly refactored)
 
   // Initial fetch
   useEffect(() => {

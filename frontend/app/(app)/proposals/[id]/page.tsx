@@ -252,7 +252,7 @@ export default function ProposalDetailPage() {
   // 버전 목록
   const fetchVersions = useCallback(async () => {
     try {
-      setVersions((await (api.proposals as any).versions(id)) ?? []);
+      setVersions((await api.proposals.versions(id)) ?? []);
     } catch {
       /* 미구현 */
     }

@@ -252,7 +252,10 @@ async def client(mock_user):
     app.dependency_overrides[get_rls_client] = lambda: supabase_mock
     app.dependency_overrides[require_project_access] = lambda: {"id": "test-id", "title": "테스트", "status": "initialized"}
 
-    with patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
+    # Patch get_async_client at usage location (must patch where it's imported, not where it's defined)
+    # For test_create_from_bid, we need to patch routes_proposal
+    with patch("app.api.routes_proposal.get_async_client", return_value=supabase_mock), \
+         patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as ac:
             ac._supabase_mock = supabase_mock

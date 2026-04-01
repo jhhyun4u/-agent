@@ -101,7 +101,6 @@ export default function DashboardPage() {
 
   // 통계
   const [stats, setStats] = useState<WinRateStats | null>(null);
-  const [statsLoading, setStatsLoading] = useState(true);
 
   // 캘린더
   const [calItems, setCalItems] = useState<CalendarItem[]>([]);
@@ -196,14 +195,11 @@ export default function DashboardPage() {
   // ── 데이터 로드 ────────────────────────────────────────────────────
 
   const loadStats = useCallback(async (s: Scope) => {
-    setStatsLoading(true);
     try {
       const data = await api.stats.winRate(s);
       setStats(data);
     } catch {
       setStats(null);
-    } finally {
-      setStatsLoading(false);
     }
   }, []);
 
@@ -353,13 +349,6 @@ export default function DashboardPage() {
   const currentMonth = getCurrentMonth();
   const prevMonth = getPrevMonth();
   const thisMonthData = stats?.by_month.find((m) => m.month === currentMonth);
-  const prevMonthData = stats?.by_month.find((m) => m.month === prevMonth);
-
-  // 지난달 대비 수주율 변화 (%p)
-  const monthTrend =
-    thisMonthData && prevMonthData
-      ? (thisMonthData.rate - prevMonthData.rate) * 100
-      : null;
 
   // 최근 6개월 추이 (최신순)
   const recentMonths = stats

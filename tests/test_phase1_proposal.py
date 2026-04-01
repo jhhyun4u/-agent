@@ -38,7 +38,6 @@ def setup_bid_announcements_mock(supabase_mock, bid_data):
 
 # ── 프로젝트 생성 (from-bid) ──
 
-@pytest.mark.skip(reason="Mock setup complexity - core functionality verified")
 async def test_create_from_bid(client):
     """POST /api/proposals/from-bid 공고번호로 생성."""
     supabase_mock = client._supabase_mock
@@ -205,7 +204,6 @@ async def test_get_proposal_not_found(client):
     assert resp.status_code == 404
 
 
-@pytest.mark.skip(reason="Mock setup complexity - core functionality verified")
 async def test_delete_proposal_success(client):
     """DELETE /api/proposals/{id} 제안서 삭제."""
     supabase_mock = client._supabase_mock
