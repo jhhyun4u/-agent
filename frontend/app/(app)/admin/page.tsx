@@ -12,7 +12,6 @@ import { api } from "@/lib/api";
 import {
   SEED_ORG,
   SEED_EXECUTIVES,
-  type SeedDivision,
 } from "@/lib/org-seed-data";
 import AdminOrgChart from "@/components/AdminOrgChart";
 import { Button } from "@/components/ui/Button";
@@ -143,16 +142,16 @@ export default function AdminPage() {
   // ── localStorage 키 ──
   const STORAGE_KEY = "admin-org-data";
 
-  function persistLocal(t: TreeDivision[], ex: TreeMember[]) {
+  const persistLocal = useCallback((t: TreeDivision[], ex: TreeMember[]) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ tree: t, execs: ex }));
     } catch {
       /* quota 초과 무시 */
     }
-  }
+  }, []);
 
   // ── 시드 → 트리 변환 ──
-  function loadSeed() {
+  const loadSeed = useCallback(() => {
     // localStorage에 저장된 데이터가 있으면 복원
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -225,7 +224,7 @@ export default function AdminPage() {
     });
     keys.add("execs");
     setExpanded(keys);
-  }
+  }, [persistLocal]);
 
   // ── API → 트리 변환 ──
   // teams.division_id가 없을 수 있으므로, users의 division_id로 팀→본부 관계 추론
@@ -368,7 +367,7 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadSeed]);
 
   useEffect(() => {
     fetchAll();
@@ -378,7 +377,11 @@ export default function AdminPage() {
   function toggle(key: string) {
     setExpanded((prev) => {
       const n = new Set(prev);
-      n.has(key) ? n.delete(key) : n.add(key);
+      if (n.has(key)) {
+        n.delete(key);
+      } else {
+        n.add(key);
+      }
       return n;
     });
   }
@@ -1403,8 +1406,6 @@ function MemberRow({
   onResetPw,
   onDeactivate,
   onDelete,
-  divisions,
-  teams,
 }: {
   m: TreeMember;
   depth: number;
@@ -1416,8 +1417,6 @@ function MemberRow({
   onResetPw: (id: string) => void;
   onDeactivate: (id: string) => void;
   onDelete: (id: string) => void;
-  divisions: Division[];
-  teams: AdminTeam[];
 }) {
   const pl = 16 + depth * 24;
   const name = patch?.name ?? m.name;

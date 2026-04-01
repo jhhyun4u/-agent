@@ -30,14 +30,15 @@ class TestDocumentUpload:
         """파일 업로드 성공 케이스"""
         pdf_content = b"%PDF-1.4\n%Mock PDF content"
         files = {"file": ("test.pdf", BytesIO(pdf_content))}
+        data = {
+            "doc_type": "보고서",
+            "doc_subtype": "보고서",
+        }
 
         response = await client.post(
             "/api/documents/upload",
-            params={
-                "doc_type": "보고서",
-                "doc_subtype": "보고서",
-            },
             files=files,
+            data=data,
         )
 
         # 201 Created 또는 구현 상태에 따라 다른 상태 코드
@@ -50,10 +51,8 @@ class TestDocumentUpload:
 
         response = await client.post(
             "/api/documents/upload",
-            params={
-                "doc_type": "기타",
-            },
             files=files,
+            data={"doc_type": "기타"},
         )
 
         # 415 Unsupported Media Type
@@ -66,8 +65,8 @@ class TestDocumentUpload:
 
         response = await client.post(
             "/api/documents/upload",
-            params={"doc_type": "보고서"},
             files=files,
+            data={"doc_type": "보고서"},
         )
 
         assert response.status_code in [201, 200, 500]
@@ -79,8 +78,8 @@ class TestDocumentUpload:
 
         response = await client.post(
             "/api/documents/upload",
-            params={"doc_type": "제안서"},
             files=files,
+            data={"doc_type": "제안서"},
         )
 
         assert response.status_code in [201, 200, 500]
@@ -92,8 +91,8 @@ class TestDocumentUpload:
 
         response = await client.post(
             "/api/documents/upload",
-            params={"doc_type": "기타"},
             files=files,
+            data={"doc_type": "기타"},
         )
 
         assert response.status_code in [201, 200, 500]
@@ -290,8 +289,8 @@ class TestDocumentErrorHandling:
         files = {"file": ("test.pdf", BytesIO(b"%PDF"))}
         response = await client.post(
             "/api/documents/upload",
-            params={},  # doc_type 누락
             files=files,
+            # doc_type 누락 - FormData에서 필수 필드 누락
         )
 
         # 400 또는 422 (입력 검증 실패)
@@ -334,8 +333,8 @@ class TestDocumentAuthAndOrgIsolation:
         files = {"file": ("test.pdf", BytesIO(b"%PDF"))}
         response = await client.post(
             "/api/documents/upload",
-            params={"doc_type": "보고서"},
             files=files,
+            data={"doc_type": "보고서"},
         )
         assert response.status_code in [201, 200, 401, 403, 500]
 

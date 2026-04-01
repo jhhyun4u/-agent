@@ -13,7 +13,7 @@ import asyncio
 import logging
 from typing import Optional, Literal
 
-from fastapi import APIRouter, Depends, File, UploadFile, Query, HTTPException, status
+from fastapi import APIRouter, Depends, File, UploadFile, Query, Form, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user, get_db, require_project_access
@@ -47,9 +47,9 @@ logger = logging.getLogger(__name__)
 @router.post("/upload", response_model=DocumentResponse, status_code=201)
 async def upload_document(
     file: UploadFile = File(...),
-    doc_type: str = Query(..., description="보고서|제안서|실적|기타"),
-    doc_subtype: Optional[str] = Query(None),
-    project_id: Optional[str] = Query(None),
+    doc_type: str = Form(..., description="보고서|제안서|실적|기타"),
+    doc_subtype: Optional[str] = Form(None),
+    project_id: Optional[str] = Form(None),
     current_user: CurrentUser = Depends(get_current_user),
     _: None = Depends(require_project_access),
 ) -> DocumentResponse:

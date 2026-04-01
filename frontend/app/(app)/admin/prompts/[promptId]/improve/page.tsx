@@ -58,7 +58,7 @@ export default function ImprovementWorkbench() {
     setSuggesting(false);
   };
 
-  const handleApplyAndSimulate = (text: string) => {
+  const handleApplyAndSimulate = () => {
     setStep("simulate");
     // SimulationRunner에 promptText 전달은 state로 관리
   };
@@ -220,7 +220,7 @@ export default function ImprovementWorkbench() {
                           </Link>
                           <button
                             onClick={() =>
-                              handleApplyAndSimulate(s.prompt_text)
+                              handleApplyAndSimulate()
                             }
                             className="px-3 py-1.5 bg-[#3ecf8e] text-black rounded-lg text-xs font-medium hover:bg-[#35b87d] transition-colors"
                           >

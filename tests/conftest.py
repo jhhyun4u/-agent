@@ -82,6 +82,7 @@ class MockQueryBuilder:
         self._data = data or []
         self._count = count
         self._is_single = False
+        self._filters = []  # [(key, value, op), ...]
 
     def _chain(self):
         return self
@@ -92,7 +93,12 @@ class MockQueryBuilder:
     update = property(lambda self: lambda *a, **kw: self._chain())
     delete = property(lambda self: lambda *a, **kw: self._chain())
     upsert = property(lambda self: lambda *a, **kw: self._chain())
-    eq = property(lambda self: lambda *a, **kw: self._chain())
+
+    def eq(self, key, value):
+        """필터 추가: key == value"""
+        self._filters.append((key, value, "=="))
+        return self
+
     neq = property(lambda self: lambda *a, **kw: self._chain())
     gt = property(lambda self: lambda *a, **kw: self._chain())
     gte = property(lambda self: lambda *a, **kw: self._chain())
@@ -118,13 +124,37 @@ class MockQueryBuilder:
         self._is_single = True
         return self
 
+    def _apply_filters(self, data):
+        """필터 적용 헬퍼"""
+        if not self._filters:
+            return data
+
+        if isinstance(data, list):
+            filtered = data
+            for key, value, op in self._filters:
+                if op == "==":
+                    filtered = [item for item in filtered if isinstance(item, dict) and item.get(key) == value]
+            return filtered
+        elif isinstance(data, dict):
+            for key, value, op in self._filters:
+                if op == "==" and data.get(key) != value:
+                    return None
+            return data
+        return data
+
     async def execute(self):
         result = MagicMock()
+        # 필터 적용
+        filtered_data = self._apply_filters(self._data)
+
         # single/maybe_single 호출 시 첫 원소만 반환
-        if self._is_single and isinstance(self._data, list):
-            result.data = self._data[0] if self._data else None
+        if self._is_single:
+            if isinstance(filtered_data, list):
+                result.data = filtered_data[0] if filtered_data else None
+            else:
+                result.data = filtered_data
         else:
-            result.data = self._data
+            result.data = filtered_data
         result.count = self._count
         return result
 

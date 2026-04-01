@@ -79,9 +79,9 @@ export function useStep8Data({
         const data = await response.json();
         setStatus(data);
       }
-    } catch (e) {
+    } catch {
       // Endpoint not ready, will use fallback
-      console.debug("STEP 8 status endpoint not ready");
+      console.warn("STEP 8 status endpoint not ready");
     }
   }, [proposalId]);
 
@@ -112,7 +112,7 @@ export function useStep8Data({
               const data = await response.json();
               setter(data);
             }
-          } catch (e) {
+          } catch {
             // Fallback: Try to fetch from artifacts
             try {
               const nodeMap: Record<string, string> = {
@@ -134,7 +134,7 @@ export function useStep8Data({
                 }
               }
             } catch (fallbackError) {
-              console.debug(`Failed to fetch ${endpoint}:`, fallbackError);
+              console.warn(`Failed to fetch ${endpoint}:`, fallbackError);
             }
           }
         },

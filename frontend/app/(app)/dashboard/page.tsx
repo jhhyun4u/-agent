@@ -32,7 +32,6 @@ import {
 import GuidedTour, { TOUR_DASHBOARD } from "@/components/GuidedTour";
 import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { TEXT_SIZES } from "@/lib/typography";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
