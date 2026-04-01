@@ -37,7 +37,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <button
@@ -56,7 +56,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

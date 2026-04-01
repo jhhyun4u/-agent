@@ -30,12 +30,20 @@ async function main() {
   for (const p of PAGES) {
     const page = await ctx.newPage();
     try {
-      await page.goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 15000 });
+      await page.goto(`${BASE}${p.url}`, {
+        waitUntil: "networkidle",
+        timeout: 15000,
+      });
     } catch {
-      await page.goto(`${BASE}${p.url}`, { waitUntil: "load", timeout: 10000 }).catch(() => {});
+      await page
+        .goto(`${BASE}${p.url}`, { waitUntil: "load", timeout: 10000 })
+        .catch(() => {});
     }
     await page.waitForTimeout(500);
-    await page.screenshot({ path: path.join(OUT, `${p.name}.png`), fullPage: false });
+    await page.screenshot({
+      path: path.join(OUT, `${p.name}.png`),
+      fullPage: false,
+    });
     console.log(`  captured: ${p.name}`);
     await page.close();
   }

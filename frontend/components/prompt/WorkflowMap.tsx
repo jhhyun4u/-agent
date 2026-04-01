@@ -23,8 +23,12 @@ export default function WorkflowMap({ data, onNodeClick }: WorkflowMapProps) {
               onClick={() => onNodeClick?.(node.id)}
               className="px-3 py-2 bg-[#1c1c1c] hover:bg-[#262626] border border-[#262626] rounded-lg transition-colors text-left"
             >
-              <div className="text-xs font-medium text-[#ededed]">{node.label}</div>
-              <div className="text-[10px] text-[#8c8c8c]">{node.prompt_count}개 프롬프트</div>
+              <div className="text-xs font-medium text-[#ededed]">
+                {node.label}
+              </div>
+              <div className="text-[10px] text-[#8c8c8c]">
+                {node.prompt_count}개 프롬프트
+              </div>
             </button>
             {i < data.nodes.length - 1 && (
               <span className="text-[#333] text-xs">→</span>

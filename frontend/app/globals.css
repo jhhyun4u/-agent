@@ -25,45 +25,81 @@
   color-scheme: light;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   background-color: var(--bg);
   color: var(--text);
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
-:root.light ::-webkit-scrollbar-track { background: var(--surface); }
-:root.light ::-webkit-scrollbar-thumb { background: var(--border); }
-:root.light ::-webkit-scrollbar-thumb:hover { background: #cbd5e0; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+:root.light ::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+:root.light ::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+:root.light ::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e0;
+}
 
 /* #1 placeholder 가독성 개선 */
-::placeholder { color: #666 !important; }
-:root.light ::placeholder { color: #a0aec0 !important; }
+::placeholder {
+  color: #666 !important;
+}
+:root.light ::placeholder {
+  color: #a0aec0 !important;
+}
 
 /* #2 focus-visible ring 강화 — 키보드 탐색 시 명확한 표시 */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent);
   border-radius: 4px;
 }
 
 /* #15 disabled 상태 강화 */
-button:disabled, input:disabled, select:disabled, textarea:disabled {
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
 }
 
 /* #17 텍스트 링크 hover 밑줄 */
-a[class*="text-"]:hover { text-decoration-line: underline; text-underline-offset: 2px; }
-nav a:hover { text-decoration: none !important; }
+a[class*="text-"]:hover {
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+nav a:hover {
+  text-decoration: none !important;
+}
 
 /* #12 모바일 터치 타겟 최소 44px */
 @media (pointer: coarse) {
-  button, a, [role="button"] { min-height: 44px; }
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+  }
 }
 
 /* #18 z-index 체계 */
@@ -79,10 +115,18 @@ nav a:hover { text-decoration: none !important; }
 /* ─────────────────────────────────────────── */
 
 /* 사이즈 */
-.btn-sm { @apply px-2.5 py-1.5 text-xs rounded-md; }
-.btn-md { @apply px-4 py-2 text-sm rounded-lg; }
-.btn-lg { @apply px-5 py-2.5 text-base rounded-lg; }
-.btn-xl { @apply px-6 py-3 text-base rounded-lg; }
+.btn-sm {
+  @apply px-2.5 py-1.5 text-xs rounded-md;
+}
+.btn-md {
+  @apply px-4 py-2 text-sm rounded-lg;
+}
+.btn-lg {
+  @apply px-5 py-2.5 text-base rounded-lg;
+}
+.btn-xl {
+  @apply px-6 py-3 text-base rounded-lg;
+}
 
 /* Primary 버튼 (주요 액션) */
 .btn-primary {
@@ -273,13 +317,21 @@ textarea {
 /* ─────────────────────────────────────────── */
 
 @keyframes slideX {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {

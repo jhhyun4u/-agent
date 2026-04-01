@@ -49,6 +49,7 @@ Step8ReviewPage
 **Purpose**: Overview of all 6 node statuses with progress tracking
 
 **Props**:
+
 ```typescript
 interface NodeStatusDashboardProps {
   proposal_id: string;
@@ -62,12 +63,14 @@ interface NodeStatusDashboardProps {
 ```
 
 **Features**:
+
 - Overall progress percentage with color coding
 - 6 node cards showing status (pending/running/completed/failed)
 - Manual validation triggers per node
 - Displays full node details when expanded
 
 **Usage**:
+
 ```tsx
 <NodeStatusDashboard
   proposal_id={id}
@@ -84,6 +87,7 @@ interface NodeStatusDashboardProps {
 **Purpose**: AI-powered review interface with issue flagging and approval workflow
 
 **Props**:
+
 ```typescript
 interface ReviewPanelEnhancedProps {
   proposal_id: string;
@@ -99,6 +103,7 @@ interface ReviewPanelEnhancedProps {
 ```
 
 **Features**:
+
 - Issue summary grid (critical/major/minor counts)
 - Category-based grouping (compliance/clarity/consistency/style/strategy)
 - Major issues list with expandable details
@@ -108,6 +113,7 @@ interface ReviewPanelEnhancedProps {
 - Approve button (disabled if critical issues exist)
 
 **Usage**:
+
 ```tsx
 <ReviewPanelEnhanced
   proposal_id={id}
@@ -126,6 +132,7 @@ interface ReviewPanelEnhancedProps {
 **Purpose**: Track and compare artifact versions across iterations
 
 **Props**:
+
 ```typescript
 interface VersionHistoryViewerProps {
   node_name: string;
@@ -138,6 +145,7 @@ interface VersionHistoryViewerProps {
 ```
 
 **Features**:
+
 - Version timeline with metadata (creator, date, size)
 - Comparison modes (vs previous / vs original)
 - Diff viewer showing additions/deletions
@@ -145,6 +153,7 @@ interface VersionHistoryViewerProps {
 - Size tracking for each version
 
 **Usage**:
+
 ```tsx
 <VersionHistoryViewer
   node_name="step_8a"
@@ -159,6 +168,7 @@ interface VersionHistoryViewerProps {
 **Purpose**: Unified data fetching for all STEP 8 nodes with polling and error handling
 
 **Usage**:
+
 ```typescript
 const {
   status,
@@ -175,12 +185,13 @@ const {
   validateNode,
 } = useStep8Data({
   proposalId: id,
-  pollingInterval: 5000,  // Poll every 5 seconds
-  autoFetch: true,        // Auto-fetch on mount
+  pollingInterval: 5000, // Poll every 5 seconds
+  autoFetch: true, // Auto-fetch on mount
 });
 ```
 
 **Features**:
+
 - Automatic data fetching from multiple endpoints
 - Polling with configurable interval
 - Fallback to artifact API if dedicated endpoints unavailable
@@ -223,6 +234,7 @@ GET /api/proposals/{proposal_id}/step8/versions/{node_id}
 ## Response Types
 
 ### Step8Status
+
 ```typescript
 {
   proposal_id: string;
@@ -233,6 +245,7 @@ GET /api/proposals/{proposal_id}/step8/versions/{node_id}
 ```
 
 ### ReviewPanelData
+
 ```typescript
 {
   proposal_id: string;
@@ -244,6 +257,7 @@ GET /api/proposals/{proposal_id}/step8/versions/{node_id}
 ```
 
 ### AIIssueFlag
+
 ```typescript
 {
   issue_id: string;
@@ -270,13 +284,15 @@ import { Step8ReviewPage } from "@/app/(app)/proposals/[id]/step8-review/page";
 <StreamTabBar
   tabs={[
     { id: "proposal", label: "정성제안서", icon: "📄" },
-    { id: "step8", label: "STEP 8 검토", icon: "🔍" },  // NEW
+    { id: "step8", label: "STEP 8 검토", icon: "🔍" }, // NEW
     { id: "bidding", label: "비딩관리", icon: "💰" },
   ]}
-/>
+/>;
 
 // Render in tab content
-{activeTab === "step8" && <Step8ReviewPage />}
+{
+  activeTab === "step8" && <Step8ReviewPage />;
+}
 ```
 
 ### 2. Workflow State Integration
@@ -299,11 +315,14 @@ Embed STEP 8 artifact viewer for detailed section review:
 // In StepArtifactViewer
 import { Step8ArtifactViewer } from "@/components/step8";
 
-if (stepIndex === 7) {  // STEP 8 index
+if (stepIndex === 7) {
+  // STEP 8 index
   return (
     <Step8ArtifactViewer
       proposalId={proposalId}
-      onNavigateToReview={() => router.push(`/proposals/${proposalId}/step8-review`)}
+      onNavigateToReview={() =>
+        router.push(`/proposals/${proposalId}/step8-review`)
+      }
     />
   );
 }
@@ -355,7 +374,7 @@ The components use MSW (Mock Service Worker) for API mocking in tests:
 server.use(
   http.get("/api/proposals/:proposal_id/step8/status", () => {
     return HttpResponse.json(mockStep8Status);
-  })
+  }),
 );
 ```
 
@@ -429,6 +448,7 @@ All components follow WCAG 2.1 AA standards:
 ### Issue: Components Not Rendering
 
 **Solution**: Check that `@/components/step8` exports are correct:
+
 ```bash
 grep -n "export" frontend/components/step8/index.ts
 ```
@@ -436,6 +456,7 @@ grep -n "export" frontend/components/step8/index.ts
 ### Issue: Data Not Loading
 
 **Solution**: Verify API endpoints are accessible:
+
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
   http://localhost:8000/api/proposals/[id]/step8/status
@@ -449,5 +470,5 @@ curl -H "Authorization: Bearer $TOKEN" \
 
 - [STEP 8 Type Definitions](./lib/types/step8.ts)
 - [Component Implementation](./components/step8/)
-- [Test Coverage](./\_\_tests\_\_/step8-*.test.ts)
-- [Integration Tests](./\_\_tests\_\_/step8-page-integration.test.tsx)
+- [Test Coverage](./__tests__/step8-*.test.ts)
+- [Integration Tests](./__tests__/step8-page-integration.test.tsx)

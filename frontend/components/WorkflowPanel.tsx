@@ -98,7 +98,11 @@ export default function WorkflowPanel({
     workflowState;
 
   // paused 상태 (abort 후 interrupt 없이 멈춘 경우)
-  const isPausedState = !has_pending_interrupt && !next_nodes.length && current_step && !current_step.includes("complete");
+  const isPausedState =
+    !has_pending_interrupt &&
+    !next_nodes.length &&
+    current_step &&
+    !current_step.includes("complete");
   if (isPausedState && current_step.includes("error")) {
     // 에러 상태는 상위에서 처리
   }
@@ -112,12 +116,10 @@ export default function WorkflowPanel({
   const isGoNoGo = activeReview === "review_gng";
 
   // 병렬 진행 감지 (STEP 3 노드가 현재 실행 중)
-  const step3Nodes = WORKFLOW_STEPS.find(s => s.step === 3)?.nodes ?? [];
+  const step3Nodes = WORKFLOW_STEPS.find((s) => s.step === 3)?.nodes ?? [];
   const isParallelActive =
     !has_pending_interrupt &&
-    step3Nodes.some(
-      (n) => current_step.includes(n) || current_step === n
-    );
+    step3Nodes.some((n) => current_step.includes(n) || current_step === n);
 
   if (isGoNoGo) {
     return (
@@ -144,10 +146,7 @@ export default function WorkflowPanel({
 
   if (isParallelActive) {
     return (
-      <ParallelProgress
-        workflowState={workflowState}
-        className={className}
-      />
+      <ParallelProgress workflowState={workflowState} className={className} />
     );
   }
 
@@ -201,7 +200,12 @@ function ReviewPanel({
 
   // Phase 2-2: 피드백 이력
   const [feedbackHistory, setFeedbackHistory] = useState<
-    Array<{ id: string; feedback: string; created_at: string; approved?: boolean }>
+    Array<{
+      id: string;
+      feedback: string;
+      created_at: string;
+      approved?: boolean;
+    }>
   >([]);
   const [feedbackHistoryLoaded, setFeedbackHistoryLoaded] = useState(false);
 
@@ -226,15 +230,17 @@ function ReviewPanel({
   const reworkOptions = isStepStrategy
     ? STRATEGY_NODES
     : isStepPlan
-    ? PARALLEL_NODES
-    : isStepProposal
-    ? (workflowState.dynamic_sections ?? []).map((sec: Record<string, unknown>) => ({
-        key: sec.section_id || sec.id,
-        label: sec.title || sec.section_title || "미지정",
-      }))
-    : isStepPpt
-    ? PPT_NODES
-    : [];
+      ? PARALLEL_NODES
+      : isStepProposal
+        ? (workflowState.dynamic_sections ?? []).map(
+            (sec: Record<string, unknown>) => ({
+              key: sec.section_id || sec.id,
+              label: sec.title || sec.section_title || "미지정",
+            }),
+          )
+        : isStepPpt
+          ? PPT_NODES
+          : [];
 
   // STEP 4 리뷰: AI 이슈 플래그 로드
   const isProposalReview =
@@ -242,11 +248,23 @@ function ReviewPanel({
 
   // Phase 2-3: 재작업 방향 프리셋
   const FEEDBACK_PRESETS = [
-    { label: "더 기술적으로", text: "내용을 더 기술적이고 전문적인 언어로 작성해주세요." },
-    { label: "고객 관점", text: "발주기관의 관점과 니즈를 중심으로 재작성해주세요." },
+    {
+      label: "더 기술적으로",
+      text: "내용을 더 기술적이고 전문적인 언어로 작성해주세요.",
+    },
+    {
+      label: "고객 관점",
+      text: "발주기관의 관점과 니즈를 중심으로 재작성해주세요.",
+    },
     { label: "간결하게", text: "핵심 내용만 남기고 간결하게 정리해주세요." },
-    { label: "근거 강화", text: "주장에 대한 구체적인 근거와 수치를 보강해주세요." },
-    { label: "차별성 강조", text: "경쟁사 대비 차별화 포인트를 더 부각해주세요." },
+    {
+      label: "근거 강화",
+      text: "주장에 대한 구체적인 근거와 수치를 보강해주세요.",
+    },
+    {
+      label: "차별성 강조",
+      text: "경쟁사 대비 차별화 포인트를 더 부각해주세요.",
+    },
   ];
 
   // W3: 산출물 요약 로드 (리뷰 대상 단계의 산출물)
@@ -261,12 +279,23 @@ function ReviewPanel({
     };
     const artifactKey = artifactMap[reviewNode];
     if (!artifactKey) return;
-    api.artifacts.get(proposalId, artifactKey).then((a) => {
-      const d = a.data as Record<string, unknown>;
-      // 요약 필드 우선순위: summary > recommendation > title
-      const summary = (d.summary || d.recommendation || d.title || "") as string;
-      if (summary) setArtifactSummary(typeof summary === "string" ? summary : JSON.stringify(summary).slice(0, 200));
-    }).catch(() => {});
+    api.artifacts
+      .get(proposalId, artifactKey)
+      .then((a) => {
+        const d = a.data as Record<string, unknown>;
+        // 요약 필드 우선순위: summary > recommendation > title
+        const summary = (d.summary ||
+          d.recommendation ||
+          d.title ||
+          "") as string;
+        if (summary)
+          setArtifactSummary(
+            typeof summary === "string"
+              ? summary
+              : JSON.stringify(summary).slice(0, 200),
+          );
+      })
+      .catch(() => {});
   }, [proposalId, reviewNode]);
 
   // 이슈 로드 (최초 1회)
@@ -301,11 +330,11 @@ function ReviewPanel({
 
         // 취약점에서도 추출
         if (evalSim?.weaknesses) {
-          for (const w of (evalSim.weaknesses as unknown as Array<{
+          for (const w of evalSim.weaknesses as unknown as Array<{
             area: string;
             description: string;
             related_section: string;
-          }>)) {
+          }>) {
             if (!issues.some((i) => i.section === w.related_section)) {
               issues.push({
                 section: w.related_section || w.area,
@@ -329,7 +358,8 @@ function ReviewPanel({
     setFeedbackHistoryLoaded(true);
 
     // API 엔드포인트: GET /api/proposals/{id}/feedbacks?step={reviewNode}
-    api.workflow.feedbacks(proposalId, reviewNode)
+    api.workflow
+      .feedbacks(proposalId, reviewNode)
       .then((res) => {
         if (res.feedbacks && Array.isArray(res.feedbacks)) {
           setFeedbackHistory(res.feedbacks);
@@ -342,7 +372,7 @@ function ReviewPanel({
 
   function toggleRework(key: string) {
     setReworkTargets((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
   }
 
@@ -352,9 +382,7 @@ function ReviewPanel({
 
   // Phase 2-3: 프리셋 텍스트 추가
   function appendPresetFeedback(text: string) {
-    setFeedback((prev) =>
-      prev.trim() ? `${prev}\n${text}` : text
-    );
+    setFeedback((prev) => (prev.trim() ? `${prev}\n${text}` : text));
     feedbackRef.current?.focus();
   }
 
@@ -366,8 +394,8 @@ function ReviewPanel({
           label: "피드백 작성",
           handler: () => {
             feedbackRef.current?.focus();
-          }
-        }
+          },
+        },
       });
       return;
     }
@@ -392,14 +420,20 @@ function ReviewPanel({
       await api.workflow.resume(proposalId, data);
 
       // 프롬프트 수정 추적: 승인=accept, 재작업=reject (비동기, 실패 무시)
-      api.prompts.recordEditAction({
-        proposal_id: proposalId,
-        section_id: reviewNode ?? "unknown",
-        action: approved ? "accept" : "reject",
-      }).catch(() => {});
+      api.prompts
+        .recordEditAction({
+          proposal_id: proposalId,
+          section_id: reviewNode ?? "unknown",
+          action: approved ? "accept" : "reject",
+        })
+        .catch(() => {});
 
       // Phase 1-6: 성공 토스트
-      toast.success(approved ? "승인되었습니다. AI가 다음 단계를 시작합니다." : "재작업 지시가 전달되었습니다.");
+      toast.success(
+        approved
+          ? "승인되었습니다. AI가 다음 단계를 시작합니다."
+          : "재작업 지시가 전달되었습니다.",
+      );
 
       onStateChange?.();
     } catch (e) {
@@ -420,7 +454,12 @@ function ReviewPanel({
         <h2 className="text-sm font-semibold text-[#ededed]">
           {gate?.title ?? "리뷰"}
         </h2>
-        <HelpTooltip text={gate?.perspective ?? "AI 결과를 검토하고 승인하거나 재작업을 요청하세요."} />
+        <HelpTooltip
+          text={
+            gate?.perspective ??
+            "AI 결과를 검토하고 승인하거나 재작업을 요청하세요."
+          }
+        />
         <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded">
           STEP {gate?.step ?? "?"}
         </span>
@@ -428,19 +467,24 @@ function ReviewPanel({
       <p className="text-xs text-[#8c8c8c] mb-2">{gate?.perspective}</p>
 
       {/* W9: 섹션 리뷰 진행률 */}
-      {reviewNode === "review_section" && workflowState.current_section_index != null && workflowState.total_sections != null && (
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex-1 h-1.5 bg-[#262626] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#3ecf8e] rounded-full transition-all duration-300"
-              style={{ width: `${((workflowState.current_section_index + 1) / workflowState.total_sections) * 100}%` }}
-            />
+      {reviewNode === "review_section" &&
+        workflowState.current_section_index != null &&
+        workflowState.total_sections != null && (
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex-1 h-1.5 bg-[#262626] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#3ecf8e] rounded-full transition-all duration-300"
+                style={{
+                  width: `${((workflowState.current_section_index + 1) / workflowState.total_sections) * 100}%`,
+                }}
+              />
+            </div>
+            <span className="text-[10px] text-[#8c8c8c] shrink-0">
+              {workflowState.current_section_index + 1}/
+              {workflowState.total_sections} 섹션
+            </span>
           </div>
-          <span className="text-[10px] text-[#8c8c8c] shrink-0">
-            {workflowState.current_section_index + 1}/{workflowState.total_sections} 섹션
-          </span>
-        </div>
-      )}
+        )}
 
       {/* AI 이슈 플래그 (§13-5 보강) */}
       {!detailsCollapsed && aiIssues.length > 0 && (
@@ -482,8 +526,12 @@ function ReviewPanel({
       {/* W3: AI 산출물 요약 */}
       {!detailsCollapsed && artifactSummary && (
         <div className="mb-3 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2.5">
-          <p className="text-[10px] text-[#5c5c5c] uppercase tracking-wider mb-1">AI 산출물 요약</p>
-          <p className="text-xs text-[#ededed] leading-relaxed">{artifactSummary}</p>
+          <p className="text-[10px] text-[#5c5c5c] uppercase tracking-wider mb-1">
+            AI 산출물 요약
+          </p>
+          <p className="text-xs text-[#ededed] leading-relaxed">
+            {artifactSummary}
+          </p>
         </div>
       )}
 
@@ -505,11 +553,15 @@ function ReviewPanel({
                       minute: "2-digit",
                     })}
                   </span>
-                  <span className={`text-[10px] font-medium ${fb.approved ? "text-[#3ecf8e]" : "text-red-400"}`}>
+                  <span
+                    className={`text-[10px] font-medium ${fb.approved ? "text-[#3ecf8e]" : "text-red-400"}`}
+                  >
                     {fb.approved ? "승인" : "재작업"}
                   </span>
                 </div>
-                <p className="text-[10px] text-[#8c8c8c] whitespace-pre-wrap">{fb.feedback || "(피드백 없음)"}</p>
+                <p className="text-[10px] text-[#8c8c8c] whitespace-pre-wrap">
+                  {fb.feedback || "(피드백 없음)"}
+                </p>
               </div>
             ))}
           </div>
@@ -518,7 +570,9 @@ function ReviewPanel({
 
       {/* Phase 2-3: 재작업 방향 프리셋 버튼 */}
       <div className="mb-3">
-        <p className="text-[10px] text-[#8c8c8c] mb-2">재작업 방향 (클릭하면 피드백에 추가됨)</p>
+        <p className="text-[10px] text-[#8c8c8c] mb-2">
+          재작업 방향 (클릭하면 피드백에 추가됨)
+        </p>
         <div className="flex flex-wrap gap-1.5">
           {FEEDBACK_PRESETS.map((preset) => (
             <button
@@ -580,7 +634,13 @@ function ReviewPanel({
       {reworkOptions.length > 0 && (
         <div className="mb-3">
           <p className="text-[10px] text-[#8c8c8c] mb-2">
-            재작업 항목 선택 ({isStepStrategy ? "선택된 항목" : isStepProposal ? "선택된 섹션" : "선택된 항목"}만 재실행)
+            재작업 항목 선택 (
+            {isStepStrategy
+              ? "선택된 항목"
+              : isStepProposal
+                ? "선택된 섹션"
+                : "선택된 항목"}
+            만 재실행)
           </p>
           <div className="flex flex-wrap gap-1.5">
             {reworkOptions.map((opt) => (
@@ -656,7 +716,10 @@ function MoveToNodeAction({
     if (!targetNode.trim()) return;
     setMoving(true);
     try {
-      const feasibility = await api.workflow.checkMoveFeasibility(proposalId, targetNode.trim());
+      const feasibility = await api.workflow.checkMoveFeasibility(
+        proposalId,
+        targetNode.trim(),
+      );
       if (!feasibility.can_move) {
         // Phase 1-5: alert → toast 전환
         toast.error("이동 불가: " + feasibility.message);
@@ -745,14 +808,14 @@ function ParallelProgress({
     // 단순 휴리스틱: 노드 순서로 추정
     const idx = PARALLEL_NODES.findIndex((n) => n.key === nodeKey);
     const currentIdx = PARALLEL_NODES.findIndex(
-      (n) => current_step === n.key || current_step.includes(n.key)
+      (n) => current_step === n.key || current_step.includes(n.key),
     );
     if (currentIdx >= 0 && idx < currentIdx) return "completed";
     return "pending";
   }
 
   const completedCount = PARALLEL_NODES.filter(
-    (n) => getNodeStatus(n.key) === "completed"
+    (n) => getNodeStatus(n.key) === "completed",
   ).length;
 
   return (
@@ -781,8 +844,8 @@ function ParallelProgress({
                       status === "completed"
                         ? "text-[#3ecf8e]"
                         : status === "active"
-                        ? "text-[#ededed]"
-                        : "text-[#5c5c5c]"
+                          ? "text-[#ededed]"
+                          : "text-[#5c5c5c]"
                     }`}
                   >
                     {node.label}
@@ -791,8 +854,8 @@ function ParallelProgress({
                     {status === "completed"
                       ? "완료"
                       : status === "active"
-                      ? "진행 중"
-                      : "대기"}
+                        ? "진행 중"
+                        : "대기"}
                   </span>
                 </div>
                 <div className="h-1.5 bg-[#262626] rounded-full overflow-hidden">
@@ -801,8 +864,8 @@ function ParallelProgress({
                       status === "completed"
                         ? "bg-[#3ecf8e] w-full"
                         : status === "active"
-                        ? "bg-[#3ecf8e]/60 w-2/3 animate-pulse"
-                        : "w-0"
+                          ? "bg-[#3ecf8e]/60 w-2/3 animate-pulse"
+                          : "w-0"
                     }`}
                   />
                 </div>

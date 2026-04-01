@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * VersionSelectionModal Component
@@ -16,17 +16,17 @@
  * - Used_by indicators (which nodes depend on this version)
  */
 
-import React, { useState, useMemo } from 'react';
-import { Card, CardBody, CardHeader } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import { Alert, AlertDescription } from '@/components/ui/Alert';
-import { AlertCircle, Check, ChevronRight } from 'lucide-react';
+import React, { useState, useMemo } from "react";
+import { Card, CardBody, CardHeader } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
+import { AlertCircle, Check, ChevronRight } from "lucide-react";
 
 export interface VersionConflict {
   input_key: string;
   versions?: number[];
-  status: 'SINGLE' | 'MULTIPLE' | 'MISSING';
+  status: "SINGLE" | "MULTIPLE" | "MISSING";
   dependency_level?: string;
 }
 
@@ -63,11 +63,16 @@ export function VersionSelectionModal({
     const recs: Record<string, number> = {};
 
     conflicts.forEach((conflict) => {
-      if (conflict.status === 'MULTIPLE' && conflict.versions && conflict.versions.length > 0) {
+      if (
+        conflict.status === "MULTIPLE" &&
+        conflict.versions &&
+        conflict.versions.length > 0
+      ) {
         const versions = availableVersions[conflict.input_key] || [];
 
         // Smart recommendation: active > latest > most-used
-        const recommendedVersion = versions.find((v) => v.is_active)?.version ||
+        const recommendedVersion =
+          versions.find((v) => v.is_active)?.version ||
           Math.max(...versions.map((v) => v.version)) ||
           conflict.versions[0];
 
@@ -100,9 +105,11 @@ export function VersionSelectionModal({
     }
   };
 
-  const hasConflicts = conflicts.some((c) => c.status === 'MULTIPLE' || c.status === 'MISSING');
-  const hasMultipleConflicts = conflicts.some((c) => c.status === 'MULTIPLE');
-  const hasMissingInputs = conflicts.some((c) => c.status === 'MISSING');
+  const hasConflicts = conflicts.some(
+    (c) => c.status === "MULTIPLE" || c.status === "MISSING",
+  );
+  const hasMultipleConflicts = conflicts.some((c) => c.status === "MULTIPLE");
+  const hasMissingInputs = conflicts.some((c) => c.status === "MISSING");
 
   const isReadyToSubmit = hasMissingInputs
     ? false
@@ -115,8 +122,8 @@ export function VersionSelectionModal({
           <div className="space-y-2">
             <h3 className="card-title text-lg">산출물 버전 선택</h3>
             <p className="text-sm text-gray-600">
-              작업 이동 시 어떤 버전을 사용할지 선택해주세요.
-              여러 버전이 있는 경우 추천된 버전을 선택할 수 있습니다.
+              작업 이동 시 어떤 버전을 사용할지 선택해주세요. 여러 버전이 있는
+              경우 추천된 버전을 선택할 수 있습니다.
             </p>
           </div>
         </CardHeader>
@@ -127,8 +134,8 @@ export function VersionSelectionModal({
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                필수 입력 자료가 없어 이동할 수 없습니다.
-                필요한 노드를 먼저 실행해주세요.
+                필수 입력 자료가 없어 이동할 수 없습니다. 필요한 노드를 먼저
+                실행해주세요.
               </AlertDescription>
             </Alert>
           )}
@@ -150,8 +157,8 @@ export function VersionSelectionModal({
             <Alert className="border-yellow-200 bg-yellow-50">
               <AlertCircle className="h-4 w-4 text-yellow-600" />
               <AlertDescription className="text-yellow-800">
-                이 노드의 출력물이 다른 노드에서 사용 중입니다.
-                버전 선택 후 후행 노드에서 재작업이 필요할 수 있습니다.
+                이 노드의 출력물이 다른 노드에서 사용 중입니다. 버전 선택 후
+                후행 노드에서 재작업이 필요할 수 있습니다.
               </AlertDescription>
             </Alert>
           )}
@@ -169,7 +176,7 @@ export function VersionSelectionModal({
               onClick={handleConfirm}
               disabled={!isReadyToSubmit || isSubmitting}
             >
-              {isSubmitting ? '처리 중...' : '선택 완료'}
+              {isSubmitting ? "처리 중..." : "선택 완료"}
             </Button>
           </div>
         </CardBody>
@@ -194,7 +201,7 @@ function ConflictCard({
   recommended?: number;
   onSelect: (v: number) => void;
 }) {
-  if (conflict.status === 'MISSING') {
+  if (conflict.status === "MISSING") {
     return (
       <div className="border rounded-lg p-4 bg-red-50">
         <div className="flex items-start gap-3">
@@ -210,17 +217,21 @@ function ConflictCard({
     );
   }
 
-  if (conflict.status === 'SINGLE') {
+  if (conflict.status === "SINGLE") {
     return (
       <div className="border rounded-lg p-4 bg-green-50">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-green-900">{conflict.input_key}</h3>
           <div className="flex items-center gap-2">
             <Check className="h-4 w-4 text-green-600" />
-            <span className="text-sm text-green-700">v{conflict.versions?.[0]}</span>
+            <span className="text-sm text-green-700">
+              v{conflict.versions?.[0]}
+            </span>
           </div>
         </div>
-        <p className="text-xs text-green-700 mt-1">사용 가능한 버전 1개 (자동 선택됨)</p>
+        <p className="text-xs text-green-700 mt-1">
+          사용 가능한 버전 1개 (자동 선택됨)
+        </p>
       </div>
     );
   }
@@ -245,19 +256,21 @@ function ConflictCard({
             onClick={() => onSelect(version.version)}
             className={`
               relative px-3 py-2 rounded border text-sm transition-all
-              ${selected === version.version
-                ? 'bg-blue-100 border-blue-500 text-blue-900 ring-2 ring-blue-200'
-                : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+              ${
+                selected === version.version
+                  ? "bg-blue-100 border-blue-500 text-blue-900 ring-2 ring-blue-200"
+                  : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
               }
-              ${recommended === version.version && selected !== version.version
-                ? 'ring-2 ring-yellow-300'
-                : ''
+              ${
+                recommended === version.version && selected !== version.version
+                  ? "ring-2 ring-yellow-300"
+                  : ""
               }
             `}
           >
             <div className="font-semibold">v{version.version}</div>
             <div className="text-xs mt-1 opacity-75">
-              {new Date(version.created_at).toLocaleDateString('ko-KR')}
+              {new Date(version.created_at).toLocaleDateString("ko-KR")}
             </div>
 
             {/* Recommendation badge */}
@@ -301,7 +314,7 @@ function VersionDetails({ version }: { version?: VersionMetadata }) {
     <div className="mt-3 pt-3 border-t bg-gray-50 rounded p-2 text-xs text-gray-600 space-y-1">
       <div className="flex justify-between">
         <span>작성일:</span>
-        <span>{new Date(version.created_at).toLocaleString('ko-KR')}</span>
+        <span>{new Date(version.created_at).toLocaleString("ko-KR")}</span>
       </div>
       <div className="flex justify-between">
         <span>작성자:</span>

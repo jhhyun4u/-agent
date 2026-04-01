@@ -26,7 +26,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div ref={ref} className={`card ${className}`} {...props}>
       {children}
     </div>
-  )
+  ),
 );
 Card.displayName = "Card";
 
@@ -37,9 +37,10 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         {title && <h3 className="card-title">{title}</h3>}
         {subtitle && <p className="card-subtitle">{subtitle}</p>}
       </div>
-      {children || (action && <div className="flex items-center gap-2">{action}</div>)}
+      {children ||
+        (action && <div className="flex items-center gap-2">{action}</div>)}
     </div>
-  )
+  ),
 );
 CardHeader.displayName = "CardHeader";
 
@@ -48,7 +49,7 @@ export const CardBody = React.forwardRef<HTMLDivElement, CardBodyProps>(
     <div ref={ref} className={`card-body ${className}`} {...props}>
       {children}
     </div>
-  )
+  ),
 );
 CardBody.displayName = "CardBody";
 
@@ -57,6 +58,6 @@ export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div ref={ref} className={`card-footer ${className}`} {...props}>
       {children}
     </div>
-  )
+  ),
 );
 CardFooter.displayName = "CardFooter";

@@ -50,7 +50,9 @@ export default function PromptEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold">프롬프트 편집</h3>
-        <span className="text-xs text-[#8c8c8c]">~{tokenEstimate.toLocaleString()} 토큰</span>
+        <span className="text-xs text-[#8c8c8c]">
+          ~{tokenEstimate.toLocaleString()} 토큰
+        </span>
       </div>
 
       {/* 편집 영역 (하이라이트 오버레이) */}

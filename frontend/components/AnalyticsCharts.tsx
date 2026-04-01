@@ -32,7 +32,14 @@ import type {
 
 // ── 공통 ──
 
-const COLORS = ["#3ecf8e", "#f59e0b", "#ef4444", "#6366f1", "#8b5cf6", "#ec4899"];
+const COLORS = [
+  "#3ecf8e",
+  "#f59e0b",
+  "#ef4444",
+  "#6366f1",
+  "#8b5cf6",
+  "#ec4899",
+];
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -44,7 +51,11 @@ function EmptyState({ message }: { message: string }) {
 
 // ── 실패 원인 파이차트 ──
 
-export function FailureReasonsPie({ data }: { data: FailureReasonsData | null }) {
+export function FailureReasonsPie({
+  data,
+}: {
+  data: FailureReasonsData | null;
+}) {
   if (!data || data.reasons.length === 0) {
     return <EmptyState message="실패 데이터 없음" />;
   }
@@ -110,7 +121,11 @@ const POS_ICONS: Record<string, string> = {
   adjacent: "🔄 인접형",
 };
 
-export function PositioningBar({ data }: { data: PositioningWinRateData | null }) {
+export function PositioningBar({
+  data,
+}: {
+  data: PositioningWinRateData | null;
+}) {
   if (!data || data.positioning.length === 0) {
     return <EmptyState message="포지셔닝 데이터 없음" />;
   }
@@ -141,7 +156,11 @@ export function PositioningBar({ data }: { data: PositioningWinRateData | null }
 
 // ── 월별 수주율 추이 ──
 
-export function MonthlyTrendsLine({ data }: { data: MonthlyTrendsData | null }) {
+export function MonthlyTrendsLine({
+  data,
+}: {
+  data: MonthlyTrendsData | null;
+}) {
   if (!data || data.months.length === 0) {
     return <EmptyState message="월별 데이터 없음" />;
   }
@@ -210,7 +229,11 @@ export function ClientWinRateBar({ data }: { data: ClientWinRateData | null }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={chartData} layout="vertical">
-        <CartesianGrid strokeDasharray="3 3" stroke="#262626" horizontal={false} />
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="#262626"
+          horizontal={false}
+        />
         <XAxis
           type="number"
           domain={[0, 100]}

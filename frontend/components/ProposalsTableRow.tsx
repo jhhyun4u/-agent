@@ -23,7 +23,9 @@ export function ProposalsTableRow({
   onMenuToggle,
   onMenuAction,
 }: ProposalsTableRowProps) {
-  const pos = p.positioning ? POS_LABELS[p.positioning as keyof typeof POS_LABELS] : null;
+  const pos = p.positioning
+    ? POS_LABELS[p.positioning as keyof typeof POS_LABELS]
+    : null;
   const stepInfo = getStepInfo(p.current_phase);
   const dl = formatDeadline(p.deadline);
   const st = deriveStatus(p);
@@ -33,7 +35,9 @@ export function ProposalsTableRow({
       href={`/proposals/${p.id}`}
       className={cn(
         `grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center`,
-        (p.status === "completed" || p.status === "failed" || p.win_result === "no_go") &&
+        (p.status === "completed" ||
+          p.status === "failed" ||
+          p.win_result === "no_go") &&
           "opacity-60",
       )}
     >
@@ -83,24 +87,32 @@ export function ProposalsTableRow({
       {/* 입찰가 */}
       <span className="text-xs text-right font-medium">
         {p.bid_amount ? (
-          <span className="text-[#3ecf8e]">{formatBudgetCompact(p.bid_amount)}</span>
+          <span className="text-[#3ecf8e]">
+            {formatBudgetCompact(p.bid_amount)}
+          </span>
         ) : (
           <span className="text-[#5c5c5c]">미결정</span>
         )}
       </span>
 
       {/* 마감일 */}
-      <span className={`text-xs ${dl.urgent ? "text-red-400 font-semibold" : "text-[#5c5c5c]"}`}>
+      <span
+        className={`text-xs ${dl.urgent ? "text-red-400 font-semibold" : "text-[#5c5c5c]"}`}
+      >
         {dl.text}
       </span>
 
       {/* 발주처 */}
-      <span className="text-xs text-[#5c5c5c] truncate">{p.client_name || "미지정"}</span>
+      <span className="text-xs text-[#5c5c5c] truncate">
+        {p.client_name || "미지정"}
+      </span>
 
       {/* 상태 */}
       <span className="flex items-center gap-1.5" title={st.tooltip}>
         <span className={`w-2 h-2 rounded-full shrink-0 ${st.dotColor}`} />
-        <span className={`text-xs font-medium ${st.textColor}`}>{st.label}</span>
+        <span className={`text-xs font-medium ${st.textColor}`}>
+          {st.label}
+        </span>
       </span>
 
       {/* 메뉴 */}

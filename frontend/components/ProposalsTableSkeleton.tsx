@@ -4,7 +4,9 @@ interface ProposalsTableSkeletonProps {
   rows?: number;
 }
 
-export function ProposalsTableSkeleton({ rows = 5 }: ProposalsTableSkeletonProps) {
+export function ProposalsTableSkeleton({
+  rows = 5,
+}: ProposalsTableSkeletonProps) {
   return (
     <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-hidden">
       {[...Array(rows)].map((_, i) => (

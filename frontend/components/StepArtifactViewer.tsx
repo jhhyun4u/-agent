@@ -36,9 +36,7 @@ const STEP_ARTIFACTS: Record<number, { key: string; label: string }[]> = {
     { key: "bid_plan", label: "입찰가격 계획" },
     { key: "bid_budget_constraint", label: "예산 제약" },
   ],
-  3: [
-    { key: "plan", label: "실행 계획" },
-  ],
+  3: [{ key: "plan", label: "실행 계획" }],
   4: [
     { key: "proposal", label: "제안서 섹션" },
     { key: "self_review", label: "자가진단" },
@@ -85,7 +83,7 @@ export default function StepArtifactViewer({
         setLoading(false);
       }
     },
-    [proposalId, activeArtifact]
+    [proposalId, activeArtifact],
   );
 
   // 타임트래블 영향 조회
@@ -111,7 +109,9 @@ export default function StepArtifactViewer({
   if (artifacts.length === 0) return null;
 
   return (
-    <div className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] p-4 ${className}`}>
+    <div
+      className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] p-4 ${className}`}
+    >
       {/* 산출물 탭 */}
       <div className="flex items-center gap-1.5 mb-3">
         <span className="text-[10px] text-[#8c8c8c] uppercase tracking-wider mr-2">
@@ -148,7 +148,9 @@ export default function StepArtifactViewer({
           <p className="text-[10px] text-amber-400 font-medium mb-1">
             재실행 영향 범위
           </p>
-          <p className="text-[10px] text-[#8c8c8c] mb-2">{impactInfo.message}</p>
+          <p className="text-[10px] text-[#8c8c8c] mb-2">
+            {impactInfo.message}
+          </p>
           <div className="flex gap-2">
             <button
               onClick={() => setImpactInfo(null)}
@@ -230,7 +232,9 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
         {score != null && (
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-[#8c8c8c]">수주 가능성</span>
-            <span className={`text-sm font-bold ${score >= 70 ? "text-[#3ecf8e]" : score >= 50 ? "text-amber-400" : "text-red-400"}`}>
+            <span
+              className={`text-sm font-bold ${score >= 70 ? "text-[#3ecf8e]" : score >= 50 ? "text-amber-400" : "text-red-400"}`}
+            >
               {score}%
             </span>
           </div>
@@ -241,9 +245,13 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
           </span>
         )}
         {recommendation && (
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-            recommendation === "go" ? "bg-[#3ecf8e]/15 text-[#3ecf8e]" : "bg-red-500/15 text-red-400"
-          }`}>
+          <span
+            className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+              recommendation === "go"
+                ? "bg-[#3ecf8e]/15 text-[#3ecf8e]"
+                : "bg-red-500/15 text-red-400"
+            }`}
+          >
             {recommendation.toUpperCase()}
           </span>
         )}
@@ -252,13 +260,17 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
       {/* fatal_flaw / strategic_focus */}
       {fatalFlaw && (
         <div className="bg-red-500/5 border border-red-500/20 rounded-lg px-3 py-2">
-          <p className="text-[9px] text-red-400 uppercase tracking-wider mb-0.5">치명적 결격 사유</p>
+          <p className="text-[9px] text-red-400 uppercase tracking-wider mb-0.5">
+            치명적 결격 사유
+          </p>
           <p className="text-[10px] text-[#ededed]">{fatalFlaw}</p>
         </div>
       )}
       {strategicFocus && (
         <div className="bg-[#3ecf8e]/5 border border-[#3ecf8e]/20 rounded-lg px-3 py-2">
-          <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-0.5">핵심 승부수</p>
+          <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-0.5">
+            핵심 승부수
+          </p>
           <p className="text-[10px] text-[#ededed]">{strategicFocus}</p>
         </div>
       )}
@@ -269,7 +281,9 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
           <div>
             <p className="text-[9px] text-[#3ecf8e] uppercase mb-1">강점</p>
             {pros.map((p, i) => (
-              <p key={i} className="text-[10px] text-[#8c8c8c]">+ {p}</p>
+              <p key={i} className="text-[10px] text-[#8c8c8c]">
+                + {p}
+              </p>
             ))}
           </div>
         )}
@@ -277,7 +291,9 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
           <div>
             <p className="text-[9px] text-red-400 uppercase mb-1">리스크</p>
             {risks.map((r, i) => (
-              <p key={i} className="text-[10px] text-[#8c8c8c]">- {r}</p>
+              <p key={i} className="text-[10px] text-[#8c8c8c]">
+                - {r}
+              </p>
             ))}
           </div>
         )}
@@ -291,20 +307,30 @@ function GoNoGoArtifact({ data }: { data: Record<string, unknown> }) {
 function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
   const caseType = data.case_type as string | undefined;
   const hotButtons = data.hot_buttons as string[] | undefined;
-  const evalItems = data.eval_items as Array<{ item: string; weight: number; sub_items?: string[] }> | undefined;
+  const evalItems = data.eval_items as
+    | Array<{ item: string; weight: number; sub_items?: string[] }>
+    | undefined;
   const mandatoryReqs = data.mandatory_reqs as string[] | undefined;
   const domain = data.domain as string | undefined;
   const budget = data.budget as string | undefined;
   const duration = data.duration as string | undefined;
   const contractType = data.contract_type as string | undefined;
   const evalMethod = data.eval_method as string | undefined;
-  const techPriceRatio = data.tech_price_ratio as { tech?: number; price?: number } | undefined;
+  const techPriceRatio = data.tech_price_ratio as
+    | { tech?: number; price?: number }
+    | undefined;
   const qualReqs = data.qualification_requirements as string[] | undefined;
   const similarReqs = data.similar_project_requirements as string[] | undefined;
-  const keyPersonnel = data.key_personnel_requirements as Array<{ role: string; grade: string; certifications?: string[] }> | undefined;
-  const deliveryPhases = data.delivery_phases as Array<{ phase: string; period: string; deliverables?: string[] }> | undefined;
+  const keyPersonnel = data.key_personnel_requirements as
+    | Array<{ role: string; grade: string; certifications?: string[] }>
+    | undefined;
+  const deliveryPhases = data.delivery_phases as
+    | Array<{ phase: string; period: string; deliverables?: string[] }>
+    | undefined;
   const projectScope = data.project_scope as string | undefined;
-  const priceScoring = data.price_scoring as { formula_type?: string; price_weight?: number } | undefined;
+  const priceScoring = data.price_scoring as
+    | { formula_type?: string; price_weight?: number }
+    | undefined;
 
   return (
     <div className="space-y-3">
@@ -342,19 +368,25 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
           {duration && (
             <div>
               <span className="text-[9px] text-[#5c5c5c] block">기간</span>
-              <span className="text-xs font-bold text-[#ededed]">{duration}</span>
+              <span className="text-xs font-bold text-[#ededed]">
+                {duration}
+              </span>
             </div>
           )}
           {techPriceRatio && (
             <div>
               <span className="text-[9px] text-[#5c5c5c] block">기술:가격</span>
-              <span className="text-xs font-bold text-[#ededed]">{techPriceRatio.tech}:{techPriceRatio.price}</span>
+              <span className="text-xs font-bold text-[#ededed]">
+                {techPriceRatio.tech}:{techPriceRatio.price}
+              </span>
             </div>
           )}
           {priceScoring?.formula_type && (
             <div>
               <span className="text-[9px] text-[#5c5c5c] block">가격산식</span>
-              <span className="text-xs font-medium text-amber-400">{priceScoring.formula_type} ({priceScoring.price_weight}점)</span>
+              <span className="text-xs font-medium text-amber-400">
+                {priceScoring.formula_type} ({priceScoring.price_weight}점)
+              </span>
             </div>
           )}
         </div>
@@ -363,24 +395,34 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
       {/* 사업 범위 */}
       {projectScope && (
         <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
-          <p className="text-[9px] text-[#5c5c5c] uppercase mb-0.5">사업 범위</p>
-          <p className="text-[10px] text-[#ededed] leading-relaxed">{projectScope}</p>
+          <p className="text-[9px] text-[#5c5c5c] uppercase mb-0.5">
+            사업 범위
+          </p>
+          <p className="text-[10px] text-[#ededed] leading-relaxed">
+            {projectScope}
+          </p>
         </div>
       )}
 
       {/* 평가항목 */}
       {evalItems && evalItems.length > 0 && (
         <div>
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">평가항목 ({evalItems.length}개)</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+            평가항목 ({evalItems.length}개)
+          </p>
           <div className="space-y-1">
             {evalItems.map((e, i) => (
               <div key={i} className="bg-[#111111] rounded px-2.5 py-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] text-[#ededed]">{e.item}</span>
-                  <span className="text-[10px] font-bold text-[#3ecf8e]">{e.weight}점</span>
+                  <span className="text-[10px] font-bold text-[#3ecf8e]">
+                    {e.weight}점
+                  </span>
                 </div>
                 {e.sub_items && e.sub_items.length > 0 && (
-                  <p className="text-[9px] text-[#5c5c5c] mt-0.5">{e.sub_items.join(", ")}</p>
+                  <p className="text-[9px] text-[#5c5c5c] mt-0.5">
+                    {e.sub_items.join(", ")}
+                  </p>
                 )}
               </div>
             ))}
@@ -394,7 +436,10 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
           <p className="text-[9px] text-amber-400 uppercase mb-1">핫버튼</p>
           <div className="flex flex-wrap gap-1">
             {hotButtons.map((h, i) => (
-              <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <span
+                key={i}
+                className="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20"
+              >
                 {h}
               </span>
             ))}
@@ -407,27 +452,37 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
         <div>
           <p className="text-[9px] text-red-400 uppercase mb-1">필수 요건</p>
           {mandatoryReqs.map((r, i) => (
-            <p key={i} className="text-[10px] text-[#8c8c8c]">- {r}</p>
+            <p key={i} className="text-[10px] text-[#8c8c8c]">
+              - {r}
+            </p>
           ))}
         </div>
       )}
 
       {/* 업체 자격 + 유사 실적 */}
-      {(qualReqs?.length || similarReqs?.length) ? (
+      {qualReqs?.length || similarReqs?.length ? (
         <div className="grid grid-cols-2 gap-2">
           {qualReqs && qualReqs.length > 0 && (
             <div>
-              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">업체 자격</p>
+              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+                업체 자격
+              </p>
               {qualReqs.map((q, i) => (
-                <p key={i} className="text-[10px] text-[#8c8c8c]">- {q}</p>
+                <p key={i} className="text-[10px] text-[#8c8c8c]">
+                  - {q}
+                </p>
               ))}
             </div>
           )}
           {similarReqs && similarReqs.length > 0 && (
             <div>
-              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">유사 실적</p>
+              <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+                유사 실적
+              </p>
               {similarReqs.map((s, i) => (
-                <p key={i} className="text-[10px] text-[#8c8c8c]">- {s}</p>
+                <p key={i} className="text-[10px] text-[#8c8c8c]">
+                  - {s}
+                </p>
               ))}
             </div>
           )}
@@ -437,14 +492,23 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
       {/* 핵심인력 요건 */}
       {keyPersonnel && keyPersonnel.length > 0 && (
         <div>
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">핵심인력 요건</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+            핵심인력 요건
+          </p>
           <div className="space-y-1">
             {keyPersonnel.map((p, i) => (
-              <div key={i} className="flex items-center gap-2 bg-[#111111] rounded px-2.5 py-1.5">
-                <span className="text-[10px] font-medium text-[#ededed]">{p.role}</span>
+              <div
+                key={i}
+                className="flex items-center gap-2 bg-[#111111] rounded px-2.5 py-1.5"
+              >
+                <span className="text-[10px] font-medium text-[#ededed]">
+                  {p.role}
+                </span>
                 <span className="text-[10px] text-[#8c8c8c]">{p.grade}</span>
                 {p.certifications && (
-                  <span className="text-[10px] text-[#3ecf8e]">{p.certifications.join(", ")}</span>
+                  <span className="text-[10px] text-[#3ecf8e]">
+                    {p.certifications.join(", ")}
+                  </span>
                 )}
               </div>
             ))}
@@ -458,7 +522,10 @@ function RfpAnalyzeArtifact({ data }: { data: Record<string, unknown> }) {
           <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">수행 단계</p>
           <div className="space-y-1">
             {deliveryPhases.map((ph, i) => (
-              <div key={i} className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5">
+              <div
+                key={i}
+                className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5"
+              >
                 <span className="text-[10px] text-[#ededed]">{ph.phase}</span>
                 <span className="text-[10px] text-[#8c8c8c]">{ph.period}</span>
               </div>
@@ -476,36 +543,53 @@ function StrategyArtifact({ data }: { data: Record<string, unknown> }) {
   const winTheme = data.win_theme as string | undefined;
   const ghostTheme = data.ghost_theme as string | undefined;
   const keyMessages = data.key_messages as string[] | undefined;
-  const alternatives = data.alternatives as Array<{ alt_id: string; win_theme: string }> | undefined;
+  const alternatives = data.alternatives as
+    | Array<{ alt_id: string; win_theme: string }>
+    | undefined;
 
   return (
     <div className="space-y-3">
       {winTheme && (
         <div className="bg-[#3ecf8e]/5 border border-[#3ecf8e]/20 rounded-lg px-3 py-2">
-          <p className="text-[9px] text-[#3ecf8e] uppercase mb-0.5">Win Theme</p>
+          <p className="text-[9px] text-[#3ecf8e] uppercase mb-0.5">
+            Win Theme
+          </p>
           <p className="text-[10px] text-[#ededed]">{winTheme}</p>
         </div>
       )}
       {ghostTheme && (
         <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-0.5">Ghost Theme</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-0.5">
+            Ghost Theme
+          </p>
           <p className="text-[10px] text-[#8c8c8c]">{ghostTheme}</p>
         </div>
       )}
       {keyMessages && keyMessages.length > 0 && (
         <div>
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">핵심 메시지</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+            핵심 메시지
+          </p>
           {keyMessages.map((m, i) => (
-            <p key={i} className="text-[10px] text-[#ededed]">{i + 1}. {m}</p>
+            <p key={i} className="text-[10px] text-[#ededed]">
+              {i + 1}. {m}
+            </p>
           ))}
         </div>
       )}
       {alternatives && alternatives.length > 1 && (
         <div>
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">전략 대안 ({alternatives.length}개)</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+            전략 대안 ({alternatives.length}개)
+          </p>
           {alternatives.map((a) => (
-            <div key={a.alt_id} className="bg-[#111111] rounded px-2.5 py-1.5 mb-1">
-              <span className="text-[10px] font-bold text-[#ededed]">{a.alt_id}: </span>
+            <div
+              key={a.alt_id}
+              className="bg-[#111111] rounded px-2.5 py-1.5 mb-1"
+            >
+              <span className="text-[10px] font-bold text-[#ededed]">
+                {a.alt_id}:{" "}
+              </span>
               <span className="text-[10px] text-[#8c8c8c]">{a.win_theme}</span>
             </div>
           ))}
@@ -522,7 +606,8 @@ function SelfReviewArtifact({ data }: { data: Record<string, unknown> }) {
   const compliance = data.compliance_score as number | undefined;
   const strategy = data.strategy_score as number | undefined;
   const quality = data.quality_score as number | undefined;
-  const trust = (data.trustworthiness as Record<string, unknown>)?.trustworthiness_score as number | undefined;
+  const trust = (data.trustworthiness as Record<string, unknown>)
+    ?.trustworthiness_score as number | undefined;
   const personas = data.persona_reviews as Record<string, string> | undefined;
 
   const axes = [
@@ -537,7 +622,9 @@ function SelfReviewArtifact({ data }: { data: Record<string, unknown> }) {
       {total != null && (
         <div className="flex items-center gap-3">
           <span className="text-[10px] text-[#8c8c8c]">총점</span>
-          <span className={`text-lg font-bold ${total >= 80 ? "text-[#3ecf8e]" : total >= 60 ? "text-amber-400" : "text-red-400"}`}>
+          <span
+            className={`text-lg font-bold ${total >= 80 ? "text-[#3ecf8e]" : total >= 60 ? "text-amber-400" : "text-red-400"}`}
+          >
             {total}/100
           </span>
         </div>
@@ -548,7 +635,9 @@ function SelfReviewArtifact({ data }: { data: Record<string, unknown> }) {
           <div key={a.label} className="bg-[#111111] rounded px-2.5 py-2">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[10px] text-[#8c8c8c]">{a.label}</span>
-              <span className={`text-[10px] font-bold ${(a.score ?? 0) >= 20 ? "text-[#3ecf8e]" : (a.score ?? 0) >= 15 ? "text-amber-400" : "text-red-400"}`}>
+              <span
+                className={`text-[10px] font-bold ${(a.score ?? 0) >= 20 ? "text-[#3ecf8e]" : (a.score ?? 0) >= 15 ? "text-amber-400" : "text-red-400"}`}
+              >
                 {a.score ?? 0}/{a.max}
               </span>
             </div>
@@ -564,10 +653,14 @@ function SelfReviewArtifact({ data }: { data: Record<string, unknown> }) {
 
       {personas && (
         <div className="space-y-1.5">
-          <p className="text-[9px] text-[#8c8c8c] uppercase">3-페르소나 시뮬레이션</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase">
+            3-페르소나 시뮬레이션
+          </p>
           {Object.entries(personas).map(([role, review]) => (
             <div key={role} className="bg-[#111111] rounded px-2.5 py-1.5">
-              <span className="text-[10px] font-medium text-[#ededed]">{role}: </span>
+              <span className="text-[10px] font-medium text-[#ededed]">
+                {role}:{" "}
+              </span>
               <span className="text-[10px] text-[#8c8c8c]">{review}</span>
             </div>
           ))}
@@ -580,21 +673,32 @@ function SelfReviewArtifact({ data }: { data: Record<string, unknown> }) {
 // ── 실행 계획 ──
 
 function PlanArtifact({ data }: { data: Record<string, unknown> }) {
-  const team = data.team as Array<{ role: string; grade: string; mm: number }> | undefined;
+  const team = data.team as
+    | Array<{ role: string; grade: string; mm: number }>
+    | undefined;
   const storylines = data.storylines as Record<string, unknown> | undefined;
   const bidPrice = data.bid_price as Record<string, unknown> | undefined;
-  const qualityCheck = (storylines as any)?.quality_check as Record<string, unknown> | undefined;
+  const qualityCheck = (storylines as any)?.quality_check as
+    | Record<string, unknown>
+    | undefined;
 
   return (
     <div className="space-y-3">
       {team && team.length > 0 && (
         <div>
-          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">팀 구성 ({team.length}명)</p>
+          <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">
+            팀 구성 ({team.length}명)
+          </p>
           <div className="space-y-1">
             {team.map((t, i) => (
-              <div key={i} className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5">
+              <div
+                key={i}
+                className="flex items-center justify-between bg-[#111111] rounded px-2.5 py-1.5"
+              >
                 <span className="text-[10px] text-[#ededed]">{t.role}</span>
-                <span className="text-[10px] text-[#8c8c8c]">{t.grade} / {t.mm} M/M</span>
+                <span className="text-[10px] text-[#8c8c8c]">
+                  {t.grade} / {t.mm} M/M
+                </span>
               </div>
             ))}
           </div>
@@ -603,8 +707,12 @@ function PlanArtifact({ data }: { data: Record<string, unknown> }) {
 
       {storylines && (storylines as any).overall_narrative && (
         <div className="bg-[#3ecf8e]/5 border border-[#3ecf8e]/20 rounded-lg px-3 py-2">
-          <p className="text-[9px] text-[#3ecf8e] uppercase mb-0.5">전체 스토리</p>
-          <p className="text-[10px] text-[#ededed]">{(storylines as any).overall_narrative}</p>
+          <p className="text-[9px] text-[#3ecf8e] uppercase mb-0.5">
+            전체 스토리
+          </p>
+          <p className="text-[10px] text-[#ededed]">
+            {(storylines as any).overall_narrative}
+          </p>
         </div>
       )}
 
@@ -612,11 +720,16 @@ function PlanArtifact({ data }: { data: Record<string, unknown> }) {
         <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
           <p className="text-[9px] text-[#8c8c8c] uppercase mb-1">품질 검증</p>
           {(qualityCheck as any).eval_coverage?.missing?.length > 0 && (
-            <p className="text-[10px] text-red-400">누락 평가항목: {(qualityCheck as any).eval_coverage.missing.join(", ")}</p>
+            <p className="text-[10px] text-red-400">
+              누락 평가항목:{" "}
+              {(qualityCheck as any).eval_coverage.missing.join(", ")}
+            </p>
           )}
           {(qualityCheck as any).win_theme_coverage && (
             <p className="text-[10px] text-[#8c8c8c]">
-              Win Theme 커버: {(qualityCheck as any).win_theme_coverage.sections_with_win_theme}/{(qualityCheck as any).win_theme_coverage.total_sections} 섹션
+              Win Theme 커버:{" "}
+              {(qualityCheck as any).win_theme_coverage.sections_with_win_theme}
+              /{(qualityCheck as any).win_theme_coverage.total_sections} 섹션
             </p>
           )}
         </div>
@@ -647,16 +760,28 @@ function highlightJson(json: string): React.ReactNode {
       const isKey = /^\s*:/.test(rest);
       if (isKey) {
         nextIsKey = true;
-        return <span key={i} className="text-[#3ecf8e]">{part}</span>;
+        return (
+          <span key={i} className="text-[#3ecf8e]">
+            {part}
+          </span>
+        );
       }
-      return <span key={i} className="text-amber-400">{part}</span>;
+      return (
+        <span key={i} className="text-amber-400">
+          {part}
+        </span>
+      );
     }
     // 숫자, true, false, null
-    return <span key={i} className="text-[#8c8c8c]">{
-      part.replace(/\b(true|false|null|\d+\.?\d*)\b/g, (match) =>
-        match === "true" || match === "false" || match === "null" ? match : match
-      )
-    }</span>;
+    return (
+      <span key={i} className="text-[#8c8c8c]">
+        {part.replace(/\b(true|false|null|\d+\.?\d*)\b/g, (match) =>
+          match === "true" || match === "false" || match === "null"
+            ? match
+            : match,
+        )}
+      </span>
+    );
   });
 }
 
@@ -670,7 +795,9 @@ function GenericArtifact({ data }: { data: Record<string, unknown> }) {
     <div>
       <pre className="text-[10px] whitespace-pre-wrap break-words leading-relaxed font-mono bg-[#111111] rounded-lg p-3 max-h-[300px] overflow-auto">
         {highlightJson(expanded ? json : preview)}
-        {!expanded && json.length > 500 && <span className="text-[#5c5c5c]">...</span>}
+        {!expanded && json.length > 500 && (
+          <span className="text-[#5c5c5c]">...</span>
+        )}
       </pre>
       {json.length > 500 && (
         <div className="flex gap-3 mt-1">
@@ -701,7 +828,9 @@ function GenericArtifact({ data }: { data: Record<string, unknown> }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-[#ededed]">산출물 전체 보기</h3>
+              <h3 className="text-sm font-medium text-[#ededed]">
+                산출물 전체 보기
+              </h3>
               <button
                 onClick={() => setFullscreen(false)}
                 className="text-[#8c8c8c] hover:text-[#ededed] transition-colors"

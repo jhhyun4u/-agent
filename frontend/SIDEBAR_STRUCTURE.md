@@ -40,24 +40,30 @@
 ## 사용자 요청 vs 현재 상태
 
 ### ❌ 문제점 1: 메뉴 순서
+
 **사용자 요청:**
+
 ```
 대시보드 → 공고모니터링 → 제안프로젝트 → 지식베이스 → 최근작업 → Admin
 ```
 
 **현재 상태:**
+
 ```
 대시보드 → 최근작업 → 공고모니터링 → 제안프로젝트 → 지식베이스 → Admin
            ↑ 위치 다름!
 ```
 
 ### ❌ 문제점 2: Settings 메뉴
+
 **사용자 요청:**
+
 ```
 Admin은 로그아웃 위쪽에 "setting"이라는 메뉴로 있으면 좋겠어
 ```
 
 **현재 상태:**
+
 ```
 이메일 클릭 → /settings 링크 (명시적 메뉴 아님)
 ```
@@ -67,27 +73,32 @@ Admin은 로그아웃 위쪽에 "setting"이라는 메뉴로 있으면 좋겠어
 ## 📋 메뉴 정의 (코드 기준)
 
 ### 1️⃣ DASHBOARD (항상 표시)
+
 ```typescript
 const DASHBOARD = {
   href: "/dashboard",
   label: "대시보드",
-  icon: "dashboard"
+  icon: "dashboard",
 };
 ```
+
 위치: 라인 67, 렌더: 라인 354
 
 ### 2️⃣ RECENT PROPOSALS (동적 표시)
+
 ```typescript
 if (recentProposals.length > 0) {
   // "최근 작업" 섹션 표시
   // 렌더: 라인 360-383
 }
 ```
+
 - 데이터: API에서 활성 proposal 5개
 - D-Day: 빨강(≤3일), 노랑(≤14일), 회색(>14일)
 - 상태점: 주황(initialized), 초록(processing/running)
 
 ### 3️⃣ NAV_REST (공고~지식베이스)
+
 ```typescript
 const NAV_REST = [
   { href: "/monitoring", label: "공고 모니터링", ... },
@@ -108,9 +119,11 @@ const NAV_REST = [
   }
 ];
 ```
+
 렌더: 라인 386-423
 
 ### 4️⃣ ADMIN_GROUP (관리자만)
+
 ```typescript
 if (userRole === "admin" || userRole === "manager") {
   const ADMIN_GROUP = {
@@ -124,12 +137,15 @@ if (userRole === "admin" || userRole === "manager") {
   };
 }
 ```
+
 렌더: 라인 426-450
 
 ### 5️⃣ 하단 섹션 (항상 표시)
+
 ```typescript
 // Theme, Email, NotificationBell, Logout
 ```
+
 렌더: 라인 454-470
 
 ---
@@ -137,11 +153,13 @@ if (userRole === "admin" || userRole === "manager") {
 ## 🎨 스타일
 
 ### 메인 항목
+
 - 활성: `bg-[#1c1c1c] text-[#ededed]`
 - 비활성: `text-[#8c8c8c] hover:bg-[#1a1a1a]`
 - 크기: `px-3 py-2 text-sm`
 
 ### 자식 항목 (expand 내)
+
 - 활성: `bg-[#1c1c1c] text-[#ededed]`
 - 비활성: `text-[#8c8c8c] hover:bg-[#1a1a1a]`
 - 크기: `px-3 py-1.5 text-[11px]`
@@ -152,11 +170,11 @@ if (userRole === "admin" || userRole === "manager") {
 ## 💾 상태 관리
 
 ```typescript
-const [collapsed, setCollapsed] = useState(false);           // 사이드바 열기/닫기
-const [sidebarWidth, setSidebarWidth] = useState(208);      // 너비 (180~360px)
-const [kbOpen, setKbOpen] = useState(false);                // 지식베이스 expand
-const [adminOpen, setAdminOpen] = useState(false);          // Admin expand
-const [mobileOpen, setMobileOpen] = useState(false);        // 모바일 슬라이드
+const [collapsed, setCollapsed] = useState(false); // 사이드바 열기/닫기
+const [sidebarWidth, setSidebarWidth] = useState(208); // 너비 (180~360px)
+const [kbOpen, setKbOpen] = useState(false); // 지식베이스 expand
+const [adminOpen, setAdminOpen] = useState(false); // Admin expand
+const [mobileOpen, setMobileOpen] = useState(false); // 모바일 슬라이드
 
 // localStorage에 영속화
 localStorage.setItem("sidebar-collapsed", collapsed);
@@ -170,9 +188,11 @@ localStorage.setItem("admin-open", adminOpen);
 ## 🔧 해결할 문제
 
 ### 👉 Priority 1: 메뉴 순서 변경
+
 **파일:** `components/AppSidebar.tsx`
 
 **변경 전:**
+
 ```javascript
 // Line 353-357: DASHBOARD
 // Line 360-383: RECENT (← 여기!)
@@ -181,6 +201,7 @@ localStorage.setItem("admin-open", adminOpen);
 ```
 
 **변경 후:**
+
 ```javascript
 // Line 353-357: DASHBOARD
 // Line 360-423: NAV_REST (공고~KB)
@@ -189,11 +210,13 @@ localStorage.setItem("admin-open", adminOpen);
 ```
 
 **코드 변경 위치:**
+
 1. 현재 최근작업 블록 (라인 360-383) 자르기
 2. NAV_REST 렌더링 후 붙이기
 3. Admin 앞에 위치하도록
 
 ### 👉 Priority 2: Settings 메뉴 추가
+
 **추가할 코드:**
 
 ```typescript

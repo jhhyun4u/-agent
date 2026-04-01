@@ -107,153 +107,149 @@ export default function ArchivePage() {
 
   return (
     <>
-        {/* 헤더 */}
-        <header className="border-b border-[#262626] px-6 py-4 bg-[#111111] shrink-0">
-          <h1 className="text-base font-semibold text-[#ededed]">아카이브</h1>
-        </header>
+      {/* 헤더 */}
+      <header className="border-b border-[#262626] px-6 py-4 bg-[#111111] shrink-0">
+        <h1 className="text-base font-semibold text-[#ededed]">아카이브</h1>
+      </header>
 
-        {/* 필터 바 */}
-        <div className="border-b border-[#262626] px-6 py-3 bg-[#111111] shrink-0 flex items-center gap-4 flex-wrap">
-          {/* 스코프 탭 */}
-          <div className="flex border border-[#262626] rounded-md overflow-hidden">
-            {SCOPE_TABS.map((t) => (
-              <button
-                key={t.value}
-                onClick={() => changeScope(t.value)}
-                className={`px-3 py-1.5 text-xs transition-colors ${
-                  scope === t.value
-                    ? "bg-[#1c1c1c] text-[#ededed]"
-                    : "text-[#8c8c8c] hover:text-[#ededed]"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {/* 수주결과 필터 */}
-          <div className="flex gap-1.5">
-            {WIN_RESULT_FILTERS.map((f) => (
-              <button
-                key={f.value}
-                onClick={() => changeWinResult(f.value)}
-                className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                  winResult === f.value
-                    ? "bg-[#1c1c1c] border-[#3c3c3c] text-[#ededed]"
-                    : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+      {/* 필터 바 */}
+      <div className="border-b border-[#262626] px-6 py-3 bg-[#111111] shrink-0 flex items-center gap-4 flex-wrap">
+        {/* 스코프 탭 */}
+        <div className="flex border border-[#262626] rounded-md overflow-hidden">
+          {SCOPE_TABS.map((t) => (
+            <button
+              key={t.value}
+              onClick={() => changeScope(t.value)}
+              className={`px-3 py-1.5 text-xs transition-colors ${
+                scope === t.value
+                  ? "bg-[#1c1c1c] text-[#ededed]"
+                  : "text-[#8c8c8c] hover:text-[#ededed]"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
-        {/* 테이블 영역 */}
-        <div className="flex-1 overflow-y-auto">
-          {error && (
-            <div className="mx-6 mt-4 bg-red-400/10 border border-red-400/20 rounded-md px-4 py-3">
-              <p className="text-sm text-red-400">{error}</p>
-            </div>
-          )}
+        {/* 수주결과 필터 */}
+        <div className="flex gap-1.5">
+          {WIN_RESULT_FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => changeWinResult(f.value)}
+              className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
+                winResult === f.value
+                  ? "bg-[#1c1c1c] border-[#3c3c3c] text-[#ededed]"
+                  : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <div className="px-6 py-4">
-            {/* 테이블 */}
-            <div className="border border-[#262626] rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#262626] bg-[#111111]">
-                    <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] w-full">
-                      제목
-                    </th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
-                      날짜
-                    </th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
-                      결과
-                    </th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
-                      단계
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    [...Array(5)].map((_, i) => (
-                      <tr key={i} className="border-b border-[#262626]">
-                        <td colSpan={4} className="px-4 py-3">
-                          <div className="h-4 bg-[#1c1c1c] rounded animate-pulse" />
-                        </td>
-                      </tr>
-                    ))
-                  ) : items.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={4}
-                        className="px-4 py-16 text-center text-sm text-[#5c5c5c]"
-                      >
-                        완료된 제안서가 없습니다
+      {/* 테이블 영역 */}
+      <div className="flex-1 overflow-y-auto">
+        {error && (
+          <div className="mx-6 mt-4 bg-red-400/10 border border-red-400/20 rounded-md px-4 py-3">
+            <p className="text-sm text-red-400">{error}</p>
+          </div>
+        )}
+
+        <div className="px-6 py-4">
+          {/* 테이블 */}
+          <div className="border border-[#262626] rounded-xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#262626] bg-[#111111]">
+                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] w-full">
+                    제목
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
+                    날짜
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
+                    결과
+                  </th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
+                    단계
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  [...Array(5)].map((_, i) => (
+                    <tr key={i} className="border-b border-[#262626]">
+                      <td colSpan={4} className="px-4 py-3">
+                        <div className="h-4 bg-[#1c1c1c] rounded animate-pulse" />
                       </td>
                     </tr>
-                  ) : (
-                    items.map((item) => (
-                      <tr
-                        key={item.id}
-                        onClick={() => router.push(`/proposals/${item.id}`)}
-                        className="border-b border-[#262626] last:border-0 hover:bg-[#1c1c1c] cursor-pointer transition-colors"
-                      >
-                        <td className="px-4 py-3 text-[#ededed] font-medium">
-                          <span className="truncate block max-w-xs">
-                            {item.title}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
-                          {formatDate(item.updated_at)}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          <WinResultBadge value={item.win_result} />
-                        </td>
-                        <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
-                          {item.current_phase ?? "-"}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* 페이지네이션 */}
-            {!loading && total > 0 && (
-              <div className="flex items-center justify-between mt-4">
-                <p className="text-xs text-[#5c5c5c]">
-                  총 {total}개
-                </p>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page <= 1}
-                    className="px-3 py-1.5 text-xs border border-[#262626] rounded-md text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3c3c3c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  >
-                    이전
-                  </button>
-                  <span className="text-xs text-[#8c8c8c]">
-                    {page} / {totalPages}
-                  </span>
-                  <button
-                    onClick={() =>
-                      setPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={page >= totalPages}
-                    className="px-3 py-1.5 text-xs border border-[#262626] rounded-md text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3c3c3c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  >
-                    다음
-                  </button>
-                </div>
-              </div>
-            )}
+                  ))
+                ) : items.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-4 py-16 text-center text-sm text-[#5c5c5c]"
+                    >
+                      완료된 제안서가 없습니다
+                    </td>
+                  </tr>
+                ) : (
+                  items.map((item) => (
+                    <tr
+                      key={item.id}
+                      onClick={() => router.push(`/proposals/${item.id}`)}
+                      className="border-b border-[#262626] last:border-0 hover:bg-[#1c1c1c] cursor-pointer transition-colors"
+                    >
+                      <td className="px-4 py-3 text-[#ededed] font-medium">
+                        <span className="truncate block max-w-xs">
+                          {item.title}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
+                        {formatDate(item.updated_at)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <WinResultBadge value={item.win_result} />
+                      </td>
+                      <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
+                        {item.current_phase ?? "-"}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
+
+          {/* 페이지네이션 */}
+          {!loading && total > 0 && (
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-xs text-[#5c5c5c]">총 {total}개</p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                  className="px-3 py-1.5 text-xs border border-[#262626] rounded-md text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3c3c3c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  이전
+                </button>
+                <span className="text-xs text-[#8c8c8c]">
+                  {page} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                  className="px-3 py-1.5 text-xs border border-[#262626] rounded-md text-[#8c8c8c] hover:text-[#ededed] hover:border-[#3c3c3c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  다음
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+      </div>
     </>
   );
 }

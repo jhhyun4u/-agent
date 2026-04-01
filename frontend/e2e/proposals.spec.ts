@@ -22,7 +22,9 @@ test.describe("제안 프로젝트 목록 페이지", () => {
   });
 
   test("검색 입력 필드 존재", async ({ page }) => {
-    await expect(page.locator('input[placeholder="프로젝트명 검색..."]')).toBeVisible();
+    await expect(
+      page.locator('input[placeholder="프로젝트명 검색..."]'),
+    ).toBeVisible();
   });
 
   test("상태 필터 버튼 존재 (전체/진행중/완료/실패)", async ({ page }) => {

@@ -63,7 +63,10 @@ export function RewriteHistoryCard({
     );
   }
 
-  const getIterationColor = (iteration: number, maxIteration: number): string => {
+  const getIterationColor = (
+    iteration: number,
+    maxIteration: number,
+  ): string => {
     const percent = (iteration / maxIteration) * 100;
     if (percent >= 80) return "bg-green-50 border-green-200";
     if (percent >= 50) return "bg-yellow-50 border-yellow-200";
@@ -75,8 +78,12 @@ export function RewriteHistoryCard({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Rewrite History</h3>
-          <p className="text-sm text-gray-600 mt-1">Iterative Section Improvements</p>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Rewrite History
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Iterative Section Improvements
+          </p>
         </div>
         {onRevalidate && (
           <button
@@ -92,19 +99,25 @@ export function RewriteHistoryCard({
       {/* Progress Summary */}
       <div className="grid grid-cols-3 gap-3 py-3 border rounded-lg bg-gradient-to-r from-orange-50 to-red-50">
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Current Section</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Current Section
+          </p>
           <p className="text-2xl font-bold text-orange-600 mt-2">
             {data.current_section_index + 1}
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Iterations</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Iterations
+          </p>
           <p className="text-2xl font-bold text-red-600 mt-2">
             {data.rewrite_iteration_count}
           </p>
         </div>
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Total Rewrites</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Total Rewrites
+          </p>
           <p className="text-2xl font-bold text-red-600 mt-2">
             {data.total_rewrites}
           </p>
@@ -114,7 +127,9 @@ export function RewriteHistoryCard({
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <p className="text-xs font-semibold text-gray-700">Overall Progress</p>
+          <p className="text-xs font-semibold text-gray-700">
+            Overall Progress
+          </p>
           <p className="text-sm text-gray-600">
             {data.history.length} revision{data.history.length === 1 ? "" : "s"}
           </p>
@@ -122,7 +137,9 @@ export function RewriteHistoryCard({
         <div className="w-full bg-gray-300 rounded-full h-3 overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-orange-500 to-red-600 transition-all"
-            style={{ width: `${Math.min((data.total_rewrites / 10) * 100, 100)}%` }}
+            style={{
+              width: `${Math.min((data.total_rewrites / 10) * 100, 100)}%`,
+            }}
           />
         </div>
       </div>
@@ -139,12 +156,14 @@ export function RewriteHistoryCard({
                 key={idx}
                 className={`border rounded-lg overflow-hidden ${getIterationColor(
                   history.iteration,
-                  3
+                  3,
                 )}`}
               >
                 {/* Header */}
                 <button
-                  onClick={() => setExpandedHistory(expandedHistory === idx ? null : idx)}
+                  onClick={() =>
+                    setExpandedHistory(expandedHistory === idx ? null : idx)
+                  }
                   className="w-full text-left p-3 hover:opacity-80 transition"
                 >
                   <div className="flex items-start justify-between">
@@ -176,7 +195,9 @@ export function RewriteHistoryCard({
                   <div className="border-t space-y-3 p-3 bg-white bg-opacity-50">
                     {/* Feedback Applied */}
                     <div>
-                      <p className="text-xs font-semibold text-gray-700 uppercase">Feedback Applied</p>
+                      <p className="text-xs font-semibold text-gray-700 uppercase">
+                        Feedback Applied
+                      </p>
                       <div className="mt-2 p-2 bg-blue-100 border border-blue-300 rounded text-sm text-blue-900">
                         {history.feedback_used}
                       </div>
@@ -188,7 +209,9 @@ export function RewriteHistoryCard({
                         Content Changes
                       </div>
                       <button
-                        onClick={() => setShowDiff(showDiff === idx ? null : idx)}
+                        onClick={() =>
+                          setShowDiff(showDiff === idx ? null : idx)
+                        }
                         className="w-full text-left px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium text-gray-800 transition"
                       >
                         {showDiff === idx ? "Hide" : "Show"} Diff
@@ -197,28 +220,44 @@ export function RewriteHistoryCard({
                       {showDiff === idx && (
                         <div className="bg-gray-100 rounded p-3 space-y-2 max-h-64 overflow-y-auto text-xs font-mono">
                           <div>
-                            <p className="text-red-700 font-semibold mb-1">Original:</p>
+                            <p className="text-red-700 font-semibold mb-1">
+                              Original:
+                            </p>
                             <div className="bg-red-50 p-2 rounded border border-red-200 line-clamp-4">
                               {history.original_content.slice(0, 300)}
-                              {history.original_content.length > 300 ? "..." : ""}
+                              {history.original_content.length > 300
+                                ? "..."
+                                : ""}
                             </div>
                           </div>
                           <div>
-                            <p className="text-green-700 font-semibold mb-1">Rewritten:</p>
+                            <p className="text-green-700 font-semibold mb-1">
+                              Rewritten:
+                            </p>
                             <div className="bg-green-50 p-2 rounded border border-green-200 line-clamp-4">
                               {history.rewritten_content.slice(0, 300)}
-                              {history.rewritten_content.length > 300 ? "..." : ""}
+                              {history.rewritten_content.length > 300
+                                ? "..."
+                                : ""}
                             </div>
                           </div>
                           <div className="text-gray-600 text-xs">
-                            <p>Original length: {history.original_content.length} chars</p>
                             <p>
-                              New length: {history.rewritten_content.length} chars
+                              Original length: {history.original_content.length}{" "}
+                              chars
+                            </p>
+                            <p>
+                              New length: {history.rewritten_content.length}{" "}
+                              chars
                               <span className="ml-2 font-semibold">
-                                ({history.rewritten_content.length > history.original_content.length
+                                (
+                                {history.rewritten_content.length >
+                                history.original_content.length
                                   ? "+"
                                   : ""}
-                                {history.rewritten_content.length - history.original_content.length})
+                                {history.rewritten_content.length -
+                                  history.original_content.length}
+                                )
                               </span>
                             </p>
                           </div>
@@ -251,7 +290,9 @@ export function RewriteHistoryCard({
 
       {/* Status */}
       <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
-        <p className="text-xs font-semibold text-blue-700 uppercase">Rewriting Status</p>
+        <p className="text-xs font-semibold text-blue-700 uppercase">
+          Rewriting Status
+        </p>
         <p className="text-sm text-gray-900 mt-2">
           {data.rewrite_iteration_count > 0
             ? `Currently revising sections. ${data.total_rewrites} total rewrites completed.`

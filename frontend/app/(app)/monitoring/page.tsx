@@ -94,13 +94,48 @@ function extractDomain(title: string): string[] {
 
 // TENOPA 실제 조직도 기반 팀 추천
 const TEAM_SPECS: { name: string; division: string; keywords: RegExp }[] = [
-  { name: "혁신1팀", division: "혁신전략본부", keywords: /과학기술인재|신산업정책|AI안전|탄소소재|국토교통|탄소중립|기후변화|탄소|교통|국토/i },
-  { name: "혁신2팀", division: "혁신전략본부", keywords: /성과분석|정밀의료|동향조사|감염병|바이오빅데이터|바이오헬스|성과|동향|바이오|감염|방역|보건|의약|제약/i },
-  { name: "혁신3팀", division: "혁신전략본부", keywords: /건강관리|재생의료|정신건강|의료기기|마약류|고령친화|만성질환|의료|건강|복지|고령|재활/i },
-  { name: "버티컬AX1팀", division: "버티컬AX본부", keywords: /AI시티|AI빅데이터|피지컬AI|정신건강|필수의료|예타기획|AI|인공지능|빅데이터|스마트시티|스마트|디지털|데이터|ICT/i },
-  { name: "공공1팀", division: "공공AX본부", keywords: /재난안전|원자력|토양지하수|환경보험|유해물질|재생의료|양자|자율제조|지역혁신|재난|원자력|환경|에너지|안전|폐기물|유해|양자|지역/i },
-  { name: "기술사업화1팀", division: "기술사업화본부", keywords: /스케일업|기술사업화|벤처성장|딥테크|PMO|프로젝트관리|벤처|창업|기술이전|사업화|스타트업|중소기업|성장지원/i },
-  { name: "AX혁신팀", division: "AX허브연구소", keywords: /AI업무자동화|AI\s?교육|AX컨설팅|업무자동화|교육훈련|컨설팅|DX|디지털전환|SW|소프트웨어|정보화|ISP/i },
+  {
+    name: "혁신1팀",
+    division: "혁신전략본부",
+    keywords:
+      /과학기술인재|신산업정책|AI안전|탄소소재|국토교통|탄소중립|기후변화|탄소|교통|국토/i,
+  },
+  {
+    name: "혁신2팀",
+    division: "혁신전략본부",
+    keywords:
+      /성과분석|정밀의료|동향조사|감염병|바이오빅데이터|바이오헬스|성과|동향|바이오|감염|방역|보건|의약|제약/i,
+  },
+  {
+    name: "혁신3팀",
+    division: "혁신전략본부",
+    keywords:
+      /건강관리|재생의료|정신건강|의료기기|마약류|고령친화|만성질환|의료|건강|복지|고령|재활/i,
+  },
+  {
+    name: "버티컬AX1팀",
+    division: "버티컬AX본부",
+    keywords:
+      /AI시티|AI빅데이터|피지컬AI|정신건강|필수의료|예타기획|AI|인공지능|빅데이터|스마트시티|스마트|디지털|데이터|ICT/i,
+  },
+  {
+    name: "공공1팀",
+    division: "공공AX본부",
+    keywords:
+      /재난안전|원자력|토양지하수|환경보험|유해물질|재생의료|양자|자율제조|지역혁신|재난|원자력|환경|에너지|안전|폐기물|유해|양자|지역/i,
+  },
+  {
+    name: "기술사업화1팀",
+    division: "기술사업화본부",
+    keywords:
+      /스케일업|기술사업화|벤처성장|딥테크|PMO|프로젝트관리|벤처|창업|기술이전|사업화|스타트업|중소기업|성장지원/i,
+  },
+  {
+    name: "AX혁신팀",
+    division: "AX허브연구소",
+    keywords:
+      /AI업무자동화|AI\s?교육|AX컨설팅|업무자동화|교육훈련|컨설팅|DX|디지털전환|SW|소프트웨어|정보화|ISP/i,
+  },
 ];
 
 function guessTeam(title: string, classification: string): string {
@@ -124,8 +159,8 @@ function DdayBadge({ days }: { days: number | null }) {
     days <= 7
       ? "bg-red-950/60 text-red-400 border border-red-900"
       : days <= 14
-      ? "bg-orange-950/60 text-orange-400 border border-orange-900"
-      : "bg-[#1c1c1c] text-[#8c8c8c] border border-[#262626]";
+        ? "bg-orange-950/60 text-orange-400 border border-orange-900"
+        : "bg-[#1c1c1c] text-[#8c8c8c] border border-[#262626]";
   return (
     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${color}`}>
       D-{days}
@@ -135,13 +170,19 @@ function DdayBadge({ days }: { days: number | null }) {
 
 function StageBadge({ stage }: { stage: string }) {
   const style: Record<string, string> = {
-    "입찰공고": "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]",
-    "사전규격": "text-blue-400 bg-blue-950/60 border-blue-900",
-    "발주계획": "text-purple-400 bg-purple-950/60 border-purple-900",
+    입찰공고: "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]",
+    사전규격: "text-blue-400 bg-blue-950/60 border-blue-900",
+    발주계획: "text-purple-400 bg-purple-950/60 border-purple-900",
   };
-  const label: Record<string, string> = { "입찰공고": "공고", "사전규격": "사전", "발주계획": "계획" };
+  const label: Record<string, string> = {
+    입찰공고: "공고",
+    사전규격: "사전",
+    발주계획: "계획",
+  };
   return (
-    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${style[stage] || style["입찰공고"]}`}>
+    <span
+      className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${style[stage] || style["입찰공고"]}`}
+    >
       {label[stage] || stage}
     </span>
   );
@@ -149,7 +190,8 @@ function StageBadge({ stage }: { stage: string }) {
 
 function scoreColor(score: number): string {
   if (score >= 120) return "text-purple-400 bg-purple-950/60 border-purple-900";
-  if (score >= 100) return "text-emerald-400 bg-emerald-950/60 border-emerald-900";
+  if (score >= 100)
+    return "text-emerald-400 bg-emerald-950/60 border-emerald-900";
   if (score >= 80) return "text-blue-400 bg-blue-950/60 border-blue-900";
   if (score >= 50) return "text-yellow-400 bg-yellow-950/60 border-yellow-900";
   return "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]";
@@ -159,14 +201,24 @@ function scoreColor(score: number): string {
 
 interface CacheEntry<T> {
   data: T;
-  fetchedAt: number;   // Date.now()
+  fetchedAt: number; // Date.now()
   cacheKey: string;
 }
 
 const CACHE_TTL = 5 * 60 * 1000; // 5분
 
-const scoredCache: { current: CacheEntry<{ bids: ScoredBid[]; totalFetched: number; dateFrom: string; dateTo: string; sources: Record<string, number> }> | null } = { current: null };
-const monitorCache: { current: CacheEntry<{ bids: MonitoredBid[]; total: number }> | null } = { current: null };
+const scoredCache: {
+  current: CacheEntry<{
+    bids: ScoredBid[];
+    totalFetched: number;
+    dateFrom: string;
+    dateTo: string;
+    sources: Record<string, number>;
+  }> | null;
+} = { current: null };
+const monitorCache: {
+  current: CacheEntry<{ bids: MonitoredBid[]; total: number }> | null;
+} = { current: null };
 
 function formatFetchedAt(ts: number | null): string {
   if (!ts) return "";
@@ -181,7 +233,13 @@ function formatFetchedAt(ts: number | null): string {
 function matchesScoredSearch(bid: ScoredBid, query: string): boolean {
   if (!query) return true;
   const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
-  const haystack = [bid.title, bid.agency, bid.classification, ...bid.role_keywords, ...bid.domain_keywords]
+  const haystack = [
+    bid.title,
+    bid.agency,
+    bid.classification,
+    ...bid.role_keywords,
+    ...bid.domain_keywords,
+  ]
     .join(" ")
     .toLowerCase();
   return tokens.every((t) => haystack.includes(t));
@@ -190,13 +248,22 @@ function matchesScoredSearch(bid: ScoredBid, query: string): boolean {
 function matchesMonitorSearch(bid: MonitoredBid, query: string): boolean {
   if (!query) return true;
   const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
-  const haystack = [bid.bid_title, bid.agency, bid.recommendation_summary || "", ...(bid.related_teams || [])]
+  const haystack = [
+    bid.bid_title,
+    bid.agency,
+    bid.recommendation_summary || "",
+    ...(bid.related_teams || []),
+  ]
     .join(" ")
     .toLowerCase();
   return tokens.every((t) => haystack.includes(t));
 }
 
-function sortBids<T>(items: T[], config: SortConfig, getter: (item: T, key: string) => number | null): T[] {
+function sortBids<T>(
+  items: T[],
+  config: SortConfig,
+  getter: (item: T, key: string) => number | null,
+): T[] {
   if (!config) return items;
   const { key, dir } = config;
   return [...items].sort((a, b) => {
@@ -253,14 +320,17 @@ function AgencyTypeahead({
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   const filtered = input
-    ? agencies.filter((a) => a.toLowerCase().includes(input.toLowerCase())).slice(0, 8)
+    ? agencies
+        .filter((a) => a.toLowerCase().includes(input.toLowerCase()))
+        .slice(0, 8)
     : agencies.slice(0, 8);
 
   return (
@@ -279,7 +349,13 @@ function AgencyTypeahead({
           className="w-[140px] bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] placeholder:text-[#5c5c5c]"
         />
         {value && (
-          <button onClick={() => { onChange(""); setInput(""); }} className="text-[#5c5c5c] hover:text-[#ededed] text-xs">
+          <button
+            onClick={() => {
+              onChange("");
+              setInput("");
+            }}
+            className="text-[#5c5c5c] hover:text-[#ededed] text-xs"
+          >
             ✕
           </button>
         )}
@@ -289,7 +365,11 @@ function AgencyTypeahead({
           {filtered.map((a) => (
             <button
               key={a}
-              onClick={() => { onChange(a); setInput(a); setOpen(false); }}
+              onClick={() => {
+                onChange(a);
+                setInput(a);
+                setOpen(false);
+              }}
               className="block w-full text-left px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] truncate"
             >
               {a}
@@ -359,8 +439,11 @@ export default function BidsMonitorPage() {
   async function handleManualCrawl() {
     setCrawling(true);
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-      const res = await fetch(`${baseUrl}/bids/crawl?days=1`, { method: "POST" });
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const res = await fetch(`${baseUrl}/bids/crawl?days=1`, {
+        method: "POST",
+      });
       if (!res.ok) console.warn("[crawl] 실패:", res.status);
       setRefreshKey((k) => k + 1);
     } catch (e) {
@@ -376,7 +459,9 @@ export default function BidsMonitorPage() {
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-sm font-semibold text-[#ededed]">공고 모니터링</h1>
+            <h1 className="text-sm font-semibold text-[#ededed]">
+              공고 모니터링
+            </h1>
             {/* 수동 크롤링 버튼 */}
             <button
               onClick={handleManualCrawl}
@@ -412,7 +497,9 @@ export default function BidsMonitorPage() {
                   key={s}
                   onClick={() => setScope(s)}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                    scope === s ? "bg-[#3ecf8e] text-[#0f0f0f]" : "text-[#8c8c8c] hover:text-[#ededed]"
+                    scope === s
+                      ? "bg-[#3ecf8e] text-[#0f0f0f]"
+                      : "text-[#8c8c8c] hover:text-[#ededed]"
                   }`}
                 >
                   {SCOPE_LABELS[s].label}
@@ -435,9 +522,7 @@ export default function BidsMonitorPage() {
             ? `마지막 데이터 수집: ${formatCrawledAt(lastCrawledAt)}`
             : "데이터 수집 대기 중..."}
         </p>
-        <p className="text-[10px] text-[#5c5c5c]">
-          출처: 나라장터 (G2B)
-        </p>
+        <p className="text-[10px] text-[#5c5c5c]">출처: 나라장터 (G2B)</p>
       </div>
     </div>
   );
@@ -447,7 +532,13 @@ export default function BidsMonitorPage() {
 // AI 추천 (Scored) 뷰
 // ══════════════════════════════════════════════════════════
 
-function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetched?: (ts: number) => void }) {
+function ScoredBidsView({
+  refreshKey,
+  onFetched,
+}: {
+  refreshKey?: number;
+  onFetched?: (ts: number) => void;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -463,14 +554,20 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
 
   // ── 서버 필터 (API 파라미터) ──
   const [days, setDays] = useState(Number(searchParams.get("days")) || 7);
-  const [minScoreServer, setMinScoreServer] = useState(Number(searchParams.get("score")) || 20);
+  const [minScoreServer, setMinScoreServer] = useState(
+    Number(searchParams.get("score")) || 20,
+  );
 
   // ── 클라이언트 필터 ──
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const [minBudget, setMinBudget] = useState(Number(searchParams.get("budget")) || 0);
+  const [minBudget, setMinBudget] = useState(
+    Number(searchParams.get("budget")) || 0,
+  );
   const [agency, setAgency] = useState(searchParams.get("agency") || "");
-  const [stageFilter, setStageFilter] = useState<Set<string>>(new Set(["입찰공고", "사전규격", "발주계획"]));
+  const [stageFilter, setStageFilter] = useState<Set<string>>(
+    new Set(["입찰공고", "사전규격", "발주계획"]),
+  );
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
 
   // 디바운스
@@ -480,7 +577,14 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
   }, [query]);
 
   // 응답을 state에 반영하는 헬퍼
-  function applyResponse(data: ScoredBid[], total: number, from: string, to: string, src: Record<string, number>, ts: number) {
+  function applyResponse(
+    data: ScoredBid[],
+    total: number,
+    from: string,
+    to: string,
+    src: Record<string, number>,
+    ts: number,
+  ) {
     setBids(data);
     setTotalFetched(total);
     setDateFrom(from);
@@ -497,50 +601,111 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
   }, [refreshKey]);
 
   // 데이터 로드 (캐시 활용, forceRefresh로 강제 갱신)
-  const load = useCallback(async (forceRefresh = false) => {
-    const cacheKey = `scored_${days}_${minScoreServer}`;
+  const load = useCallback(
+    async (forceRefresh = false) => {
+      const cacheKey = `scored_${days}_${minScoreServer}`;
 
-    // 캐시 히트: 같은 파라미터 + 5분 이내
-    if (!forceRefresh && scoredCache.current && scoredCache.current.cacheKey === cacheKey && Date.now() - scoredCache.current.fetchedAt < CACHE_TTL) {
-      const c = scoredCache.current.data;
-      applyResponse(c.bids, c.totalFetched, c.dateFrom, c.dateTo, c.sources, scoredCache.current.fetchedAt);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    try {
-      const res = await api.bids.scored({ days, minScore: minScoreServer, maxResults: 200 });
-      const now = Date.now();
-      const d = res.data || [];
-      applyResponse(d, res.total_fetched || 0, res.date_from || "", res.date_to || "", res.sources || {}, now);
-      scoredCache.current = { data: { bids: d, totalFetched: res.total_fetched || 0, dateFrom: res.date_from || "", dateTo: res.date_to || "", sources: res.sources || {} }, fetchedAt: now, cacheKey };
-    } catch {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-        const directRes = await fetch(`${baseUrl}/bids/scored?days=${days}&min_score=${minScoreServer}&max_results=200`);
-        if (directRes.ok) {
-          const json = await directRes.json();
-          const now = Date.now();
-          const d = json.data || [];
-          applyResponse(d, json.total_fetched || 0, json.date_from || "", json.date_to || "", json.sources || {}, now);
-          scoredCache.current = { data: { bids: d, totalFetched: json.total_fetched || 0, dateFrom: json.date_from || "", dateTo: json.date_to || "", sources: json.sources || {} }, fetchedAt: now, cacheKey };
-          return;
-        }
-      } catch {
-        setError("백엔드에 연결할 수 없습니다.");
+      // 캐시 히트: 같은 파라미터 + 5분 이내
+      if (
+        !forceRefresh &&
+        scoredCache.current &&
+        scoredCache.current.cacheKey === cacheKey &&
+        Date.now() - scoredCache.current.fetchedAt < CACHE_TTL
+      ) {
+        const c = scoredCache.current.data;
+        applyResponse(
+          c.bids,
+          c.totalFetched,
+          c.dateFrom,
+          c.dateTo,
+          c.sources,
+          scoredCache.current.fetchedAt,
+        );
+        setLoading(false);
+        return;
       }
-      setBids([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [days, minScoreServer]);
 
-  useEffect(() => { load(); }, [load]);
+      setLoading(true);
+      setError("");
+      try {
+        const res = await api.bids.scored({
+          days,
+          minScore: minScoreServer,
+          maxResults: 200,
+        });
+        const now = Date.now();
+        const d = res.data || [];
+        applyResponse(
+          d,
+          res.total_fetched || 0,
+          res.date_from || "",
+          res.date_to || "",
+          res.sources || {},
+          now,
+        );
+        scoredCache.current = {
+          data: {
+            bids: d,
+            totalFetched: res.total_fetched || 0,
+            dateFrom: res.date_from || "",
+            dateTo: res.date_to || "",
+            sources: res.sources || {},
+          },
+          fetchedAt: now,
+          cacheKey,
+        };
+      } catch {
+        try {
+          const baseUrl =
+            process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+          const directRes = await fetch(
+            `${baseUrl}/bids/scored?days=${days}&min_score=${minScoreServer}&max_results=200`,
+          );
+          if (directRes.ok) {
+            const json = await directRes.json();
+            const now = Date.now();
+            const d = json.data || [];
+            applyResponse(
+              d,
+              json.total_fetched || 0,
+              json.date_from || "",
+              json.date_to || "",
+              json.sources || {},
+              now,
+            );
+            scoredCache.current = {
+              data: {
+                bids: d,
+                totalFetched: json.total_fetched || 0,
+                dateFrom: json.date_from || "",
+                dateTo: json.date_to || "",
+                sources: json.sources || {},
+              },
+              fetchedAt: now,
+              cacheKey,
+            };
+            return;
+          }
+        } catch {
+          setError("백엔드에 연결할 수 없습니다.");
+        }
+        setBids([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [days, minScoreServer],
+  );
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   // 발주처 목록 추출
-  const agencies = useMemo(() => [...new Set(bids.map((b) => b.agency))].sort(), [bids]);
+  const agencies = useMemo(
+    () => [...new Set(bids.map((b) => b.agency))].sort(),
+    [bids],
+  );
 
   // 클라이언트 필터 + 정렬
   const filteredBids = useMemo(() => {
@@ -571,8 +736,9 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
   function toggleStage(stage: string) {
     setStageFilter((prev) => {
       const next = new Set(prev);
-      if (next.has(stage)) { if (next.size > 1) next.delete(stage); }
-      else next.add(stage);
+      if (next.has(stage)) {
+        if (next.size > 1) next.delete(stage);
+      } else next.add(stage);
       return next;
     });
   }
@@ -617,21 +783,37 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
         />
 
         {/* 예산 */}
-        <select value={minBudget} onChange={(e) => setMinBudget(Number(e.target.value))} className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]">
+        <select
+          value={minBudget}
+          onChange={(e) => setMinBudget(Number(e.target.value))}
+          className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]"
+        >
           {BUDGET_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
 
         {/* 발주처 */}
-        <AgencyTypeahead agencies={agencies} value={agency} onChange={setAgency} />
+        <AgencyTypeahead
+          agencies={agencies}
+          value={agency}
+          onChange={setAgency}
+        />
 
         {/* 기간 */}
         <label className="flex items-center gap-1 text-xs text-[#8c8c8c]">
           기간
-          <select value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]">
+          <select
+            value={days}
+            onChange={(e) => setDays(Number(e.target.value))}
+            className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]"
+          >
             {[1, 3, 5, 7, 10, 14, 30].map((d) => (
-              <option key={d} value={d}>{d === 1 ? "당일" : `${d}일`}</option>
+              <option key={d} value={d}>
+                {d === 1 ? "당일" : `${d}일`}
+              </option>
             ))}
           </select>
         </label>
@@ -639,9 +821,23 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
         {/* 단계 */}
         <div className="flex items-center gap-2 text-[10px] text-[#5c5c5c]">
           {(["입찰공고", "사전규격", "발주계획"] as const).map((stage) => (
-            <label key={stage} className="flex items-center gap-1 cursor-pointer">
-              <input type="checkbox" checked={stageFilter.has(stage)} onChange={() => toggleStage(stage)} className="w-3 h-3 rounded border-[#262626] bg-[#1c1c1c] accent-[#3ecf8e]" />
-              <span>{stage === "입찰공고" ? "공고" : stage === "사전규격" ? "사전" : "계획"}</span>
+            <label
+              key={stage}
+              className="flex items-center gap-1 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={stageFilter.has(stage)}
+                onChange={() => toggleStage(stage)}
+                className="w-3 h-3 rounded border-[#262626] bg-[#1c1c1c] accent-[#3ecf8e]"
+              />
+              <span>
+                {stage === "입찰공고"
+                  ? "공고"
+                  : stage === "사전규격"
+                    ? "사전"
+                    : "계획"}
+              </span>
             </label>
           ))}
         </div>
@@ -651,22 +847,33 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
           {activeFilterCount > 0 && (
             <>
               <span>{activeFilterCount}개 필터</span>
-              <button onClick={resetFilters} className="text-[#3ecf8e] hover:underline">초기화</button>
+              <button
+                onClick={resetFilters}
+                className="text-[#3ecf8e] hover:underline"
+              >
+                초기화
+              </button>
               <span>·</span>
             </>
           )}
-          {loading
-            ? "수집 중..."
-            : <>
-                {`${filteredBids.length}건`}
-                {totalFetched > 0 && ` / 전수 ${totalFetched.toLocaleString()}건`}
-                {Object.keys(sources).length > 0 && (() => {
+          {loading ? (
+            "수집 중..."
+          ) : (
+            <>
+              {`${filteredBids.length}건`}
+              {totalFetched > 0 && ` / 전수 ${totalFetched.toLocaleString()}건`}
+              {Object.keys(sources).length > 0 &&
+                (() => {
                   const parts = (["입찰공고", "사전규격", "발주계획"] as const)
-                    .filter(k => (sources[k] ?? 0) > 0)
-                    .map(k => `${({입찰공고: "공고", 사전규격: "사전규격", 발주계획: "발주계획"})[k]} ${sources[k]}`);
+                    .filter((k) => (sources[k] ?? 0) > 0)
+                    .map(
+                      (k) =>
+                        `${{ 입찰공고: "공고", 사전규격: "사전규격", 발주계획: "발주계획" }[k]} ${sources[k]}`,
+                    );
                   return parts.length > 0 ? ` (${parts.join(" · ")})` : null;
                 })()}
-              </>}
+            </>
+          )}
           {fetchedAt && !loading && (
             <>
               <span>·</span>
@@ -687,28 +894,64 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
       {/* 테이블 */}
       {loading ? (
         <div className="flex items-center justify-center h-40">
-          <p className="text-sm text-[#5c5c5c]">G2B 전수 수집 + 스코어링 중...</p>
+          <p className="text-sm text-[#5c5c5c]">
+            G2B 전수 수집 + 스코어링 중...
+          </p>
         </div>
       ) : filteredBids.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-40 text-center">
           <p className="text-sm text-[#8c8c8c]">조건에 맞는 공고가 없습니다</p>
-          <p className="text-xs text-[#5c5c5c] mt-1">기간을 늘리거나 필터를 조정해보세요</p>
+          <p className="text-xs text-[#5c5c5c] mt-1">
+            기간을 늘리거나 필터를 조정해보세요
+          </p>
         </div>
       ) : (
         <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#262626] bg-[#0f0f0f]">
-                <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] w-10">#</th>
-                <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] w-14">구분</th>
-                <SortableHeader label="적합도" sortKey="score" current={sortConfig} onSort={handleSort} className="text-center w-16" />
-                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c]">공고명</th>
-                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">발주기관</th>
-                <SortableHeader label="예산" sortKey="budget" current={sortConfig} onSort={handleSort} className="text-right" />
-                <SortableHeader label="마감" sortKey="d_day" current={sortConfig} onSort={handleSort} className="text-center" />
-                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">역할 키워드</th>
-                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">도메인</th>
-                <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">추천 팀</th>
+                <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] w-10">
+                  #
+                </th>
+                <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] w-14">
+                  구분
+                </th>
+                <SortableHeader
+                  label="적합도"
+                  sortKey="score"
+                  current={sortConfig}
+                  onSort={handleSort}
+                  className="text-center w-16"
+                />
+                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c]">
+                  공고명
+                </th>
+                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                  발주기관
+                </th>
+                <SortableHeader
+                  label="예산"
+                  sortKey="budget"
+                  current={sortConfig}
+                  onSort={handleSort}
+                  className="text-right"
+                />
+                <SortableHeader
+                  label="마감"
+                  sortKey="d_day"
+                  current={sortConfig}
+                  onSort={handleSort}
+                  className="text-center"
+                />
+                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                  역할 키워드
+                </th>
+                <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                  도메인
+                </th>
+                <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                  추천 팀
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -716,46 +959,93 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
                 <tr
                   key={bid.bid_no}
                   onClick={async () => {
-                    sessionStorage.setItem(`bid_scored_${bid.bid_no}`, JSON.stringify(bid));
+                    sessionStorage.setItem(
+                      `bid_scored_${bid.bid_no}`,
+                      JSON.stringify(bid),
+                    );
                     // DB에 공고가 없을 수 있으므로 상세 API를 미리 호출하여 G2B fallback + DB 저장 트리거
-                    const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-                    fetch(`${baseUrl}/bids/${bid.bid_no}`, { signal: AbortSignal.timeout(10000) }).catch(() => {});
+                    const baseUrl =
+                      process.env.NEXT_PUBLIC_API_URL ??
+                      "http://localhost:8000/api";
+                    fetch(`${baseUrl}/bids/${bid.bid_no}`, {
+                      signal: AbortSignal.timeout(10000),
+                    }).catch(() => {});
                     router.push(`/monitoring/${bid.bid_no}/review`);
                   }}
                   className="border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors cursor-pointer"
                 >
-                  <td className="px-2 py-3 text-center text-xs text-[#5c5c5c]">{idx + 1}</td>
-                  <td className="px-2 py-3 text-center"><StageBadge stage={bid.bid_stage || "입찰공고"} /></td>
+                  <td className="px-2 py-3 text-center text-xs text-[#5c5c5c]">
+                    {idx + 1}
+                  </td>
                   <td className="px-2 py-3 text-center">
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-md border ${scoreColor(bid.score)}`}>{bid.score.toFixed(0)}</span>
+                    <StageBadge stage={bid.bid_stage || "입찰공고"} />
                   </td>
-                  <td className="px-3 py-3"><span className="text-sm text-[#ededed] leading-snug">{bid.title}</span></td>
+                  <td className="px-2 py-3 text-center">
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-md border ${scoreColor(bid.score)}`}
+                    >
+                      {bid.score.toFixed(0)}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3">
+                    <span className="text-sm text-[#ededed] leading-snug">
+                      {bid.title}
+                    </span>
+                  </td>
                   <td className="px-3 py-3 whitespace-nowrap">
-                    <span className="text-[11px] text-[#8c8c8c]">{bid.agency.length > 12 ? bid.agency.slice(0, 12) + "…" : bid.agency}</span>
+                    <span className="text-[11px] text-[#8c8c8c]">
+                      {bid.agency.length > 12
+                        ? bid.agency.slice(0, 12) + "…"
+                        : bid.agency}
+                    </span>
                   </td>
-                  <td className="px-3 py-3 text-right whitespace-nowrap"><span className="text-xs text-[#8c8c8c]">{formatBudget(bid.budget)}</span></td>
+                  <td className="px-3 py-3 text-right whitespace-nowrap">
+                    <span className="text-xs text-[#8c8c8c]">
+                      {formatBudget(bid.budget)}
+                    </span>
+                  </td>
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     {(() => {
                       const dday = calcDday(bid.deadline);
-                      return dday !== null ? <DdayBadge days={dday} /> : <span className="text-xs text-[#3c3c3c]">-</span>;
+                      return dday !== null ? (
+                        <DdayBadge days={dday} />
+                      ) : (
+                        <span className="text-xs text-[#3c3c3c]">-</span>
+                      );
                     })()}
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap gap-1">
                       {(bid.role_keywords || []).map((kw) => (
-                        <span key={kw} className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-900/50">{kw}</span>
+                        <span
+                          key={kw}
+                          className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-900/50"
+                        >
+                          {kw}
+                        </span>
                       ))}
                     </div>
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap gap-1">
                       {extractDomain(bid.title).map((kw) => (
-                        <span key={kw} className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/50">{kw}</span>
+                        <span
+                          key={kw}
+                          className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/50"
+                        >
+                          {kw}
+                        </span>
                       ))}
-                      {extractDomain(bid.title).length === 0 && <span className="text-[10px] text-[#3c3c3c]">-</span>}
+                      {extractDomain(bid.title).length === 0 && (
+                        <span className="text-[10px] text-[#3c3c3c]">-</span>
+                      )}
                     </div>
                   </td>
-                  <td className="px-3 py-3 text-center whitespace-nowrap"><span className="text-[10px] text-[#8c8c8c]">{guessTeam(bid.title, bid.classification)}</span></td>
+                  <td className="px-3 py-3 text-center whitespace-nowrap">
+                    <span className="text-[10px] text-[#8c8c8c]">
+                      {guessTeam(bid.title, bid.classification)}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -770,7 +1060,15 @@ function ScoredBidsView({ refreshKey, onFetched }: { refreshKey?: number; onFetc
 // 모니터링 뷰
 // ══════════════════════════════════════════════════════════
 
-function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refreshKey?: number; onFetched?: (ts: number) => void }) {
+function MonitorBidsView({
+  scope,
+  refreshKey,
+  onFetched,
+}: {
+  scope: Scope;
+  refreshKey?: number;
+  onFetched?: (ts: number) => void;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -784,7 +1082,9 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
   // ── 클라이언트 필터 ──
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const [minBudget, setMinBudget] = useState(Number(searchParams.get("budget")) || 0);
+  const [minBudget, setMinBudget] = useState(
+    Number(searchParams.get("budget")) || 0,
+  );
   const [agency, setAgency] = useState(searchParams.get("agency") || "");
   const [statusFilter, setStatusFilter] = useState("");
   const [relevanceFilter, setRelevanceFilter] = useState("");
@@ -796,51 +1096,70 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
     return () => clearTimeout(t);
   }, [query]);
 
-  const loadBids = useCallback(async (s: Scope, p: number, forceRefresh = false) => {
-    const cacheKey = `monitor_${s}_${p}`;
+  const loadBids = useCallback(
+    async (s: Scope, p: number, forceRefresh = false) => {
+      const cacheKey = `monitor_${s}_${p}`;
 
-    if (!forceRefresh && monitorCache.current && monitorCache.current.cacheKey === cacheKey && Date.now() - monitorCache.current.fetchedAt < CACHE_TTL) {
-      const c = monitorCache.current.data;
-      setBids(c.bids);
-      setTotal(c.total);
-      setFetchedAt(monitorCache.current.fetchedAt);
-      onFetched?.(monitorCache.current.fetchedAt);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    try {
-      const res = await api.bids.monitor(s, p, true);
-      const now = Date.now();
-      setBids(res.data || []);
-      setTotal(res.meta?.total || 0);
-      setFetchedAt(now);
-      onFetched?.(now);
-      monitorCache.current = { data: { bids: res.data || [], total: res.meta?.total || 0 }, fetchedAt: now, cacheKey };
-    } catch {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-        const directRes = await fetch(`${baseUrl}/bids/monitor?scope=${s}&page=${p}&show_all=true`);
-        if (directRes.ok) {
-          const json = await directRes.json();
-          const now = Date.now();
-          setBids(json.data || []);
-          setTotal(json.meta?.total || 0);
-          setFetchedAt(now);
-          onFetched?.(now);
-          monitorCache.current = { data: { bids: json.data || [], total: json.meta?.total || 0 }, fetchedAt: now, cacheKey };
-          return;
-        }
-      } catch {
-        setError("백엔드에 연결할 수 없습니다.");
+      if (
+        !forceRefresh &&
+        monitorCache.current &&
+        monitorCache.current.cacheKey === cacheKey &&
+        Date.now() - monitorCache.current.fetchedAt < CACHE_TTL
+      ) {
+        const c = monitorCache.current.data;
+        setBids(c.bids);
+        setTotal(c.total);
+        setFetchedAt(monitorCache.current.fetchedAt);
+        onFetched?.(monitorCache.current.fetchedAt);
+        setLoading(false);
+        return;
       }
-      setBids([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [onFetched]);
+
+      setLoading(true);
+      setError("");
+      try {
+        const res = await api.bids.monitor(s, p, true);
+        const now = Date.now();
+        setBids(res.data || []);
+        setTotal(res.meta?.total || 0);
+        setFetchedAt(now);
+        onFetched?.(now);
+        monitorCache.current = {
+          data: { bids: res.data || [], total: res.meta?.total || 0 },
+          fetchedAt: now,
+          cacheKey,
+        };
+      } catch {
+        try {
+          const baseUrl =
+            process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+          const directRes = await fetch(
+            `${baseUrl}/bids/monitor?scope=${s}&page=${p}&show_all=true`,
+          );
+          if (directRes.ok) {
+            const json = await directRes.json();
+            const now = Date.now();
+            setBids(json.data || []);
+            setTotal(json.meta?.total || 0);
+            setFetchedAt(now);
+            onFetched?.(now);
+            monitorCache.current = {
+              data: { bids: json.data || [], total: json.meta?.total || 0 },
+              fetchedAt: now,
+              cacheKey,
+            };
+            return;
+          }
+        } catch {
+          setError("백엔드에 연결할 수 없습니다.");
+        }
+        setBids([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [onFetched],
+  );
 
   // refreshKey 변경 시 강제 새로고침
   useEffect(() => {
@@ -848,12 +1167,24 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshKey]);
 
-  useEffect(() => { setPage(1); loadBids(scope, 1); }, [scope, loadBids]);
-  useEffect(() => { if (page > 1) loadBids(scope, page); }, [page, scope, loadBids]);
+  useEffect(() => {
+    setPage(1);
+    loadBids(scope, 1);
+  }, [scope, loadBids]);
+  useEffect(() => {
+    if (page > 1) loadBids(scope, page);
+  }, [page, scope, loadBids]);
 
-  const agencies = useMemo(() => [...new Set(bids.map((b) => b.agency))].sort(), [bids]);
+  const agencies = useMemo(
+    () => [...new Set(bids.map((b) => b.agency))].sort(),
+    [bids],
+  );
 
-  const RELEVANCE_MAP: Record<string, number> = { "적극 추천": 3, "보통": 2, "낮음": 1 };
+  const RELEVANCE_MAP: Record<string, number> = {
+    "적극 추천": 3,
+    보통: 2,
+    낮음: 1,
+  };
 
   const filteredBids = useMemo(() => {
     let result = bids
@@ -873,7 +1204,15 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
       if (key === "relevance") return RELEVANCE_MAP[b.relevance || "낮음"] || 0;
       return null;
     });
-  }, [bids, debouncedQuery, minBudget, agency, statusFilter, relevanceFilter, sortConfig]);
+  }, [
+    bids,
+    debouncedQuery,
+    minBudget,
+    agency,
+    statusFilter,
+    relevanceFilter,
+    sortConfig,
+  ]);
 
   function handleSort(key: string) {
     setSortConfig((prev) => {
@@ -884,7 +1223,11 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
   }
 
   function applyPreset(name: string) {
-    if (activePreset === name) { setActivePreset(null); resetFilters(); return; }
+    if (activePreset === name) {
+      setActivePreset(null);
+      resetFilters();
+      return;
+    }
     setActivePreset(name);
     if (name === "unreviewed") setStatusFilter("미검토");
     else if (name === "recommended") setRelevanceFilter("적극 추천");
@@ -910,40 +1253,89 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
     setActivePreset(null);
   }
 
-  async function handleStatusChange(bidNo: string, status: "검토중" | "제안착수" | "관련없음") {
+  async function handleStatusChange(
+    bidNo: string,
+    status: "검토중" | "제안착수" | "관련없음",
+  ) {
     try {
       await api.bids.updateStatus(bidNo, status);
-      setBids((prev) => prev.map((b) => b.bid_no === bidNo ? { ...b, proposal_status: status } : b));
-    } catch { /* 인증 실패 허용 */ }
+      setBids((prev) =>
+        prev.map((b) =>
+          b.bid_no === bidNo ? { ...b, proposal_status: status } : b,
+        ),
+      );
+    } catch {
+      /* 인증 실패 허용 */
+    }
   }
 
   async function handleBookmark(bidNo: string) {
     try {
       const res = await api.bids.toggleBookmark(bidNo);
-      setBids((prev) => prev.map((b) => b.bid_no === bidNo ? { ...b, is_bookmarked: res.bookmarked } : b));
-    } catch { /* 무시 */ }
+      setBids((prev) =>
+        prev.map((b) =>
+          b.bid_no === bidNo ? { ...b, is_bookmarked: res.bookmarked } : b,
+        ),
+      );
+    } catch {
+      /* 무시 */
+    }
   }
 
   if (error) {
-    return <div className="mx-2 mt-3 px-4 py-2 bg-red-950/40 border border-red-900/50 rounded-lg text-xs text-red-400">{error}</div>;
+    return (
+      <div className="mx-2 mt-3 px-4 py-2 bg-red-950/40 border border-red-900/50 rounded-lg text-xs text-red-400">
+        {error}
+      </div>
+    );
   }
 
   return (
     <div>
       {/* 필터 바 */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <PresetButton label="검토대기만" active={activePreset === "unreviewed"} onClick={() => applyPreset("unreviewed")} />
-        <PresetButton label="적극 추천" active={activePreset === "recommended"} onClick={() => applyPreset("recommended")} />
-        <PresetButton label="대형 1억+" active={activePreset === "big"} onClick={() => applyPreset("big")} />
+        <PresetButton
+          label="검토대기만"
+          active={activePreset === "unreviewed"}
+          onClick={() => applyPreset("unreviewed")}
+        />
+        <PresetButton
+          label="적극 추천"
+          active={activePreset === "recommended"}
+          onClick={() => applyPreset("recommended")}
+        />
+        <PresetButton
+          label="대형 1억+"
+          active={activePreset === "big"}
+          onClick={() => applyPreset("big")}
+        />
         <div className="w-px h-5 bg-[#262626]" />
 
-        <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="공고명, 발주처, 키워드 검색" className="w-[220px] bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] placeholder:text-[#5c5c5c]" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="공고명, 발주처, 키워드 검색"
+          className="w-[220px] bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] placeholder:text-[#5c5c5c]"
+        />
 
-        <select value={minBudget} onChange={(e) => setMinBudget(Number(e.target.value))} className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]">
-          {BUDGET_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        <select
+          value={minBudget}
+          onChange={(e) => setMinBudget(Number(e.target.value))}
+          className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]"
+        >
+          {BUDGET_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </select>
 
-        <AgencyTypeahead agencies={agencies} value={agency} onChange={setAgency} />
+        <AgencyTypeahead
+          agencies={agencies}
+          value={agency}
+          onChange={setAgency}
+        />
 
         {/* 관련성 */}
         <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-0.5 border border-[#262626]">
@@ -952,7 +1344,9 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
               key={r}
               onClick={() => setRelevanceFilter(r)}
               className={`px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${
-                relevanceFilter === r ? "bg-[#3ecf8e] text-[#0f0f0f]" : "text-[#5c5c5c] hover:text-[#8c8c8c]"
+                relevanceFilter === r
+                  ? "bg-[#3ecf8e] text-[#0f0f0f]"
+                  : "text-[#5c5c5c] hover:text-[#8c8c8c]"
               }`}
             >
               {r || "전체"}
@@ -980,7 +1374,12 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
           {activeFilterCount > 0 && (
             <>
               <span>{activeFilterCount}개 필터</span>
-              <button onClick={resetFilters} className="text-[#3ecf8e] hover:underline">초기화</button>
+              <button
+                onClick={resetFilters}
+                className="text-[#3ecf8e] hover:underline"
+              >
+                초기화
+              </button>
               <span>·</span>
             </>
           )}
@@ -1004,7 +1403,9 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
 
       {/* 테이블 */}
       {loading ? (
-        <div className="flex items-center justify-center h-40"><p className="text-sm text-[#5c5c5c]">불러오는 중...</p></div>
+        <div className="flex items-center justify-center h-40">
+          <p className="text-sm text-[#5c5c5c]">불러오는 중...</p>
+        </div>
       ) : filteredBids.length === 0 ? (
         <EmptyState scope={scope} />
       ) : (
@@ -1014,37 +1415,95 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
               <thead>
                 <tr className="border-b border-[#262626] bg-[#0f0f0f]">
                   <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] w-8"></th>
-                  <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">단계</th>
-                  <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">공고명</th>
-                  <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">발주처</th>
-                  <SortableHeader label="용역비" sortKey="budget" current={sortConfig} onSort={handleSort} className="text-right" />
-                  <SortableHeader label="마감일" sortKey="days" current={sortConfig} onSort={handleSort} className="text-center" />
-                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">관련 팀</th>
-                  <SortableHeader label="관련성" sortKey="relevance" current={sortConfig} onSort={handleSort} className="text-center" />
-                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">공고문</th>
-                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">제안요청서</th>
-                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">과업지시서</th>
-                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">검토결과</th>
+                  <th className="text-center px-2 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    단계
+                  </th>
+                  <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    공고명
+                  </th>
+                  <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    발주처
+                  </th>
+                  <SortableHeader
+                    label="용역비"
+                    sortKey="budget"
+                    current={sortConfig}
+                    onSort={handleSort}
+                    className="text-right"
+                  />
+                  <SortableHeader
+                    label="마감일"
+                    sortKey="days"
+                    current={sortConfig}
+                    onSort={handleSort}
+                    className="text-center"
+                  />
+                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    관련 팀
+                  </th>
+                  <SortableHeader
+                    label="관련성"
+                    sortKey="relevance"
+                    current={sortConfig}
+                    onSort={handleSort}
+                    className="text-center"
+                  />
+                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    공고문
+                  </th>
+                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    제안요청서
+                  </th>
+                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    과업지시서
+                  </th>
+                  <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    검토결과
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredBids.map((bid) => (
-                  <BidRow key={bid.bid_no} bid={bid} scope={scope} onBookmark={handleBookmark} onStatusChange={handleStatusChange} onClick={() => {
-                    sessionStorage.setItem(`bid_monitor_${bid.bid_no}`, JSON.stringify({
-                      bid_no: bid.bid_no, title: bid.bid_title, agency: bid.agency,
-                      budget: bid.budget_amount, deadline: bid.deadline_date,
-                    }));
-                    router.push(`/monitoring/${bid.bid_no}/review`);
-                  }} />
+                  <BidRow
+                    key={bid.bid_no}
+                    bid={bid}
+                    scope={scope}
+                    onBookmark={handleBookmark}
+                    onStatusChange={handleStatusChange}
+                    onClick={() => {
+                      sessionStorage.setItem(
+                        `bid_monitor_${bid.bid_no}`,
+                        JSON.stringify({
+                          bid_no: bid.bid_no,
+                          title: bid.bid_title,
+                          agency: bid.agency,
+                          budget: bid.budget_amount,
+                          deadline: bid.deadline_date,
+                        }),
+                      );
+                      router.push(`/monitoring/${bid.bid_no}/review`);
+                    }}
+                  />
                 ))}
               </tbody>
             </table>
           </div>
           {total > 30 && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] transition-colors">이전</button>
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] transition-colors"
+              >
+                이전
+              </button>
               <span className="px-3 py-1.5 text-xs text-[#8c8c8c]">{page}</span>
-              <button onClick={() => setPage((p) => p + 1)} className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] hover:bg-[#1c1c1c] transition-colors">다음</button>
+              <button
+                onClick={() => setPage((p) => p + 1)}
+                className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] hover:bg-[#1c1c1c] transition-colors"
+              >
+                다음
+              </button>
             </div>
           )}
         </>
@@ -1055,122 +1514,250 @@ function MonitorBidsView({ scope, refreshKey, onFetched }: { scope: Scope; refre
 
 // ── 모니터링 행 ─────────────────────────────────────────
 
-function classifyAttachment(name: string): "공고문" | "제안요청서" | "과업지시서" | null {
+function classifyAttachment(
+  name: string,
+): "공고문" | "제안요청서" | "과업지시서" | null {
   const lower = name.toLowerCase();
   if (lower.includes("제안요청") || lower.includes("rfp")) return "제안요청서";
-  if (lower.includes("과업지시") || lower.includes("과업내용") || lower.includes("사양서")) return "과업지시서";
+  if (
+    lower.includes("과업지시") ||
+    lower.includes("과업내용") ||
+    lower.includes("사양서")
+  )
+    return "과업지시서";
   if (lower.includes("공고") || lower.includes("입찰")) return "공고문";
   return null;
 }
 
-function AttachmentLink({ attachments, type }: { attachments: BidAttachment[]; type: "공고문" | "제안요청서" | "과업지시서" }) {
+function AttachmentLink({
+  attachments,
+  type,
+}: {
+  attachments: BidAttachment[];
+  type: "공고문" | "제안요청서" | "과업지시서";
+}) {
   const match = attachments.find((a) => classifyAttachment(a.name) === type);
   if (!match) return <span className="text-[#3c3c3c]">-</span>;
   const ext = match.name.split(".").pop()?.toUpperCase() ?? "";
   return (
-    <a href={match.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-[#3ecf8e] hover:underline" title={match.name}>
-      <span>{ext}</span><span>↓</span>
+    <a
+      href={match.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      className="inline-flex items-center gap-1 text-[#3ecf8e] hover:underline"
+      title={match.name}
+    >
+      <span>{ext}</span>
+      <span>↓</span>
     </a>
   );
 }
 
-function formatDeadline(dateStr: string | null): { text: string; dday: string; color: string } {
+function formatDeadline(dateStr: string | null): {
+  text: string;
+  dday: string;
+  color: string;
+} {
   if (!dateStr) return { text: "-", dday: "", color: "text-[#8c8c8c]" };
   const d = new Date(dateStr);
-  const text = d.toLocaleDateString("ko-KR", { month: "numeric", day: "numeric" });
-  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const text = d.toLocaleDateString("ko-KR", {
+    month: "numeric",
+    day: "numeric",
+  });
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
   const diff = Math.ceil((d.getTime() - now.getTime()) / 86400000);
   const dday = diff <= 0 ? "마감" : `D-${diff}`;
-  const color = diff <= 7 ? "text-red-400" : diff <= 14 ? "text-orange-400" : "text-[#8c8c8c]";
+  const color =
+    diff <= 7
+      ? "text-red-400"
+      : diff <= 14
+        ? "text-orange-400"
+        : "text-[#8c8c8c]";
   return { text, dday, color };
 }
 
-function BidRow({ bid, scope, onBookmark, onStatusChange, onClick }: {
-  bid: MonitoredBid; scope: Scope;
+function BidRow({
+  bid,
+  scope,
+  onBookmark,
+  onStatusChange,
+  onClick,
+}: {
+  bid: MonitoredBid;
+  scope: Scope;
   onBookmark: (bidNo: string) => void;
-  onStatusChange: (bidNo: string, status: "검토중" | "제안착수" | "관련없음") => void;
+  onStatusChange: (
+    bidNo: string,
+    status: "검토중" | "제안착수" | "관련없음",
+  ) => void;
   onClick: () => void;
 }) {
   const deadline = formatDeadline(bid.deadline_date);
   const atts = bid.attachments || [];
   const relevanceColor: Record<string, string> = {
     "적극 추천": "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
-    "보통": "text-yellow-400 bg-yellow-950/60 border-yellow-900",
-    "낮음": "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]",
+    보통: "text-yellow-400 bg-yellow-950/60 border-yellow-900",
+    낮음: "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]",
   };
   const rel = bid.relevance || "낮음";
   const teams = bid.related_teams || [];
 
   return (
-    <tr onClick={onClick} className="border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors cursor-pointer">
+    <tr
+      onClick={onClick}
+      className="border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors cursor-pointer"
+    >
       <td className="px-2 py-3 text-center">
-        <button onClick={(e) => { e.stopPropagation(); onBookmark(bid.bid_no); }} className={`text-base transition-colors ${bid.is_bookmarked ? "text-yellow-400" : "text-[#3c3c3c] hover:text-yellow-400"}`}>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onBookmark(bid.bid_no);
+          }}
+          className={`text-base transition-colors ${bid.is_bookmarked ? "text-yellow-400" : "text-[#3c3c3c] hover:text-yellow-400"}`}
+        >
           {bid.is_bookmarked ? "★" : "☆"}
         </button>
       </td>
       <td className="px-2 py-3 text-center">
-        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${bid.bid_stage === "사전공고" ? "text-blue-400 bg-blue-950/60 border border-blue-900" : "text-[#8c8c8c] bg-[#1c1c1c] border border-[#262626]"}`}>
+        <span
+          className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${bid.bid_stage === "사전공고" ? "text-blue-400 bg-blue-950/60 border border-blue-900" : "text-[#8c8c8c] bg-[#1c1c1c] border border-[#262626]"}`}
+        >
           {bid.bid_stage === "사전공고" ? "사전" : "본공고"}
         </span>
       </td>
-      <td className="px-3 py-3"><span className="text-sm text-[#ededed] leading-snug">{bid.bid_title}</span></td>
-      <td className="px-3 py-3 whitespace-nowrap"><span className="text-[11px] text-[#8c8c8c]">{bid.agency.length > 8 ? bid.agency.slice(0, 8) + "…" : bid.agency}</span></td>
-      <td className="px-3 py-3 text-right whitespace-nowrap"><span className="text-xs text-[#8c8c8c]">{formatBudget(bid.budget_amount)}</span></td>
+      <td className="px-3 py-3">
+        <span className="text-sm text-[#ededed] leading-snug">
+          {bid.bid_title}
+        </span>
+      </td>
+      <td className="px-3 py-3 whitespace-nowrap">
+        <span className="text-[11px] text-[#8c8c8c]">
+          {bid.agency.length > 8 ? bid.agency.slice(0, 8) + "…" : bid.agency}
+        </span>
+      </td>
+      <td className="px-3 py-3 text-right whitespace-nowrap">
+        <span className="text-xs text-[#8c8c8c]">
+          {formatBudget(bid.budget_amount)}
+        </span>
+      </td>
       <td className="px-3 py-3 text-center whitespace-nowrap">
         <div className="flex flex-col items-center">
           <span className="text-xs text-[#8c8c8c]">{deadline.text}</span>
-          <span className={`text-[10px] font-bold ${deadline.color}`}>{deadline.dday}</span>
+          <span className={`text-[10px] font-bold ${deadline.color}`}>
+            {deadline.dday}
+          </span>
         </div>
       </td>
       <td className="px-3 py-3 text-center">
         {teams.length > 0 ? (
           <div className="flex flex-col items-center gap-0.5">
-            {teams.map((t, i) => (<span key={i} className="text-[10px] text-[#8c8c8c] bg-[#1c1c1c] border border-[#262626] rounded px-1.5 py-0.5 whitespace-nowrap">{t}</span>))}
+            {teams.map((t, i) => (
+              <span
+                key={i}
+                className="text-[10px] text-[#8c8c8c] bg-[#1c1c1c] border border-[#262626] rounded px-1.5 py-0.5 whitespace-nowrap"
+              >
+                {t}
+              </span>
+            ))}
           </div>
-        ) : <span className="text-xs text-[#3c3c3c]">-</span>}
+        ) : (
+          <span className="text-xs text-[#3c3c3c]">-</span>
+        )}
       </td>
       <td className="px-3 py-3 text-center">
-        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${relevanceColor[rel]}`}>{rel}</span>
+        <span
+          className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${relevanceColor[rel]}`}
+        >
+          {rel}
+        </span>
       </td>
-      <td className="px-3 py-3 text-center text-xs"><AttachmentLink attachments={atts} type="공고문" /></td>
-      <td className="px-3 py-3 text-center text-xs"><AttachmentLink attachments={atts} type="제안요청서" /></td>
-      <td className="px-3 py-3 text-center text-xs"><AttachmentLink attachments={atts} type="과업지시서" /></td>
+      <td className="px-3 py-3 text-center text-xs">
+        <AttachmentLink attachments={atts} type="공고문" />
+      </td>
+      <td className="px-3 py-3 text-center text-xs">
+        <AttachmentLink attachments={atts} type="제안요청서" />
+      </td>
+      <td className="px-3 py-3 text-center text-xs">
+        <AttachmentLink attachments={atts} type="과업지시서" />
+      </td>
       <td className="px-3 py-3 text-center">
         {bid.proposal_status ? (
           <div className="flex flex-col items-center gap-0.5">
-            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border whitespace-nowrap ${
-              bid.proposal_status === "제안결정" || bid.proposal_status === "제안착수" ? "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900"
-              : bid.proposal_status === "제안포기" ? "text-red-400 bg-red-950/60 border-red-900"
-              : bid.proposal_status === "제안유보" ? "text-orange-400 bg-orange-950/60 border-orange-900"
-              : bid.proposal_status === "관련없음" ? "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]"
-              : bid.proposal_status === "검토중" ? "text-yellow-400 bg-yellow-950/60 border-yellow-900"
-              : "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]"
-            }`}>
-              {bid.proposal_status === "제안결정" && teams.length > 0 ? `${teams[0]} 제안착수` : bid.proposal_status}
+            <span
+              className={`text-[10px] font-bold px-1.5 py-0.5 rounded border whitespace-nowrap ${
+                bid.proposal_status === "제안결정" ||
+                bid.proposal_status === "제안착수"
+                  ? "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900"
+                  : bid.proposal_status === "제안포기"
+                    ? "text-red-400 bg-red-950/60 border-red-900"
+                    : bid.proposal_status === "제안유보"
+                      ? "text-orange-400 bg-orange-950/60 border-orange-900"
+                      : bid.proposal_status === "관련없음"
+                        ? "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]"
+                        : bid.proposal_status === "검토중"
+                          ? "text-yellow-400 bg-yellow-950/60 border-yellow-900"
+                          : "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]"
+              }`}
+            >
+              {bid.proposal_status === "제안결정" && teams.length > 0
+                ? `${teams[0]} 제안착수`
+                : bid.proposal_status}
             </span>
-            {bid.decided_by && <span className="text-[11px] text-[#5c5c5c]">{bid.decided_by}</span>}
+            {bid.decided_by && (
+              <span className="text-[11px] text-[#5c5c5c]">
+                {bid.decided_by}
+              </span>
+            )}
           </div>
-        ) : <span className="text-[10px] text-[#3c3c3c]">-</span>}
+        ) : (
+          <span className="text-[10px] text-[#3c3c3c]">-</span>
+        )}
       </td>
     </tr>
   );
 }
 
 function EmptyState({ scope }: { scope: Scope }) {
-  const messages: Record<Scope, { title: string; desc: string; icon: string }> = {
-    my: { title: "관심 공고가 없습니다", desc: "전체 탭에서 관심 있는 공고를 북마크하거나, 프로필의 관심분야를 설정하세요.", icon: "★" },
-    team: { title: "팀 추천 공고가 없습니다", desc: "팀 프로필과 검색 조건을 설정하면 AI가 맞춤 공고를 추천합니다.", icon: "👥" },
-    division: { title: "본부 추천 공고가 없습니다", desc: "본부 내 팀들의 추천 공고가 수집되면 여기에 표시됩니다.", icon: "🏢" },
-    company: { title: "모니터링된 공고가 없습니다", desc: "공고 수집이 아직 실행되지 않았습니다. 팀 설정 후 공고를 수집해주세요.", icon: "📡" },
-  };
+  const messages: Record<Scope, { title: string; desc: string; icon: string }> =
+    {
+      my: {
+        title: "관심 공고가 없습니다",
+        desc: "전체 탭에서 관심 있는 공고를 북마크하거나, 프로필의 관심분야를 설정하세요.",
+        icon: "★",
+      },
+      team: {
+        title: "팀 추천 공고가 없습니다",
+        desc: "팀 프로필과 검색 조건을 설정하면 AI가 맞춤 공고를 추천합니다.",
+        icon: "👥",
+      },
+      division: {
+        title: "본부 추천 공고가 없습니다",
+        desc: "본부 내 팀들의 추천 공고가 수집되면 여기에 표시됩니다.",
+        icon: "🏢",
+      },
+      company: {
+        title: "모니터링된 공고가 없습니다",
+        desc: "공고 수집이 아직 실행되지 않았습니다. 팀 설정 후 공고를 수집해주세요.",
+        icon: "📡",
+      },
+    };
   const m = messages[scope];
   return (
     <div className="flex flex-col items-center justify-center h-64 text-center">
-      <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl mb-4">{m.icon}</div>
+      <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl mb-4">
+        {m.icon}
+      </div>
       <h3 className="text-sm font-semibold text-[#ededed] mb-1">{m.title}</h3>
       <p className="text-xs text-[#8c8c8c] mb-6 max-w-xs">{m.desc}</p>
       {scope === "team" && (
-        <Link href="/monitoring/settings" className="bg-[#3ecf8e] hover:bg-[#49e59e] text-black font-semibold rounded-lg px-5 py-2 text-sm transition-colors">설정하기</Link>
+        <Link
+          href="/monitoring/settings"
+          className="bg-[#3ecf8e] hover:bg-[#49e59e] text-black font-semibold rounded-lg px-5 py-2 text-sm transition-colors"
+        >
+          설정하기
+        </Link>
       )}
     </div>
   );

@@ -7,16 +7,19 @@
 ## 📦 생성된 파일 목록
 
 ### 핵심 파일
+
 - ✅ `lib/typography.ts` — 타이포그래피 시스템 (TEXT_SIZES, TEXT_PRESETS)
 - ✅ `components/ui/Button.tsx` — 버튼 컴포넌트 (4가지 variant)
 - ✅ `components/ui/Card.tsx` — 카드 컴포넌트 체계
 - ✅ `components/ui/FormField.tsx` — 폼 필드 컴포넌트 (TextInput, TextArea, Select)
 
 ### 설정 파일
+
 - ✅ `app/globals.css` — 글로벌 클래스 확장 (버튼, 입력, 카드, 상태 색상, 애니메이션)
 - ✅ `tailwind.config.ts` — Tailwind 설정 (간격, 그림자, 색상, 애니메이션)
 
 ### 문서
+
 - ✅ `COMPONENT_USAGE.md` — 모든 컴포넌트 사용 가이드
 - ✅ `SPACING_AND_SHADOWS.md` — 간격 및 그림자 체계 가이드
 - ✅ `MIGRATION_EXAMPLE.tsx` — 마이그레이션 예시 코드
@@ -28,6 +31,7 @@
 ### 방법 1: 점진적 마이그레이션 (권장)
 
 **1주차**: 자주 사용되는 컴포넌트부터 시작
+
 ```
 Priority 1 (HIGH):
 - Dashboard 페이지의 카드들
@@ -45,6 +49,7 @@ Priority 3 (LOW):
 ```
 
 **마이그레이션 단계**:
+
 ```tsx
 // Step 1: 컴포넌트 임포트
 import { Card, CardHeader, CardBody, CardFooter } from "@/components/ui/Card";
@@ -77,6 +82,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ## 📋 컴포넌트 사용 치트시트
 
 ### 버튼
+
 ```tsx
 <Button variant="primary" size="md">저장</Button>
 <Button variant="secondary" size="sm">취소</Button>
@@ -85,6 +91,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ```
 
 ### 카드
+
 ```tsx
 <Card>
   <CardHeader title="제목" subtitle="부제목" />
@@ -94,6 +101,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ```
 
 ### 폼 필드
+
 ```tsx
 <TextInput label="이름" placeholder="..." error={error} />
 <TextArea label="설명" helperText="도움말" />
@@ -101,6 +109,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ```
 
 ### 타이포그래피
+
 ```tsx
 <h1 className={TEXT_SIZES.h1}>제목</h1>
 <p className={TEXT_SIZES.body}>본문</p>
@@ -109,6 +118,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ```
 
 ### 간격
+
 ```tsx
 <div className="space-y-md">여러 항목</div>
 <div className="p-lg">내부 여백</div>
@@ -116,6 +126,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ```
 
 ### 그림자
+
 ```tsx
 <Card className="shadow-sm hover:shadow-card-hover">호버 효과</Card>
 <div className="shadow-lg">모달</div>
@@ -128,6 +139,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 마이그레이션 후 다음을 확인하세요:
 
 ### 시각적 확인
+
 - [ ] 다크 모드에서 색상이 올바른가?
 - [ ] 라이트 모드에서 색상이 올바른가?
 - [ ] 간격이 일관되는가?
@@ -135,17 +147,20 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 - [ ] 타이포그래피가 읽기 쉬운가?
 
 ### 기능 확인
+
 - [ ] 버튼 클릭이 작동하는가?
 - [ ] 입력 필드에 포커스 효과가 있는가?
 - [ ] 에러 메시지가 표시되는가?
 - [ ] 폼 제출이 작동하는가?
 
 ### 반응형 확인
+
 - [ ] 모바일 화면에서 레이아웃이 정렬되는가?
 - [ ] 태블릿 화면에서 읽기 쉬운가?
 - [ ] 데스크톱 화면에서 최적화되는가?
 
 ### 접근성 확인
+
 - [ ] 탭 네비게이션이 작동하는가?
 - [ ] 포커스 링이 보이는가?
 - [ ] 색상 대비가 충분한가? (WCAG AA 이상)
@@ -155,6 +170,7 @@ import { TEXT_SIZES, TEXT_PRESETS } from "@/lib/typography";
 ## 🚀 배포 전 확인사항
 
 ### 브라우저 호환성
+
 ```bash
 # 빌드 테스트
 npm run build
@@ -164,6 +180,7 @@ npm run build -- --analyze
 ```
 
 ### 성능 검사
+
 ```bash
 # Lighthouse
 npm run build
@@ -172,6 +189,7 @@ npx lighthouse http://localhost:8080
 ```
 
 ### TypeScript 검사
+
 ```bash
 # 타입 에러 확인
 npm run typecheck
@@ -181,15 +199,15 @@ npm run typecheck
 
 ## 📊 개선 사항 요약
 
-| 항목 | 이전 | 현재 | 개선도 |
-|------|------|------|--------|
-| 타이포그래피 일관성 | 산재 | 중앙화 | 100% |
-| 버튼 스타일 | 2가지 | 4가지 | 100% |
-| 입력 필드 | 일관되지 않음 | 표준화 | 100% |
-| 카드 컴포넌트 | 정의 없음 | 체계화 | 100% |
-| 간격 체계 | 불규칙 | 8px 기반 | 100% |
-| 그림자 체계 | 제한적 | 6단계 | 200% |
-| 컴포넌트 재사용성 | 낮음 | 높음 | 300% |
+| 항목                | 이전          | 현재     | 개선도 |
+| ------------------- | ------------- | -------- | ------ |
+| 타이포그래피 일관성 | 산재          | 중앙화   | 100%   |
+| 버튼 스타일         | 2가지         | 4가지    | 100%   |
+| 입력 필드           | 일관되지 않음 | 표준화   | 100%   |
+| 카드 컴포넌트       | 정의 없음     | 체계화   | 100%   |
+| 간격 체계           | 불규칙        | 8px 기반 | 100%   |
+| 그림자 체계         | 제한적        | 6단계    | 200%   |
+| 컴포넌트 재사용성   | 낮음          | 높음     | 300%   |
 
 ---
 
@@ -207,6 +225,7 @@ npm run typecheck
 ## ⚠️ 주의사항
 
 ### 하위 호환성
+
 새 컴포넌트는 기존 코드와 호환됩니다. 동시에 사용 가능합니다:
 
 ```tsx
@@ -215,7 +234,7 @@ npm run typecheck
   <Card>
     <CardHeader title="신규" />
   </Card>
-  
+
   <div className="bg-[#1c1c1c] border border-[#262626] rounded-lg p-4">
     기존 스타일
   </div>
@@ -223,10 +242,13 @@ npm run typecheck
 ```
 
 ### 필요한 업데이트만
+
 모든 페이지를 즉시 업데이트할 필요가 없습니다. 필요에 따라 점진적으로 진행합니다.
 
 ### 테스트
+
 변경 후 항상 테스트합니다:
+
 ```bash
 npm run dev
 npm run test (있는 경우)
@@ -257,4 +279,3 @@ npm run test (있는 경우)
 **작성일**: 2026-03-29
 **버전**: 1.0
 **상태**: 완료 ✅
-

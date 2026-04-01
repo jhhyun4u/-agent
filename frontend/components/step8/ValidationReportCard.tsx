@@ -74,7 +74,9 @@ export function ValidationReportCard({
     return "bg-red-50";
   };
 
-  const getSeverityColor = (severity: "critical" | "major" | "minor"): string => {
+  const getSeverityColor = (
+    severity: "critical" | "major" | "minor",
+  ): string => {
     switch (severity) {
       case "critical":
         return "bg-red-100 text-red-800 border-red-200";
@@ -90,7 +92,9 @@ export function ValidationReportCard({
       {/* Header & Status */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Validation Report</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Validation Report
+          </h3>
           <p
             className={`text-sm font-medium mt-1 ${
               data.pass_validation ? "text-green-600" : "text-red-600"
@@ -114,18 +118,26 @@ export function ValidationReportCard({
       <div className={`p-4 rounded-lg ${getScoreBg(data.quality_score)}`}>
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-xs font-semibold text-gray-600 uppercase">Quality Score</p>
-            <p className={`text-4xl font-bold mt-2 ${getScoreColor(data.quality_score)}`}>
+            <p className="text-xs font-semibold text-gray-600 uppercase">
+              Quality Score
+            </p>
+            <p
+              className={`text-4xl font-bold mt-2 ${getScoreColor(data.quality_score)}`}
+            >
               {data.quality_score}
             </p>
             <p className="text-xs text-gray-600 mt-1">/ 100</p>
           </div>
           {/* Compliance Status */}
           <div className="text-right">
-            <p className="text-xs font-semibold text-gray-600 uppercase">Compliance</p>
+            <p className="text-xs font-semibold text-gray-600 uppercase">
+              Compliance
+            </p>
             <p
               className={`text-sm font-medium mt-2 ${
-                data.compliance_status === "compliant" ? "text-green-600" : "text-red-600"
+                data.compliance_status === "compliant"
+                  ? "text-green-600"
+                  : "text-red-600"
               }`}
             >
               {data.compliance_status}
@@ -140,8 +152,8 @@ export function ValidationReportCard({
               data.quality_score >= 80
                 ? "bg-green-600"
                 : data.quality_score >= 60
-                ? "bg-yellow-600"
-                : "bg-red-600"
+                  ? "bg-yellow-600"
+                  : "bg-red-600"
             }`}
             style={{ width: `${data.quality_score}%` }}
           />
@@ -151,16 +163,28 @@ export function ValidationReportCard({
       {/* Issue Summary */}
       <div className="grid grid-cols-3 gap-3 py-4 border-y">
         <div className="text-center p-3 bg-red-50 rounded">
-          <p className="text-2xl font-bold text-red-600">{data.critical_issues_count}</p>
-          <p className="text-xs font-semibold text-red-700 uppercase mt-1">Critical</p>
+          <p className="text-2xl font-bold text-red-600">
+            {data.critical_issues_count}
+          </p>
+          <p className="text-xs font-semibold text-red-700 uppercase mt-1">
+            Critical
+          </p>
         </div>
         <div className="text-center p-3 bg-orange-50 rounded">
-          <p className="text-2xl font-bold text-orange-600">{data.major_issues_count}</p>
-          <p className="text-xs font-semibold text-orange-700 uppercase mt-1">Major</p>
+          <p className="text-2xl font-bold text-orange-600">
+            {data.major_issues_count}
+          </p>
+          <p className="text-xs font-semibold text-orange-700 uppercase mt-1">
+            Major
+          </p>
         </div>
         <div className="text-center p-3 bg-yellow-50 rounded">
-          <p className="text-2xl font-bold text-yellow-600">{data.minor_issues_count}</p>
-          <p className="text-xs font-semibold text-yellow-700 uppercase mt-1">Minor</p>
+          <p className="text-2xl font-bold text-yellow-600">
+            {data.minor_issues_count}
+          </p>
+          <p className="text-xs font-semibold text-yellow-700 uppercase mt-1">
+            Minor
+          </p>
         </div>
       </div>
 
@@ -179,16 +203,22 @@ export function ValidationReportCard({
                     ? `${getSeverityColor(issue.severity)} border-current`
                     : `border-gray-200 hover:${getSeverityColor(issue.severity)}`
                 }`}
-                onClick={() => setSelectedIssue(selectedIssue === idx ? null : idx)}
+                onClick={() =>
+                  setSelectedIssue(selectedIssue === idx ? null : idx)
+                }
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-sm text-gray-900">{issue.issue_description}</p>
-                    <p className="text-xs text-gray-600 mt-1">📍 {issue.location}</p>
+                    <p className="font-medium text-sm text-gray-900">
+                      {issue.issue_description}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      📍 {issue.location}
+                    </p>
                   </div>
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded ml-2 whitespace-nowrap ${getSeverityColor(
-                      issue.severity
+                      issue.severity,
                     )}`}
                   >
                     {issue.severity}
@@ -198,13 +228,21 @@ export function ValidationReportCard({
                 {selectedIssue === idx && (
                   <div className="mt-3 pt-3 border-t space-y-2">
                     <div>
-                      <p className="text-xs font-semibold text-gray-600">Issue Type</p>
-                      <p className="text-sm text-gray-700 mt-1">{issue.issue_type}</p>
+                      <p className="text-xs font-semibold text-gray-600">
+                        Issue Type
+                      </p>
+                      <p className="text-sm text-gray-700 mt-1">
+                        {issue.issue_type}
+                      </p>
                     </div>
                     {issue.fix_suggestion && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-600">Suggestion</p>
-                        <p className="text-sm text-gray-700 mt-1">{issue.fix_suggestion}</p>
+                        <p className="text-xs font-semibold text-gray-600">
+                          Suggestion
+                        </p>
+                        <p className="text-sm text-gray-700 mt-1">
+                          {issue.fix_suggestion}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -218,14 +256,21 @@ export function ValidationReportCard({
       {/* Recommendations */}
       {data.recommendations_for_improvement.length > 0 && (
         <div className="space-y-2 pt-4 border-t">
-          <h4 className="text-sm font-semibold text-gray-700">Recommendations</h4>
+          <h4 className="text-sm font-semibold text-gray-700">
+            Recommendations
+          </h4>
           <ul className="space-y-1">
-            {data.recommendations_for_improvement.map((rec: string, idx: number) => (
-              <li key={idx} className="text-sm text-gray-700 flex items-start">
-                <span className="text-blue-600 mr-2">→</span>
-                <span>{rec}</span>
-              </li>
-            ))}
+            {data.recommendations_for_improvement.map(
+              (rec: string, idx: number) => (
+                <li
+                  key={idx}
+                  className="text-sm text-gray-700 flex items-start"
+                >
+                  <span className="text-blue-600 mr-2">→</span>
+                  <span>{rec}</span>
+                </li>
+              ),
+            )}
           </ul>
         </div>
       )}

@@ -11,7 +11,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, pricingApi, BidAnalysis, type QuickEstimateResult } from "@/lib/api";
+import {
+  api,
+  pricingApi,
+  BidAnalysis,
+  type QuickEstimateResult,
+} from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import DuplicateBidWarning from "@/components/DuplicateBidWarning";
 
@@ -62,7 +67,8 @@ export default function NewProposalPage() {
   const [analyzing, setAnalyzing] = useState(false);
 
   // 빠른 견적
-  const [quickEstimate, setQuickEstimate] = useState<QuickEstimateResult | null>(null);
+  const [quickEstimate, setQuickEstimate] =
+    useState<QuickEstimateResult | null>(null);
   const [estimating, setEstimating] = useState(false);
 
   // Path B: RFP 파일 업로드
@@ -84,7 +90,8 @@ export default function NewProposalPage() {
 
       // AI 분석 요청
       setAnalyzing(true);
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
       fetch(`${baseUrl}/bids/${data.bid_no}/analysis`)
         .then((r) => (r.ok ? r.json() : null))
         .then((json) => {
@@ -113,7 +120,8 @@ export default function NewProposalPage() {
       fd.append("client_name", bidPrefill.client_name || "");
       fd.append("rfp_file", file);
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const baseUrl =
+        process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
       const token = await getAuthToken();
       const res = await fetch(`${baseUrl}/proposals/from-rfp`, {
         method: "POST",
@@ -127,7 +135,9 @@ export default function NewProposalPage() {
       const data = await res.json();
       router.push(`/proposals/${data.proposal_id}`);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "제안서 생성에 실패했습니다.");
+      setError(
+        err instanceof Error ? err.message : "제안서 생성에 실패했습니다.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -141,7 +151,10 @@ export default function NewProposalPage() {
     try {
       const fd = new FormData();
       fd.append("rfp_file", rfpFile);
-      fd.append("rfp_title", rfpUploadTitle.trim() || rfpFile.name.replace(/\.[^.]+$/, ""));
+      fd.append(
+        "rfp_title",
+        rfpUploadTitle.trim() || rfpFile.name.replace(/\.[^.]+$/, ""),
+      );
       fd.append("client_name", rfpClientName.trim());
       const data = await api.proposals.createFromRfp(fd);
       router.push(`/proposals/${data.proposal_id}`);
@@ -158,19 +171,27 @@ export default function NewProposalPage() {
     <div className="border-b border-[#262626] px-6 py-4 shrink-0">
       <div className="flex items-center gap-3">
         {entryPath === "select" || entryPath === "monitor" ? (
-          <Link href="/proposals" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">
+          <Link
+            href="/proposals"
+            className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"
+          >
             &larr;
           </Link>
         ) : (
           <button
-            onClick={() => { setEntryPath("select"); setError(""); }}
+            onClick={() => {
+              setEntryPath("select");
+              setError("");
+            }}
             className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"
           >
             &larr;
           </button>
         )}
         <div>
-          <h1 className="text-sm font-semibold text-[#ededed]">새 제안서 생성</h1>
+          <h1 className="text-sm font-semibold text-[#ededed]">
+            새 제안서 생성
+          </h1>
           {entryPath !== "select" && (
             <p className="text-xs text-[#5c5c5c] mt-0.5">
               {entryPath === "monitor" && `공고번호: ${bidPrefill?.bid_no}`}
@@ -183,7 +204,9 @@ export default function NewProposalPage() {
   );
 
   const errorBanner = error && (
-    <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">{error}</p>
+    <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">
+      {error}
+    </p>
   );
 
   const infoBanner = (
@@ -204,8 +227,12 @@ export default function NewProposalPage() {
         <div className="flex-1 overflow-auto px-6 py-8">
           <div className="max-w-2xl mx-auto space-y-6">
             <div className="text-center space-y-2 mb-8">
-              <h2 className="text-base font-semibold text-[#ededed]">어떤 방법으로 시작하시겠습니까?</h2>
-              <p className="text-xs text-[#8c8c8c]">제안서 작성 방식을 선택하세요. 이후 AI가 단계별로 안내합니다.</p>
+              <h2 className="text-base font-semibold text-[#ededed]">
+                어떤 방법으로 시작하시겠습니까?
+              </h2>
+              <p className="text-xs text-[#8c8c8c]">
+                제안서 작성 방식을 선택하세요. 이후 AI가 단계별로 안내합니다.
+              </p>
             </div>
 
             <div className="grid gap-4">
@@ -222,8 +249,9 @@ export default function NewProposalPage() {
                     공고 모니터링에서 선택
                   </p>
                   <p className="text-xs text-[#8c8c8c] mt-1 leading-relaxed">
-                    G2B 공고 목록에서 관심 과제를 검토하고 &ldquo;제안 착수&rdquo;로 시작합니다.
-                    AI 적합성 분석과 RFP 요약이 자동으로 제공됩니다.
+                    G2B 공고 목록에서 관심 과제를 검토하고 &ldquo;제안
+                    착수&rdquo;로 시작합니다. AI 적합성 분석과 RFP 요약이
+                    자동으로 제공됩니다.
                   </p>
                   <div className="flex gap-2 mt-2.5">
                     <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950/40 text-[#3ecf8e] border border-emerald-900/50">
@@ -234,12 +262,17 @@ export default function NewProposalPage() {
                     </span>
                   </div>
                 </div>
-                <span className="text-[#5c5c5c] group-hover:text-[#3ecf8e] text-sm shrink-0 transition-colors">&rarr;</span>
+                <span className="text-[#5c5c5c] group-hover:text-[#3ecf8e] text-sm shrink-0 transition-colors">
+                  &rarr;
+                </span>
               </Link>
 
               {/* B. RFP 파일 업로드 */}
               <button
-                onClick={() => { setEntryPath("rfp_upload"); setError(""); }}
+                onClick={() => {
+                  setEntryPath("rfp_upload");
+                  setError("");
+                }}
                 className="group flex items-start gap-4 p-5 bg-[#1c1c1c] border border-[#262626] rounded-xl hover:border-purple-500/50 transition-all text-left"
               >
                 <div className="w-10 h-10 rounded-lg bg-purple-950/60 border border-purple-900 flex items-center justify-center text-lg shrink-0 group-hover:bg-purple-950/80 transition-colors">
@@ -250,8 +283,8 @@ export default function NewProposalPage() {
                     RFP 파일 직접 업로드
                   </p>
                   <p className="text-xs text-[#8c8c8c] mt-1 leading-relaxed">
-                    제안요청서(RFP) 파일을 직접 업로드하여 시작합니다.
-                    PDF, HWP, HWPX, TXT 형식을 지원합니다.
+                    제안요청서(RFP) 파일을 직접 업로드하여 시작합니다. PDF, HWP,
+                    HWPX, TXT 형식을 지원합니다.
                   </p>
                   <div className="flex gap-2 mt-2.5">
                     <span className="text-[10px] px-2 py-0.5 rounded bg-purple-950/40 text-purple-400 border border-purple-900/50">
@@ -262,7 +295,9 @@ export default function NewProposalPage() {
                     </span>
                   </div>
                 </div>
-                <span className="text-[#5c5c5c] group-hover:text-purple-400 text-sm shrink-0 transition-colors">&rarr;</span>
+                <span className="text-[#5c5c5c] group-hover:text-purple-400 text-sm shrink-0 transition-colors">
+                  &rarr;
+                </span>
               </button>
             </div>
           </div>
@@ -279,9 +314,9 @@ export default function NewProposalPage() {
     const attachments = bidPrefill.attachments || [];
     const fitColor: Record<string, string> = {
       "적극 추천": "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
-      "추천": "text-blue-400 bg-blue-950/60 border-blue-900",
-      "보통": "text-yellow-400 bg-yellow-950/60 border-yellow-900",
-      "낮음": "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]",
+      추천: "text-blue-400 bg-blue-950/60 border-blue-900",
+      보통: "text-yellow-400 bg-yellow-950/60 border-yellow-900",
+      낮음: "text-[#5c5c5c] bg-[#1c1c1c] border-[#262626]",
     };
 
     return (
@@ -291,7 +326,9 @@ export default function NewProposalPage() {
           <form onSubmit={submitFromMonitor} className="max-w-2xl space-y-5">
             {/* 공고명 (편집 가능) */}
             <div>
-              <label className="block text-xs font-medium text-[#ededed] mb-2">공고명</label>
+              <label className="block text-xs font-medium text-[#ededed] mb-2">
+                공고명
+              </label>
               <input
                 type="text"
                 required
@@ -310,11 +347,15 @@ export default function NewProposalPage() {
               <div className="grid grid-cols-3 gap-3 text-xs">
                 <div>
                   <span className="text-[#5c5c5c]">발주처</span>
-                  <p className="text-[#ededed] mt-0.5">{bidPrefill.client_name || "-"}</p>
+                  <p className="text-[#ededed] mt-0.5">
+                    {bidPrefill.client_name || "-"}
+                  </p>
                 </div>
                 <div>
                   <span className="text-[#5c5c5c]">용역비</span>
-                  <p className="text-[#ededed] mt-0.5">{formatBudget(bidPrefill.budget_amount)}</p>
+                  <p className="text-[#ededed] mt-0.5">
+                    {formatBudget(bidPrefill.budget_amount)}
+                  </p>
                 </div>
                 <div>
                   <span className="text-[#5c5c5c]">공고번호</span>
@@ -329,7 +370,9 @@ export default function NewProposalPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-amber-400 text-sm">{"$"}</span>
-                    <p className="text-xs font-medium text-[#ededed]">빠른 견적</p>
+                    <p className="text-xs font-medium text-[#ededed]">
+                      빠른 견적
+                    </p>
                   </div>
                   {!quickEstimate && (
                     <button
@@ -340,8 +383,11 @@ export default function NewProposalPage() {
                             budget: bidPrefill.budget_amount!,
                           });
                           setQuickEstimate(res);
-                        } catch { /* ignore */ }
-                        finally { setEstimating(false); }
+                        } catch {
+                          /* ignore */
+                        } finally {
+                          setEstimating(false);
+                        }
                       }}
                       disabled={estimating}
                       className="text-[10px] px-2.5 py-1 rounded border border-amber-900/50 bg-amber-950/30 text-amber-400 hover:bg-amber-950/50 disabled:opacity-50 transition-colors"
@@ -353,29 +399,44 @@ export default function NewProposalPage() {
                 {quickEstimate ? (
                   <div className="grid grid-cols-3 gap-3">
                     <div className="text-center">
-                      <p className="text-lg font-bold text-[#ededed] font-mono">{formatBudget(quickEstimate.recommended_bid)}</p>
+                      <p className="text-lg font-bold text-[#ededed] font-mono">
+                        {formatBudget(quickEstimate.recommended_bid)}
+                      </p>
                       <p className="text-[10px] text-[#8c8c8c]">추천 입찰가</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-[#ededed] font-mono">{quickEstimate.recommended_ratio.toFixed(1)}%</p>
+                      <p className="text-lg font-bold text-[#ededed] font-mono">
+                        {quickEstimate.recommended_ratio.toFixed(1)}%
+                      </p>
                       <p className="text-[10px] text-[#8c8c8c]">추천 낙찰률</p>
                     </div>
                     <div className="text-center">
-                      <p className={`text-lg font-bold font-mono ${
-                        quickEstimate.win_probability >= 0.7 ? "text-green-400" : quickEstimate.win_probability >= 0.4 ? "text-yellow-400" : "text-red-400"
-                      }`}>
+                      <p
+                        className={`text-lg font-bold font-mono ${
+                          quickEstimate.win_probability >= 0.7
+                            ? "text-green-400"
+                            : quickEstimate.win_probability >= 0.4
+                              ? "text-yellow-400"
+                              : "text-red-400"
+                        }`}
+                      >
                         {Math.round(quickEstimate.win_probability * 100)}%
                       </p>
                       <p className="text-[10px] text-[#8c8c8c]">수주확률</p>
                     </div>
                     <div className="col-span-3 text-[10px] text-[#555] text-center">
-                      {quickEstimate.data_quality === "statistical" ? "통계 기반" : "규칙 기반"} · 유사 사례 {quickEstimate.comparable_cases}건
-                      {quickEstimate.positioning_adjustment && ` · ${quickEstimate.positioning_adjustment}`}
+                      {quickEstimate.data_quality === "statistical"
+                        ? "통계 기반"
+                        : "규칙 기반"}{" "}
+                      · 유사 사례 {quickEstimate.comparable_cases}건
+                      {quickEstimate.positioning_adjustment &&
+                        ` · ${quickEstimate.positioning_adjustment}`}
                     </div>
                   </div>
                 ) : !estimating ? (
                   <p className="text-xs text-[#5c5c5c]">
-                    예산({formatBudget(bidPrefill.budget_amount)}) 기반으로 추천 입찰가와 수주확률을 빠르게 확인합니다.
+                    예산({formatBudget(bidPrefill.budget_amount)}) 기반으로 추천
+                    입찰가와 수주확률을 빠르게 확인합니다.
                   </p>
                 ) : null}
               </div>
@@ -385,24 +446,38 @@ export default function NewProposalPage() {
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-blue-400 text-sm">{"[ ]"}</span>
-                <p className="text-xs font-medium text-[#ededed]">RFP 주요내용</p>
-                {analyzing && <span className="text-[10px] text-[#5c5c5c] animate-pulse">AI 분석 중...</span>}
+                <p className="text-xs font-medium text-[#ededed]">
+                  RFP 주요내용
+                </p>
+                {analyzing && (
+                  <span className="text-[10px] text-[#5c5c5c] animate-pulse">
+                    AI 분석 중...
+                  </span>
+                )}
               </div>
               {analyzing ? (
                 <div className="flex items-center gap-2 py-6 justify-center">
                   <div className="w-4 h-4 border-2 border-[#262626] border-t-blue-400 rounded-full animate-spin" />
-                  <span className="text-xs text-[#5c5c5c]">RFP를 분석하고 있습니다...</span>
+                  <span className="text-xs text-[#5c5c5c]">
+                    RFP를 분석하고 있습니다...
+                  </span>
                 </div>
               ) : analysis?.rfp_summary && analysis.rfp_summary.length > 0 ? (
                 <div className="bg-[#111111] border border-[#262626] rounded-lg p-3 space-y-1.5">
                   {analysis.rfp_summary.map((line, i) => (
-                    <p key={i} className="text-xs text-[#8c8c8c] leading-relaxed">{line}</p>
+                    <p
+                      key={i}
+                      className="text-xs text-[#8c8c8c] leading-relaxed"
+                    >
+                      {line}
+                    </p>
                   ))}
                 </div>
               ) : (
                 <div className="bg-[#111111] border border-[#262626] rounded-lg p-3">
                   <p className="text-xs text-[#5c5c5c]">
-                    공고 상세 텍스트를 가져올 수 없습니다. 첨부된 제안요청서를 직접 확인해주세요.
+                    공고 상세 텍스트를 가져올 수 없습니다. 첨부된 제안요청서를
+                    직접 확인해주세요.
                   </p>
                 </div>
               )}
@@ -413,20 +488,28 @@ export default function NewProposalPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-emerald-400 text-sm">{"(*)"}</span>
-                  <p className="text-xs font-medium text-[#ededed]">TENOPA 적합성 분석</p>
+                  <p className="text-xs font-medium text-[#ededed]">
+                    TENOPA 적합성 분석
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  {analysis?.recommended_teams && analysis.recommended_teams.length > 0 && (
-                    <div className="flex gap-1">
-                      {analysis.recommended_teams.map((team, i) => (
-                        <span key={i} className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-950/60 text-blue-400 border border-blue-900">
-                          {team}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  {analysis?.recommended_teams &&
+                    analysis.recommended_teams.length > 0 && (
+                      <div className="flex gap-1">
+                        {analysis.recommended_teams.map((team, i) => (
+                          <span
+                            key={i}
+                            className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-blue-950/60 text-blue-400 border border-blue-900"
+                          >
+                            {team}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   {analysis?.fit_level && (
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${fitColor[analysis.fit_level] || fitColor["보통"]}`}>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${fitColor[analysis.fit_level] || fitColor["보통"]}`}
+                    >
                       {analysis.fit_level}
                     </span>
                   )}
@@ -435,35 +518,61 @@ export default function NewProposalPage() {
               {analyzing ? (
                 <div className="flex items-center gap-2 py-4 justify-center">
                   <div className="w-4 h-4 border-2 border-[#262626] border-t-emerald-400 rounded-full animate-spin" />
-                  <span className="text-xs text-[#5c5c5c]">적합성을 분석하고 있습니다...</span>
+                  <span className="text-xs text-[#5c5c5c]">
+                    적합성을 분석하고 있습니다...
+                  </span>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-[10px] font-medium text-[#3ecf8e] mb-2 uppercase tracking-wider">Positive</p>
+                    <p className="text-[10px] font-medium text-[#3ecf8e] mb-2 uppercase tracking-wider">
+                      Positive
+                    </p>
                     <div className="space-y-1.5">
                       {(analysis?.positive || []).map((item, i) => (
-                        <div key={i} className="flex items-start gap-2 px-3 py-2 rounded-lg bg-emerald-950/20 border border-emerald-900/30">
-                          <span className="text-[#3ecf8e] text-xs shrink-0">+</span>
-                          <p className="text-xs text-[#8c8c8c] leading-relaxed">{item}</p>
+                        <div
+                          key={i}
+                          className="flex items-start gap-2 px-3 py-2 rounded-lg bg-emerald-950/20 border border-emerald-900/30"
+                        >
+                          <span className="text-[#3ecf8e] text-xs shrink-0">
+                            +
+                          </span>
+                          <p className="text-xs text-[#8c8c8c] leading-relaxed">
+                            {item}
+                          </p>
                         </div>
                       ))}
-                      {(!analysis?.positive || analysis.positive.length === 0) && (
-                        <p className="text-xs text-[#5c5c5c] px-3 py-2">해당 없음</p>
+                      {(!analysis?.positive ||
+                        analysis.positive.length === 0) && (
+                        <p className="text-xs text-[#5c5c5c] px-3 py-2">
+                          해당 없음
+                        </p>
                       )}
                     </div>
                   </div>
                   <div>
-                    <p className="text-[10px] font-medium text-red-400 mb-2 uppercase tracking-wider">Negative</p>
+                    <p className="text-[10px] font-medium text-red-400 mb-2 uppercase tracking-wider">
+                      Negative
+                    </p>
                     <div className="space-y-1.5">
                       {(analysis?.negative || []).map((item, i) => (
-                        <div key={i} className="flex items-start gap-2 px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/30">
-                          <span className="text-red-400 text-xs shrink-0">-</span>
-                          <p className="text-xs text-[#8c8c8c] leading-relaxed">{item}</p>
+                        <div
+                          key={i}
+                          className="flex items-start gap-2 px-3 py-2 rounded-lg bg-red-950/20 border border-red-900/30"
+                        >
+                          <span className="text-red-400 text-xs shrink-0">
+                            -
+                          </span>
+                          <p className="text-xs text-[#8c8c8c] leading-relaxed">
+                            {item}
+                          </p>
                         </div>
                       ))}
-                      {(!analysis?.negative || analysis.negative.length === 0) && (
-                        <p className="text-xs text-[#5c5c5c] px-3 py-2">해당 없음</p>
+                      {(!analysis?.negative ||
+                        analysis.negative.length === 0) && (
+                        <p className="text-xs text-[#5c5c5c] px-3 py-2">
+                          해당 없음
+                        </p>
                       )}
                     </div>
                   </div>
@@ -476,16 +585,20 @@ export default function NewProposalPage() {
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-emerald-400 text-sm">{"{+}"}</span>
-                  <p className="text-xs font-medium text-[#ededed]">공고 첨부파일</p>
+                  <p className="text-xs font-medium text-[#ededed]">
+                    공고 첨부파일
+                  </p>
                 </div>
                 <div className="space-y-1.5">
                   {attachments.map((att, i) => {
                     const ext = att.name.split(".").pop()?.toUpperCase() ?? "";
                     const typeColor: Record<string, string> = {
-                      "제안요청서": "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
-                      "과업지시서": "text-blue-400 bg-blue-950/60 border-blue-900",
-                      "공고문": "text-[#8c8c8c] bg-[#111111] border-[#262626]",
-                      "기타": "text-[#5c5c5c] bg-[#111111] border-[#262626]",
+                      제안요청서:
+                        "text-[#3ecf8e] bg-emerald-950/60 border-emerald-900",
+                      과업지시서:
+                        "text-blue-400 bg-blue-950/60 border-blue-900",
+                      공고문: "text-[#8c8c8c] bg-[#111111] border-[#262626]",
+                      기타: "text-[#5c5c5c] bg-[#111111] border-[#262626]",
                     };
                     return (
                       <a
@@ -495,11 +608,17 @@ export default function NewProposalPage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111111] border border-[#262626] hover:border-[#3ecf8e]/40 transition-colors"
                       >
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${typeColor[att.type] || typeColor["기타"]}`}>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${typeColor[att.type] || typeColor["기타"]}`}
+                        >
                           {att.type}
                         </span>
-                        <span className="text-xs text-[#ededed] truncate flex-1">{att.name}</span>
-                        <span className="text-[10px] text-[#5c5c5c] shrink-0">{ext}</span>
+                        <span className="text-xs text-[#ededed] truncate flex-1">
+                          {att.name}
+                        </span>
+                        <span className="text-[10px] text-[#5c5c5c] shrink-0">
+                          {ext}
+                        </span>
                       </a>
                     );
                   })}
@@ -508,7 +627,10 @@ export default function NewProposalPage() {
             )}
 
             {/* 권고 #4: 공고 중복 프로젝트 경고 */}
-            <DuplicateBidWarning bidNo={bidPrefill.bid_no} rfpTitle={rfpTitle} />
+            <DuplicateBidWarning
+              bidNo={bidPrefill.bid_no}
+              rfpTitle={rfpTitle}
+            />
 
             {errorBanner}
             {infoBanner}
@@ -537,7 +659,9 @@ export default function NewProposalPage() {
         <form onSubmit={submitFromRfpUpload} className="max-w-2xl space-y-5">
           {/* 파일 업로드 */}
           <div>
-            <label className="block text-xs font-medium text-[#ededed] mb-2">RFP 파일</label>
+            <label className="block text-xs font-medium text-[#ededed] mb-2">
+              RFP 파일
+            </label>
             <input
               ref={fileRef}
               type="file"
@@ -557,12 +681,19 @@ export default function NewProposalPage() {
                   {rfpFile.name.split(".").pop()?.toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-[#ededed] truncate">{rfpFile.name}</p>
-                  <p className="text-[10px] text-[#5c5c5c]">{(rfpFile.size / 1024).toFixed(0)} KB</p>
+                  <p className="text-xs text-[#ededed] truncate">
+                    {rfpFile.name}
+                  </p>
+                  <p className="text-[10px] text-[#5c5c5c]">
+                    {(rfpFile.size / 1024).toFixed(0)} KB
+                  </p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => { setRfpFile(null); if (fileRef.current) fileRef.current.value = ""; }}
+                  onClick={() => {
+                    setRfpFile(null);
+                    if (fileRef.current) fileRef.current.value = "";
+                  }}
                   className="text-[#5c5c5c] hover:text-red-400 text-xs transition-colors"
                 >
                   x
@@ -577,15 +708,21 @@ export default function NewProposalPage() {
                 <div className="w-10 h-10 rounded-lg bg-purple-950/40 border border-purple-900/50 flex items-center justify-center text-lg text-purple-400">
                   +
                 </div>
-                <p className="text-xs text-[#8c8c8c]">클릭하여 파일을 선택하세요</p>
-                <p className="text-[10px] text-[#5c5c5c]">PDF, HWP, HWPX, TXT, DOC, DOCX</p>
+                <p className="text-xs text-[#8c8c8c]">
+                  클릭하여 파일을 선택하세요
+                </p>
+                <p className="text-[10px] text-[#5c5c5c]">
+                  PDF, HWP, HWPX, TXT, DOC, DOCX
+                </p>
               </button>
             )}
           </div>
 
           {/* 프로젝트명 */}
           <div>
-            <label className="block text-xs font-medium text-[#ededed] mb-2">프로젝트명</label>
+            <label className="block text-xs font-medium text-[#ededed] mb-2">
+              프로젝트명
+            </label>
             <input
               type="text"
               value={rfpUploadTitle}

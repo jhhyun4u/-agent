@@ -1,6 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useRef, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+  ReactNode,
+} from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -23,10 +30,22 @@ export interface ToastMessage {
 
 interface ToastContextType {
   toasts: ToastMessage[];
-  success: (message: string, options?: { action?: ToastMessage["action"] }) => void;
-  error: (message: string, options?: { action?: ToastMessage["action"] }) => void;
-  warning: (message: string, options?: { action?: ToastMessage["action"] }) => void;
-  info: (message: string, options?: { action?: ToastMessage["action"] }) => void;
+  success: (
+    message: string,
+    options?: { action?: ToastMessage["action"] },
+  ) => void;
+  error: (
+    message: string,
+    options?: { action?: ToastMessage["action"] },
+  ) => void;
+  warning: (
+    message: string,
+    options?: { action?: ToastMessage["action"] },
+  ) => void;
+  info: (
+    message: string,
+    options?: { action?: ToastMessage["action"] },
+  ) => void;
   dismiss: (id: string) => void;
 }
 
@@ -46,7 +65,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const timeoutMapRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   const addToast = useCallback(
-    (message: string, variant: ToastVariant, options?: { action?: ToastMessage["action"] }) => {
+    (
+      message: string,
+      variant: ToastVariant,
+      options?: { action?: ToastMessage["action"] },
+    ) => {
       const id = Math.random().toString(36).substr(2, 9);
       const duration = variant === "error" ? 8000 : 5000;
 
@@ -68,7 +91,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       timeoutMapRef.current.set(id, timeoutId);
       return { id, dismiss: () => clearTimeout(timeoutId) };
     },
-    []
+    [],
   );
 
   const dismiss = useCallback((id: string) => {
@@ -107,7 +130,11 @@ function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md pointer-events-none">
       {toasts.map((toast) => (
-        <ToastItem key={toast.id} toast={toast} onDismiss={() => onDismiss(toast.id)} />
+        <ToastItem
+          key={toast.id}
+          toast={toast}
+          onDismiss={() => onDismiss(toast.id)}
+        />
       ))}
     </div>
   );
@@ -119,7 +146,10 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast, onDismiss }: ToastItemProps) {
-  const variantClasses: Record<ToastVariant, { bg: string; border: string; icon: string; text: string }> = {
+  const variantClasses: Record<
+    ToastVariant,
+    { bg: string; border: string; icon: string; text: string }
+  > = {
     success: {
       bg: "bg-[#0d6b3d]",
       border: "border-[#1a9d5d]",
@@ -154,10 +184,12 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
         "pointer-events-auto rounded-lg border px-4 py-3 shadow-lg animate-in slide-in-from-right-4 fade-in",
         variant.bg,
         variant.border,
-        "flex items-start gap-3"
+        "flex items-start gap-3",
       )}
     >
-      <span className={cn("flex-shrink-0 font-bold mt-0.5", variant.text)}>{variant.icon}</span>
+      <span className={cn("flex-shrink-0 font-bold mt-0.5", variant.text)}>
+        {variant.icon}
+      </span>
       <div className="flex-1">
         <p className="text-sm text-[#ededed]">{toast.message}</p>
         {toast.action && (

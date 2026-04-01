@@ -35,9 +35,28 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
 
     setLoading(true);
     // KB 검색으로 이 콘텐츠를 사용한 제안서를 검색
-    api.kb.search(contentTitle, undefined, 20)
+    api.kb
+      .search(contentTitle, undefined, 20)
       .then((res) => {
-        const results = ((res as unknown as { items?: Array<{ proposal_id?: string; proposal_title?: string; section_title?: string; updated_at?: string; status?: string; win_result?: string | null }> })?.items ?? []) as Array<{ proposal_id?: string; proposal_title?: string; section_title?: string; updated_at?: string; status?: string; win_result?: string | null }>;
+        const results = ((
+          res as unknown as {
+            items?: Array<{
+              proposal_id?: string;
+              proposal_title?: string;
+              section_title?: string;
+              updated_at?: string;
+              status?: string;
+              win_result?: string | null;
+            }>;
+          }
+        )?.items ?? []) as Array<{
+          proposal_id?: string;
+          proposal_title?: string;
+          section_title?: string;
+          updated_at?: string;
+          status?: string;
+          win_result?: string | null;
+        }>;
         setUsages(
           results
             .filter((r) => r.proposal_id)
@@ -48,7 +67,7 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
               used_at: r.updated_at ?? "",
               status: r.status ?? "unknown",
               win_result: r.win_result ?? null,
-            }))
+            })),
         );
       })
       .catch(() => setUsages([]))
@@ -61,8 +80,18 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 text-[10px] text-[#8c8c8c] hover:text-[#3ecf8e] transition-colors"
       >
-        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        <svg
+          className="w-3 h-3"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+          />
         </svg>
         {open ? "사용 이력 접기" : "사용 이력 보기"}
       </button>
@@ -72,7 +101,9 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
           {loading ? (
             <p className="text-[10px] text-[#8c8c8c]">검색 중...</p>
           ) : usages.length === 0 ? (
-            <p className="text-[10px] text-[#8c8c8c]">이 콘텐츠를 참조한 제안서가 없습니다.</p>
+            <p className="text-[10px] text-[#8c8c8c]">
+              이 콘텐츠를 참조한 제안서가 없습니다.
+            </p>
           ) : (
             <div className="space-y-1.5">
               <p className="text-[10px] text-[#8c8c8c] mb-2">
@@ -85,12 +116,20 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
                   className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-[#1c1c1c] transition-colors group"
                 >
                   {/* 수주 결과 */}
-                  <span className={`text-[9px] font-bold shrink-0 w-5 text-center ${
-                    u.win_result === "won" ? "text-[#3ecf8e]" :
-                    u.win_result === "lost" ? "text-red-400" :
-                    "text-[#8c8c8c]"
-                  }`}>
-                    {u.win_result === "won" ? "W" : u.win_result === "lost" ? "L" : "-"}
+                  <span
+                    className={`text-[9px] font-bold shrink-0 w-5 text-center ${
+                      u.win_result === "won"
+                        ? "text-[#3ecf8e]"
+                        : u.win_result === "lost"
+                          ? "text-red-400"
+                          : "text-[#8c8c8c]"
+                    }`}
+                  >
+                    {u.win_result === "won"
+                      ? "W"
+                      : u.win_result === "lost"
+                        ? "L"
+                        : "-"}
                   </span>
 
                   {/* 제안서 제목 */}
@@ -108,7 +147,10 @@ export default function KbUsageHistory({ contentId, contentTitle }: Props) {
                   {/* 날짜 */}
                   {u.used_at && (
                     <span className="text-[9px] text-[#8c8c8c] shrink-0">
-                      {new Date(u.used_at).toLocaleDateString("ko-KR", { month: "numeric", day: "numeric" })}
+                      {new Date(u.used_at).toLocaleDateString("ko-KR", {
+                        month: "numeric",
+                        day: "numeric",
+                      })}
                     </span>
                   )}
                 </Link>

@@ -5,8 +5,22 @@
  * user interactions, and complete workflow scenarios.
  */
 
-import { describe, it, expect, beforeAll, afterEach, afterAll, vi } from "vitest";
-import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  afterEach,
+  afterAll,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
@@ -155,15 +169,18 @@ const handlers = [
   }),
 
   // Node Validation
-  http.post("/api/proposals/:proposal_id/step8/validate/:node_id", async ({ params }) => {
-    const { node_id } = params;
-    // Simulate validation in progress
-    return HttpResponse.json({
-      status: "success",
-      node_id,
-      message: "Validation triggered",
-    });
-  }),
+  http.post(
+    "/api/proposals/:proposal_id/step8/validate/:node_id",
+    async ({ params }) => {
+      const { node_id } = params;
+      // Simulate validation in progress
+      return HttpResponse.json({
+        status: "success",
+        node_id,
+        message: "Validation triggered",
+      });
+    },
+  ),
 
   // Approval endpoint (not yet in mock, for future)
   http.post("/api/proposals/:proposal_id/step8/approve", () => {
@@ -171,14 +188,17 @@ const handlers = [
   }),
 
   // Feedback submission
-  http.post("/api/proposals/:proposal_id/step8/feedback", async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({
-      status: "success",
-      feedback_id: "fb-123",
-      received_at: new Date().toISOString(),
-    });
-  }),
+  http.post(
+    "/api/proposals/:proposal_id/step8/feedback",
+    async ({ request }) => {
+      const body = await request.json();
+      return HttpResponse.json({
+        status: "success",
+        feedback_id: "fb-123",
+        received_at: new Date().toISOString(),
+      });
+    },
+  ),
 ];
 
 const server = setupServer(...handlers);
@@ -233,7 +253,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch review panel data with AI issues", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/review-panel");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/review-panel",
+    );
     expect(response.ok).toBe(true);
 
     const data = (await response.json()) as ReviewPanelData;
@@ -244,16 +266,22 @@ describe("STEP 8 API Integration", () => {
     // Validate issue structure
     data.issues.forEach((issue) => {
       expect(["critical", "major", "minor"]).toContain(issue.severity);
-      expect(["compliance", "clarity", "consistency", "style", "strategy"]).toContain(
-        issue.category
-      );
+      expect([
+        "compliance",
+        "clarity",
+        "consistency",
+        "style",
+        "strategy",
+      ]).toContain(issue.category);
       expect(issue.description).toBeTruthy();
       expect(issue.suggestion).toBeTruthy();
     });
   });
 
   it("should fetch feedback summary with actionable items", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/feedback-summary");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/feedback-summary",
+    );
     expect(response.ok).toBe(true);
 
     const data = (await response.json()) as FeedbackSummary;
@@ -265,9 +293,12 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should trigger node validation", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/validate/step_8b", {
-      method: "POST",
-    });
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/validate/step_8b",
+      {
+        method: "POST",
+      },
+    );
     expect(response.ok).toBe(true);
 
     const data = await response.json();
@@ -317,7 +348,8 @@ describe("STEP 8 User Interactions", () => {
   });
 
   it("should collect feedback when requesting changes", async () => {
-    const feedbackText = "Expand the technical approach section with more detail";
+    const feedbackText =
+      "Expand the technical approach section with more detail";
 
     const response = await fetch("/api/proposals/proposal-123/step8/feedback", {
       method: "POST",
@@ -331,19 +363,29 @@ describe("STEP 8 User Interactions", () => {
   });
 
   it("should handle rewrite trigger", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/validate/step_8f", {
-      method: "POST",
-    });
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/validate/step_8f",
+      {
+        method: "POST",
+      },
+    );
     expect(response.ok).toBe(true);
   });
 
   it("should validate individual nodes", async () => {
-    const nodeIds = ["step_8a", "step_8b", "step_8c", "step_8d", "step_8e", "step_8f"];
+    const nodeIds = [
+      "step_8a",
+      "step_8b",
+      "step_8c",
+      "step_8d",
+      "step_8e",
+      "step_8f",
+    ];
 
     for (const nodeId of nodeIds) {
       const response = await fetch(
         `/api/proposals/proposal-123/step8/validate/${nodeId}`,
-        { method: "POST" }
+        { method: "POST" },
       );
       expect(response.ok).toBe(true);
     }
@@ -357,7 +399,9 @@ describe("STEP 8 State Management", () => {
     const response = await fetch("/api/proposals/proposal-123/step8/status");
     const status = (await response.json()) as Step8Status;
 
-    const completed = status.nodes.filter((n) => n.status === "completed").length;
+    const completed = status.nodes.filter(
+      (n) => n.status === "completed",
+    ).length;
     const expected = (completed / 6) * 100;
 
     expect(Math.abs(status.overall_progress - expected)).toBeLessThan(1);
@@ -369,7 +413,7 @@ describe("STEP 8 State Management", () => {
 
     // Verify critical issues count matches actual critical issues
     const actualCritical = mockReviewPanelData.issues.filter(
-      (i) => i.severity === "critical"
+      (i) => i.severity === "critical",
     ).length;
     expect(actualCritical).toBe(mockReviewPanelData.critical_count);
   });
@@ -386,9 +430,7 @@ describe("STEP 8 State Management", () => {
 
     status.nodes.forEach((node) => {
       expect(node.version).toBeGreaterThanOrEqual(0);
-      expect(node.status).toMatch(
-        /^(pending|running|completed|failed)$/
-      );
+      expect(node.status).toMatch(/^(pending|running|completed|failed)$/);
     });
   });
 });
@@ -400,7 +442,7 @@ describe("STEP 8 Error Handling", () => {
     server.use(
       http.get("/api/proposals/:proposal_id/step8/status", () => {
         return HttpResponse.json({ error: "Not found" }, { status: 404 });
-      })
+      }),
     );
 
     const response = await fetch("/api/proposals/invalid-id/step8/status");
@@ -412,12 +454,14 @@ describe("STEP 8 Error Handling", () => {
       http.get("/api/proposals/:proposal_id/step8/review-panel", () => {
         return HttpResponse.json(
           { error: "Internal server error" },
-          { status: 500 }
+          { status: 500 },
         );
-      })
+      }),
     );
 
-    const response = await fetch("/api/proposals/proposal-123/step8/review-panel");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/review-panel",
+    );
     expect(response.status).toBe(500);
   });
 
@@ -437,7 +481,7 @@ describe("STEP 8 Error Handling", () => {
           overall_progress: 50,
           last_updated: new Date().toISOString(),
         });
-      })
+      }),
     );
 
     // Initial request should fail
@@ -497,7 +541,9 @@ describe("STEP 8 Business Logic", () => {
   });
 
   it("should group feedback by category", () => {
-    const categories = new Set(mockReviewPanelData.issues.map((i) => i.category));
+    const categories = new Set(
+      mockReviewPanelData.issues.map((i) => i.category),
+    );
     expect(categories.size).toBeGreaterThan(0);
 
     // All categories should be valid

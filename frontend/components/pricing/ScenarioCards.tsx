@@ -25,12 +25,17 @@ const RISK_BADGES: Record<string, string> = {
 };
 
 function fmtWon(amount: number): string {
-  if (Math.abs(amount) >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
+  if (Math.abs(amount) >= 100_000_000)
+    return `${(amount / 100_000_000).toFixed(1)}억원`;
   if (Math.abs(amount) >= 10_000) return `${(amount / 10_000).toFixed(0)}만원`;
   return `${amount.toLocaleString()}원`;
 }
 
-export default function ScenarioCards({ scenarios, selected, onSelect }: Props) {
+export default function ScenarioCards({
+  scenarios,
+  selected,
+  onSelect,
+}: Props) {
   if (!scenarios.length) return null;
 
   return (
@@ -50,15 +55,25 @@ export default function ScenarioCards({ scenarios, selected, onSelect }: Props) 
               } hover:brightness-110`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-[#ededed]">{s.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded ${RISK_BADGES[s.risk_level] || ""}`}>
-                  {s.risk_level === "low" ? "저위험" : s.risk_level === "high" ? "고위험" : "중위험"}
+                <span className="text-sm font-medium text-[#ededed]">
+                  {s.label}
+                </span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded ${RISK_BADGES[s.risk_level] || ""}`}
+                >
+                  {s.risk_level === "low"
+                    ? "저위험"
+                    : s.risk_level === "high"
+                      ? "고위험"
+                      : "중위험"}
                 </span>
               </div>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-[#8c8c8c]">낙찰률</span>
-                  <span className="text-[#ededed] font-mono">{s.bid_ratio.toFixed(1)}%</span>
+                  <span className="text-[#ededed] font-mono">
+                    {s.bid_ratio.toFixed(1)}%
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#8c8c8c]">입찰가</span>
@@ -66,14 +81,17 @@ export default function ScenarioCards({ scenarios, selected, onSelect }: Props) 
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#8c8c8c]">수주확률</span>
-                  <span className="text-[#ededed] font-mono">{Math.round(s.win_probability * 100)}%</span>
+                  <span className="text-[#ededed] font-mono">
+                    {Math.round(s.win_probability * 100)}%
+                  </span>
                 </div>
                 {s.price_score_detail && (
                   <>
                     <div className="flex justify-between">
                       <span className="text-[#8c8c8c]">가격점수</span>
                       <span className="text-[#ededed] font-mono">
-                        {s.price_score_detail.price_score.toFixed(1)}/{s.price_score_detail.price_weight}점
+                        {s.price_score_detail.price_score.toFixed(1)}/
+                        {s.price_score_detail.price_weight}점
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -86,7 +104,9 @@ export default function ScenarioCards({ scenarios, selected, onSelect }: Props) 
                 )}
                 <div className="flex justify-between border-t border-[#333] pt-1 mt-1">
                   <span className="text-[#8c8c8c]">기대수익</span>
-                  <span className={`font-mono ${s.expected_payoff >= 0 ? "text-green-400" : "text-red-400"}`}>
+                  <span
+                    className={`font-mono ${s.expected_payoff >= 0 ? "text-green-400" : "text-red-400"}`}
+                  >
                     {fmtWon(s.expected_payoff)}
                   </span>
                 </div>

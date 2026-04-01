@@ -1,6 +1,6 @@
 /**
  * UI 컴포넌트 마이그레이션 예시
- * 
+ *
  * 이 파일은 실제 구현이 아니며, 기존 코드를 새로운 UI 시스템으로
  * 어떻게 마이그레이션하는지 보여주는 참고용입니다.
  */
@@ -26,8 +26,8 @@ export const OldDashboard = () => {
       <form className="space-y-4">
         <div>
           <label className="text-sm font-medium">이름</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="이름 입력"
             className="w-full mt-1 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 text-[#ededed]"
           />
@@ -50,9 +50,13 @@ export const NewDashboard = () => {
     <div className="p-lg space-y-lg">
       {/* 새로운 카드 */}
       <Card>
-        <CardHeader 
+        <CardHeader
           title="제목"
-          action={<Button size="sm" variant="primary">편집</Button>}
+          action={
+            <Button size="sm" variant="primary">
+              편집
+            </Button>
+          }
         />
         <CardBody>
           <p className={TEXT_SIZES.body}>내용</p>
@@ -68,7 +72,7 @@ export const NewDashboard = () => {
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
-        
+
         <div className="flex gap-md">
           <Button type="submit" variant="primary">
             저장
@@ -85,24 +89,24 @@ export const NewDashboard = () => {
 // ── 마이그레이션 팁 ──
 /**
  * 1. 일관된 간격 사용
- * 
+ *
  * Before:
  * <div className="p-4 space-y-4">
- * 
+ *
  * After:
  * <div className="p-md space-y-md">
- * 
+ *
  * Tailwind에서 제공하는 기본 간격 대신 새로운 시스템 사용:
  * - xs (6px), sm (8px), md (16px), lg (24px), xl (32px)
  */
 
 /**
  * 2. 타이포그래피 표준화
- * 
+ *
  * Before:
  * <h1 className="text-3xl font-bold">제목</h1>
  * <p className="text-sm leading-6">본문</p>
- * 
+ *
  * After:
  * <h1 className={TEXT_SIZES.h1}>제목</h1>
  * <p className={TEXT_SIZES.body}>본문</p>
@@ -110,23 +114,23 @@ export const NewDashboard = () => {
 
 /**
  * 3. 버튼 표준화
- * 
+ *
  * Before:
  * <button className="px-4 py-2 bg-[#3ecf8e] text-[#0f0f0f] rounded-lg">
- * 
+ *
  * After:
  * <Button variant="primary" size="md">
  */
 
 /**
  * 4. 카드 구조 통일
- * 
+ *
  * Before:
  * <div className="bg-[#1c1c1c] border border-[#262626] rounded-lg p-4">
  *   <div className="border-b pb-3">헤더</div>
  *   <div className="pt-4">본문</div>
  * </div>
- * 
+ *
  * After:
  * <Card>
  *   <CardHeader title="..." />
@@ -136,10 +140,10 @@ export const NewDashboard = () => {
 
 /**
  * 5. 입력 필드 통일
- * 
+ *
  * Before:
  * <input className="w-full bg-[#111111] border border-[#262626] rounded-lg px-3 py-2" />
- * 
+ *
  * After:
  * <TextInput label="..." />
  */

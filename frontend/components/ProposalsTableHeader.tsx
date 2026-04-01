@@ -6,9 +6,15 @@ interface ProposalsTableHeaderProps {
   onSort: (key: "deadline" | "step" | "created_at" | null) => void;
 }
 
-export function ProposalsTableHeader({ sortKey, sortAsc, onSort }: ProposalsTableHeaderProps) {
+export function ProposalsTableHeader({
+  sortKey,
+  sortAsc,
+  onSort,
+}: ProposalsTableHeaderProps) {
   return (
-    <div className={`grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-2.5 border-b border-[#262626] bg-[#0f0f0f]`}>
+    <div
+      className={`grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-2.5 border-b border-[#262626] bg-[#0f0f0f]`}
+    >
       {TABLE_COLUMNS.map((col) => (
         <div key={col.key} style={{ textAlign: col.align as any }}>
           {col.sortable ? (

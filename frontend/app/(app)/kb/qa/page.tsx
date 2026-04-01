@@ -73,7 +73,9 @@ export default function KbQaSearchPage() {
             className="bg-[#1c1c1c] border border-[#262626] rounded-lg px-2.5 py-2 text-xs text-[#ededed] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
           >
             {CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
             ))}
           </select>
           <button
@@ -133,9 +135,7 @@ export default function KbQaSearchPage() {
                   {categoryLabel(qa.category)}
                 </span>
                 {qa.proposal_name && (
-                  <span title={qa.proposal_name}>
-                    {qa.proposal_name}
-                  </span>
+                  <span title={qa.proposal_name}>{qa.proposal_name}</span>
                 )}
                 {qa.client && (
                   <span className="text-[#5c5c5c]">{qa.client}</span>

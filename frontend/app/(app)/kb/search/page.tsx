@@ -7,7 +7,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api, type ArchiveItem, type KbSearchResult, type KbHealthResponse } from "@/lib/api";
+import {
+  api,
+  type ArchiveItem,
+  type KbSearchResult,
+  type KbHealthResponse,
+} from "@/lib/api";
 
 // ── 상수 ──
 
@@ -50,8 +55,11 @@ const KB_AREA_ROUTE: Record<string, string> = {
 
 function formatDate(iso: string | null): string {
   if (!iso) return "-";
-  try { return new Date(iso).toISOString().slice(0, 10); }
-  catch { return "-"; }
+  try {
+    return new Date(iso).toISOString().slice(0, 10);
+  } catch {
+    return "-";
+  }
 }
 
 // ── 페이지 ──
@@ -67,15 +75,17 @@ export default function KbPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-sm font-semibold text-[#ededed]">지식 베이스</h1>
           <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-1 border border-[#262626]">
-            {([
+            {[
               { key: "artifacts" as Tab, label: "산출물 관리" },
               { key: "search" as Tab, label: "KB 검색" },
-            ]).map((t) => (
+            ].map((t) => (
               <button
                 key={t.key}
                 onClick={() => setActiveTab(t.key)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  activeTab === t.key ? "bg-[#3ecf8e] text-[#0f0f0f]" : "text-[#8c8c8c] hover:text-[#ededed]"
+                  activeTab === t.key
+                    ? "bg-[#3ecf8e] text-[#0f0f0f]"
+                    : "text-[#8c8c8c] hover:text-[#ededed]"
                 }`}
               >
                 {t.label}
@@ -131,8 +141,12 @@ function ArtifactsView() {
     }
   }, [scope, winResult, page, debouncedQ]);
 
-  useEffect(() => { load(); }, [load]);
-  useEffect(() => { setPage(1); }, [scope, winResult, debouncedQ]);
+  useEffect(() => {
+    load();
+  }, [load]);
+  useEffect(() => {
+    setPage(1);
+  }, [scope, winResult, debouncedQ]);
 
   const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
@@ -154,7 +168,9 @@ function ArtifactsView() {
               key={s.value}
               onClick={() => setScope(s.value)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                scope === s.value ? "bg-[#3ecf8e] text-[#0f0f0f]" : "text-[#8c8c8c] hover:text-[#ededed]"
+                scope === s.value
+                  ? "bg-[#3ecf8e] text-[#0f0f0f]"
+                  : "text-[#8c8c8c] hover:text-[#ededed]"
               }`}
             >
               {s.label}
@@ -168,7 +184,9 @@ function ArtifactsView() {
               key={w.value}
               onClick={() => setWinResult(w.value)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                winResult === w.value ? "bg-[#3ecf8e] text-[#0f0f0f]" : "text-[#8c8c8c] hover:text-[#ededed]"
+                winResult === w.value
+                  ? "bg-[#3ecf8e] text-[#0f0f0f]"
+                  : "text-[#8c8c8c] hover:text-[#ededed]"
               }`}
             >
               {w.label}
@@ -184,7 +202,9 @@ function ArtifactsView() {
           로딩 중...
         </div>
       ) : items.length === 0 ? (
-        <p className="text-sm text-[#5c5c5c] py-16 text-center">완료된 제안서가 없습니다.</p>
+        <p className="text-sm text-[#5c5c5c] py-16 text-center">
+          완료된 제안서가 없습니다.
+        </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -194,7 +214,9 @@ function ArtifactsView() {
                 <th className="pb-2 pr-4 font-medium">발주기관</th>
                 <th className="pb-2 pr-4 font-medium">제출일</th>
                 <th className="pb-2 pr-4 font-medium">결과</th>
-                <th className="pb-2 pr-4 font-medium text-center">정성제안서</th>
+                <th className="pb-2 pr-4 font-medium text-center">
+                  정성제안서
+                </th>
                 <th className="pb-2 pr-4 font-medium text-center">발표자료</th>
                 <th className="pb-2 font-medium text-center">가격제안서</th>
               </tr>
@@ -215,11 +237,17 @@ function ArtifactsView() {
                         {item.title}
                       </button>
                     </td>
-                    <td className="py-3 pr-4 text-[#8c8c8c]">{item.client_name ?? "-"}</td>
-                    <td className="py-3 pr-4 text-[#8c8c8c] whitespace-nowrap">{formatDate(item.deadline)}</td>
+                    <td className="py-3 pr-4 text-[#8c8c8c]">
+                      {item.client_name ?? "-"}
+                    </td>
+                    <td className="py-3 pr-4 text-[#8c8c8c] whitespace-nowrap">
+                      {formatDate(item.deadline)}
+                    </td>
                     <td className="py-3 pr-4">
                       {badge ? (
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${badge.cls}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${badge.cls}`}
+                        >
                           {badge.label}
                         </span>
                       ) : (
@@ -227,13 +255,22 @@ function ArtifactsView() {
                       )}
                     </td>
                     <td className="py-3 pr-4 text-center">
-                      <DownloadLink href={`${BASE}/proposals/${item.id}/download/docx`} label="DOCX" />
+                      <DownloadLink
+                        href={`${BASE}/proposals/${item.id}/download/docx`}
+                        label="DOCX"
+                      />
                     </td>
                     <td className="py-3 pr-4 text-center">
-                      <DownloadLink href={`${BASE}/proposals/${item.id}/download/pptx`} label="PPT" />
+                      <DownloadLink
+                        href={`${BASE}/proposals/${item.id}/download/pptx`}
+                        label="PPT"
+                      />
                     </td>
                     <td className="py-3 text-center">
-                      <DownloadLink href={`${BASE}/proposals/${item.id}/download/cost-sheet`} label="가격" />
+                      <DownloadLink
+                        href={`${BASE}/proposals/${item.id}/download/cost-sheet`}
+                        label="가격"
+                      />
                     </td>
                   </tr>
                 );
@@ -253,7 +290,9 @@ function ArtifactsView() {
           >
             이전
           </button>
-          <span className="text-xs text-[#8c8c8c]">{page} / {totalPages}</span>
+          <span className="text-xs text-[#8c8c8c]">
+            {page} / {totalPages}
+          </span>
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages}
@@ -275,7 +314,15 @@ function DownloadLink({ href, label }: { href: string; label: string }) {
       rel="noopener noreferrer"
       className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium rounded-md bg-[#1c1c1c] border border-[#262626] text-[#8c8c8c] hover:text-[#3ecf8e] hover:border-[#3ecf8e]/30 transition-colors"
     >
-      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        className="w-3 h-3"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
         <polyline points="7 10 12 15 17 10" />
         <line x1="12" y1="15" x2="12" y2="3" />
@@ -294,7 +341,10 @@ function KbHealthWidget() {
   const [reindexing, setReindexing] = useState(false);
 
   useEffect(() => {
-    api.kb.health().then(setHealth).catch(() => {});
+    api.kb
+      .health()
+      .then(setHealth)
+      .catch(() => {});
   }, []);
 
   async function handleReindex(areas: string[]) {
@@ -303,15 +353,21 @@ function KbHealthWidget() {
       await api.kb.reindex(areas);
       const h = await api.kb.health();
       setHealth(h);
-    } catch {}
-    finally { setReindexing(false); }
+    } catch {
+    } finally {
+      setReindexing(false);
+    }
   }
 
   if (!health) return null;
 
   const areaLabels: Record<string, string> = {
-    content: "콘텐츠", client: "발주기관", competitor: "경쟁사",
-    lesson: "교훈", capability: "역량", qa: "Q&A",
+    content: "콘텐츠",
+    client: "발주기관",
+    competitor: "경쟁사",
+    lesson: "교훈",
+    capability: "역량",
+    qa: "Q&A",
   };
   const lowCoverageAreas = Object.entries(health)
     .filter(([, v]) => v.total > 0 && v.coverage < 90)
@@ -327,7 +383,9 @@ function KbHealthWidget() {
             disabled={reindexing}
             className="text-[10px] px-2 py-1 rounded bg-[#3ecf8e]/15 text-[#3ecf8e] hover:bg-[#3ecf8e]/25 disabled:opacity-50"
           >
-            {reindexing ? "인덱싱 중..." : `재인덱싱 (${lowCoverageAreas.length}개 영역)`}
+            {reindexing
+              ? "인덱싱 중..."
+              : `재인덱싱 (${lowCoverageAreas.length}개 영역)`}
           </button>
         )}
       </div>
@@ -335,7 +393,9 @@ function KbHealthWidget() {
         {Object.entries(health).map(([area, data]) => (
           <div key={area} className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#8c8c8c]">{areaLabels[area] || area}</span>
+              <span className="text-[10px] text-[#8c8c8c]">
+                {areaLabels[area] || area}
+              </span>
               <span className="text-[10px] text-[#ededed]">{data.total}건</span>
             </div>
             <div className="h-1.5 bg-[#262626] rounded-full overflow-hidden">
@@ -345,9 +405,13 @@ function KbHealthWidget() {
               />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#5c5c5c]">{data.coverage}%</span>
+              <span className="text-[10px] text-[#5c5c5c]">
+                {data.coverage}%
+              </span>
               {data.avg_quality !== undefined && (
-                <span className="text-[10px] text-[#8c8c8c]">품질 {data.avg_quality}</span>
+                <span className="text-[10px] text-[#8c8c8c]">
+                  품질 {data.avg_quality}
+                </span>
               )}
             </div>
           </div>
@@ -357,7 +421,6 @@ function KbHealthWidget() {
   );
 }
 
-
 function KbSearchView() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -366,7 +429,9 @@ function KbSearchView() {
   const [loading, setLoading] = useState(false);
 
   function toggleArea(area: string) {
-    setAreas((prev) => prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]);
+    setAreas((prev) =>
+      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area],
+    );
   }
 
   async function handleSearch(e: React.FormEvent) {
@@ -377,8 +442,11 @@ function KbSearchView() {
       const areasStr = areas.length > 0 ? areas.join(",") : undefined;
       const res = await api.kb.search(query, areasStr, 10);
       setResult(res);
-    } catch { setResult(null); }
-    finally { setLoading(false); }
+    } catch {
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -389,10 +457,18 @@ function KbSearchView() {
       {/* 검색 폼 */}
       <form onSubmit={handleSearch} className="space-y-3">
         <div className="flex gap-2">
-          <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="검색어 입력 (시맨틱 + 키워드 하이브리드)"
-            className="flex-1 bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40" />
-          <button type="submit" disabled={loading || !query.trim()}
-            className="px-5 py-3 rounded-xl bg-[#3ecf8e] text-[#0f0f0f] text-sm font-semibold hover:bg-[#3ecf8e]/90 disabled:opacity-50 transition-colors shrink-0">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="검색어 입력 (시맨틱 + 키워드 하이브리드)"
+            className="flex-1 bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-2 focus:ring-[#3ecf8e]/40"
+          />
+          <button
+            type="submit"
+            disabled={loading || !query.trim()}
+            className="px-5 py-3 rounded-xl bg-[#3ecf8e] text-[#0f0f0f] text-sm font-semibold hover:bg-[#3ecf8e]/90 disabled:opacity-50 transition-colors shrink-0"
+          >
             {loading ? "검색 중..." : "검색"}
           </button>
         </div>
@@ -401,13 +477,23 @@ function KbSearchView() {
         <div className="flex gap-2">
           <span className="text-xs text-[#5c5c5c] self-center">영역:</span>
           {KB_AREA_OPTS.map((a) => (
-            <button key={a.value} type="button" onClick={() => toggleArea(a.value)}
-              className={`px-3 py-1 text-xs rounded-lg transition-colors ${areas.includes(a.value) ? "bg-[#3ecf8e]/15 text-[#3ecf8e] border border-[#3ecf8e]/30" : "bg-[#1c1c1c] text-[#8c8c8c] border border-[#262626]"}`}>
+            <button
+              key={a.value}
+              type="button"
+              onClick={() => toggleArea(a.value)}
+              className={`px-3 py-1 text-xs rounded-lg transition-colors ${areas.includes(a.value) ? "bg-[#3ecf8e]/15 text-[#3ecf8e] border border-[#3ecf8e]/30" : "bg-[#1c1c1c] text-[#8c8c8c] border border-[#262626]"}`}
+            >
               {a.label}
             </button>
           ))}
           {areas.length > 0 && (
-            <button type="button" onClick={() => setAreas([])} className="text-[10px] text-[#5c5c5c] hover:text-[#8c8c8c]">초기화</button>
+            <button
+              type="button"
+              onClick={() => setAreas([])}
+              className="text-[10px] text-[#5c5c5c] hover:text-[#8c8c8c]"
+            >
+              초기화
+            </button>
           )}
         </div>
       </form>
@@ -416,30 +502,50 @@ function KbSearchView() {
       {result && (
         <div className="space-y-4">
           <p className="text-xs text-[#8c8c8c]">
-            &quot;{result.query}&quot; 검색 결과: <span className="text-[#ededed] font-medium">{result.total}건</span>
+            &quot;{result.query}&quot; 검색 결과:{" "}
+            <span className="text-[#ededed] font-medium">{result.total}건</span>
           </p>
 
           {Object.entries(result.results).map(([area, items]) => {
             if (!items || items.length === 0) return null;
-            const areaLabel = KB_AREA_OPTS.find((a) => a.value === area)?.label ?? area;
+            const areaLabel =
+              KB_AREA_OPTS.find((a) => a.value === area)?.label ?? area;
             return (
               <div key={area}>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xs font-semibold text-[#ededed]">{areaLabel} ({items.length})</h3>
-                  <button onClick={() => router.push(KB_AREA_ROUTE[area] ?? "/kb/content")} className="text-[10px] text-[#3ecf8e] hover:underline">전체 보기</button>
+                  <h3 className="text-xs font-semibold text-[#ededed]">
+                    {areaLabel} ({items.length})
+                  </h3>
+                  <button
+                    onClick={() =>
+                      router.push(KB_AREA_ROUTE[area] ?? "/kb/content")
+                    }
+                    className="text-[10px] text-[#3ecf8e] hover:underline"
+                  >
+                    전체 보기
+                  </button>
                 </div>
                 <div className="space-y-1.5">
                   {items.map((item, idx) => (
-                    <div key={item.id ?? idx} className="bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3">
+                    <div
+                      key={item.id ?? idx}
+                      className="bg-[#1c1c1c] border border-[#262626] rounded-xl px-4 py-3"
+                    >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-[#ededed]">{item.title ?? item.id}</span>
+                        <span className="text-sm font-medium text-[#ededed]">
+                          {item.title ?? item.id}
+                        </span>
                         {item.score != null && (
                           <span className="text-[10px] text-[#3ecf8e] bg-[#3ecf8e]/10 px-1.5 py-0.5 rounded">
                             {(item.score * 100).toFixed(0)}%
                           </span>
                         )}
                       </div>
-                      {item.summary && <p className="text-xs text-[#8c8c8c] line-clamp-2">{item.summary}</p>}
+                      {item.summary && (
+                        <p className="text-xs text-[#8c8c8c] line-clamp-2">
+                          {item.summary}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -448,7 +554,9 @@ function KbSearchView() {
           })}
 
           {result.total === 0 && (
-            <p className="text-sm text-[#5c5c5c] py-8 text-center">검색 결과가 없습니다.</p>
+            <p className="text-sm text-[#5c5c5c] py-8 text-center">
+              검색 결과가 없습니다.
+            </p>
           )}
         </div>
       )}

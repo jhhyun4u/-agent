@@ -74,7 +74,10 @@ describe("STEP 8 Types", () => {
         minor_issues_count: 1,
         compliance_status: "non-compliant",
         style_consistency: 45.5,
-        recommendations_for_improvement: ["Add required fields", "Clarify language"],
+        recommendations_for_improvement: [
+          "Add required fields",
+          "Clarify language",
+        ],
         next_steps: ["Fix critical issues", "Request manager review"],
         created_at: new Date().toISOString(),
       };
@@ -179,7 +182,8 @@ describe("STEP 8 Types", () => {
             issue_description: "Missing architecture diagram",
             priority: "high",
             estimated_effort: "complex",
-            recommended_action: "Add detailed architecture diagram with components",
+            recommended_action:
+              "Add detailed architecture diagram with components",
           },
         ],
         quick_wins: [
@@ -209,7 +213,8 @@ describe("STEP 8 Types", () => {
           ],
         },
         score_improvement_projection: 15,
-        next_phase_guidance: "Implement quick wins first, then tackle critical gaps",
+        next_phase_guidance:
+          "Implement quick wins first, then tackle critical gaps",
         created_at: new Date().toISOString(),
       };
 
@@ -321,12 +326,8 @@ describe("Type Safety", () => {
   });
 
   it("should enforce node status values", () => {
-    const validStatuses: Array<"pending" | "running" | "completed" | "failed"> = [
-      "pending",
-      "running",
-      "completed",
-      "failed",
-    ];
+    const validStatuses: Array<"pending" | "running" | "completed" | "failed"> =
+      ["pending", "running", "completed", "failed"];
 
     const status: NodeStatus = {
       node_name: "8A",

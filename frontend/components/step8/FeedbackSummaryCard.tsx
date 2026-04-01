@@ -24,9 +24,9 @@ export function FeedbackSummaryCard({
   error = null,
   onRevalidate,
 }: FeedbackSummaryCardProps) {
-  const [expandedCategory, setExpandedCategory] = useState<"gaps" | "wins" | "section" | null>(
-    null
-  );
+  const [expandedCategory, setExpandedCategory] = useState<
+    "gaps" | "wins" | "section" | null
+  >(null);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
 
   if (isLoading) {
@@ -83,7 +83,9 @@ export function FeedbackSummaryCard({
     <div className="border rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="font-medium text-sm text-gray-900">{item.section_title}</p>
+          <p className="font-medium text-sm text-gray-900">
+            {item.section_title}
+          </p>
           <p className="text-xs text-gray-600 mt-1">{item.issue_description}</p>
         </div>
         <div className="flex gap-2 ml-4 whitespace-nowrap">
@@ -92,20 +94,23 @@ export function FeedbackSummaryCard({
               item.priority === "high"
                 ? "bg-red-100 text-red-800 border-red-200"
                 : item.priority === "medium"
-                ? "bg-yellow-100 text-yellow-800 border-yellow-200"
-                : "bg-green-100 text-green-800 border-green-200"
+                  ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                  : "bg-green-100 text-green-800 border-green-200"
             }`}
           >
             {item.priority}
           </span>
-          <span className={`px-2 py-1 text-xs font-semibold rounded border ${getEffortColor(item.estimated_effort)}`}>
+          <span
+            className={`px-2 py-1 text-xs font-semibold rounded border ${getEffortColor(item.estimated_effort)}`}
+          >
             {item.estimated_effort}
           </span>
         </div>
       </div>
       <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
         <p className="text-xs text-blue-700">
-          <span className="font-semibold">Action:</span> {item.recommended_action}
+          <span className="font-semibold">Action:</span>{" "}
+          {item.recommended_action}
         </p>
       </div>
     </div>
@@ -118,8 +123,12 @@ export function FeedbackSummaryCard({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Feedback Summary</h3>
-          <p className="text-sm text-gray-600 mt-1">Prioritized Improvement Actions</p>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Feedback Summary
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Prioritized Improvement Actions
+          </p>
         </div>
         {onRevalidate && (
           <button
@@ -134,7 +143,9 @@ export function FeedbackSummaryCard({
 
       {/* Key Findings */}
       <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
-        <p className="text-xs font-semibold text-blue-700 uppercase">Key Findings</p>
+        <p className="text-xs font-semibold text-blue-700 uppercase">
+          Key Findings
+        </p>
         <p className="text-sm text-gray-900 mt-2">{data.key_findings}</p>
       </div>
 
@@ -142,12 +153,16 @@ export function FeedbackSummaryCard({
       <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-green-700 uppercase">Expected Improvement</p>
+            <p className="text-xs font-semibold text-green-700 uppercase">
+              Expected Improvement
+            </p>
             <p className="text-sm text-gray-900 mt-1">
               If all recommendations are implemented
             </p>
           </div>
-          <div className="text-3xl font-bold text-green-600">+{data.score_improvement_projection}</div>
+          <div className="text-3xl font-bold text-green-600">
+            +{data.score_improvement_projection}
+          </div>
         </div>
       </div>
 
@@ -162,14 +177,18 @@ export function FeedbackSummaryCard({
           <span className="flex items-center gap-2">
             🔴 Critical Gaps ({data.critical_gaps.length})
           </span>
-          <span className={`transform transition ${expandedCategory === "gaps" ? "rotate-180" : ""}`}>
+          <span
+            className={`transform transition ${expandedCategory === "gaps" ? "rotate-180" : ""}`}
+          >
             ▼
           </span>
         </button>
         {expandedCategory === "gaps" && (
           <div className="space-y-2 pl-1">
             {data.critical_gaps.length === 0 ? (
-              <p className="text-sm text-gray-600 italic">No critical gaps found</p>
+              <p className="text-sm text-gray-600 italic">
+                No critical gaps found
+              </p>
             ) : (
               data.critical_gaps.map((item, idx) => (
                 <FeedbackItemRow key={idx} item={item} />
@@ -190,14 +209,18 @@ export function FeedbackSummaryCard({
           <span className="flex items-center gap-2">
             ⚡ Quick Wins ({data.quick_wins.length})
           </span>
-          <span className={`transform transition ${expandedCategory === "wins" ? "rotate-180" : ""}`}>
+          <span
+            className={`transform transition ${expandedCategory === "wins" ? "rotate-180" : ""}`}
+          >
             ▼
           </span>
         </button>
         {expandedCategory === "wins" && (
           <div className="space-y-2 pl-1">
             {data.quick_wins.length === 0 ? (
-              <p className="text-sm text-gray-600 italic">No quick wins identified</p>
+              <p className="text-sm text-gray-600 italic">
+                No quick wins identified
+              </p>
             ) : (
               data.quick_wins.map((item, idx) => (
                 <FeedbackItemRow key={idx} item={item} />
@@ -209,14 +232,17 @@ export function FeedbackSummaryCard({
 
       {/* Strategic Recommendations */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-gray-700">💡 Strategic Recommendations</h4>
+        <h4 className="text-sm font-semibold text-gray-700">
+          💡 Strategic Recommendations
+        </h4>
         <ul className="space-y-2">
           {data.strategic_recommendations.map((rec, idx) => (
             <li
               key={idx}
               className="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-gray-900"
             >
-              <span className="font-semibold text-indigo-600">{idx + 1}.</span> {rec}
+              <span className="font-semibold text-indigo-600">{idx + 1}.</span>{" "}
+              {rec}
             </li>
           ))}
         </ul>
@@ -227,14 +253,18 @@ export function FeedbackSummaryCard({
         <div className="space-y-2">
           <button
             onClick={() =>
-              setExpandedCategory(expandedCategory === "section" ? null : "section")
+              setExpandedCategory(
+                expandedCategory === "section" ? null : "section",
+              )
             }
             className="w-full flex items-center justify-between p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition font-medium text-purple-900"
           >
             <span className="flex items-center gap-2">
               📋 Section-Specific Feedback ({sectionIds.length})
             </span>
-            <span className={`transform transition ${expandedCategory === "section" ? "rotate-180" : ""}`}>
+            <span
+              className={`transform transition ${expandedCategory === "section" ? "rotate-180" : ""}`}
+            >
               ▼
             </span>
           </button>
@@ -244,11 +274,14 @@ export function FeedbackSummaryCard({
                 <div key={sectionId}>
                   <button
                     onClick={() =>
-                      setSelectedSection(selectedSection === sectionId ? null : sectionId)
+                      setSelectedSection(
+                        selectedSection === sectionId ? null : sectionId,
+                      )
                     }
                     className="w-full text-left p-3 rounded-lg bg-purple-100 border border-purple-300 hover:bg-purple-200 transition font-medium text-purple-900"
                   >
-                    {data.section_feedback[sectionId]?.[0]?.section_title || sectionId}
+                    {data.section_feedback[sectionId]?.[0]?.section_title ||
+                      sectionId}
                     <span className="float-right">
                       {selectedSection === sectionId ? "▲" : "▼"}
                     </span>
@@ -269,7 +302,9 @@ export function FeedbackSummaryCard({
 
       {/* Next Phase Guidance */}
       <div className="p-4 rounded-lg bg-orange-50 border border-orange-200">
-        <p className="text-xs font-semibold text-orange-700 uppercase">Next Phase Guidance</p>
+        <p className="text-xs font-semibold text-orange-700 uppercase">
+          Next Phase Guidance
+        </p>
         <p className="text-sm text-gray-900 mt-2">{data.next_phase_guidance}</p>
       </div>
 

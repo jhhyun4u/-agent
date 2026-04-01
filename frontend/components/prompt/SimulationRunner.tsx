@@ -20,8 +20,13 @@ interface SimulationRunnerProps {
   promptText?: string | null;
 }
 
-export default function SimulationRunner({ promptId, promptText }: SimulationRunnerProps) {
-  const [dataSource, setDataSource] = useState<"sample" | "project" | "custom">("sample");
+export default function SimulationRunner({
+  promptId,
+  promptText,
+}: SimulationRunnerProps) {
+  const [dataSource, setDataSource] = useState<"sample" | "project" | "custom">(
+    "sample",
+  );
   const [sampleId, setSampleId] = useState("sample_mid_consulting");
   const [runQuality, setRunQuality] = useState(true);
   const [running, setRunning] = useState(false);
@@ -67,7 +72,9 @@ export default function SimulationRunner({ promptId, promptText }: SimulationRun
         <h2 className="text-sm font-semibold">입력 설정</h2>
 
         <div>
-          <label className="text-xs text-[#8c8c8c] block mb-2">데이터 소스</label>
+          <label className="text-xs text-[#8c8c8c] block mb-2">
+            데이터 소스
+          </label>
           <div className="flex gap-3">
             {(["sample", "project", "custom"] as const).map((id) => (
               <button
@@ -79,7 +86,13 @@ export default function SimulationRunner({ promptId, promptText }: SimulationRun
                     : "bg-[#111] text-[#8c8c8c] hover:bg-[#1a1a1a] border border-transparent"
                 }`}
               >
-                {{ sample: "샘플 RFP", project: "기존 프로젝트", custom: "커스텀" }[id]}
+                {
+                  {
+                    sample: "샘플 RFP",
+                    project: "기존 프로젝트",
+                    custom: "커스텀",
+                  }[id]
+                }
               </button>
             ))}
           </div>
@@ -87,14 +100,18 @@ export default function SimulationRunner({ promptId, promptText }: SimulationRun
 
         {dataSource === "sample" && (
           <div>
-            <label className="text-xs text-[#8c8c8c] block mb-2">샘플 RFP</label>
+            <label className="text-xs text-[#8c8c8c] block mb-2">
+              샘플 RFP
+            </label>
             <select
               value={sampleId}
               onChange={(e) => setSampleId(e.target.value)}
               className="bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-xs focus:border-[#3ecf8e] focus:outline-none w-full"
             >
               {SAMPLE_OPTIONS.map((s) => (
-                <option key={s.id} value={s.id}>{s.label}</option>
+                <option key={s.id} value={s.id}>
+                  {s.label}
+                </option>
               ))}
             </select>
           </div>
@@ -144,8 +161,12 @@ export function SimResultCard({
   label?: string;
 }) {
   return (
-    <section className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5 space-y-4 ${compact ? "text-xs" : ""}`}>
-      {label && <h3 className="text-xs font-semibold text-[#8c8c8c] mb-2">{label}</h3>}
+    <section
+      className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5 space-y-4 ${compact ? "text-xs" : ""}`}
+    >
+      {label && (
+        <h3 className="text-xs font-semibold text-[#8c8c8c] mb-2">{label}</h3>
+      )}
 
       <div className="flex flex-wrap gap-4 text-xs text-[#8c8c8c]">
         <span>입력: {result.tokens_input} 토큰</span>
@@ -154,26 +175,50 @@ export function SimResultCard({
         {result.format_valid ? (
           <span className="text-[#3ecf8e]">형식 정상</span>
         ) : (
-          <span className="text-[#ff6b6b]">형식 오류: {result.format_errors.join(", ")}</span>
+          <span className="text-[#ff6b6b]">
+            형식 오류: {result.format_errors.join(", ")}
+          </span>
         )}
         {result.variables_missing.length > 0 && (
-          <span className="text-[#f5a623]">누락 변수: {result.variables_missing.join(", ")}</span>
+          <span className="text-[#f5a623]">
+            누락 변수: {result.variables_missing.join(", ")}
+          </span>
         )}
       </div>
 
       {result.quality_score != null && result.quality_detail && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-          <QualityCard label="적합성" value={result.quality_detail.compliance} max={25} />
-          <QualityCard label="전략 정합성" value={result.quality_detail.strategy} max={25} />
-          <QualityCard label="품질" value={result.quality_detail.quality} max={25} />
-          <QualityCard label="신뢰성" value={result.quality_detail.trustworthiness} max={25} />
+          <QualityCard
+            label="적합성"
+            value={result.quality_detail.compliance}
+            max={25}
+          />
+          <QualityCard
+            label="전략 정합성"
+            value={result.quality_detail.strategy}
+            max={25}
+          />
+          <QualityCard
+            label="품질"
+            value={result.quality_detail.quality}
+            max={25}
+          />
+          <QualityCard
+            label="신뢰성"
+            value={result.quality_detail.trustworthiness}
+            max={25}
+          />
           <div className="bg-[#111] rounded-lg p-3 border border-[#262626]">
             <div className="text-xs text-[#8c8c8c]">총점</div>
-            <div className={`text-lg font-bold ${
-              result.quality_score >= 80 ? "text-[#3ecf8e]"
-                : result.quality_score >= 60 ? "text-[#f5a623]"
-                : "text-[#ff6b6b]"
-            }`}>
+            <div
+              className={`text-lg font-bold ${
+                result.quality_score >= 80
+                  ? "text-[#3ecf8e]"
+                  : result.quality_score >= 60
+                    ? "text-[#f5a623]"
+                    : "text-[#ff6b6b]"
+              }`}
+            >
               {result.quality_score}/100
             </div>
           </div>
@@ -190,18 +235,29 @@ export function SimResultCard({
   );
 }
 
-function QualityCard({ label, value, max }: { label: string; value: number; max: number }) {
+function QualityCard({
+  label,
+  value,
+  max,
+}: {
+  label: string;
+  value: number;
+  max: number;
+}) {
   const pct = (value / max) * 100;
   return (
     <div className="bg-[#111] rounded-lg p-3 border border-[#262626]">
       <div className="text-xs text-[#8c8c8c]">{label}</div>
-      <div className="text-sm font-bold mt-0.5">{value}/{max}</div>
+      <div className="text-sm font-bold mt-0.5">
+        {value}/{max}
+      </div>
       <div className="h-1 bg-[#262626] rounded-full mt-2">
         <div
           className="h-full rounded-full"
           style={{
             width: `${pct}%`,
-            backgroundColor: pct >= 80 ? "#3ecf8e" : pct >= 60 ? "#f5a623" : "#ff6b6b",
+            backgroundColor:
+              pct >= 80 ? "#3ecf8e" : pct >= 60 ? "#f5a623" : "#ff6b6b",
           }}
         />
       </div>

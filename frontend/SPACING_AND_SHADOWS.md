@@ -6,15 +6,15 @@
 
 ### 간격 스케일
 
-| 변수 | 크기 | CSS | Tailwind | 사용 예 |
-|------|------|-----|----------|--------|
-| `xs` | 6px | `0.375rem` | `gap-xs` | 아이콘과 텍스트 사이 |
-| `sm` | 8px | `0.5rem` | `gap-sm` | 인라인 요소 간격 |
-| `md` | 16px | `1rem` | `gap-md` `p-md` | 컴포넌트 간 기본 간격 |
-| `lg` | 24px | `1.5rem` | `gap-lg` `p-lg` | 섹션 간 간격 |
-| `xl` | 32px | `2rem` | `gap-xl` | 주요 영역 간 간격 |
-| `2xl` | 48px | `3rem` | `gap-2xl` | 큰 섹션 간 |
-| `3xl` | 64px | `4rem` | `gap-3xl` | 페이지 최상단 간격 |
+| 변수  | 크기 | CSS        | Tailwind        | 사용 예               |
+| ----- | ---- | ---------- | --------------- | --------------------- |
+| `xs`  | 6px  | `0.375rem` | `gap-xs`        | 아이콘과 텍스트 사이  |
+| `sm`  | 8px  | `0.5rem`   | `gap-sm`        | 인라인 요소 간격      |
+| `md`  | 16px | `1rem`     | `gap-md` `p-md` | 컴포넌트 간 기본 간격 |
+| `lg`  | 24px | `1.5rem`   | `gap-lg` `p-lg` | 섹션 간 간격          |
+| `xl`  | 32px | `2rem`     | `gap-xl`        | 주요 영역 간 간격     |
+| `2xl` | 48px | `3rem`     | `gap-2xl`       | 큰 섹션 간            |
+| `3xl` | 64px | `4rem`     | `gap-3xl`       | 페이지 최상단 간격    |
 
 ### 사용 방법
 
@@ -76,12 +76,12 @@
 // 페이지 레이아웃
 <div className="p-lg space-y-xl">
   <h1 className={TEXT_SIZES.h1}>페이지 제목</h1>
-  
+
   <section className="space-y-md">
     <h2 className={TEXT_SIZES.h2}>섹션 1</h2>
     <Card>...</Card>
   </section>
-  
+
   <section className="space-y-md">
     <h2 className={TEXT_SIZES.h2}>섹션 2</h2>
     <Card>...</Card>
@@ -97,15 +97,15 @@
 
 ### 그림자 레벨
 
-| 레벨 | CSS 클래스 | 설명 | 사용 예 |
-|------|-----------|------|--------|
-| No Shadow | (없음) | 평면 | 배경, 모드별 컴포넌트 |
-| Small | `shadow-sm` | 미묘한 깊이 | 호버 상태, 팝오버 |
-| Medium | `shadow-md` | 일반적인 깊이 | 카드, 모달 |
-| Large | `shadow-lg` | 두드러진 깊이 | 드롭다운, 플로팅 버튼 |
-| XLarge | `shadow-xl` | 강한 깊이 | 모달 배경, 중요 오버레이 |
-| Elevation | `shadow-elevation` | 최고 깊이 | 전체 화면 오버레이 |
-| Card Hover | `shadow-card-hover` | 카드 호버 | 카드 인터랙션 |
+| 레벨       | CSS 클래스          | 설명          | 사용 예                  |
+| ---------- | ------------------- | ------------- | ------------------------ |
+| No Shadow  | (없음)              | 평면          | 배경, 모드별 컴포넌트    |
+| Small      | `shadow-sm`         | 미묘한 깊이   | 호버 상태, 팝오버        |
+| Medium     | `shadow-md`         | 일반적인 깊이 | 카드, 모달               |
+| Large      | `shadow-lg`         | 두드러진 깊이 | 드롭다운, 플로팅 버튼    |
+| XLarge     | `shadow-xl`         | 강한 깊이     | 모달 배경, 중요 오버레이 |
+| Elevation  | `shadow-elevation`  | 최고 깊이     | 전체 화면 오버레이       |
+| Card Hover | `shadow-card-hover` | 카드 호버     | 카드 인터랙션            |
 
 ### 사용 방법
 
@@ -251,4 +251,3 @@ export default function ComplexLayout() {
 2. **라이트 모드**: 라이트 모드에서는 그림자가 덜 눈에 띕니다. 스케일을 조정할 수 있습니다.
 3. **성능**: 과도한 그림자는 렌더링 성능에 영향을 줄 수 있습니다.
 4. **일관성**: 같은 목적의 요소는 같은 그림자를 사용합니다.
-

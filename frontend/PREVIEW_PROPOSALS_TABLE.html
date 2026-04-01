@@ -1,598 +1,702 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proposal Coworker - 제안 프로젝트</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposal Coworker - 제안 프로젝트</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    :root {
-      --bg: #0f0f0f;
-      --surface: #111111;
-      --card: #1c1c1c;
-      --border: #262626;
-      --text: #ededed;
-      --muted: #8c8c8c;
-      --accent: #3ecf8e;
-    }
+      :root {
+        --bg: #0f0f0f;
+        --surface: #111111;
+        --card: #1c1c1c;
+        --border: #262626;
+        --text: #ededed;
+        --muted: #8c8c8c;
+        --accent: #3ecf8e;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
 
-    .container {
-      display: flex;
-      min-height: 100vh;
-    }
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
 
-    /* Sidebar */
-    .sidebar {
-      width: 208px;
-      background-color: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 16px 12px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .sidebar-logo {
-      padding: 8px;
-      margin-bottom: 24px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background-color 150ms;
-    }
-
-    .sidebar-logo:hover {
-      background-color: var(--card);
-    }
-
-    .sidebar-logo-icon {
-      width: 24px;
-      height: 24px;
-      background-color: var(--accent);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--bg);
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .nav-item {
-      padding: 8px 12px;
-      margin: 4px 0;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--muted);
-      transition: all 150ms;
-      font-size: 13px;
-    }
-
-    .nav-item:hover {
-      background-color: var(--card);
-      color: var(--text);
-    }
-
-    .nav-item.active {
-      background-color: var(--card);
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* Main Content */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background-color: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 150ms;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-primary {
-      background-color: var(--accent);
-      color: var(--bg);
-    }
-
-    .btn-primary:hover {
-      background-color: #34b87a;
-    }
-
-    .btn-secondary {
-      background-color: var(--card);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background-color: #303030;
-    }
-
-    .content {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-    }
-
-    .filters {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .filter-chip {
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background-color: transparent;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 150ms;
-    }
-
-    .filter-chip:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .filter-chip.active {
-      background-color: var(--accent);
-      border-color: var(--accent);
-      color: var(--bg);
-    }
-
-    /* 테이블 스타일 */
-    .table-wrapper {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    thead {
-      background-color: var(--surface);
-      border-bottom: 2px solid var(--border);
-    }
-
-    th {
-      padding: 12px 16px;
-      text-align: left;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.5px;
-    }
-
-    th:last-child {
-      text-align: right;
-    }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: all 150ms;
-    }
-
-    tbody tr:hover {
-      background-color: var(--surface);
-      cursor: pointer;
-    }
-
-    td {
-      padding: 14px 16px;
-      color: var(--text);
-    }
-
-    td:last-child {
-      text-align: right;
-    }
-
-    /* 컬럼 너비 */
-    .col-name { width: 20%; }
-    .col-team { width: 10%; }
-    .col-pm { width: 8%; }
-    .col-pl { width: 8%; }
-    .col-client { width: 12%; }
-    .col-amount { width: 12%; }
-    .col-deadline { width: 12%; }
-    .col-status { width: 8%; text-align: right; }
-
-    /* 상태 배지 */
-    .status-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-    }
-
-    .status-waiting {
-      background-color: rgba(85, 85, 85, 0.2);
-      color: #aaaaaa;
-    }
-
-    .status-processing {
-      background-color: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
-    }
-
-    .status-paused {
-      background-color: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-    }
-
-    .status-completed {
-      background-color: rgba(16, 185, 129, 0.2);
-      color: #6ee7b7;
-    }
-
-    .status-submitted {
-      background-color: rgba(168, 85, 247, 0.2);
-      color: #d8b4fe;
-    }
-
-    .status-results {
-      background-color: rgba(236, 72, 153, 0.2);
-      color: #f472b6;
-    }
-
-    .status-closed {
-      background-color: rgba(107, 114, 128, 0.2);
-      color: #9ca3af;
-    }
-
-    /* D-Day 강조 */
-    .dday {
-      font-weight: 600;
-    }
-
-    .dday-urgent {
-      color: #ef4444;
-    }
-
-    .dday-warning {
-      color: #f59e0b;
-    }
-
-    .dday-normal {
-      color: var(--accent);
-    }
-
-    .dday-over {
-      color: #8c8c8c;
-      text-decoration: line-through;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-    }
-
-    .empty-title {
-      font-size: 16px;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    @media (max-width: 1024px) {
+      /* Sidebar */
       .sidebar {
-        display: none;
+        width: 208px;
+        background-color: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 16px 12px;
+        overflow-y: auto;
+        flex-shrink: 0;
       }
 
-      .col-pm, .col-pl {
-        display: none;
+      .sidebar-logo {
+        padding: 8px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background-color 150ms;
       }
 
-      th:nth-child(3), th:nth-child(4),
-      td:nth-child(3), td:nth-child(4) {
-        display: none;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .content {
-        padding: 12px;
+      .sidebar-logo:hover {
+        background-color: var(--card);
       }
 
-      .col-team, .col-client {
-        display: none;
-      }
-
-      th:nth-child(2), th:nth-child(5),
-      td:nth-child(2), td:nth-child(5) {
-        display: none;
-      }
-
-      table {
+      .sidebar-logo-icon {
+        width: 24px;
+        height: 24px;
+        background-color: var(--accent);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bg);
+        font-weight: bold;
         font-size: 12px;
       }
 
-      td, th {
-        padding: 10px;
+      .nav-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 150ms;
+        font-size: 13px;
       }
-    }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
+      .nav-item:hover {
+        background-color: var(--card);
+        color: var(--text);
+      }
 
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
+      .nav-item.active {
+        background-color: var(--card);
+        color: var(--text);
+        font-weight: 500;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
+      /* Main Content */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a3a3a;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">PA</div>
-        <span>Proposal Coworker</span>
-      </div>
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-      <div class="nav-item">🏠 대시보드</div>
-      <div class="nav-item">👁️ 공고 모니터링</div>
-      <div class="nav-item active">📄 제안 프로젝트</div>
-      <div style="font-size: 11px; color: var(--muted); margin: 12px 8px; text-transform: uppercase;">📖 지식 베이스</div>
-      <div class="nav-item">🔍 통합 검색</div>
-      <div class="nav-item">📝 콘텐츠</div>
-      <div class="nav-item">🏢 발주기관</div>
-      <div class="nav-item">🎯 경쟁사</div>
-      <div class="nav-item">💡 교훈</div>
-      <div class="nav-item">❓ Q&A</div>
-      <div class="nav-item">💰 노임단가</div>
-      <div class="nav-item">📊 시장가격</div>
-      <div style="font-size: 11px; color: var(--muted); margin: 12px 8px; text-transform: uppercase;">📌 최근 작업</div>
-      <div class="nav-item">🟠 ISP 시스템 제안</div>
-      <div class="nav-item">🟢 보안 솔루션</div>
-    </div>
+      .header-title {
+        font-size: 20px;
+        font-weight: 600;
+      }
 
-    <!-- Main Content -->
-    <div class="main">
-      <div class="header">
-        <h1 class="header-title">제안 프로젝트</h1>
-        <div class="header-actions">
-          <button class="btn btn-secondary">📊 분석</button>
-          <button class="btn btn-primary">+ 신규 제안</button>
-        </div>
-      </div>
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
 
-      <div class="content">
-        <div class="filters">
-          <button class="filter-chip active" onclick="filterTable('all')">전체</button>
-          <button class="filter-chip" onclick="filterTable('processing')">진행 중</button>
-          <button class="filter-chip" onclick="filterTable('completed')">완료</button>
-          <button class="filter-chip" onclick="filterTable('submitted')">제출됨</button>
-          <button class="filter-chip" onclick="filterTable('paused')">⚠️ 중단됨</button>
-        </div>
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 150ms;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
 
-        <div class="table-wrapper">
-          <table id="proposalsTable">
-            <thead>
-              <tr>
-                <th class="col-name">과제명</th>
-                <th class="col-team">담당팀</th>
-                <th class="col-pm">PM</th>
-                <th class="col-pl">PL</th>
-                <th class="col-client">발주처</th>
-                <th class="col-amount">금액</th>
-                <th class="col-deadline">제출일</th>
-                <th class="col-status">상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Row 1 -->
-              <tr onclick="goToWorkflow('proj-001')">
-                <td class="col-name"><strong>K 공사 터널 운영</strong></td>
-                <td class="col-team">토목팀</td>
-                <td class="col-pm">김민준</td>
-                <td class="col-pl">이재호</td>
-                <td class="col-client">K 공사</td>
-                <td class="col-amount">₩2.5B</td>
-                <td class="col-deadline"><span class="dday dday-urgent">D-2</span></td>
-                <td class="col-status"><span class="status-badge status-processing">진행</span></td>
-              </tr>
+      .btn-primary {
+        background-color: var(--accent);
+        color: var(--bg);
+      }
 
-              <!-- Row 2 -->
-              <tr onclick="goToWorkflow('proj-002')">
-                <td class="col-name"><strong>서울시 교통 시뮬레이션</strong></td>
-                <td class="col-team">교통팀</td>
-                <td class="col-pm">박순영</td>
-                <td class="col-pl">최진호</td>
-                <td class="col-client">서울시청</td>
-                <td class="col-amount">₩1.8B</td>
-                <td class="col-deadline"><span class="dday dday-over">D+3</span></td>
-                <td class="col-status"><span class="status-badge status-completed">완료</span></td>
-              </tr>
+      .btn-primary:hover {
+        background-color: #34b87a;
+      }
 
-              <!-- Row 3 -->
-              <tr onclick="goToWorkflow('proj-003')">
-                <td class="col-name"><strong>인천항 물류 센터</strong></td>
-                <td class="col-team">항만팀</td>
-                <td class="col-pm">장영식</td>
-                <td class="col-pl">정미영</td>
-                <td class="col-client">인천항만공사</td>
-                <td class="col-amount">₩5.3B</td>
-                <td class="col-deadline"><span class="dday dday-urgent">D-2</span></td>
-                <td class="col-status"><span class="status-badge status-waiting">대기</span></td>
-              </tr>
+      .btn-secondary {
+        background-color: var(--card);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
 
-              <!-- Row 4 -->
-              <tr onclick="goToWorkflow('proj-004')">
-                <td class="col-name"><strong>부산 신도시 개발</strong></td>
-                <td class="col-team">도시팀</td>
-                <td class="col-pm">우명호</td>
-                <td class="col-pl">문준영</td>
-                <td class="col-client">부산시청</td>
-                <td class="col-amount">₩1.2B</td>
-                <td class="col-deadline"><span class="dday dday-normal">D-12</span></td>
-                <td class="col-status"><span class="status-badge status-paused">중단</span></td>
-              </tr>
+      .btn-secondary:hover {
+        background-color: #303030;
+      }
 
-              <!-- Row 5 -->
-              <tr onclick="goToWorkflow('proj-005')">
-                <td class="col-name"><strong>대구 상수도 망 재구축</strong></td>
-                <td class="col-team">수도팀</td>
-                <td class="col-pm">한승민</td>
-                <td class="col-pl">신하나</td>
-                <td class="col-client">대구 상수도</td>
-                <td class="col-amount">₩3.2B</td>
-                <td class="col-deadline"><span class="dday dday-warning">D-7</span></td>
-                <td class="col-status"><span class="status-badge status-processing">진행</span></td>
-              </tr>
+      .content {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+      }
 
-              <!-- Row 6 -->
-              <tr onclick="goToWorkflow('proj-006')">
-                <td class="col-name"><strong>경주 문화유산 기록화</strong></td>
-                <td class="col-team">문화팀</td>
-                <td class="col-pm">이준현</td>
-                <td class="col-pl">김지원</td>
-                <td class="col-client">경주시청</td>
-                <td class="col-amount">₩850M</td>
-                <td class="col-deadline"><span class="dday dday-over">D+15</span></td>
-                <td class="col-status"><span class="status-badge status-submitted">제출</span></td>
-              </tr>
+      .filters {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
 
-              <!-- Row 7 -->
-              <tr onclick="goToWorkflow('proj-007')">
-                <td class="col-name"><strong>광주 스마트 조명 사업</strong></td>
-                <td class="col-team">에너지팀</td>
-                <td class="col-pm">손준환</td>
-                <td class="col-pl">홍나현</td>
-                <td class="col-client">광주시청</td>
-                <td class="col-amount">₩2.1B</td>
-                <td class="col-deadline"><span class="dday dday-normal">D-8</span></td>
-                <td class="col-status"><span class="status-badge status-processing">진행</span></td>
-              </tr>
+      .filter-chip {
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background-color: transparent;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 150ms;
+      }
 
-              <!-- Row 8 -->
-              <tr onclick="goToWorkflow('proj-008')">
-                <td class="col-name"><strong>대전 IoT 플랫폼 구축</strong></td>
-                <td class="col-team">IT팀</td>
-                <td class="col-pm">박혜진</td>
-                <td class="col-pl">류태호</td>
-                <td class="col-client">대전시청</td>
-                <td class="col-amount">₩4.5B</td>
-                <td class="col-deadline"><span class="dday dday-normal">D-10</span></td>
-                <td class="col-status"><span class="status-badge status-results">결과</span></td>
-              </tr>
+      .filter-chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
 
-              <!-- Row 9 -->
-              <tr onclick="goToWorkflow('proj-009')">
-                <td class="col-name"><strong>울산 화학단지 안전</strong></td>
-                <td class="col-team">안전팀</td>
-                <td class="col-pm">최연호</td>
-                <td class="col-pl">오수정</td>
-                <td class="col-client">울산시청</td>
-                <td class="col-amount">₩1.9B</td>
-                <td class="col-deadline"><span class="dday dday-over">D+2</span></td>
-                <td class="col-status"><span class="status-badge status-closed">종료</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+      .filter-chip.active {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg);
+      }
 
-  <script>
-    function filterTable(filter) {
-      // 필터 칩 활성화
-      document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.classList.remove('active');
-      });
-      event.target.classList.add('active');
+      /* 테이블 스타일 */
+      .table-wrapper {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-      // 테이블 행 필터링
-      const statusMap = {
-        'all': null,
-        'processing': 'status-processing',
-        'completed': 'status-completed',
-        'submitted': 'status-submitted',
-        'paused': 'status-paused'
-      };
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
 
-      const rows = document.querySelectorAll('#proposalsTable tbody tr');
-      rows.forEach(row => {
-        if (statusMap[filter] === null) {
-          row.style.display = '';
-        } else {
-          const hasStatus = row.querySelector(`.${statusMap[filter]}`);
-          row.style.display = hasStatus ? '' : 'none';
+      thead {
+        background-color: var(--surface);
+        border-bottom: 2px solid var(--border);
+      }
+
+      th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+      }
+
+      th:last-child {
+        text-align: right;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: all 150ms;
+      }
+
+      tbody tr:hover {
+        background-color: var(--surface);
+        cursor: pointer;
+      }
+
+      td {
+        padding: 14px 16px;
+        color: var(--text);
+      }
+
+      td:last-child {
+        text-align: right;
+      }
+
+      /* 컬럼 너비 */
+      .col-name {
+        width: 20%;
+      }
+      .col-team {
+        width: 10%;
+      }
+      .col-pm {
+        width: 8%;
+      }
+      .col-pl {
+        width: 8%;
+      }
+      .col-client {
+        width: 12%;
+      }
+      .col-amount {
+        width: 12%;
+      }
+      .col-deadline {
+        width: 12%;
+      }
+      .col-status {
+        width: 8%;
+        text-align: right;
+      }
+
+      /* 상태 배지 */
+      .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+      }
+
+      .status-waiting {
+        background-color: rgba(85, 85, 85, 0.2);
+        color: #aaaaaa;
+      }
+
+      .status-processing {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+      }
+
+      .status-paused {
+        background-color: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+
+      .status-completed {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+      }
+
+      .status-submitted {
+        background-color: rgba(168, 85, 247, 0.2);
+        color: #d8b4fe;
+      }
+
+      .status-results {
+        background-color: rgba(236, 72, 153, 0.2);
+        color: #f472b6;
+      }
+
+      .status-closed {
+        background-color: rgba(107, 114, 128, 0.2);
+        color: #9ca3af;
+      }
+
+      /* D-Day 강조 */
+      .dday {
+        font-weight: 600;
+      }
+
+      .dday-urgent {
+        color: #ef4444;
+      }
+
+      .dday-warning {
+        color: #f59e0b;
+      }
+
+      .dday-normal {
+        color: var(--accent);
+      }
+
+      .dday-over {
+        color: #8c8c8c;
+        text-decoration: line-through;
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+
+      .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      .empty-title {
+        font-size: 16px;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      @media (max-width: 1024px) {
+        .sidebar {
+          display: none;
         }
-      });
-    }
 
-    function goToWorkflow(projectId) {
-      // 워크플로우 화면으로 전환
-      console.log('Navigating to workflow:', projectId);
-      // 실제 구현에서는: window.location.href = `/proposals/${projectId}/workflow`;
-      alert(`프로젝트 ${projectId}의 워크플로우 화면으로 이동합니다.`);
-    }
-  </script>
-</body>
+        .col-pm,
+        .col-pl {
+          display: none;
+        }
+
+        th:nth-child(3),
+        th:nth-child(4),
+        td:nth-child(3),
+        td:nth-child(4) {
+          display: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .content {
+          padding: 12px;
+        }
+
+        .col-team,
+        .col-client {
+          display: none;
+        }
+
+        th:nth-child(2),
+        th:nth-child(5),
+        td:nth-child(2),
+        td:nth-child(5) {
+          display: none;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        td,
+        th {
+          padding: 10px;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3a3a3a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">PA</div>
+          <span>Proposal Coworker</span>
+        </div>
+
+        <div class="nav-item">🏠 대시보드</div>
+        <div class="nav-item">👁️ 공고 모니터링</div>
+        <div class="nav-item active">📄 제안 프로젝트</div>
+        <div
+          style="
+            font-size: 11px;
+            color: var(--muted);
+            margin: 12px 8px;
+            text-transform: uppercase;
+          "
+        >
+          📖 지식 베이스
+        </div>
+        <div class="nav-item">🔍 통합 검색</div>
+        <div class="nav-item">📝 콘텐츠</div>
+        <div class="nav-item">🏢 발주기관</div>
+        <div class="nav-item">🎯 경쟁사</div>
+        <div class="nav-item">💡 교훈</div>
+        <div class="nav-item">❓ Q&A</div>
+        <div class="nav-item">💰 노임단가</div>
+        <div class="nav-item">📊 시장가격</div>
+        <div
+          style="
+            font-size: 11px;
+            color: var(--muted);
+            margin: 12px 8px;
+            text-transform: uppercase;
+          "
+        >
+          📌 최근 작업
+        </div>
+        <div class="nav-item">🟠 ISP 시스템 제안</div>
+        <div class="nav-item">🟢 보안 솔루션</div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main">
+        <div class="header">
+          <h1 class="header-title">제안 프로젝트</h1>
+          <div class="header-actions">
+            <button class="btn btn-secondary">📊 분석</button>
+            <button class="btn btn-primary">+ 신규 제안</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="filters">
+            <button class="filter-chip active" onclick="filterTable('all')">
+              전체
+            </button>
+            <button class="filter-chip" onclick="filterTable('processing')">
+              진행 중
+            </button>
+            <button class="filter-chip" onclick="filterTable('completed')">
+              완료
+            </button>
+            <button class="filter-chip" onclick="filterTable('submitted')">
+              제출됨
+            </button>
+            <button class="filter-chip" onclick="filterTable('paused')">
+              ⚠️ 중단됨
+            </button>
+          </div>
+
+          <div class="table-wrapper">
+            <table id="proposalsTable">
+              <thead>
+                <tr>
+                  <th class="col-name">과제명</th>
+                  <th class="col-team">담당팀</th>
+                  <th class="col-pm">PM</th>
+                  <th class="col-pl">PL</th>
+                  <th class="col-client">발주처</th>
+                  <th class="col-amount">금액</th>
+                  <th class="col-deadline">제출일</th>
+                  <th class="col-status">상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row 1 -->
+                <tr onclick="goToWorkflow('proj-001')">
+                  <td class="col-name"><strong>K 공사 터널 운영</strong></td>
+                  <td class="col-team">토목팀</td>
+                  <td class="col-pm">김민준</td>
+                  <td class="col-pl">이재호</td>
+                  <td class="col-client">K 공사</td>
+                  <td class="col-amount">₩2.5B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-urgent">D-2</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-processing">진행</span>
+                  </td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr onclick="goToWorkflow('proj-002')">
+                  <td class="col-name">
+                    <strong>서울시 교통 시뮬레이션</strong>
+                  </td>
+                  <td class="col-team">교통팀</td>
+                  <td class="col-pm">박순영</td>
+                  <td class="col-pl">최진호</td>
+                  <td class="col-client">서울시청</td>
+                  <td class="col-amount">₩1.8B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-over">D+3</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-completed">완료</span>
+                  </td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr onclick="goToWorkflow('proj-003')">
+                  <td class="col-name"><strong>인천항 물류 센터</strong></td>
+                  <td class="col-team">항만팀</td>
+                  <td class="col-pm">장영식</td>
+                  <td class="col-pl">정미영</td>
+                  <td class="col-client">인천항만공사</td>
+                  <td class="col-amount">₩5.3B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-urgent">D-2</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-waiting">대기</span>
+                  </td>
+                </tr>
+
+                <!-- Row 4 -->
+                <tr onclick="goToWorkflow('proj-004')">
+                  <td class="col-name"><strong>부산 신도시 개발</strong></td>
+                  <td class="col-team">도시팀</td>
+                  <td class="col-pm">우명호</td>
+                  <td class="col-pl">문준영</td>
+                  <td class="col-client">부산시청</td>
+                  <td class="col-amount">₩1.2B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-normal">D-12</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-paused">중단</span>
+                  </td>
+                </tr>
+
+                <!-- Row 5 -->
+                <tr onclick="goToWorkflow('proj-005')">
+                  <td class="col-name">
+                    <strong>대구 상수도 망 재구축</strong>
+                  </td>
+                  <td class="col-team">수도팀</td>
+                  <td class="col-pm">한승민</td>
+                  <td class="col-pl">신하나</td>
+                  <td class="col-client">대구 상수도</td>
+                  <td class="col-amount">₩3.2B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-warning">D-7</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-processing">진행</span>
+                  </td>
+                </tr>
+
+                <!-- Row 6 -->
+                <tr onclick="goToWorkflow('proj-006')">
+                  <td class="col-name">
+                    <strong>경주 문화유산 기록화</strong>
+                  </td>
+                  <td class="col-team">문화팀</td>
+                  <td class="col-pm">이준현</td>
+                  <td class="col-pl">김지원</td>
+                  <td class="col-client">경주시청</td>
+                  <td class="col-amount">₩850M</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-over">D+15</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-submitted">제출</span>
+                  </td>
+                </tr>
+
+                <!-- Row 7 -->
+                <tr onclick="goToWorkflow('proj-007')">
+                  <td class="col-name">
+                    <strong>광주 스마트 조명 사업</strong>
+                  </td>
+                  <td class="col-team">에너지팀</td>
+                  <td class="col-pm">손준환</td>
+                  <td class="col-pl">홍나현</td>
+                  <td class="col-client">광주시청</td>
+                  <td class="col-amount">₩2.1B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-normal">D-8</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-processing">진행</span>
+                  </td>
+                </tr>
+
+                <!-- Row 8 -->
+                <tr onclick="goToWorkflow('proj-008')">
+                  <td class="col-name">
+                    <strong>대전 IoT 플랫폼 구축</strong>
+                  </td>
+                  <td class="col-team">IT팀</td>
+                  <td class="col-pm">박혜진</td>
+                  <td class="col-pl">류태호</td>
+                  <td class="col-client">대전시청</td>
+                  <td class="col-amount">₩4.5B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-normal">D-10</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-results">결과</span>
+                  </td>
+                </tr>
+
+                <!-- Row 9 -->
+                <tr onclick="goToWorkflow('proj-009')">
+                  <td class="col-name"><strong>울산 화학단지 안전</strong></td>
+                  <td class="col-team">안전팀</td>
+                  <td class="col-pm">최연호</td>
+                  <td class="col-pl">오수정</td>
+                  <td class="col-client">울산시청</td>
+                  <td class="col-amount">₩1.9B</td>
+                  <td class="col-deadline">
+                    <span class="dday dday-over">D+2</span>
+                  </td>
+                  <td class="col-status">
+                    <span class="status-badge status-closed">종료</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function filterTable(filter) {
+        // 필터 칩 활성화
+        document.querySelectorAll(".filter-chip").forEach((chip) => {
+          chip.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // 테이블 행 필터링
+        const statusMap = {
+          all: null,
+          processing: "status-processing",
+          completed: "status-completed",
+          submitted: "status-submitted",
+          paused: "status-paused",
+        };
+
+        const rows = document.querySelectorAll("#proposalsTable tbody tr");
+        rows.forEach((row) => {
+          if (statusMap[filter] === null) {
+            row.style.display = "";
+          } else {
+            const hasStatus = row.querySelector(`.${statusMap[filter]}`);
+            row.style.display = hasStatus ? "" : "none";
+          }
+        });
+      }
+
+      function goToWorkflow(projectId) {
+        // 워크플로우 화면으로 전환
+        console.log("Navigating to workflow:", projectId);
+        // 실제 구현에서는: window.location.href = `/proposals/${projectId}/workflow`;
+        alert(`프로젝트 ${projectId}의 워크플로우 화면으로 이동합니다.`);
+      }
+    </script>
+  </body>
 </html>

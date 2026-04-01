@@ -20,18 +20,15 @@ import EditorAiPanel, {
   type ChangeEntry,
 } from "@/components/EditorAiPanel";
 
-const ProposalEditor = dynamic(
-  () => import("@/components/ProposalEditor"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-full text-[#8c8c8c] text-sm">
-        <div className="w-5 h-5 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin mr-3" />
-        에디터 로딩 중...
-      </div>
-    ),
-  }
-);
+const ProposalEditor = dynamic(() => import("@/components/ProposalEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full text-[#8c8c8c] text-sm">
+      <div className="w-5 h-5 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin mr-3" />
+      에디터 로딩 중...
+    </div>
+  ),
+});
 
 interface ProposalEditViewProps {
   id: string;
@@ -39,14 +36,19 @@ interface ProposalEditViewProps {
   standalone?: boolean;
 }
 
-export default function ProposalEditView({ id, standalone }: ProposalEditViewProps) {
+export default function ProposalEditView({
+  id,
+  standalone,
+}: ProposalEditViewProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
-  const [mobilePanel, setMobilePanel] = useState<"toc" | "editor" | "ai">("editor");
+  const [mobilePanel, setMobilePanel] = useState<"toc" | "editor" | "ai">(
+    "editor",
+  );
 
   const [content, setContent] = useState("");
   const [sections, setSections] = useState<TocSection[]>([]);
@@ -62,7 +64,9 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
   const channelRef = useRef<BroadcastChannel | null>(null);
   useEffect(() => {
     channelRef.current = new BroadcastChannel(`tenopa-proposal-${id}`);
-    return () => { channelRef.current?.close(); };
+    return () => {
+      channelRef.current?.close();
+    };
   }, [id]);
 
   // ── 데이터 로드 ──
@@ -76,7 +80,8 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
 
       if (proposalArtifact.status === "fulfilled") {
         const data = proposalArtifact.value.data as Record<string, unknown>;
-        const html = (data.html_content as string) ?? (data.content as string) ?? "";
+        const html =
+          (data.html_content as string) ?? (data.content as string) ?? "";
         setContent(html);
 
         const dynSections = (data.sections ?? data.dynamic_sections) as
@@ -88,7 +93,7 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
               id: s.id ?? `section-${i}`,
               title: s.title ?? `섹션 ${i + 1}`,
               level: s.level ?? 1,
-            }))
+            })),
           );
         }
 
@@ -119,7 +124,9 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
     }
   }, [id]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // 섹션 잠금 폴링 (10초 간격)
   useEffect(() => {
@@ -128,17 +135,25 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
       try {
         const res = await api.workflow.listLocks(id);
         if (active) setSectionLocks(res.locks);
-      } catch { /* silent */ }
+      } catch {
+        /* silent */
+      }
     }
     pollLocks();
     const interval = setInterval(pollLocks, 10_000);
-    return () => { active = false; clearInterval(interval); };
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [id]);
 
   // ── 비저장 경고: beforeunload ──
   useEffect(() => {
     function handleBeforeUnload(e: BeforeUnloadEvent) {
-      if (isDirty) { e.preventDefault(); e.returnValue = ""; }
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
     }
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -156,7 +171,7 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
       }
       if ((e.ctrlKey || e.metaKey) && e.key === "/") {
         e.preventDefault();
-        setShortcutsOpen(prev => !prev);
+        setShortcutsOpen((prev) => !prev);
       }
       if (e.key === "Escape" && shortcutsOpen) setShortcutsOpen(false);
     }
@@ -165,16 +180,27 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
   }, [isDirty, shortcutsOpen]);
 
   // ── 즉시 저장 (Ctrl+S용) ──
-  const flushSave = useCallback(async (html: string) => {
-    setSaving(true);
-    try {
-      await api.artifacts.save(id, "proposal", html);
-      setLastSaved(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
-      setIsDirty(false);
-      channelRef.current?.postMessage({ type: "saved" });
-    } catch { /* silent */ }
-    finally { setSaving(false); }
-  }, [id]);
+  const flushSave = useCallback(
+    async (html: string) => {
+      setSaving(true);
+      try {
+        await api.artifacts.save(id, "proposal", html);
+        setLastSaved(
+          new Date().toLocaleTimeString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        );
+        setIsDirty(false);
+        channelRef.current?.postMessage({ type: "saved" });
+      } catch {
+        /* silent */
+      } finally {
+        setSaving(false);
+      }
+    },
+    [id],
+  );
 
   // ── 자동 저장 + BroadcastChannel 알림 + 수정 추적 ──
   const prevContentRef = useRef(content);
@@ -184,19 +210,26 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
       setSaving(true);
       try {
         await api.artifacts.save(id, "proposal", html);
-        setLastSaved(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
+        setLastSaved(
+          new Date().toLocaleTimeString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        );
         setIsDirty(false);
         // 다른 창(상세 페이지)에 저장 완료 알림
         channelRef.current?.postMessage({ type: "saved" });
         // 프롬프트 수정 추적 (비동기, 실패 무시)
         if (prevContentRef.current && prevContentRef.current !== html) {
-          api.prompts.recordEditAction({
-            proposal_id: id,
-            section_id: activeSection ?? "full_proposal",
-            action: "edit",
-            original: prevContentRef.current.slice(0, 5000),
-            edited: html.slice(0, 5000),
-          }).catch(() => {});
+          api.prompts
+            .recordEditAction({
+              proposal_id: id,
+              section_id: activeSection ?? "full_proposal",
+              action: "edit",
+              original: prevContentRef.current.slice(0, 5000),
+              edited: html.slice(0, 5000),
+            })
+            .catch(() => {});
         }
         prevContentRef.current = html;
       } catch {
@@ -205,7 +238,7 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
         setSaving(false);
       }
     },
-    [id, activeSection]
+    [id, activeSection],
   );
 
   function handleSectionClick(sectionId: string) {
@@ -215,7 +248,11 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
   }
 
   function handleBack() {
-    if (isDirty && !confirm("저장하지 않은 변경사항이 있습니다. 페이지를 떠나시겠습니까?")) return;
+    if (
+      isDirty &&
+      !confirm("저장하지 않은 변경사항이 있습니다. 페이지를 떠나시겠습니까?")
+    )
+      return;
     if (standalone) window.close();
     else router.push(`/proposals/${id}`);
   }
@@ -240,15 +277,26 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
       <header className="bg-[#111111] border-b border-[#262626] px-4 py-2 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           {standalone ? (
-            <button onClick={handleBack} className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">닫기</button>
+            <button
+              onClick={handleBack}
+              className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"
+            >
+              닫기
+            </button>
           ) : (
-            <Breadcrumb items={[
-              { label: "제안 프로젝트", href: "/proposals" },
-              { label: "프로젝트", href: `/proposals/${id}` },
-              { label: "편집" },
-            ]} />
+            <Breadcrumb
+              items={[
+                { label: "제안 프로젝트", href: "/proposals" },
+                { label: "프로젝트", href: `/proposals/${id}` },
+                { label: "편집" },
+              ]}
+            />
           )}
-          {isDirty && <span className="text-[9px] text-amber-400 font-medium">수정됨</span>}
+          {isDirty && (
+            <span className="text-[9px] text-amber-400 font-medium">
+              수정됨
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {lastSaved && (
@@ -285,19 +333,41 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
           {/* 모바일: 선택된 패널 */}
           <div className="lg:hidden flex-1 overflow-hidden">
             {mobilePanel === "toc" && (
-              <EditorTocPanel sections={sections} activeSection={activeSection} onSectionClick={handleSectionClick} complianceItems={complianceItems} />
+              <EditorTocPanel
+                sections={sections}
+                activeSection={activeSection}
+                onSectionClick={handleSectionClick}
+                complianceItems={complianceItems}
+              />
             )}
             {mobilePanel === "editor" && (
-              <ProposalEditor content={content} onUpdate={handleContentUpdate} onChange={() => setIsDirty(true)} />
+              <ProposalEditor
+                content={content}
+                onUpdate={handleContentUpdate}
+                onChange={() => setIsDirty(true)}
+              />
             )}
             {mobilePanel === "ai" && (
-              <EditorAiPanel proposalId={id} complianceItems={complianceItems} strategyChecks={strategyChecks} kbReferences={kbReferences} changes={changes} activeSectionId={activeSection} currentContent={content} onApplySuggestion={(html) => setContent(html)} />
+              <EditorAiPanel
+                proposalId={id}
+                complianceItems={complianceItems}
+                strategyChecks={strategyChecks}
+                kbReferences={kbReferences}
+                changes={changes}
+                activeSectionId={activeSection}
+                currentContent={content}
+                onApplySuggestion={(html) => setContent(html)}
+              />
             )}
           </div>
 
           {/* 데스크톱: 에디터만 */}
           <div className="hidden lg:block flex-1 overflow-hidden">
-            <ProposalEditor content={content} onUpdate={handleContentUpdate} onChange={() => setIsDirty(true)} />
+            <ProposalEditor
+              content={content}
+              onUpdate={handleContentUpdate}
+              onChange={() => setIsDirty(true)}
+            />
           </div>
         </main>
 
@@ -319,30 +389,40 @@ export default function ProposalEditView({ id, standalone }: ProposalEditViewPro
       {/* 하단 상태바 */}
       <footer className="bg-[#111111] border-t border-[#262626] px-4 py-1.5 flex items-center gap-4 text-[10px] text-[#5c5c5c] shrink-0">
         <span className={isDirty && !saving ? "text-amber-400" : ""}>
-          {saving ? "저장 중..." : isDirty ? "수정됨 (저장 대기)" : lastSaved ? `마지막 저장: ${lastSaved}` : "미저장"}
+          {saving
+            ? "저장 중..."
+            : isDirty
+              ? "수정됨 (저장 대기)"
+              : lastSaved
+                ? `마지막 저장: ${lastSaved}`
+                : "미저장"}
         </span>
         <span>•</span>
         <span>{sections.length}개 섹션</span>
         <span>•</span>
         <span>
-          Compliance: {complianceItems.filter((i) => i.status === "met").length}/
-          {complianceItems.length}
+          Compliance: {complianceItems.filter((i) => i.status === "met").length}
+          /{complianceItems.length}
         </span>
         {sectionLocks.length > 0 && (
           <>
             <span>•</span>
             <span className="text-amber-400">
               {sectionLocks.length}개 섹션 편집 중
-              {sectionLocks.map((l) => l.locked_by_name || l.locked_by).filter(Boolean).length > 0 &&
-                ` (${[...new Set(sectionLocks.map((l) => l.locked_by_name || "").filter(Boolean))].join(", ")})`
-              }
+              {sectionLocks
+                .map((l) => l.locked_by_name || l.locked_by)
+                .filter(Boolean).length > 0 &&
+                ` (${[...new Set(sectionLocks.map((l) => l.locked_by_name || "").filter(Boolean))].join(", ")})`}
             </span>
           </>
         )}
       </footer>
 
       {/* 키보드 단축키 가이드 */}
-      <KeyboardShortcutsGuide open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+      <KeyboardShortcutsGuide
+        open={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+      />
     </div>
   );
 }

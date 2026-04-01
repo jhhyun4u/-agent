@@ -50,12 +50,14 @@ return {
 For Phase 1, focus on these nodes that already exist or will be created in STEP 8A:
 
 #### Already Exist (Can Update Now)
+
 - [ ] strategy_generate (→ strategy)
 - [ ] plan_nodes - plan_story (→ plan.storylines)
 - [ ] plan_nodes - plan_team (→ plan.team)
 - [ ] proposal_nodes (→ proposal_sections)
 
 #### STEP 8A Nodes (Create With Versioning)
+
 - [ ] proposal_customer_analysis (→ customer_context)
 - [ ] proposal_section_validator (→ section_validation_results)
 - [ ] proposal_sections_consolidation (→ sections_consolidation_result)
@@ -115,20 +117,20 @@ async def strategy_generate(state: ProposalState) -> dict:
 
 ## State Key Mapping
 
-| Node Name | Output Key | State Field | Model |
-|-----------|-----------|------------|-------|
-| strategy_generate | strategy | state["strategy"] | Strategy |
-| proposal_nodes | proposal_sections | state["proposal_sections"] | list[ProposalSection] |
-| plan_nodes | plan | state["plan"] | ProposalPlan |
-| proposal_customer_analysis* | customer_context | state["customer_context"] | dict |
-| proposal_section_validator* | section_validation_results | state["section_validation_results"] | list[dict] |
-| proposal_sections_consolidation* | sections_consolidation_result | state["sections_consolidation_result"] | dict |
-| mock_evaluation_analysis* | mock_evaluation_analysis | state["mock_evaluation_analysis"] | dict |
-| mock_evaluation_feedback_processor* | mock_eval_feedback | state["mock_eval_feedback"] | dict |
-| mock_evaluation_feedback_processor* | rework_instructions | state["rework_instructions"] | dict |
-| proposal_write_next* | proposal_sections | state["proposal_sections"] | list[ProposalSection] |
+| Node Name                            | Output Key                    | State Field                            | Model                 |
+| ------------------------------------ | ----------------------------- | -------------------------------------- | --------------------- |
+| strategy_generate                    | strategy                      | state["strategy"]                      | Strategy              |
+| proposal_nodes                       | proposal_sections             | state["proposal_sections"]             | list[ProposalSection] |
+| plan_nodes                           | plan                          | state["plan"]                          | ProposalPlan          |
+| proposal_customer_analysis\*         | customer_context              | state["customer_context"]              | dict                  |
+| proposal_section_validator\*         | section_validation_results    | state["section_validation_results"]    | list[dict]            |
+| proposal_sections_consolidation\*    | sections_consolidation_result | state["sections_consolidation_result"] | dict                  |
+| mock_evaluation_analysis\*           | mock_evaluation_analysis      | state["mock_evaluation_analysis"]      | dict                  |
+| mock_evaluation_feedback_processor\* | mock_eval_feedback            | state["mock_eval_feedback"]            | dict                  |
+| mock_evaluation_feedback_processor\* | rework_instructions           | state["rework_instructions"]           | dict                  |
+| proposal_write_next\*                | proposal_sections             | state["proposal_sections"]             | list[ProposalSection] |
 
-*STEP 8A nodes (to be created with versioning integrated)
+\*STEP 8A nodes (to be created with versioning integrated)
 
 ## Testing Pattern
 

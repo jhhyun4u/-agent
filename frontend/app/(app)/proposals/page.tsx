@@ -11,6 +11,7 @@
 
 import { Suspense, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { api, ProposalSummary, MonitoredBid } from "@/lib/api";
 import {
   SCOPE_LABELS,
@@ -18,6 +19,7 @@ import {
   getStepInfo,
   deriveStatus,
   formatDeadline,
+  formatBudget,
   formatBudgetCompact,
   GRID_LAYOUT_CLASS,
   createSortComparator,
@@ -105,12 +107,15 @@ function ProposalsContent() {
       const params: Record<string, string | number> = { page, scope };
       if (statusFilter !== "all") params.status = statusFilter;
       if (search.trim()) params.search = search.trim();
-      const res = await api.proposals.list(params as Parameters<typeof api.proposals.list>[0]);
+      const res = await api.proposals.list(
+        params as Parameters<typeof api.proposals.list>[0],
+      );
       setProposals(res.data);
       setTotalCount(res.meta?.total ?? res.data.length);
     } catch {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
         const qs = new URLSearchParams();
         qs.set("skip", String((page - 1) * 20));
         qs.set("limit", "20");
@@ -148,17 +153,23 @@ function ProposalsContent() {
       // show_all=true로 전체 목록 가져온 뒤 제안결정만 필터
       const res = await api.bids.monitor("company", 1, true);
       const decided = (res.data || []).filter(
-        (b) => b.proposal_status === "제안결정" || b.proposal_status === "제안착수"
+        (b) =>
+          b.proposal_status === "제안결정" || b.proposal_status === "제안착수",
       );
       setDecidedBids(decided);
     } catch {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-        const res = await fetch(`${baseUrl}/bids/monitor?scope=company&page=1&show_all=true`);
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+        const res = await fetch(
+          `${baseUrl}/bids/monitor?scope=company&page=1&show_all=true`,
+        );
         if (res.ok) {
           const json = await res.json();
           const decided = (json.data || []).filter(
-            (b: MonitoredBid) => b.proposal_status === "제안결정" || b.proposal_status === "제안착수"
+            (b: MonitoredBid) =>
+              b.proposal_status === "제안결정" ||
+              b.proposal_status === "제안착수",
           );
           setDecidedBids(decided);
         }
@@ -192,7 +203,10 @@ function ProposalsContent() {
     try {
       const fd = new FormData();
       fd.append("rfp_file", rfpFile);
-      fd.append("rfp_title", rfpUploadTitle.trim() || rfpFile.name.replace(/\.[^.]+$/, ""));
+      fd.append(
+        "rfp_title",
+        rfpUploadTitle.trim() || rfpFile.name.replace(/\.[^.]+$/, ""),
+      );
       fd.append("client_name", rfpClientName.trim());
       const data = await api.proposals.createFromRfp(fd);
       router.push(`/proposals/${data.proposal_id}`);
@@ -220,7 +234,9 @@ function ProposalsContent() {
   }
 
   const errorBanner = error && (
-    <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">{error}</p>
+    <p className="text-xs text-red-400 bg-red-950/40 border border-red-900 rounded-lg px-3 py-2">
+      {error}
+    </p>
   );
 
   return (
@@ -229,7 +245,9 @@ function ProposalsContent() {
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-sm font-semibold text-[#ededed]">제안 프로젝트 목록</h1>
+            <h1 className="text-sm font-semibold text-[#ededed]">
+              제안 프로젝트 목록
+            </h1>
             <p className="text-xs text-[#8c8c8c] mt-0.5">
               {SCOPE_LABELS[scope].desc}
               {proposals.length > 0 && ` · ${proposals.length}건`}
@@ -289,7 +307,9 @@ function ProposalsContent() {
             placeholder="프로젝트명 검색..."
             className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg pl-8 pr-3 py-1.5 text-xs text-[#ededed] placeholder:text-[#666] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e] focus:border-[#3ecf8e] transition-colors"
           />
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#5c5c5c] text-xs">&#x1F50D;</span>
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#5c5c5c] text-xs">
+            &#x1F50D;
+          </span>
         </div>
         <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-0.5 border border-[#262626]">
           {[
@@ -320,8 +340,12 @@ function ProposalsContent() {
           <div className="bg-[#141414] border border-emerald-900/40 rounded-xl p-5 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <p className="text-xs font-semibold text-[#3ecf8e]">제안작업 대기 중</p>
-                <span className="text-[10px] text-[#5c5c5c]">공고 모니터링에서 제안결정된 과제</span>
+                <p className="text-xs font-semibold text-[#3ecf8e]">
+                  제안작업 대기 중
+                </p>
+                <span className="text-[10px] text-[#5c5c5c]">
+                  공고 모니터링에서 제안결정된 과제
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Link
@@ -330,19 +354,30 @@ function ProposalsContent() {
                 >
                   공고 모니터링 →
                 </Link>
-                <button onClick={resetInline} className="text-[#5c5c5c] hover:text-[#ededed] text-xs transition-colors">닫기</button>
+                <button
+                  onClick={resetInline}
+                  className="text-[#5c5c5c] hover:text-[#ededed] text-xs transition-colors"
+                >
+                  닫기
+                </button>
               </div>
             </div>
 
             {decidedLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="w-4 h-4 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin" />
-                <span className="text-xs text-[#5c5c5c] ml-2">제안결정 과제를 불러오는 중...</span>
+                <span className="text-xs text-[#5c5c5c] ml-2">
+                  제안결정 과제를 불러오는 중...
+                </span>
               </div>
             ) : decidedBids.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-sm text-[#8c8c8c] mb-2">제안결정된 과제가 없습니다</p>
-                <p className="text-xs text-[#5c5c5c] mb-4">공고 모니터링에서 과제를 검토하고 제안결정을 해주세요</p>
+                <p className="text-sm text-[#8c8c8c] mb-2">
+                  제안결정된 과제가 없습니다
+                </p>
+                <p className="text-xs text-[#5c5c5c] mb-4">
+                  공고 모니터링에서 과제를 검토하고 제안결정을 해주세요
+                </p>
                 <Link
                   href="/monitoring"
                   className="inline-flex items-center gap-1.5 bg-[#1c1c1c] hover:bg-[#262626] border border-[#262626] text-[#ededed] rounded-lg px-4 py-2 text-xs font-medium transition-colors"
@@ -353,10 +388,16 @@ function ProposalsContent() {
             ) : (
               <div className="space-y-2">
                 {decidedBids.map((bid) => {
-                  const dl = bid.deadline_date ? new Date(bid.deadline_date) : null;
-                  const dlText = dl ? `${dl.getMonth() + 1}/${dl.getDate()}` : "—";
+                  const dl = bid.deadline_date
+                    ? new Date(bid.deadline_date)
+                    : null;
+                  const dlText = dl
+                    ? `${dl.getMonth() + 1}/${dl.getDate()}`
+                    : "—";
                   const now = new Date();
-                  const daysLeft = dl ? Math.ceil((dl.getTime() - now.getTime()) / 86400000) : null;
+                  const daysLeft = dl
+                    ? Math.ceil((dl.getTime() - now.getTime()) / 86400000)
+                    : null;
                   const isStarting = startingBid === bid.bid_no;
 
                   return (
@@ -365,11 +406,19 @@ function ProposalsContent() {
                       className="flex items-center gap-4 p-3 bg-[#1c1c1c] border border-[#262626] rounded-lg hover:border-[#3ecf8e]/40 transition-colors"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#ededed] truncate font-medium">{bid.bid_title}</p>
+                        <p className="text-sm text-[#ededed] truncate font-medium">
+                          {bid.bid_title}
+                        </p>
                         <div className="flex items-center gap-3 mt-1 text-xs text-[#8c8c8c]">
                           <span>{bid.agency}</span>
                           <span>{formatBudget(bid.budget_amount)}</span>
-                          <span className={daysLeft !== null && daysLeft <= 7 ? "text-red-400 font-semibold" : ""}>
+                          <span
+                            className={
+                              daysLeft !== null && daysLeft <= 7
+                                ? "text-red-400 font-semibold"
+                                : ""
+                            }
+                          >
                             마감 {dlText}
                             {daysLeft !== null && ` (D-${daysLeft})`}
                           </span>
@@ -377,7 +426,10 @@ function ProposalsContent() {
                         {bid.related_teams && bid.related_teams.length > 0 && (
                           <div className="flex gap-1 mt-1.5">
                             {bid.related_teams.map((team, i) => (
-                              <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/50">
+                              <span
+                                key={i}
+                                className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/50"
+                              >
                                 {team}
                               </span>
                             ))}
@@ -410,8 +462,15 @@ function ProposalsContent() {
         {inlineMode === "rfp_upload" && (
           <div className="bg-[#141414] border border-purple-900/40 rounded-xl p-5 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-xs font-semibold text-purple-400">RFP 파일 업로드</p>
-              <button onClick={resetInline} className="text-[#5c5c5c] hover:text-[#ededed] text-xs transition-colors">닫기</button>
+              <p className="text-xs font-semibold text-purple-400">
+                RFP 파일 업로드
+              </p>
+              <button
+                onClick={resetInline}
+                className="text-[#5c5c5c] hover:text-[#ededed] text-xs transition-colors"
+              >
+                닫기
+              </button>
             </div>
             <form onSubmit={submitFromRfpUpload} className="space-y-4">
               <input
@@ -421,7 +480,8 @@ function ProposalsContent() {
                 onChange={(e) => {
                   const f = e.target.files?.[0] ?? null;
                   setRfpFile(f);
-                  if (f && !rfpUploadTitle) setRfpUploadTitle(f.name.replace(/\.[^.]+$/, ""));
+                  if (f && !rfpUploadTitle)
+                    setRfpUploadTitle(f.name.replace(/\.[^.]+$/, ""));
                 }}
                 className="hidden"
               />
@@ -432,12 +492,19 @@ function ProposalsContent() {
                     {rfpFile.name.split(".").pop()?.toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-[#ededed] truncate">{rfpFile.name}</p>
-                    <p className="text-[10px] text-[#5c5c5c]">{(rfpFile.size / 1024).toFixed(0)} KB</p>
+                    <p className="text-xs text-[#ededed] truncate">
+                      {rfpFile.name}
+                    </p>
+                    <p className="text-[10px] text-[#5c5c5c]">
+                      {(rfpFile.size / 1024).toFixed(0)} KB
+                    </p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => { setRfpFile(null); if (fileRef.current) fileRef.current.value = ""; }}
+                    onClick={() => {
+                      setRfpFile(null);
+                      if (fileRef.current) fileRef.current.value = "";
+                    }}
                     className="text-[#5c5c5c] hover:text-red-400 text-xs transition-colors"
                   >
                     x
@@ -447,7 +514,10 @@ function ProposalsContent() {
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragging(true);
+                  }}
                   onDragLeave={() => setDragging(false)}
                   onDrop={(e) => {
                     e.preventDefault();
@@ -455,22 +525,35 @@ function ProposalsContent() {
                     const f = e.dataTransfer.files?.[0];
                     if (f) {
                       setRfpFile(f);
-                      if (!rfpUploadTitle) setRfpUploadTitle(f.name.replace(/\.[^.]+$/, ""));
+                      if (!rfpUploadTitle)
+                        setRfpUploadTitle(f.name.replace(/\.[^.]+$/, ""));
                     }
                   }}
                   className={`w-full flex flex-col items-center gap-2 py-6 bg-[#1c1c1c] border-2 border-dashed rounded-xl transition-colors ${
-                    dragging ? "border-purple-400 bg-purple-950/20" : "border-[#333] hover:border-purple-500/50"
+                    dragging
+                      ? "border-purple-400 bg-purple-950/20"
+                      : "border-[#333] hover:border-purple-500/50"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-950/40 border border-purple-900/50 flex items-center justify-center text-purple-400">+</div>
-                  <p className="text-xs text-[#8c8c8c]">{dragging ? "여기에 놓으세요" : "클릭 또는 드래그하여 파일 선택"}</p>
-                  <p className="text-[10px] text-[#5c5c5c]">PDF, HWP, HWPX, TXT, DOC, DOCX</p>
+                  <div className="w-8 h-8 rounded-lg bg-purple-950/40 border border-purple-900/50 flex items-center justify-center text-purple-400">
+                    +
+                  </div>
+                  <p className="text-xs text-[#8c8c8c]">
+                    {dragging
+                      ? "여기에 놓으세요"
+                      : "클릭 또는 드래그하여 파일 선택"}
+                  </p>
+                  <p className="text-[10px] text-[#5c5c5c]">
+                    PDF, HWP, HWPX, TXT, DOC, DOCX
+                  </p>
                 </button>
               )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-[#ededed] mb-1.5">프로젝트명</label>
+                  <label className="block text-xs font-medium text-[#ededed] mb-1.5">
+                    프로젝트명
+                  </label>
                   <input
                     type="text"
                     value={rfpUploadTitle}
@@ -481,7 +564,8 @@ function ProposalsContent() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-[#ededed] mb-1.5">
-                    발주처 <span className="text-[#5c5c5c] font-normal">(선택)</span>
+                    발주처{" "}
+                    <span className="text-[#5c5c5c] font-normal">(선택)</span>
                   </label>
                   <input
                     type="text"
@@ -509,7 +593,13 @@ function ProposalsContent() {
         {/* ═══ 진행 중인 프로젝트 목록 ═══ */}
         <div>
           <p className="text-xs font-medium text-[#5c5c5c] uppercase tracking-wider mb-3">
-            {statusFilter === "all" ? "프로젝트" : statusFilter === "processing" ? "진행 중" : statusFilter === "completed" ? "완료" : "실패"}
+            {statusFilter === "all"
+              ? "프로젝트"
+              : statusFilter === "processing"
+                ? "진행 중"
+                : statusFilter === "completed"
+                  ? "완료"
+                  : "실패"}
             {!loading && ` · ${totalCount}건`}
           </p>
 
@@ -517,8 +607,12 @@ function ProposalsContent() {
             <ProposalsTableSkeleton rows={5} />
           ) : fetchError ? (
             <div className="flex flex-col items-center justify-center py-12 text-center border border-red-900/40 rounded-xl bg-red-950/10">
-              <p className="text-sm text-red-400 mb-2">프로젝트 목록을 불러올 수 없습니다</p>
-              <p className="text-xs text-[#5c5c5c] mb-4">네트워크 연결을 확인하거나 다시 시도해주세요</p>
+              <p className="text-sm text-red-400 mb-2">
+                프로젝트 목록을 불러올 수 없습니다
+              </p>
+              <p className="text-xs text-[#5c5c5c] mb-4">
+                네트워크 연결을 확인하거나 다시 시도해주세요
+              </p>
               <button
                 onClick={fetchProposals}
                 className="px-4 py-2 text-xs font-medium rounded-lg bg-[#1c1c1c] border border-[#262626] text-[#ededed] hover:bg-[#262626] transition-colors"
@@ -531,8 +625,12 @@ function ProposalsContent() {
               <div className="w-10 h-10 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-xl mb-3">
                 📋
               </div>
-              <p className="text-sm text-[#8c8c8c]">아직 진행 중인 프로젝트가 없습니다</p>
-              <p className="text-xs text-[#5c5c5c] mt-1">위 경로 중 하나를 선택하여 첫 프로젝트를 시작하세요</p>
+              <p className="text-sm text-[#8c8c8c]">
+                아직 진행 중인 프로젝트가 없습니다
+              </p>
+              <p className="text-xs text-[#5c5c5c] mt-1">
+                위 경로 중 하나를 선택하여 첫 프로젝트를 시작하세요
+              </p>
             </div>
           ) : (
             <>
@@ -568,35 +666,38 @@ function ProposalsContent() {
                   ))}
               </div>
 
-              {totalCount > 20 && (() => {
-                const totalPages = Math.ceil(totalCount / 20);
-                const from = (page - 1) * 20 + 1;
-                const to = Math.min(page * 20, totalCount);
-                return (
-                  <div className="flex items-center justify-between mt-4">
-                    <span className="text-xs text-[#5c5c5c]">
-                      {from}-{to} / {totalCount}건
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        disabled={page === 1}
-                        onClick={() => setPage((p) => p - 1)}
-                        className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] hover:text-[#ededed] transition-colors"
-                      >
-                        이전
-                      </button>
-                      <span className="px-3 py-1.5 text-xs text-[#8c8c8c]">{page} / {totalPages}</span>
-                      <button
-                        disabled={page >= totalPages}
-                        onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] hover:text-[#ededed] transition-colors"
-                      >
-                        다음
-                      </button>
+              {totalCount > 20 &&
+                (() => {
+                  const totalPages = Math.ceil(totalCount / 20);
+                  const from = (page - 1) * 20 + 1;
+                  const to = Math.min(page * 20, totalCount);
+                  return (
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-xs text-[#5c5c5c]">
+                        {from}-{to} / {totalCount}건
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          disabled={page === 1}
+                          onClick={() => setPage((p) => p - 1)}
+                          className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] hover:text-[#ededed] transition-colors"
+                        >
+                          이전
+                        </button>
+                        <span className="px-3 py-1.5 text-xs text-[#8c8c8c]">
+                          {page} / {totalPages}
+                        </span>
+                        <button
+                          disabled={page >= totalPages}
+                          onClick={() => setPage((p) => p + 1)}
+                          className="px-3 py-1.5 text-xs border border-[#262626] rounded-lg text-[#8c8c8c] disabled:opacity-40 hover:bg-[#1c1c1c] hover:text-[#ededed] transition-colors"
+                        >
+                          다음
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })()}
+                  );
+                })()}
             </>
           )}
         </div>

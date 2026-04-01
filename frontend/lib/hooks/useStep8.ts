@@ -55,7 +55,7 @@ export function useNodeStatus(opts: UseNodeStatusOptions): UseNodeStatusResult {
         `${BASE}/proposals/${proposalId}/step8a/node-status`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -128,7 +128,10 @@ export function useValidateNode() {
   const [error, setError] = useState<Error | null>(null);
 
   const validate = useCallback(
-    async (proposalId: string, nodeName: string): Promise<ValidateNodeResult | null> => {
+    async (
+      proposalId: string,
+      nodeName: string,
+    ): Promise<ValidateNodeResult | null> => {
       setIsLoading(true);
       setError(null);
 
@@ -143,7 +146,7 @@ export function useValidateNode() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ node_name: nodeName }),
-          }
+          },
         );
 
         if (!response.ok) {
@@ -159,7 +162,7 @@ export function useValidateNode() {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   return { validate, isLoading, error };
@@ -180,7 +183,7 @@ export interface UseVersionHistoryResult {
 }
 
 export function useVersionHistory(
-  opts: UseVersionHistoryOptions
+  opts: UseVersionHistoryOptions,
 ): UseVersionHistoryResult {
   const { proposalId, outputKey } = opts;
   const [versions, setVersions] = useState<ArtifactVersion[]>([]);
@@ -201,11 +204,13 @@ export function useVersionHistory(
         `${BASE}/proposals/${proposalId}/step8a/versions/${outputKey}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.ok) {
-        throw new Error(`Version history request failed: ${response.statusText}`);
+        throw new Error(
+          `Version history request failed: ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
@@ -245,7 +250,7 @@ export type NodeDataType =
 
 export function useNodeData<T extends NodeDataType>(
   proposalId: string,
-  nodeOutputKey: string
+  nodeOutputKey: string,
 ) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -266,7 +271,7 @@ export function useNodeData<T extends NodeDataType>(
         `${BASE}/proposals/${proposalId}/step8a/versions/${nodeOutputKey}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -274,7 +279,11 @@ export function useNodeData<T extends NodeDataType>(
       }
 
       const result = await response.json();
-      if (!cancelledRef.current && result.versions && result.versions.length > 0) {
+      if (
+        !cancelledRef.current &&
+        result.versions &&
+        result.versions.length > 0
+      ) {
         // Get the latest version data
         // In a real implementation, this would fetch the actual artifact data
         setData(result.versions[0] as T);

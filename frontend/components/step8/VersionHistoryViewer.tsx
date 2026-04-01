@@ -48,10 +48,12 @@ export function VersionHistoryViewer({
   onRevalidate,
 }: VersionHistoryViewerProps) {
   const [selectedVersion, setSelectedVersion] = useState<string | null>(
-    versions.length > 0 ? versions[0].version_id : null
+    versions.length > 0 ? versions[0].version_id : null,
   );
   const [showDiff, setShowDiff] = useState(false);
-  const [comparisonMode, setComparisonMode] = useState<"prev" | "first">("prev");
+  const [comparisonMode, setComparisonMode] = useState<"prev" | "first">(
+    "prev",
+  );
 
   const getVersionColor = (index: number, total: number): string => {
     const percent = ((total - index) / total) * 100;
@@ -69,7 +71,10 @@ export function VersionHistoryViewer({
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
-  const generateMockDiff = (v1: VersionMetadata, v2: VersionMetadata | null) => {
+  const generateMockDiff = (
+    v1: VersionMetadata,
+    v2: VersionMetadata | null,
+  ) => {
     // Mock diff generation for demo purposes
     // In production, this would fetch actual diff from backend
     if (!v2) return { additions: 0, deletions: 0, diff_lines: [] };
@@ -127,14 +132,19 @@ export function VersionHistoryViewer({
     );
   }
 
-  const currentSelectedVersion = versions.find((v) => v.version_id === selectedVersion);
-  const currentIndex = versions.findIndex((v) => v.version_id === selectedVersion) ?? 0;
+  const currentSelectedVersion = versions.find(
+    (v) => v.version_id === selectedVersion,
+  );
+  const currentIndex =
+    versions.findIndex((v) => v.version_id === selectedVersion) ?? 0;
   const previousVersion =
     comparisonMode === "prev" && currentIndex < versions.length - 1
       ? versions[currentIndex + 1]
       : null;
-  const firstVersion = comparisonMode === "first" ? versions[versions.length - 1] : null;
-  const comparisonTarget = comparisonMode === "prev" ? previousVersion : firstVersion;
+  const firstVersion =
+    comparisonMode === "first" ? versions[versions.length - 1] : null;
+  const comparisonTarget =
+    comparisonMode === "prev" ? previousVersion : firstVersion;
 
   const diffData = generateMockDiff(currentSelectedVersion!, comparisonTarget);
 
@@ -143,8 +153,12 @@ export function VersionHistoryViewer({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Version History</h3>
-          <p className="text-sm text-gray-600 mt-1">{node_name} artifact versions</p>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Version History
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            {node_name} artifact versions
+          </p>
         </div>
         {onRevalidate && (
           <button
@@ -160,11 +174,17 @@ export function VersionHistoryViewer({
       {/* Version Summary */}
       <div className="grid grid-cols-3 gap-3 py-3 border rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50">
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Total Versions</p>
-          <p className="text-2xl font-bold text-indigo-600 mt-2">{versions.length}</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Total Versions
+          </p>
+          <p className="text-2xl font-bold text-indigo-600 mt-2">
+            {versions.length}
+          </p>
         </div>
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Latest</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Latest
+          </p>
           <p className="text-2xl font-bold text-purple-600 mt-2">
             v{versions[0].version_number}
           </p>
@@ -179,7 +199,9 @@ export function VersionHistoryViewer({
 
       {/* Timeline */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-gray-700">Version Timeline</h4>
+        <h4 className="text-sm font-semibold text-gray-700">
+          Version Timeline
+        </h4>
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {versions.map((version, idx) => {
             const isSelected = version.version_id === selectedVersion;
@@ -212,7 +234,8 @@ export function VersionHistoryViewer({
                       {version.description || "Version update"}
                     </p>
                     <p className="text-xs text-gray-600 mt-1">
-                      {new Date(version.created_at).toLocaleString()} • By {version.created_by}
+                      {new Date(version.created_at).toLocaleString()} • By{" "}
+                      {version.created_by}
                     </p>
                   </div>
                   <div className="text-right ml-4 flex-shrink-0">
@@ -233,7 +256,9 @@ export function VersionHistoryViewer({
                 {/* Selection Indicator */}
                 {isSelected && (
                   <div className="mt-2 pt-2 border-t flex items-center justify-between">
-                    <span className="text-xs font-semibold text-indigo-700">Selected</span>
+                    <span className="text-xs font-semibold text-indigo-700">
+                      Selected
+                    </span>
                     <span className="text-indigo-500">✓</span>
                   </div>
                 )}
@@ -247,7 +272,9 @@ export function VersionHistoryViewer({
       {currentSelectedVersion && (
         <div className="space-y-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
           <div>
-            <p className="text-sm font-semibold text-gray-700 mb-2">Compare With</p>
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Compare With
+            </p>
             <div className="flex gap-2">
               <button
                 onClick={() => {
@@ -305,15 +332,21 @@ export function VersionHistoryViewer({
                 <div className="grid grid-cols-3 gap-2">
                   <div className="p-2 bg-green-50 rounded text-center">
                     <p className="text-xs text-gray-600">Additions</p>
-                    <p className="text-lg font-bold text-green-600">{diffData.additions}</p>
+                    <p className="text-lg font-bold text-green-600">
+                      {diffData.additions}
+                    </p>
                   </div>
                   <div className="p-2 bg-red-50 rounded text-center">
                     <p className="text-xs text-gray-600">Deletions</p>
-                    <p className="text-lg font-bold text-red-600">{diffData.deletions}</p>
+                    <p className="text-lg font-bold text-red-600">
+                      {diffData.deletions}
+                    </p>
                   </div>
                   <div className="p-2 bg-blue-50 rounded text-center">
                     <p className="text-xs text-gray-600">Net Change</p>
-                    <p className={`text-lg font-bold ${diffData.net_change >= 0 ? "text-blue-600" : "text-orange-600"}`}>
+                    <p
+                      className={`text-lg font-bold ${diffData.net_change >= 0 ? "text-blue-600" : "text-orange-600"}`}
+                    >
                       {diffData.net_change >= 0 ? "+" : ""}
                       {diffData.net_change}
                     </p>
@@ -352,7 +385,9 @@ export function VersionHistoryViewer({
           <div className="grid grid-cols-2 gap-2 text-sm text-gray-900">
             <div>
               <p className="text-xs text-gray-600">Version ID</p>
-              <p className="font-mono text-xs mt-1">{currentSelectedVersion.version_id}</p>
+              <p className="font-mono text-xs mt-1">
+                {currentSelectedVersion.version_id}
+              </p>
             </div>
             <div>
               <p className="text-xs text-gray-600">Created By</p>
@@ -360,11 +395,15 @@ export function VersionHistoryViewer({
             </div>
             <div>
               <p className="text-xs text-gray-600">Created At</p>
-              <p className="mt-1">{new Date(currentSelectedVersion.created_at).toLocaleString()}</p>
+              <p className="mt-1">
+                {new Date(currentSelectedVersion.created_at).toLocaleString()}
+              </p>
             </div>
             <div>
               <p className="text-xs text-gray-600">Size</p>
-              <p className="mt-1">{formatBytes(currentSelectedVersion.size_bytes)}</p>
+              <p className="mt-1">
+                {formatBytes(currentSelectedVersion.size_bytes)}
+              </p>
             </div>
           </div>
         </div>

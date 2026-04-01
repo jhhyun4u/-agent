@@ -81,6 +81,7 @@ class MockQueryBuilder:
     def __init__(self, data=None, count=None):
         self._data = data or []
         self._count = count
+        self._is_single = False
 
     def _chain(self):
         return self
@@ -106,12 +107,24 @@ class MockQueryBuilder:
     order = property(lambda self: lambda *a, **kw: self._chain())
     limit = property(lambda self: lambda *a, **kw: self._chain())
     range = property(lambda self: lambda *a, **kw: self._chain())
-    single = property(lambda self: lambda: self._chain())
-    maybe_single = property(lambda self: lambda: self._chain())
+
+    def single(self):
+        """단일 레코드 조회 (있으면 반환, 없으면 error)"""
+        self._is_single = True
+        return self
+
+    def maybe_single(self):
+        """단일 레코드 조회 (있으면 반환, 없으면 None)"""
+        self._is_single = True
+        return self
 
     async def execute(self):
         result = MagicMock()
-        result.data = self._data
+        # single/maybe_single 호출 시 첫 원소만 반환
+        if self._is_single and isinstance(self._data, list):
+            result.data = self._data[0] if self._data else None
+        else:
+            result.data = self._data
         result.count = self._count
         return result
 
@@ -188,7 +201,21 @@ async def client(mock_user):
     from app.api.deps import get_current_user, get_rls_client, require_project_access
 
     app = _get_test_app()
-    supabase_mock = make_supabase_mock()
+
+    # 테스트용 문서 데이터
+    test_document = {
+        "id": "test-doc-001",
+        "org_id": "org-001",
+        "title": "Test Document",
+        "processing_status": "completed",
+        "storage_path": "documents/test-doc.pdf",
+    }
+
+    supabase_mock = make_supabase_mock(
+        table_data={
+            "intranet_documents": [test_document],
+        }
+    )
 
     # FastAPI dependency override — 모든 엔드포인트에서 인증 우회
     app.dependency_overrides[get_current_user] = lambda: mock_user

@@ -13,7 +13,13 @@ import PriceScoreTable from "./PriceScoreTable";
 import ScenarioCards from "./ScenarioCards";
 import SensitivityChart from "./SensitivityChart";
 import WinProbabilityGauge from "./WinProbabilityGauge";
-import { pricingApi, type PricingScenario, type PricingSimulationSummary, type ScoreSimulationRow, type SensitivityPoint } from "@/lib/api";
+import {
+  pricingApi,
+  type PricingScenario,
+  type PricingSimulationSummary,
+  type ScoreSimulationRow,
+  type SensitivityPoint,
+} from "@/lib/api";
 
 interface BidPlanData {
   recommended_bid: number;
@@ -37,14 +43,19 @@ interface Props {
 }
 
 function fmtWon(amount: number): string {
-  if (Math.abs(amount) >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
+  if (Math.abs(amount) >= 100_000_000)
+    return `${(amount / 100_000_000).toFixed(1)}억원`;
   if (Math.abs(amount) >= 10_000) return `${(amount / 10_000).toFixed(0)}만원`;
   return `${amount.toLocaleString()}원`;
 }
 
-export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: Props) {
+export default function BidPlanReviewPanel({
+  artifact,
+  proposalId,
+  onResume,
+}: Props) {
   const [selectedScenario, setSelectedScenario] = useState(
-    artifact?.selected_scenario || "balanced"
+    artifact?.selected_scenario || "balanced",
   );
   const [overrideEnabled, setOverrideEnabled] = useState(false);
   const [customPrice, setCustomPrice] = useState("");
@@ -57,7 +68,9 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
   const [loadingSims, setLoadingSims] = useState(false);
   const [currentArtifact, setCurrentArtifact] = useState<BidPlanData>(artifact);
 
-  useEffect(() => { setCurrentArtifact(artifact); }, [artifact]);
+  useEffect(() => {
+    setCurrentArtifact(artifact);
+  }, [artifact]);
 
   async function loadSimHistory() {
     setShowSimPicker(true);
@@ -65,32 +78,43 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
     try {
       const res = await pricingApi.getPricingSimulations(proposalId);
       setSimHistory(res.data || []);
-    } catch { /* ignore */ }
-    finally { setLoadingSims(false); }
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingSims(false);
+    }
   }
 
   async function applySimulation(simId: string) {
     try {
       const detail = await pricingApi.getPricingSimulation(simId);
-      const simResult = (detail as Record<string, unknown>).result as Record<string, unknown> | undefined;
+      const simResult = (detail as Record<string, unknown>).result as
+        | Record<string, unknown>
+        | undefined;
       if (simResult) {
         setCurrentArtifact({
           recommended_bid: (simResult.recommended_bid as number) || 0,
           recommended_ratio: (simResult.recommended_ratio as number) || 0,
           scenarios: (simResult.scenarios as PricingScenario[]) || [],
           selected_scenario: "balanced",
-          cost_breakdown: (simResult.cost_breakdown as Record<string, unknown>) || {},
-          sensitivity_curve: (simResult.sensitivity_curve as SensitivityPoint[]) || [],
+          cost_breakdown:
+            (simResult.cost_breakdown as Record<string, unknown>) || {},
+          sensitivity_curve:
+            (simResult.sensitivity_curve as SensitivityPoint[]) || [],
           win_probability: (simResult.win_probability as number) || 0,
-          market_context: (simResult.market_context as Record<string, unknown>) || {},
+          market_context:
+            (simResult.market_context as Record<string, unknown>) || {},
           data_quality: (simResult.data_quality as string) || "rule_based",
-          score_simulation: (simResult.score_simulation as ScoreSimulationRow[]) || [],
+          score_simulation:
+            (simResult.score_simulation as ScoreSimulationRow[]) || [],
           user_override_price: null,
           user_override_reason: "",
         });
         setSelectedScenario("balanced");
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     setShowSimPicker(false);
   }
 
@@ -137,7 +161,8 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
           </button>
         </div>
         <p className="text-xs text-[#8c8c8c]">
-          전략에 맞는 입찰 시나리오를 선택하세요. 시나리오 선택 후 실행 계획(팀/일정/원가)이 이 예산 범위 내에서 수립됩니다.
+          전략에 맞는 입찰 시나리오를 선택하세요. 시나리오 선택 후 실행
+          계획(팀/일정/원가)이 이 예산 범위 내에서 수립됩니다.
         </p>
         <div className="mt-3 flex items-center gap-4 text-sm">
           <div>
@@ -151,13 +176,15 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
           </div>
           <div>
             <span className="text-[#8c8c8c]">데이터: </span>
-            <span className={`text-xs px-1.5 py-0.5 rounded ${
-              currentArtifact.data_quality === "statistical"
-                ? "bg-green-400/10 text-green-400"
-                : currentArtifact.data_quality === "hybrid"
-                ? "bg-blue-400/10 text-blue-400"
-                : "bg-yellow-400/10 text-yellow-400"
-            }`}>
+            <span
+              className={`text-xs px-1.5 py-0.5 rounded ${
+                currentArtifact.data_quality === "statistical"
+                  ? "bg-green-400/10 text-green-400"
+                  : currentArtifact.data_quality === "hybrid"
+                    ? "bg-blue-400/10 text-blue-400"
+                    : "bg-yellow-400/10 text-yellow-400"
+              }`}
+            >
               {currentArtifact.data_quality}
             </span>
           </div>
@@ -168,13 +195,24 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
       {showSimPicker && (
         <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-blue-400">기존 시뮬레이션 선택</h3>
-            <button onClick={() => setShowSimPicker(false)} className="text-xs text-[#8c8c8c] hover:text-[#ededed]">닫기</button>
+            <h3 className="text-sm font-medium text-blue-400">
+              기존 시뮬레이션 선택
+            </h3>
+            <button
+              onClick={() => setShowSimPicker(false)}
+              className="text-xs text-[#8c8c8c] hover:text-[#ededed]"
+            >
+              닫기
+            </button>
           </div>
           {loadingSims ? (
-            <p className="text-xs text-[#8c8c8c] animate-pulse">불러오는 중...</p>
+            <p className="text-xs text-[#8c8c8c] animate-pulse">
+              불러오는 중...
+            </p>
           ) : simHistory.length === 0 ? (
-            <p className="text-xs text-[#8c8c8c]">이 프로젝트에 연결된 시뮬레이션이 없습니다</p>
+            <p className="text-xs text-[#8c8c8c]">
+              이 프로젝트에 연결된 시뮬레이션이 없습니다
+            </p>
           ) : (
             <div className="space-y-1">
               {simHistory.map((sim) => (
@@ -185,11 +223,17 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
                 >
                   <div className="text-xs">
                     <span className="text-[#ededed]">{sim.domain || "—"}</span>
-                    <span className="text-[#8c8c8c] ml-2">{sim.evaluation_method}</span>
-                    <span className="text-[#8c8c8c] ml-2">{sim.positioning}</span>
+                    <span className="text-[#8c8c8c] ml-2">
+                      {sim.evaluation_method}
+                    </span>
+                    <span className="text-[#8c8c8c] ml-2">
+                      {sim.positioning}
+                    </span>
                   </div>
                   <span className="text-[10px] text-[#666]">
-                    {sim.created_at ? new Date(sim.created_at).toLocaleDateString("ko-KR") : ""}
+                    {sim.created_at
+                      ? new Date(sim.created_at).toLocaleDateString("ko-KR")
+                      : ""}
                   </span>
                 </button>
               ))}
@@ -202,7 +246,9 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
       <div className="grid grid-cols-[200px_1fr] gap-4">
         <WinProbabilityGauge
           probability={currentArtifact.win_probability}
-          confidence={currentArtifact.data_quality === "statistical" ? "high" : "medium"}
+          confidence={
+            currentArtifact.data_quality === "statistical" ? "high" : "medium"
+          }
         />
         <ScenarioCards
           scenarios={currentArtifact.scenarios}
@@ -282,7 +328,13 @@ export default function BidPlanReviewPanel({ artifact, proposalId, onResume }: P
           onClick={handleApprove}
           className="rounded-lg bg-[#3ecf8e] px-4 py-2 text-sm font-medium text-[#0a0a0a] hover:bg-[#3ecf8e]/90 transition-colors"
         >
-          승인 ({selectedScenario === "conservative" ? "보수적" : selectedScenario === "aggressive" ? "공격적" : "균형"})
+          승인 (
+          {selectedScenario === "conservative"
+            ? "보수적"
+            : selectedScenario === "aggressive"
+              ? "공격적"
+              : "균형"}
+          )
         </button>
         <button
           onClick={() => handleReject(false)}

@@ -332,6 +332,10 @@ app.include_router(bids_router)
 from app.api.routes_step8a import router as step8a_router
 app.include_router(step8a_router)
 
+# STEP 8 Review: AI-powered review interface for STEP 8 nodes
+from app.api.routes_step8_review import router as step8_review_router
+app.include_router(step8_review_router)
+
 
 # ── 헬스체크 ──
 

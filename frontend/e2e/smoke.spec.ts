@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Smoke Tests — 주요 페이지 렌더링", () => {
-  test("로그인 페이지 → DEV 모드에서 /proposals 리다이렉트", async ({ page }) => {
+  test("로그인 페이지 → DEV 모드에서 /proposals 리다이렉트", async ({
+    page,
+  }) => {
     await page.goto("/login");
     // DEV 모드: /login → /proposals 리다이렉트 (middleware)
     await expect(page).toHaveURL(/proposals/);

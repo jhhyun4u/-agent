@@ -50,13 +50,22 @@ export function useStep8Data({
   autoFetch = true,
 }: UseStep8DataOptions): UseStep8DataResult {
   const [status, setStatus] = useState<Step8Status | null>(null);
-  const [customerProfile, setCustomerProfile] = useState<CustomerProfile | null>(null);
-  const [validationReport, setValidationReport] = useState<ValidationReport | null>(null);
-  const [consolidatedProposal, setConsolidatedProposal] = useState<ConsolidatedProposal | null>(null);
-  const [mockEvalResult, setMockEvalResult] = useState<MockEvalResult | null>(null);
-  const [feedbackSummary, setFeedbackSummary] = useState<FeedbackSummary | null>(null);
-  const [rewriteHistory, setRewriteHistory] = useState<RewriteRecord | null>(null);
-  const [reviewPanelData, setReviewPanelData] = useState<ReviewPanelData | null>(null);
+  const [customerProfile, setCustomerProfile] =
+    useState<CustomerProfile | null>(null);
+  const [validationReport, setValidationReport] =
+    useState<ValidationReport | null>(null);
+  const [consolidatedProposal, setConsolidatedProposal] =
+    useState<ConsolidatedProposal | null>(null);
+  const [mockEvalResult, setMockEvalResult] = useState<MockEvalResult | null>(
+    null,
+  );
+  const [feedbackSummary, setFeedbackSummary] =
+    useState<FeedbackSummary | null>(null);
+  const [rewriteHistory, setRewriteHistory] = useState<RewriteRecord | null>(
+    null,
+  );
+  const [reviewPanelData, setReviewPanelData] =
+    useState<ReviewPanelData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -64,7 +73,7 @@ export function useStep8Data({
   const fetchStatus = useCallback(async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/status`
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/status`,
       );
       if (response.ok) {
         const data = await response.json();
@@ -93,43 +102,49 @@ export function useStep8Data({
         review_panel: setReviewPanelData,
       };
 
-      const fetchPromises = Object.entries(endpoints).map(async ([endpoint, setter]) => {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/${endpoint.replace(/_/g, "-")}`
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setter(data);
-          }
-        } catch (e) {
-          // Fallback: Try to fetch from artifacts
+      const fetchPromises = Object.entries(endpoints).map(
+        async ([endpoint, setter]) => {
           try {
-            const nodeMap: Record<string, string> = {
-              customer_profile: "step_8a",
-              validation_report: "step_8b",
-              consolidated_proposal: "step_8c",
-              mock_eval_result: "step_8d",
-              feedback_summary: "step_8e",
-              rewrite_history: "step_8f",
-            };
-
-            if (nodeMap[endpoint]) {
-              const artifact = await api.artifacts.get(proposalId, nodeMap[endpoint]);
-              if (artifact && artifact.data) {
-                setter(artifact.data);
-              }
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/${endpoint.replace(/_/g, "-")}`,
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setter(data);
             }
-          } catch (fallbackError) {
-            console.debug(`Failed to fetch ${endpoint}:`, fallbackError);
+          } catch (e) {
+            // Fallback: Try to fetch from artifacts
+            try {
+              const nodeMap: Record<string, string> = {
+                customer_profile: "step_8a",
+                validation_report: "step_8b",
+                consolidated_proposal: "step_8c",
+                mock_eval_result: "step_8d",
+                feedback_summary: "step_8e",
+                rewrite_history: "step_8f",
+              };
+
+              if (nodeMap[endpoint]) {
+                const artifact = await api.artifacts.get(
+                  proposalId,
+                  nodeMap[endpoint],
+                );
+                if (artifact && artifact.data) {
+                  setter(artifact.data);
+                }
+              }
+            } catch (fallbackError) {
+              console.debug(`Failed to fetch ${endpoint}:`, fallbackError);
+            }
           }
-        }
-      });
+        },
+      );
 
       await Promise.all(fetchPromises);
       await fetchStatus();
     } catch (e) {
-      const err = e instanceof Error ? e : new Error("Failed to fetch STEP 8 data");
+      const err =
+        e instanceof Error ? e : new Error("Failed to fetch STEP 8 data");
       setError(err);
     } finally {
       setIsLoading(false);
@@ -160,7 +175,7 @@ export function useStep8Data({
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${proposalId}/step8/validate/${nodeId}`,
-          { method: "POST" }
+          { method: "POST" },
         );
         if (response.ok) {
           // Refresh data after validation
@@ -170,7 +185,7 @@ export function useStep8Data({
         console.error("Validation failed:", e);
       }
     },
-    [proposalId, fetchNodeData]
+    [proposalId, fetchNodeData],
   );
 
   return {

@@ -21,7 +21,9 @@ interface CompareViewProps {
 }
 
 export default function CompareView({ promptId }: CompareViewProps) {
-  const [dataSource, setDataSource] = useState<"sample" | "project" | "custom">("sample");
+  const [dataSource, setDataSource] = useState<"sample" | "project" | "custom">(
+    "sample",
+  );
   const [sampleId, setSampleId] = useState("sample_mid_consulting");
   const [runQuality, setRunQuality] = useState(true);
   const [running, setRunning] = useState(false);
@@ -70,7 +72,9 @@ export default function CompareView({ promptId }: CompareViewProps) {
         <h2 className="text-sm font-semibold">A vs B 비교 설정</h2>
 
         <div>
-          <label className="text-xs text-[#8c8c8c] block mb-2">데이터 소스</label>
+          <label className="text-xs text-[#8c8c8c] block mb-2">
+            데이터 소스
+          </label>
           <div className="flex gap-3">
             {(["sample", "project", "custom"] as const).map((id) => (
               <button
@@ -82,7 +86,13 @@ export default function CompareView({ promptId }: CompareViewProps) {
                     : "bg-[#111] text-[#8c8c8c] hover:bg-[#1a1a1a] border border-transparent"
                 }`}
               >
-                {{ sample: "샘플 RFP", project: "기존 프로젝트", custom: "커스텀" }[id]}
+                {
+                  {
+                    sample: "샘플 RFP",
+                    project: "기존 프로젝트",
+                    custom: "커스텀",
+                  }[id]
+                }
               </button>
             ))}
           </div>
@@ -90,14 +100,18 @@ export default function CompareView({ promptId }: CompareViewProps) {
 
         {dataSource === "sample" && (
           <div>
-            <label className="text-xs text-[#8c8c8c] block mb-2">샘플 RFP</label>
+            <label className="text-xs text-[#8c8c8c] block mb-2">
+              샘플 RFP
+            </label>
             <select
               value={sampleId}
               onChange={(e) => setSampleId(e.target.value)}
               className="bg-[#0a0a0a] border border-[#262626] rounded-lg px-3 py-2 text-xs focus:border-[#3ecf8e] focus:outline-none w-full"
             >
               {SAMPLE_OPTIONS.map((s) => (
-                <option key={s.id} value={s.id}>{s.label}</option>
+                <option key={s.id} value={s.id}>
+                  {s.label}
+                </option>
               ))}
             </select>
           </div>
@@ -155,11 +169,15 @@ export default function CompareView({ promptId }: CompareViewProps) {
               </div>
               <div>
                 <div className="text-xs text-[#8c8c8c]">토큰 차이</div>
-                <div className="text-lg font-bold">{result.comparison.token_diff}</div>
+                <div className="text-lg font-bold">
+                  {result.comparison.token_diff}
+                </div>
               </div>
               <div>
                 <div className="text-xs text-[#8c8c8c]">추천</div>
-                <div className="text-xs mt-1">{result.comparison.recommendation}</div>
+                <div className="text-xs mt-1">
+                  {result.comparison.recommendation}
+                </div>
               </div>
             </div>
           </section>
@@ -167,7 +185,11 @@ export default function CompareView({ promptId }: CompareViewProps) {
           {/* 나란히 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SimResultCard result={result.result_a} compact label="A: Active" />
-            <SimResultCard result={result.result_b} compact label="B: Candidate" />
+            <SimResultCard
+              result={result.result_b}
+              compact
+              label="B: Candidate"
+            />
           </div>
         </>
       )}

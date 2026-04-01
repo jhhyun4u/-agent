@@ -13,10 +13,26 @@ type Tab = "profile" | "notifications" | "display";
 // ── 이메일 카테고리 정의 ──
 
 const EMAIL_CATEGORIES = [
-  { key: "email_monitoring", label: "공고 모니터링", desc: "추천 공고 \u00B7 마감 임박 \u00B7 일일 요약" },
-  { key: "email_proposal", label: "제안서 작성", desc: "검토 및 승인 요청 \u00B7 AI 작업 결과" },
-  { key: "email_bidding", label: "입찰 \u00B7 성과", desc: "비딩 \u00B7 수주 결과" },
-  { key: "email_learning", label: "지식 \u00B7 학습", desc: "회고 \u00B7 KB 환류 알림" },
+  {
+    key: "email_monitoring",
+    label: "공고 모니터링",
+    desc: "추천 공고 \u00B7 마감 임박 \u00B7 일일 요약",
+  },
+  {
+    key: "email_proposal",
+    label: "제안서 작성",
+    desc: "검토 및 승인 요청 \u00B7 AI 작업 결과",
+  },
+  {
+    key: "email_bidding",
+    label: "입찰 \u00B7 성과",
+    desc: "비딩 \u00B7 수주 결과",
+  },
+  {
+    key: "email_learning",
+    label: "지식 \u00B7 학습",
+    desc: "회고 \u00B7 KB 환류 알림",
+  },
 ] as const;
 
 // ── 메인 ──
@@ -28,16 +44,18 @@ export default function SettingsPage() {
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <h1 className="text-sm font-semibold text-[#ededed]">내 설정</h1>
-        <p className="text-xs text-[#8c8c8c] mt-0.5">프로필, 알림, 표시 설정을 관리합니다</p>
+        <p className="text-xs text-[#8c8c8c] mt-0.5">
+          프로필, 알림, 표시 설정을 관리합니다
+        </p>
       </div>
 
       <div className="border-b border-[#262626] px-6 shrink-0">
         <div className="flex">
-          {([
+          {[
             { key: "profile" as Tab, label: "프로필" },
             { key: "notifications" as Tab, label: "알림" },
             { key: "display" as Tab, label: "표시" },
-          ]).map((t) => (
+          ].map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
@@ -108,10 +126,15 @@ function ProfileTab() {
         <InfoRow
           label="소속"
           value={
-            [profile.division_name, profile.team_name].filter(Boolean).join(" > ") || "-"
+            [profile.division_name, profile.team_name]
+              .filter(Boolean)
+              .join(" > ") || "-"
           }
         />
-        <InfoRow label="역할" value={ROLE_LABELS[profile.role || ""] || profile.role || "-"} />
+        <InfoRow
+          label="역할"
+          value={ROLE_LABELS[profile.role || ""] || profile.role || "-"}
+        />
       </div>
 
       <button
@@ -182,7 +205,9 @@ function NotificationsTab() {
     <div className="max-w-lg space-y-5">
       {/* 채널 설정 */}
       <div className="rounded-lg border border-[#262626] bg-[#111111] p-5 space-y-3">
-        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide">채널 설정</h3>
+        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide">
+          채널 설정
+        </h3>
         <ToggleRow
           label="Teams 알림"
           desc="Teams 채널에 Adaptive Card 발송"
@@ -201,7 +226,9 @@ function NotificationsTab() {
 
       {/* 이메일 알림 */}
       <div className="rounded-lg border border-[#262626] bg-[#111111] p-5 space-y-3">
-        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide">이메일 알림</h3>
+        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide">
+          이메일 알림
+        </h3>
         {!emailEnabled && (
           <p className="text-xs text-[#5c5c5c] bg-[#1c1c1c] rounded-md px-3 py-2 border border-[#262626]">
             이메일 알림은 관리자 설정 후 사용 가능합니다.
@@ -241,7 +268,9 @@ function ToggleRow({
   loading?: boolean;
 }) {
   return (
-    <div className={`flex items-center justify-between py-1.5 ${disabled ? "opacity-40" : ""}`}>
+    <div
+      className={`flex items-center justify-between py-1.5 ${disabled ? "opacity-40" : ""}`}
+    >
       <div>
         <span className="text-sm text-[#ededed]">{label}</span>
         <p className="text-xs text-[#5c5c5c]">{desc}</p>
@@ -276,7 +305,9 @@ function DisplayTab() {
       const saved = localStorage.getItem("theme");
       if (saved === "light") setTheme("light");
       else if (!saved) setTheme("system");
-    } catch { /* SSR */ }
+    } catch {
+      /* SSR */
+    }
   }, []);
 
   function applyTheme(t: "dark" | "light" | "system") {
@@ -296,20 +327,27 @@ function DisplayTab() {
           document.documentElement.classList.remove("light");
         }
       }
-    } catch { /* 무시 */ }
+    } catch {
+      /* 무시 */
+    }
   }
 
   return (
     <div className="max-w-lg">
       <div className="rounded-lg border border-[#262626] bg-[#111111] p-5">
-        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide mb-3">테마</h3>
+        <h3 className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wide mb-3">
+          테마
+        </h3>
         <div className="flex gap-3">
-          {([
+          {[
             { key: "dark" as const, label: "다크" },
             { key: "light" as const, label: "라이트" },
             { key: "system" as const, label: "시스템 설정" },
-          ]).map((opt) => (
-            <label key={opt.key} className="flex items-center gap-1.5 cursor-pointer">
+          ].map((opt) => (
+            <label
+              key={opt.key}
+              className="flex items-center gap-1.5 cursor-pointer"
+            >
               <input
                 type="radio"
                 name="theme"

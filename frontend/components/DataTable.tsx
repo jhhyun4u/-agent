@@ -107,13 +107,18 @@ export default function DataTable<T extends { id: string }>({
   }
 
   return (
-    <div className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] overflow-hidden ${className}`}>
+    <div
+      className={`bg-[#1c1c1c] rounded-2xl border border-[#262626] overflow-hidden ${className}`}
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-[#262626]">
         <h2 className="text-sm font-semibold text-[#ededed]">{title}</h2>
         {onAdd && (
           <button
-            onClick={() => { setAddingRow(true); setNewRow({}); }}
+            onClick={() => {
+              setAddingRow(true);
+              setNewRow({});
+            }}
             className="text-xs font-medium text-[#3ecf8e] hover:text-[#3ecf8e]/80 transition-colors"
           >
             + 등록
@@ -134,7 +139,9 @@ export default function DataTable<T extends { id: string }>({
               >
                 <option value="">전체</option>
                 {f.options.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -172,7 +179,9 @@ export default function DataTable<T extends { id: string }>({
                     <CellInput
                       column={col}
                       value={newRow[col.key] ?? ""}
-                      onChange={(v) => setNewRow((r) => ({ ...r, [col.key]: v }))}
+                      onChange={(v) =>
+                        setNewRow((r) => ({ ...r, [col.key]: v }))
+                      }
                     />
                   </td>
                 ))}
@@ -198,14 +207,19 @@ export default function DataTable<T extends { id: string }>({
 
             {/* 데이터 행 */}
             {data.map((row) => (
-              <tr key={row.id} className="border-b border-[#262626] hover:bg-[#262626]/30 transition-colors">
+              <tr
+                key={row.id}
+                className="border-b border-[#262626] hover:bg-[#262626]/30 transition-colors"
+              >
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-2.5 text-[#ededed]">
                     {editingId === row.id && col.editable !== false ? (
                       <CellInput
                         column={col}
                         value={editValues[col.key] ?? ""}
-                        onChange={(v) => setEditValues((ev) => ({ ...ev, [col.key]: v }))}
+                        onChange={(v) =>
+                          setEditValues((ev) => ({ ...ev, [col.key]: v }))
+                        }
                       />
                     ) : col.render ? (
                       col.render(row[col.key], row)
@@ -218,13 +232,38 @@ export default function DataTable<T extends { id: string }>({
                   <td className="px-4 py-2.5 text-right">
                     {editingId === row.id ? (
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={saveEdit} disabled={submitting} className="text-[10px] text-[#3ecf8e] hover:underline disabled:opacity-40">저장</button>
-                        <button onClick={() => setEditingId(null)} className="text-[10px] text-[#8c8c8c] hover:underline">취소</button>
+                        <button
+                          onClick={saveEdit}
+                          disabled={submitting}
+                          className="text-[10px] text-[#3ecf8e] hover:underline disabled:opacity-40"
+                        >
+                          저장
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className="text-[10px] text-[#8c8c8c] hover:underline"
+                        >
+                          취소
+                        </button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-end gap-1">
-                        {onEdit && <button onClick={() => startEdit(row)} className="text-[10px] text-[#8c8c8c] hover:text-[#ededed]">수정</button>}
-                        {onDelete && <button onClick={() => handleDelete(row.id)} className="text-[10px] text-red-400/70 hover:text-red-400">삭제</button>}
+                        {onEdit && (
+                          <button
+                            onClick={() => startEdit(row)}
+                            className="text-[10px] text-[#8c8c8c] hover:text-[#ededed]"
+                          >
+                            수정
+                          </button>
+                        )}
+                        {onDelete && (
+                          <button
+                            onClick={() => handleDelete(row.id)}
+                            className="text-[10px] text-red-400/70 hover:text-red-400"
+                          >
+                            삭제
+                          </button>
+                        )}
                       </div>
                     )}
                   </td>
@@ -234,7 +273,10 @@ export default function DataTable<T extends { id: string }>({
 
             {data.length === 0 && !addingRow && (
               <tr>
-                <td colSpan={columns.length + 1} className="px-4 py-8 text-center text-[#5c5c5c]">
+                <td
+                  colSpan={columns.length + 1}
+                  className="px-4 py-8 text-center text-[#5c5c5c]"
+                >
                   데이터가 없습니다.
                 </td>
               </tr>
@@ -266,7 +308,9 @@ function CellInput<T>({
       >
         <option value="">선택...</option>
         {column.options.map((opt) => (
-          <option key={opt} value={opt}>{opt}</option>
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
         ))}
       </select>
     );
@@ -276,7 +320,11 @@ function CellInput<T>({
     <input
       type={column.type === "number" ? "number" : "text"}
       value={String(value)}
-      onChange={(e) => onChange(column.type === "number" ? Number(e.target.value) : e.target.value)}
+      onChange={(e) =>
+        onChange(
+          column.type === "number" ? Number(e.target.value) : e.target.value,
+        )
+      }
       className="w-full bg-[#111111] border border-[#262626] rounded px-2 py-1 text-[10px] text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
     />
   );

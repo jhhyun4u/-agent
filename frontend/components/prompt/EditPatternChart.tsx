@@ -17,7 +17,10 @@ interface EditPatternChartProps {
   maxItems?: number;
 }
 
-export default function EditPatternChart({ patterns, maxItems = 5 }: EditPatternChartProps) {
+export default function EditPatternChart({
+  patterns,
+  maxItems = 5,
+}: EditPatternChartProps) {
   if (!patterns.length) {
     return <div className="text-xs text-[#8c8c8c]">수정 패턴 데이터 없음</div>;
   }
@@ -27,7 +30,9 @@ export default function EditPatternChart({ patterns, maxItems = 5 }: EditPattern
 
   return (
     <div className="space-y-2">
-      <h3 className="text-xs font-semibold">사람 수정 패턴 TOP {items.length}</h3>
+      <h3 className="text-xs font-semibold">
+        사람 수정 패턴 TOP {items.length}
+      </h3>
       {items.map((p, i) => {
         const barPct = (p.count / maxCount) * 100;
         return (

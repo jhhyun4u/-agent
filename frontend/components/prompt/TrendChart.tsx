@@ -20,7 +20,13 @@ interface TrendChartProps {
 
 const METRIC_CONFIG = {
   quality: { label: "품질 점수", color: "#3ecf8e", suffix: "점", good: "high" },
-  edit_ratio: { label: "수정율", color: "#ff6b6b", suffix: "%", good: "low", multiply: 100 },
+  edit_ratio: {
+    label: "수정율",
+    color: "#ff6b6b",
+    suffix: "%",
+    good: "low",
+    multiply: 100,
+  },
   win_rate: { label: "수주율", color: "#60a5fa", suffix: "%", good: "high" },
 } as const;
 
@@ -49,7 +55,9 @@ export default function TrendChart({ data, metric }: TrendChartProps) {
 
   return (
     <div className="space-y-2">
-      <div className="text-xs font-semibold text-[#8c8c8c]">{config.label} 추이</div>
+      <div className="text-xs font-semibold text-[#8c8c8c]">
+        {config.label} 추이
+      </div>
       <div className="space-y-1">
         {data.map((d, i) => {
           const raw = d[metric];
@@ -60,15 +68,21 @@ export default function TrendChart({ data, metric }: TrendChartProps) {
 
           return (
             <div key={d.period} className="flex items-center gap-2 text-xs">
-              <span className="w-16 text-[#8c8c8c] shrink-0">{d.period.slice(5)}</span>
+              <span className="w-16 text-[#8c8c8c] shrink-0">
+                {d.period.slice(5)}
+              </span>
               <div className="flex-1 h-4 bg-[#1a1a1a] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
-                  style={{ width: `${barWidth}%`, backgroundColor: config.color }}
+                  style={{
+                    width: `${barWidth}%`,
+                    backgroundColor: config.color,
+                  }}
                 />
               </div>
               <span className="w-12 text-right" style={{ color: config.color }}>
-                {val.toFixed(metric === "edit_ratio" ? 0 : 1)}{config.suffix}
+                {val.toFixed(metric === "edit_ratio" ? 0 : 1)}
+                {config.suffix}
               </span>
             </div>
           );

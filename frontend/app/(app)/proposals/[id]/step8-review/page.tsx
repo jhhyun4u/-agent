@@ -40,7 +40,9 @@ export default function Step8ReviewPage() {
     autoFetch: true,
   });
 
-  const [selectedVersionNode, setSelectedVersionNode] = useState<string | null>(null);
+  const [selectedVersionNode, setSelectedVersionNode] = useState<string | null>(
+    null,
+  );
   const [showVersionViewer, setShowVersionViewer] = useState(false);
 
   // Mock version history (in production, fetch from backend)
@@ -124,7 +126,9 @@ export default function Step8ReviewPage() {
       <div className="min-h-screen bg-[#0f0f0f] text-[#ededed] flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm text-[#8c8c8c]">STEP 8 데이터를 불러오는 중...</p>
+          <p className="text-sm text-[#8c8c8c]">
+            STEP 8 데이터를 불러오는 중...
+          </p>
         </div>
       </div>
     );
@@ -143,8 +147,12 @@ export default function Step8ReviewPage() {
               ← 뒤로
             </Link>
             <div>
-              <h1 className="text-lg font-semibold text-[#ededed]">STEP 8 검토</h1>
-              <p className="text-xs text-[#8c8c8c] mt-1">AI 강화 제안서 리뷰 및 최적화</p>
+              <h1 className="text-lg font-semibold text-[#ededed]">
+                STEP 8 검토
+              </h1>
+              <p className="text-xs text-[#8c8c8c] mt-1">
+                AI 강화 제안서 리뷰 및 최적화
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -178,9 +186,14 @@ export default function Step8ReviewPage() {
               isLoading={isLoading}
               error={error}
               onValidateAll={() => {
-                ["step_8a", "step_8b", "step_8c", "step_8d", "step_8e", "step_8f"].forEach(
-                  (nodeId) => validateNode(nodeId)
-                );
+                [
+                  "step_8a",
+                  "step_8b",
+                  "step_8c",
+                  "step_8d",
+                  "step_8e",
+                  "step_8f",
+                ].forEach((nodeId) => validateNode(nodeId));
               }}
               onValidateNode={validateNode}
               onRevalidate={refresh}
@@ -217,13 +230,27 @@ export default function Step8ReviewPage() {
         {/* 버전 히스토리 비교기 */}
         <section className="mb-12">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-[#ededed] mb-2">버전 히스토리</h2>
-            <p className="text-sm text-[#8c8c8c]">각 노드의 버전 변경 이력과 차이점 비교</p>
+            <h2 className="text-lg font-semibold text-[#ededed] mb-2">
+              버전 히스토리
+            </h2>
+            <p className="text-sm text-[#8c8c8c]">
+              각 노드의 버전 변경 이력과 차이점 비교
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {["step_8a", "step_8b", "step_8c", "step_8d", "step_8e", "step_8f"].map((nodeId) => (
-              <div key={nodeId} className="border border-[#262626] rounded-lg overflow-hidden">
+            {[
+              "step_8a",
+              "step_8b",
+              "step_8c",
+              "step_8d",
+              "step_8e",
+              "step_8f",
+            ].map((nodeId) => (
+              <div
+                key={nodeId}
+                className="border border-[#262626] rounded-lg overflow-hidden"
+              >
                 <VersionHistoryViewer
                   node_name={nodeId}
                   versions={mockVersions[nodeId] || []}
@@ -244,11 +271,15 @@ export default function Step8ReviewPage() {
         {feedbackSummary && (
           <section className="mb-12">
             <div className="bg-[#111111] border border-[#262626] rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-[#ededed] mb-4">피드백 요약</h2>
+              <h2 className="text-lg font-semibold text-[#ededed] mb-4">
+                피드백 요약
+              </h2>
 
               {/* 핵심 소견 */}
               <div className="mb-6 p-4 bg-[#1a1a1a] rounded-lg border border-[#262626]">
-                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">핵심 소견</p>
+                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">
+                  핵심 소견
+                </p>
                 <p className="text-sm text-[#ededed] leading-relaxed">
                   {feedbackSummary.key_findings}
                 </p>
@@ -256,16 +287,22 @@ export default function Step8ReviewPage() {
 
               {/* 예상 개선율 */}
               <div className="mb-6 p-4 bg-green-500/10 rounded-lg border border-green-500/30">
-                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">예상 개선</p>
+                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">
+                  예상 개선
+                </p>
                 <p className="text-3xl font-bold text-green-400">
                   +{feedbackSummary.score_improvement_projection}점
                 </p>
-                <p className="text-xs text-[#8c8c8c] mt-1">모든 권고사항 반영 시</p>
+                <p className="text-xs text-[#8c8c8c] mt-1">
+                  모든 권고사항 반영 시
+                </p>
               </div>
 
               {/* 다음 단계 안내 */}
               <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#262626]">
-                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">다음 단계</p>
+                <p className="text-sm text-[#8c8c8c] uppercase font-semibold mb-2">
+                  다음 단계
+                </p>
                 <p className="text-sm text-[#ededed] leading-relaxed">
                   {feedbackSummary.next_phase_guidance}
                 </p>
@@ -277,7 +314,9 @@ export default function Step8ReviewPage() {
         {/* 빈 상태 */}
         {!status && !error && (
           <div className="text-center py-12">
-            <p className="text-[#8c8c8c] text-sm mb-4">STEP 8 데이터가 아직 준비되지 않았습니다.</p>
+            <p className="text-[#8c8c8c] text-sm mb-4">
+              STEP 8 데이터가 아직 준비되지 않았습니다.
+            </p>
             <button
               onClick={() => refresh()}
               className="text-xs text-[#3ecf8e] hover:underline transition-colors"

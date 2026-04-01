@@ -9,9 +9,11 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 ## 🎨 Preview Pages
 
 ### 1. **Dashboard** — PREVIEW_DASHBOARD.html
+
 **Main landing page showing KPI metrics and proposal overview**
 
 **Features:**
+
 - 📊 6 KPI cards (win rate, monthly rate, active proposals, recent activity, deadlines, team performance)
 - 📌 Recently worked proposals section with status indicators
 - 🎯 D-Day deadline tracking with color-coded urgency (red/amber/gray)
@@ -19,6 +21,7 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 - 🌓 Dark mode styling with CSS variables
 
 **When to use:**
+
 - First landing page after login
 - Overview of current project status
 - Quick access to recent work
@@ -26,9 +29,11 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 ---
 
 ### 2. **Proposals List** — PREVIEW_PROPOSALS_LIST.html
+
 **Grid view of all proposals in different states**
 
 **Features:**
+
 - 🏠 6 project cards showing:
   - Project title with status badge (진행 중, 완료됨, 준비 중, 실패)
   - Client/contractor info
@@ -40,12 +45,14 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 - 🎬 Hover effects on cards with border and shadow enhancement
 
 **Status Badges:**
+
 - **진행 중** (Processing) — Green accent
 - **완료됨** (Completed) — Light green
 - **준비 중** (Initialized) — Amber/orange
 - **실패** (Failed) — Red
 
 **When to use:**
+
 - Browse all proposals across the team
 - Filter by status or completion stage
 - Quick actions (Continue writing, Preview, Download)
@@ -53,9 +60,11 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 ---
 
 ### 3. **Proposal Editor** — PREVIEW_PROPOSAL_EDITOR.html
+
 **Multi-column editor interface for writing proposals**
 
 **Layout:**
+
 ```
 ┌─────────────────────────────────────────────┐
 │ Header: Project Title + Actions             │
@@ -69,12 +78,14 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 **Components:**
 
 **Left Panel — Table of Contents (TOC)**
+
 - 8 sections with completion indicators (✓ done, × todo)
 - Progress bar showing 4/8 sections completed (50%)
 - Click to navigate between sections
 - Visual indicator of active section with green left border
 
 **Center Panel — Editor**
+
 - Section number and title
 - Last modified info and author
 - Rich text formatting toolbar (B, I, U, H1-H3, bullets, links, attachments)
@@ -82,6 +93,7 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 - Previous/Next section navigation buttons
 
 **Right Panel — AI Assistant**
+
 - 3 types of suggestions:
   1. **구조 개선 제안** (Structure improvement) — Recommendations to enhance credibility
   2. **경쟁사 비교** (Competitor comparison) — Tips to differentiate from competitors
@@ -90,6 +102,7 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 - Loading spinner showing active AI analysis
 
 **When to use:**
+
 - Write and edit proposal sections
 - Get AI-powered suggestions in real-time
 - Track progress across all sections
@@ -98,11 +111,13 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 ---
 
 ### 4. **Knowledge Base Search** — PREVIEW_KB_SEARCH.html
+
 **Unified search and discovery of organizational knowledge**
 
 **Features:**
 
 **Search Interface:**
+
 - 🔍 Search box with query: "터널 운영"
 - 6 filter chips (모든 타입, 사례, 발주처, 경쟁사, 교훈, Q&A)
 - Left sidebar with faceted filters:
@@ -111,6 +126,7 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
   - Category (기술 제안, 가격 전략)
 
 **Search Results (6 cards shown):**
+
 1. **사례** (Case Study)
    - K 공사 터널 운영 사업
    - Budget, award year metadata
@@ -136,12 +152,14 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
    - Success indicators
 
 **Results Display:**
+
 - 12 total results across 3 pages
 - Result highlights in accent color (#3ecf8e)
 - Metadata (budget, year, stats, tags)
 - Pagination with current page indicator
 
 **When to use:**
+
 - Discover past similar projects
 - Research client preferences and bidding history
 - Learn from competitor positioning
@@ -153,6 +171,7 @@ This guide shows you all the available HTML preview pages demonstrating the **Pr
 ## 🎯 Design System Components
 
 ### Color Palette
+
 ```
 Dark Mode (default):
   Background (--bg)        #0f0f0f    (Pure black)
@@ -165,12 +184,14 @@ Dark Mode (default):
 ```
 
 ### Typography
+
 - **Headers**: 20-28px, bold (600-700 weight)
 - **Body**: 13-14px, regular (400 weight)
 - **Labels**: 11-12px, uppercase, semi-bold
 - **Captions**: 11px, gray, small details
 
 ### Spacing System
+
 - **xs**: 6px (tight)
 - **sm**: 8px (normal)
 - **md**: 16px (section spacing)
@@ -178,6 +199,7 @@ Dark Mode (default):
 - **xl**: 32px (page padding)
 
 ### Interactive Elements
+
 - **Buttons**: Primary (green accent), Secondary (gray card), Ghost (outline)
 - **Hover effects**: 150ms color transition, subtle shadow/border highlight
 - **Focus states**: Ring with 2px accent color + 2px offset
@@ -188,18 +210,21 @@ Dark Mode (default):
 ## 📱 Responsive Behavior
 
 ### Desktop (lg ≥ 1024px)
+
 - ✅ Sidebar always visible (208px width, or 48px when collapsed)
 - ✅ Full 3-column layouts in editor
 - ✅ Grid layouts with multiple columns
 - ✅ Hover effects on interactive elements
 
 ### Tablet (640px - 1023px)
+
 - ✅ Sidebar hidden by default, slide-in overlay on hamburger click
 - ✅ Editor: 2-column layout (no AI panel initially)
 - ✅ Grid layouts collapse to 1-2 columns
 - ✅ All touch targets ≥ 44px height
 
 ### Mobile (< 640px)
+
 - ✅ Sidebar hidden, overlay only
 - ✅ Single column layouts
 - ✅ Stacked components
@@ -211,6 +236,7 @@ Dark Mode (default):
 ## 🖱️ Interactive Elements
 
 ### Sidebar Interactions
+
 ```
 Desktop:
   - PA logo click → Toggle collapse/expand
@@ -224,6 +250,7 @@ Mobile:
 ```
 
 ### Editor Interactions
+
 ```
   - TOC item click → Scroll/navigate to section
   - Toolbar button click → Toggle text formatting
@@ -232,6 +259,7 @@ Mobile:
 ```
 
 ### Search Interactions
+
 ```
   - Chip click → Filter by category
   - Facet checkbox → Toggle filter
@@ -244,6 +272,7 @@ Mobile:
 ## 🚀 How to View
 
 ### Option 1: Direct File Open
+
 ```bash
 # Navigate to project root
 cd c:\project\tenopa proposer\-agent-master\frontend
@@ -256,6 +285,7 @@ cd c:\project\tenopa proposer\-agent-master\frontend
 ```
 
 ### Option 2: Local Web Server
+
 ```bash
 # Using Python
 python -m http.server 8000
@@ -267,6 +297,7 @@ npx http-server
 ```
 
 ### Option 3: VS Code Live Server
+
 - Install "Live Server" extension
 - Right-click any HTML file
 - Select "Open with Live Server"
@@ -303,6 +334,7 @@ Each preview demonstrates a complete workflow:
 ## 📝 Implementation Notes
 
 These HTML files are **static mockups** demonstrating:
+
 - Layout and spacing
 - Component interactions
 - Responsive breakpoints
@@ -310,6 +342,7 @@ These HTML files are **static mockups** demonstrating:
 - Status and state indicators
 
 For actual implementation, use:
+
 - **Framework**: Next.js 15 + React 19
 - **Styling**: Tailwind CSS 4 + custom configuration
 - **Components**: shadcn/ui + custom components

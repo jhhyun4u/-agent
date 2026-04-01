@@ -55,7 +55,7 @@ export default function NotificationBell() {
   async function handleMarkRead(id: string) {
     await api.notifications.markRead(id);
     setItems((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
     );
     setUnreadCount((c) => Math.max(0, c - 1));
   }

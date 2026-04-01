@@ -54,7 +54,9 @@ export default function DocumentsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [docTypeFilter, setDocTypeFilter] = useState("");
-  const [sortBy, setSortBy] = useState<"updated_at" | "created_at" | "filename" | "total_chars">("updated_at");
+  const [sortBy, setSortBy] = useState<
+    "updated_at" | "created_at" | "filename" | "total_chars"
+  >("updated_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Upload
@@ -225,7 +227,8 @@ export default function DocumentsPage() {
                 disabled={uploading}
                 className="w-full cursor-pointer"
                 onClick={(e) => {
-                  const input = (e.target as HTMLButtonElement).previousElementSibling as HTMLInputElement;
+                  const input = (e.target as HTMLButtonElement)
+                    .previousElementSibling as HTMLInputElement;
                   input?.click();
                 }}
               >
@@ -243,7 +246,9 @@ export default function DocumentsPage() {
 
           {/* Search Input */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">파일명 검색</label>
+            <label className="block text-sm font-medium mb-2">
+              파일명 검색
+            </label>
             <input
               type="text"
               placeholder="파일명 입력..."
@@ -292,7 +297,11 @@ export default function DocumentsPage() {
                 value={sortBy}
                 onChange={(e) =>
                   setSortBy(
-                    e.target.value as "updated_at" | "created_at" | "filename" | "total_chars"
+                    e.target.value as
+                      | "updated_at"
+                      | "created_at"
+                      | "filename"
+                      | "total_chars",
                   )
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -342,28 +351,32 @@ export default function DocumentsPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="font-medium truncate">{doc.filename}</h3>
                         <Badge className={STATUS_COLORS[doc.processing_status]}>
-                          {STATUS_OPTS.find((s) => s.value === doc.processing_status)
-                            ?.label || doc.processing_status}
+                          {STATUS_OPTS.find(
+                            (s) => s.value === doc.processing_status,
+                          )?.label || doc.processing_status}
                         </Badge>
                       </div>
 
                       <div className="text-sm text-gray-600 space-y-1">
                         <div>
-                          유형: <span className="font-medium">{doc.doc_type}</span>
+                          유형:{" "}
+                          <span className="font-medium">{doc.doc_type}</span>
                         </div>
                         <div>
                           생성: {formatDate(doc.created_at)} • 수정:{" "}
                           {formatDate(doc.updated_at)}
                         </div>
                         <div>
-                          크기: {doc.total_chars.toLocaleString()} 자 •{" "}
-                          청크: {doc.chunk_count}개
+                          크기: {doc.total_chars.toLocaleString()} 자 • 청크:{" "}
+                          {doc.chunk_count}개
                         </div>
 
                         {doc.error_message && (
                           <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
                             <div className="font-medium">오류:</div>
-                            <div className="break-words">{doc.error_message}</div>
+                            <div className="break-words">
+                              {doc.error_message}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -389,7 +402,9 @@ export default function DocumentsPage() {
                                 disabled={reprocessing === doc.id}
                                 size="sm"
                               >
-                                {reprocessing === doc.id ? "처리 중..." : "재처리"}
+                                {reprocessing === doc.id
+                                  ? "처리 중..."
+                                  : "재처리"}
                               </Button>
                             </div>
                           ) : (
@@ -401,7 +416,9 @@ export default function DocumentsPage() {
                               }
                               disabled={reprocessing === doc.id}
                             >
-                              {reprocessing === doc.id ? "처리 중..." : "재처리"}
+                              {reprocessing === doc.id
+                                ? "처리 중..."
+                                : "재처리"}
                             </Button>
                           )}
                         </>

@@ -23,7 +23,9 @@ export function CustomerProfileCard({
   error = null,
   onRevalidate,
 }: CustomerProfileCardProps) {
-  const [expandedStakeholder, setExpandedStakeholder] = useState<string | null>(null);
+  const [expandedStakeholder, setExpandedStakeholder] = useState<string | null>(
+    null,
+  );
 
   if (isLoading) {
     return (
@@ -67,7 +69,9 @@ export function CustomerProfileCard({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{data.client_name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            {data.client_name}
+          </h3>
           <p className="text-sm text-gray-600">{data.client_org}</p>
         </div>
         {onRevalidate && (
@@ -84,11 +88,15 @@ export function CustomerProfileCard({
       {/* Key Info */}
       <div className="grid grid-cols-2 gap-4 py-4 border-y">
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase">Budget Authority</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase">
+            Budget Authority
+          </p>
           <p className="text-sm text-gray-900 mt-1">{data.budget_authority}</p>
         </div>
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase">Key Drivers</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase">
+            Key Drivers
+          </p>
           <p className="text-sm text-gray-900 mt-1">
             {data.decision_drivers.slice(0, 2).join(", ")}
           </p>
@@ -97,7 +105,9 @@ export function CustomerProfileCard({
 
       {/* Stakeholders */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-gray-700">Stakeholders ({data.stakeholders.length})</h4>
+        <h4 className="text-sm font-semibold text-gray-700">
+          Stakeholders ({data.stakeholders.length})
+        </h4>
         <div className="space-y-2 max-h-64 overflow-y-auto">
           {data.stakeholders.map((stakeholder, idx) => (
             <div
@@ -105,13 +115,17 @@ export function CustomerProfileCard({
               className="border rounded p-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition"
               onClick={() =>
                 setExpandedStakeholder(
-                  expandedStakeholder === stakeholder.name ? null : stakeholder.name
+                  expandedStakeholder === stakeholder.name
+                    ? null
+                    : stakeholder.name,
                 )
               }
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-sm text-gray-900">{stakeholder.name}</p>
+                  <p className="font-medium text-sm text-gray-900">
+                    {stakeholder.name}
+                  </p>
                   <p className="text-xs text-gray-600">{stakeholder.role}</p>
                 </div>
                 <span
@@ -119,8 +133,8 @@ export function CustomerProfileCard({
                     stakeholder.influence_level === "high"
                       ? "bg-red-100 text-red-800"
                       : stakeholder.influence_level === "medium"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : "bg-green-100 text-green-800"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-green-100 text-green-800"
                   }`}
                 >
                   {stakeholder.influence_level}
@@ -130,20 +144,30 @@ export function CustomerProfileCard({
               {expandedStakeholder === stakeholder.name && (
                 <div className="mt-3 pt-3 border-t space-y-2">
                   <div>
-                    <p className="text-xs font-semibold text-gray-600">Priorities</p>
+                    <p className="text-xs font-semibold text-gray-600">
+                      Priorities
+                    </p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {stakeholder.priorities.map((p, i) => (
-                        <span key={i} className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">
+                        <span
+                          key={i}
+                          className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
+                        >
                           {p}
                         </span>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-gray-600">Concerns</p>
+                    <p className="text-xs font-semibold text-gray-600">
+                      Concerns
+                    </p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {stakeholder.concerns.map((c, i) => (
-                        <span key={i} className="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs">
+                        <span
+                          key={i}
+                          className="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs"
+                        >
                           {c}
                         </span>
                       ))}

@@ -32,26 +32,72 @@ export const STEP_MAP = {
  * 테이블 컬럼 설정
  */
 export const TABLE_COLUMNS = [
-  { width: "1.5fr", key: "title", label: "프로젝트명", sortable: false, align: "left" },
-  { width: "100px", key: "positioning", label: "포지셔닝", sortable: false, align: "center" },
+  {
+    width: "1.5fr",
+    key: "title",
+    label: "프로젝트명",
+    sortable: false,
+    align: "left",
+  },
+  {
+    width: "100px",
+    key: "positioning",
+    label: "포지셔닝",
+    sortable: false,
+    align: "center",
+  },
   { width: "80px", key: "step", label: "단계", sortable: true, align: "left" },
-  { width: "100px", key: "budget", label: "예정가", sortable: false, align: "right" },
-  { width: "100px", key: "bid_amount", label: "입찰가", sortable: false, align: "right" },
-  { width: "110px", key: "deadline", label: "마감일", sortable: true, align: "left" },
-  { width: "100px", key: "client_name", label: "발주처", sortable: false, align: "left" },
-  { width: "100px", key: "status", label: "상태", sortable: false, align: "center" },
+  {
+    width: "100px",
+    key: "budget",
+    label: "예정가",
+    sortable: false,
+    align: "right",
+  },
+  {
+    width: "100px",
+    key: "bid_amount",
+    label: "입찰가",
+    sortable: false,
+    align: "right",
+  },
+  {
+    width: "110px",
+    key: "deadline",
+    label: "마감일",
+    sortable: true,
+    align: "left",
+  },
+  {
+    width: "100px",
+    key: "client_name",
+    label: "발주처",
+    sortable: false,
+    align: "left",
+  },
+  {
+    width: "100px",
+    key: "status",
+    label: "상태",
+    sortable: false,
+    align: "center",
+  },
   { width: "36px", key: "menu", label: "", sortable: false, align: "center" },
 ] as const;
 
 /**
  * 그리드 레이아웃 클래스명
  */
-export const GRID_LAYOUT_CLASS = "grid-cols-[1.5fr_100px_80px_100px_100px_110px_100px_100px_36px]";
+export const GRID_LAYOUT_CLASS =
+  "grid-cols-[1.5fr_100px_80px_100px_100px_110px_100px_100px_36px]";
 
 /**
  * 단계 정보 조회
  */
-export function getStepInfo(phase: string | null): { step: number; label: string } {
+export function getStepInfo(phase: string | null): {
+  step: number;
+  label: string;
+} {
   if (!phase) return { step: 0, label: "—" };
   return STEP_MAP[phase as keyof typeof STEP_MAP] ?? { step: 0, label: phase };
 }
@@ -67,11 +113,21 @@ export function formatDeadline(deadline: string | null): {
   if (!deadline) return { text: "—", urgent: false, dDay: "" };
   const d = new Date(deadline);
   const now = new Date();
-  const diffDays = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.ceil(
+    (d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+  );
   const text = `${d.getMonth() + 1}/${d.getDate()}`;
   const dDay =
-    diffDays > 0 ? `D-${diffDays}` : diffDays === 0 ? "D-Day" : `D+${Math.abs(diffDays)}`;
-  return { text: `${text} (${dDay})`, urgent: diffDays >= 0 && diffDays <= 3, dDay };
+    diffDays > 0
+      ? `D-${diffDays}`
+      : diffDays === 0
+        ? "D-Day"
+        : `D+${Math.abs(diffDays)}`;
+  return {
+    text: `${text} (${dDay})`,
+    urgent: diffDays >= 0 && diffDays <= 3,
+    dDay,
+  };
 }
 
 /**
@@ -102,9 +158,19 @@ export function deriveStatus(p: ProposalSummary): {
   tooltip: string;
 } {
   if (p.status === "on_hold")
-    return { label: "중단", dotColor: "bg-orange-400", textColor: "text-orange-400", tooltip: "작업 중단됨" };
+    return {
+      label: "중단",
+      dotColor: "bg-orange-400",
+      textColor: "text-orange-400",
+      tooltip: "작업 중단됨",
+    };
   if (p.status === "abandoned")
-    return { label: "포기", dotColor: "bg-red-400", textColor: "text-red-400", tooltip: "제안 포기" };
+    return {
+      label: "포기",
+      dotColor: "bg-red-400",
+      textColor: "text-red-400",
+      tooltip: "제안 포기",
+    };
   if (p.status === "submitted")
     return {
       label: "결과대기",
@@ -156,7 +222,10 @@ export function deriveStatus(p: ProposalSummary): {
     };
   const stepInfo = getStepInfo(p.current_phase);
   if (p.positioning && stepInfo.step > 1) {
-    if (p.phases_completed > 0 && (p.status === "processing" || p.status === "running")) {
+    if (
+      p.phases_completed > 0 &&
+      (p.status === "processing" || p.status === "running")
+    ) {
       return {
         label: "재작업",
         dotColor: "bg-amber-400",
@@ -194,12 +263,15 @@ export function createSortComparator(
     }
     if (key === "step") {
       return (
-        (getStepInfo(a.current_phase).step - getStepInfo(b.current_phase).step) * direction
+        (getStepInfo(a.current_phase).step -
+          getStepInfo(b.current_phase).step) *
+        direction
       );
     }
     if (key === "created_at") {
       return (
-        (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) * direction
+        (new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) *
+        direction
       );
     }
     return 0;

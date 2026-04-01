@@ -182,7 +182,9 @@ export function NodeStatusDashboard({
               of 6 nodes completed
             </p>
           </div>
-          <div className={`text-3xl font-bold bg-gradient-to-r ${progressColor} bg-clip-text text-transparent`}>
+          <div
+            className={`text-3xl font-bold bg-gradient-to-r ${progressColor} bg-clip-text text-transparent`}
+          >
             {overallProgress}%
           </div>
         </div>
@@ -197,16 +199,16 @@ export function NodeStatusDashboard({
       {/* Node Status Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {nodeConfig.map((config) => {
-          const node = status?.nodes?.find((n) => n.output_key === config.id.replace("step_8", "step_8"));
+          const node = status?.nodes?.find(
+            (n) => n.output_key === config.id.replace("step_8", "step_8"),
+          );
           const isExpanded = expandedNode === config.id;
 
           return (
             <div
               key={config.id}
               className={`border rounded-lg p-4 transition cursor-pointer ${getNodeCompletionColor(node)}`}
-              onClick={() =>
-                setExpandedNode(isExpanded ? null : config.id)
-              }
+              onClick={() => setExpandedNode(isExpanded ? null : config.id)}
             >
               {/* Node Header */}
               <div className="flex items-start justify-between mb-3">
@@ -236,10 +238,10 @@ export function NodeStatusDashboard({
                       node.status === "completed"
                         ? "bg-green-600"
                         : node.status === "in_progress"
-                        ? "bg-blue-600"
-                        : node.status === "failed"
-                        ? "bg-red-600"
-                        : "bg-yellow-600"
+                          ? "bg-blue-600"
+                          : node.status === "failed"
+                            ? "bg-red-600"
+                            : "bg-yellow-600"
                     }`}
                   />
                   <span className="text-xs font-medium text-gray-700 capitalize">

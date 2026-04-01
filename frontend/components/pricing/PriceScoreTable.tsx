@@ -16,7 +16,8 @@ interface Props {
 }
 
 function fmtWon(amount: number): string {
-  if (Math.abs(amount) >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억`;
+  if (Math.abs(amount) >= 100_000_000)
+    return `${(amount / 100_000_000).toFixed(1)}억`;
   if (Math.abs(amount) >= 10_000) return `${(amount / 10_000).toFixed(0)}만`;
   return `${amount.toLocaleString()}`;
 }
@@ -28,9 +29,8 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
 
   // 최고 총점 행 찾기
   const validRows = rows.filter((r) => !r.is_disqualified);
-  const maxScore = validRows.length > 0
-    ? Math.max(...validRows.map((r) => r.total_score))
-    : 0;
+  const maxScore =
+    validRows.length > 0 ? Math.max(...validRows.map((r) => r.total_score)) : 0;
 
   const formula = rows[0]?.formula_used || "";
   const techScore = rows[0]?.tech_score ?? 0;
@@ -49,7 +49,9 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
   return (
     <div className="rounded-lg border border-[#262626] bg-[#161616] p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#ededed]">가격점수 시뮬레이션</h3>
+        <h3 className="text-sm font-medium text-[#ededed]">
+          가격점수 시뮬레이션
+        </h3>
         <button
           onClick={() => setExpanded(!expanded)}
           className="text-xs text-[#8c8c8c] hover:text-[#ededed] transition-colors"
@@ -60,9 +62,20 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
 
       {/* 가정 정보 */}
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#8c8c8c]">
-        <span>기술점수: <span className="text-[#ededed]">{techScore}/{techWeight}점</span> (가정)</span>
-        <span>가격배점: <span className="text-[#ededed]">{priceWeight}점</span></span>
-        <span>추정최저가: <span className="text-[#ededed]">{fmtWon(estMinBid)}원</span></span>
+        <span>
+          기술점수:{" "}
+          <span className="text-[#ededed]">
+            {techScore}/{techWeight}점
+          </span>{" "}
+          (가정)
+        </span>
+        <span>
+          가격배점: <span className="text-[#ededed]">{priceWeight}점</span>
+        </span>
+        <span>
+          추정최저가:{" "}
+          <span className="text-[#ededed]">{fmtWon(estMinBid)}원</span>
+        </span>
       </div>
 
       {/* 공식 */}
@@ -84,8 +97,11 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
           </thead>
           <tbody>
             {displayRows.map((row) => {
-              const isRecommended = recommendedRatio && Math.abs(row.bid_ratio - recommendedRatio) < 0.5;
-              const isBest = !row.is_disqualified && row.total_score === maxScore;
+              const isRecommended =
+                recommendedRatio &&
+                Math.abs(row.bid_ratio - recommendedRatio) < 0.5;
+              const isBest =
+                !row.is_disqualified && row.total_score === maxScore;
               const isDisq = row.is_disqualified;
 
               return (
@@ -95,10 +111,10 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
                     isDisq
                       ? "text-[#555] line-through"
                       : isRecommended
-                      ? "bg-[#3ecf8e]/5"
-                      : isBest
-                      ? "bg-blue-500/5"
-                      : "hover:bg-[#1a1a1a]"
+                        ? "bg-[#3ecf8e]/5"
+                        : isBest
+                          ? "bg-blue-500/5"
+                          : "hover:bg-[#1a1a1a]"
                   }`}
                 >
                   <td className="py-1.5 pr-2 text-right font-mono text-[#ededed]">
@@ -113,9 +129,11 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
                     </span>
                     <span className="text-[#555]">/{row.price_weight}</span>
                   </td>
-                  <td className={`py-1.5 px-2 text-right font-mono font-medium ${
-                    isDisq ? "" : isBest ? "text-blue-400" : "text-[#ededed]"
-                  }`}>
+                  <td
+                    className={`py-1.5 px-2 text-right font-mono font-medium ${
+                      isDisq ? "" : isBest ? "text-blue-400" : "text-[#ededed]"
+                    }`}
+                  >
                     {row.total_score.toFixed(2)}
                   </td>
                   <td className="py-1.5 pl-2 text-center">
@@ -146,16 +164,30 @@ export default function PriceScoreTable({ rows, recommendedRatio }: Props) {
       {validRows.length > 1 && (
         <div className="text-[11px] text-[#8c8c8c] space-y-0.5">
           {(() => {
-            const bestRow = validRows.reduce((a, b) => a.total_score > b.total_score ? a : b);
-            const recRow = validRows.find((r) => recommendedRatio && Math.abs(r.bid_ratio - recommendedRatio) < 0.5);
+            const bestRow = validRows.reduce((a, b) =>
+              a.total_score > b.total_score ? a : b,
+            );
+            const recRow = validRows.find(
+              (r) =>
+                recommendedRatio &&
+                Math.abs(r.bid_ratio - recommendedRatio) < 0.5,
+            );
             if (recRow && bestRow.bid_ratio !== recRow.bid_ratio) {
-              const scoreDiff = (bestRow.total_score - recRow.total_score).toFixed(1);
-              const priceDiff = fmtWon(Math.abs(bestRow.bid_price - recRow.bid_price));
+              const scoreDiff = (
+                bestRow.total_score - recRow.total_score
+              ).toFixed(1);
+              const priceDiff = fmtWon(
+                Math.abs(bestRow.bid_price - recRow.bid_price),
+              );
               return (
                 <p>
-                  총점 최대화: {bestRow.bid_ratio.toFixed(1)}% ({fmtWon(bestRow.bid_price)}원) →
-                  추천 대비 <span className="text-blue-400">+{scoreDiff}점</span>,
-                  입찰가 <span className="text-[#ededed]">{priceDiff}원 {bestRow.bid_price < recRow.bid_price ? "절감" : "추가"}</span>
+                  총점 최대화: {bestRow.bid_ratio.toFixed(1)}% (
+                  {fmtWon(bestRow.bid_price)}원) → 추천 대비{" "}
+                  <span className="text-blue-400">+{scoreDiff}점</span>, 입찰가{" "}
+                  <span className="text-[#ededed]">
+                    {priceDiff}원{" "}
+                    {bestRow.bid_price < recRow.bid_price ? "절감" : "추가"}
+                  </span>
                 </p>
               );
             }

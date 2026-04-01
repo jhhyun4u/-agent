@@ -89,7 +89,9 @@ export default function MarketPricesPage() {
   }
 
   async function handleAdd(row: Record<string, unknown>) {
-    await api.kb.marketPrices.create(row as Omit<MarketPrice, "id" | "created_at" | "updated_at">);
+    await api.kb.marketPrices.create(
+      row as Omit<MarketPrice, "id" | "created_at" | "updated_at">,
+    );
     fetchData();
   }
 
@@ -107,10 +109,15 @@ export default function MarketPricesPage() {
     <div className="min-h-screen bg-[#0f0f0f] text-[#ededed]">
       <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 sticky top-0 z-20">
         <div className="max-w-5xl mx-auto flex items-center gap-3">
-          <Link href="/dashboard" className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors">
+          <Link
+            href="/dashboard"
+            className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"
+          >
             ← 대시보드
           </Link>
-          <h1 className="text-sm font-semibold text-[#ededed]">낙찰가 벤치마크</h1>
+          <h1 className="text-sm font-semibold text-[#ededed]">
+            낙찰가 벤치마크
+          </h1>
           <div className="flex-1" />
           <Link
             href="/kb/labor-rates"

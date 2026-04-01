@@ -81,7 +81,9 @@ export function ReviewPanelEnhanced({
     }
   };
 
-  const majorIssues = issues.filter((i) => i.severity === "critical" || i.severity === "major");
+  const majorIssues = issues.filter(
+    (i) => i.severity === "critical" || i.severity === "major",
+  );
   const minorIssues = issues.filter((i) => i.severity === "minor");
   const byCategory = issues.reduce(
     (acc, issue) => {
@@ -89,7 +91,7 @@ export function ReviewPanelEnhanced({
       acc[issue.category].push(issue);
       return acc;
     },
-    {} as Record<string, AIIssueFlag[]>
+    {} as Record<string, AIIssueFlag[]>,
   );
 
   if (isLoading) {
@@ -110,7 +112,9 @@ export function ReviewPanelEnhanced({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">AI Review</h3>
-          <p className="text-sm text-gray-600">Smart issue detection & recommendations</p>
+          <p className="text-sm text-gray-600">
+            Smart issue detection & recommendations
+          </p>
         </div>
         <div
           className={`px-3 py-1 rounded-full font-medium text-sm ${
@@ -127,26 +131,34 @@ export function ReviewPanelEnhanced({
       <div className="grid grid-cols-3 gap-3 py-3 border rounded-lg bg-gradient-to-r from-violet-50 to-purple-50">
         <div className="text-center p-3">
           <p className="text-2xl font-bold text-red-600">{critical_count}</p>
-          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">Critical</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">
+            Critical
+          </p>
         </div>
         <div className="text-center p-3">
           <p className="text-2xl font-bold text-orange-600">
             {issues.filter((i) => i.severity === "major").length}
           </p>
-          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">Major</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">
+            Major
+          </p>
         </div>
         <div className="text-center p-3">
           <p className="text-2xl font-bold text-yellow-600">
             {minorIssues.length}
           </p>
-          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">Minor</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase mt-1">
+            Minor
+          </p>
         </div>
       </div>
 
       {/* Issues by Category */}
       {Object.entries(byCategory).length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-gray-700">Issues by Category</h4>
+          <h4 className="text-sm font-semibold text-gray-700">
+            Issues by Category
+          </h4>
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(byCategory).map(([category, categoryIssues]) => (
               <div
@@ -184,11 +196,15 @@ export function ReviewPanelEnhanced({
                   key={issue.issue_id}
                   className={`border rounded-lg p-3 cursor-pointer transition ${colors.bg} ${colors.border} hover:shadow-sm`}
                   onClick={() =>
-                    setSelectedIssue(selectedIssue === issue.issue_id ? null : issue.issue_id)
+                    setSelectedIssue(
+                      selectedIssue === issue.issue_id ? null : issue.issue_id,
+                    )
                   }
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${colors.dot}`} />
+                    <div
+                      className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${colors.dot}`}
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-gray-900">
                         {issue.description}
@@ -260,8 +276,12 @@ export function ReviewPanelEnhanced({
       {/* No Issues State */}
       {total_issues === 0 && (
         <div className="p-4 rounded-lg bg-green-50 border border-green-200">
-          <p className="text-sm text-green-800 font-medium">✓ No issues detected</p>
-          <p className="text-xs text-green-700 mt-1">This section is ready for approval.</p>
+          <p className="text-sm text-green-800 font-medium">
+            ✓ No issues detected
+          </p>
+          <p className="text-xs text-green-700 mt-1">
+            This section is ready for approval.
+          </p>
         </div>
       )}
 
@@ -277,7 +297,11 @@ export function ReviewPanelEnhanced({
                   ? "bg-green-600 text-white hover:bg-green-700"
                   : "bg-gray-200 text-gray-500 cursor-not-allowed"
               }`}
-              title={can_proceed ? "Approve this section" : "Resolve critical issues first"}
+              title={
+                can_proceed
+                  ? "Approve this section"
+                  : "Resolve critical issues first"
+              }
             >
               ✓ Approve
             </button>
@@ -346,7 +370,10 @@ export function ReviewPanelEnhanced({
 
       {/* Status Info */}
       <div className="text-xs text-gray-500 border-t pt-2">
-        <p>AI powered by Claude • Real-time issue detection • {total_issues} total issues</p>
+        <p>
+          AI powered by Claude • Real-time issue detection • {total_issues}{" "}
+          total issues
+        </p>
       </div>
     </div>
   );

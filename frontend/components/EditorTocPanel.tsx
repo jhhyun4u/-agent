@@ -36,7 +36,8 @@ export default function EditorTocPanel({
   const partial = complianceItems.filter((i) => i.status === "partial").length;
   const notMet = complianceItems.filter((i) => i.status === "not_met").length;
   const total = complianceItems.length;
-  const progressRate = total > 0 ? Math.round(((met + partial * 0.5) / total) * 100) : 0;
+  const progressRate =
+    total > 0 ? Math.round(((met + partial * 0.5) / total) * 100) : 0;
 
   return (
     <div className={`flex flex-col h-full overflow-hidden ${className}`}>
@@ -47,16 +48,26 @@ export default function EditorTocPanel({
             <span className="text-[10px] text-[#8c8c8c] uppercase tracking-wider font-medium">
               Compliance
             </span>
-            <span className={`text-xs font-bold ${
-              progressRate >= 80 ? "text-[#3ecf8e]" : progressRate >= 60 ? "text-amber-400" : "text-red-400"
-            }`}>
+            <span
+              className={`text-xs font-bold ${
+                progressRate >= 80
+                  ? "text-[#3ecf8e]"
+                  : progressRate >= 60
+                    ? "text-amber-400"
+                    : "text-red-400"
+              }`}
+            >
               {progressRate}%
             </span>
           </div>
           <div className="h-1.5 bg-[#262626] rounded-full overflow-hidden mb-1.5">
             <div
               className={`h-full rounded-full transition-all ${
-                progressRate >= 80 ? "bg-[#3ecf8e]" : progressRate >= 60 ? "bg-amber-500" : "bg-red-500"
+                progressRate >= 80
+                  ? "bg-[#3ecf8e]"
+                  : progressRate >= 60
+                    ? "bg-amber-500"
+                    : "bg-red-500"
               }`}
               style={{ width: `${progressRate}%` }}
             />
@@ -111,20 +122,20 @@ export default function EditorTocPanel({
                   {item.status === "met"
                     ? "✅"
                     : item.status === "partial"
-                    ? "⚠️"
-                    : item.status === "not_met"
-                    ? "❌"
-                    : "⏳"}
+                      ? "⚠️"
+                      : item.status === "not_met"
+                        ? "❌"
+                        : "⏳"}
                 </span>
                 <span
                   className={`truncate ${
                     item.status === "met"
                       ? "text-[#8c8c8c]"
                       : item.status === "partial"
-                      ? "text-amber-400"
-                      : item.status === "not_met"
-                      ? "text-red-400"
-                      : "text-[#5c5c5c]"
+                        ? "text-amber-400"
+                        : item.status === "not_met"
+                          ? "text-red-400"
+                          : "text-[#5c5c5c]"
                   }`}
                   title={item.requirement}
                 >

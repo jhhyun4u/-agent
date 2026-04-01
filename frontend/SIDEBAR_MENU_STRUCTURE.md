@@ -20,6 +20,7 @@ AppSidebar (AppSidebar.tsx)
 ### 1단계 메뉴
 
 #### 대시보드 (Dashboard)
+
 ```
 🏠 대시보드
    └── href: /dashboard
@@ -28,6 +29,7 @@ AppSidebar (AppSidebar.tsx)
 ```
 
 #### 공고 모니터링 (Bid Monitoring)
+
 ```
 👁️ 공고 모니터링
    └── href: /monitoring
@@ -36,6 +38,7 @@ AppSidebar (AppSidebar.tsx)
 ```
 
 #### 제안 프로젝트 (Proposals)
+
 ```
 📄 제안 프로젝트
    └── href: /proposals
@@ -180,12 +183,12 @@ AppSidebar (AppSidebar.tsx)
 
 ## 💾 상태 관리 (localStorage)
 
-| 키 | 값 | 설명 | 예시 |
-|------|------|------|------|
-| `sidebar-collapsed` | "true" / "false" | 사이드바 접힘/펼침 | 기본값: 열려있음 |
-| `sidebar-width` | 숫자 (180~360) | 사이드바 너비(px) | 기본값: 208px |
-| `sidebar-kb-expanded` | "true" / "false" | 지식베이스 그룹 펼침 | 경로 진입 시 자동 펼침 |
-| `sidebar-admin-expanded` | "true" / "false" | Admin 그룹 펼침 | 경로 진입 시 자동 펼침 |
+| 키                       | 값               | 설명                 | 예시                   |
+| ------------------------ | ---------------- | -------------------- | ---------------------- |
+| `sidebar-collapsed`      | "true" / "false" | 사이드바 접힘/펼침   | 기본값: 열려있음       |
+| `sidebar-width`          | 숫자 (180~360)   | 사이드바 너비(px)    | 기본값: 208px          |
+| `sidebar-kb-expanded`    | "true" / "false" | 지식베이스 그룹 펼침 | 경로 진입 시 자동 펼침 |
+| `sidebar-admin-expanded` | "true" / "false" | Admin 그룹 펼침      | 경로 진입 시 자동 펼침 |
 
 ---
 
@@ -193,22 +196,22 @@ AppSidebar (AppSidebar.tsx)
 
 ### 데스크톱
 
-| 동작 | 효과 |
-|------|------|
-| PA 로고 클릭 | 사이드바 접기/펼치기 토글 |
-| 우측 경계 드래그 | 너비 조절 (180~360px) |
-| 우측 경계 더블클릭 | 기본 너비(208px)로 리셋 |
-| 그룹 버튼 클릭 | 하위 메뉴 펼치기/접기 |
-| 메뉴 항목 클릭 | 해당 페이지로 이동 |
+| 동작               | 효과                      |
+| ------------------ | ------------------------- |
+| PA 로고 클릭       | 사이드바 접기/펼치기 토글 |
+| 우측 경계 드래그   | 너비 조절 (180~360px)     |
+| 우측 경계 더블클릭 | 기본 너비(208px)로 리셋   |
+| 그룹 버튼 클릭     | 하위 메뉴 펼치기/접기     |
+| 메뉴 항목 클릭     | 해당 페이지로 이동        |
 
 ### 모바일
 
-| 동작 | 효과 |
-|------|------|
+| 동작               | 효과                        |
+| ------------------ | --------------------------- |
 | 햄버거 아이콘 클릭 | 슬라이드 오버레이 열기/닫기 |
-| 배경 영역 클릭 | 오버레이 닫기 |
-| Escape 키 | 오버레이 닫기 |
-| 메뉴 항목 클릭 | 페이지 이동 + 자동 닫기 |
+| 배경 영역 클릭     | 오버레이 닫기               |
+| Escape 키          | 오버레이 닫기               |
+| 메뉴 항목 클릭     | 페이지 이동 + 자동 닫기     |
 
 ---
 
@@ -251,12 +254,12 @@ pathname: "/admin/prompts" → Admin 그룹 자동 펼침
 
 ## 🎨 너비 설정
 
-| 상태 | 너비 | 설명 |
-|------|------|------|
-| Collapsed | 48px | PA 아이콘만 표시 (미니바) |
-| Default | 208px | 표준 너비 |
-| Minimum | 180px | 드래그 최소값 |
-| Maximum | 360px | 드래그 최대값 |
+| 상태      | 너비  | 설명                      |
+| --------- | ----- | ------------------------- |
+| Collapsed | 48px  | PA 아이콘만 표시 (미니바) |
+| Default   | 208px | 표준 너비                 |
+| Minimum   | 180px | 드래그 최소값             |
+| Maximum   | 360px | 드래그 최대값             |
 
 ---
 
@@ -282,12 +285,14 @@ pathname: "/admin/prompts" → Admin 그룹 자동 펼침
 ## 🔒 권한 제어
 
 ### 모든 사용자
+
 - 대시보드
 - 공고 모니터링
 - 제안 프로젝트
 - 지식 베이스 (모든 항목)
 
 ### 관리자 / 매니저만
+
 - Admin 섹션 표시
   - 이용자 관리
   - 프롬프트 관리
@@ -297,24 +302,24 @@ pathname: "/admin/prompts" → Admin 그룹 자동 펼침
 
 ## 📊 아이콘 목록
 
-| 항목 | 아이콘 이름 | SVG 경로 |
-|------|-----------|---------|
-| 대시보드 | dashboard | 홈 모양 |
-| 공고 모니터링 | bids | 눈 모양 |
-| 제안 프로젝트 | proposals | 문서 모양 |
-| 지식 베이스 | kb | 책 모양 |
-| 통합 검색 | search | 돋보기 |
-| 콘텐츠 | content | 리스트 |
-| 발주기관 | clients | 사람들 |
-| 경쟁사 | competitors | 비교 |
-| 교훈 | lessons | 전구 |
-| Q&A | qa | 물음표 |
-| 노임단가 | labor | 사람 |
-| 시장가격 | market | 차트 |
-| Admin | admin | 설정 |
-| 이용자 관리 | org | 조직 |
-| 프롬프트 | prompt | 메시지 |
-| A/B 실험 | experiment | 실험 |
+| 항목          | 아이콘 이름 | SVG 경로  |
+| ------------- | ----------- | --------- |
+| 대시보드      | dashboard   | 홈 모양   |
+| 공고 모니터링 | bids        | 눈 모양   |
+| 제안 프로젝트 | proposals   | 문서 모양 |
+| 지식 베이스   | kb          | 책 모양   |
+| 통합 검색     | search      | 돋보기    |
+| 콘텐츠        | content     | 리스트    |
+| 발주기관      | clients     | 사람들    |
+| 경쟁사        | competitors | 비교      |
+| 교훈          | lessons     | 전구      |
+| Q&A           | qa          | 물음표    |
+| 노임단가      | labor       | 사람      |
+| 시장가격      | market      | 차트      |
+| Admin         | admin       | 설정      |
+| 이용자 관리   | org         | 조직      |
+| 프롬프트      | prompt      | 메시지    |
+| A/B 실험      | experiment  | 실험      |
 
 ---
 
@@ -324,18 +329,22 @@ pathname: "/admin/prompts" → Admin 그룹 자동 펼침
 
 ```typescript
 // 1. 메뉴 데이터 정의
-const DASHBOARD: NavItem = { href, label, icon }
-const NAV_REST: NavEntry[] = [/* 아이템들 */]
-const ADMIN_GROUP: NavGroup = { label, icon, basePath, children }
+const DASHBOARD: NavItem = { href, label, icon };
+const NAV_REST: NavEntry[] = [
+  /* 아이템들 */
+];
+const ADMIN_GROUP: NavGroup = { label, icon, basePath, children };
 
 // 2. 상태 관리
-const [collapsed, setCollapsed] = useState(null)  // SSR 안전
-const [sidebarWidth, setSidebarWidth] = useState(208)
-const [kbOpen, setKbOpen] = useState(false)
-const [adminOpen, setAdminOpen] = useState(false)
+const [collapsed, setCollapsed] = useState(null); // SSR 안전
+const [sidebarWidth, setSidebarWidth] = useState(208);
+const [kbOpen, setKbOpen] = useState(false);
+const [adminOpen, setAdminOpen] = useState(false);
 
 // 3. 렌더링
-function renderSidebarContent(forMobile) { /* 공유 콘텐츠 */ }
+function renderSidebarContent(forMobile) {
+  /* 공유 콘텐츠 */
+}
 // 모바일과 데스크톱에서 같은 콘텐츠 사용
 ```
 
@@ -350,15 +359,15 @@ function renderSidebarContent(forMobile) { /* 공유 콘텐츠 */ }
 
 ## 🔄 경로와 메뉴 매핑
 
-| 경로 | 메뉴 | 상태 |
-|------|------|------|
-| `/dashboard` | 🏠 대시보드 | 활성 |
-| `/monitoring/*` | 👁️ 공고 모니터링 | 활성 |
-| `/proposals/*` | 📄 제안 프로젝트 | 활성 |
-| `/kb/search` | 📖 지식베이스 > 🔍 통합 검색 | 활성 + KB 펼침 |
-| `/kb/content` | 📖 지식베이스 > 📝 콘텐츠 | 활성 + KB 펼침 |
-| `/admin/*` | ⚙️ Admin > (해당 항목) | 활성 + Admin 펼침 |
-| `/settings` | (메뉴 항목 아님) | - |
+| 경로            | 메뉴                         | 상태              |
+| --------------- | ---------------------------- | ----------------- |
+| `/dashboard`    | 🏠 대시보드                  | 활성              |
+| `/monitoring/*` | 👁️ 공고 모니터링             | 활성              |
+| `/proposals/*`  | 📄 제안 프로젝트             | 활성              |
+| `/kb/search`    | 📖 지식베이스 > 🔍 통합 검색 | 활성 + KB 펼침    |
+| `/kb/content`   | 📖 지식베이스 > 📝 콘텐츠    | 활성 + KB 펼침    |
+| `/admin/*`      | ⚙️ Admin > (해당 항목)       | 활성 + Admin 펼침 |
+| `/settings`     | (메뉴 항목 아님)             | -                 |
 
 ---
 
@@ -369,4 +378,3 @@ function renderSidebarContent(forMobile) { /* 공유 콘텐츠 */ }
 3. **localStorage**: 시크릿 모드에서도 안전하게 작동
 4. **권한 제어**: `userRole`에 따라 Admin 섹션 표시
 5. **경로 자동 펼침**: 사용자 의도 존중 (닫은 후 다시 닫지 않음)
-

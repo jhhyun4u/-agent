@@ -502,9 +502,9 @@ async def ai_assist(
 @router.get("/{proposal_id}/download/docx")
 async def download_docx(
     proposal_id: str,
-    version: int | None = None,
-    background_tasks: BackgroundTasks = Depends(),
+    background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
+    version: int | None = None,
     _access = Depends(require_project_access),
 ):
     """DOCX 다운로드 (중간 버전 포함) + Storage 업로드 (§8 finally 패턴).
@@ -581,7 +581,7 @@ async def download_docx(
 @router.get("/{proposal_id}/download/hwpx")
 async def download_hwpx(
     proposal_id: str,
-    background_tasks: BackgroundTasks = Depends(),
+    background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
     _access = Depends(require_project_access),
 ):
@@ -648,7 +648,7 @@ async def download_hwpx(
 @router.get("/{proposal_id}/download/pptx")
 async def download_pptx(
     proposal_id: str,
-    background_tasks: BackgroundTasks = Depends(),
+    background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):

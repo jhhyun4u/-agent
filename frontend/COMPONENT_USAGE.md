@@ -21,7 +21,11 @@ export default function Example() {
       </Button>
 
       {/* 위험한 액션 */}
-      <Button variant="danger" size="md" onClick={() => confirm("정말 삭제하시겠습니까?")}>
+      <Button
+        variant="danger"
+        size="md"
+        onClick={() => confirm("정말 삭제하시겠습니까?")}
+      >
         삭제
       </Button>
 
@@ -41,12 +45,12 @@ export default function Example() {
 
 ### Button Props
 
-| 속성 | 타입 | 기본값 | 설명 |
-|------|------|--------|------|
-| `variant` | `primary \| secondary \| danger \| ghost` | `secondary` | 버튼 스타일 |
-| `size` | `sm \| md \| lg \| xl` | `md` | 버튼 크기 |
-| `loading` | `boolean` | `false` | 로딩 상태 (처리 중... 표시) |
-| `disabled` | `boolean` | `false` | 비활성화 상태 |
+| 속성       | 타입                                      | 기본값      | 설명                        |
+| ---------- | ----------------------------------------- | ----------- | --------------------------- |
+| `variant`  | `primary \| secondary \| danger \| ghost` | `secondary` | 버튼 스타일                 |
+| `size`     | `sm \| md \| lg \| xl`                    | `md`        | 버튼 크기                   |
+| `loading`  | `boolean`                                 | `false`     | 로딩 상태 (처리 중... 표시) |
+| `disabled` | `boolean`                                 | `false`     | 비활성화 상태               |
 
 ---
 
@@ -59,8 +63,8 @@ import { Button } from "@/components/ui/Button";
 export default function Example() {
   return (
     <Card>
-      <CardHeader 
-        title="카드 제목" 
+      <CardHeader
+        title="카드 제목"
         subtitle="부제목"
         action={<Button size="sm">편집</Button>}
       />
@@ -68,8 +72,12 @@ export default function Example() {
         <p>카드 본문 내용이 여기에 들어갑니다.</p>
       </CardBody>
       <CardFooter>
-        <Button variant="secondary" size="sm">취소</Button>
-        <Button variant="primary" size="sm">저장</Button>
+        <Button variant="secondary" size="sm">
+          취소
+        </Button>
+        <Button variant="primary" size="sm">
+          저장
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -78,23 +86,23 @@ export default function Example() {
 
 ### Card Props
 
-| 컴포넌트 | Props | 설명 |
-|---------|-------|------|
-| `Card` | `className` | 추가 CSS 클래스 |
-| `CardHeader` | `title`, `subtitle`, `action`, `children` | 헤더 구성 |
-| `CardBody` | `className`, `children` | 본문 |
-| `CardFooter` | `className`, `children` | 푸터 |
+| 컴포넌트     | Props                                     | 설명            |
+| ------------ | ----------------------------------------- | --------------- |
+| `Card`       | `className`                               | 추가 CSS 클래스 |
+| `CardHeader` | `title`, `subtitle`, `action`, `children` | 헤더 구성       |
+| `CardBody`   | `className`, `children`                   | 본문            |
+| `CardFooter` | `className`, `children`                   | 푸터            |
 
 ---
 
 ## 폼 필드 (FormField)
 
 ```tsx
-import { 
-  FormField, 
-  TextInput, 
-  TextArea, 
-  Select 
+import {
+  FormField,
+  TextInput,
+  TextArea,
+  Select,
 } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/Button";
 
@@ -123,7 +131,9 @@ export default function Example() {
         placeholder="상세 설명을 입력하세요..."
         required
         value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, description: e.target.value })
+        }
         error={errors.description}
       />
 
@@ -155,12 +165,12 @@ export default function Example() {
 
 ### FormField Props
 
-| 컴포넌트 | Props | 설명 |
-|---------|-------|------|
-| `FormField` | `label`, `error`, `helperText`, `required` | 폼 필드 래퍼 |
-| `TextInput` | (TextInput의 모든 Props) + FormField Props | 텍스트 입력 |
-| `TextArea` | (TextArea의 모든 Props) + FormField Props | 긴 텍스트 입력 |
-| `Select` | `options`, (Select의 모든 Props) + FormField Props | 드롭다운 |
+| 컴포넌트    | Props                                              | 설명           |
+| ----------- | -------------------------------------------------- | -------------- |
+| `FormField` | `label`, `error`, `helperText`, `required`         | 폼 필드 래퍼   |
+| `TextInput` | (TextInput의 모든 Props) + FormField Props         | 텍스트 입력    |
+| `TextArea`  | (TextArea의 모든 Props) + FormField Props          | 긴 텍스트 입력 |
+| `Select`    | `options`, (Select의 모든 Props) + FormField Props | 드롭다운       |
 
 ---
 
@@ -207,10 +217,18 @@ export default function Example() {
 export default function Example() {
   return (
     <div className="space-y-2">
-      <p><span className="status-success">완료</span></p>
-      <p><span className="status-warning">진행 중</span></p>
-      <p><span className="status-error">오류</span></p>
-      <p><span className="status-info">정보</span></p>
+      <p>
+        <span className="status-success">완료</span>
+      </p>
+      <p>
+        <span className="status-warning">진행 중</span>
+      </p>
+      <p>
+        <span className="status-error">오류</span>
+      </p>
+      <p>
+        <span className="status-info">정보</span>
+      </p>
     </div>
   );
 }
@@ -298,11 +316,15 @@ interface EmailInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
   ({ label, error, helperText, required, ...props }, ref) => (
-    <FormField label={label} error={error} helperText={helperText} required={required}>
+    <FormField
+      label={label}
+      error={error}
+      helperText={helperText}
+      required={required}
+    >
       <input ref={ref} type="email" {...props} />
     </FormField>
-  )
+  ),
 );
 EmailInput.displayName = "EmailInput";
 ```
-

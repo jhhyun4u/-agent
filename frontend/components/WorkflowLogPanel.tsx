@@ -60,7 +60,9 @@ export default function WorkflowLogPanel({
   }, [events.length, collapsed]);
 
   return (
-    <div className={`bg-[#111111] border border-[#262626] rounded-xl overflow-hidden ${className}`}>
+    <div
+      className={`bg-[#111111] border border-[#262626] rounded-xl overflow-hidden ${className}`}
+    >
       {/* 헤더 */}
       <button
         onClick={onToggle}

@@ -1,658 +1,708 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proposal Coworker - 제안서 편집</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg: #0f0f0f;
-      --surface: #111111;
-      --card: #1c1c1c;
-      --border: #262626;
-      --text: #ededed;
-      --muted: #8c8c8c;
-      --accent: #3ecf8e;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-    }
-
-    .container {
-      display: flex;
-      height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 208px;
-      background-color: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 16px 12px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .sidebar-logo {
-      padding: 8px;
-      margin-bottom: 24px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background-color 150ms;
-    }
-
-    .sidebar-logo:hover {
-      background-color: var(--card);
-    }
-
-    .sidebar-logo-icon {
-      width: 24px;
-      height: 24px;
-      background-color: var(--accent);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--bg);
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .nav-item {
-      padding: 8px 12px;
-      margin: 4px 0;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--muted);
-      transition: all 150ms;
-      font-size: 13px;
-    }
-
-    .nav-item:hover {
-      background-color: var(--card);
-      color: var(--text);
-    }
-
-    .nav-item.active {
-      background-color: var(--card);
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* Main Content */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background-color: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-left {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .header-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .header-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 150ms;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-primary {
-      background-color: var(--accent);
-      color: var(--bg);
-    }
-
-    .btn-primary:hover {
-      background-color: #34b87a;
-    }
-
-    .btn-secondary {
-      background-color: var(--card);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background-color: #303030;
-    }
-
-    .btn-ghost {
-      background-color: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-ghost:hover {
-      background-color: var(--card);
-    }
-
-    .content {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    }
-
-    /* TOC Panel */
-    .toc-panel {
-      width: 240px;
-      background-color: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 16px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .toc-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      padding: 0 8px;
-    }
-
-    .toc-item {
-      padding: 8px 12px;
-      margin: 2px 0;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 13px;
-      color: var(--text);
-      border-left: 3px solid transparent;
-      transition: all 150ms;
-    }
-
-    .toc-item:hover {
-      background-color: var(--card);
-    }
-
-    .toc-item.active {
-      border-left-color: var(--accent);
-      background-color: var(--card);
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .toc-item.done::before {
-      content: "✓ ";
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    .toc-progress {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 12px;
-      padding: 8px;
-      background-color: var(--card);
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    /* Editor Panel */
-    .editor-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
-      overflow-y: auto;
-    }
-
-    .section-header {
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-number {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .section-title {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .section-info {
-      display: flex;
-      gap: 16px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .editor-toolbar {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      background-color: var(--card);
-      border-radius: 6px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-
-    .toolbar-btn {
-      padding: 6px 10px;
-      background-color: transparent;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 100ms;
-    }
-
-    .toolbar-btn:hover {
-      background-color: var(--border);
-    }
-
-    .toolbar-btn.active {
-      background-color: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-    }
-
-    .editor-content {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 16px;
-      min-height: 300px;
-      line-height: 1.6;
-      color: var(--text);
-    }
-
-    .editor-content p {
-      margin-bottom: 12px;
-    }
-
-    .editor-content h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 16px 0 8px;
-    }
-
-    .editor-content ul {
-      margin-left: 20px;
-      margin-bottom: 12px;
-    }
-
-    .editor-content li {
-      margin-bottom: 6px;
-    }
-
-    .editor-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    /* AI Panel */
-    .ai-panel {
-      width: 300px;
-      background-color: var(--surface);
-      border-left: 1px solid var(--border);
-      padding: 16px;
-      overflow-y: auto;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ai-panel-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .ai-suggestion {
-      background-color: var(--card);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 12px;
-      font-size: 13px;
-    }
-
-    .ai-suggestion-title {
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--accent);
-    }
-
-    .ai-suggestion-content {
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .ai-suggestion-buttons {
-      display: flex;
-      gap: 6px;
-    }
-
-    .ai-btn {
-      flex: 1;
-      padding: 4px 8px;
-      background-color: transparent;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 11px;
-      transition: all 100ms;
-    }
-
-    .ai-btn:hover {
-      background-color: var(--border);
-    }
-
-    .ai-btn.accept {
-      background-color: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-    }
-
-    .ai-status {
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .ai-loading {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .spinner {
-      width: 12px;
-      height: 12px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 1024px) {
-      .ai-panel {
-        display: none;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposal Coworker - 제안서 편집</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      .toc-panel {
-        width: 180px;
+      :root {
+        --bg: #0f0f0f;
+        --surface: #111111;
+        --card: #1c1c1c;
+        --border: #262626;
+        --text: #ededed;
+        --muted: #8c8c8c;
+        --accent: #3ecf8e;
       }
 
-      .editor-panel {
-        padding: 16px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .toc-panel {
-        display: none;
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
       }
 
-      .editor-panel {
-        padding: 12px;
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 208px;
+        background-color: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 16px 12px;
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+
+      .sidebar-logo {
+        padding: 8px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background-color 150ms;
+      }
+
+      .sidebar-logo:hover {
+        background-color: var(--card);
+      }
+
+      .sidebar-logo-icon {
+        width: 24px;
+        height: 24px;
+        background-color: var(--accent);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bg);
+        font-weight: bold;
+        font-size: 12px;
+      }
+
+      .nav-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 150ms;
+        font-size: 13px;
+      }
+
+      .nav-item:hover {
+        background-color: var(--card);
+        color: var(--text);
+      }
+
+      .nav-item.active {
+        background-color: var(--card);
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* Main Content */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
       }
 
       .header {
-        padding: 12px 16px;
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
       }
 
       .header-title {
-        font-size: 18px;
+        font-size: 20px;
+        font-weight: 600;
       }
-    }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
+      .header-subtitle {
+        font-size: 12px;
+        color: var(--muted);
+      }
 
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-    }
+      .header-actions {
+        display: flex;
+        gap: 12px;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 150ms;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a3a3a;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">PA</div>
-        <span>Proposal Coworker</span>
+      .btn-primary {
+        background-color: var(--accent);
+        color: var(--bg);
+      }
+
+      .btn-primary:hover {
+        background-color: #34b87a;
+      }
+
+      .btn-secondary {
+        background-color: var(--card);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        background-color: #303030;
+      }
+
+      .btn-ghost {
+        background-color: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-ghost:hover {
+        background-color: var(--card);
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* TOC Panel */
+      .toc-panel {
+        width: 240px;
+        background-color: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 16px;
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+
+      .toc-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        padding: 0 8px;
+      }
+
+      .toc-item {
+        padding: 8px 12px;
+        margin: 2px 0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text);
+        border-left: 3px solid transparent;
+        transition: all 150ms;
+      }
+
+      .toc-item:hover {
+        background-color: var(--card);
+      }
+
+      .toc-item.active {
+        border-left-color: var(--accent);
+        background-color: var(--card);
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .toc-item.done::before {
+        content: "✓ ";
+        color: var(--accent);
+        font-weight: bold;
+      }
+
+      .toc-progress {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 12px;
+        padding: 8px;
+        background-color: var(--card);
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      /* Editor Panel */
+      .editor-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      .section-header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .section-number {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .section-info {
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .editor-toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        background-color: var(--card);
+        border-radius: 6px;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+
+      .toolbar-btn {
+        padding: 6px 10px;
+        background-color: transparent;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 100ms;
+      }
+
+      .toolbar-btn:hover {
+        background-color: var(--border);
+      }
+
+      .toolbar-btn.active {
+        background-color: var(--accent);
+        color: var(--bg);
+        border-color: var(--accent);
+      }
+
+      .editor-content {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 16px;
+        min-height: 300px;
+        line-height: 1.6;
+        color: var(--text);
+      }
+
+      .editor-content p {
+        margin-bottom: 12px;
+      }
+
+      .editor-content h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+
+      .editor-content ul {
+        margin-left: 20px;
+        margin-bottom: 12px;
+      }
+
+      .editor-content li {
+        margin-bottom: 6px;
+      }
+
+      .editor-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      /* AI Panel */
+      .ai-panel {
+        width: 300px;
+        background-color: var(--surface);
+        border-left: 1px solid var(--border);
+        padding: 16px;
+        overflow-y: auto;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ai-panel-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+
+      .ai-suggestion {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
+        border-radius: 4px;
+        padding: 12px;
+        margin-bottom: 12px;
+        font-size: 13px;
+      }
+
+      .ai-suggestion-title {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--accent);
+      }
+
+      .ai-suggestion-content {
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .ai-suggestion-buttons {
+        display: flex;
+        gap: 6px;
+      }
+
+      .ai-btn {
+        flex: 1;
+        padding: 4px 8px;
+        background-color: transparent;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 11px;
+        transition: all 100ms;
+      }
+
+      .ai-btn:hover {
+        background-color: var(--border);
+      }
+
+      .ai-btn.accept {
+        background-color: var(--accent);
+        color: var(--bg);
+        border-color: var(--accent);
+      }
+
+      .ai-status {
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .ai-loading {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .spinner {
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .ai-panel {
+          display: none;
+        }
+
+        .toc-panel {
+          width: 180px;
+        }
+
+        .editor-panel {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .toc-panel {
+          display: none;
+        }
+
+        .editor-panel {
+          padding: 12px;
+        }
+
+        .header {
+          padding: 12px 16px;
+        }
+
+        .header-title {
+          font-size: 18px;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3a3a3a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">PA</div>
+          <span>Proposal Coworker</span>
+        </div>
+
+        <div class="nav-item">🏠 대시보드</div>
+        <div class="nav-item">👁️ 공고 모니터링</div>
+        <div class="nav-item active">📄 제안 프로젝트</div>
+        <div
+          style="
+            font-size: 11px;
+            color: var(--muted);
+            margin: 12px 8px;
+            text-transform: uppercase;
+          "
+        >
+          📖 지식 베이스
+        </div>
+        <div class="nav-item">🔍 통합 검색</div>
+        <div class="nav-item">📝 콘텐츠</div>
+        <div class="nav-item">🏢 발주기관</div>
+        <div class="nav-item">🎯 경쟁사</div>
+        <div class="nav-item">💡 교훈</div>
+        <div class="nav-item">❓ Q&A</div>
+        <div class="nav-item">💰 노임단가</div>
+        <div class="nav-item">📊 시장가격</div>
+        <div
+          style="
+            font-size: 11px;
+            color: var(--muted);
+            margin: 12px 8px;
+            text-transform: uppercase;
+          "
+        >
+          📌 최근 작업
+        </div>
+        <div class="nav-item">🟠 ISP 시스템 제안</div>
+        <div class="nav-item">🟢 보안 솔루션</div>
       </div>
 
-      <div class="nav-item">🏠 대시보드</div>
-      <div class="nav-item">👁️ 공고 모니터링</div>
-      <div class="nav-item active">📄 제안 프로젝트</div>
-      <div style="font-size: 11px; color: var(--muted); margin: 12px 8px; text-transform: uppercase;">📖 지식 베이스</div>
-      <div class="nav-item">🔍 통합 검색</div>
-      <div class="nav-item">📝 콘텐츠</div>
-      <div class="nav-item">🏢 발주기관</div>
-      <div class="nav-item">🎯 경쟁사</div>
-      <div class="nav-item">💡 교훈</div>
-      <div class="nav-item">❓ Q&A</div>
-      <div class="nav-item">💰 노임단가</div>
-      <div class="nav-item">📊 시장가격</div>
-      <div style="font-size: 11px; color: var(--muted); margin: 12px 8px; text-transform: uppercase;">📌 최근 작업</div>
-      <div class="nav-item">🟠 ISP 시스템 제안</div>
-      <div class="nav-item">🟢 보안 솔루션</div>
+      <!-- Main Content -->
+      <div class="main">
+        <div class="header">
+          <div class="header-left">
+            <div class="header-title">K 공사 터널 운영 용역</div>
+            <div class="header-subtitle">K 공사 | 예정가격 ₩2.5B | D-5</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-ghost">⬇️ 다운로드</button>
+            <button class="btn btn-ghost">🔄 동기화</button>
+            <button class="btn btn-secondary">💬 리뷰 요청</button>
+            <button class="btn btn-primary">✓ 완료</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- TOC Panel -->
+          <div class="toc-panel">
+            <div class="toc-title">목차</div>
+            <div class="toc-item done">1. 제출 현황</div>
+            <div class="toc-item done">2. 회사 소개</div>
+            <div class="toc-item done">3. 사업 경험</div>
+            <div class="toc-item active">4. 기술 제안</div>
+            <div class="toc-item">5. 가격 제안</div>
+            <div class="toc-item">6. 리스크 관리</div>
+            <div class="toc-item">7. 지속가능성</div>
+            <div class="toc-item">8. Q&A</div>
+
+            <div class="toc-progress">
+              진행률: 4/8<br />
+              <strong style="color: var(--accent)">50%</strong>
+            </div>
+          </div>
+
+          <!-- Editor Panel -->
+          <div class="editor-panel">
+            <div class="section-header">
+              <div class="section-number">섹션 4 / 8</div>
+              <div class="section-title">기술 제안</div>
+              <div class="section-info">
+                <span>📝 마지막 수정: 5분 전</span>
+                <span>👤 현재호 작성</span>
+              </div>
+            </div>
+
+            <div class="editor-toolbar">
+              <button class="toolbar-btn active">B</button>
+              <button class="toolbar-btn">I</button>
+              <button class="toolbar-btn">U</button>
+              <button class="toolbar-btn">|</button>
+              <button class="toolbar-btn">H1</button>
+              <button class="toolbar-btn">H2</button>
+              <button class="toolbar-btn">H3</button>
+              <button class="toolbar-btn">•</button>
+              <button class="toolbar-btn">1.</button>
+              <button class="toolbar-btn">""</button>
+              <button class="toolbar-btn">📎</button>
+              <button class="toolbar-btn">🔗</button>
+            </div>
+
+            <div class="editor-content">
+              <h3>터널 운영 시스템</h3>
+              <p><strong>1. 기술 개요</strong></p>
+              <p>
+                본 제안서에서 제시하는 터널 운영 시스템은 최신 IoT 기술과 AI
+                기반 분석을 결합한 통합 솔루션입니다. 이 시스템은 다음과 같은
+                특징을 가지고 있습니다:
+              </p>
+
+              <ul>
+                <li>
+                  <strong>실시간 모니터링:</strong> 터널 내 환기, 조명, 안전
+                  상황을 24/7 감시
+                </li>
+                <li>
+                  <strong>예측 유지보수:</strong> 설비 상태를 분석하여 사전 점검
+                  일정 최적화
+                </li>
+                <li>
+                  <strong>자동 보안:</strong> CCTV 영상 분석으로 이상 상황 즉시
+                  감지
+                </li>
+                <li>
+                  <strong>에너지 효율:</strong> AI 기반 수요 예측으로 전력 소비
+                  30% 감소
+                </li>
+              </ul>
+
+              <h3>기술 팀 구성</h3>
+              <p>
+                당사는 터널 운영 분야에 20년 이상의 경험을 가진 전문가 팀을
+                구성하였습니다:
+              </p>
+              <ul>
+                <li>기술 총괄: 엔지니어 1명 (석사 학위, 15년 경력)</li>
+                <li>IoT 시스템: 개발자 3명 (평균 12년 경력)</li>
+                <li>AI/분석: 데이터 사이언티스트 2명 (석사 학위)</li>
+              </ul>
+            </div>
+
+            <div class="editor-actions">
+              <button class="btn btn-secondary">← 이전 섹션</button>
+              <button class="btn btn-secondary">다음 섹션 →</button>
+            </div>
+          </div>
+
+          <!-- AI Panel -->
+          <div class="ai-panel">
+            <div class="ai-panel-title">🤖 AI 어시스턴트</div>
+
+            <div class="ai-suggestion">
+              <div class="ai-suggestion-title">구조 개선 제안</div>
+              <div class="ai-suggestion-content">
+                "기술 팀 구성" 섹션에 경력 증명 자료(인증서, 수상 이력) 참조를
+                추가하면 신뢰도가 20% 향상됩니다.
+              </div>
+              <div class="ai-suggestion-buttons">
+                <button class="ai-btn">자세히</button>
+                <button class="ai-btn accept">적용</button>
+              </div>
+            </div>
+
+            <div class="ai-suggestion">
+              <div class="ai-suggestion-title">경쟁사 비교</div>
+              <div class="ai-suggestion-content">
+                "실시간 모니터링" 항목에서 경쟁사 대비 응답 시간을 명시하면
+                경쟁력이 강조됩니다.
+              </div>
+              <div class="ai-suggestion-buttons">
+                <button class="ai-btn">제안 보기</button>
+                <button class="ai-btn accept">승인</button>
+              </div>
+            </div>
+
+            <div class="ai-suggestion">
+              <div class="ai-suggestion-title">📊 데이터 신뢰성</div>
+              <div class="ai-suggestion-content">
+                "에너지 효율 30% 감소" 주장에 대한 근거가 부족합니다. 사례
+                프로젝트 또는 시뮬레이션 결과를 추가하세요.
+              </div>
+              <div class="ai-suggestion-buttons">
+                <button class="ai-btn">확인</button>
+                <button class="ai-btn accept">수정</button>
+              </div>
+            </div>
+
+            <div class="ai-status">
+              <div class="ai-loading">
+                <div class="spinner"></div>
+                분석 중...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main">
-      <div class="header">
-        <div class="header-left">
-          <div class="header-title">K 공사 터널 운영 용역</div>
-          <div class="header-subtitle">K 공사 | 예정가격 ₩2.5B | D-5</div>
-        </div>
-        <div class="header-actions">
-          <button class="btn btn-ghost">⬇️ 다운로드</button>
-          <button class="btn btn-ghost">🔄 동기화</button>
-          <button class="btn btn-secondary">💬 리뷰 요청</button>
-          <button class="btn btn-primary">✓ 완료</button>
-        </div>
-      </div>
-
-      <div class="content">
-        <!-- TOC Panel -->
-        <div class="toc-panel">
-          <div class="toc-title">목차</div>
-          <div class="toc-item done">1. 제출 현황</div>
-          <div class="toc-item done">2. 회사 소개</div>
-          <div class="toc-item done">3. 사업 경험</div>
-          <div class="toc-item active">4. 기술 제안</div>
-          <div class="toc-item">5. 가격 제안</div>
-          <div class="toc-item">6. 리스크 관리</div>
-          <div class="toc-item">7. 지속가능성</div>
-          <div class="toc-item">8. Q&A</div>
-
-          <div class="toc-progress">
-            진행률: 4/8<br/>
-            <strong style="color: var(--accent);">50%</strong>
-          </div>
-        </div>
-
-        <!-- Editor Panel -->
-        <div class="editor-panel">
-          <div class="section-header">
-            <div class="section-number">섹션 4 / 8</div>
-            <div class="section-title">기술 제안</div>
-            <div class="section-info">
-              <span>📝 마지막 수정: 5분 전</span>
-              <span>👤 현재호 작성</span>
-            </div>
-          </div>
-
-          <div class="editor-toolbar">
-            <button class="toolbar-btn active">B</button>
-            <button class="toolbar-btn">I</button>
-            <button class="toolbar-btn">U</button>
-            <button class="toolbar-btn">|</button>
-            <button class="toolbar-btn">H1</button>
-            <button class="toolbar-btn">H2</button>
-            <button class="toolbar-btn">H3</button>
-            <button class="toolbar-btn">•</button>
-            <button class="toolbar-btn">1.</button>
-            <button class="toolbar-btn">""</button>
-            <button class="toolbar-btn">📎</button>
-            <button class="toolbar-btn">🔗</button>
-          </div>
-
-          <div class="editor-content">
-            <h3>터널 운영 시스템</h3>
-            <p><strong>1. 기술 개요</strong></p>
-            <p>본 제안서에서 제시하는 터널 운영 시스템은 최신 IoT 기술과 AI 기반 분석을 결합한 통합 솔루션입니다. 이 시스템은 다음과 같은 특징을 가지고 있습니다:</p>
-
-            <ul>
-              <li><strong>실시간 모니터링:</strong> 터널 내 환기, 조명, 안전 상황을 24/7 감시</li>
-              <li><strong>예측 유지보수:</strong> 설비 상태를 분석하여 사전 점검 일정 최적화</li>
-              <li><strong>자동 보안:</strong> CCTV 영상 분석으로 이상 상황 즉시 감지</li>
-              <li><strong>에너지 효율:</strong> AI 기반 수요 예측으로 전력 소비 30% 감소</li>
-            </ul>
-
-            <h3>기술 팀 구성</h3>
-            <p>당사는 터널 운영 분야에 20년 이상의 경험을 가진 전문가 팀을 구성하였습니다:</p>
-            <ul>
-              <li>기술 총괄: 엔지니어 1명 (석사 학위, 15년 경력)</li>
-              <li>IoT 시스템: 개발자 3명 (평균 12년 경력)</li>
-              <li>AI/분석: 데이터 사이언티스트 2명 (석사 학위)</li>
-            </ul>
-          </div>
-
-          <div class="editor-actions">
-            <button class="btn btn-secondary">← 이전 섹션</button>
-            <button class="btn btn-secondary">다음 섹션 →</button>
-          </div>
-        </div>
-
-        <!-- AI Panel -->
-        <div class="ai-panel">
-          <div class="ai-panel-title">🤖 AI 어시스턴트</div>
-
-          <div class="ai-suggestion">
-            <div class="ai-suggestion-title">구조 개선 제안</div>
-            <div class="ai-suggestion-content">
-              "기술 팀 구성" 섹션에 경력 증명 자료(인증서, 수상 이력) 참조를 추가하면 신뢰도가 20% 향상됩니다.
-            </div>
-            <div class="ai-suggestion-buttons">
-              <button class="ai-btn">자세히</button>
-              <button class="ai-btn accept">적용</button>
-            </div>
-          </div>
-
-          <div class="ai-suggestion">
-            <div class="ai-suggestion-title">경쟁사 비교</div>
-            <div class="ai-suggestion-content">
-              "실시간 모니터링" 항목에서 경쟁사 대비 응답 시간을 명시하면 경쟁력이 강조됩니다.
-            </div>
-            <div class="ai-suggestion-buttons">
-              <button class="ai-btn">제안 보기</button>
-              <button class="ai-btn accept">승인</button>
-            </div>
-          </div>
-
-          <div class="ai-suggestion">
-            <div class="ai-suggestion-title">📊 데이터 신뢰성</div>
-            <div class="ai-suggestion-content">
-              "에너지 효율 30% 감소" 주장에 대한 근거가 부족합니다. 사례 프로젝트 또는 시뮬레이션 결과를 추가하세요.
-            </div>
-            <div class="ai-suggestion-buttons">
-              <button class="ai-btn">확인</button>
-              <button class="ai-btn accept">수정</button>
-            </div>
-          </div>
-
-          <div class="ai-status">
-            <div class="ai-loading">
-              <div class="spinner"></div>
-              분석 중...
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // TOC item click
-    document.querySelectorAll('.toc-item').forEach((item, index) => {
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.toc-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
+    <script>
+      // TOC item click
+      document.querySelectorAll(".toc-item").forEach((item, index) => {
+        item.addEventListener("click", () => {
+          document
+            .querySelectorAll(".toc-item")
+            .forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+        });
       });
-    });
 
-    // Toolbar button toggle
-    document.querySelectorAll('.toolbar-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.currentTarget.classList.toggle('active');
+      // Toolbar button toggle
+      document.querySelectorAll(".toolbar-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.currentTarget.classList.toggle("active");
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

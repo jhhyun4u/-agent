@@ -40,7 +40,8 @@ export function MockEvalCard({
   onRevalidate,
 }: MockEvalCardProps) {
   const [chartType, setChartType] = useState<"radar" | "bar">("radar");
-  const [selectedDimension, setSelectedDimension] = useState<ScoreComponent | null>(null);
+  const [selectedDimension, setSelectedDimension] =
+    useState<ScoreComponent | null>(null);
 
   if (isLoading) {
     return (
@@ -54,7 +55,9 @@ export function MockEvalCard({
   if (error) {
     return (
       <div className="p-4 border border-red-200 rounded-lg bg-red-50">
-        <p className="text-sm text-red-700">Failed to load evaluation results</p>
+        <p className="text-sm text-red-700">
+          Failed to load evaluation results
+        </p>
         <p className="text-xs text-red-600 mt-1">{error.message}</p>
         {onRevalidate && (
           <button
@@ -99,8 +102,12 @@ export function MockEvalCard({
       {/* Header & Risk */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Mock Evaluation</h3>
-          <p className="text-sm text-gray-600 mt-1">5-Dimension Scoring Analysis</p>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Mock Evaluation
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            5-Dimension Scoring Analysis
+          </p>
         </div>
         {onRevalidate && (
           <button
@@ -116,10 +123,15 @@ export function MockEvalCard({
       {/* Win Probability & Risk Summary */}
       <div className="grid grid-cols-2 gap-3 py-3 border rounded-lg bg-gradient-to-br from-purple-50 to-blue-50">
         <div className="text-center">
-          <p className="text-xs font-semibold text-gray-600 uppercase">Win Probability</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase">
+            Win Probability
+          </p>
           <div className="mt-2 relative w-32 h-32 mx-auto">
             {/* Circular gauge */}
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <svg
+              className="w-full h-full transform -rotate-90"
+              viewBox="0 0 100 100"
+            >
               <circle
                 cx="50"
                 cy="50"
@@ -137,8 +149,8 @@ export function MockEvalCard({
                   winProbabilityPercent >= 70
                     ? "#16a34a"
                     : winProbabilityPercent >= 50
-                    ? "#f59e0b"
-                    : "#dc2626"
+                      ? "#f59e0b"
+                      : "#dc2626"
                 }
                 strokeWidth="8"
                 strokeDasharray={`${(winProbabilityPercent / 100) * 251.2} 251.2`}
@@ -159,14 +171,20 @@ export function MockEvalCard({
 
         <div className="flex flex-col justify-center space-y-3 px-4">
           <div>
-            <p className="text-xs font-semibold text-gray-600 uppercase">Overall Score</p>
-            <p className="text-2xl font-bold text-purple-600 mt-1">{data.total_score}</p>
+            <p className="text-xs font-semibold text-gray-600 uppercase">
+              Overall Score
+            </p>
+            <p className="text-2xl font-bold text-purple-600 mt-1">
+              {data.total_score}
+            </p>
           </div>
           <div>
-            <p className="text-xs font-semibold text-gray-600 uppercase">Risk Level</p>
+            <p className="text-xs font-semibold text-gray-600 uppercase">
+              Risk Level
+            </p>
             <span
               className={`inline-block px-3 py-1 text-xs font-semibold rounded border mt-1 ${getRiskColor(
-                data.pass_fail_risk
+                data.pass_fail_risk,
               )}`}
             >
               {data.pass_fail_risk.toUpperCase()}
@@ -203,10 +221,17 @@ export function MockEvalCard({
       <div className="h-72 bg-gray-50 rounded-lg p-4">
         {chartType === "radar" ? (
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={chartData} margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
+            <RadarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
+            >
               <PolarGrid stroke="#e5e7eb" />
               <PolarAngleAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 11 }} />
+              <PolarRadiusAxis
+                angle={90}
+                domain={[0, 100]}
+                tick={{ fontSize: 11 }}
+              />
               <Radar
                 name="Score"
                 dataKey="score"
@@ -219,7 +244,10 @@ export function MockEvalCard({
           </ResponsiveContainer>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 60 }}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 10, right: 20, left: 0, bottom: 60 }}
+            >
               <CartesianGrid stroke="#e5e7eb" />
               <XAxis
                 dataKey="name"
@@ -230,7 +258,10 @@ export function MockEvalCard({
               />
               <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
               <Tooltip
-                contentStyle={{ backgroundColor: "#f3f4f6", border: "1px solid #e5e7eb" }}
+                contentStyle={{
+                  backgroundColor: "#f3f4f6",
+                  border: "1px solid #e5e7eb",
+                }}
               />
               <Bar dataKey="score" fill="#7c3aed" radius={[8, 8, 0, 0]} />
             </BarChart>
@@ -240,7 +271,9 @@ export function MockEvalCard({
 
       {/* Dimensions Detail */}
       <div className="space-y-2">
-        <h4 className="text-sm font-semibold text-gray-700">Dimension Breakdown</h4>
+        <h4 className="text-sm font-semibold text-gray-700">
+          Dimension Breakdown
+        </h4>
         <div className="space-y-2 max-h-72 overflow-y-auto">
           {data.dimensions.map((dim: ScoreComponent, idx: number) => (
             <div
@@ -248,19 +281,24 @@ export function MockEvalCard({
               className="border rounded-lg p-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition"
               onClick={() =>
                 setSelectedDimension(
-                  selectedDimension?.dimension === dim.dimension ? null : dim
+                  selectedDimension?.dimension === dim.dimension ? null : dim,
                 )
               }
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <p className="font-medium text-sm text-gray-900">
-                    {dim.dimension.charAt(0).toUpperCase() + dim.dimension.slice(1)}
+                    {dim.dimension.charAt(0).toUpperCase() +
+                      dim.dimension.slice(1)}
                   </p>
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-1">{dim.rationale}</p>
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-1">
+                    {dim.rationale}
+                  </p>
                 </div>
                 <div className="text-right ml-4">
-                  <p className="text-lg font-bold text-purple-600">{dim.score}</p>
+                  <p className="text-lg font-bold text-purple-600">
+                    {dim.score}
+                  </p>
                   <div className="h-1 w-16 bg-gray-300 rounded mt-1 overflow-hidden">
                     <div
                       className="h-full bg-purple-600"
@@ -273,7 +311,9 @@ export function MockEvalCard({
               {selectedDimension?.dimension === dim.dimension && (
                 <div className="mt-3 pt-3 border-t space-y-2">
                   <div>
-                    <p className="text-xs font-semibold text-green-600">Strengths</p>
+                    <p className="text-xs font-semibold text-green-600">
+                      Strengths
+                    </p>
                     <ul className="text-sm text-gray-700 mt-1 space-y-1">
                       {dim.strengths.map((s, i) => (
                         <li key={i} className="flex items-start">
@@ -284,7 +324,9 @@ export function MockEvalCard({
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-red-600">Weaknesses</p>
+                    <p className="text-xs font-semibold text-red-600">
+                      Weaknesses
+                    </p>
                     <ul className="text-sm text-gray-700 mt-1 space-y-1">
                       {dim.weaknesses.map((w, i) => (
                         <li key={i} className="flex items-start">
@@ -304,7 +346,9 @@ export function MockEvalCard({
       {/* Key Differentiators & Risks */}
       <div className="grid grid-cols-2 gap-4 pt-4 border-t">
         <div>
-          <h4 className="text-xs font-semibold text-green-600 uppercase">Differentiators</h4>
+          <h4 className="text-xs font-semibold text-green-600 uppercase">
+            Differentiators
+          </h4>
           <ul className="text-sm text-gray-700 mt-2 space-y-1">
             {data.key_differentiators.slice(0, 2).map((d, idx) => (
               <li key={idx} className="flex items-start">
@@ -315,7 +359,9 @@ export function MockEvalCard({
           </ul>
         </div>
         <div>
-          <h4 className="text-xs font-semibold text-red-600 uppercase">Risks</h4>
+          <h4 className="text-xs font-semibold text-red-600 uppercase">
+            Risks
+          </h4>
           <ul className="text-sm text-gray-700 mt-2 space-y-1">
             {data.competitive_risks.slice(0, 2).map((r, idx) => (
               <li key={idx} className="flex items-start">

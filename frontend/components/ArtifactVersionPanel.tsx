@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ArtifactVersionPanel Component
@@ -16,13 +16,13 @@
  * - Phase 3-4: Version-specific download buttons
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
-import { Card, CardBody, CardHeader } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
-import { Alert, AlertDescription } from '@/components/ui/Alert';
-import { Clock, User, GitBranch, AlertCircle, Download } from 'lucide-react';
-import { useToast } from '@/components/ui/Toast';
+import React, { useState, useMemo, useCallback } from "react";
+import { Card, CardBody, CardHeader } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
+import { Clock, User, GitBranch, AlertCircle, Download } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export interface ArtifactVersionInfo {
   node_name: string;
@@ -62,8 +62,12 @@ export function ArtifactVersionPanel({
   proposalId,
   downloadToken,
 }: ArtifactVersionPanelProps) {
-  const [selectedVersion, setSelectedVersion] = useState<number | undefined>(undefined);
-  const [expandedKey, setExpandedKey] = useState<string | undefined>(currentOutputKey);
+  const [selectedVersion, setSelectedVersion] = useState<number | undefined>(
+    undefined,
+  );
+  const [expandedKey, setExpandedKey] = useState<string | undefined>(
+    currentOutputKey,
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // Group artifacts by output_key
@@ -111,7 +115,11 @@ export function ArtifactVersionPanel({
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4" />
           <span>
-            {Object.values(groupedArtifacts).reduce((sum, versions) => sum + versions.length, 0)}개 버전
+            {Object.values(groupedArtifacts).reduce(
+              (sum, versions) => sum + versions.length,
+              0,
+            )}
+            개 버전
           </span>
         </div>
       </div>
@@ -123,8 +131,12 @@ export function ArtifactVersionPanel({
             outputKey={outputKey}
             versions={versions}
             isExpanded={expandedKey === outputKey}
-            onExpand={() => setExpandedKey(outputKey === expandedKey ? undefined : outputKey)}
-            onVersionSelect={(version) => handleVersionSelect(outputKey, version)}
+            onExpand={() =>
+              setExpandedKey(outputKey === expandedKey ? undefined : outputKey)
+            }
+            onVersionSelect={(version) =>
+              handleVersionSelect(outputKey, version)
+            }
             isLoading={isLoading}
             proposalId={proposalId}
             downloadToken={downloadToken}
@@ -143,10 +155,15 @@ export function ArtifactVersionPanel({
             <Alert key={idx} className="border-orange-200 bg-orange-50 text-xs">
               <AlertCircle className="h-3 w-3 text-orange-500" />
               <AlertDescription className="text-orange-800">
-                <span className="font-semibold">{mismatch.input_key}</span>: 노드{" "}
-                <span className="font-mono">{mismatch.node_name}</span>가 v{mismatch.expected_version}을 기대하지만
-                현재 활성 버전은 v{mismatch.actual_version}입니다.
-                {mismatch.message && <span className="block mt-0.5 text-orange-600">{mismatch.message}</span>}
+                <span className="font-semibold">{mismatch.input_key}</span>:
+                노드 <span className="font-mono">{mismatch.node_name}</span>가 v
+                {mismatch.expected_version}을 기대하지만 현재 활성 버전은 v
+                {mismatch.actual_version}입니다.
+                {mismatch.message && (
+                  <span className="block mt-0.5 text-orange-600">
+                    {mismatch.message}
+                  </span>
+                )}
               </AlertDescription>
             </Alert>
           ))}
@@ -191,22 +208,21 @@ function ArtifactVersionGroup({
 
   return (
     <Card className="border">
-      <CardHeader className="pb-3 cursor-pointer hover:bg-gray-50" onClick={onExpand}>
+      <CardHeader
+        className="pb-3 cursor-pointer hover:bg-gray-50"
+        onClick={onExpand}
+      >
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <h3 className="card-title text-sm">{outputKey}</h3>
             <div className="text-xs text-gray-600 mt-1">
               {versions.length}개 버전
               {activeVersion && (
-                <span className="ml-2">
-                  (활성: v{activeVersion.version})
-                </span>
+                <span className="ml-2">(활성: v{activeVersion.version})</span>
               )}
             </div>
           </div>
-          <div className="text-xs text-gray-500">
-            {isExpanded ? '▼' : '▶'}
-          </div>
+          <div className="text-xs text-gray-500">{isExpanded ? "▼" : "▶"}</div>
         </div>
       </CardHeader>
 
@@ -214,7 +230,9 @@ function ArtifactVersionGroup({
         <CardBody className="border-t pt-3">
           {/* Version selector buttons */}
           <div className="space-y-3">
-            <div className="text-xs font-semibold text-gray-700 mb-2">버전 선택</div>
+            <div className="text-xs font-semibold text-gray-700 mb-2">
+              버전 선택
+            </div>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
               {versions.map((version) => (
                 <button
@@ -223,14 +241,12 @@ function ArtifactVersionGroup({
                   disabled={isLoading}
                   className={`
                     relative px-2 py-1 rounded border text-xs transition-all
-                    ${version.is_active
-                      ? 'bg-blue-100 border-blue-300 text-blue-900 font-semibold'
-                      : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+                    ${
+                      version.is_active
+                        ? "bg-blue-100 border-blue-300 text-blue-900 font-semibold"
+                        : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
                     }
-                    ${version.is_deprecated
-                      ? 'opacity-60 line-through'
-                      : ''
-                    }
+                    ${version.is_deprecated ? "opacity-60 line-through" : ""}
                     disabled:opacity-50 disabled:cursor-not-allowed
                   `}
                 >
@@ -279,7 +295,7 @@ function VersionDetailsPanel({
 
   const createdDate = new Date(version.created_at);
   const daysAgo = Math.floor(
-    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
+    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   // Phase 3-4: 버전별 DOCX 다운로드
@@ -298,7 +314,9 @@ function VersionDetailsPanel({
 
       // Parse filename from Content-Disposition header
       const disposition = res.headers.get("Content-Disposition") ?? "";
-      const match = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\r\n]+)["']?/i);
+      const match = disposition.match(
+        /filename\*?=(?:UTF-8'')?["']?([^"';\r\n]+)["']?/i,
+      );
       const filename = match
         ? decodeURIComponent(match[1])
         : `proposal_v${version.version}.docx`;
@@ -325,8 +343,10 @@ function VersionDetailsPanel({
         <div className="flex-1">
           <div className="font-semibold">생성일</div>
           <div className="text-gray-600">
-            {createdDate.toLocaleDateString('ko-KR')}
-            {daysAgo > 0 && <span className="text-gray-500"> ({daysAgo}일 전)</span>}
+            {createdDate.toLocaleDateString("ko-KR")}
+            {daysAgo > 0 && (
+              <span className="text-gray-500"> ({daysAgo}일 전)</span>
+            )}
           </div>
         </div>
       </div>
@@ -346,23 +366,17 @@ function VersionDetailsPanel({
           <GitBranch className="h-3 w-3 text-gray-500 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
             <div className="font-semibold">버전 사유</div>
-            <div className="text-gray-600 capitalize">{version.created_reason}</div>
+            <div className="text-gray-600 capitalize">
+              {version.created_reason}
+            </div>
           </div>
         </div>
       )}
 
       {/* Status badges */}
       <div className="flex gap-2 flex-wrap pt-1">
-        {version.is_active && (
-          <Badge variant="success">
-            활성
-          </Badge>
-        )}
-        {version.is_deprecated && (
-          <Badge variant="warning">
-            deprecated
-          </Badge>
-        )}
+        {version.is_active && <Badge variant="success">활성</Badge>}
+        {version.is_deprecated && <Badge variant="warning">deprecated</Badge>}
         {version.artifact_size && (
           <Badge variant="info">
             {(version.artifact_size / 1024).toFixed(1)} KB

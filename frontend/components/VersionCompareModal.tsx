@@ -26,7 +26,10 @@ function stripHtml(html: string): string {
 }
 
 /** 줄 단위 diff */
-function lineDiff(a: string, b: string): Array<{ type: "same" | "add" | "del"; text: string }> {
+function lineDiff(
+  a: string,
+  b: string,
+): Array<{ type: "same" | "add" | "del"; text: string }> {
   const aLines = a.split("\n");
   const bLines = b.split("\n");
   const result: Array<{ type: "same" | "add" | "del"; text: string }> = [];
@@ -74,10 +77,12 @@ export default function VersionCompareModal({
     Promise.all([
       versionA ? loadContent(versionA) : Promise.resolve("(버전 선택)"),
       loadContent(versionB),
-    ]).then(([a, b]) => {
-      setContentA(stripHtml(a));
-      setContentB(stripHtml(b));
-    }).finally(() => setLoading(false));
+    ])
+      .then(([a, b]) => {
+        setContentA(stripHtml(a));
+        setContentB(stripHtml(b));
+      })
+      .finally(() => setLoading(false));
   }, [open, versionA, versionB, loadContent]);
 
   if (!open) return null;
@@ -105,11 +110,15 @@ export default function VersionCompareModal({
             >
               <option value="">이전 버전 선택</option>
               {versions.map((v) => (
-                <option key={v.id} value={v.id}>{v.title || v.id}</option>
+                <option key={v.id} value={v.id}>
+                  {v.title || v.id}
+                </option>
               ))}
             </select>
             <span className="text-[10px] text-[#5c5c5c]">vs</span>
-            <span className="text-[10px] text-[#8c8c8c]">{currentVersionLabel || "현재"}</span>
+            <span className="text-[10px] text-[#8c8c8c]">
+              {currentVersionLabel || "현재"}
+            </span>
             <button
               onClick={onClose}
               className="text-[#8c8c8c] hover:text-[#ededed] ml-4 transition-colors"
@@ -136,8 +145,8 @@ export default function VersionCompareModal({
                     d.type === "add"
                       ? "bg-green-500/10 text-green-300"
                       : d.type === "del"
-                      ? "bg-red-500/10 text-red-400"
-                      : "text-[#8c8c8c]"
+                        ? "bg-red-500/10 text-red-400"
+                        : "text-[#8c8c8c]"
                   }`}
                 >
                   <span className="inline-block w-4 text-[#5c5c5c] select-none">

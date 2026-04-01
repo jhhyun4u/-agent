@@ -1,6 +1,7 @@
 # 제안 프로젝트 목록 페이지 최적화
 
 ## 개요
+
 기존 `proposals/page.tsx`의 복잡한 구조를 분리하여 재사용 가능한 컴포넌트와 유틸리티 함수로 리팩토링했습니다.
 
 ---
@@ -8,9 +9,11 @@
 ## 생성된 새 파일
 
 ### 1. `lib/proposals-utils.ts`
+
 **목적**: 제안서 페이지에서 반복되는 유틸리티 함수 및 상수 중앙화
 
 **제공하는 기능**:
+
 - **상수 정의**:
   - `POS_LABELS`: 포지셔닝 아이콘/색상/레이블 매핑
   - `STEP_MAP`: 워크플로 단계 매핑
@@ -27,6 +30,7 @@
   - `createSortComparator(key, direction)`: 정렬 함수 생성
 
 **이점**:
+
 - 한 곳에서 모든 상수와 함수를 관리
 - 테스트 용이
 - 다른 컴포넌트에서 재사용 가능
@@ -34,14 +38,17 @@
 ---
 
 ### 2. `components/ProposalsTableHeader.tsx`
+
 **목적**: 테이블 헤더를 독립적인 컴포넌트로 분리
 
 **Props**:
+
 - `sortKey`: 현재 정렬 키
 - `sortAsc`: 오름차순 여부
 - `onSort`: 정렬 클릭 핸들러
 
 **개선 사항**:
+
 - 헤더 렌더링 로직 분리
 - 동적 정렬 버튼 생성
 - `TABLE_COLUMNS`에서 열 정보를 읽어 자동 렌더링
@@ -49,15 +56,18 @@
 ---
 
 ### 3. `components/ProposalsTableRow.tsx`
+
 **목적**: 테이블 행을 재사용 가능한 컴포넌트로 분리
 
 **Props**:
+
 - `proposal`: 제안서 데이터
 - `menuOpen`: 현재 열려있는 메뉴 ID
 - `onMenuToggle`: 메뉴 토글 콜백
 - `onMenuAction`: 메뉴 액션 콜백 (view, resume, delete)
 
 **포함된 기능**:
+
 - 프로젝트명 + 결과 표시
 - 포지셔닝 아이콘/레이블
 - 단계 + 진행도 바
@@ -69,6 +79,7 @@
 - 컨텍스트 메뉴
 
 **개선 사항**:
+
 - 행 렌더링 로직을 단순화한 컴포넌트로 분리
 - 모든 포맷팅 함수 활용
 - 클릭 핸들러를 콜백으로 추상화
@@ -76,12 +87,15 @@
 ---
 
 ### 4. `components/ProposalsTableSkeleton.tsx`
+
 **목적**: 로딩 상태 스켈레톤을 재사용 가능한 컴포넌트로 분리
 
 **Props**:
+
 - `rows` (optional, default: 5): 표시할 행의 수
 
 **개선 사항**:
+
 - 스켈레톤 로더를 컴포넌트화
 - `GRID_LAYOUT_CLASS` 사용하여 실제 테이블과 동일한 레이아웃 유지
 - 동적 행 개수 설정 가능
@@ -91,9 +105,11 @@
 ## 리팩토링된 파일
 
 ### `app/(app)/proposals/page.tsx`
+
 **변경 사항**:
 
 1. **Imports 정리**:
+
    ```typescript
    // Before: 각 상수와 함수 인라인 정의
    // After: 모두 proposals-utils에서 import
@@ -104,6 +120,7 @@
    - After: ~650줄 (약 19% 감소)
 
 3. **테이블 렌더링 간소화**:
+
    ```typescript
    // Before: 복잡한 정렬 로직 + 행 렌더링 인라인
    [...]
@@ -131,13 +148,13 @@
 
 ## 성능 개선
 
-| 항목 | Before | After | 개선 |
-|------|--------|-------|------|
-| 파일 크기 | ~799줄 | ~650줄 | 19% 감소 |
-| 유지보수성 | 낮음 (인라인 코드) | 높음 (분리된 컴포넌트) | ✓ |
-| 재사용성 | 낮음 | 높음 (3개 컴포넌트) | ✓ |
-| 가독성 | 복잡함 | 명확함 | ✓ |
-| 테스트 가능성 | 어려움 | 용이함 | ✓ |
+| 항목          | Before             | After                  | 개선     |
+| ------------- | ------------------ | ---------------------- | -------- |
+| 파일 크기     | ~799줄             | ~650줄                 | 19% 감소 |
+| 유지보수성    | 낮음 (인라인 코드) | 높음 (분리된 컴포넌트) | ✓        |
+| 재사용성      | 낮음               | 높음 (3개 컴포넌트)    | ✓        |
+| 가독성        | 복잡함             | 명확함                 | ✓        |
+| 테스트 가능성 | 어려움             | 용이함                 | ✓        |
 
 ---
 
@@ -187,7 +204,11 @@ import {
   SCOPE_LABELS,
   POS_LABELS,
 } from "@/lib/proposals-utils";
-import { ProposalsTableHeader, ProposalsTableRow, ProposalsTableSkeleton } from "@/components";
+import {
+  ProposalsTableHeader,
+  ProposalsTableRow,
+  ProposalsTableSkeleton,
+} from "@/components";
 
 // 단계 정보 조회
 const { step, label } = getStepInfo("strategy_generate"); // { step: 2, label: "전략수립" }

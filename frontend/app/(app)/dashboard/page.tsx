@@ -13,9 +13,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  api, CalendarItem, WinRateStats, ProposalSummary, RecommendedBid,
-  type FailureReasonsData, type MonthlyTrendsData, type ClientWinRateData,
-  type TeamPerformanceData, type PositioningWinRateData,
+  api,
+  CalendarItem,
+  WinRateStats,
+  ProposalSummary,
+  RecommendedBid,
+  type FailureReasonsData,
+  type MonthlyTrendsData,
+  type ClientWinRateData,
+  type TeamPerformanceData,
+  type PositioningWinRateData,
 } from "@/lib/api";
 import {
   FailureReasonsPie,
@@ -58,10 +65,7 @@ function dDayLabel(days: number): string {
 }
 
 function statusBadge(status: CalendarItem["status"]): React.ReactNode {
-  const map: Record<
-    CalendarItem["status"],
-    { label: string; cls: string }
-  > = {
+  const map: Record<CalendarItem["status"], { label: string; cls: string }> = {
     open: { label: "공개", cls: "bg-[#262626] text-[#8c8c8c]" },
     submitted: { label: "제출", cls: "bg-blue-500/15 text-blue-400" },
     won: { label: "수주", cls: "bg-[#3ecf8e]/15 text-[#3ecf8e]" },
@@ -114,21 +118,62 @@ export default function DashboardPage() {
   const [bidsLoading, setBidsLoading] = useState(true);
 
   // 분석 차트
-  const [failureData, setFailureData] = useState<FailureReasonsData | null>(null);
+  const [failureData, setFailureData] = useState<FailureReasonsData | null>(
+    null,
+  );
   const [trendsData, setTrendsData] = useState<MonthlyTrendsData | null>(null);
   const [clientData, setClientData] = useState<ClientWinRateData | null>(null);
 
   // 팀 성과 + 포지셔닝별 수주율
-  const [teamPerfData, setTeamPerfData] = useState<TeamPerformanceData | null>(null);
-  const [posWinData, setPosWinData] = useState<PositioningWinRateData | null>(null);
+  const [teamPerfData, setTeamPerfData] = useState<TeamPerformanceData | null>(
+    null,
+  );
+  const [posWinData, setPosWinData] = useState<PositioningWinRateData | null>(
+    null,
+  );
 
   // 권고 #6: 대시보드 위젯 토글
   const [widgetConfig, setWidgetConfig] = useState(() => {
-    if (typeof window === "undefined") return { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true };
+    if (typeof window === "undefined")
+      return {
+        action: true,
+        pipeline: true,
+        kpi: true,
+        charts: true,
+        client: true,
+        team: true,
+        positioning: true,
+        bids: true,
+        calendar: true,
+      };
     try {
       const stored = localStorage.getItem("tenopa-dashboard-widgets");
-      return stored ? JSON.parse(stored) : { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true };
-    } catch { return { action: true, pipeline: true, kpi: true, charts: true, client: true, team: true, positioning: true, bids: true, calendar: true }; }
+      return stored
+        ? JSON.parse(stored)
+        : {
+            action: true,
+            pipeline: true,
+            kpi: true,
+            charts: true,
+            client: true,
+            team: true,
+            positioning: true,
+            bids: true,
+            calendar: true,
+          };
+    } catch {
+      return {
+        action: true,
+        pipeline: true,
+        kpi: true,
+        charts: true,
+        client: true,
+        team: true,
+        positioning: true,
+        bids: true,
+        calendar: true,
+      };
+    }
   });
   const [showWidgetConfig, setShowWidgetConfig] = useState(false);
   function toggleWidget(key: string) {
@@ -183,7 +228,7 @@ export default function DashboardPage() {
         recommended
           .filter((b) => b.match_grade === "S" || b.match_grade === "A")
           .sort((a, b) => b.match_score - a.match_score)
-          .slice(0, 3)
+          .slice(0, 3),
       );
     } catch {
       // silent fail — 팀 미설정이거나 추천 없는 경우 정상
@@ -207,7 +252,7 @@ export default function DashboardPage() {
       const data = await api.calendar.list({ scope });
       const sorted = [...data.data].sort(
         (a, b) =>
-          new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+          new Date(a.deadline).getTime() - new Date(b.deadline).getTime(),
       );
       setCalItems(sorted);
     } catch {
@@ -228,7 +273,9 @@ export default function DashboardPage() {
     setFailureData(results[0].status === "fulfilled" ? results[0].value : null);
     setTrendsData(results[1].status === "fulfilled" ? results[1].value : null);
     setClientData(results[2].status === "fulfilled" ? results[2].value : null);
-    setTeamPerfData(results[3].status === "fulfilled" ? results[3].value : null);
+    setTeamPerfData(
+      results[3].status === "fulfilled" ? results[3].value : null,
+    );
     setPosWinData(results[4].status === "fulfilled" ? results[4].value : null);
   }, []);
 
@@ -238,7 +285,14 @@ export default function DashboardPage() {
     loadProposals();
     loadBidRecommendations();
     loadAnalytics();
-  }, [scope, loadStats, loadCalendar, loadProposals, loadBidRecommendations, loadAnalytics]);
+  }, [
+    scope,
+    loadStats,
+    loadCalendar,
+    loadProposals,
+    loadBidRecommendations,
+    loadAnalytics,
+  ]);
 
   // ── 일정 추가 저장 ─────────────────────────────────────────────────
 
@@ -266,12 +320,13 @@ export default function DashboardPage() {
   // ── 파이프라인 카운트 계산 ─────────────────────────────────────────
 
   const pipeline = {
-    registered: calItems.filter((c) => c.status === "open" && !c.proposal_id).length,
+    registered: calItems.filter((c) => c.status === "open" && !c.proposal_id)
+      .length,
     inProgress: proposals.filter(
-      (p) => p.status === "initialized" || p.status === "processing"
+      (p) => p.status === "initialized" || p.status === "processing",
     ).length,
     completed: proposals.filter(
-      (p) => p.status === "completed" && p.win_result == null
+      (p) => p.status === "completed" && p.win_result == null,
     ).length,
     pending: proposals.filter((p) => p.win_result === "pending").length,
     won: proposals.filter((p) => p.win_result === "won").length,
@@ -283,7 +338,11 @@ export default function DashboardPage() {
   const actionItems: ActionItem[] = [
     ...calItems
       .filter((c) => calcDDay(c.deadline) <= 14 && c.status === "open")
-      .map((c) => ({ type: "calendar" as const, item: c, days: calcDDay(c.deadline) }))
+      .map((c) => ({
+        type: "calendar" as const,
+        item: c,
+        days: calcDDay(c.deadline),
+      }))
       .sort((a, b) => a.days - b.days),
     ...proposals
       .filter((p) => p.status === "initialized" || p.status === "processing")
@@ -314,9 +373,9 @@ export default function DashboardPage() {
 
   // 수주율 TOP 기관 (최소 2건 이상)
   const topAgency = stats
-    ? [...stats.by_agency]
+    ? ([...stats.by_agency]
         .filter((a) => a.total >= 2)
-        .sort((a, b) => b.rate - a.rate)[0] ?? null
+        .sort((a, b) => b.rate - a.rate)[0] ?? null)
     : null;
 
   // 최근 6개월 평균 수주율
@@ -327,21 +386,19 @@ export default function DashboardPage() {
 
   // 가장 많이 제안한 기관
   const mostProposedAgency = stats
-    ? [...stats.by_agency].sort((a, b) => b.total - a.total)[0] ?? null
+    ? ([...stats.by_agency].sort((a, b) => b.total - a.total)[0] ?? null)
     : null;
 
   // ── 렌더 ──────────────────────────────────────────────────────────
 
   return (
     <>
-        {/* 상단 헤더 */}
-        <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 shrink-0 flex items-center justify-between">
-          <h1 className="text-sm font-semibold text-[#ededed]">
-            대시보드
-          </h1>
+      {/* 상단 헤더 */}
+      <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 shrink-0 flex items-center justify-between">
+        <h1 className="text-sm font-semibold text-[#ededed]">대시보드</h1>
 
-          {/* 위젯 설정 + 스코프 탭 */}
-          <div className="flex items-center gap-3">
+        {/* 위젯 설정 + 스코프 탭 */}
+        <div className="flex items-center gap-3">
           {/* 권고 #6: 위젯 표시/숨김 토글 */}
           <div className="relative">
             <button
@@ -349,33 +406,56 @@ export default function DashboardPage() {
               className="p-1.5 rounded-lg text-[#8c8c8c] hover:text-[#ededed] hover:bg-[#262626] transition-colors"
               title="위젯 설정"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             </button>
             {showWidgetConfig && (
               <>
-                <div className="fixed inset-0 z-30" onClick={() => setShowWidgetConfig(false)} />
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setShowWidgetConfig(false)}
+                />
                 <div className="absolute right-0 mt-1.5 w-48 bg-[#1c1c1c] border border-[#262626] rounded-xl shadow-xl z-40 py-2">
-                  <p className="px-3 py-1.5 text-[10px] text-[#8c8c8c] uppercase tracking-wider">위젯 표시</p>
-                  {([
-                    ["action", "지금 해야 할 것"],
-                    ["pipeline", "제안 파이프라인"],
-                    ["kpi", "제안 분석 KPI"],
-                    ["charts", "분석 차트"],
-                    ["client", "기관별 수주"],
-                    ["team", "팀별 성과"],
-                    ["positioning", "포지셔닝별"],
-                    ["bids", "공고 모니터링"],
-                    ["calendar", "RFP 캘린더"],
-                  ] as const).map(([key, label]) => (
+                  <p className="px-3 py-1.5 text-[10px] text-[#8c8c8c] uppercase tracking-wider">
+                    위젯 표시
+                  </p>
+                  {(
+                    [
+                      ["action", "지금 해야 할 것"],
+                      ["pipeline", "제안 파이프라인"],
+                      ["kpi", "제안 분석 KPI"],
+                      ["charts", "분석 차트"],
+                      ["client", "기관별 수주"],
+                      ["team", "팀별 성과"],
+                      ["positioning", "포지셔닝별"],
+                      ["bids", "공고 모니터링"],
+                      ["calendar", "RFP 캘린더"],
+                    ] as const
+                  ).map(([key, label]) => (
                     <button
                       key={key}
                       onClick={() => toggleWidget(key)}
                       className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] transition-colors"
                     >
-                      <span className={`w-3.5 h-3.5 rounded border flex items-center justify-center text-[9px] ${widgetConfig[key] ? "bg-[#3ecf8e] border-[#3ecf8e] text-[#0f0f0f]" : "border-[#363636]"}`}>
+                      <span
+                        className={`w-3.5 h-3.5 rounded border flex items-center justify-center text-[9px] ${widgetConfig[key] ? "bg-[#3ecf8e] border-[#3ecf8e] text-[#0f0f0f]" : "border-[#363636]"}`}
+                      >
                         {widgetConfig[key] ? "v" : ""}
                       </span>
                       {label}
@@ -407,16 +487,16 @@ export default function DashboardPage() {
               </button>
             ))}
           </div>
-          </div>
-        </header>
+        </div>
+      </header>
 
-        {/* 스크롤 본문 */}
-        <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
-
-          {/* ── 결재 대기 (팀장용) ── */}
-          {scope === "team" && (() => {
+      {/* 스크롤 본문 */}
+      <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        {/* ── 결재 대기 (팀장용) ── */}
+        {scope === "team" &&
+          (() => {
             const pendingReviews = proposals.filter(
-              (p) => p.status === "paused" || p.status === "on_hold"
+              (p) => p.status === "paused" || p.status === "on_hold",
             );
             if (pendingReviews.length === 0) return null;
             return (
@@ -438,13 +518,17 @@ export default function DashboardPage() {
                         className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626] cursor-pointer hover:border-amber-500/30 transition-colors"
                       >
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[#ededed] truncate">{p.title}</p>
+                          <p className="text-sm font-medium text-[#ededed] truncate">
+                            {p.title}
+                          </p>
                           <p className="text-xs text-[#8c8c8c] mt-0.5">
                             {p.current_phase ?? "리뷰 대기"}
                           </p>
                         </div>
                         {days != null && (
-                          <span className={`shrink-0 text-xs font-bold ${dDayColor(days)}`}>
+                          <span
+                            className={`shrink-0 text-xs font-bold ${dDayColor(days)}`}
+                          >
                             {dDayLabel(days)}
                           </span>
                         )}
@@ -456,8 +540,9 @@ export default function DashboardPage() {
             );
           })()}
 
-          {/* ── 마감 임박 경고 (팀장용) ── */}
-          {scope === "team" && (() => {
+        {/* ── 마감 임박 경고 (팀장용) ── */}
+        {scope === "team" &&
+          (() => {
             const urgentItems = calItems
               .filter((c) => {
                 const d = calcDDay(c.deadline);
@@ -490,14 +575,19 @@ export default function DashboardPage() {
                         }
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626] ${c.proposal_id ? "cursor-pointer hover:border-red-500/30" : ""} transition-colors`}
                       >
-                        <span className={`shrink-0 text-xs font-bold w-10 text-center ${days <= 3 ? "text-red-400" : "text-yellow-400"}`}>
+                        <span
+                          className={`shrink-0 text-xs font-bold w-10 text-center ${days <= 3 ? "text-red-400" : "text-yellow-400"}`}
+                        >
                           {dDayLabel(days)}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[#ededed] truncate">{c.title}</p>
+                          <p className="text-sm font-medium text-[#ededed] truncate">
+                            {c.title}
+                          </p>
                           <p className="text-xs text-[#8c8c8c] mt-0.5">
                             {relatedProposal
-                              ? relatedProposal.current_phase ?? relatedProposal.status
+                              ? (relatedProposal.current_phase ??
+                                relatedProposal.status)
                               : "제안서 미생성"}
                           </p>
                         </div>
@@ -509,40 +599,71 @@ export default function DashboardPage() {
             );
           })()}
 
-          {/* ── 본부별 성과 비교 (경영진용) ── */}
-          {scope === "company" && teamPerfData && teamPerfData.teams.length > 0 && (
+        {/* ── 본부별 성과 비교 (경영진용) ── */}
+        {scope === "company" &&
+          teamPerfData &&
+          teamPerfData.teams.length > 0 && (
             <Card>
               <CardHeader title="본부별 성과 비교" />
               <div className="overflow-x-auto px-5 pb-5">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-[#8c8c8c] border-b border-[#262626]">
-                      <th className="text-left py-2 pr-3 font-medium">본부/팀</th>
-                      <th className="text-right py-2 px-3 font-medium">진행건</th>
-                      <th className="text-right py-2 px-3 font-medium">수주율</th>
-                      <th className="text-right py-2 px-3 font-medium">평균 소요</th>
-                      <th className="text-right py-2 pl-3 font-medium">전월 대비</th>
+                      <th className="text-left py-2 pr-3 font-medium">
+                        본부/팀
+                      </th>
+                      <th className="text-right py-2 px-3 font-medium">
+                        진행건
+                      </th>
+                      <th className="text-right py-2 px-3 font-medium">
+                        수주율
+                      </th>
+                      <th className="text-right py-2 px-3 font-medium">
+                        평균 소요
+                      </th>
+                      <th className="text-right py-2 pl-3 font-medium">
+                        전월 대비
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {(() => {
-                      const avgRate = teamPerfData.teams.length > 0
-                        ? teamPerfData.teams.reduce((s, t) => s + t.rate, 0) / teamPerfData.teams.length
-                        : 0;
+                      const avgRate =
+                        teamPerfData.teams.length > 0
+                          ? teamPerfData.teams.reduce((s, t) => s + t.rate, 0) /
+                            teamPerfData.teams.length
+                          : 0;
                       return [...teamPerfData.teams]
                         .sort((a, b) => b.rate - a.rate)
                         .map((t) => {
                           const diff = t.rate - avgRate;
                           return (
-                            <tr key={t.team_id} className="border-b border-[#1a1a1a] hover:bg-[#111111]">
-                              <td className="py-2 pr-3 text-[#ededed] font-medium">{t.team_name}</td>
-                              <td className="py-2 px-3 text-right text-[#8c8c8c]">{t.total}건</td>
-                              <td className={`py-2 px-3 text-right font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}>
+                            <tr
+                              key={t.team_id}
+                              className="border-b border-[#1a1a1a] hover:bg-[#111111]"
+                            >
+                              <td className="py-2 pr-3 text-[#ededed] font-medium">
+                                {t.team_name}
+                              </td>
+                              <td className="py-2 px-3 text-right text-[#8c8c8c]">
+                                {t.total}건
+                              </td>
+                              <td
+                                className={`py-2 px-3 text-right font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}
+                              >
                                 {(t.rate * 100).toFixed(0)}%
                               </td>
-                              <td className="py-2 px-3 text-right text-[#5c5c5c]">{t.avg_duration_days}일</td>
-                              <td className={`py-2 pl-3 text-right text-xs font-medium ${diff > 0 ? "text-[#3ecf8e]" : diff < 0 ? "text-red-400" : "text-[#5c5c5c]"}`}>
-                                {diff > 0 ? `▲ +${(diff * 100).toFixed(0)}%p` : diff < 0 ? `▼ ${(diff * 100).toFixed(0)}%p` : "-"}
+                              <td className="py-2 px-3 text-right text-[#5c5c5c]">
+                                {t.avg_duration_days}일
+                              </td>
+                              <td
+                                className={`py-2 pl-3 text-right text-xs font-medium ${diff > 0 ? "text-[#3ecf8e]" : diff < 0 ? "text-red-400" : "text-[#5c5c5c]"}`}
+                              >
+                                {diff > 0
+                                  ? `▲ +${(diff * 100).toFixed(0)}%p`
+                                  : diff < 0
+                                    ? `▼ ${(diff * 100).toFixed(0)}%p`
+                                    : "-"}
                               </td>
                             </tr>
                           );
@@ -554,101 +675,134 @@ export default function DashboardPage() {
             </Card>
           )}
 
-          {/* ── 오늘 할 일 ── */}
-          {widgetConfig.action && actionItems.length > 0 && (
-            <div className="bg-[#1c1c1c] border border-[#3ecf8e]/20 rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e] animate-pulse" />
-                지금 해야 할 것
-              </h2>
-              <div className="space-y-2">
-                {actionItems.map((action) => {
-                  if (action.type === "calendar") {
-                    const { item, days } = action;
-                    const urgent = days <= 3;
-                    return (
-                      <div
-                        key={`cal-${item.id}`}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626]"
-                      >
-                        <span
-                          className={`shrink-0 text-xs font-bold w-10 text-center ${
-                            urgent ? "text-red-400" : "text-yellow-400"
-                          }`}
-                        >
-                          {dDayLabel(days)}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[#ededed] truncate">
-                            {item.title}
-                          </p>
-                          <p className="text-xs text-[#8c8c8c] mt-0.5">
-                            {item.agency ? `${item.agency} · ` : ""}제안서 미생성
-                          </p>
-                        </div>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => router.push("/proposals/new")}
-                          className="shrink-0"
-                        >
-                          지금 시작
-                        </Button>
-                      </div>
-                    );
-                  }
-
-                  const { item } = action;
-                  const isProcessing = item.status === "processing";
+        {/* ── 오늘 할 일 ── */}
+        {widgetConfig.action && actionItems.length > 0 && (
+          <div className="bg-[#1c1c1c] border border-[#3ecf8e]/20 rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e] animate-pulse" />
+              지금 해야 할 것
+            </h2>
+            <div className="space-y-2">
+              {actionItems.map((action) => {
+                if (action.type === "calendar") {
+                  const { item, days } = action;
+                  const urgent = days <= 3;
                   return (
                     <div
-                      key={`prop-${item.id}`}
+                      key={`cal-${item.id}`}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626]"
                     >
                       <span
                         className={`shrink-0 text-xs font-bold w-10 text-center ${
-                          isProcessing ? "text-blue-400" : "text-[#8c8c8c]"
+                          urgent ? "text-red-400" : "text-yellow-400"
                         }`}
                       >
-                        {isProcessing ? "생성중" : "대기"}
+                        {dDayLabel(days)}
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#ededed] truncate">
                           {item.title}
                         </p>
                         <p className="text-xs text-[#8c8c8c] mt-0.5">
-                          {isProcessing
-                            ? `Phase ${item.phases_completed + 1} 진행 중`
-                            : "생성 시작 전"}
+                          {item.agency ? `${item.agency} · ` : ""}제안서 미생성
                         </p>
                       </div>
                       <Button
-                        variant="secondary"
+                        variant="primary"
                         size="sm"
-                        onClick={() => router.push(`/proposals/${item.id}`)}
+                        onClick={() => router.push("/proposals/new")}
                         className="shrink-0"
                       >
-                        {isProcessing ? "확인" : "시작"}
+                        지금 시작
                       </Button>
                     </div>
                   );
-                })}
-              </div>
-            </div>
-          )}
+                }
 
-          {/* ── 파이프라인 뷰 ── */}
-          {widgetConfig.pipeline && <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-            <h2 className="text-sm font-semibold text-[#ededed] mb-4">제안 파이프라인</h2>
+                const { item } = action;
+                const isProcessing = item.status === "processing";
+                return (
+                  <div
+                    key={`prop-${item.id}`}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626]"
+                  >
+                    <span
+                      className={`shrink-0 text-xs font-bold w-10 text-center ${
+                        isProcessing ? "text-blue-400" : "text-[#8c8c8c]"
+                      }`}
+                    >
+                      {isProcessing ? "생성중" : "대기"}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[#ededed] truncate">
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-[#8c8c8c] mt-0.5">
+                        {isProcessing
+                          ? `Phase ${item.phases_completed + 1} 진행 중`
+                          : "생성 시작 전"}
+                      </p>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => router.push(`/proposals/${item.id}`)}
+                      className="shrink-0"
+                    >
+                      {isProcessing ? "확인" : "시작"}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── 파이프라인 뷰 ── */}
+        {widgetConfig.pipeline && (
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-4">
+              제안 파이프라인
+            </h2>
             <div className="flex items-stretch gap-0">
               {(
                 [
-                  { label: "공고 등록", count: pipeline.registered, color: "text-[#8c8c8c]", href: "/monitoring" },
-                  { label: "작성 중", count: pipeline.inProgress, color: "text-blue-400", href: "/proposals?status=processing" },
-                  { label: "완료", count: pipeline.completed, color: "text-[#ededed]", href: "/proposals?status=completed" },
-                  { label: "결과 대기", count: pipeline.pending, color: "text-yellow-400", href: "/proposals" },
-                  { label: "수주", count: pipeline.won, color: "text-[#3ecf8e]", href: "/archive?win_result=won" },
-                  { label: "낙찰 실패", count: pipeline.lost, color: "text-red-400", href: "/archive?win_result=lost" },
+                  {
+                    label: "공고 등록",
+                    count: pipeline.registered,
+                    color: "text-[#8c8c8c]",
+                    href: "/monitoring",
+                  },
+                  {
+                    label: "작성 중",
+                    count: pipeline.inProgress,
+                    color: "text-blue-400",
+                    href: "/proposals?status=processing",
+                  },
+                  {
+                    label: "완료",
+                    count: pipeline.completed,
+                    color: "text-[#ededed]",
+                    href: "/proposals?status=completed",
+                  },
+                  {
+                    label: "결과 대기",
+                    count: pipeline.pending,
+                    color: "text-yellow-400",
+                    href: "/proposals",
+                  },
+                  {
+                    label: "수주",
+                    count: pipeline.won,
+                    color: "text-[#3ecf8e]",
+                    href: "/archive?win_result=won",
+                  },
+                  {
+                    label: "낙찰 실패",
+                    count: pipeline.lost,
+                    color: "text-red-400",
+                    href: "/archive?win_result=lost",
+                  },
                 ] as const
               ).map((stage, i, arr) => (
                 <div key={stage.label} className="flex items-stretch">
@@ -671,17 +825,23 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-          </div>}
+          </div>
+        )}
 
-          {/* ── 제안 분석 (3개 카드 — 연도별) ── */}
-          {widgetConfig.kpi && <div className="grid grid-cols-3 gap-4">
+        {/* ── 제안 분석 (3개 카드 — 연도별) ── */}
+        {widgetConfig.kpi && (
+          <div className="grid grid-cols-3 gap-4">
             {/* 총 제안건수 */}
             <Card>
               <CardBody className="p-4">
-                <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 총 제안건수</p>
+                <p className="text-xs text-[#8c8c8c] mb-2">
+                  {new Date().getFullYear()}년 총 제안건수
+                </p>
                 <p className="text-3xl font-bold text-[#ededed]">
                   {stats?.overall.total ?? 0}
-                  <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
+                  <span className="text-base font-normal text-[#8c8c8c] ml-1">
+                    건
+                  </span>
                 </p>
               </CardBody>
             </Card>
@@ -689,42 +849,50 @@ export default function DashboardPage() {
             {/* 수주 성공 건수 */}
             <Card>
               <CardBody className="p-4">
-              <p className="text-xs text-[#8c8c8c] mb-2">{new Date().getFullYear()}년 수주 성공</p>
-              <p className="text-3xl font-bold text-[#3ecf8e]">
-                {stats?.overall.won ?? 0}
-                <span className="text-base font-normal text-[#8c8c8c] ml-1">건</span>
-              </p>
-              {stats && stats.overall.total > 0 && (
-                <p className="text-xs text-[#8c8c8c] mt-1">
-                  수주율 {(stats.overall.rate * 100).toFixed(1)}%
+                <p className="text-xs text-[#8c8c8c] mb-2">
+                  {new Date().getFullYear()}년 수주 성공
                 </p>
-              )}
+                <p className="text-3xl font-bold text-[#3ecf8e]">
+                  {stats?.overall.won ?? 0}
+                  <span className="text-base font-normal text-[#8c8c8c] ml-1">
+                    건
+                  </span>
+                </p>
+                {stats && stats.overall.total > 0 && (
+                  <p className="text-xs text-[#8c8c8c] mt-1">
+                    수주율 {(stats.overall.rate * 100).toFixed(1)}%
+                  </p>
+                )}
               </CardBody>
             </Card>
 
             {/* 이번달 수주율 */}
             <Card>
               <CardBody className="p-4">
-              <p className="text-xs text-[#8c8c8c] mb-2">이번달 수주율</p>
-              {thisMonthData ? (
-                <>
-                  <p className="text-3xl font-bold text-[#ededed]">
-                    {(thisMonthData.rate * 100).toFixed(1)}
-                    <span className="text-base font-normal text-[#8c8c8c] ml-1">%</span>
-                  </p>
-                  <p className="text-xs text-[#8c8c8c] mt-1">
-                    {thisMonthData.total}건 중 {thisMonthData.won}건 수주
-                  </p>
-                </>
-              ) : (
-                <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
-              )}
+                <p className="text-xs text-[#8c8c8c] mb-2">이번달 수주율</p>
+                {thisMonthData ? (
+                  <>
+                    <p className="text-3xl font-bold text-[#ededed]">
+                      {(thisMonthData.rate * 100).toFixed(1)}
+                      <span className="text-base font-normal text-[#8c8c8c] ml-1">
+                        %
+                      </span>
+                    </p>
+                    <p className="text-xs text-[#8c8c8c] mt-1">
+                      {thisMonthData.total}건 중 {thisMonthData.won}건 수주
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-3xl font-bold text-[#8c8c8c]">N/A</p>
+                )}
               </CardBody>
             </Card>
-          </div>}
+          </div>
+        )}
 
-          {/* ── 분석 차트 (월별 추이 + 실패원인) ── */}
-          {widgetConfig.charts && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* ── 분석 차트 (월별 추이 + 실패원인) ── */}
+        {widgetConfig.charts && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader title="월별 수주율 추이" className="pb-0" />
               <CardBody className="pt-2">
@@ -737,49 +905,85 @@ export default function DashboardPage() {
                 <FailureReasonsPie data={failureData} />
               </CardBody>
             </Card>
-          </div>}
+          </div>
+        )}
 
-          {/* ── 기관별 수주 현황 차트 ── */}
-          {widgetConfig.client && clientData && (
-            <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-              <h2 className="text-sm font-semibold text-[#ededed] mb-4">기관별 수주 현황</h2>
-              <ClientWinRateBar data={clientData} />
-            </div>
-          )}
+        {/* ── 기관별 수주 현황 차트 ── */}
+        {widgetConfig.client && clientData && (
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-[#ededed] mb-4">
+              기관별 수주 현황
+            </h2>
+            <ClientWinRateBar data={clientData} />
+          </div>
+        )}
 
-          {/* ── 팀 성과 + 포지셔닝별 수주율 ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* 팀 성과 */}
-            {widgetConfig.team && teamPerfData && teamPerfData.teams.length > 0 && (
+        {/* ── 팀 성과 + 포지셔닝별 수주율 ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* 팀 성과 */}
+          {widgetConfig.team &&
+            teamPerfData &&
+            teamPerfData.teams.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-                <h2 className="text-sm font-semibold text-[#ededed] mb-3">팀별 성과</h2>
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3">
+                  팀별 성과
+                </h2>
                 <div className="space-y-2">
                   {teamPerfData.teams.map((t) => (
-                    <div key={t.team_id} className="flex items-center gap-3 bg-[#111111] rounded-lg px-3 py-2">
-                      <span className="text-xs text-[#ededed] font-medium flex-1 truncate">{t.team_name}</span>
-                      <span className="text-xs text-[#8c8c8c]">{t.total}건</span>
-                      <span className={`text-xs font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}>
+                    <div
+                      key={t.team_id}
+                      className="flex items-center gap-3 bg-[#111111] rounded-lg px-3 py-2"
+                    >
+                      <span className="text-xs text-[#ededed] font-medium flex-1 truncate">
+                        {t.team_name}
+                      </span>
+                      <span className="text-xs text-[#8c8c8c]">
+                        {t.total}건
+                      </span>
+                      <span
+                        className={`text-xs font-bold ${t.rate >= 0.5 ? "text-[#3ecf8e]" : t.rate >= 0.3 ? "text-amber-400" : "text-red-400"}`}
+                      >
                         {(t.rate * 100).toFixed(0)}%
                       </span>
-                      <span className="text-[10px] text-[#5c5c5c]">평균 {t.avg_duration_days}일</span>
+                      <span className="text-[10px] text-[#5c5c5c]">
+                        평균 {t.avg_duration_days}일
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* 포지셔닝별 수주율 */}
-            {widgetConfig.positioning && posWinData && posWinData.positioning.length > 0 && (
+          {/* 포지셔닝별 수주율 */}
+          {widgetConfig.positioning &&
+            posWinData &&
+            posWinData.positioning.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-                <h2 className="text-sm font-semibold text-[#ededed] mb-3">포지셔닝별 수주율</h2>
+                <h2 className="text-sm font-semibold text-[#ededed] mb-3">
+                  포지셔닝별 수주율
+                </h2>
                 <div className="space-y-2">
                   {posWinData.positioning.map((p) => {
-                    const posLabel = p.type === "defensive" ? "🛡️ 수성형" : p.type === "offensive" ? "⚔️ 공격형" : p.type === "adjacent" ? "🔄 인접형" : p.type;
+                    const posLabel =
+                      p.type === "defensive"
+                        ? "🛡️ 수성형"
+                        : p.type === "offensive"
+                          ? "⚔️ 공격형"
+                          : p.type === "adjacent"
+                            ? "🔄 인접형"
+                            : p.type;
                     return (
-                      <div key={p.type} className="bg-[#111111] rounded-lg px-3 py-2">
+                      <div
+                        key={p.type}
+                        className="bg-[#111111] rounded-lg px-3 py-2"
+                      >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs text-[#ededed]">{posLabel}</span>
-                          <span className="text-xs text-[#8c8c8c]">{p.won}/{p.total}건</span>
+                          <span className="text-xs text-[#ededed]">
+                            {posLabel}
+                          </span>
+                          <span className="text-xs text-[#8c8c8c]">
+                            {p.won}/{p.total}건
+                          </span>
                         </div>
                         <div className="h-1.5 bg-[#262626] rounded-full overflow-hidden">
                           <div
@@ -793,14 +997,18 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
-          </div>
+        </div>
 
-          {/* ── 공고 모니터링 위젯 ── */}
-          {widgetConfig.bids && !bidsLoading && (bidCounts.S > 0 || bidCounts.A > 0) && (
+        {/* ── 공고 모니터링 위젯 ── */}
+        {widgetConfig.bids &&
+          !bidsLoading &&
+          (bidCounts.S > 0 || bidCounts.A > 0) && (
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-sm font-semibold text-[#ededed]">공고 모니터링</h2>
+                  <h2 className="text-sm font-semibold text-[#ededed]">
+                    공고 모니터링
+                  </h2>
                   {bidCounts.S > 0 && (
                     <span className="text-xs px-2 py-0.5 rounded-md font-bold bg-purple-950/60 text-purple-400 border border-purple-900">
                       S {bidCounts.S}건
@@ -831,15 +1039,15 @@ export default function DashboardPage() {
                     dDays !== null && dDays <= 7
                       ? "text-red-400"
                       : dDays !== null && dDays <= 14
-                      ? "text-yellow-400"
-                      : "text-[#8c8c8c]";
+                        ? "text-yellow-400"
+                        : "text-[#8c8c8c]";
 
                   return (
                     <button
                       key={bid.bid_no}
                       onClick={() =>
                         router.push(
-                          `/monitoring/${bid.bid_no}${teamId ? `?team_id=${teamId}` : ""}`
+                          `/monitoring/${bid.bid_no}${teamId ? `?team_id=${teamId}` : ""}`,
                         )
                       }
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626] hover:border-[#3ecf8e]/30 hover:bg-[#161616] transition-colors text-left"
@@ -856,7 +1064,9 @@ export default function DashboardPage() {
                         {bid.agency}
                       </span>
                       {dDays !== null && (
-                        <span className={`shrink-0 text-xs font-bold ${dColor}`}>
+                        <span
+                          className={`shrink-0 text-xs font-bold ${dColor}`}
+                        >
                           D-{dDays}
                         </span>
                       )}
@@ -867,8 +1077,9 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── RFP 캘린더 ── */}
-          {widgetConfig.calendar && <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
+        {/* ── RFP 캘린더 ── */}
+        {widgetConfig.calendar && (
+          <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold text-[#ededed]">
@@ -994,7 +1205,9 @@ export default function DashboardPage() {
               <p className="text-sm text-[#8c8c8c] py-4">로딩 중...</p>
             ) : calItems.length === 0 ? (
               <div className="py-8 text-center">
-                <p className="text-sm text-[#8c8c8c]">등록된 일정이 없습니다.</p>
+                <p className="text-sm text-[#8c8c8c]">
+                  등록된 일정이 없습니다.
+                </p>
                 <p className="text-xs text-[#5c5c5c] mt-1">
                   위의 일정 추가 버튼으로 RFP 마감일을 등록하세요.
                 </p>
@@ -1005,10 +1218,12 @@ export default function DashboardPage() {
                   const days = calcDDay(item.deadline);
                   const ddColor = dDayColor(days);
                   const isClickable = !!item.proposal_id;
-                  const deadlineDate = new Date(item.deadline).toLocaleDateString(
-                    "ko-KR",
-                    { month: "numeric", day: "numeric" }
-                  );
+                  const deadlineDate = new Date(
+                    item.deadline,
+                  ).toLocaleDateString("ko-KR", {
+                    month: "numeric",
+                    day: "numeric",
+                  });
 
                   return (
                     <div
@@ -1049,9 +1264,9 @@ export default function DashboardPage() {
                 })}
               </div>
             )}
-          </div>}
-
-        </main>
+          </div>
+        )}
+      </main>
       {/* 권고 #2: 초보 사용자 가이드 투어 */}
       <GuidedTour tourId="dashboard" steps={TOUR_DASHBOARD} />
     </>

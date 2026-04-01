@@ -128,7 +128,14 @@ const mockValidationReport: ValidationReport = {
 const mockConsolidatedProposal: ConsolidatedProposal = {
   proposal_id: "proposal-123",
   total_sections: 8,
-  final_sections: ["Executive Summary", "Approach", "Team", "Schedule", "Cost", "Risk Management"],
+  final_sections: [
+    "Executive Summary",
+    "Approach",
+    "Team",
+    "Schedule",
+    "Cost",
+    "Risk Management",
+  ],
   section_lineage: [
     {
       original_index: 0,
@@ -138,7 +145,8 @@ const mockConsolidatedProposal: ConsolidatedProposal = {
       conflict_resolution: "Combined best points from both drafts",
     },
   ],
-  executive_summary: "Comprehensive proposal addressing all client requirements with proven approach.",
+  executive_summary:
+    "Comprehensive proposal addressing all client requirements with proven approach.",
   key_changes: [
     "Consolidated duplicate sections",
     "Enhanced team qualifications",
@@ -234,7 +242,8 @@ const mockFeedbackSummary: FeedbackSummary = {
     ],
   },
   score_improvement_projection: 8,
-  next_phase_guidance: "Implement critical gaps first, then quick wins for maximum impact.",
+  next_phase_guidance:
+    "Implement critical gaps first, then quick wins for maximum impact.",
   created_at: new Date().toISOString(),
 };
 
@@ -267,7 +276,8 @@ const mockReviewPanelData: ReviewPanelData = {
       severity: "critical",
       category: "compliance",
       description: "Missing mandatory compliance statement",
-      suggestion: "Add SOC 2 Type II certification statement to security section",
+      suggestion:
+        "Add SOC 2 Type II certification statement to security section",
       flagged_text: "Security measures include standard encryption",
     },
     {
@@ -392,8 +402,12 @@ describe("STEP 8 Types", () => {
 
   it("should have valid CustomerProfile structure", () => {
     expect(mockCustomerProfile.stakeholders).toHaveLength(2);
-    expect(mockCustomerProfile.stakeholders[0]).toHaveProperty("influence_level");
-    expect(["high", "medium", "low"]).toContain(mockCustomerProfile.stakeholders[0].influence_level);
+    expect(mockCustomerProfile.stakeholders[0]).toHaveProperty(
+      "influence_level",
+    );
+    expect(["high", "medium", "low"]).toContain(
+      mockCustomerProfile.stakeholders[0].influence_level,
+    );
   });
 
   it("should have valid ValidationReport structure", () => {
@@ -406,11 +420,19 @@ describe("STEP 8 Types", () => {
     expect(mockMockEvalResult.dimensions).toHaveLength(5);
     expect(mockMockEvalResult.win_probability).toBeGreaterThanOrEqual(0);
     expect(mockMockEvalResult.win_probability).toBeLessThanOrEqual(1);
-    expect(["high", "medium", "low"]).toContain(mockMockEvalResult.pass_fail_risk);
+    expect(["high", "medium", "low"]).toContain(
+      mockMockEvalResult.pass_fail_risk,
+    );
   });
 
   it("should have valid ReviewPanelData with issue categories", () => {
-    const categories = ["compliance", "clarity", "consistency", "style", "strategy"];
+    const categories = [
+      "compliance",
+      "clarity",
+      "consistency",
+      "style",
+      "strategy",
+    ];
     mockReviewPanelData.issues.forEach((issue) => {
       expect(categories).toContain(issue.category);
       expect(["critical", "major", "minor"]).toContain(issue.severity);
@@ -430,7 +452,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch customer profile", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/customer-profile");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/customer-profile",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.client_name).toBe("TechCorp Inc.");
@@ -438,7 +462,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch validation report", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/validation-report");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/validation-report",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.quality_score).toBe(82);
@@ -454,7 +480,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch feedback summary", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/feedback-summary");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/feedback-summary",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.critical_gaps).toHaveLength(1);
@@ -462,7 +490,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch rewrite history", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/rewrite-history");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/rewrite-history",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.current_section_index).toBe(2);
@@ -470,7 +500,9 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should fetch review panel data", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/review-panel");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/review-panel",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.issues).toHaveLength(2);
@@ -479,16 +511,21 @@ describe("STEP 8 API Integration", () => {
   });
 
   it("should trigger node validation", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/validate/step_8b", {
-      method: "POST",
-    });
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/validate/step_8b",
+      {
+        method: "POST",
+      },
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.status).toBe("success");
   });
 
   it("should fetch version history", async () => {
-    const response = await fetch("/api/proposals/proposal-123/step8/versions/step_8a");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/versions/step_8a",
+    );
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data.versions).toHaveLength(1);
@@ -503,7 +540,7 @@ describe("STEP 8 Error Handling", () => {
     server.use(
       http.get("/api/proposals/:proposal_id/step8/status", () => {
         return HttpResponse.json({ error: "Not found" }, { status: 404 });
-      })
+      }),
     );
 
     const response = await fetch("/api/proposals/invalid-id/step8/status");
@@ -515,12 +552,14 @@ describe("STEP 8 Error Handling", () => {
       http.get("/api/proposals/:proposal_id/step8/validation-report", () => {
         return HttpResponse.json(
           { error: "Internal server error" },
-          { status: 500 }
+          { status: 500 },
         );
-      })
+      }),
     );
 
-    const response = await fetch("/api/proposals/proposal-123/step8/validation-report");
+    const response = await fetch(
+      "/api/proposals/proposal-123/step8/validation-report",
+    );
     expect(response.status).toBe(500);
   });
 
@@ -529,7 +568,7 @@ describe("STEP 8 Error Handling", () => {
       http.get("/api/proposals/:proposal_id/step8/mock-eval", async () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
         return HttpResponse.json({});
-      })
+      }),
     );
 
     const controller = new AbortController();
@@ -598,13 +637,24 @@ describe("STEP 8 Data Validation", () => {
 
 describe("STEP 8 State Management", () => {
   it("should track overall progress correctly", () => {
-    const completed = Object.values(mockNodeStatuses).filter((n) => n.status === "completed");
+    const completed = Object.values(mockNodeStatuses).filter(
+      (n) => n.status === "completed",
+    );
     const expectedProgress = (completed.length / 6) * 100;
-    expect(Math.abs(mockStep8Status.overall_progress - expectedProgress)).toBeLessThan(1);
+    expect(
+      Math.abs(mockStep8Status.overall_progress - expectedProgress),
+    ).toBeLessThan(1);
   });
 
   it("should maintain node ordering consistency", () => {
-    const nodeOrder = ["step_8a", "step_8b", "step_8c", "step_8d", "step_8e", "step_8f"];
+    const nodeOrder = [
+      "step_8a",
+      "step_8b",
+      "step_8c",
+      "step_8d",
+      "step_8e",
+      "step_8f",
+    ];
     const statusNodeNames = mockStep8Status.nodes.map((n) => n.output_key);
     expect(statusNodeNames).toHaveLength(6);
   });
@@ -625,21 +675,25 @@ describe("STEP 8 Business Logic", () => {
 
   it("should calculate score improvement correctly", () => {
     expect(mockFeedbackSummary.score_improvement_projection).toBeGreaterThan(0);
-    expect(mockFeedbackSummary.score_improvement_projection).toBeLessThanOrEqual(100);
+    expect(
+      mockFeedbackSummary.score_improvement_projection,
+    ).toBeLessThanOrEqual(100);
   });
 
   it("should map feedback items to sections correctly", () => {
-    Object.entries(mockFeedbackSummary.section_feedback).forEach(([sectionId, items]) => {
-      items.forEach((item) => {
-        expect(item.section_id).toBe(sectionId);
-      });
-    });
+    Object.entries(mockFeedbackSummary.section_feedback).forEach(
+      ([sectionId, items]) => {
+        items.forEach((item) => {
+          expect(item.section_id).toBe(sectionId);
+        });
+      },
+    );
   });
 
   it("should categorize rewrite iterations", () => {
     expect(mockRewriteRecord.rewrite_iteration_count).toBeGreaterThanOrEqual(0);
     expect(mockRewriteRecord.total_rewrites).toBeGreaterThanOrEqual(
-      mockRewriteRecord.rewrite_iteration_count
+      mockRewriteRecord.rewrite_iteration_count,
     );
   });
 });
