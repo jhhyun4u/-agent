@@ -348,10 +348,10 @@ export default function DashboardPage() {
 
   const currentMonth = getCurrentMonth();
   const prevMonth = getPrevMonth();
-  const thisMonthData = stats?.by_month.find((m) => m.month === currentMonth);
+  const thisMonthData = stats?.by_month?.find((m) => m.month === currentMonth);
 
   // 최근 6개월 추이 (최신순)
-  const recentMonths = stats
+  const recentMonths = stats?.by_month
     ? [...stats.by_month]
         .sort((a, b) => b.month.localeCompare(a.month))
         .slice(0, 6)
@@ -360,7 +360,7 @@ export default function DashboardPage() {
   // ── 인사이트 계산 ──────────────────────────────────────────────────
 
   // 수주율 TOP 기관 (최소 2건 이상)
-  const topAgency = stats
+  const topAgency = stats?.by_agency
     ? ([...stats.by_agency]
         .filter((a) => a.total >= 2)
         .sort((a, b) => b.rate - a.rate)[0] ?? null)
@@ -373,7 +373,7 @@ export default function DashboardPage() {
       : null;
 
   // 가장 많이 제안한 기관
-  const mostProposedAgency = stats
+  const mostProposedAgency = stats?.by_agency
     ? ([...stats.by_agency].sort((a, b) => b.total - a.total)[0] ?? null)
     : null;
 
@@ -846,7 +846,7 @@ export default function DashboardPage() {
                     건
                   </span>
                 </p>
-                {stats && stats.overall.total > 0 && (
+                {stats?.overall && stats.overall.total > 0 && (
                   <p className="text-xs text-[#8c8c8c] mt-1">
                     수주율 {(stats.overall.rate * 100).toFixed(1)}%
                   </p>
