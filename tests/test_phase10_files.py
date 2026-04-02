@@ -200,11 +200,11 @@ async def test_list_project_files(client):
     """GET /api/proposals/{id}/files — 파일 목록."""
     mock_sb = make_async_client_mock({
         "proposal_files": MockQueryBuilder([
-            {"id": "f1", "proposal_id": "p", "category": "rfp", "filename": "rfp.pdf",
-             "storage_path": "p/rfp/rfp.pdf", "file_type": "pdf", "file_size": 1024,
+            {"id": "f1", "proposal_id": "prop-001", "category": "rfp", "filename": "rfp.pdf",
+             "storage_path": "prop-001/rfp/rfp.pdf", "file_type": "pdf", "file_size": 1024,
              "uploaded_by": "u1", "description": None, "created_at": "2026-03-20T10:00:00Z"},
-            {"id": "f2", "proposal_id": "p", "category": "reference", "filename": "ref.docx",
-             "storage_path": "p/references/f2.docx", "file_type": "docx", "file_size": 2048,
+            {"id": "f2", "proposal_id": "prop-001", "category": "reference", "filename": "ref.docx",
+             "storage_path": "prop-001/references/f2.docx", "file_type": "docx", "file_size": 2048,
              "uploaded_by": "u1", "description": "참고", "created_at": "2026-03-20T11:00:00Z"},
         ]),
     })
@@ -396,7 +396,14 @@ async def test_save_artifact_creates_version(client):
 
 async def test_save_artifact_increments_version(client):
     """기존 버전 3 → version 4로 증가."""
-    art_builder = TrackingQueryBuilder([{"version": 3}])
+    art_builder = TrackingQueryBuilder([{
+        "id": "art-001",
+        "proposal_id": "test-prop",
+        "step": "strategy",
+        "version": 3,
+        "status": "completed",
+        "created_by": "user-001",
+    }])
 
     mock_snapshot = MagicMock()
     mock_snapshot.values = {"strategy": {"win_theme": "기존"}}
@@ -432,8 +439,8 @@ async def test_delete_proposal(client):
         "storage_path_rfp": "prop-001/rfp/test.pdf",
     }])
     pf_builder = MockQueryBuilder([
-        {"storage_path": "prop-001/references/ref1.pdf"},
-        {"storage_path": "prop-001/rfp/test.pdf"},
+        {"proposal_id": "prop-001", "storage_path": "prop-001/references/ref1.pdf"},
+        {"proposal_id": "prop-001", "storage_path": "prop-001/rfp/test.pdf"},
     ])
     mock_sb = make_async_client_mock({
         "proposals": prop_builder,
@@ -472,7 +479,7 @@ async def test_delete_running_proposal_blocked(client):
     """실행 중 삭제 → 409."""
     mock_sb = make_async_client_mock({
         "proposals": SingleQueryBuilder([{
-            "id": "prop-001", "owner_id": "user-001", "status": "running",
+            "id": "prop-001", "owner_id": "user-001", "status": "processing",
         }]),
     })
 

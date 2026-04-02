@@ -241,9 +241,39 @@ async def client(mock_user):
         "storage_path": "documents/test-doc.pdf",
     }
 
+    # Phase 10: 프로젝트 파일 관리 테스트용 더미 데이터
+    test_proposal_files = [
+        {
+            "id": "pf-001",
+            "proposal_id": "prop-001",
+            "category": "rfp",
+            "filename": "test.pdf",
+            "storage_path": "prop-001/rfp/test.pdf",
+            "file_type": "pdf",
+            "file_size": 1024,
+            "uploaded_by": "user-001",
+            "description": None,
+            "created_at": "2026-03-20T10:00:00Z",
+        }
+    ]
+
+    test_artifacts = [
+        {
+            "id": "art-001",
+            "proposal_id": "prop-001",
+            "artifact_type": "section",
+            "version": 1,
+            "status": "completed",
+            "content": "테스트 산출물",
+            "created_at": "2026-03-20T10:00:00Z",
+        }
+    ]
+
     supabase_mock = make_supabase_mock(
         table_data={
             "intranet_documents": [test_document],
+            "proposal_files": test_proposal_files,
+            "artifacts": test_artifacts,
         }
     )
 
@@ -252,9 +282,9 @@ async def client(mock_user):
     app.dependency_overrides[get_rls_client] = lambda: supabase_mock
     app.dependency_overrides[require_project_access] = lambda: {"id": "test-id", "title": "테스트", "status": "initialized"}
 
-    # Patch get_async_client at usage location (must patch where it's imported, not where it's defined)
-    # For test_create_from_bid, we need to patch routes_proposal
+    # Patch get_async_client at usage locations (must patch where it's imported, not where it's defined)
     with patch("app.api.routes_proposal.get_async_client", return_value=supabase_mock), \
+         patch("app.api.routes_files.get_async_client", return_value=supabase_mock), \
          patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as ac:

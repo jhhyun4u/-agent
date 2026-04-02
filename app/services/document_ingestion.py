@@ -116,6 +116,7 @@ async def process_document(document_id: str, org_id: str) -> dict:
 
 async def _extract_from_storage(client, doc: dict) -> str:
     """Supabase Storage에서 파일 다운로드 → 텍스트 추출."""
+    import os
     from app.config import settings
     from app.utils.file_utils import extract_text_from_file
 
@@ -125,10 +126,16 @@ async def _extract_from_storage(client, doc: dict) -> str:
     response = await client.storage.from_(bucket).download(storage_path)
 
     suffix = Path(doc["filename"]).suffix.lower()
-    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
-        tmp.write(response)
-        tmp.flush()
-        return extract_text_from_file(tmp.name)
+    tmp_file = None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            tmp_file = tmp.name
+            tmp.write(response)
+            tmp.flush()
+        return extract_text_from_file(tmp_file)
+    finally:
+        if tmp_file and os.path.exists(tmp_file):
+            os.unlink(tmp_file)
 
 
 async def _update_doc_status(client, document_id: str, status: str, error: str | None = None):
@@ -207,11 +214,12 @@ async def import_project(org_id: str, project_data: dict, *, upsert: bool = Fals
 
     if existing.data and upsert:
         # 기존 레코드 업데이트
+        from datetime import datetime
         project_id = existing.data[0]["id"]
         row.pop("org_id")
         row.pop("legacy_idx")
         row.pop("board_id")
-        row["updated_at"] = "now()"
+        row["updated_at"] = datetime.utcnow().isoformat()
         await client.table("intranet_projects").update(row).eq("id", project_id).execute()
         action = "updated"
     else:

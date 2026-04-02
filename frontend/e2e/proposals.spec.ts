@@ -76,16 +76,22 @@ test.describe("새 제안서 생성 페이지", () => {
 test.describe("제안서 목록 — 사이드바 네비게이션", () => {
   test("사이드바에 제안 프로젝트 메뉴 활성", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByLabel("제안 프로젝트").first()).toBeVisible();
+    // Desktop sidebar: target the main sidebar aside element
+    const sidebar = page.locator("aside").first();
+    await expect(sidebar.getByLabel("제안 프로젝트")).toBeVisible();
   });
 
   test("사이드바에 공고 모니터링 링크 존재", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByText("공고 모니터링").first()).toBeVisible();
+    // Desktop sidebar: target only visible sidebar nav
+    const sidebarNav = page.locator("nav").first();
+    await expect(sidebarNav.getByText("공고 모니터링")).toBeVisible();
   });
 
   test("사이드바에 대시보드 링크 존재", async ({ page }) => {
     await page.goto("/proposals");
-    await expect(page.getByText("대시보드").first()).toBeVisible();
+    // Desktop sidebar: target only visible sidebar nav
+    const sidebarNav = page.locator("nav").first();
+    await expect(sidebarNav.getByText("대시보드")).toBeVisible();
   });
 });

@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class DocumentUploadRequest(BaseModel):
@@ -17,6 +17,8 @@ class DocumentUploadRequest(BaseModel):
 class DocumentResponse(BaseModel):
     """문서 조회 응답"""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     filename: str
     doc_type: str
@@ -29,9 +31,6 @@ class DocumentResponse(BaseModel):
     error_message: Optional[str] = None
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class DocumentListResponse(BaseModel):
@@ -54,6 +53,8 @@ class DocumentDetailResponse(DocumentResponse):
 class ChunkResponse(BaseModel):
     """청크 조회 응답"""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     chunk_index: int
     chunk_type: str = Field(
@@ -63,9 +64,6 @@ class ChunkResponse(BaseModel):
     content: str
     char_count: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class ChunkListResponse(BaseModel):

@@ -1,0 +1,7 @@
+
+> tenopa-proposer-frontend@0.1.0 test:e2e
+> playwright test
+
+Error: Timed out waiting 30000ms from config.webServer.
+
+[1A[2K

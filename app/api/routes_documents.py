@@ -11,12 +11,12 @@ DELETE /api/documents/{id}                      — 문서 삭제
 
 import asyncio
 import logging
+from datetime import datetime, timezone
 from typing import Optional, Literal
 
 from fastapi import APIRouter, Depends, File, UploadFile, Query, Form, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_current_user, get_db, require_project_access
+from app.api.deps import get_current_user, require_project_access
 from app.config import settings
 from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
@@ -43,6 +43,28 @@ SUPPORTED_FORMATS = {
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 logger = logging.getLogger(__name__)
 
+# Track background tasks for proper lifecycle management
+_background_tasks: set = set()
+
+
+def _escape_ilike_pattern(value: str) -> str:
+    """Escape special characters in ilike pattern to prevent SQL injection"""
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def _create_background_task(coro):
+    """Create and track a background task with proper error handling"""
+    async def wrapped_task():
+        try:
+            await coro
+        except Exception as e:
+            logger.error(f"Background task failed: {e}", exc_info=True)
+
+    task = asyncio.create_task(wrapped_task())
+    _background_tasks.add(task)
+    task.add_done_callback(lambda t: _background_tasks.discard(t))
+    return task
+
 
 @router.post("/upload", response_model=DocumentResponse, status_code=201)
 async def upload_document(
@@ -62,10 +84,17 @@ async def upload_document(
     - 즉시 응답 (상태는 클라이언트가 주기적으로 조회)
     """
     import uuid
-    from datetime import datetime
     import os
 
     client = await get_async_client()
+
+    # doc_type 검증
+    allowed_doc_types = {"보고서", "제안서", "실적", "기타"}
+    if doc_type not in allowed_doc_types:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"잘못된 문서 타입입니다. 허용 값: {', '.join(allowed_doc_types)}",
+        )
 
     # 파일 형식 검증
     if not file.filename:
@@ -84,16 +113,15 @@ async def upload_document(
             detail=f"지원하지 않는 파일 형식입니다. 지원 형식: {supported}",
         )
 
-    # 파일 크기 검증 (500MB)
-    if file.size and file.size > 500 * 1024 * 1024:
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail="파일이 너무 큽니다 (최대 500MB)",
-        )
-
     try:
-        # 파일 읽기
+        # 파일 읽기 및 크기 검증
         file_content = await file.read()
+        max_size_bytes = settings.intranet_max_file_size_mb * 1024 * 1024
+        if len(file_content) > max_size_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail=f"파일이 너무 큽니다 (최대 {settings.intranet_max_file_size_mb}MB)",
+            )
 
         # Supabase Storage에 저장
         bucket = settings.storage_bucket_intranet
@@ -108,7 +136,7 @@ async def upload_document(
         logger.info(f"[{current_user.org_id}] Storage 업로드 완료: {storage_path}")
 
         # intranet_documents 레코드 생성
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         doc_result = await client.table("intranet_documents").insert({
             "id": document_id,
             "org_id": current_user.org_id,
@@ -128,8 +156,8 @@ async def upload_document(
 
         doc = doc_result.data[0]
 
-        # 백그라운드: 비동기 처리 시작
-        asyncio.create_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작 (에러 핸들링 포함)
+        _create_background_task(process_document(document_id, current_user.org_id))
 
         return DocumentResponse(
             id=doc["id"],
@@ -196,8 +224,9 @@ async def list_documents(
         if doc_type:
             query = query.eq("doc_type", doc_type)
         if search:
-            # 파일명 포함 검색 (Supabase의 ilike 연산자 사용)
-            query = query.ilike("filename", f"%{search}%")
+            # 파일명 포함 검색 (Supabase의 ilike 연산자 사용, 와일드카드 이스케이프)
+            escaped_search = _escape_ilike_pattern(search)
+            query = query.ilike("filename", f"%{escaped_search}%")
 
         # 정렬 적용
         query = query.order(sort_by, desc=(order == "desc"))
@@ -218,7 +247,8 @@ async def list_documents(
         if doc_type:
             count_query = count_query.eq("doc_type", doc_type)
         if search:
-            count_query = count_query.ilike("filename", f"%{search}%")
+            escaped_search = _escape_ilike_pattern(search)
+            count_query = count_query.ilike("filename", f"%{escaped_search}%")
 
         count_result = await count_query.execute()
         total = len(count_result.data) if count_result.data else 0
@@ -342,13 +372,12 @@ async def reprocess_document(
             )
 
         # 상태 리셋
-        from datetime import datetime
         update_result = await (
             client.table("intranet_documents")
             .update({
                 "processing_status": "extracting",
                 "error_message": None,
-                "updated_at": datetime.utcnow().isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
             })
             .eq("id", document_id)
             .execute()
@@ -357,8 +386,8 @@ async def reprocess_document(
         if not update_result.data:
             raise Exception("상태 업데이트 실패")
 
-        # 백그라운드: 비동기 처리 시작
-        asyncio.create_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작 (에러 핸들링 포함)
+        _create_background_task(process_document(document_id, current_user.org_id))
 
         return DocumentProcessResponse(
             id=document_id,

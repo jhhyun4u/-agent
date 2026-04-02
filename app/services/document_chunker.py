@@ -21,6 +21,21 @@ class Chunk:
     char_count: int
 
 
+# 한글 문서 타입 → 내부 영문 타입 매핑
+_DOC_TYPE_MAPPING = {
+    "보고서": "report",
+    "제안서": "proposal",
+    "실적": "report",
+    "기타": "other",
+    # 영문도 지원
+    "report": "report",
+    "proposal": "proposal",
+    "presentation": "presentation",
+    "contract": "contract",
+    "other": "other",
+}
+
+
 def chunk_document(
     text: str,
     doc_type: str,
@@ -33,11 +48,14 @@ def chunk_document(
     if not text or len(text.strip()) < 50:
         return []
 
-    if doc_type == "presentation":
+    # 문서 타입 정규화 (한글 → 영문)
+    normalized_type = _DOC_TYPE_MAPPING.get(doc_type, "other")
+
+    if normalized_type == "presentation":
         return _chunk_slides(text)
-    elif doc_type == "contract":
+    elif normalized_type == "contract":
         return _chunk_articles(text, window_chars, overlap_chars)
-    elif doc_type in ("proposal", "report"):
+    elif normalized_type in ("proposal", "report"):
         return _chunk_by_headings(text, max_chunk_chars, overlap_chars)
     else:
         return _chunk_by_window(text, window_chars, overlap_chars)

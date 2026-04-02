@@ -46,6 +46,11 @@ class StateMachine:
         """
         self.proposal_id = proposal_id
 
+    @staticmethod
+    def _build_metadata(**kwargs) -> dict:
+        """Build metadata dict filtering out None values"""
+        return {k: v for k, v in kwargs.items() if v is not None}
+
     async def start_workflow(
         self,
         user_id: str,
@@ -83,7 +88,7 @@ class StateMachine:
         Returns:
             timeline entry dict
         """
-        metadata = {"notes": notes} if notes else {}
+        metadata = self._build_metadata(notes=notes or None)
 
         return await StateValidator.transition(
             self.proposal_id,
@@ -109,9 +114,7 @@ class StateMachine:
         Returns:
             timeline entry dict
         """
-        metadata = {
-            "submission_type": submission_type,
-        }
+        metadata = self._build_metadata(submission_type=submission_type)
 
         return await StateValidator.transition(
             self.proposal_id,
@@ -137,9 +140,7 @@ class StateMachine:
         Returns:
             timeline entry dict
         """
-        metadata: dict = {}
-        if presentation_date:
-            metadata["presentation_date"] = presentation_date
+        metadata = self._build_metadata(presentation_date=presentation_date)
 
         return await StateValidator.transition(
             self.proposal_id,
@@ -181,14 +182,12 @@ class StateMachine:
                 f"알 수 없는 win_result: {win_result}. 허용: {[w.value for w in WinResult]}"
             ) from e
 
-        metadata: dict = {
-            "win_result": win_result,
-            "notes": notes,
-        }
-        if contract_amount is not None:
-            metadata["contract_amount"] = contract_amount
-        if contract_date:
-            metadata["contract_date"] = contract_date
+        metadata = self._build_metadata(
+            win_result=win_result,
+            notes=notes or None,
+            contract_amount=contract_amount,
+            contract_date=contract_date,
+        )
 
         log_label = {
             WinResult.WON: "CONTRACT_WON",
