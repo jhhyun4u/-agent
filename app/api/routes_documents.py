@@ -43,27 +43,8 @@ SUPPORTED_FORMATS = {
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 logger = logging.getLogger(__name__)
 
-# Track background tasks for proper lifecycle management
-_background_tasks: set = set()
-
-
-def _escape_ilike_pattern(value: str) -> str:
-    """Escape special characters in ilike pattern to prevent SQL injection"""
-    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-
-
-def _create_background_task(coro):
-    """Create and track a background task with proper error handling"""
-    async def wrapped_task():
-        try:
-            await coro
-        except Exception as e:
-            logger.error(f"Background task failed: {e}", exc_info=True)
-
-    task = asyncio.create_task(wrapped_task())
-    _background_tasks.add(task)
-    task.add_done_callback(lambda t: _background_tasks.discard(t))
-    return task
+# Allowed document types (must match upload validation)
+ALLOWED_DOC_TYPES = {"보고서", "제안서", "실적", "기타"}
 
 
 @router.post("/upload", response_model=DocumentResponse, status_code=201)
@@ -89,11 +70,10 @@ async def upload_document(
     client = await get_async_client()
 
     # doc_type 검증
-    allowed_doc_types = {"보고서", "제안서", "실적", "기타"}
-    if doc_type not in allowed_doc_types:
+    if doc_type not in ALLOWED_DOC_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"잘못된 문서 타입입니다. 허용 값: {', '.join(allowed_doc_types)}",
+            detail=f"잘못된 문서 타입입니다. 허용 값: {', '.join(ALLOWED_DOC_TYPES)}",
         )
 
     # 파일 형식 검증
@@ -156,8 +136,8 @@ async def upload_document(
 
         doc = doc_result.data[0]
 
-        # 백그라운드: 비동기 처리 시작 (에러 핸들링 포함)
-        _create_background_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작
+        asyncio.create_task(process_document(document_id, current_user.org_id))
 
         return DocumentResponse(
             id=doc["id"],
@@ -211,6 +191,11 @@ async def list_documents(
     client = await get_async_client()
 
     try:
+        # 검색 input 이스케이프 (한 번만 수행)
+        escaped_search = None
+        if search:
+            escaped_search = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
         # 기본 쿼리
         query = (
             client.table("intranet_documents")
@@ -223,9 +208,8 @@ async def list_documents(
             query = query.eq("processing_status", status_filter)
         if doc_type:
             query = query.eq("doc_type", doc_type)
-        if search:
+        if escaped_search:
             # 파일명 포함 검색 (Supabase의 ilike 연산자 사용, 와일드카드 이스케이프)
-            escaped_search = _escape_ilike_pattern(search)
             query = query.ilike("filename", f"%{escaped_search}%")
 
         # 정렬 적용
@@ -246,8 +230,7 @@ async def list_documents(
             count_query = count_query.eq("processing_status", status_filter)
         if doc_type:
             count_query = count_query.eq("doc_type", doc_type)
-        if search:
-            escaped_search = _escape_ilike_pattern(search)
+        if escaped_search:
             count_query = count_query.ilike("filename", f"%{escaped_search}%")
 
         count_result = await count_query.execute()
@@ -386,8 +369,8 @@ async def reprocess_document(
         if not update_result.data:
             raise Exception("상태 업데이트 실패")
 
-        # 백그라운드: 비동기 처리 시작 (에러 핸들링 포함)
-        _create_background_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작
+        asyncio.create_task(process_document(document_id, current_user.org_id))
 
         return DocumentProcessResponse(
             id=document_id,
