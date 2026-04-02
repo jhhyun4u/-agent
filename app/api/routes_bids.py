@@ -433,8 +433,12 @@ async def get_scored_bids(
         # G2B API에서 직접 공고 검색 (최근 N일)
         from app.services.g2b_service import G2BService
 
+        now = datetime.now(timezone.utc)
+        date_to = now.strftime("%Y%m%d%H%M")
+        date_from = (now - timedelta(days=days)).strftime("%Y%m%d%H%M")
+
         g2b = G2BService()
-        bids = await g2b.search_bids(lookback_days=days)
+        bids = await g2b.fetch_all_bids(date_from=date_from, date_to=date_to)
 
         # 적합도 스코어링
         scored = score_and_rank_bids(
