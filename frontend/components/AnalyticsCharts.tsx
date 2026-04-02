@@ -56,7 +56,7 @@ export function FailureReasonsPie({
 }: {
   data: FailureReasonsData | null;
 }) {
-  if (!data || data.reasons.length === 0) {
+  if (!data || !data.reasons?.length) {
     return <EmptyState message="실패 데이터 없음" />;
   }
 
@@ -126,13 +126,13 @@ export function PositioningBar({
 }: {
   data: PositioningWinRateData | null;
 }) {
-  if (!data || data.positioning.length === 0) {
+  if (!data || !data.positioning?.length) {
     return <EmptyState message="포지셔닝 데이터 없음" />;
   }
 
   return (
     <div className="space-y-3">
-      {data.positioning.map((p) => (
+      {(data.positioning ?? []).map((p) => (
         <div key={p.type}>
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-[#ededed]">
@@ -161,11 +161,11 @@ export function MonthlyTrendsLine({
 }: {
   data: MonthlyTrendsData | null;
 }) {
-  if (!data || data.months.length === 0) {
+  if (!data || !data.months?.length) {
     return <EmptyState message="월별 데이터 없음" />;
   }
 
-  const chartData = data.months.map((m) => ({
+  const chartData = (data.months ?? []).map((m) => ({
     month: m.month,
     rate: Math.round(m.rate * 10) / 10,
     total: m.total,
@@ -215,11 +215,11 @@ export function MonthlyTrendsLine({
 // ── 기관별 수주 현황 ──
 
 export function ClientWinRateBar({ data }: { data: ClientWinRateData | null }) {
-  if (!data || data.clients.length === 0) {
+  if (!data || !data.clients?.length) {
     return <EmptyState message="기관별 데이터 없음" />;
   }
 
-  const chartData = data.clients.slice(0, 8).map((c) => ({
+  const chartData = (data.clients ?? []).slice(0, 8).map((c) => ({
     agency: c.agency.length > 8 ? c.agency.slice(0, 8) + "…" : c.agency,
     rate: Math.round(c.rate * 10) / 10,
     total: c.total,
