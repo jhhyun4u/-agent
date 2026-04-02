@@ -472,7 +472,7 @@ async def get_scored_bids(
         })
     except Exception as e:
         logger.error(f"get_scored_bids 오류: {e}", exc_info=True)
-        return error("G2B 공고 조회 실패", code="BID_FETCH_ERROR")
+        raise InternalServiceError("G2B 공고 조회 실패")
 
 
 @router.post("/bids/crawl")
