@@ -418,65 +418,55 @@ async def pipeline_trigger(
 
 @router.get("/bids/scored")
 async def get_scored_bids(
-    days: int = Query(7, ge=1, le=30, description="조회 일수 (최근 N일)"),
+    date_from: Optional[str] = Query(None, description="시작일 (YYYYMMDD). 미지정 시 days 사용"),
+    date_to: Optional[str] = Query(None, description="종료일 (YYYYMMDD). 미지정 시 오늘"),
+    days: int = Query(7, ge=1, le=30, description="조회 일수 (date_from 미지정 시 사용)"),
     min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
+    min_score: float = Query(20, description="최소 적합도 점수"),
     max_results: int = Query(100, ge=1, le=300, description="최대 반환 건수"),
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
-    DB 저장된 공고 목록 조회 (적합도 스코어링 기반).
+    적합도 스코어링 기반 공고 추천.
 
-    정기 스케줄러(평일 08~18시 매시 정각)가 수집한 데이터 조회.
-    실시간 G2B 호출 없음 — 수동 크롤링은 POST /bids/crawl 사용.
+    G2B 3소스(입찰공고+사전규격+발주계획) 병렬 수집 → 역할 키워드 + 분류 가중치 스코어링.
+    개별 소스 실패 허용 — 가져온 소스만으로 결과 반환.
     """
-    try:
-        # G2B API에서 직접 공고 검색 (최근 N일)
-        from app.services.g2b_service import G2BService
+    from app.services.bidding.monitor.fetcher import BidFetcher
 
-        now = datetime.now(timezone.utc)
-        date_to = now.strftime("%Y%m%d%H%M")
-        date_from = (now - timedelta(days=days)).strftime("%Y%m%d%H%M")
+    try:
+        if not date_to:
+            date_to_str = datetime.now(timezone.utc).strftime("%Y%m%d") + "2359"
+        else:
+            date_to_str = date_to + "2359"
+
+        if not date_from:
+            date_from_str = (datetime.now(timezone.utc) - timedelta(days=days - 1)).strftime("%Y%m%d") + "0000"
+        else:
+            date_from_str = date_from + "0000"
 
         async with G2BService() as g2b:
-            bids = await g2b.fetch_all_bids(date_from=date_from, date_to=date_to, max_pages=3)
+            fetcher = BidFetcher(g2b_service=g2b, supabase_client=None)
+            results = await fetcher.fetch_bids_scored(
+                date_from=date_from_str,
+                date_to=date_to_str,
+                min_budget=min_budget,
+                min_score=min_score,
+                max_results=max_results,
+            )
 
-        # 적합도 스코어링
-        scored = score_and_rank_bids(
-            bids,
-            reference_date=datetime.now(timezone.utc).date(),
-            min_score=0,
-            exclude_expired=True,
-            max_results=max_results,
-            min_days_remaining=3,
-        )
-
-        # "관련없음" 공고 제외 (파일 캐시 기반)
-        try:
-            cache_dir = Path("data/bid_status")
-            excluded_nos: set[str] = set()
-            if cache_dir.exists():
-                for cache_file in cache_dir.glob("*.json"):
-                    try:
-                        data = json.loads(cache_file.read_text(encoding="utf-8"))
-                        if data.get("status") == "관련없음":
-                            excluded_nos.add(data.get("bid_no", ""))
-                    except Exception:
-                        pass
-            if excluded_nos:
-                scored = [bs for bs in scored if bs.bid_no not in excluded_nos]
-        except Exception as e:
-            logger.warning(f"bid_status 캐시 읽기 실패 (필터링 건너뜀): {e}")
-
+        data = results["data"]
         return ok({
-            "data": scored,
-            "total_fetched": len(bids),
-            "date_from": (datetime.now(timezone.utc) - timedelta(days=days)).isoformat(),
-            "date_to": datetime.now(timezone.utc).isoformat(),
-            "sources": {"입찰공고": len(bids)},
+            "date_from": date_from_str[:8],
+            "date_to": date_to_str[:8],
+            "total_count": len(data),
+            "total_fetched": results["total_fetched"],
+            "sources": results.get("sources", {}),
+            "data": data,
         })
     except Exception as e:
-        logger.error(f"get_scored_bids 오류: {e}", exc_info=True)
-        raise InternalServiceError("G2B 공고 조회 실패")
+        logger.error(f"scored bids 오류: {e}", exc_info=True)
+        raise InternalServiceError("공고 스코어링 중 오류가 발생했습니다.")
 
 
 @router.post("/bids/crawl")
