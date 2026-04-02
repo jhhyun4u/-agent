@@ -882,13 +882,13 @@ export default function DashboardPage() {
         {widgetConfig.charts && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
-              <CardHeader title="월별 수주율 추이" className="pb-0" />
+              <CardHeader title="월별 수주율 추이" className="pb-0 [&_h3]:text-xs [&_h3]:font-medium" />
               <CardBody className="pt-2">
                 <MonthlyTrendsLine data={trendsData} />
               </CardBody>
             </Card>
             <Card>
-              <CardHeader title="실패 원인 분석" className="pb-0" />
+              <CardHeader title="실패 원인 분석" className="pb-0 [&_h3]:text-xs [&_h3]:font-medium" />
               <CardBody className="pt-2">
                 <FailureReasonsPie data={failureData} />
               </CardBody>
