@@ -590,7 +590,7 @@ export default function DashboardPage() {
         {/* ── 본부별 성과 비교 (경영진용) ── */}
         {scope === "company" &&
           teamPerfData &&
-          teamPerfData.teams.length > 0 && (
+          teamPerfData?.teams?.length > 0 && (
             <Card>
               <CardHeader title="본부별 성과 비교" />
               <div className="overflow-x-auto px-5 pb-5">
@@ -617,11 +617,11 @@ export default function DashboardPage() {
                   <tbody>
                     {(() => {
                       const avgRate =
-                        teamPerfData.teams.length > 0
-                          ? teamPerfData.teams.reduce((s, t) => s + t.rate, 0) /
-                            teamPerfData.teams.length
+                        teamPerfData?.teams?.length > 0
+                          ? teamPerfData?.teams?.reduce((s, t) => s + t.rate, 0) /
+                            teamPerfData?.teams?.length
                           : 0;
-                      return [...teamPerfData.teams]
+                      return [...(teamPerfData?.teams || [])]
                         .sort((a, b) => b.rate - a.rate)
                         .map((t) => {
                           const diff = t.rate - avgRate;
@@ -911,13 +911,13 @@ export default function DashboardPage() {
           {/* 팀 성과 */}
           {widgetConfig.team &&
             teamPerfData &&
-            teamPerfData.teams.length > 0 && (
+            teamPerfData?.teams?.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
                 <h2 className="text-sm font-semibold text-[#ededed] mb-3">
                   팀별 성과
                 </h2>
                 <div className="space-y-2">
-                  {teamPerfData.teams.map((t) => (
+                  {teamPerfData?.teams?.map((t) => (
                     <div
                       key={t.team_id}
                       className="flex items-center gap-3 bg-[#111111] rounded-lg px-3 py-2"
@@ -945,13 +945,13 @@ export default function DashboardPage() {
           {/* 포지셔닝별 수주율 */}
           {widgetConfig.positioning &&
             posWinData &&
-            posWinData.positioning.length > 0 && (
+            posWinData?.positioning?.length > 0 && (
               <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">
-                <h2 className="text-sm font-semibold text-[#ededed] mb-3">
+                <h2 className="text-sm font-semibold text-[#ededa] mb-3">
                   포지셔닝별 수주율
                 </h2>
                 <div className="space-y-2">
-                  {posWinData.positioning.map((p) => {
+                  {posWinData?.positioning?.map((p) => {
                     const posLabel =
                       p.type === "defensive"
                         ? "🛡️ 수성형"
