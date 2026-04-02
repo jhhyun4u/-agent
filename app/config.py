@@ -100,7 +100,7 @@ class Settings(BaseSettings):
     file_download_timeout_seconds: int = 30
     edge_function_timeout_seconds: int = 10
     webhook_timeout_seconds: int = 10
-    g2b_api_timeout_seconds: int = 15
+    g2b_api_timeout_seconds: int = 60
     bid_pipeline_timeout_seconds: int = 120
     heartbeat_timeout_seconds: int = 60
 
@@ -112,7 +112,7 @@ class Settings(BaseSettings):
 
     # 나라장터 API 파라미터
     g2b_api_base_url: str = "https://apis.data.go.kr/1230000"
-    g2b_max_retries: int = 3
+    g2b_max_retries: int = 1
     g2b_default_lookback_days: int = 14
     g2b_historical_days: int = 180
 

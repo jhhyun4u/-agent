@@ -438,7 +438,7 @@ async def get_scored_bids(
         date_from = (now - timedelta(days=days)).strftime("%Y%m%d%H%M")
 
         async with G2BService() as g2b:
-            bids = await g2b.fetch_all_bids(date_from=date_from, date_to=date_to, max_pages=5)
+            bids = await g2b.fetch_all_bids(date_from=date_from, date_to=date_to, max_pages=3)
 
         # 적합도 스코어링
         scored = score_and_rank_bids(
