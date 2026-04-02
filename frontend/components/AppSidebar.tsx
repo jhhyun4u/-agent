@@ -620,11 +620,15 @@ export default function AppSidebar() {
         </aside>
       </div>
 
-      {/* 데스크톱 사이드바 */}
-      <div className="hidden lg:flex shrink-0 relative" ref={sidebarRef}>
+      {/* 데스크톱 사이드바 — 외부 div에 width 명시해야 flex 레이아웃이 공간 확보 */}
+      <div
+        className="hidden lg:flex shrink-0 relative transition-[width] duration-200 ease-in-out"
+        style={{ width: collapsed ? "48px" : `${sidebarWidth}px` }}
+        ref={sidebarRef}
+      >
         {/* 닫혀있을 때 */}
         {collapsed && (
-          <div className="w-12 h-full flex flex-col items-center border-r border-[#262626] bg-[#111111] pt-4">
+          <div className="w-full h-full flex flex-col items-center border-r border-[#262626] bg-[#111111] pt-4">
             <button
               onClick={toggleSidebar}
               className="w-7 h-7 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0 hover:bg-[#4fe0a0] transition-colors"
@@ -640,8 +644,7 @@ export default function AppSidebar() {
         {!collapsed && (
           <>
             <aside
-              className="h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden transition-all"
-              style={{ width: `${sidebarWidth}px` }}
+              className="w-full h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden"
             >
               {renderSidebarContent(false)}
             </aside>
@@ -650,7 +653,7 @@ export default function AppSidebar() {
             <div
               onMouseDown={handleMouseDown}
               onDoubleClick={handleDoubleClick}
-              className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-[#3ecf8e] bg-[#262626] transition-colors group"
+              className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-[#3ecf8e] bg-[#262626] transition-colors"
               title="드래그로 너비 조절 · 더블클릭으로 초기화"
             />
           </>
