@@ -7,8 +7,6 @@
  * - 우측 경계 더블클릭: 기본 너비로 리셋
  * - 모바일: 좌측 슬라이드 + 배경 클릭/Escape로 닫기
  * - 상태(접힘/너비/그룹 펼침)는 localStorage에 영속
- *
- * z-index 규약: 모바일오버레이=z-50, 햄버거=z-50, 데스크톱사이드바=z-30, 드래그핸들=z-40, 드래그오버레이=z-[9999]
  */
 
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -82,7 +80,6 @@ function isGroup(e: NavEntry): e is NavGroup {
   return "children" in e;
 }
 
-// 대시보드를 명시적 변수로 분리 (인덱스 하드코딩 방지 — M-2)
 const DASHBOARD: NavItem = {
   href: "/dashboard",
   label: "대시보드",
@@ -125,23 +122,22 @@ const DEFAULT_WIDTH = 208;
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 360;
 
-/* ── localStorage 안전 헬퍼 (SSR/시크릿모드/스토리지 가득 참 방어) ── */
 function safeGetItem(key: string): string | null {
   try {
-    return localStorage.getItem(key);
+    return typeof window !== "undefined" ? localStorage.getItem(key) : null;
   } catch {
     return null;
   }
 }
+
 function safeSetItem(key: string, value: string) {
   try {
-    localStorage.setItem(key, value);
+    if (typeof window !== "undefined") localStorage.setItem(key, value);
   } catch {
     /* 무시 */
   }
 }
 
-/* ── 스타일 헬퍼 ── */
 const lCls = (active: boolean) =>
   `flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
     active
@@ -162,34 +158,30 @@ export default function AppSidebar() {
   const [userRole, setUserRole] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // ── SSR 안전: 초기값 기본 → 마운트 후 localStorage 복원 ──
-  const [collapsed, setCollapsed] = useState<boolean | null>(null);
+  const [collapsed, setCollapsed] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_WIDTH);
   const [kbOpen, setKbOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [dragging, setDragging] = useState(false);
 
-  // 마운트 시 localStorage → state 복원
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(DEFAULT_WIDTH);
+
+  // 마운트 시 localStorage에서 복원
   useEffect(() => {
-    if (typeof window === "undefined") return; // SSR 방어
-
     const savedCollapsed = safeGetItem("sidebar-collapsed");
-    let initialCollapsed = false; // 기본값: 열려있음
-
     if (savedCollapsed !== null) {
-      initialCollapsed = savedCollapsed === "true";
-    } else if (window.innerWidth < 1024) {
-      initialCollapsed = true; // 모바일이면 닫혀있음
+      setCollapsed(savedCollapsed === "true");
     }
-
-    setCollapsed(initialCollapsed);
 
     const savedWidth = safeGetItem("sidebar-width");
     if (savedWidth) {
       const w = Number(savedWidth);
-      if (Number.isFinite(w))
+      if (Number.isFinite(w)) {
         setSidebarWidth(Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, w)));
+      }
     }
 
     setKbOpen(safeGetItem("sidebar-kb-expanded") === "true");
@@ -197,48 +189,59 @@ export default function AppSidebar() {
     setMounted(true);
   }, []);
 
-  // ── 드래그 리사이즈 (C-3: body.pointerEvents 대신 오버레이 사용) ──
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const liveWidthRef = useRef(DEFAULT_WIDTH); // M-1: React 배치와 무관하게 실시간 너비 추적
+  // collapsed 상태 저장
+  useEffect(() => {
+    if (mounted) {
+      safeSetItem("sidebar-collapsed", String(collapsed));
+    }
+  }, [collapsed, mounted]);
 
-  const handleDragMove = useCallback((ev: React.MouseEvent | MouseEvent) => {
-    if (!sidebarRef.current) return;
-    const rect = sidebarRef.current.getBoundingClientRect();
-    const raw = ev.clientX - rect.left; // C-4: sidebar offset 보정
-    if (!Number.isFinite(raw)) return; // L-7: NaN 방어
-    const clamped = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, raw));
-    liveWidthRef.current = clamped;
-    setSidebarWidth(clamped);
-  }, []);
+  // 드래그 리사이즈
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    startXRef.current = e.clientX;
+    startWidthRef.current = sidebarWidth;
+    setDragging(true);
+  }, [sidebarWidth]);
 
-  const handleDragEnd = useCallback(() => {
-    setDragging(false);
-    safeSetItem("sidebar-width", String(liveWidthRef.current)); // M-1: ref에서 읽어 배치 무관
-  }, []);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!dragging || !sidebarRef.current) return;
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      liveWidthRef.current = sidebarWidth;
-      setDragging(true);
+      const delta = e.clientX - startXRef.current;
+      const newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, startWidthRef.current + delta));
+      setSidebarWidth(newWidth);
     },
-    [sidebarWidth],
+    [dragging]
   );
+
+  const handleMouseUp = useCallback(() => {
+    if (dragging) {
+      setDragging(false);
+      safeSetItem("sidebar-width", String(sidebarWidth));
+    }
+  }, [dragging, sidebarWidth]);
 
   const handleDoubleClick = useCallback(() => {
     setSidebarWidth(DEFAULT_WIDTH);
-    liveWidthRef.current = DEFAULT_WIDTH;
     safeSetItem("sidebar-width", String(DEFAULT_WIDTH));
   }, []);
 
-  // ── 토글 함수들 (M-3: 일관되게 useCallback) ──
+  // 드래그 이벤트 리스너
+  useEffect(() => {
+    if (dragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [dragging, handleMouseMove, handleMouseUp]);
+
+  // 토글 함수들
   const toggleSidebar = useCallback(() => {
-    setCollapsed((prev) => {
-      // null이면 닫혀있는 상태(true)로 시작
-      if (prev === null) return true;
-      // 그 후는 토글
-      return !prev;
-    });
+    setCollapsed((prev) => !prev);
   }, []);
 
   const toggleKb = useCallback(() => {
@@ -257,34 +260,24 @@ export default function AppSidebar() {
     });
   }, []);
 
-  // collapsed 상태 변경 → localStorage 저장
+  // KB / Admin 자동 펼침
   useEffect(() => {
-    if (collapsed === null) return; // 초기화 전 무시
-    safeSetItem("sidebar-collapsed", String(collapsed));
-  }, [collapsed]);
-
-  // KB / Admin 하위 페이지 첫 진입 시만 자동 펼침 (M-4: 사용자 닫기 의도 존중)
-  const prevPathRef = useRef(pathname);
-  useEffect(() => {
-    const wasInKb = prevPathRef.current.startsWith("/kb");
-    const wasInAdmin = prevPathRef.current.startsWith("/admin");
-    if (pathname.startsWith("/kb") && !wasInKb) {
+    if (pathname.startsWith("/kb")) {
       setKbOpen(true);
       safeSetItem("sidebar-kb-expanded", "true");
     }
-    if (pathname.startsWith("/admin") && !wasInAdmin) {
+    if (pathname.startsWith("/admin")) {
       setAdminOpen(true);
       safeSetItem("sidebar-admin-expanded", "true");
     }
-    prevPathRef.current = pathname;
   }, [pathname]);
 
-  // 모바일: 페이지 이동 시 오버레이 닫기
+  // 모바일: 페이지 이동 시 닫기
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // 모바일: Escape 키로 닫기 (L-3)
+  // 모바일: Escape 키
   useEffect(() => {
     if (!mobileOpen) return;
     const handler = (e: KeyboardEvent) => {
@@ -294,18 +287,19 @@ export default function AppSidebar() {
     return () => window.removeEventListener("keydown", handler);
   }, [mobileOpen]);
 
-  // ── 유저 정보 (M-6: mounted guard) ──
+  // 유저 정보
   useEffect(() => {
-    let active = true;
     if (process.env.NODE_ENV === "development") {
       setEmail("dev@tenopa.co.kr");
       setUserRole("admin");
       return;
     }
+
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
-      if (active) setEmail(data.user?.email ?? "");
+      setEmail(data.user?.email ?? "");
     });
+
     const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
     supabase.auth.getSession().then(({ data }) => {
       const token = data.session?.access_token;
@@ -315,17 +309,13 @@ export default function AppSidebar() {
         })
           .then((r) => (r.ok ? r.json() : null))
           .then((profile) => {
-            if (active && profile?.role) setUserRole(profile.role);
+            if (profile?.role) setUserRole(profile.role);
           })
           .catch(() => {});
       }
     });
-    return () => {
-      active = false;
-    };
   }, []);
 
-  // ── 로그아웃 (M-5: 에러 처리) ──
   async function signOut() {
     try {
       await createClient().auth.signOut();
@@ -334,36 +324,30 @@ export default function AppSidebar() {
     }
   }
 
-  // ── 최근 작업 (C-5: AbortController) ──
+  // 최근 작업
   const [recentProposals, setRecentProposals] = useState<ProposalSummary[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
     (async () => {
       try {
         const { data } = await api.proposals.list({ scope: "my" });
-        if (!cancelled) {
-          setRecentProposals(
-            data
-              .filter((p: ProposalSummary) => ACTIVE_STATUSES.has(p.status))
-              .sort(
-                (a: ProposalSummary, b: ProposalSummary) =>
-                  new Date(b.updated_at).getTime() -
-                  new Date(a.updated_at).getTime(),
-              )
-              .slice(0, 3),
-          );
-        }
+        setRecentProposals(
+          data
+            .filter((p: ProposalSummary) => ACTIVE_STATUSES.has(p.status))
+            .sort(
+              (a: ProposalSummary, b: ProposalSummary) =>
+                new Date(b.updated_at).getTime() -
+                new Date(a.updated_at).getTime()
+            )
+            .slice(0, 3)
+        );
       } catch {
-        /* 실패 시 빈 상태 유지 */
+        /* 무시 */
       }
     })();
-    return () => {
-      cancelled = true;
-    };
-  }, [pathname]);
+  }, []);
 
-  // ── 헬퍼 ──
+  // 헬퍼 함수들
   function calcDDay(deadline: string | null): number | null {
     if (!deadline) return null;
     return Math.ceil((new Date(deadline).getTime() - Date.now()) / 86400000);
@@ -372,7 +356,7 @@ export default function AppSidebar() {
   function formatDDay(d: number): string {
     if (d > 0) return `D-${d}`;
     if (d === 0) return "D-Day";
-    return `D+${Math.abs(d)}`; // L-1: 마감 초과 표시 수정
+    return `D+${Math.abs(d)}`;
   }
 
   function dDayColor(d: number): string {
@@ -393,7 +377,7 @@ export default function AppSidebar() {
     return pathname === href;
   }
 
-  // ── 사이드바 공용 콘텐츠 ──
+  // 사이드바 콘텐츠
   function renderSidebarContent(forMobile: boolean) {
     return (
       <>
@@ -422,7 +406,6 @@ export default function AppSidebar() {
 
         {/* 네비게이션 */}
         <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
-          {/* 대시보드 */}
           <Link
             href={DASHBOARD.href}
             className={lCls(isActive(DASHBOARD.href))}
@@ -435,7 +418,6 @@ export default function AppSidebar() {
             <span>{DASHBOARD.label}</span>
           </Link>
 
-          {/* 나머지 NAV (공고~지식 베이스) — M-8: basePath/href를 key로 사용 */}
           {NAV_REST.map((entry) => {
             if (isGroup(entry)) {
               const groupActive = pathname.startsWith(entry.basePath);
@@ -497,7 +479,7 @@ export default function AppSidebar() {
             );
           })}
 
-          {/* 최근 작업 — KB 아래로 이동 */}
+          {/* 최근 작업 */}
           {recentProposals.length > 0 && (
             <div className="mt-2 mb-2">
               <p className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-[#555]">
@@ -546,7 +528,7 @@ export default function AppSidebar() {
             <NotificationBell />
           </div>
 
-          {/* Admin 관리 메뉴 (하단) */}
+          {/* Admin 관리 메뉴 */}
           {(userRole === "admin" || userRole === "manager") && (
             <div className="mt-2 pt-2 border-t border-[#262626]">
               <button
@@ -603,12 +585,11 @@ export default function AppSidebar() {
     );
   }
 
-  const showCollapsed = collapsed === true; // collapsed가 true일 때만 닫혀있음
-  const currentWidth = sidebarWidth;
+  if (!mounted) return null;
 
   return (
     <>
-      {/* 모바일 햄버거 (lg 미만) — L-5: DOM에서 제거하지 않고 토글 */}
+      {/* 모바일 햄버거 */}
       <button
         onClick={() => setMobileOpen((v) => !v)}
         className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-[#1c1c1c] border border-[#262626] rounded-lg"
@@ -618,7 +599,7 @@ export default function AppSidebar() {
         <SvgIcon d="M3 12h18M3 6h18M3 18h18" />
       </button>
 
-      {/* 모바일 오버레이 (lg 미만) — 슬라이드, L-3: role + Escape */}
+      {/* 모바일 오버레이 */}
       <div
         role="presentation"
         aria-hidden={!mobileOpen}
@@ -639,10 +620,10 @@ export default function AppSidebar() {
         </aside>
       </div>
 
-      {/* 데스크톱 사이드바 (lg 이상) */}
+      {/* 데스크톱 사이드바 */}
       <div className="hidden lg:flex shrink-0 relative" ref={sidebarRef}>
-        {/* 닫혀있을 때: PA 아이콘 미니바 */}
-        {showCollapsed && (
+        {/* 닫혀있을 때 */}
+        {collapsed && (
           <div className="w-12 h-full flex flex-col items-center border-r border-[#262626] bg-[#111111] pt-4">
             <button
               onClick={toggleSidebar}
@@ -655,34 +636,30 @@ export default function AppSidebar() {
           </div>
         )}
 
-        {/* 열려있을 때: 전체 사이드바 */}
-        {!showCollapsed && (
+        {/* 열려있을 때 */}
+        {!collapsed && (
           <>
             <aside
-              className="h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden"
-              style={{ width: currentWidth }}
+              className="h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden transition-all"
+              style={{ width: `${sidebarWidth}px` }}
             >
               {renderSidebarContent(false)}
             </aside>
 
-            {/* 드래그 핸들 — 우측 경계 */}
+            {/* 드래그 핸들 */}
             <div
               onMouseDown={handleMouseDown}
               onDoubleClick={handleDoubleClick}
-              className="absolute top-0 right-0 w-1 h-full cursor-col-resize z-40 group/resize bg-[#262626] hover:bg-[#3ecf8e] transition-colors"
+              className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-[#3ecf8e] bg-[#262626] transition-colors group"
               title="드래그로 너비 조절 · 더블클릭으로 초기화"
             />
           </>
         )}
       </div>
 
-      {/* C-3: 드래그 오버레이 — body.pointerEvents 대신 투명 오버레이 사용 */}
+      {/* 드래그 오버레이 */}
       {dragging && (
-        <div
-          className="fixed inset-0 z-[9999] cursor-col-resize"
-          onMouseMove={handleDragMove}
-          onMouseUp={handleDragEnd}
-        />
+        <div className="fixed inset-0 z-[9999] cursor-col-resize" />
       )}
     </>
   );
