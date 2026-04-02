@@ -48,7 +48,7 @@ async function request<T>(
   // AI 작업 (long-polling): 120초, CRUD: 30초
   const isLongOperation =
     method === "GET" &&
-    (path.includes("/stream") || path.includes("/download"));
+    (path.includes("/stream") || path.includes("/download") || path.includes("/bids/scored"));
   const timeout = isLongOperation ? 180000 : 30000; // 3분 vs 30초
 
   const controller = new AbortController();
