@@ -669,11 +669,9 @@ export default function AppSidebar() {
             <div
               onMouseDown={handleMouseDown}
               onDoubleClick={handleDoubleClick}
-              className="absolute top-0 -right-1 w-2 h-full cursor-col-resize z-40 group/resize"
+              className="absolute top-0 right-0 w-1 h-full cursor-col-resize z-40 group/resize bg-[#262626] hover:bg-[#3ecf8e] transition-colors"
               title="드래그로 너비 조절 · 더블클릭으로 초기화"
-            >
-              <div className="w-px h-full mx-auto bg-transparent group-hover/resize:bg-[#3ecf8e] transition-colors" />
-            </div>
+            />
           </>
         )}
       </div>
