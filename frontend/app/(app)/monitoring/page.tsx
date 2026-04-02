@@ -634,22 +634,24 @@ function ScoredBidsView({
           maxResults: 200,
         });
         const now = Date.now();
-        const d = res.data || [];
+        const payload = res.data ?? res;
+        const d = (payload as { data?: unknown }).data ?? payload ?? [];
+        const dataArr = Array.isArray(d) ? d : [];
         applyResponse(
-          d,
-          res.total_fetched || 0,
-          res.date_from || "",
-          res.date_to || "",
-          res.sources || {},
+          dataArr,
+          (payload as { total_fetched?: number }).total_fetched || 0,
+          (payload as { date_from?: string }).date_from || "",
+          (payload as { date_to?: string }).date_to || "",
+          (payload as { sources?: Record<string, number> }).sources || {},
           now,
         );
         scoredCache.current = {
           data: {
-            bids: d,
-            totalFetched: res.total_fetched || 0,
-            dateFrom: res.date_from || "",
-            dateTo: res.date_to || "",
-            sources: res.sources || {},
+            bids: dataArr,
+            totalFetched: (payload as { total_fetched?: number }).total_fetched || 0,
+            dateFrom: (payload as { date_from?: string }).date_from || "",
+            dateTo: (payload as { date_to?: string }).date_to || "",
+            sources: (payload as { sources?: Record<string, number> }).sources || {},
           },
           fetchedAt: now,
           cacheKey,
@@ -664,22 +666,24 @@ function ScoredBidsView({
           if (directRes.ok) {
             const json = await directRes.json();
             const now = Date.now();
-            const d = json.data || [];
+            const jsonPayload = json.data ?? json;
+            const d = (jsonPayload as { data?: unknown }).data ?? jsonPayload ?? [];
+            const dataArr = Array.isArray(d) ? d : [];
             applyResponse(
-              d,
-              json.total_fetched || 0,
-              json.date_from || "",
-              json.date_to || "",
-              json.sources || {},
+              dataArr,
+              (jsonPayload as { total_fetched?: number }).total_fetched || 0,
+              (jsonPayload as { date_from?: string }).date_from || "",
+              (jsonPayload as { date_to?: string }).date_to || "",
+              (jsonPayload as { sources?: Record<string, number> }).sources || {},
               now,
             );
             scoredCache.current = {
               data: {
-                bids: d,
-                totalFetched: json.total_fetched || 0,
-                dateFrom: json.date_from || "",
-                dateTo: json.date_to || "",
-                sources: json.sources || {},
+                bids: dataArr,
+                totalFetched: (jsonPayload as { total_fetched?: number }).total_fetched || 0,
+                dateFrom: (jsonPayload as { date_from?: string }).date_from || "",
+                dateTo: (jsonPayload as { date_to?: string }).date_to || "",
+                sources: (jsonPayload as { sources?: Record<string, number> }).sources || {},
               },
               fetchedAt: now,
               cacheKey,
