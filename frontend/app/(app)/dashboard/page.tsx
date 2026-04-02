@@ -826,7 +826,7 @@ export default function DashboardPage() {
                   {new Date().getFullYear()}년 총 제안건수
                 </p>
                 <p className="text-3xl font-bold text-[#ededed]">
-                  {stats?.overall.total ?? 0}
+                  {stats?.overall?.total ?? 0}
                   <span className="text-base font-normal text-[#8c8c8c] ml-1">
                     건
                   </span>
@@ -841,7 +841,7 @@ export default function DashboardPage() {
                   {new Date().getFullYear()}년 수주 성공
                 </p>
                 <p className="text-3xl font-bold text-[#3ecf8e]">
-                  {stats?.overall.won ?? 0}
+                  {stats?.overall?.won ?? 0}
                   <span className="text-base font-normal text-[#8c8c8c] ml-1">
                     건
                   </span>
