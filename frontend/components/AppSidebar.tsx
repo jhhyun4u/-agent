@@ -639,11 +639,15 @@ export default function AppSidebar() {
         </aside>
       </div>
 
-      {/* 데스크톱 사이드바 (lg 이상) */}
-      <div className="hidden lg:flex shrink-0 relative" ref={sidebarRef}>
+      {/* 데스크톱 사이드바 (lg 이상) — 외부 div에 width 명시해야 flex 공간 확보됨 */}
+      <div
+        className="hidden lg:flex shrink-0 relative overflow-hidden"
+        style={{ width: showCollapsed ? "48px" : `${currentWidth}px` }}
+        ref={sidebarRef}
+      >
         {/* 닫혀있을 때: PA 아이콘 미니바 */}
         {showCollapsed && (
-          <div className="w-12 h-full flex flex-col items-center border-r border-[#262626] bg-[#111111] pt-4">
+          <div className="w-full h-full flex flex-col items-center border-r border-[#262626] bg-[#111111] pt-4">
             <button
               onClick={toggleSidebar}
               className="w-7 h-7 rounded bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[9px] shrink-0 hover:bg-[#4fe0a0] transition-colors"
@@ -659,8 +663,7 @@ export default function AppSidebar() {
         {!showCollapsed && (
           <>
             <aside
-              className="h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden"
-              style={{ width: currentWidth }}
+              className="w-full h-full flex flex-col border-r border-[#262626] bg-[#111111] overflow-hidden"
             >
               {renderSidebarContent(false)}
             </aside>
