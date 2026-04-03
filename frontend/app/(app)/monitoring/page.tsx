@@ -457,9 +457,9 @@ export default function BidsMonitorPage() {
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       {/* 헤더 */}
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h1 className="text-sm font-semibold text-[#ededed]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <h1 className="text-sm font-semibold text-[#ededed] shrink-0">
               공고 모니터링
             </h1>
             {/* 수동 크롤링 버튼 */}
@@ -467,7 +467,7 @@ export default function BidsMonitorPage() {
               onClick={handleManualCrawl}
               disabled={crawling}
               title="나라장터 공고 새로고침"
-              className="p-1 rounded-md text-[#8c8c8c] hover:text-[#3ecf8e] hover:bg-[#1c1c1c] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1 rounded-md text-[#8c8c8c] hover:text-[#3ecf8e] hover:bg-[#1c1c1c] transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -485,7 +485,7 @@ export default function BidsMonitorPage() {
                 <path d="M21 3v5h-5" />
               </svg>
             </button>
-            <p className="text-xs text-[#8c8c8c] ml-1">
+            <p className="text-xs text-[#8c8c8c] ml-1 truncate hidden sm:block">
               AI 적합도 스코어링 기반 추천 · {SCOPE_LABELS[scope].desc}
             </p>
           </div>
