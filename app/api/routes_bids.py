@@ -17,11 +17,26 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
-# ── 공고 스코어링 인메모리 캐시 ──────────────────────────────
-# 구조: { cache_key: {"data": [...], "meta": {...}, "fetched_at": float} }
-# 목적: 페이지 재방문 시 G2B 재크롤링 방지
-_SCORED_CACHE: dict = {}
-_SCORED_CACHE_TTL = 3600  # 1시간
+# ── 공고 스코어링 파일 캐시 ──────────────────────────────────
+# 서버 재시작 후에도 데이터 유지
+_SCORED_CACHE_FILE = Path("data/bid_scored_cache.json")
+_SCORED_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _load_file_cache() -> dict:
+    try:
+        if _SCORED_CACHE_FILE.exists():
+            return json.loads(_SCORED_CACHE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+
+def _save_file_cache(cache: dict) -> None:
+    try:
+        _SCORED_CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:
+        logger.warning(f"파일 캐시 저장 실패: {e}")
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
@@ -454,17 +469,14 @@ async def get_scored_bids(
         else:
             date_from_str = date_from + "0000"
 
-        cache_key = f"{date_from_str}_{date_to_str}_{min_score}_{min_budget}"
-
-        # ── 캐시 확인 ──
-        cached = _SCORED_CACHE.get(cache_key)
-        if cached and (time.time() - cached["fetched_at"]) < _SCORED_CACHE_TTL:
-            logger.info(f"공고 캐시 HIT: {cache_key}")
-            return ok(cached["payload"])
+        # ── 파일 캐시 확인 (서버 재시작 후에도 유지) ──
+        file_cache = _load_file_cache()
+        if file_cache.get("payload"):
+            logger.info("공고 파일 캐시 HIT")
+            return ok(file_cache["payload"])
 
         # ── 캐시 없음 → 빈 결과 반환 (자동 크롤링 안 함) ──
-        # 새로고침 버튼(POST /bids/crawl)을 통해서만 크롤링 가능
-        logger.info(f"공고 캐시 MISS → 빈 결과 반환 (새로고침 버튼으로 수동 크롤링 필요)")
+        logger.info("공고 파일 캐시 MISS → 빈 결과 반환 (새로고침 버튼으로 수동 크롤링 필요)")
         empty_payload = {
             "date_from": date_from_str[:8],
             "date_to": date_to_str[:8],
@@ -472,7 +484,7 @@ async def get_scored_bids(
             "total_fetched": 0,
             "sources": {},
             "data": [],
-            "requires_crawl": True,  # 프론트엔드에서 새로고침 안내용
+            "requires_crawl": True,
         }
         return ok(empty_payload)
     except Exception as e:
@@ -512,18 +524,16 @@ async def manual_crawl(
 
         scored_data = results.get("data", [])
 
-        # ── 신규 공고만 추출 (기존 캐시와 비교) ──
-        existing_bid_nos: set[str] = set()
-        for cached in _SCORED_CACHE.values():
-            for item in cached.get("payload", {}).get("data", []):
-                existing_bid_nos.add(item.get("bid_no", ""))
-
+        # ── 신규 공고만 추출 (기존 파일 캐시와 비교) ──
+        file_cache = _load_file_cache()
+        existing_bid_nos: set[str] = {
+            item.get("bid_no", "")
+            for item in file_cache.get("payload", {}).get("data", [])
+        }
         new_bids = [b for b in scored_data if b.get("bid_no") not in existing_bid_nos]
-        logger.info(f"크롤링 결과: 전체 {len(scored_data)}건, 신규 {len(new_bids)}건, 기존 {len(existing_bid_nos)}건")
+        logger.info(f"크롤링: 전체 {len(scored_data)}건, 신규 {len(new_bids)}건, 기존 {len(existing_bid_nos)}건")
 
-        # ── 캐시 무효화 후 전체 결과로 갱신 ──
-        _SCORED_CACHE.clear()
-        cache_key = f"{date_from_str}_{date_to_str}_20_0"
+        # ── 파일 캐시 갱신 (전체 결과로 덮어씀) ──
         payload = {
             "date_from": date_from_str[:8],
             "date_to": date_to_str[:8],
@@ -532,7 +542,7 @@ async def manual_crawl(
             "sources": results.get("sources", {}),
             "data": scored_data,
         }
-        _SCORED_CACHE[cache_key] = {"payload": payload, "fetched_at": time.time()}
+        _save_file_cache({"payload": payload, "saved_at": time.time()})
 
         # ── 신규 공고만 백그라운드 파이프라인 ──
         top_new_bid_nos = [b["bid_no"] for b in new_bids[:50] if b.get("score", 0) >= 80]
