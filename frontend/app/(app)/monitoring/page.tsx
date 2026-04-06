@@ -546,6 +546,7 @@ function ScoredBidsView({
   const [bids, setBids] = useState<ScoredBid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [requiresCrawl, setRequiresCrawl] = useState(false);
   const [totalFetched, setTotalFetched] = useState(0);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -584,6 +585,7 @@ function ScoredBidsView({
     to: string,
     src: Record<string, number>,
     ts: number,
+    crawlNeeded = false,
   ) {
     setBids(data);
     setTotalFetched(total);
@@ -591,6 +593,7 @@ function ScoredBidsView({
     setDateTo(to);
     setSources(src);
     setFetchedAt(ts);
+    setRequiresCrawl(crawlNeeded);
     onFetched?.(ts);
   }
 
@@ -637,6 +640,7 @@ function ScoredBidsView({
         const payload = res.data ?? res;
         const d = (payload as { data?: unknown }).data ?? payload ?? [];
         const dataArr = Array.isArray(d) ? d : [];
+        const crawlNeeded = !!(payload as { requires_crawl?: boolean }).requires_crawl;
         applyResponse(
           dataArr,
           (payload as { total_fetched?: number }).total_fetched || 0,
@@ -644,6 +648,7 @@ function ScoredBidsView({
           (payload as { date_to?: string }).date_to || "",
           (payload as { sources?: Record<string, number> }).sources || {},
           now,
+          crawlNeeded,
         );
         scoredCache.current = {
           data: {
@@ -903,11 +908,22 @@ function ScoredBidsView({
           </p>
         </div>
       ) : filteredBids.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-40 text-center">
-          <p className="text-sm text-[#8c8c8c]">조건에 맞는 공고가 없습니다</p>
-          <p className="text-xs text-[#5c5c5c] mt-1">
-            기간을 늘리거나 필터를 조정해보세요
-          </p>
+        <div className="flex flex-col items-center justify-center h-40 text-center gap-2">
+          {requiresCrawl ? (
+            <>
+              <p className="text-sm text-[#8c8c8c]">공고 데이터가 없습니다</p>
+              <p className="text-xs text-[#5c5c5c]">
+                상단 ↻ 버튼을 눌러 나라장터에서 공고를 불러오세요
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-[#8c8c8c]">조건에 맞는 공고가 없습니다</p>
+              <p className="text-xs text-[#5c5c5c]">
+                기간을 늘리거나 필터를 조정해보세요
+              </p>
+            </>
+          )}
         </div>
       ) : (
         <div className="rounded-lg border border-[#262626] bg-[#111111] overflow-x-auto">
