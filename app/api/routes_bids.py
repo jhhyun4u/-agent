@@ -12,9 +12,16 @@ import asyncio
 import json
 import logging
 import re
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
+
+# ── 공고 스코어링 인메모리 캐시 ──────────────────────────────
+# 구조: { cache_key: {"data": [...], "meta": {...}, "fetched_at": float} }
+# 목적: 페이지 재방문 시 G2B 재크롤링 방지
+_SCORED_CACHE: dict = {}
+_SCORED_CACHE_TTL = 3600  # 1시간
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
@@ -429,8 +436,10 @@ async def get_scored_bids(
     """
     적합도 스코어링 기반 공고 추천.
 
-    G2B 3소스(입찰공고+사전규격+발주계획) 병렬 수집 → 역할 키워드 + 분류 가중치 스코어링.
-    개별 소스 실패 허용 — 가져온 소스만으로 결과 반환.
+    캐시 우선 전략:
+    - 캐시 유효(1시간): 즉시 반환 (G2B 호출 없음)
+    - 캐시 없음/만료: G2B 크롤링 후 캐시 저장
+    - 새로고침은 POST /bids/crawl 사용
     """
     from app.services.bidding.monitor.fetcher import BidFetcher
 
@@ -445,6 +454,16 @@ async def get_scored_bids(
         else:
             date_from_str = date_from + "0000"
 
+        cache_key = f"{date_from_str}_{date_to_str}_{min_score}_{min_budget}"
+
+        # ── 캐시 확인 ──
+        cached = _SCORED_CACHE.get(cache_key)
+        if cached and (time.time() - cached["fetched_at"]) < _SCORED_CACHE_TTL:
+            logger.info(f"공고 캐시 HIT: {cache_key}")
+            return ok(cached["payload"])
+
+        # ── 캐시 없음 → G2B 크롤링 ──
+        logger.info(f"공고 캐시 MISS → G2B 크롤링: {date_from_str}~{date_to_str}")
         async with G2BService() as g2b:
             fetcher = BidFetcher(g2b_service=g2b, supabase_client=None)
             results = await fetcher.fetch_bids_scored(
@@ -456,14 +475,20 @@ async def get_scored_bids(
             )
 
         data = results["data"]
-        return ok({
+        payload = {
             "date_from": date_from_str[:8],
             "date_to": date_to_str[:8],
             "total_count": len(data),
             "total_fetched": results["total_fetched"],
             "sources": results.get("sources", {}),
             "data": data,
-        })
+        }
+
+        # 캐시 저장
+        _SCORED_CACHE[cache_key] = {"payload": payload, "fetched_at": time.time()}
+        logger.info(f"공고 캐시 저장: {len(data)}건")
+
+        return ok(payload)
     except Exception as e:
         logger.error(f"scored bids 오류: {e}", exc_info=True)
         raise InternalServiceError("공고 스코어링 중 오류가 발생했습니다.")
@@ -476,9 +501,12 @@ async def manual_crawl(
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
-    수동 크롤링 — G2B에서 최신 공고 수집 후 DB 저장 + 백그라운드 파이프라인.
+    수동 크롤링 — 새로고침 버튼 전용.
 
-    프론트엔드 "새로고침" 버튼에서만 호출.
+    신규 공고만 처리:
+    - 기존 캐시에 있는 공고는 분석 결과 보존 (덮어쓰지 않음)
+    - 신규 공고만 캐시에 추가 + 백그라운드 파이프라인
+    - 캐시 갱신 후 새 데이터 반환
     """
     try:
         date_to_dt = datetime.now(timezone.utc)
@@ -496,17 +524,41 @@ async def manual_crawl(
                 max_results=300,
             )
 
-        # 백그라운드 파이프라인: 상위 scored 공고 DB 저장 + 첨부파일 + AI 분석
         scored_data = results.get("data", [])
-        top_bid_nos = [b["bid_no"] for b in scored_data[:50] if b.get("score", 0) >= 80]
-        if top_bid_nos:
-            raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in scored_data if b["bid_no"] in set(top_bid_nos)}
-            background_tasks.add_task(run_pipeline, top_bid_nos, raw_map)
+
+        # ── 신규 공고만 추출 (기존 캐시와 비교) ──
+        existing_bid_nos: set[str] = set()
+        for cached in _SCORED_CACHE.values():
+            for item in cached.get("payload", {}).get("data", []):
+                existing_bid_nos.add(item.get("bid_no", ""))
+
+        new_bids = [b for b in scored_data if b.get("bid_no") not in existing_bid_nos]
+        logger.info(f"크롤링 결과: 전체 {len(scored_data)}건, 신규 {len(new_bids)}건, 기존 {len(existing_bid_nos)}건")
+
+        # ── 캐시 무효화 후 전체 결과로 갱신 ──
+        _SCORED_CACHE.clear()
+        cache_key = f"{date_from_str}_{date_to_str}_20_0"
+        payload = {
+            "date_from": date_from_str[:8],
+            "date_to": date_to_str[:8],
+            "total_count": len(scored_data),
+            "total_fetched": results["total_fetched"],
+            "sources": results.get("sources", {}),
+            "data": scored_data,
+        }
+        _SCORED_CACHE[cache_key] = {"payload": payload, "fetched_at": time.time()}
+
+        # ── 신규 공고만 백그라운드 파이프라인 ──
+        top_new_bid_nos = [b["bid_no"] for b in new_bids[:50] if b.get("score", 0) >= 80]
+        if top_new_bid_nos:
+            raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in new_bids if b["bid_no"] in set(top_new_bid_nos)}
+            background_tasks.add_task(run_pipeline, top_new_bid_nos, raw_map)
 
         return ok({
             "total_fetched": results["total_fetched"],
-            "scored_count": len(results["data"]),
-            "pipeline_queued": len(top_bid_nos),
+            "scored_count": len(scored_data),
+            "new_count": len(new_bids),
+            "pipeline_queued": len(top_new_bid_nos),
         })
     except Exception as e:
         logger.error(f"수동 크롤링 오류: {e}")
