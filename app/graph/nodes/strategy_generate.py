@@ -7,6 +7,7 @@ v3.2: 경쟁분석 프레임워크 + 연구수행 전략.
 """
 
 import logging
+from uuid import UUID
 
 from app.graph.state import ProposalState, Strategy, StrategyAlternative
 from app.graph.context_helpers import (
@@ -23,6 +24,7 @@ from app.prompts.strategy import (
 )
 from app.services.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
+from app.services.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +60,29 @@ async def strategy_generate(state: ProposalState) -> dict:
         include_lessons=True,
         include_competitor_history=True,
     )
+
+    # 과거 전략 레코드 조회 (C-2)
+    past_strategy_text = ""
+    try:
+        from app.utils.supabase_client import get_async_client as _get_db
+        db = await _get_db()
+        past = await (
+            db.table("content_library")
+            .select("title, body, tags")
+            .eq("type", "strategy_record")
+            .ilike("title", f"%{rfp_dict.get('client', '')}%")
+            .order("created_at", desc=True)
+            .limit(2)
+            .execute()
+        )
+        if past.data:
+            parts = []
+            for p in past.data:
+                parts.append(f"- {p['title']}\n  {(p.get('body') or '')[:300]}")
+            past_strategy_text = "\n\n## 과거 전략 레코드 (이 발주기관)\n" + "\n".join(parts)
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
+        pass
 
     # 리서치 브리프 + credibility 필터링
     research_text = extract_credible_research(
@@ -103,7 +128,8 @@ async def strategy_generate(state: ProposalState) -> dict:
         reg_text, _, _ = await prompt_registry.get_prompt_for_experiment(
             "strategy.GENERATE_PROMPT", proposal_id
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         reg_text = ""
 
     prompt = (reg_text or STRATEGY_GENERATE_PROMPT).format(
@@ -125,11 +151,15 @@ async def strategy_generate(state: ProposalState) -> dict:
         strategy_research_framework=STRATEGY_RESEARCH_FRAMEWORK,
     )
 
+    # 과거 전략 참조 추가 (C-2)
+    if past_strategy_text:
+        prompt += past_strategy_text
+
     # 가격전략 시장 데이터 추가
     if pricing_strategy_context:
         prompt += f"\n\n{pricing_strategy_context}\n위 시장 데이터를 price_strategy 설정 시 참고하세요."
 
-    result = await claude_generate(prompt, max_tokens=8000)
+    result = await claude_generate(prompt, max_tokens=8000, step_name="strategy_generate")
 
     # 프롬프트 사용 기록
     if proposal_id:
@@ -143,7 +173,8 @@ async def strategy_generate(state: ProposalState) -> dict:
                 prompt_version=sg_ver,
                 prompt_hash=sg_hash,
             )
-        except Exception:
+        except Exception as e:
+            logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
             pass
 
     # 전략 대안 구성
@@ -176,6 +207,34 @@ async def strategy_generate(state: ProposalState) -> dict:
         competitor_analysis=result.get("competitor_analysis", {}),
         risks=[],
     )
+
+    # KB 자동 축적 (A-3: 전략 결과)
+    try:
+        from app.services.kb_updater import save_strategy_to_kb
+        await save_strategy_to_kb(
+            org_id=state.get("org_id", ""),
+            proposal_id=state.get("project_id", ""),
+            client_name=rfp_dict.get("client", ""),
+            positioning=positioning,
+            strategy_result=result,
+        )
+    except Exception as e:
+        logger.debug(f"전략 KB 축적 실패 (무시): {e}")
+
+    # Phase 1: Create artifact version
+    try:
+        strategy_data = strategy.model_dump() if hasattr(strategy, "model_dump") else strategy
+        version_num, artifact_version = await execute_node_and_create_version(
+            proposal_id=UUID(state.get("project_id")),
+            node_name="strategy_generate",
+            output_key="strategy",
+            artifact_data=strategy_data,
+            user_id=UUID(state.get("created_by")),
+            state=state
+        )
+        logger.info(f"Strategy v{version_num} created for proposal {state.get('project_id')}")
+    except Exception as e:
+        logger.warning(f"Strategy versioning 실패 (계속 진행): {e}")
 
     return {
         "strategy": strategy,

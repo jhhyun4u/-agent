@@ -9,10 +9,13 @@ GET  /api/proposals/{id}/bid-price-history  — 가격 변경 이력
 
 import logging
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_project_access, require_role
+from app.api.response import ok
+from app.exceptions import ConflictError, PropNotFoundError
+from app.models.auth_schemas import CurrentUser
 
 router = APIRouter(prefix="/api/proposals", tags=["bid-submission"])
 logger = logging.getLogger(__name__)
@@ -29,7 +32,7 @@ async def submit_bid(
     proposal_id: str,
     body: BidSubmissionRequest,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """투찰 담당자가 나라장터에 실제 투찰한 가격을 기록."""
@@ -38,19 +41,18 @@ async def submit_bid(
     # 중복 투찰 방어
     status = await get_bid_submission_status(proposal_id)
     if not status:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
+        raise PropNotFoundError(proposal_id)
     current = status.get("bid_submission_status")
     if current in ("submitted", "verified"):
-        raise HTTPException(
-            status_code=409,
-            detail=f"이미 투찰 완료 상태입니다 (status={current}). 변경이 필요하면 관리자에게 문의하세요.",
+        raise ConflictError(
+            f"이미 투찰 완료 상태입니다 (status={current}). 변경이 필요하면 관리자에게 문의하세요."
         )
 
     result = await record_bid_submission(
         proposal_id=proposal_id,
         submitted_price=body.submitted_price,
-        user_id=user.get("id", ""),
-        user_name=user.get("name", ""),
+        user_id=user.id,
+        user_name=user.name,
         note=body.note,
     )
 
@@ -67,13 +69,13 @@ async def submit_bid(
 
     background_tasks.add_task(_notify)
 
-    return result
+    return ok(result)
 
 
 @router.post("/{proposal_id}/bid-submission/verify")
 async def verify_bid(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
     _role=Depends(require_role("lead")),
 ):
@@ -81,19 +83,19 @@ async def verify_bid(
     from app.services.bid_handoff import verify_bid_submission
 
     try:
-        return await verify_bid_submission(
+        return ok(await verify_bid_submission(
             proposal_id=proposal_id,
-            user_id=user.get("id", ""),
-            user_name=user.get("name", ""),
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+            user_id=user.id,
+            user_name=user.name,
+        ))
+    except ValueError:
+        raise PropNotFoundError(proposal_id)
 
 
 @router.get("/{proposal_id}/bid-submission")
 async def get_bid_status(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """투찰 상태 조회."""
@@ -101,20 +103,20 @@ async def get_bid_status(
 
     status = await get_bid_submission_status(proposal_id)
     if not status:
-        raise HTTPException(status_code=404, detail="제안서를 찾을 수 없습니다.")
-    return status
+        raise PropNotFoundError(proposal_id)
+    return ok(status)
 
 
 @router.get("/{proposal_id}/bid-price-history")
 async def get_price_history(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """가격 변경 이력 조회."""
     from app.services.bid_handoff import get_bid_price_history
 
-    return await get_bid_price_history(proposal_id)
+    return ok(await get_bid_price_history(proposal_id))
 
 
 # ── 3-Stream 비딩 워크스페이스 확장 ──
@@ -130,29 +132,29 @@ class BidPriceAdjustRequest(BaseModel):
 async def adjust_bid_price(
     proposal_id: str,
     body: BidPriceAdjustRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
     _role=Depends(require_role("lead")),
 ):
     """워크플로 완료 후 가격 조정 — 사유 필수."""
     from app.services.bidding_stream import update_bid_price_post_workflow
 
-    return await update_bid_price_post_workflow(
+    return ok(await update_bid_price_post_workflow(
         proposal_id=proposal_id,
         adjusted_price=body.adjusted_price,
         reason=body.reason,
-        user_id=user.get("id", ""),
-        user_name=user.get("name", ""),
-    )
+        user_id=user.id,
+        user_name=user.name,
+    ))
 
 
 @router.get("/{proposal_id}/bidding-workspace")
 async def get_bidding_workspace(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """통합 비딩 대시보드."""
     from app.services.bidding_stream import get_bidding_workspace
 
-    return await get_bidding_workspace(proposal_id)
+    return ok(await get_bidding_workspace(proposal_id))

@@ -23,7 +23,7 @@ async def _call(function_name: str, payload: dict) -> bool:
         "Content-Type": "application/json",
     }
     try:
-        timeout = aiohttp.ClientTimeout(total=10)
+        timeout = aiohttp.ClientTimeout(total=settings.edge_function_timeout_seconds)
         async with aiohttp.ClientSession(timeout=timeout) as session:
             async with session.post(url, json=payload, headers=headers) as resp:
                 if resp.status >= 400:

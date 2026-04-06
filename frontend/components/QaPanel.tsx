@@ -40,10 +40,14 @@ function reactionBadge(reaction: string | null) {
     negative: "bg-red-500/15 text-red-400 border-red-500/30",
   };
   const labels: Record<string, string> = {
-    positive: "긍정", neutral: "중립", negative: "부정",
+    positive: "긍정",
+    neutral: "중립",
+    negative: "부정",
   };
   return (
-    <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium border ${colors[reaction] ?? ""}`}>
+    <span
+      className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium border ${colors[reaction] ?? ""}`}
+    >
       {labels[reaction] ?? reaction}
     </span>
   );
@@ -81,7 +85,13 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
   }, [fetchRecords]);
 
   function resetForm() {
-    setForm({ question: "", answer: "", category: "general", evaluator_reaction: null, memo: null });
+    setForm({
+      question: "",
+      answer: "",
+      category: "general",
+      evaluator_reaction: null,
+      memo: null,
+    });
     setShowForm(false);
     setEditingId(null);
   }
@@ -126,7 +136,8 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
       question: qa.question,
       answer: qa.answer,
       category: qa.category as QARecordCreate["category"],
-      evaluator_reaction: qa.evaluator_reaction as QARecordCreate["evaluator_reaction"],
+      evaluator_reaction:
+        qa.evaluator_reaction as QARecordCreate["evaluator_reaction"],
       memo: qa.memo,
     });
     setEditingId(qa.id);
@@ -147,10 +158,15 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-[#ededed]">
           Q&A 기록{" "}
-          <span className="text-[#8c8c8c] font-normal">({records.length}건)</span>
+          <span className="text-[#8c8c8c] font-normal">
+            ({records.length}건)
+          </span>
         </h3>
         <button
-          onClick={() => { resetForm(); setShowForm(!showForm); }}
+          onClick={() => {
+            resetForm();
+            setShowForm(!showForm);
+          }}
           className="text-xs text-[#3ecf8e] hover:text-[#3ecf8e]/80 font-medium transition-colors"
         >
           {showForm ? "취소" : "+ 추가"}
@@ -214,16 +230,23 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
 
       {/* 입력 폼 */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-[#111111] border border-[#262626] rounded-xl p-4 space-y-3">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-[#111111] border border-[#262626] rounded-xl p-4 space-y-3"
+        >
           <p className="text-xs font-semibold text-[#ededed]">
             {editingId ? "Q&A 수정" : "새 Q&A 추가"}
           </p>
 
           <div>
-            <label className="text-[10px] text-[#8c8c8c] block mb-1">질문</label>
+            <label className="text-[10px] text-[#8c8c8c] block mb-1">
+              질문
+            </label>
             <textarea
               value={form.question}
-              onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, question: e.target.value }))
+              }
               rows={2}
               placeholder="평가위원 질문..."
               className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 resize-none"
@@ -232,10 +255,14 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
           </div>
 
           <div>
-            <label className="text-[10px] text-[#8c8c8c] block mb-1">답변</label>
+            <label className="text-[10px] text-[#8c8c8c] block mb-1">
+              답변
+            </label>
             <textarea
               value={form.answer}
-              onChange={(e) => setForm((f) => ({ ...f, answer: e.target.value }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, answer: e.target.value }))
+              }
               rows={3}
               placeholder="답변 내용..."
               className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40 resize-none"
@@ -245,38 +272,60 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] text-[#8c8c8c] block mb-1">카테고리</label>
+              <label className="text-[10px] text-[#8c8c8c] block mb-1">
+                카테고리
+              </label>
               <select
                 value={form.category}
-                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as QARecordCreate["category"] }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    category: e.target.value as QARecordCreate["category"],
+                  }))
+                }
                 className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40"
               >
                 {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-[10px] text-[#8c8c8c] block mb-1">평가위원 반응</label>
+              <label className="text-[10px] text-[#8c8c8c] block mb-1">
+                평가위원 반응
+              </label>
               <select
                 value={form.evaluator_reaction ?? ""}
-                onChange={(e) => setForm((f) => ({ ...f, evaluator_reaction: e.target.value || null }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    evaluator_reaction: e.target.value || null,
+                  }))
+                }
                 className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-2.5 py-1.5 text-xs text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40"
               >
                 {REACTIONS.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] text-[#8c8c8c] block mb-1">메모 (선택)</label>
+            <label className="text-[10px] text-[#8c8c8c] block mb-1">
+              메모 (선택)
+            </label>
             <input
               type="text"
               value={form.memo ?? ""}
-              onChange={(e) => setForm((f) => ({ ...f, memo: e.target.value || null }))}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, memo: e.target.value || null }))
+              }
               placeholder="참고 사항..."
               className="w-full bg-[#0f0f0f] border border-[#262626] rounded-lg px-3 py-1.5 text-xs text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]/40"
             />
@@ -284,7 +333,9 @@ export default function QaPanel({ proposalId }: { proposalId: string }) {
 
           <button
             type="submit"
-            disabled={submitting || !form.question.trim() || !form.answer.trim()}
+            disabled={
+              submitting || !form.question.trim() || !form.answer.trim()
+            }
             className="w-full bg-[#3ecf8e] hover:bg-[#3ecf8e]/90 disabled:opacity-40 text-[#0f0f0f] font-semibold rounded-lg py-2 text-sm transition-colors"
           >
             {submitting ? "저장 중..." : editingId ? "수정" : "등록"}

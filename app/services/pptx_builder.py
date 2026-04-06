@@ -6,12 +6,13 @@ PPTX 빌더 (§12-4)
 - presentation_strategy 반영 (키 메시지, 발표 시간 배분)
 """
 
+import asyncio
 import io
 import logging
 from typing import Any
 
 from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
+from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,17 @@ async def build_pptx(
     presentation_strategy: dict[str, Any] | None = None,
 ) -> bytes:
     """ppt_slides 리스트 → PPTX 바이트."""
+    return await asyncio.to_thread(
+        _build_pptx_sync, slides, proposal_name, presentation_strategy,
+    )
+
+
+def _build_pptx_sync(
+    slides: list[dict[str, Any]],
+    proposal_name: str,
+    presentation_strategy: dict[str, Any] | None,
+) -> bytes:
+    """동기 PPTX 빌드 (to_thread용)."""
     prs = Presentation()
     prs.slide_width = SLIDE_WIDTH
     prs.slide_height = SLIDE_HEIGHT

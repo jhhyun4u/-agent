@@ -32,7 +32,14 @@ import type {
 
 // ── 공통 ──
 
-const COLORS = ["#3ecf8e", "#f59e0b", "#ef4444", "#6366f1", "#8b5cf6", "#ec4899"];
+const COLORS = [
+  "#3ecf8e",
+  "#f59e0b",
+  "#ef4444",
+  "#6366f1",
+  "#8b5cf6",
+  "#ec4899",
+];
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -44,8 +51,12 @@ function EmptyState({ message }: { message: string }) {
 
 // ── 실패 원인 파이차트 ──
 
-export function FailureReasonsPie({ data }: { data: FailureReasonsData | null }) {
-  if (!data || data.reasons.length === 0) {
+export function FailureReasonsPie({
+  data,
+}: {
+  data: FailureReasonsData | null;
+}) {
+  if (!data || !data.reasons?.length) {
     return <EmptyState message="실패 데이터 없음" />;
   }
 
@@ -110,14 +121,18 @@ const POS_ICONS: Record<string, string> = {
   adjacent: "🔄 인접형",
 };
 
-export function PositioningBar({ data }: { data: PositioningWinRateData | null }) {
-  if (!data || data.positioning.length === 0) {
+export function PositioningBar({
+  data,
+}: {
+  data: PositioningWinRateData | null;
+}) {
+  if (!data || !data.positioning?.length) {
     return <EmptyState message="포지셔닝 데이터 없음" />;
   }
 
   return (
     <div className="space-y-3">
-      {data.positioning.map((p) => (
+      {(data.positioning ?? []).map((p) => (
         <div key={p.type}>
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-[#ededed]">
@@ -141,12 +156,16 @@ export function PositioningBar({ data }: { data: PositioningWinRateData | null }
 
 // ── 월별 수주율 추이 ──
 
-export function MonthlyTrendsLine({ data }: { data: MonthlyTrendsData | null }) {
-  if (!data || data.months.length === 0) {
+export function MonthlyTrendsLine({
+  data,
+}: {
+  data: MonthlyTrendsData | null;
+}) {
+  if (!data || !data.months?.length) {
     return <EmptyState message="월별 데이터 없음" />;
   }
 
-  const chartData = data.months.map((m) => ({
+  const chartData = (data.months ?? []).map((m) => ({
     month: m.month,
     rate: Math.round(m.rate * 10) / 10,
     total: m.total,
@@ -196,11 +215,11 @@ export function MonthlyTrendsLine({ data }: { data: MonthlyTrendsData | null }) 
 // ── 기관별 수주 현황 ──
 
 export function ClientWinRateBar({ data }: { data: ClientWinRateData | null }) {
-  if (!data || data.clients.length === 0) {
+  if (!data || !data.clients?.length) {
     return <EmptyState message="기관별 데이터 없음" />;
   }
 
-  const chartData = data.clients.slice(0, 8).map((c) => ({
+  const chartData = (data.clients ?? []).slice(0, 8).map((c) => ({
     agency: c.agency.length > 8 ? c.agency.slice(0, 8) + "…" : c.agency,
     rate: Math.round(c.rate * 10) / 10,
     total: c.total,
@@ -210,7 +229,11 @@ export function ClientWinRateBar({ data }: { data: ClientWinRateData | null }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={chartData} layout="vertical">
-        <CartesianGrid strokeDasharray="3 3" stroke="#262626" horizontal={false} />
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="#262626"
+          horizontal={false}
+        />
         <XAxis
           type="number"
           domain={[0, 100]}

@@ -8,22 +8,53 @@ POST /api/proposals/{id}/ai-assist                                 — AI 인라
 GET  /api/proposals/{id}/download/docx                             — DOCX 다운로드
 GET  /api/proposals/{id}/download/hwpx                             — HWPX 다운로드
 GET  /api/proposals/{id}/download/pptx                             — PPTX 다운로드
+GET  /api/proposals/{id}/download/cost-sheet                       — 산출내역서 DOCX 다운로드 (기본)
+GET  /api/proposals/{id}/cost-sheet/draft                          — 산출내역서 초안 데이터 (편집용)
+POST /api/proposals/{id}/cost-sheet/generate                       — 편집된 데이터로 DOCX 생성
 GET  /api/proposals/{id}/compliance                                — Compliance Matrix
 POST /api/proposals/{id}/compliance/check                          — Compliance AI 체크 실행
 """
 
 import logging
+from datetime import datetime
 from typing import Any
+from urllib.parse import quote
 
 from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import Response
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_project_access
+from app.config import settings
 from app.exceptions import PropNotFoundError
+from app.models.auth_schemas import CurrentUser
+from app.models.artifact_schemas import (
+    ArtifactResponse, ArtifactSaveResponse,
+    SectionRegenerateResponse, AiAssistResponse, CostSheetDraftResponse,
+    ComplianceMatrixResponse, ComplianceCheckResponse,
+)
 
 router = APIRouter(prefix="/api/proposals", tags=["artifacts"])
 logger = logging.getLogger(__name__)
+
+
+def _format_download_filename(proposal_name: str, file_type: str, version: int = 1) -> tuple[str, str]:
+    """Phase 3-1: RFC 5987 인코딩으로 버전+날짜 포함 파일명 생성.
+
+    Returns: (filename, content_disposition_header)
+    """
+    date_str = datetime.now().strftime("%Y%m%d")
+    type_map = {
+        "docx": ("제안서", "docx"),
+        "hwpx": ("제안서", "hwpx"),
+        "pptx": ("발표자료", "pptx"),
+    }
+    type_label, ext = type_map.get(file_type, ("파일", file_type))
+
+    filename = f"{proposal_name}_{type_label}_v{version}_{date_str}.{ext}"
+    # RFC 5987 인코딩 (한글 파일명 깨짐 방지)
+    encoded = quote(filename, safe="")
+    return filename, f"attachment; filename*=UTF-8''{encoded}"
 
 
 async def _upload_to_storage_with_tracking(
@@ -35,13 +66,38 @@ async def _upload_to_storage_with_tracking(
     """Storage 업로드 + proposals.storage_upload_failed 추적 (설계 §8 finally 패턴).
 
     업로드 성공 시 storage_path 업데이트, 실패 시 storage_upload_failed=True 설정.
+    아카이브 테이블에도 바이너리 산출물 등록.
     """
     from app.utils.supabase_client import get_async_client
 
-    bucket = "proposal-files"
+    bucket = settings.storage_bucket_proposals
     storage_path = f"{proposal_id}/proposal.{file_key}"
     col_map = {"docx": "storage_path_docx", "pptx": "storage_path_pptx", "hwpx": "storage_path_hwpx"}
     db_col = col_map.get(file_key)
+
+    # 아카이브 등록 (바이너리 산출물)
+    archive_map = {
+        "docx": ("proposal_docx", "proposal", "제안서 DOCX", "proposal/proposal.docx"),
+        "hwpx": ("proposal_hwpx", "proposal", "제안서 HWPX", "proposal/proposal.hwpx"),
+        "pptx": ("ppt_pptx", "presentation", "발표자료 PPTX", "presentation/proposal.pptx"),
+    }
+    archive_info = archive_map.get(file_key)
+    if archive_info:
+        try:
+            from app.services.project_archive_service import archive_binary_artifact
+            await archive_binary_artifact(
+                proposal_id,
+                doc_type=archive_info[0],
+                category=archive_info[1],
+                title=archive_info[2],
+                file_format=file_key,
+                file_bytes=file_bytes,
+                storage_subpath=archive_info[3],
+                graph_step="download",
+                source="ai",
+            )
+        except Exception as e:
+            logger.warning(f"[{proposal_id}] archive 등록 실패 ({file_key}): {e}")
 
     try:
         client = await get_async_client()
@@ -74,11 +130,11 @@ async def _upload_to_storage_with_tracking(
             pass
 
 
-@router.get("/{proposal_id}/artifacts/{step}")
+@router.get("/{proposal_id}/artifacts/{step}", response_model=ArtifactResponse)
 async def get_artifacts(
     proposal_id: str,
     step: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """단계별 산출물 조회 (그래프 상태에서 추출)."""
@@ -135,12 +191,12 @@ class ArtifactSaveRequest(BaseModel):
     change_source: str = "human_edit"  # 변경 출처
 
 
-@router.put("/{proposal_id}/artifacts/{step}")
+@router.put("/{proposal_id}/artifacts/{step}", response_model=ArtifactSaveResponse)
 async def save_artifact(
     proposal_id: str,
     step: str,
     body: ArtifactSaveRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """에디터에서 수정한 산출물을 그래프 상태에 저장."""
@@ -174,7 +230,7 @@ async def save_artifact(
         update = {
             state_key: existing,
             "_edited_html": body.content,
-            "_last_editor": user.get("name", user.get("id", "unknown")),
+            "_last_editor": user.name or user.id,
         }
 
         # Phase C: 사람 수정 추적
@@ -192,7 +248,7 @@ async def save_artifact(
                 action="edit",
                 original=old_html[:10000],
                 edited=body.content[:10000],
-                user_id=user.get("id"),
+                user_id=user.id,
             )
         except Exception as e:
             logger.debug(f"수정 추적 실패 (무시): {e}")
@@ -203,7 +259,7 @@ async def save_artifact(
 
     logger.info(
         f"산출물 저장: proposal={proposal_id}, step={step}, "
-        f"source={body.change_source}, user={user.get('id')}"
+        f"source={body.change_source}, user={user.id}"
     )
 
     # GAP-4: artifacts 테이블에 버전 기록
@@ -224,7 +280,7 @@ async def save_artifact(
             "content": content_str[:50000],
             "change_source": body.change_source,
             "change_summary": f"{step} v{next_ver}",
-            "created_by": user.get("id"),
+            "created_by": user.id,
         }).execute()
     except Exception as e:
         logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
@@ -241,13 +297,13 @@ class SectionRegenerateRequest(BaseModel):
     instructions: str = ""  # 재생성 시 추가 지시사항
 
 
-@router.post("/{proposal_id}/artifacts/{step}/sections/{section_id}/regenerate")
+@router.post("/{proposal_id}/artifacts/{step}/sections/{section_id}/regenerate", response_model=SectionRegenerateResponse)
 async def regenerate_section(
     proposal_id: str,
     step: str,
     section_id: str,
     body: SectionRegenerateRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """특정 섹션만 AI로 재생성 (§12-4-1).
@@ -347,12 +403,12 @@ async def regenerate_section(
                 proposal_id=proposal_id,
                 section_id=section_id,
                 action="regenerate",
-                user_id=user.get("id"),
+                user_id=user.id,
             )
         except Exception:
             pass
 
-        logger.info(f"섹션 재생성: proposal={proposal_id}, section={section_id}, user={user.get('id')}")
+        logger.info(f"섹션 재생성: proposal={proposal_id}, section={section_id}, user={user.id}")
 
         # GAP-4: artifacts 버전 기록 (ai_regenerate)
         try:
@@ -371,7 +427,7 @@ async def regenerate_section(
                 "content": json.dumps(result, ensure_ascii=False)[:50000],
                 "change_source": "ai_regenerate",
                 "change_summary": f"{section_title} AI 재생성 v{next_ver}",
-                "created_by": user.get("id"),
+                "created_by": user.id,
             }).execute()
         except Exception as e:
             logger.warning(f"아티팩트 버전 저장 실패 (무시): {e}")
@@ -394,11 +450,11 @@ class AiAssistRequest(BaseModel):
     context: str = ""  # 주변 컨텍스트 (선택)
 
 
-@router.post("/{proposal_id}/ai-assist")
+@router.post("/{proposal_id}/ai-assist", response_model=AiAssistResponse)
 async def ai_assist(
     proposal_id: str,
     body: AiAssistRequest,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """에디터에서 선택한 텍스트에 대한 AI 개선 제안 (§12-4-2)."""
@@ -447,12 +503,17 @@ async def ai_assist(
 async def download_docx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
-    _access=Depends(require_project_access),
+    user: CurrentUser = Depends(get_current_user),
+    version: int | None = None,
+    _access = Depends(require_project_access),
 ):
-    """DOCX 다운로드 (중간 버전 포함) + Storage 업로드 (§8 finally 패턴)."""
+    """DOCX 다운로드 (중간 버전 포함) + Storage 업로드 (§8 finally 패턴).
+
+    Phase 3-2: ?version=N 쿼리 파라미터 지원 (없으면 최신)
+    """
     from app.api.routes_workflow import _get_graph
     from app.services.docx_builder import build_docx
+    from app.utils.supabase_client import get_async_client
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -462,9 +523,35 @@ async def download_docx(
         raise PropNotFoundError(proposal_id)
 
     state = snapshot.values
-    sections = state.get("proposal_sections", [])
-    rfp = state.get("rfp_analysis")
     proposal_name = state.get("project_name", "제안서")
+
+    # Phase 3-2: 버전 지정시 해당 버전의 artifact 로드 (Issue #5 fix: use step not output_key)
+    if version:
+        try:
+            client = await get_async_client()
+            artifact_row = await (
+                client.table("artifacts")
+                .select("content, version")
+                .eq("proposal_id", proposal_id)
+                .eq("step", "proposal")
+                .eq("version", version)
+                .single()
+                .execute()
+            )
+            if artifact_row.data:
+                sections = artifact_row.data.get("content", [])
+                artifact_version = artifact_row.data.get("version", version)
+            else:
+                raise PropNotFoundError(f"Version {version} not found")
+        except Exception as e:
+            logger.warning(f"[{proposal_id}] Version {version} artifact 로드 실패: {e}")
+            raise PropNotFoundError(f"Version {version} not found")
+    else:
+        # 기본: 최신 그래프 상태
+        sections = state.get("proposal_sections", [])
+        artifact_version = 1
+
+    rfp = state.get("rfp_analysis")
 
     if not sections:
         return Response(
@@ -482,11 +569,12 @@ async def download_docx(
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     )
 
-    filename = f"{proposal_name}_제안서.docx"
+    # Phase 3-1: 버전+날짜 포함 파일명
+    _, disposition = _format_download_filename(proposal_name, "docx", artifact_version)
     return Response(
         content=docx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": disposition},
     )
 
 
@@ -494,10 +582,13 @@ async def download_docx(
 async def download_hwpx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
-    _access=Depends(require_project_access),
+    user: CurrentUser = Depends(get_current_user),
+    _access = Depends(require_project_access),
 ):
-    """HWPX 다운로드 (hwpxskill 기반 템플릿 조립)."""
+    """HWPX 다운로드 (hwpxskill 기반 템플릿 조립).
+
+    Phase 3-1: 버전+날짜 포함 파일명
+    """
     import tempfile
     from pathlib import Path
 
@@ -545,11 +636,12 @@ async def download_hwpx(
         proposal_id, hwpx_bytes, "hwpx", "application/zip",
     )
 
-    filename = f"{proposal_name}_제안서.hwpx"
+    # Phase 3-1: 버전+날짜 포함 파일명
+    _, disposition = _format_download_filename(proposal_name, "hwpx", 1)
     return Response(
         content=hwpx_bytes,
         media_type="application/hwp+zip",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": disposition},
     )
 
 
@@ -557,10 +649,13 @@ async def download_hwpx(
 async def download_pptx(
     proposal_id: str,
     background_tasks: BackgroundTasks,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
-    """PPTX 다운로드 — 컨설팅급(ppt_storyboard) 또는 경량(ppt_slides) 폴백 + Storage 업로드."""
+    """PPTX 다운로드 — 컨설팅급(ppt_storyboard) 또는 경량(ppt_slides) 폴백 + Storage 업로드.
+
+    Phase 3-1: 버전+날짜 포함 파일명
+    """
     from app.api.routes_workflow import _get_graph
 
     graph = await _get_graph()
@@ -609,18 +704,219 @@ async def download_pptx(
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     )
 
-    filename = f"{proposal_name}_발표자료.pptx"
+    # Phase 3-1: 버전+날짜 포함 파일명
+    _, disposition = _format_download_filename(proposal_name, "pptx", 1)
     return Response(
         content=pptx_bytes,
         media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": disposition},
     )
 
 
-@router.get("/{proposal_id}/compliance")
+@router.get("/{proposal_id}/download/cost-sheet")
+async def download_cost_sheet(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """산출내역서 DOCX 다운로드 — bid_plan + plan_price 데이터 기반."""
+    from app.api.routes_workflow import _get_graph
+    from app.config import settings
+    from app.services.cost_sheet_builder import build_cost_sheet
+
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+
+    snapshot = await graph.aget_state(config)
+    if not snapshot:
+        raise PropNotFoundError(proposal_id)
+
+    state = snapshot.values
+    bid_plan = state.get("bid_plan")
+    plan = state.get("plan") or {}
+    rfp = state.get("rfp_analysis")
+    proposal_name = state.get("project_name", "제안서")
+
+    bid_plan_data = bid_plan.model_dump() if hasattr(bid_plan, "model_dump") else (bid_plan or {})
+    plan_price_data = plan.get("bid_price", {}) if isinstance(plan, dict) else {}
+
+    # RFP 정보
+    client = ""
+    if rfp:
+        client = rfp.client if hasattr(rfp, "client") else rfp.get("client", "") if isinstance(rfp, dict) else ""
+
+    cost_standard = bid_plan_data.get("cost_breakdown", {}).get("cost_standard", "KOSA")
+    if not cost_standard:
+        cost_standard = "KOSA"
+
+    buf = build_cost_sheet(
+        project_name=proposal_name,
+        client=client,
+        proposer_name=settings.proposer_name or "TENOPA",
+        bid_plan_data=bid_plan_data,
+        plan_price_data=plan_price_data,
+        cost_standard=cost_standard,
+    )
+
+    cost_bytes = buf.read()
+
+    # 아카이브 등록 (산출내역서)
+    try:
+        from app.services.project_archive_service import archive_binary_artifact
+        await archive_binary_artifact(
+            proposal_id,
+            doc_type="cost_sheet",
+            category="bidding",
+            title="산출내역서",
+            file_format="docx",
+            file_bytes=cost_bytes,
+            storage_subpath="bidding/cost_sheet.docx",
+            graph_step="cost_sheet",
+            source="ai",
+        )
+    except Exception as e:
+        logger.warning(f"[{proposal_id}] 산출내역서 archive 등록 실패: {e}")
+
+    # Issue #6 fix: Use RFC 5987 encoding for Korean filename
+    _, disposition = _format_download_filename(proposal_name, "docx", 1)
+    return Response(
+        content=cost_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": disposition},
+    )
+
+
+@router.get("/{proposal_id}/cost-sheet/draft", response_model=CostSheetDraftResponse)
+async def get_cost_sheet_draft(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """산출내역서 초안 데이터 — 프론트엔드 편집용 JSON 반환."""
+    from app.api.routes_workflow import _get_graph
+    from app.config import settings
+
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+    snapshot = await graph.aget_state(config)
+    if not snapshot:
+        raise PropNotFoundError(proposal_id)
+
+    state = snapshot.values
+    bid_plan = state.get("bid_plan")
+    plan = state.get("plan") or {}
+    rfp = state.get("rfp_analysis")
+
+    bid_plan_data = bid_plan.model_dump() if hasattr(bid_plan, "model_dump") else (bid_plan or {})
+    plan_price = plan.get("bid_price", {}) if isinstance(plan, dict) else {}
+
+    cost_breakdown = bid_plan_data.get("cost_breakdown", {})
+    labor_cost = plan_price.get("labor_cost", {})
+    labor_breakdown = labor_cost.get("breakdown", [])
+    direct_expenses = plan_price.get("direct_expenses", {})
+    overhead = plan_price.get("overhead", {})
+    profit = plan_price.get("profit", {})
+
+    client = ""
+    if rfp:
+        client = rfp.client if hasattr(rfp, "client") else rfp.get("client", "") if isinstance(rfp, dict) else ""
+
+    cost_standard = cost_breakdown.get("cost_standard", plan_price.get("cost_standard", "KOSA")) or "KOSA"
+
+    return {
+        "project_name": state.get("project_name", ""),
+        "client": client,
+        "proposer_name": settings.proposer_name or "TENOPA",
+        "cost_standard": cost_standard,
+        "labor_breakdown": labor_breakdown,
+        "labor_total": labor_cost.get("total", cost_breakdown.get("direct_labor", 0)),
+        "expense_items": direct_expenses.get("items", []),
+        "expense_total": direct_expenses.get("total", 0),
+        "overhead_rate": overhead.get("rate", 1.10) if isinstance(overhead, dict) else 1.10,
+        "overhead_total": overhead.get("total", 0) if isinstance(overhead, dict) else 0,
+        "profit_rate": profit.get("rate", 0.22) if isinstance(profit, dict) else 0.22,
+        "profit_total": profit.get("total", 0) if isinstance(profit, dict) else 0,
+        "total_cost": plan_price.get("total_cost", bid_plan_data.get("recommended_bid", 0)),
+        "budget_narrative": plan_price.get("budget_narrative", []),
+    }
+
+
+class CostSheetGenerateRequest(BaseModel):
+    """산출내역서 편집 후 DOCX 생성 요청."""
+    project_name: str = ""
+    client: str = ""
+    proposer_name: str = ""
+    cost_standard: str = "KOSA"
+    labor_breakdown: list[dict] = []
+    expense_items: list[dict] = []
+    overhead_rate: float = 1.10
+    profit_rate: float = 0.22
+    budget_narrative: list[dict] = []
+
+
+@router.post("/{proposal_id}/cost-sheet/generate")
+async def generate_cost_sheet(
+    proposal_id: str,
+    body: CostSheetGenerateRequest,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """편집된 산출내역서 데이터로 DOCX 생성·다운로드."""
+    from app.services.cost_sheet_builder import build_cost_sheet
+
+    # 편집된 데이터에서 합계 재계산
+    labor_total = sum(
+        item.get("subtotal", item.get("amount", 0)) for item in body.labor_breakdown
+    )
+    expense_total = sum(item.get("amount", 0) for item in body.expense_items)
+
+    overhead_rate = body.overhead_rate if body.overhead_rate < 2 else body.overhead_rate - 1
+    overhead_total = int(labor_total * overhead_rate)
+    profit_total = int((labor_total + overhead_total) * body.profit_rate)
+
+    subtotal = labor_total + expense_total + overhead_total + profit_total
+    vat = int(subtotal * 0.10)
+    total_cost = subtotal + vat
+
+    plan_price_data = {
+        "cost_standard": body.cost_standard,
+        "labor_cost": {
+            "breakdown": body.labor_breakdown,
+            "total": labor_total,
+        },
+        "direct_expenses": {
+            "items": body.expense_items,
+            "total": expense_total,
+        },
+        "overhead": {"rate": body.overhead_rate, "total": overhead_total},
+        "profit": {"rate": body.profit_rate, "total": profit_total},
+        "total_cost": total_cost,
+        "budget_narrative": body.budget_narrative,
+    }
+
+    buf = build_cost_sheet(
+        project_name=body.project_name,
+        client=body.client,
+        proposer_name=body.proposer_name,
+        bid_plan_data={},
+        plan_price_data=plan_price_data,
+        cost_standard=body.cost_standard,
+    )
+
+    # Issue #6 fix: Use RFC 5987 encoding for Korean filename
+    project_name = body.project_name or '제안서'
+    _, disposition = _format_download_filename(project_name, "docx", 1)
+    return Response(
+        content=buf.read(),
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": disposition},
+    )
+
+
+@router.get("/{proposal_id}/compliance", response_model=ComplianceMatrixResponse)
 async def get_compliance_matrix(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """Compliance Matrix 현재 상태."""
@@ -654,10 +950,10 @@ async def get_compliance_matrix(
     }
 
 
-@router.post("/{proposal_id}/compliance/check")
+@router.post("/{proposal_id}/compliance/check", response_model=ComplianceCheckResponse)
 async def run_compliance_check(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """Compliance Matrix AI 체크 실행."""
@@ -686,3 +982,288 @@ async def run_compliance_check(
         "checked": len(data),
         "message": f"Compliance 체크 완료: {len(data)}개 항목",
     }
+
+
+# ── Phase 1: Artifact Versioning ──
+
+
+@router.get("/{proposal_id}/artifact-versions")
+async def get_artifact_versions(
+    proposal_id: str,
+    current_user: CurrentUser = Depends(get_current_user),
+    _: None = Depends(require_project_access),
+):
+    """
+    모든 산출물 버전 조회.
+
+    Returns:
+        {
+            "versions": [
+                {
+                    "node_name": str,
+                    "output_key": str,
+                    "version": int,
+                    "created_at": str,
+                    "created_by": str,
+                    "is_active": bool,
+                    "is_deprecated": bool,
+                    "used_by": list[dict],
+                    "created_reason": str
+                }
+            ],
+            "count": int
+        }
+    """
+    from app.utils.supabase_client import supabase_async
+
+    try:
+        result = (
+            await supabase_async.table("proposal_artifacts")
+            .select("*")
+            .eq("proposal_id", proposal_id)
+            .order("node_name")
+            .order("output_key")
+            .order("version", desc=True)
+            .execute()
+        )
+
+        return {
+            "versions": result.data,
+            "count": len(result.data),
+        }
+    except Exception as e:
+        logger.error(f"버전 조회 실패: {e}")
+        raise
+
+
+@router.post("/{proposal_id}/validate-move")
+async def validate_node_move(
+    proposal_id: str,
+    data: dict[str, Any],
+    current_user: CurrentUser = Depends(get_current_user),
+    _: None = Depends(require_project_access),
+):
+    """
+    노드 이동 검증 및 버전 충돌 감지.
+
+    Request:
+        {
+            "target_node": str,
+            "state": dict  # current workflow state
+        }
+
+    Returns:
+        {
+            "can_move": bool,
+            "conflicts": [...],
+            "dependency_level": str,
+            "message": str,
+            "downstream_impact": list[str]
+        }
+    """
+    from app.graph.graph import build_graph
+    from app.services.version_manager import validate_move_and_resolve_versions
+
+    try:
+        target_node = data.get("target_node")
+        if not target_node:
+            from app.exceptions import TenopAPIError as _TenopErr
+            raise _TenopErr(
+                status_code=400,
+                error_code="INVALID_REQUEST",
+                message="target_node 필수",
+            )
+
+        # Get current state from graph (Issue #2 fix: use _get_graph with checkpointer)
+        from app.api.routes_workflow import _get_graph
+        graph = await _get_graph()
+        config = {"configurable": {"thread_id": proposal_id}}
+        snapshot = await graph.aget_state(config)
+
+        if not snapshot:
+            return {
+                "error": f"Proposal {proposal_id} not found",
+                "can_move": False,
+            }
+
+        state = snapshot.values
+
+        # Validate move
+        result = await validate_move_and_resolve_versions(
+            proposal_id=proposal_id,
+            target_node=target_node,
+            state=state,
+        )
+
+        return result.model_dump()
+
+    except Exception as e:
+        logger.error(f"이동 검증 실패: {e}")
+        return {
+            "can_move": False,
+            "error": str(e),
+        }
+
+
+@router.post("/{proposal_id}/check-node-move/{target_node}")
+async def check_node_move(
+    proposal_id: str,
+    target_node: str,
+    current_user: CurrentUser = Depends(get_current_user),
+    _: None = Depends(require_project_access),
+):
+    """
+    노드 이동 가능 여부 사전 확인 (모달 표시 전).
+
+    Returns:
+        {
+            "can_move": bool,
+            "needs_modal": bool,
+            "message": str,
+            "conflicts": [...]
+        }
+    """
+    from app.api.routes_workflow import _get_graph
+    from app.services.version_manager import check_node_move_feasibility
+
+    try:
+        # Get current state (Issue #2 fix: use _get_graph with checkpointer)
+        graph = await _get_graph()
+        config = {"configurable": {"thread_id": proposal_id}}
+        snapshot = await graph.aget_state(config)
+
+        if not snapshot:
+            return {
+                "can_move": False,
+                "needs_modal": False,
+                "message": f"Proposal {proposal_id} not found",
+            }
+
+        state = snapshot.values
+
+        # Check feasibility
+        result = await check_node_move_feasibility(
+            proposal_id=proposal_id,
+            target_node=target_node,
+            state=state,
+        )
+
+        return result
+
+    except Exception as e:
+        logger.error(f"이동 가능 여부 확인 실패: {e}")
+        return {
+            "can_move": False,
+            "needs_modal": False,
+            "message": str(e),
+        }
+
+
+class MoveToNodeRequest(BaseModel):
+    """노드 이동 요청 — 버전 선택 포함."""
+    selected_versions: dict[str, int] = {}  # {f"{node_name}_{output_key}": version}
+
+
+@router.post("/{proposal_id}/move-to-node/{target_node}")
+async def move_to_node(
+    proposal_id: str,
+    target_node: str,
+    request: MoveToNodeRequest,
+    current_user: CurrentUser = Depends(get_current_user),
+    _: None = Depends(require_project_access),
+):
+    """
+    선택한 버전으로 상태를 업데이트하고 특정 노드로 그래프 실행을 재개.
+
+    Process:
+    1. 이동 가능 여부 검증 (validate_move_and_resolve_versions)
+    2. selected_versions로 active_versions 상태 업데이트
+    3. version_selection_history에 이력 추가
+    4. 그래프 ainvoke로 target_node 실행
+
+    Request body:
+        {
+            "selected_versions": {"rfp_analysis": 2, "strategy": 1}
+        }
+    """
+    from datetime import datetime
+
+    from app.api.routes_workflow import _get_graph
+    from app.exceptions import TenopAPIError
+    from app.services.version_manager import validate_move_and_resolve_versions
+
+    # Issue #2 fix: use _get_graph with checkpointer
+    graph = await _get_graph()
+    config = {"configurable": {"thread_id": proposal_id}}
+
+    try:
+        snapshot = await graph.aget_state(config)
+        if not snapshot:
+            raise TenopAPIError(
+                status_code=404,
+                error_code="PROPOSAL_NOT_FOUND",
+                message=f"Proposal {proposal_id}를 찾을 수 없습니다.",
+            )
+
+        state = snapshot.values
+
+        # 1. 이동 가능 여부 검증
+        validation = await validate_move_and_resolve_versions(
+            proposal_id=proposal_id,
+            target_node=target_node,
+            state=state,
+        )
+
+        if not validation.can_move:
+            raise TenopAPIError(
+                status_code=400,
+                error_code="MOVE_VALIDATION_FAILED",
+                message=validation.message or "노드 이동 검증 실패",
+            )
+
+        # 2. selected_versions로 active_versions 업데이트
+        existing_active = state.get("active_versions", {})
+        merged_active = {**existing_active, **request.selected_versions}
+
+        # 3. version_selection_history 이력 추가
+        history_entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "from_node": state.get("current_step", ""),
+            "to_node": target_node,
+            "choices": request.selected_versions,
+            "selected": request.selected_versions,
+            "decided_by": current_user.id,
+        }
+
+        state_update = {
+            "active_versions": merged_active,
+            "version_selection_history": [history_entry],
+            "current_step": target_node,
+        }
+        if request.selected_versions:
+            state_update["selected_versions"] = request.selected_versions
+
+        await graph.aupdate_state(config, state_update)
+
+        logger.info(
+            f"[MOVE_TO_NODE] proposal={proposal_id}, target={target_node}, "
+            f"versions={request.selected_versions}, user={current_user.id}"
+        )
+
+        return {
+            "success": True,
+            "proposal_id": proposal_id,
+            "target_node": target_node,
+            "selected_versions": request.selected_versions,
+            "message": f"'{target_node}' 노드로 이동 준비 완료. 워크플로를 재개하세요.",
+        }
+
+    except TenopAPIError:
+        raise
+    except Exception as e:
+        logger.error(f"노드 이동 실패: {e}", exc_info=True)
+        raise TenopAPIError(
+            status_code=500,
+            error_code="MOVE_FAILED",
+            message=f"노드 이동 중 오류가 발생했습니다: {e}",
+        )

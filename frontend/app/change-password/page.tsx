@@ -36,7 +36,9 @@ export default function ChangePasswordPage() {
       router.push("/proposals");
       router.refresh();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "비밀번호 변경에 실패했습니다.");
+      setError(
+        err instanceof Error ? err.message : "비밀번호 변경에 실패했습니다.",
+      );
     } finally {
       setLoading(false);
     }
@@ -46,11 +48,17 @@ export default function ChangePasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-          <span className="text-[#ededed] font-semibold text-sm">Proposal Architect</span>
+          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">
+            PA
+          </div>
+          <span className="text-[#ededed] font-semibold text-sm">
+            Proposal Coworker
+          </span>
         </div>
 
-        <h2 className="text-xl font-semibold text-[#ededed] mb-1">비밀번호 변경</h2>
+        <h2 className="text-xl font-semibold text-[#ededed] mb-1">
+          비밀번호 변경
+        </h2>
         <p className="text-sm text-[#8c8c8c] mb-6">
           보안을 위해 임시 비밀번호를 변경해 주세요.
         </p>
@@ -63,7 +71,9 @@ export default function ChangePasswordPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#ededed] mb-1.5">현재 비밀번호</label>
+            <label className="block text-sm font-medium text-[#ededed] mb-1.5">
+              현재 비밀번호
+            </label>
             <input
               type="password"
               required
@@ -75,7 +85,9 @@ export default function ChangePasswordPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#ededed] mb-1.5">새 비밀번호</label>
+            <label className="block text-sm font-medium text-[#ededed] mb-1.5">
+              새 비밀번호
+            </label>
             <input
               type="password"
               required
@@ -88,7 +100,9 @@ export default function ChangePasswordPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#ededed] mb-1.5">새 비밀번호 확인</label>
+            <label className="block text-sm font-medium text-[#ededed] mb-1.5">
+              새 비밀번호 확인
+            </label>
             <input
               type="password"
               required

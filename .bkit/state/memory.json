@@ -1,11 +1,29 @@
 {
-  "sessionCount": 88,
+  "sessionCount": 93,
   "lastSession": {
-    "startedAt": "2026-03-18T00:00:00.000Z",
+    "startedAt": "2026-04-01T00:22:07.832Z",
     "platform": "claude",
-    "level": "Dynamic"
+    "level": "Enterprise"
   },
   "phase": "archived",
-  "matchRate": 92,
-  "feature": "frontend-gaps"
+  "matchRate": 93,
+  "feature": "db-migration-automation",
+  "archivedFeatures": {
+    "intranet-kb-migration": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 4,
+      "startedAt": "2026-03-26T00:00:00.000Z",
+      "archivedAt": "2026-03-27T00:00:00.000Z",
+      "archivedTo": "docs/archive/2026-03/intranet-kb-migration/"
+    },
+    "db-migration-automation": {
+      "phase": "archived",
+      "matchRate": 93,
+      "iterationCount": 1,
+      "startedAt": "2026-03-30T00:00:00.000Z",
+      "archivedAt": "2026-03-30T18:03:00.000Z",
+      "archivedTo": "docs/archive/2026-03/db-migration-automation/"
+    }
+  }
 }

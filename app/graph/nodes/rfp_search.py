@@ -103,8 +103,8 @@ async def rfp_search(state: ProposalState) -> dict:
                 prompt_version=0,
                 prompt_hash=hashlib.sha256(prompt[:500].encode()).hexdigest(),
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"프롬프트 트래커 기록 실패 (무시): {e}")
 
     recommendations = result if isinstance(result, list) else result.get("recommendations", [result])
 

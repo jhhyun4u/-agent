@@ -10,8 +10,9 @@
  * - 변경 이력
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { api, type ComplianceItem } from "@/lib/api";
+import AiSuggestionDiff from "@/components/AiSuggestionDiff";
 
 // ── 타입 ──
 
@@ -46,6 +47,7 @@ interface EditorAiPanelProps {
   kbReferences: KbReference[];
   changes: ChangeEntry[];
   activeSectionId?: string | null;
+  currentContent?: string;
   onApplySuggestion?: (html: string) => void;
   className?: string;
 }
@@ -57,13 +59,14 @@ export default function EditorAiPanel({
   kbReferences,
   changes,
   activeSectionId,
+  currentContent,
   onApplySuggestion,
   className = "",
 }: EditorAiPanelProps) {
   // 충족률 계산
   const total = complianceItems.length;
   const met = complianceItems.filter(
-    (i) => i.status === "met" || i.status === "partial"
+    (i) => i.status === "met" || i.status === "partial",
   ).length;
   const rate = total > 0 ? Math.round((met / total) * 100) : 0;
 
@@ -81,22 +84,45 @@ export default function EditorAiPanel({
   const [regenLoading, setRegenLoading] = useState(false);
   const [regenResult, setRegenResult] = useState("");
 
+  // AI 응답 대기 경과 시간
+  const [aiElapsed, setAiElapsed] = useState(0);
+  const aiTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (aiTimerRef.current) clearInterval(aiTimerRef.current);
+    };
+  }, []);
+
   const handleAiAssist = useCallback(async () => {
     if (!aiQuery.trim()) return;
     setAiLoading(true);
     setAiError("");
     setAiResult(null);
+    setAiElapsed(0);
+    aiTimerRef.current = setInterval(
+      () => setAiElapsed((prev) => prev + 1),
+      1000,
+    );
     try {
       const result = await api.artifacts.aiAssist(
         proposalId,
         aiQuery,
         aiMode,
-        activeSectionId ?? ""
+        activeSectionId ?? "",
       );
-      setAiResult({ suggestion: result.suggestion, explanation: result.explanation });
+      setAiResult({
+        suggestion: result.suggestion,
+        explanation: result.explanation,
+      });
     } catch (e) {
       setAiError(e instanceof Error ? e.message : "AI 요청 실패");
     } finally {
+      if (aiTimerRef.current) {
+        clearInterval(aiTimerRef.current);
+        aiTimerRef.current = null;
+      }
       setAiLoading(false);
     }
   }, [proposalId, aiQuery, aiMode, activeSectionId]);
@@ -105,17 +131,34 @@ export default function EditorAiPanel({
     if (!activeSectionId) return;
     setRegenLoading(true);
     setRegenResult("");
+    setAiElapsed(0);
+    aiTimerRef.current = setInterval(
+      () => setAiElapsed((prev) => prev + 1),
+      1000,
+    );
     try {
       const result = await api.artifacts.regenerateSection(
         proposalId,
         "proposal",
         activeSectionId,
-        aiQuery || ""
+        aiQuery || "",
       );
       setRegenResult(`${result.section_title} 재생성 완료`);
+      // 프롬프트 수정 추적: 섹션 재생성
+      api.prompts
+        .recordEditAction({
+          proposal_id: proposalId,
+          section_id: activeSectionId,
+          action: "regenerate",
+        })
+        .catch(() => {});
     } catch (e) {
       setRegenResult(e instanceof Error ? e.message : "재생성 실패");
     } finally {
+      if (aiTimerRef.current) {
+        clearInterval(aiTimerRef.current);
+        aiTimerRef.current = null;
+      }
       setRegenLoading(false);
     }
   }, [proposalId, activeSectionId, aiQuery]);
@@ -141,8 +184,8 @@ export default function EditorAiPanel({
                   rate >= 80
                     ? "bg-[#3ecf8e]"
                     : rate >= 60
-                    ? "bg-amber-500"
-                    : "bg-red-500"
+                      ? "bg-amber-500"
+                      : "bg-red-500"
                 }`}
                 style={{ width: `${rate}%` }}
               />
@@ -164,9 +207,7 @@ export default function EditorAiPanel({
                 >
                   <span>{check.met ? "✅" : "⚠️"}</span>
                   <span
-                    className={
-                      check.met ? "text-[#8c8c8c]" : "text-amber-400"
-                    }
+                    className={check.met ? "text-[#8c8c8c]" : "text-amber-400"}
                   >
                     {check.label}
                   </span>
@@ -205,10 +246,7 @@ export default function EditorAiPanel({
             </h3>
             <div className="space-y-1 px-3">
               {changes.slice(0, 10).map((entry, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2 text-[10px]"
-                >
+                <div key={idx} className="flex items-start gap-2 text-[10px]">
                   <span className="text-[#5c5c5c] shrink-0">{entry.time}</span>
                   <span className="text-[#8c8c8c]">{entry.description}</span>
                 </div>
@@ -264,7 +302,7 @@ export default function EditorAiPanel({
             disabled={aiLoading || !aiQuery.trim()}
             className="flex-1 py-1.5 text-[10px] font-semibold rounded-lg bg-[#3ecf8e] text-[#0f0f0f] hover:bg-[#3ecf8e]/90 disabled:opacity-40 transition-colors"
           >
-            {aiLoading ? "처리 중..." : "AI 제안"}
+            {aiLoading ? `분석 중 (${aiElapsed}s)` : "AI 제안"}
           </button>
           {activeSectionId && (
             <button
@@ -277,26 +315,56 @@ export default function EditorAiPanel({
           )}
         </div>
 
-        {/* AI 결과 */}
-        {aiResult && (
+        {/* AI 대기 표시 */}
+        {(aiLoading || regenLoading) && (
+          <div className="flex items-center gap-2 py-1">
+            <div className="w-3 h-3 border-2 border-[#262626] border-t-[#3ecf8e] rounded-full animate-spin shrink-0" />
+            <span className="text-[10px] text-[#8c8c8c]">
+              AI 분석 중... {aiElapsed}초{" "}
+              <span className="text-[#5c5c5c]">(보통 5~15초)</span>
+            </span>
+          </div>
+        )}
+
+        {/* AI 결과 — 인라인 diff */}
+        {aiResult && currentContent && onApplySuggestion ? (
+          <AiSuggestionDiff
+            original={currentContent}
+            suggestion={aiResult.suggestion}
+            explanation={aiResult.explanation}
+            onAccept={() => {
+              onApplySuggestion(aiResult.suggestion);
+              api.prompts
+                .recordEditAction({
+                  proposal_id: proposalId,
+                  section_id: activeSectionId ?? "full_proposal",
+                  action: "accept",
+                  original: currentContent.slice(0, 5000),
+                  edited: aiResult.suggestion.slice(0, 5000),
+                })
+                .catch(() => {});
+            }}
+            onReject={() => {
+              setAiResult(null);
+              api.prompts
+                .recordEditAction({
+                  proposal_id: proposalId,
+                  section_id: activeSectionId ?? "full_proposal",
+                  action: "reject",
+                  original: currentContent.slice(0, 5000),
+                })
+                .catch(() => {});
+            }}
+          />
+        ) : aiResult ? (
           <div className="bg-[#111111] border border-[#3ecf8e]/20 rounded-lg px-2.5 py-2 space-y-1.5">
             <p className="text-[10px] text-[#8c8c8c]">{aiResult.explanation}</p>
             <div className="text-[10px] text-[#ededed] leading-relaxed max-h-24 overflow-y-auto whitespace-pre-wrap">
               {aiResult.suggestion}
             </div>
-            {onApplySuggestion && (
-              <button
-                onClick={() => onApplySuggestion(aiResult.suggestion)}
-                className="text-[9px] text-[#3ecf8e] hover:underline"
-              >
-                제안 적용
-              </button>
-            )}
           </div>
-        )}
-        {aiError && (
-          <p className="text-[10px] text-red-400">{aiError}</p>
-        )}
+        ) : null}
+        {aiError && <p className="text-[10px] text-red-400">{aiError}</p>}
         {regenResult && (
           <p className="text-[10px] text-[#3ecf8e]">{regenResult}</p>
         )}

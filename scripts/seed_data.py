@@ -151,6 +151,34 @@ async def seed():
             "created_by": users[3]["id"],
         },
     ]
+
+    # v4.0: 자격·인증·등록 시드 (Go/No-Go 자격 적격성 자동 대조용)
+    qualification_caps = [
+        {"org_id": org_id, "type": "certification", "title": "ISO 27001",
+         "detail": "정보보안 경영시스템 인증", "keywords": ["ISO", "27001", "ISMS"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "certification", "title": "ISO 9001",
+         "detail": "품질경영시스템 인증", "keywords": ["ISO", "9001", "품질"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "certification", "title": "ISMS-P",
+         "detail": "정보보호 및 개인정보보호 관리체계 인증", "keywords": ["ISMS", "개인정보", "ISMS-P"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "certification", "title": "GS인증",
+         "detail": "Good Software 인증 (1등급)", "keywords": ["GS", "소프트웨어", "품질인증", "GS인증"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "license", "title": "소프트웨어사업자 신고",
+         "detail": "소프트웨어산업진흥법 기반 신고", "keywords": ["소프트웨어사업자", "SW사업자"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "license", "title": "정보통신공사업 등록",
+         "detail": "정보통신공사업법 기반 등록", "keywords": ["정보통신공사", "통신공사"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "license", "title": "정보보호 전문서비스 기업",
+         "detail": "KISA 지정 정보보호 전문서비스 기업", "keywords": ["정보보호", "전문서비스", "KISA"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "registration", "title": "벤처기업 확인",
+         "detail": "중소벤처기업부 벤처기업 확인서", "keywords": ["벤처", "벤처기업"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "registration", "title": "중소기업 확인",
+         "detail": "중소기업확인서", "keywords": ["중소기업"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "certification", "title": "SW품질인증",
+         "detail": "소프트웨어 프로세스 품질인증", "keywords": ["SW", "품질", "프로세스", "SW품질인증"], "created_by": users[3]["id"]},
+        {"org_id": org_id, "type": "registration", "title": "여성기업 확인",
+         "detail": "여성기업확인서", "keywords": ["여성기업"], "created_by": users[3]["id"]},
+    ]
+    capabilities.extend(qualification_caps)
+
     for cap in capabilities:
         try:
             await client.table("capabilities").insert(cap).execute()

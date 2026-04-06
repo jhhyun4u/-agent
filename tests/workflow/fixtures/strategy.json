@@ -1,0 +1,36 @@
+{
+  "positioning_rationale": "방어적 포지셔닝: 기존 관계 활용 + 기술 차별화",
+  "alternatives": [
+    {
+      "alt_id": "ALT-1",
+      "ghost_theme": "경쟁사는 클라우드 전환 경험이 부족하여 리스크가 높습니다",
+      "win_theme": "검증된 클라우드 전환 방법론으로 안정적 구축 보장",
+      "action_forcing_event": "클라우드 전환 의무화 시점",
+      "key_messages": ["검증된 방법론", "성공 사례 3건", "24/7 운영 지원"],
+      "price_strategy": {"approach": "적정가격", "rationale": "품질 대비 합리적 가격"},
+      "risk_assessment": {"risk": "일정 지연", "mitigation": "애자일 방법론 적용"}
+    },
+    {
+      "alt_id": "ALT-2",
+      "ghost_theme": "타사의 패키지 솔루션은 커스터마이징이 제한적입니다",
+      "win_theme": "맞춤형 솔루션으로 발주처 특화 요구사항 100% 반영",
+      "action_forcing_event": "레거시 시스템 EOL",
+      "key_messages": ["맞춤형 개발", "발주처 업무 이해", "통합 유지보수"],
+      "price_strategy": {"approach": "가치기반", "rationale": "맞춤형 가치 강조"},
+      "risk_assessment": {"risk": "범위 확대", "mitigation": "명확한 범위 정의"}
+    }
+  ],
+  "focus_areas": [
+    {"area": "클라우드 아키텍처", "description": "AWS/Azure 기반 하이브리드 클라우드"},
+    {"area": "데이터 마이그레이션", "description": "무중단 마이그레이션 방법론"}
+  ],
+  "competitor_analysis": {
+    "competitor": "대형 SI 업체",
+    "swot": {
+      "strengths": ["브랜드 인지도", "대규모 인력"],
+      "weaknesses": ["높은 단가", "경직된 프로세스"],
+      "opportunities": ["클라우드 전환 수요 증가"],
+      "threats": ["가격 덤핑 가능성"]
+    }
+  }
+}

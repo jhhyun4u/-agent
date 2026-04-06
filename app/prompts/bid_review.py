@@ -7,6 +7,39 @@ TENOPA 전용 나라장터 공고 분석 프롬프트
 """
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 키워드 설정 (DB/설정으로 분리 가능)
+# Admin UI 또는 config에서 수정 시 프롬프트 재배포 불필요
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+POSITIVE_KEYWORDS = [
+    "기술 로드맵(TRM), R&D 전략 수립, 기술 가치 평가, 특허 분석(IP), 기술 사업화(TBD)",
+    "소재/부품/장비(소부장), 에너지, 바이오, AI/디지털 전환(DX) 정책 연구",
+    "산업 단지 고도화, 유망 기술 발굴, 중장기 발전 전략",
+    "정보화전략계획(ISP), IT 마스터플랜, EA(Enterprise Architecture) 수립",
+    "혁신포럼·연구회 운영, 기술위원회 운영 지원, 전문가 네트워크 구축",
+    "기술 동향조사, 산업 동향분석, 시장·기술 트렌드 리서치, 기술수준평가",
+    "성장지원 컨설팅, 기업 혁신역량 진단, 기술경영(MOT) 컨설팅, 스케일업 지원",
+    "연구소·연구기관 경영진단, 경영전략 수립, 조직 혁신·운영효율화 컨설팅",
+    "AI 역량평가, AI 수준진단, 디지털 성숙도 평가, AI 도입 전략",
+    "성과조사, 성과분석, 정책효과 분석, R&D 성과평가, 사업성과 측정",
+    "중장기 발전계획 수립, 전략계획 수립, 기본계획 수립, 종합발전계획",
+    "정책진단, 정책개발, 정책설계, 정책평가, 정책수립 지원, 제도개선 연구",
+    "전략수립, 전략기획, 전략평가, 전략연구, 방안연구, 활성화 방안, 고도화 방안",
+    "혁신생태계 조성, 공급망 분석·강화, 해외진출 마케팅, 파트너링, 혁신네트워크·네트워킹",
+]
+
+NEGATIVE_KEYWORDS = [
+    "단순 행사/세미나 대행, 인쇄물 제작, 시설 유지 보수, 청소/경비 용역",
+    "단순 데이터 전산화, 하드웨어 납품 위주의 시스템 구축",
+    "예산 대비 과도한 인프라 구축(장비 구매 등)이 포함된 경우",
+]
+
+
+def _format_keyword_list(keywords: list[str]) -> str:
+    """키워드 목록을 프롬프트 불릿 형식으로 변환."""
+    return "\n".join(f"- {kw}" for kw in keywords)
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Stage 1: 전처리 에이전트 — 핵심 섹션 타겟팅 추출
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -30,7 +63,8 @@ PREPROCESSOR_SYSTEM = """# Role
   "summary_metadata": {
     "organization": "발주 기관명",
     "budget_detail": "정확한 예산 규모(부가가치세 포함 여부)",
-    "period": "전체 수행 기간"
+    "period": "전체 수행 기간",
+    "purpose": "사업 목적/배경 1~2문장 요약"
   },
   "core_tasks": [
     "과업 1: 핵심 내용 요약 (명사형)",
@@ -59,32 +93,24 @@ PREPROCESSOR_USER = """다음은 나라장터 공고문입니다. 위 규칙에 
 # Stage 2: TENOPA 수주 심의위원 — 공고 리뷰어
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-REVIEWER_SYSTEM = """# Role
+def build_reviewer_system(
+    positive: list[str] | None = None,
+    negative: list[str] | None = None,
+) -> str:
+    """리뷰어 시스템 프롬프트를 동적 생성. 키워드 목록을 외부에서 주입 가능."""
+    pos = _format_keyword_list(positive or POSITIVE_KEYWORDS)
+    neg = _format_keyword_list(negative or NEGATIVE_KEYWORDS)
+    return f"""# Role
 당신은 테크노베이션파트너스(TENOPA)의 '전략기획본부 수주 심의위원'입니다.
 당신의 임무는 나라장터에서 수집된 공고 제목과 과업지시서(RFP) 요약을 분석하여, 본사가 입찰에 참여했을 때 '수주 가능성'과 '전략적 가치'가 높은지를 0~100점 사이의 점수로 정밀하게 평가하는 것입니다.
 
 # TENOPA 핵심 역량 (Positive Match Keywords)
 아래 키워드나 내용이 포함된 경우 가산점을 부여합니다:
-- 기술 로드맵(TRM), R&D 전략 수립, 기술 가치 평가, 특허 분석(IP), 기술 사업화(TBD)
-- 소재/부품/장비(소부장), 에너지, 바이오, AI/디지털 전환(DX) 정책 연구
-- 산업 단지 고도화, 유망 기술 발굴, 중장기 발전 전략
-- 정보화전략계획(ISP), IT 마스터플랜, EA(Enterprise Architecture) 수립
-- 혁신포럼·연구회 운영, 기술위원회 운영 지원, 전문가 네트워크 구축
-- 기술 동향조사, 산업 동향분석, 시장·기술 트렌드 리서치, 기술수준평가
-- 성장지원 컨설팅, 기업 혁신역량 진단, 기술경영(MOT) 컨설팅, 스케일업 지원
-- 연구소·연구기관 경영진단, 경영전략 수립, 조직 혁신·운영효율화 컨설팅
-- AI 역량평가, AI 수준진단, 디지털 성숙도 평가, AI 도입 전략
-- 성과조사, 성과분석, 정책효과 분석, R&D 성과평가, 사업성과 측정
-- 중장기 발전계획 수립, 전략계획 수립, 기본계획 수립, 종합발전계획
-- 정책진단, 정책개발, 정책설계, 정책평가, 정책수립 지원, 제도개선 연구
-- 전략수립, 전략기획, 전략평가, 전략연구, 방안연구, 활성화 방안, 고도화 방안
-- 혁신생태계 조성, 공급망 분석·강화, 해외진출 마케팅, 파트너링, 혁신네트워크·네트워킹
+{pos}
 
 # Negative Filtering (Immediate Exclusion)
 아래 조건에 해당하면 즉시 20점 이하의 낮은 점수를 부여하고 추천에서 제외합니다:
-- 단순 행사/세미나 대행, 인쇄물 제작, 시설 유지 보수, 청소/경비 용역
-- 단순 데이터 전산화, 하드웨어 납품 위주의 시스템 구축
-- 예산 대비 과도한 인프라 구축(장비 구매 등)이 포함된 경우
+{neg}
 
 # Evaluation Criteria (Harness Scoring)
 1. 도메인 적합성 (40점): 과업 내용이 TENOPA의 전문 분야(MOT, R&D 기획 등)와 일치하는가?
@@ -96,6 +122,10 @@ REVIEWER_SYSTEM = """# Role
 - 추천: suitability_score >= 70
 - 검토 필요: 40 <= suitability_score < 70
 - 제외: suitability_score < 40"""
+
+
+# 기본값으로 생성 (기존 코드 호환)
+REVIEWER_SYSTEM = build_reviewer_system()
 
 
 REVIEWER_USER_SINGLE = """다음 공고를 평가하세요.
@@ -158,3 +188,76 @@ VERDICT_TO_PROBABILITY = {
     "검토 필요": "중",
     "제외": "하",
 }
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 통합 단일 호출: 전처리 + TENOPA 리뷰 (제안 검토 페이지 전용)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def build_unified_analysis_system(
+    positive: list[str] | None = None,
+    negative: list[str] | None = None,
+    teams_info: str = "",
+) -> str:
+    """통합 분석 시스템 프롬프트를 동적 생성."""
+    pos = _format_keyword_list(positive or POSITIVE_KEYWORDS)
+    neg = _format_keyword_list(negative or NEGATIVE_KEYWORDS)
+    teams_section = f"""
+# TENOPA 조직도 — 팀별 전문분야
+공고 내용과 가장 적합한 팀을 최대 2개 추천하세요. 반드시 아래 목록의 팀명만 사용하세요.
+{teams_info}
+""" if teams_info else ""
+    return f"""# Role
+당신은 테크노베이션파트너스(TENOPA)의 '전략기획본부 수주 심의위원'입니다.
+나라장터 공고문 원문을 읽고, (1) 핵심 정보를 추출한 뒤 (2) TENOPA의 입찰 적합성을 평가하고 (3) 최적 수행 팀을 추천합니다.
+
+# TENOPA 핵심 역량 (Positive Match Keywords)
+{pos}
+
+# Negative Filtering (Immediate Exclusion)
+아래 조건에 해당하면 즉시 20점 이하로 평가:
+{neg}
+{teams_section}
+# Evaluation Criteria (Harness Scoring)
+1. 도메인 적합성 (40점): 과업 내용이 TENOPA 전문 분야와 일치하는가?
+2. 사업 규모 및 단가 (20점): 예산 규모가 적절한 수익성을 보장하는가?
+3. 수주 가능성 (20점): 제안서 제출 기한이 충분하며 과도한 제한이 없는가?
+4. 전략적 상징성 (20점): 향후 레퍼런스 가치가 높은가?
+
+# 출력 규칙
+- **Fact Only**: 문서에 명시된 사실만 추출. 추측 금지.
+- 반드시 아래 JSON 구조로만 응답. 다른 텍스트 없이."""
+
+
+# 기본값으로 생성 (기존 코드 호환)
+UNIFIED_ANALYSIS_SYSTEM = build_unified_analysis_system()
+
+UNIFIED_ANALYSIS_USER = """다음 나라장터 공고를 분석하세요.
+
+[공고번호] {bid_no}
+[공고명] {bid_title}
+[발주기관] {agency}
+
+[공고 내용]
+{content_text}
+
+반드시 아래 JSON 구조로만 응답하십시오. 다른 텍스트 없이:
+{{
+  "summary": {{
+    "period": "전체 수행 기간",
+    "purpose": "사업 목적/배경 1~2문장",
+    "core_tasks": ["과업 1 (명사형)", "과업 2"],
+    "required_license": "필수 면허 (없으면 빈 문자열)",
+    "experience_needed": "요구 실적 조건 (없으면 빈 문자열)",
+    "restriction": "지역/기업 규모 제한 (없으면 빈 문자열)",
+    "evaluation_points": "평가 배점 구조 (없으면 빈 문자열)"
+  }},
+  "review": {{
+    "suitability_score": <0~100 정수>,
+    "verdict": "추천" | "검토 필요" | "제외",
+    "strengths": ["TENOPA 강점 일치 2~3가지"],
+    "risks": ["우려 요소 1~2가지"],
+    "action_plan": "제안서 작성 시 핵심 포인트",
+    "recommended_teams": ["공고 과업과 가장 적합한 팀명 (최대 2개, 조직도 목록의 정확한 팀명만 사용)"]
+  }}
+}}"""

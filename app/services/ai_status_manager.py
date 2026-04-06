@@ -9,11 +9,12 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Literal
 
+from app.config import settings
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
-HEARTBEAT_TIMEOUT = 60  # 초 (AGT-08)
+HEARTBEAT_TIMEOUT = settings.heartbeat_timeout_seconds  # (AGT-08)
 
 StatusType = Literal[
     "running", "complete", "error", "paused", "no_response", "waiting_approval"
@@ -123,10 +124,10 @@ class AiStatusManager:
         self._emit_status_change(proposal_id, "complete")
         return task
 
-    def fail_task(
+    async def fail_task(
         self, proposal_id: str, error_message: str
     ) -> dict[str, Any] | None:
-        """작업 오류 처리."""
+        """작업 오류 처리 + DB 자동 기록 (MON-04)."""
         task = self._statuses.get(proposal_id)
         if not task:
             return None
@@ -134,6 +135,17 @@ class AiStatusManager:
         task["error"] = error_message
         logger.error(f"AI 작업 오류: {proposal_id}/{task['step']}: {error_message}")
         self._emit_status_change(proposal_id, "error")
+
+        # MON-04: DB 자동 기록
+        duration_ms = int((time.time() - task.get("started_at", time.time())) * 1000)
+        await self.persist_log(
+            proposal_id=proposal_id,
+            step=task["step"],
+            status="error",
+            duration_ms=duration_ms,
+            error_message=error_message,
+        )
+
         return task
 
     def pause_task(self, proposal_id: str) -> dict[str, Any] | None:

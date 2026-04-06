@@ -25,8 +25,39 @@ def track_tokens(node_name: str):
             reset_usage_context()
             started_at = time.time()
 
-            result = await fn(state, *args, **kwargs)
+            try:
+                result = await fn(state, *args, **kwargs)
+            except Exception as exc:
+                # ── MON-03: 실패 시에도 토큰 사용량 + 에러 DB 기록 ──
+                duration_ms = int((time.time() - started_at) * 1000)
+                proposal_id = state.get("project_id", "")
+                logger.error(
+                    f"[NODE ERROR] {node_name}: {type(exc).__name__}: {exc}",
+                    exc_info=True,
+                    extra={"data": {
+                        "node": node_name,
+                        "proposal_id": proposal_id,
+                        "duration_ms": duration_ms,
+                    }},
+                )
+                if proposal_id:
+                    records = get_accumulated_usage()
+                    summary = summarize_usage(records) if records else {}
+                    await _persist_ai_task_log_error(
+                        proposal_id, node_name, summary, duration_ms,
+                        error_message=f"{type(exc).__name__}: {str(exc)[:500]}",
+                    )
+                    # MON-05: 에러 알림 (Phase B)
+                    try:
+                        from app.services.notification_service import notify_agent_error
+                        await notify_agent_error(proposal_id, node_name, str(exc)[:200])
+                    except ImportError:
+                        pass
+                    except Exception as notify_err:
+                        logger.debug(f"에러 알림 발송 실패 (무시): {notify_err}")
+                raise
 
+            # ── 성공 경로 ──
             duration_ms = int((time.time() - started_at) * 1000)
             records = get_accumulated_usage()
 
@@ -95,3 +126,34 @@ async def _persist_ai_task_log(
             await client.table("ai_task_logs").insert(row).execute()
     except Exception as e:
         logger.warning(f"ai_task_log DB insert 실패: {e}")
+
+
+async def _persist_ai_task_log_error(
+    proposal_id: str,
+    step: str,
+    summary: dict,
+    duration_ms: int,
+    error_message: str,
+) -> None:
+    """ai_task_logs 테이블에 에러 상태 기록 (MON-03)."""
+    try:
+        from datetime import datetime, timezone
+
+        from app.utils.supabase_client import get_async_client
+
+        client = await get_async_client()
+        row = {
+            "proposal_id": proposal_id,
+            "step": step,
+            "status": "error",
+            "duration_ms": duration_ms,
+            "input_tokens": summary.get("input_tokens", 0),
+            "output_tokens": summary.get("output_tokens", 0),
+            "cost_usd": summary.get("cost_usd", 0),
+            "model": summary.get("model", ""),
+            "error_message": error_message,
+            "completed_at": datetime.now(timezone.utc).isoformat(),
+        }
+        await client.table("ai_task_logs").insert(row).execute()
+    except Exception as e:
+        logger.warning(f"ai_task_log error insert 실패: {e}")

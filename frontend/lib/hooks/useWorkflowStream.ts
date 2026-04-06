@@ -13,10 +13,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface StreamEvent {
   timestamp: string;
-  event: string;      // on_chain_start | on_chain_end | done | error
-  name: string;       // 노드명
+  event: string; // on_chain_start | on_chain_end | done | error
+  name: string; // 노드명
   current_step?: string;
-  output_summary?: string;  // on_chain_end 시 산출물 1줄 요약
+  output_summary?: string; // on_chain_end 시 산출물 1줄 요약
   message?: string;
 }
 
@@ -43,7 +43,9 @@ export function useWorkflowStream(
   enabled: boolean,
 ): UseWorkflowStreamResult {
   const [events, setEvents] = useState<StreamEvent[]>([]);
-  const [nodeProgress, setNodeProgress] = useState<Map<string, NodeProgress>>(new Map());
+  const [nodeProgress, setNodeProgress] = useState<Map<string, NodeProgress>>(
+    new Map(),
+  );
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentNode, setCurrentNode] = useState("");
   const esRef = useRef<EventSource | null>(null);

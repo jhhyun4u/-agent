@@ -1,6 +1,6 @@
 {
-  "version": "2.0",
-  "lastUpdated": "2026-03-08T15:28:44.880Z",
+  "version": "3.0",
+  "lastUpdated": "2026-04-01T00:22:07.756Z",
   "activeFeatures": [
     "tenopa proposer",
     "api",
@@ -42,7 +42,24 @@
       "iterationCount": 1,
       "startedAt": "2026-03-08T00:00:00.000Z",
       "archivedAt": "2026-03-08T00:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/proposal-platform-v2/"
+      "archivedTo": "docs/archive/2026-03/proposal-platform-v2/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "admin-page": {
       "phase": "archived",
@@ -50,7 +67,24 @@
       "iterationCount": 0,
       "startedAt": "2026-03-07T00:00:00.000Z",
       "archivedAt": "2026-03-07T00:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/admin-page/"
+      "archivedTo": "docs/archive/2026-03/admin-page/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "frontend-components": {
       "phase": "archived",
@@ -58,7 +92,24 @@
       "iterationCount": 0,
       "startedAt": "2026-03-07T00:00:00.000Z",
       "archivedAt": "2026-03-07T00:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/frontend-components/"
+      "archivedTo": "docs/archive/2026-03/frontend-components/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "tenopa proposer": {
       "phase": "archived",
@@ -66,7 +117,24 @@
       "iterationCount": 1,
       "startedAt": "2026-03-05T05:22:34.160Z",
       "archivedAt": "2026-03-07T08:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/tenopa-proposer/"
+      "archivedTo": "docs/archive/2026-03/tenopa-proposer/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "api": {
       "phase": "do",
@@ -79,7 +147,24 @@
       "lastFile": "C:\\projects\\tenopa-proposer\\app\\api\\routes_bids.py",
       "timestamps": {
         "lastUpdated": "2026-03-08T07:32:08.652Z"
-      }
+      },
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "proposal-agent-v33": {
       "phase": "act",
@@ -93,7 +178,24 @@
         "lastUpdated": "2026-03-05T06:10:03.253Z"
       },
       "previousPhase": "check",
-      "autoAdvanced": true
+      "autoAdvanced": true,
+      "stateMachine": {
+        "currentState": "act",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "bid_calculator.py": {
       "phase": "do",
@@ -106,7 +208,24 @@
         "started": "2026-03-05T11:25:50.832Z",
         "lastUpdated": "2026-03-05T11:25:50.832Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/app/services/bid_calculator.py"
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/app/services/bid_calculator.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "temp": {
       "phase": "do",
@@ -119,7 +238,24 @@
         "started": "2026-03-05T13:10:46.070Z",
         "lastUpdated": "2026-03-05T13:48:34.441Z"
       },
-      "lastFile": "c:\\temp\\fix_executor_v2.py"
+      "lastFile": "c:\\temp\\fix_executor_v2.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "prompts": {
       "phase": "do",
@@ -132,7 +268,24 @@
         "started": "2026-03-05T13:27:10.451Z",
         "lastUpdated": "2026-03-05T13:27:10.451Z"
       },
-      "lastFile": "c:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\app\\prompts\\proposal.py"
+      "lastFile": "c:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\app\\prompts\\proposal.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "scripts": {
       "phase": "do",
@@ -145,7 +298,24 @@
         "started": "2026-03-05T16:03:12.035Z",
         "lastUpdated": "2026-03-08T05:18:06.347Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\scripts\\hwpx_to_pptx.py"
+      "lastFile": "C:\\projects\\tenopa-proposer\\scripts\\hwpx_to_pptx.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "proposal-complete": {
       "phase": "do",
@@ -158,7 +328,24 @@
         "started": "2026-03-06T05:18:59.122Z",
         "lastUpdated": "2026-03-06T05:18:59.122Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/supabase/functions/proposal-complete/index.ts"
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/supabase/functions/proposal-complete/index.ts",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "comment-notify": {
       "phase": "do",
@@ -171,7 +358,24 @@
         "started": "2026-03-06T05:19:23.558Z",
         "lastUpdated": "2026-03-06T05:19:23.558Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/supabase/functions/comment-notify/index.ts"
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/supabase/functions/comment-notify/index.ts",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "phase_executor.py": {
       "phase": "do",
@@ -184,7 +388,24 @@
         "started": "2026-03-06T05:19:49.667Z",
         "lastUpdated": "2026-03-08T00:55:27.954Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/app/services/phase_executor.py"
+      "lastFile": "c:/projects/tenopa-proposer/app/services/phase_executor.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "frontend": {
       "phase": "do",
@@ -197,7 +418,24 @@
         "started": "2026-03-06T05:28:44.483Z",
         "lastUpdated": "2026-03-08T15:23:53.474Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/middleware.ts"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/middleware.ts",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "supabase": {
       "phase": "do",
@@ -210,7 +448,24 @@
         "started": "2026-03-06T05:28:55.873Z",
         "lastUpdated": "2026-03-08T15:22:16.542Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/lib/supabase/server.ts"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/lib/supabase/server.ts",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "login": {
       "phase": "do",
@@ -223,7 +478,24 @@
         "started": "2026-03-06T05:30:02.981Z",
         "lastUpdated": "2026-03-08T15:26:06.911Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/login/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/login/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "onboarding": {
       "phase": "do",
@@ -236,7 +508,24 @@
         "started": "2026-03-06T05:30:17.823Z",
         "lastUpdated": "2026-03-06T05:30:17.823Z"
       },
-      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/onboarding/page.tsx"
+      "lastFile": "C:/Users/현재호/OneDrive - 테크노베이션파트너스/바탕 화면/viveproject/tenopa proposer/frontend/app/onboarding/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "proposals": {
       "phase": "do",
@@ -249,7 +538,24 @@
         "started": "2026-03-06T05:30:47.107Z",
         "lastUpdated": "2026-03-08T15:28:16.837Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/proposals/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/proposals/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "new": {
       "phase": "do",
@@ -262,7 +568,24 @@
         "started": "2026-03-06T05:31:21.064Z",
         "lastUpdated": "2026-03-08T03:44:23.715Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\new\\page.tsx"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\new\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "[id]": {
       "phase": "do",
@@ -275,7 +598,24 @@
         "started": "2026-03-06T05:32:10.407Z",
         "lastUpdated": "2026-03-08T01:51:28.100Z"
       },
-      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\[id]\\page.tsx"
+      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\proposals\\[id]\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "accept": {
       "phase": "do",
@@ -288,7 +628,24 @@
         "started": "2026-03-06T05:32:23.334Z",
         "lastUpdated": "2026-03-08T15:24:50.287Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/invitations/accept/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/invitations/accept/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "admin": {
       "phase": "do",
@@ -301,7 +658,24 @@
         "started": "2026-03-06T05:33:02.808Z",
         "lastUpdated": "2026-03-07T00:33:48.341Z"
       },
-      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\frontend\\app\\admin\\page.tsx"
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\viveproject\\tenopa proposer\\frontend\\app\\admin\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "tenopa-proposer": {
       "phase": "do",
@@ -314,7 +688,24 @@
       "lastFile": "c:\\projects\\tenopa-proposer\\app\\services\\presentation_generator.py",
       "timestamps": {
         "lastUpdated": "2026-03-08T12:38:33.400Z"
-      }
+      },
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "resources": {
       "phase": "do",
@@ -327,7 +718,24 @@
         "started": "2026-03-08T00:28:55.765Z",
         "lastUpdated": "2026-03-08T01:51:17.157Z"
       },
-      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\resources\\page.tsx"
+      "lastFile": "c:\\projects\\tenopa-proposer\\frontend\\app\\resources\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "archive": {
       "phase": "do",
@@ -340,7 +748,24 @@
         "started": "2026-03-08T00:29:29.828Z",
         "lastUpdated": "2026-03-08T00:29:29.828Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/archive/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/archive/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "dashboard": {
       "phase": "completed",
@@ -358,7 +783,24 @@
         "lastUpdated": "2026-03-08T04:00:00.000Z",
         "completed": "2026-03-08T04:00:00.000Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\dashboard\\page.tsx"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\dashboard\\page.tsx",
+      "stateMachine": {
+        "currentState": "completed",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "proposal-platform-v2.1": {
       "phase": "archived",
@@ -366,7 +808,24 @@
       "iterationCount": 0,
       "startedAt": "2026-03-08T00:00:00.000Z",
       "archivedAt": "2026-03-08T00:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/proposal-platform-v2.1/"
+      "archivedTo": "docs/archive/2026-03/proposal-platform-v2.1/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "g2b_service.py": {
       "phase": "do",
@@ -379,7 +838,24 @@
         "started": "2026-03-08T02:29:21.960Z",
         "lastUpdated": "2026-03-08T02:29:21.960Z"
       },
-      "lastFile": "C:/projects/tenopa-proposer/app/services/g2b_service.py"
+      "lastFile": "C:/projects/tenopa-proposer/app/services/g2b_service.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "bid_fetcher.py": {
       "phase": "do",
@@ -392,7 +868,24 @@
         "started": "2026-03-08T02:29:58.379Z",
         "lastUpdated": "2026-03-08T02:29:58.379Z"
       },
-      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_fetcher.py"
+      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_fetcher.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "bid_recommender.py": {
       "phase": "do",
@@ -405,7 +898,24 @@
         "started": "2026-03-08T02:30:56.993Z",
         "lastUpdated": "2026-03-08T02:30:56.993Z"
       },
-      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_recommender.py"
+      "lastFile": "C:/projects/tenopa-proposer/app/services/bid_recommender.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "bids": {
       "phase": "do",
@@ -418,7 +928,24 @@
         "started": "2026-03-08T02:51:53.372Z",
         "lastUpdated": "2026-03-08T03:45:14.615Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\page.tsx"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "[bidNo]": {
       "phase": "do",
@@ -431,7 +958,24 @@
         "started": "2026-03-08T02:54:03.996Z",
         "lastUpdated": "2026-03-08T15:28:44.879Z"
       },
-      "lastFile": "c:/projects/tenopa-proposer/frontend/app/bids/[bidNo]/page.tsx"
+      "lastFile": "c:/projects/tenopa-proposer/frontend/app/bids/[bidNo]/page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "settings": {
       "phase": "do",
@@ -444,7 +988,24 @@
         "started": "2026-03-08T02:55:29.062Z",
         "lastUpdated": "2026-03-08T04:51:37.939Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\settings\\page.tsx"
+      "lastFile": "C:\\projects\\tenopa-proposer\\frontend\\app\\bids\\settings\\page.tsx",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "bid-recommendation": {
       "phase": "archived",
@@ -452,7 +1013,24 @@
       "iterationCount": 0,
       "startedAt": "2026-03-08T00:00:00.000Z",
       "archivedAt": "2026-03-08T08:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/bid-recommendation/"
+      "archivedTo": "docs/archive/2026-03/bid-recommendation/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "presentation-generator": {
       "phase": "archived",
@@ -460,7 +1038,24 @@
       "iterationCount": 0,
       "startedAt": "2026-03-08T00:00:00.000Z",
       "archivedAt": "2026-03-08T00:00:00.000Z",
-      "archivedTo": "docs/archive/2026-03/presentation-generator/"
+      "archivedTo": "docs/archive/2026-03/presentation-generator/",
+      "stateMachine": {
+        "currentState": "archived",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     },
     "unit": {
       "phase": "do",
@@ -473,7 +1068,24 @@
         "started": "2026-03-08T05:00:49.397Z",
         "lastUpdated": "2026-03-08T07:45:39.490Z"
       },
-      "lastFile": "C:\\projects\\tenopa-proposer\\tests\\unit\\test_bid_fetcher_unit.py"
+      "lastFile": "C:\\projects\\tenopa-proposer\\tests\\unit\\test_bid_fetcher_unit.py",
+      "stateMachine": {
+        "currentState": "do",
+        "previousState": null,
+        "stateHistory": [],
+        "retryCount": 0,
+        "maxRetries": 5,
+        "circuitBreakerOpen": false
+      },
+      "metrics": {
+        "qualityScore": null,
+        "conventionCompliance": null,
+        "apiCompliance": null,
+        "cycleTimeMs": null,
+        "iterationEfficiency": null
+      },
+      "phaseTimestamps": {},
+      "automationLevel": 2
     }
   },
   "pipeline": {
@@ -484,7 +1096,7 @@
   "session": {
     "startedAt": "2026-03-05T04:49:56.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-03-08T15:28:44.880Z"
+    "lastActivity": "2026-04-01T00:22:07.756Z"
   },
   "history": [
     {
@@ -3098,5 +3710,21 @@
       "phase": "do",
       "action": "updated"
     }
-  ]
+  ],
+  "stateMachine": {
+    "defaultWorkflow": "default",
+    "activeWorkflows": {},
+    "totalTransitions": 0
+  },
+  "automation": {
+    "globalLevel": 2,
+    "trustScore": 40,
+    "pendingApprovals": 0,
+    "lastGateResult": null
+  },
+  "team": {
+    "enabled": true,
+    "stateFile": ".bkit/runtime/agent-state.json",
+    "eventsFile": ".bkit/runtime/agent-events.jsonl"
+  }
 }

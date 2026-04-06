@@ -12,7 +12,13 @@ interface StreamInfo {
   progress_pct: number;
 }
 
-export type StreamTab = "proposal" | "bidding" | "documents" | "overview";
+export type StreamTab =
+  | "proposal"
+  | "bidding"
+  | "documents"
+  | "overview"
+  | "filehub"
+  | "step8";
 
 interface Props {
   activeTab: StreamTab;
@@ -25,6 +31,8 @@ const TABS: { key: StreamTab; label: string; stream?: string }[] = [
   { key: "bidding", label: "비딩관리", stream: "bidding" },
   { key: "documents", label: "제출서류", stream: "documents" },
   { key: "overview", label: "통합현황" },
+  { key: "step8", label: "STEP 8 검토", stream: "step8" },
+  { key: "filehub", label: "파일 허브" },
 ];
 
 const STATUS_BADGE: Record<string, { color: string; label: string }> = {
@@ -35,7 +43,11 @@ const STATUS_BADGE: Record<string, { color: string; label: string }> = {
   error: { color: "bg-red-500/20 text-red-400", label: "오류" },
 };
 
-export default function StreamTabBar({ activeTab, onTabChange, streams }: Props) {
+export default function StreamTabBar({
+  activeTab,
+  onTabChange,
+  streams,
+}: Props) {
   function getStreamStatus(streamName?: string): StreamInfo | null {
     if (!streamName) return null;
     return streams.find((s) => s.stream === streamName) || null;
@@ -46,7 +58,9 @@ export default function StreamTabBar({ activeTab, onTabChange, streams }: Props)
       {TABS.map(({ key, label, stream }) => {
         const isActive = activeTab === key;
         const streamData = getStreamStatus(stream);
-        const badge = streamData ? STATUS_BADGE[streamData.status] || STATUS_BADGE.not_started : null;
+        const badge = streamData
+          ? STATUS_BADGE[streamData.status] || STATUS_BADGE.not_started
+          : null;
 
         return (
           <button
@@ -54,19 +68,22 @@ export default function StreamTabBar({ activeTab, onTabChange, streams }: Props)
             onClick={() => onTabChange(key)}
             className={`
               relative flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium transition-colors
-              ${isActive
-                ? "text-[#ededed] border-b-2 border-[#3ecf8e]"
-                : "text-[#8c8c8c] hover:text-[#ededed] border-b-2 border-transparent"
+              ${
+                isActive
+                  ? "text-[#ededed] border-b-2 border-[#3ecf8e]"
+                  : "text-[#8c8c8c] hover:text-[#ededed] border-b-2 border-transparent"
               }
             `}
           >
             {label}
             {badge && (
-              <span className={`inline-flex px-1.5 py-0.5 rounded text-[9px] font-medium ${badge.color}`}>
-                {streamData!.progress_pct > 0 && streamData!.status !== "completed"
+              <span
+                className={`inline-flex px-1.5 py-0.5 rounded text-[9px] font-medium ${badge.color}`}
+              >
+                {streamData!.progress_pct > 0 &&
+                streamData!.status !== "completed"
                   ? `${streamData!.progress_pct}%`
-                  : badge.label
-                }
+                  : badge.label}
               </span>
             )}
             {key === "overview" && (

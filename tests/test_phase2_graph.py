@@ -17,14 +17,15 @@ def test_state_imports():
 def test_edges_imports():
     """조건부 엣지 함수 import 가능."""
     from app.graph.edges import (
-        route_start,
-        route_after_search_review,
         route_after_rfp_review,
         route_after_gng_review,
         route_after_strategy_review,
+        route_after_bid_plan_review,
         route_after_plan_review,
         route_after_self_review,
+        route_after_section_review,
         route_after_proposal_review,
+        route_after_presentation_strategy,
         route_after_ppt_review,
     )
 

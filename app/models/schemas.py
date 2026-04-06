@@ -1,6 +1,14 @@
-from typing import Literal
+from datetime import datetime
 
 from pydantic import BaseModel, field_validator
+
+from app.models.types import (
+    EvaluatorReaction,
+    ImpactLevel,
+    LessonCategory,
+    ProposalResult,
+    QACategory,
+)
 
 
 class ProjectInput(BaseModel):
@@ -70,7 +78,7 @@ class ProposalResponse(BaseModel):
 class ProposalResultCreate(BaseModel):
     """제안 결과 등록 (§12-4, Phase 4-2)"""
 
-    result: Literal["won", "lost", "void"]
+    result: ProposalResult
     final_price: int | None = None
     competitor_count: int | None = None
     ranking: int | None = None
@@ -97,19 +105,18 @@ class ProposalResultUpdate(BaseModel):
 class LessonCreate(BaseModel):
     """교훈 등록 (§20-5, Phase 4-5)"""
 
-    category: Literal["strategy", "pricing", "team", "technical", "process", "other"]
+    category: LessonCategory
     title: str
     description: str
-    impact: Literal["high", "medium", "low"]
+    impact: ImpactLevel
     action_items: list[str] = []
     applicable_domains: list[str] = []
 
 
 # ── PSM-16: Q&A 기록 ──
 
-QA_CATEGORIES = Literal[
-    "technical", "management", "pricing", "experience", "team", "general"
-]
+# 하위 호환: 기존 코드에서 QA_CATEGORIES로 참조하는 곳 지원
+QA_CATEGORIES = QACategory
 
 
 class QARecordCreate(BaseModel):
@@ -117,8 +124,8 @@ class QARecordCreate(BaseModel):
 
     question: str
     answer: str
-    category: QA_CATEGORIES = "general"
-    evaluator_reaction: Literal["positive", "neutral", "negative"] | None = None
+    category: QACategory = "general"
+    evaluator_reaction: EvaluatorReaction | None = None
     memo: str | None = None
 
 
@@ -127,8 +134,8 @@ class QARecordUpdate(BaseModel):
 
     question: str | None = None
     answer: str | None = None
-    category: QA_CATEGORIES | None = None
-    evaluator_reaction: Literal["positive", "neutral", "negative"] | None = None
+    category: QACategory | None = None
+    evaluator_reaction: EvaluatorReaction | None = None
     memo: str | None = None
 
 
@@ -139,12 +146,12 @@ class QARecordResponse(BaseModel):
     proposal_id: str
     question: str
     answer: str
-    category: str
-    evaluator_reaction: str | None
-    memo: str | None
-    content_library_id: str | None
-    created_at: str
-    created_by: str | None
+    category: QACategory
+    evaluator_reaction: EvaluatorReaction | None = None
+    memo: str | None = None
+    content_library_id: str | None = None
+    created_at: datetime | None = None
+    created_by: str | None = None
 
 
 class QASearchResult(BaseModel):
@@ -154,10 +161,10 @@ class QASearchResult(BaseModel):
     proposal_id: str
     question: str
     answer: str
-    category: str
-    evaluator_reaction: str | None
-    memo: str | None
-    created_at: str
+    category: QACategory
+    evaluator_reaction: EvaluatorReaction | None = None
+    memo: str | None = None
+    created_at: datetime | None = None
     similarity: float | None = None
     proposal_name: str | None = None
     client: str | None = None

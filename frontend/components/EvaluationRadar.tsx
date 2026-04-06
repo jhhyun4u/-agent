@@ -74,9 +74,7 @@ export default function EvaluationRadar({
             fillOpacity={0.2}
             strokeWidth={2}
           />
-          <Legend
-            wrapperStyle={{ fontSize: 10, color: "#8c8c8c" }}
-          />
+          <Legend wrapperStyle={{ fontSize: 10, color: "#8c8c8c" }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>

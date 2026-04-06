@@ -13,6 +13,7 @@ import logging
 import zipfile
 from datetime import date, datetime, timezone
 
+from app.config import settings
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -215,7 +216,10 @@ async def update_document_status(doc_id: str, data: dict, proposal_id: str | Non
     if proposal_id:
         q = q.eq("proposal_id", proposal_id)
     res = await q.execute()
-    return res.data[0] if res.data else {}
+    result = res.data[0] if res.data else {}
+    if result and "status" in data and proposal_id:
+        await recalculate_documents_progress(proposal_id)
+    return result
 
 
 async def delete_document(doc_id: str, proposal_id: str | None = None) -> bool:
@@ -257,7 +261,10 @@ async def upload_document(doc_id: str, file_path: str, file_name: str, file_size
     if proposal_id:
         q = q.eq("proposal_id", proposal_id)
     res = await q.execute()
-    return res.data[0] if res.data else {}
+    result = res.data[0] if res.data else {}
+    if result and proposal_id:
+        await recalculate_documents_progress(proposal_id)
+    return result
 
 
 async def verify_document(doc_id: str, user_id: str, proposal_id: str | None = None) -> dict:
@@ -277,7 +284,10 @@ async def verify_document(doc_id: str, user_id: str, proposal_id: str | None = N
     if proposal_id:
         q = q.eq("proposal_id", proposal_id)
     res = await q.execute()
-    return res.data[0] if res.data else {}
+    result = res.data[0] if res.data else {}
+    if result and proposal_id:
+        await recalculate_documents_progress(proposal_id)
+    return result
 
 
 async def validate_document(doc_id: str) -> dict:
@@ -304,6 +314,213 @@ async def validate_document(doc_id: str) -> dict:
             errors.append(f"포맷 불일치: 요구={fmt}, 실제={actual}")
 
     return {"valid": len(errors) == 0, "errors": errors}
+
+
+# ── 진행률 자동 계산 + 자동 완료 ──
+
+async def recalculate_documents_progress(proposal_id: str) -> int:
+    """서류 상태 기반 가중 진행률 계산 + 전체 verified 시 자동 완료."""
+    from app.services.stream_orchestrator import update_stream_progress
+
+    docs = await get_checklist(proposal_id)
+    applicable = [d for d in docs if d["status"] != "not_applicable"]
+    total = len(applicable)
+    if total == 0:
+        return 0
+
+    verified = sum(1 for d in applicable if d["status"] == "verified")
+    uploaded = sum(1 for d in applicable if d["status"] == "uploaded")
+    assigned = sum(1 for d in applicable if d["status"] in ("assigned", "in_progress"))
+
+    weighted = verified * 1.0 + uploaded * 0.7 + assigned * 0.3
+    pct = int(min(weighted / total * 100, 100))
+
+    is_complete = (verified == total and total > 0)
+    phase = "all_verified" if is_complete else (
+        "all_uploaded" if uploaded + verified == total else "in_progress"
+    )
+
+    await update_stream_progress(
+        proposal_id, "documents",
+        status="completed" if is_complete else "in_progress",
+        progress_pct=pct,
+        current_phase=phase,
+    )
+    return pct
+
+
+# ── 원본 준비 확인 ──
+
+async def confirm_original_document(
+    doc_id: str, user_id: str, proposal_id: str | None = None,
+) -> dict:
+    """원본 서류 준비 완료 확인 (파일 업로드 없이 verified 처리)."""
+    client = await get_async_client()
+
+    # 서류 조회 + required_format 검증
+    q = client.table("submission_documents").select("*").eq("id", doc_id)
+    if proposal_id:
+        q = q.eq("proposal_id", proposal_id)
+    doc_res = await q.single().execute()
+    if not doc_res.data:
+        raise ValueError("서류를 찾을 수 없습니다.")
+
+    doc = doc_res.data
+    if doc.get("required_format") != "원본":
+        raise ValueError("원본 서류만 이 방식으로 확인할 수 있습니다.")
+
+    now = datetime.now(timezone.utc).isoformat()
+    notes = (doc.get("notes") or "") + " [원본 준비 확인]"
+
+    res = await (
+        client.table("submission_documents")
+        .update({
+            "status": "verified",
+            "verified_by": user_id,
+            "verified_at": now,
+            "notes": notes.strip(),
+            "updated_at": now,
+        })
+        .eq("id", doc_id)
+        .execute()
+    )
+    result = res.data[0] if res.data else {}
+
+    if result and proposal_id:
+        await recalculate_documents_progress(proposal_id)
+    elif result and doc.get("proposal_id"):
+        await recalculate_documents_progress(doc["proposal_id"])
+
+    return result
+
+
+# ── 사본 PDF 병합 다운로드 ──
+
+async def build_copy_bundle(proposal_id: str) -> tuple[bytes, str]:
+    """사본 서류 파일을 PDF 병합 (비PDF 혼재 시 ZIP fallback)."""
+    docs = await get_checklist(proposal_id)
+    copy_docs = [
+        d for d in docs
+        if d.get("file_path")
+        and d.get("required_format") in ("사본", None)
+        and d.get("source") == "template_matched"
+    ]
+
+    if not copy_docs:
+        raise ValueError("다운로드할 사본 서류가 없습니다.")
+
+    client = await get_async_client()
+    files: list[tuple[str, bytes]] = []
+
+    for doc in copy_docs:
+        try:
+            res = await client.storage.from_(settings.storage_bucket_proposals).download(doc["file_path"])
+            fname = doc.get("file_name") or doc["file_path"].rsplit("/", 1)[-1]
+            files.append((fname, res))
+        except Exception as e:
+            logger.warning(f"사본 파일 다운로드 실패: {doc['file_path']} — {e}")
+
+    if not files:
+        raise ValueError("다운로드 가능한 사본 파일이 없습니다.")
+
+    # 모든 파일이 PDF면 병합, 아니면 ZIP
+    all_pdf = all(fname.lower().endswith(".pdf") for fname, _ in files)
+
+    if all_pdf and len(files) >= 1:
+        try:
+            from PyPDF2 import PdfMerger
+            merger = PdfMerger()
+            for fname, data in files:
+                merger.append(io.BytesIO(data))
+            output = io.BytesIO()
+            merger.write(output)
+            merger.close()
+            return output.getvalue(), "application/pdf"
+        except Exception as e:
+            logger.warning(f"PDF 병합 실패, ZIP fallback: {e}")
+
+    # ZIP fallback
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for fname, data in files:
+            zf.writestr(fname, data)
+    return buf.getvalue(), "application/zip"
+
+
+# ── 산출물 자동 연결 ──
+
+async def link_stream1_artifacts(proposal_id: str) -> int:
+    """Stream 1 완료 시 제안서/PPT 산출물을 체크리스트에 자동 연결."""
+    client = await get_async_client()
+
+    # doc_category=proposal인 서류 조회
+    docs_res = await (
+        client.table("submission_documents")
+        .select("*")
+        .eq("proposal_id", proposal_id)
+        .eq("doc_category", "proposal")
+        .execute()
+    )
+    target_docs = docs_res.data or []
+    if not target_docs:
+        return 0
+
+    # 최신 산출물 조회 (proposal, ppt)
+    artifacts = {}
+    for step in ("proposal", "ppt"):
+        art_res = await (
+            client.table("artifacts")
+            .select("file_path, file_name, file_size, file_format")
+            .eq("proposal_id", proposal_id)
+            .eq("step", step)
+            .order("version", desc=True)
+            .limit(1)
+            .execute()
+        )
+        if art_res.data and art_res.data[0].get("file_path"):
+            artifacts[step] = art_res.data[0]
+
+    if not artifacts:
+        return 0
+
+    now = datetime.now(timezone.utc).isoformat()
+    linked = 0
+
+    for doc in target_docs:
+        if doc.get("status") in ("verified", "uploaded"):
+            continue  # 이미 처리됨
+
+        doc_type_lower = (doc.get("doc_type") or "").lower()
+        matched_art = None
+
+        if any(kw in doc_type_lower for kw in ("기술제안서", "제안서", "proposal")):
+            matched_art = artifacts.get("proposal")
+        elif any(kw in doc_type_lower for kw in ("발표자료", "발표", "ppt", "프레젠테이션")):
+            matched_art = artifacts.get("ppt")
+
+        if matched_art:
+            notes = (doc.get("notes") or "") + " [산출물 자동연결]"
+            await (
+                client.table("submission_documents")
+                .update({
+                    "file_path": matched_art["file_path"],
+                    "file_name": matched_art.get("file_name"),
+                    "file_size": matched_art.get("file_size"),
+                    "file_format": matched_art.get("file_format"),
+                    "status": "uploaded",
+                    "notes": notes.strip(),
+                    "updated_at": now,
+                })
+                .eq("id", doc["id"])
+                .execute()
+            )
+            linked += 1
+
+    if linked > 0:
+        await recalculate_documents_progress(proposal_id)
+
+    logger.info(f"산출물 자동 연결: proposal={proposal_id}, {linked}건")
+    return linked
 
 
 # ── 사전 제출 점검 ──
