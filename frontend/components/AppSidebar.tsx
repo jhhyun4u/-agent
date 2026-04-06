@@ -611,7 +611,7 @@ export default function AppSidebar() {
       {/* 모바일 햄버거 (lg 미만) — L-5: DOM에서 제거하지 않고 토글 */}
       <button
         onClick={() => setMobileOpen((v) => !v)}
-        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-[#1c1c1c] border border-[#262626] rounded-lg"
+        className="md:hidden fixed top-3 left-3 z-50 p-2 bg-[#1c1c1c] border border-[#262626] rounded-lg"
         aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
         aria-expanded={mobileOpen}
       >
@@ -622,7 +622,7 @@ export default function AppSidebar() {
       <div
         role="presentation"
         aria-hidden={!mobileOpen}
-        className={`lg:hidden fixed inset-0 z-50 transition-colors duration-300 ${
+        className={`md:hidden fixed inset-0 z-50 transition-colors duration-300 ${
           mobileOpen
             ? "bg-[#0f0f0f]/60 pointer-events-auto"
             : "bg-transparent pointer-events-none"
@@ -641,7 +641,7 @@ export default function AppSidebar() {
 
       {/* 데스크톱 사이드바 (lg 이상) — 외부 div에 width 명시해야 flex 공간 확보됨 */}
       <div
-        className="hidden lg:flex shrink-0 relative overflow-hidden"
+        className="hidden md:flex shrink-0 relative overflow-hidden"
         style={{ width: showCollapsed ? "48px" : `${currentWidth}px` }}
         ref={sidebarRef}
       >
