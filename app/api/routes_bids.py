@@ -462,33 +462,19 @@ async def get_scored_bids(
             logger.info(f"공고 캐시 HIT: {cache_key}")
             return ok(cached["payload"])
 
-        # ── 캐시 없음 → G2B 크롤링 ──
-        logger.info(f"공고 캐시 MISS → G2B 크롤링: {date_from_str}~{date_to_str}")
-        async with G2BService() as g2b:
-            fetcher = BidFetcher(g2b_service=g2b, supabase_client=None)
-            results = await fetcher.fetch_bids_scored(
-                date_from=date_from_str,
-                date_to=date_to_str,
-                min_budget=min_budget,
-                min_score=min_score,
-                max_results=max_results,
-            )
-
-        data = results["data"]
-        payload = {
+        # ── 캐시 없음 → 빈 결과 반환 (자동 크롤링 안 함) ──
+        # 새로고침 버튼(POST /bids/crawl)을 통해서만 크롤링 가능
+        logger.info(f"공고 캐시 MISS → 빈 결과 반환 (새로고침 버튼으로 수동 크롤링 필요)")
+        empty_payload = {
             "date_from": date_from_str[:8],
             "date_to": date_to_str[:8],
-            "total_count": len(data),
-            "total_fetched": results["total_fetched"],
-            "sources": results.get("sources", {}),
-            "data": data,
+            "total_count": 0,
+            "total_fetched": 0,
+            "sources": {},
+            "data": [],
+            "requires_crawl": True,  # 프론트엔드에서 새로고침 안내용
         }
-
-        # 캐시 저장
-        _SCORED_CACHE[cache_key] = {"payload": payload, "fetched_at": time.time()}
-        logger.info(f"공고 캐시 저장: {len(data)}건")
-
-        return ok(payload)
+        return ok(empty_payload)
     except Exception as e:
         logger.error(f"scored bids 오류: {e}", exc_info=True)
         raise InternalServiceError("공고 스코어링 중 오류가 발생했습니다.")
