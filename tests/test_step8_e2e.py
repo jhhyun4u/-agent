@@ -71,9 +71,28 @@ class StepMetrics:
 
 @pytest.fixture
 def test_proposal_state() -> ProposalState:
-    """테스트용 ProposalState 생성"""
+    """테스트용 ProposalState 생성 - 모든 Step 8 단계를 위한 완전한 초기 상태"""
+    proposal_sections = [
+        {
+            "section_id": "sec_001",
+            "title": "Executive Summary",
+            "content": "This section summarizes the proposal and key value propositions...",
+        },
+        {
+            "section_id": "sec_002",
+            "title": "Technical Approach",
+            "content": "Our technical approach includes the following components and methodologies...",
+        },
+    ]
+
+    # dynamic_sections는 proposal_sections과 동일한 구조 (8C는 섹션 dict 기대)
+    dynamic_sections = proposal_sections.copy()
+
+    test_user_id = str(uuid4())
     return {
         "proposal_id": str(uuid4()),
+        "project_id": str(uuid4()),  # Step 8C expects project_id
+        "created_by": test_user_id,  # Step 8C expects created_by UUID
         "rfp_analysis": {
             "title": "Sample RFP for Testing",
             "description": "This is a test RFP",
@@ -82,24 +101,31 @@ def test_proposal_state() -> ProposalState:
             "deadline": "2026-04-30",
             "budget_range": "$100K - $500K",
         },
-        "proposal_sections": [
-            {
-                "title": "Executive Summary",
-                "content": "This section summarizes the proposal...",
-            },
-            {
-                "title": "Technical Approach",
-                "content": "Our technical approach includes...",
-            },
-        ],
-        "strategy": None,
-        "customer_profile": None,
-        "validation_report": None,
+        "proposal_sections": proposal_sections,
+        "dynamic_sections": dynamic_sections,  # 초기화: Step 8C expects this
+        "strategy": {
+            "positioning": "Premium quality provider",
+            "win_themes": ["Quality", "Reliability"],
+        },
+        "customer_profile": {
+            "client_name": "Sample Client",
+            "industry": "Technology",
+            "requirements_summary": "High-quality technical solution",
+            "decision_criteria": ["Cost", "Quality", "Timeline"],
+        },
+        "validation_report": {
+            "sections": proposal_sections,
+            "total_issues": 0,
+            "critical_issues": [],
+            "validation_passed": True,
+        },
         "consolidated_proposal": None,
         "mock_eval_result": None,
         "feedback_summary": None,
         "artifact_versions": {},
         "current_step": "proposal_analysis",
+        "current_section_index": 0,  # Step 8F expects this
+        "rewrite_iteration_count": 0,  # Step 8F expects this
         "node_errors": {},
     }
 
