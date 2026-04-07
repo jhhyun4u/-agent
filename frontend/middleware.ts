@@ -10,9 +10,31 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // TODO: 개발 중 임시 우회 — 배포 전 원복 필요
-const PUBLIC_PATHS = ["/login", "/invitations/accept", "/proposals", "/bids", "/dashboard", "/kb", "/analytics", "/admin", "/archive", "/resources"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/invitations/accept",
+  "/proposals",
+  "/monitoring",
+  "/dashboard",
+  "/kb",
+  "/analytics",
+  "/admin",
+  "/archive",
+  "/resources",
+];
 
 export async function middleware(request: NextRequest) {
+  // DEV: 인증 우회 — 배포 전 원복 필요
+  if (process.env.NODE_ENV === "development") {
+    // /login 접근 시 /proposals로 리다이렉트 (로그인 불필요)
+    if (request.nextUrl.pathname === "/login") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/proposals";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -23,18 +45,20 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet: { name: string; value: string; options?: object }[]) {
+        setAll(
+          cookiesToSet: { name: string; value: string; options?: object }[],
+        ) {
           cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            supabaseResponse.cookies.set(name, value, options as any)
+            supabaseResponse.cookies.set(name, value, options as any),
           );
         },
       },
-    }
+    },
   );
 
   // 세션 갱신 (토큰 만료 방지)

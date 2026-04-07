@@ -1,0 +1,20 @@
+{
+  "project_name": "데이터 분석 플랫폼 구축",
+  "client": "XYZ 공공기관",
+  "deadline": "2026-07-15",
+  "case_type": "A",
+  "eval_method": "document_only",
+  "eval_items": [
+    {"item": "기술 이해도", "weight": 40, "sub_items": ["요구사항 분석"]},
+    {"item": "수행 방안", "weight": 60, "sub_items": ["구축 방법론"]}
+  ],
+  "tech_price_ratio": {"tech": 90, "price": 10},
+  "hot_buttons": ["데이터 분석 경험"],
+  "mandatory_reqs": ["정보처리기술사"],
+  "format_template": {"exists": false, "structure": null},
+  "volume_spec": {"max_pages": 80, "font_size": "11pt"},
+  "special_conditions": [],
+  "compliance_items": [
+    {"req_id": "RFP-001", "content": "데이터 분석 경험 2건 이상", "source_step": "rfp_analyze"}
+  ]
+}

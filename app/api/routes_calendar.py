@@ -12,14 +12,17 @@ import logging
 from typing import Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.response import ok, ok_list
+from app.exceptions import InvalidRequestError, OwnershipRequiredError, ResourceNotFoundError
+from app.models.auth_schemas import CurrentUser
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["calendar"])
+router = APIRouter(prefix="/api", tags=["calendar"])
 
 VALID_STATUSES = ("open", "submitted", "won", "lost")
 
@@ -55,16 +58,13 @@ class CalendarUpdate(BaseModel):
 
 @router.get("/calendar")
 async def list_calendar(
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     scope: str = Query("personal", description="personal | team | company"),
     status: Optional[str] = Query(None, description="open | submitted | won | lost"),
 ):
     """RFP 일정 목록 조회 (deadline 오름차순)"""
     if status and status not in VALID_STATUSES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"status는 {', '.join(VALID_STATUSES)} 중 하나여야 합니다.",
-        )
+        raise InvalidRequestError(f"status는 {', '.join(VALID_STATUSES)} 중 하나여야 합니다.")
 
     client = await get_async_client()
 
@@ -109,13 +109,14 @@ async def list_calendar(
     query = query.order("deadline", desc=False)
 
     res = await query.execute()
-    return {"items": res.data or []}
+    items = res.data or []
+    return ok_list(items, total=len(items))
 
 
 # ── 등록 ─────────────────────────────────────────────────────────────
 
 @router.post("/calendar", status_code=201)
-async def create_calendar(body: CalendarCreate, user=Depends(get_current_user)):
+async def create_calendar(body: CalendarCreate, user: CurrentUser = Depends(get_current_user)):
     """RFP 일정 등록"""
     # 현재 유저의 팀 조회 (team_id 자동 할당)
     client = await get_async_client()
@@ -146,21 +147,18 @@ async def create_calendar(body: CalendarCreate, user=Depends(get_current_user)):
 
     await client.table("rfp_calendar").insert(insert_data).execute()
 
-    return {"id": item_id, "title": body.title, "status": "open"}
+    return ok({"id": item_id, "title": body.title, "status": "open"})
 
 
 # ── 수정 ─────────────────────────────────────────────────────────────
 
 @router.put("/calendar/{item_id}")
 async def update_calendar(
-    item_id: str, body: CalendarUpdate, user=Depends(get_current_user)
+    item_id: str, body: CalendarUpdate, user: CurrentUser = Depends(get_current_user)
 ):
     """RFP 일정 수정 / 상태 변경 (소유자만)"""
     if body.status is not None and body.status not in VALID_STATUSES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"status는 {', '.join(VALID_STATUSES)} 중 하나여야 합니다.",
-        )
+        raise InvalidRequestError(f"status는 {', '.join(VALID_STATUSES)} 중 하나여야 합니다.")
 
     client = await get_async_client()
 
@@ -173,14 +171,14 @@ async def update_calendar(
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="일정을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("일정")
     if res.data["owner_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 일정만 수정할 수 있습니다.")
+        raise OwnershipRequiredError("본인 일정만 수정할 수 있습니다.")
 
     # None이 아닌 필드만 업데이트 (빈 문자열도 허용)
     update_data = {k: v for k, v in body.model_dump().items() if v is not None}
     if not update_data:
-        raise HTTPException(status_code=400, detail="수정할 필드가 없습니다.")
+        raise InvalidRequestError("수정할 필드가 없습니다.")
 
     await (
         client.table("rfp_calendar")
@@ -190,13 +188,13 @@ async def update_calendar(
         .execute()
     )
 
-    return {"id": item_id, **update_data}
+    return ok({"id": item_id, **update_data})
 
 
 # ── 삭제 ─────────────────────────────────────────────────────────────
 
 @router.delete("/calendar/{item_id}", status_code=204)
-async def delete_calendar(item_id: str, user=Depends(get_current_user)):
+async def delete_calendar(item_id: str, user: CurrentUser = Depends(get_current_user)):
     """RFP 일정 삭제 (소유자만)"""
     client = await get_async_client()
 
@@ -208,9 +206,9 @@ async def delete_calendar(item_id: str, user=Depends(get_current_user)):
         .execute()
     )
     if not res.data:
-        raise HTTPException(status_code=404, detail="일정을 찾을 수 없습니다.")
+        raise ResourceNotFoundError("일정")
     if res.data["owner_id"] != user.id:
-        raise HTTPException(status_code=403, detail="본인 일정만 삭제할 수 있습니다.")
+        raise OwnershipRequiredError("본인 일정만 삭제할 수 있습니다.")
 
     await (
         client.table("rfp_calendar")

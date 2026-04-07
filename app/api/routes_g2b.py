@@ -16,10 +16,27 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query, Body, BackgroundTasks
 
 from app.api.deps import get_current_user
+from app.exceptions import G2BExternalError, G2BServiceError, InternalServiceError, TenopAPIError
 from app.services.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
+from app.services.bid_analysis_service import generate_bid_analysis_documents
+from app.utils.supabase_client import get_async_client
+
+
+def _classify_g2b_error(e: RuntimeError) -> TenopAPIError:
+    """RuntimeError 메시지 기반 G2B 에러 분류."""
+    msg = str(e)
+    if "타임아웃" in msg or "시간 초과" in msg:
+        return G2BExternalError("나라장터 API 응답 시간 초과")
+    if "클라이언트 오류" in msg:
+        return G2BExternalError(msg)
+    if "연결 실패" in msg:
+        return G2BExternalError("나라장터 API 서버 연결 실패")
+    if "API_KEY" in msg:
+        return G2BServiceError("G2B API 키가 설정되지 않았습니다.")
+    return G2BExternalError(msg)
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/g2b", tags=["g2b"])
@@ -42,6 +59,7 @@ async def bid_search(
     나라장터 입찰공고 검색
 
     - 키워드로 유사 공고 조회
+    - 결과를 bid_announcements 테이블에 저장 (분석 대기)
     - 캐시 TTL: 24시간
     """
     try:
@@ -53,18 +71,72 @@ async def bid_search(
                 date_from=date_from,
                 date_to=date_to,
             )
+
+        # 각 검색 결과를 bid_announcements 테이블에 저장
+        client = await get_async_client()
+        saved_count = 0
+
+        for item in items:
+            bid_no = item.get("bid_no") or item.get("bidNo")
+            if not bid_no:
+                continue
+
+            try:
+                # 기존 기록 확인 (upsert를 위해)
+                result = await client.table("bid_announcements").select("id").eq(
+                    "org_id", current_user.org_id
+                ).eq("bid_no", bid_no).execute()
+
+                is_update = len(result.data) > 0
+
+                # 저장할 데이터
+                data = {
+                    "org_id": str(current_user.org_id),
+                    "bid_no": bid_no,
+                    "bid_title": item.get("bid_title") or item.get("bidTitle") or "제목 미정",
+                    "agency": item.get("agency") or item.get("agencyName"),
+                    "budget_amount": item.get("budget_amount") or item.get("budgetAmount"),
+                    "deadline_date": item.get("deadline_date") or item.get("deadlineDate"),
+                    "content_text": item.get("content_text", ""),
+                    "raw_data": item,  # 원본 데이터 저장
+                    "analysis_status": "pending",
+                    "decision": "pending",
+                    "created_by": str(current_user.id) if not is_update else None,
+                }
+
+                if is_update:
+                    # 업데이트: id 필요
+                    bid_id = result.data[0]["id"]
+                    data.pop("created_by")  # created_by는 업데이트시 제외
+                    await client.table("bid_announcements").update(data).eq(
+                        "id", bid_id
+                    ).execute()
+                else:
+                    # 새로 생성
+                    await client.table("bid_announcements").insert(data).execute()
+
+                saved_count += 1
+                logger.info(f"✓ bid_announcements 저장: {bid_no}")
+
+            except Exception as e:
+                logger.warning(f"! bid_announcements 저장 실패 [{bid_no}]: {str(e)}")
+                # 개별 저장 실패는 계속 진행
+
+        logger.info(f"[bid-search] {saved_count}개 공고 저장됨 (total: {len(items)})")
+
         return {
             "keyword": keyword,
             "page_no": page_no,
             "num_of_rows": num_of_rows,
             "total_count": len(items),
+            "saved_count": saved_count,
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-search 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -95,10 +167,121 @@ async def bid_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-results 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 공고 분석 (RFP分析, 공고문, 과업지시서 생성)
+# ─────────────────────────────────────────────
+
+@router.post("/bid/{bid_no}/analyze")
+async def analyze_bid(
+    bid_no: str,
+    background_tasks: BackgroundTasks,
+    current_user=Depends(get_current_user),
+):
+    """
+    공고 상세 분석 — 3가지 마크다운 문서 생성 (백그라운드)
+
+    - RFP分析: 사업개요, 평가항목, 기술요구사항, 가격평가, 강점/약점, 경쟁강도, 제안전략
+    - 공고문: 공고 요약
+    - 과업지시서: 과업 범위, 요구사항, 일정
+
+    모든 문서는 Supabase Storage에 저장됨.
+    """
+    try:
+        client = await get_async_client()
+
+        # bid_announcements에서 해당 공고 조회 (org_id 필터링 제거)
+        result = await client.table("bid_announcements").select("id, bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data").eq(
+            "bid_no", bid_no
+        ).maybe_single().execute()
+
+        if not result.data:
+            raise G2BServiceError(f"공고를 찾을 수 없습니다: {bid_no}")
+
+        bid = result.data
+        logger.info(f"[analyze] 공고 조회 완료: {bid_no}")
+
+        # 분석 문서 생성은 백그라운드에서 처리
+        async def _analyze_documents():
+            try:
+                doc_paths = await generate_bid_analysis_documents(
+                    bid_no=bid["bid_no"],
+                    bid_title=bid["bid_title"],
+                    agency=bid.get("agency", ""),
+                    budget_amount=bid.get("budget_amount"),
+                    deadline_date=bid.get("deadline_date", ""),
+                    content_text=bid.get("content_text", ""),
+                    raw_data=bid.get("raw_data", {}),
+                )
+
+                # bid_announcements 업데이트: 문서 경로 및 상태 저장
+                await client.table("bid_announcements").update({
+                    "md_rfp_analysis_path": doc_paths["md_rfp_analysis_path"],
+                    "md_notice_path": doc_paths["md_notice_path"],
+                    "md_instruction_path": doc_paths["md_instruction_path"],
+                    "analysis_status": "analyzed",
+                }).eq("id", bid["id"]).execute()
+
+                logger.info(f"✓ 공고 분석 문서 생성 완료: {bid_no}")
+            except Exception as e:
+                logger.error(f"✗ 공고 분석 문서 생성 실패 [{bid_no}]: {str(e)}")
+
+        background_tasks.add_task(_analyze_documents)
+
+        logger.info(f"[analyze] ✓ 공고 분석 시작됨 (백그라운드): {bid_no}")
+
+        return {
+            "bid_no": bid_no,
+            "status": "pending",
+            "message": "공고 분석이 백그라운드에서 처리 중입니다",
+        }
+
+    except Exception as e:
+        logger.error(f"공고 분석 오류 [{bid_no}]: {str(e)}")
+        raise G2BServiceError(f"공고 분석 중 오류가 발생했습니다: {str(e)}")
+
+
+# ─────────────────────────────────────────────
+# 공고 의사결정 (Go/No-Go)
+# ─────────────────────────────────────────────
+
+@router.post("/bid/{bid_no}/decision")
+async def decide_bid(
+    bid_no: str,
+    decision: str = Body(..., description="Go 또는 No-Go"),
+    decision_comment: Optional[str] = Body(None, description="의사결정 사유"),
+    current_user=Depends(get_current_user),
+):
+    """
+    공고 의사결정 기록 (Go/No-Go) — 로깅 전용
+
+    실제 proposal_status 업데이트는 /api/bids/{bid_no}/status 엔드포인트에서 처리
+    """
+    try:
+        if decision not in ["Go", "No-Go"]:
+            raise G2BServiceError("의사결정은 'Go' 또는 'No-Go'만 가능합니다.")
+
+        logger.info(
+            f"✓ 공고 의사결정 기록: {bid_no} = {decision}, "
+            f"사유: {decision_comment}, 결정자: {current_user.id}"
+        )
+
+        # 의사결정 로깅만 수행 (DB 업데이트는 /api/bids/{bid_no}/status에서 처리)
+        return {
+            "bid_no": bid_no,
+            "decision": decision,
+            "decision_comment": decision_comment,
+            "message": "의사결정이 기록되었습니다",
+        }
+
+    except Exception as e:
+        logger.error(f"공고 의사결정 오류 [{bid_no}]: {str(e)}")
+        raise G2BServiceError(f"의사결정 기록 중 오류가 발생했습니다: {str(e)}")
 
 
 # ─────────────────────────────────────────────
@@ -155,10 +338,10 @@ async def bid_award_info(
             ],
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-award-info 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰정보 조회 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰정보 조회 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -241,10 +424,10 @@ async def bid_stats(
             },
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"bid-stats 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰 통계 조회 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰 통계 조회 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -311,10 +494,10 @@ async def contract_results(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"contract-results 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -345,10 +528,10 @@ async def company_history(
             "items": items,
         }
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"company-history 오류: {e}")
-        raise HTTPException(status_code=500, detail="나라장터 API 호출 중 오류가 발생했습니다.")
+        raise G2BServiceError("나라장터 API 호출 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -381,10 +564,10 @@ async def competitors(
             )
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"competitors 분석 오류: {e}")
-        raise HTTPException(status_code=500, detail="경쟁사 분석 중 오류가 발생했습니다.")
+        raise G2BServiceError("경쟁사 분석 중 오류가 발생했습니다.")
 
 
 # ─────────────────────────────────────────────
@@ -401,7 +584,7 @@ async def bulk_sync(
         return result
     except Exception as e:
         logger.error(f"낙찰정보 일괄 동기화 오류: {e}")
-        raise HTTPException(status_code=500, detail="일괄 동기화 중 오류가 발생했습니다.")
+        raise InternalServiceError("일괄 동기화 중 오류가 발생했습니다.")
 
 
 @router.post("/bid-results/{bid_notice_id}")
@@ -415,7 +598,73 @@ async def collect_bid_result(
         result = await fetch_and_store_bid_result(bid_notice_id, domain)
         return result
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail="외부 API 호출 중 오류가 발생했습니다.")
+        raise _classify_g2b_error(e)
     except Exception as e:
         logger.error(f"낙찰정보 수집 오류: {e}")
-        raise HTTPException(status_code=500, detail="낙찰정보 수집 중 오류가 발생했습니다.")
+        raise G2BServiceError("낙찰정보 수집 중 오류가 발생했습니다.")
+
+
+# ─────────────────────────────────────────────
+# 모니터링 진단 + 수동 트리거
+# ─────────────────────────────────────────────
+
+@router.get("/monitor/diagnostics")
+async def monitor_diagnostics(current_user=Depends(get_current_user)):
+    """모니터링 시스템 상태 진단."""
+    from app.config import settings
+    from app.utils.supabase_client import get_async_client
+
+    diag: dict = {"scheduler": "unknown", "g2b_api_key": False, "teams_count": 0,
+                  "teams_with_keywords": 0, "g2b_api_reachable": False, "errors": []}
+
+    # 1) APScheduler
+    try:
+        from apscheduler.schedulers.asyncio import AsyncIOScheduler
+        diag["scheduler"] = "installed"
+    except ImportError:
+        diag["scheduler"] = "NOT_INSTALLED"
+        diag["errors"].append("apscheduler 미설치 — 스케줄러 비활성 상태")
+
+    # 2) G2B API 키
+    diag["g2b_api_key"] = bool(settings.g2b_api_key)
+    if not settings.g2b_api_key:
+        diag["errors"].append("G2B_API_KEY 미설정")
+
+    # 3) 팀 + 키워드
+    try:
+        client = await get_async_client()
+        teams_res = await client.table("teams").select("id, name, monitor_keywords").execute()
+        teams = teams_res.data or []
+        diag["teams_count"] = len(teams)
+        diag["teams_with_keywords"] = sum(
+            1 for t in teams if t.get("monitor_keywords") and len(t["monitor_keywords"]) > 0
+        )
+        if diag["teams_with_keywords"] == 0:
+            diag["errors"].append("monitor_keywords가 설정된 팀이 없음")
+    except Exception as e:
+        diag["errors"].append(f"teams 테이블 조회 실패: {e}")
+
+    # 4) G2B API 연결 테스트 (1건만)
+    if settings.g2b_api_key:
+        try:
+            async with G2BService() as g2b:
+                test = await g2b.search_bid_announcements("테스트", num_of_rows=1)
+                diag["g2b_api_reachable"] = True
+                diag["g2b_test_result_count"] = len(test)
+        except Exception as e:
+            diag["errors"].append(f"G2B API 호출 실패: {e}")
+
+    diag["status"] = "ok" if not diag["errors"] else "issues_found"
+    return diag
+
+
+@router.post("/monitor/trigger")
+async def trigger_monitor(current_user=Depends(get_current_user)):
+    """모니터링 수동 실행 (디버깅용)."""
+    from app.services.scheduled_monitor import daily_g2b_monitor
+    try:
+        result = await daily_g2b_monitor()
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        logger.error(f"수동 모니터링 실행 오류: {e}", exc_info=True)
+        raise InternalServiceError(f"모니터링 실행 실패: {e}")

@@ -1,0 +1,119 @@
+{
+  "rfp_text": "대규모 차세대 정보시스템 구축 ISP 수립 및 구현 용역.\n\n1. 사업개요\n- 사업명: 스마트시티 통합플랫폼 구축\n- 사업기간: 2026.07 ~ 2027.12 (18개월)\n- 사업예산: 1,500,000,000원 (부가세 포함)\n- 발주기관: 광역시청\n\n2. 주요 과업\n- 스마트시티 통합관제 플랫폼 ISP 수립\n- IoT 데이터 수집·분석 시스템 설계\n- 시민 서비스 포털 구축\n- AI 기반 교통/환경/안전 분석 모듈\n- 클라우드 인프라 설계 및 구축\n\n3. 평가 방법\n- 기술능력평가 85점 + 입찰가격 15점\n- 기술 발표심사 포함 (20분)\n- 세부: 사업이해(15), 추진전략(20), 기술방안(25), 수행방안(15), 인력/실적(10)\n\n4. 참여 자격\n- SW사업자 등록 대기업 또는 컨소시엄\n- 최근 5년 내 50억 이상 SI 수행 실적\n- 스마트시티 관련 사업 수행 경험\n- 정보보호 관련 인증 보유",
+  "rfp_analysis": {
+    "project_name": "스마트시티 통합플랫폼 구축",
+    "budget": 1500000000,
+    "duration_months": 18,
+    "eval_method": "기술+가격+발표심사",
+    "eval_weights": {
+      "사업이해": 15,
+      "추진전략": 20,
+      "기술방안": 25,
+      "수행방안": 15,
+      "인력실적": 10,
+      "가격": 15
+    },
+    "key_requirements": [
+      "스마트시티 통합관제 플랫폼 ISP",
+      "IoT 데이터 수집/분석 시스템",
+      "시민 서비스 포털",
+      "AI 교통/환경/안전 분석",
+      "클라우드 인프라 설계/구축"
+    ],
+    "compliance_items": [
+      "대기업 또는 컨소시엄",
+      "50억 이상 SI 실적",
+      "스마트시티 사업 경험",
+      "정보보호 인증",
+      "기술 발표심사 20분"
+    ]
+  },
+  "go_no_go": {
+    "verdict": "go",
+    "confidence": 75,
+    "positioning": "adjacent",
+    "rationale": "스마트시티 직접 실적은 부족하나, 유사 공공 SI + IoT 경험으로 진입 가능"
+  },
+  "strategy": {
+    "win_theme": "공공 대규모 SI 실적 + AI/IoT 융합 기술력으로 스마트시티 최적 파트너",
+    "ghost_theme": "순수 SI 업체는 AI/IoT 전문성 부족, 스타트업은 대규모 관리 역량 부족",
+    "positioning": "adjacent",
+    "differentiation": [
+      "100억+ 공공 SI 수행 실적 다수",
+      "자체 IoT 플랫폼 및 AI 분석 엔진 보유",
+      "클라우드 네이티브 아키텍처 전문성",
+      "스마트시티 관련 학술 연구 협력"
+    ],
+    "alternatives": [
+      {
+        "approach": "기존 패키지 솔루션 커스터마이징",
+        "our_approach": "마이크로서비스 기반 맞춤 개발",
+        "why_better": "확장성과 타 시스템 연동 유연성 확보"
+      },
+      {
+        "approach": "온프레미스 중심 구축",
+        "our_approach": "하이브리드 클라우드 아키텍처",
+        "why_better": "비용 최적화 + 탄력적 리소스 운영"
+      }
+    ]
+  },
+  "positioning_guide": "인접 포지셔닝: 기존 공공 SI 역량을 스마트시티 도메인으로 확장. 기술방안(25점) 배점이 최대이므로 AI/IoT 기술 아키텍처에 집중. 발표심사 대비 시각적 데모 준비.",
+  "plan": {
+    "team": {
+      "total_members": 30,
+      "roles": [
+        {"role": "총괄 PM", "name": "강총괄", "grade": "특급", "cert": "PMP, 정보관리기술사"},
+        {"role": "아키텍트", "name": "유설계", "grade": "특급", "count": 2},
+        {"role": "AI/ML 리드", "name": "정인공", "grade": "특급"},
+        {"role": "IoT 리드", "name": "김사물", "grade": "고급"},
+        {"role": "클라우드 엔지니어", "name": "이클라", "grade": "고급", "count": 3},
+        {"role": "풀스택 개발자", "grade": "고급/중급", "count": 12},
+        {"role": "데이터 엔지니어", "grade": "고급", "count": 4},
+        {"role": "UX 디자이너", "grade": "고급", "count": 2},
+        {"role": "QA 엔지니어", "grade": "중급", "count": 3},
+        {"role": "PMO", "grade": "중급", "count": 2}
+      ]
+    },
+    "schedule": {
+      "phases": [
+        {"phase": "1단계: ISP 수립", "duration": "4개월", "deliverables": ["ISP 보고서", "목표 아키텍처"]},
+        {"phase": "2단계: 설계/개발", "duration": "8개월", "deliverables": ["플랫폼 개발", "AI 모듈 개발", "시민 포털"]},
+        {"phase": "3단계: 통합/시험", "duration": "4개월", "deliverables": ["통합 테스트", "성능 테스트"]},
+        {"phase": "4단계: 안정화/이관", "duration": "2개월", "deliverables": ["운영 매뉴얼", "교육", "이관 완료"]}
+      ]
+    },
+    "budget": {
+      "total": 1500000000,
+      "labor": 1050000000,
+      "overhead": 300000000,
+      "equipment": 100000000,
+      "profit": 50000000
+    }
+  },
+  "dynamic_sections": [
+    {"id": "sec-1", "title": "사업 이해 및 환경 분석", "type": "understand"},
+    {"id": "sec-2", "title": "추진 전략 및 차별화", "type": "strategy"},
+    {"id": "sec-3", "title": "기술 아키텍처", "type": "technical"},
+    {"id": "sec-4", "title": "수행 방법론", "type": "methodology"},
+    {"id": "sec-5", "title": "프로젝트 관리 방안", "type": "management"},
+    {"id": "sec-6", "title": "투입 인력 및 조직", "type": "personnel"},
+    {"id": "sec-7", "title": "수행 실적", "type": "track_record"},
+    {"id": "sec-8", "title": "보안 대책", "type": "security"},
+    {"id": "sec-9", "title": "유지보수 및 지속가능성", "type": "maintenance"},
+    {"id": "sec-10", "title": "기대효과 및 부가가치", "type": "added_value"}
+  ],
+  "storylines": {
+    "sections": [
+      {
+        "section_id": "sec-1",
+        "key_message": "스마트시티 시대의 도시 운영 패러다임 변화를 깊이 이해합니다",
+        "narrative_arc": "글로벌 트렌드→국내 현황→광역시 고유 과제→비전",
+        "supporting_points": ["글로벌 스마트시티 동향", "국내 정책 방향", "광역시 특화 과제"],
+        "win_theme_connection": "대규모 SI 경험 기반 도시 인프라 이해",
+        "transition_to_next": "이러한 이해를 바탕으로 최적의 추진 전략을 수립합니다."
+      }
+    ]
+  },
+  "prev_sections_context": "",
+  "storyline_context": ""
+}

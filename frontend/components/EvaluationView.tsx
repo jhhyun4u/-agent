@@ -55,7 +55,9 @@ export default function EvaluationView({
       {/* ── 종합 점수 헤더 ── */}
       <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-[#ededed]">모의평가 결과</h2>
+          <h2 className="text-sm font-semibold text-[#ededed]">
+            모의평가 결과
+          </h2>
           <div className={`text-lg font-bold ${scoreColor(avgTotal)}`}>
             {avgTotal.toFixed(1)}
             <span className="text-xs text-[#8c8c8c] font-normal"> / 100</span>
@@ -94,7 +96,10 @@ export default function EvaluationView({
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-[#ededed] mb-0.5">
-                    {w.area} — <span className="text-[#8c8c8c] font-normal">{w.description}</span>
+                    {w.area} —{" "}
+                    <span className="text-[#8c8c8c] font-normal">
+                      {w.description}
+                    </span>
                   </p>
                   {w.related_section && (
                     <Link
@@ -124,9 +129,7 @@ export default function EvaluationView({
                 className="bg-[#111111] border border-[#262626] rounded-xl overflow-hidden"
               >
                 <button
-                  onClick={() =>
-                    setExpandedQa(expandedQa === idx ? null : idx)
-                  }
+                  onClick={() => setExpandedQa(expandedQa === idx ? null : idx)}
                   className="w-full flex items-center gap-2 px-4 py-3 text-left"
                 >
                   <svg
@@ -151,7 +154,9 @@ export default function EvaluationView({
                 {expandedQa === idx && (
                   <div className="px-4 pb-3 pt-0">
                     <div className="pl-5 border-l-2 border-[#3ecf8e]/30">
-                      <p className="text-[10px] text-[#8c8c8c] mb-1">모범답변:</p>
+                      <p className="text-[10px] text-[#8c8c8c] mb-1">
+                        모범답변:
+                      </p>
                       <p className="text-xs text-[#ededed] leading-relaxed">
                         {qa.answer}
                       </p>
@@ -183,7 +188,8 @@ function EvaluatorCard({
     <div className="bg-[#111111] border border-[#262626] rounded-xl p-3">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-medium text-[#ededed]">
-          {icons[index] ?? "👤"} 평가위원 {String.fromCharCode(65 + index)} ({role})
+          {icons[index] ?? "👤"} 평가위원 {String.fromCharCode(65 + index)} (
+          {role})
         </span>
         <span className={`text-sm font-bold ${scoreColor(scores.total)}`}>
           {scores.total}점
@@ -191,21 +197,23 @@ function EvaluatorCard({
       </div>
 
       <div className="grid grid-cols-2 gap-1.5">
-        {(Object.keys(AXIS_LABELS) as Array<keyof typeof AXIS_LABELS>).map((key) => {
-          const score = scores[key as keyof EvaluatorScore];
-          if (typeof score !== "number") return null;
-          return (
-            <div
-              key={key}
-              className={`flex items-center justify-between px-2 py-1 rounded border text-[10px] ${scoreBg(score)}`}
-            >
-              <span className="text-[#8c8c8c]">{AXIS_LABELS[key]}</span>
-              <span className={`font-medium ${scoreColor(score)}`}>
-                {score}점
-              </span>
-            </div>
-          );
-        })}
+        {(Object.keys(AXIS_LABELS) as Array<keyof typeof AXIS_LABELS>).map(
+          (key) => {
+            const score = scores[key as keyof EvaluatorScore];
+            if (typeof score !== "number") return null;
+            return (
+              <div
+                key={key}
+                className={`flex items-center justify-between px-2 py-1 rounded border text-[10px] ${scoreBg(score)}`}
+              >
+                <span className="text-[#8c8c8c]">{AXIS_LABELS[key]}</span>
+                <span className={`font-medium ${scoreColor(score)}`}>
+                  {score}점
+                </span>
+              </div>
+            );
+          },
+        )}
       </div>
 
       {comments && (

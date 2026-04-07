@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposal Coworker - 제안 프로젝트</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #0f0f0f;
+        --surface: #111111;
+        --card: #1c1c1c;
+        --border: #262626;
+        --text: #ededed;
+        --muted: #8c8c8c;
+        --accent: #3ecf8e;
+        --overlay: rgba(0, 0, 0, 0.5);
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 208px;
+        background-color: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 16px 12px;
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+
+      .sidebar.collapsed {
+        width: 48px;
+      }
+
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        margin-bottom: 24px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 150ms ease;
+      }
+
+      .sidebar-header:hover {
+        background-color: var(--card);
+      }
+
+      .sidebar.collapsed .sidebar-header span {
+        display: none;
+      }
+
+      .sidebar-logo {
+        width: 24px;
+        height: 24px;
+        background-color: var(--accent);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--bg);
+        font-size: 12px;
+      }
+
+      .nav-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 150ms ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item:hover {
+        background-color: var(--card);
+        color: var(--text);
+      }
+
+      .nav-item.active {
+        background-color: var(--card);
+        color: var(--text);
+      }
+
+      .sidebar.collapsed .nav-item span {
+        display: none;
+      }
+
+      .nav-group-label {
+        padding: 12px 12px 8px;
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar.collapsed .nav-group-label {
+        display: none;
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      /* Main Content */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg);
+      }
+
+      .header {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-title {
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 150ms ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        color: var(--bg);
+      }
+
+      .btn-primary:hover {
+        background-color: #34b87a;
+      }
+
+      .btn-secondary {
+        background-color: var(--card);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        background-color: #303030;
+      }
+
+      .content {
+        flex: 1;
+        padding: 32px;
+        overflow-y: auto;
+      }
+
+      .filters {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .filter-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background-color: transparent;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 150ms ease;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background-color: var(--card);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .proposals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 16px;
+      }
+
+      .proposal-card {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+
+      .proposal-card:hover {
+        border-color: #303030;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        flex: 1;
+      }
+
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-waiting {
+        background-color: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+      }
+
+      .status-in-progress {
+        background-color: rgba(62, 207, 142, 0.1);
+        color: #3ecf8e;
+      }
+
+      .status-completed {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+      }
+
+      .status-submitted {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+
+      .status-presentation {
+        background-color: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+      }
+
+      .status-closed {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+
+      .card-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 12px 0;
+        padding: 12px 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .meta-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #555;
+      }
+
+      .meta-value {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .meta-value.empty {
+        color: #6b7280;
+        font-style: italic;
+      }
+
+      .assign-badge {
+        display: inline-block;
+        background-color: var(--border);
+        color: var(--text);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+
+      .assign-badge:hover {
+        background-color: #303030;
+        border-color: var(--accent);
+      }
+
+      .assign-badge.assigned {
+        background-color: rgba(62, 207, 142, 0.1);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+      }
+
+      .dday {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .dday.critical {
+        color: #ef4444;
+      }
+
+      .dday.warning {
+        color: #f59e0b;
+      }
+
+      .dday.normal {
+        color: var(--accent);
+      }
+
+      .progress-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .progress {
+        flex: 1;
+        height: 6px;
+        background-color: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background-color: var(--accent);
+        border-radius: 3px;
+      }
+
+      .progress-text {
+        font-size: 12px;
+        color: var(--muted);
+        min-width: 45px;
+        text-align: right;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .card-action-btn {
+        flex: 1;
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background-color: transparent;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 150ms ease;
+      }
+
+      .card-action-btn:hover {
+        background-color: var(--border);
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      .empty-title {
+        font-size: 18px;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .empty-text {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 1024px) {
+        .sidebar {
+          position: fixed;
+          left: -208px;
+          top: 0;
+          height: 100vh;
+          z-index: 40;
+          transition: left 300ms ease-in-out;
+        }
+
+        .sidebar.open {
+          left: 0;
+        }
+
+        .overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 30;
+        }
+
+        .overlay.open {
+          display: block;
+        }
+
+        .proposals-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .content {
+          padding: 16px;
+        }
+
+        .header {
+          padding: 12px 16px;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3a3a3a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header" onclick="toggleSidebar(event)">
+          <div class="sidebar-logo">PA</div>
+          <span>Proposal Coworker</span>
+        </div>
+
+        <div class="nav-item">
+          <span>🏠</span>
+          <span>대시보드</span>
+        </div>
+
+        <div class="nav-item">
+          <span>👁️</span>
+          <span>공고 모니터링</span>
+        </div>
+
+        <div class="nav-item active">
+          <span>📄</span>
+          <span>제안 프로젝트</span>
+        </div>
+
+        <div class="nav-group-label">
+          <span>📖 지식 베이스</span>
+          <span>▾</span>
+        </div>
+
+        <div class="nav-item">
+          <span>🔍</span>
+          <span>통합 검색</span>
+        </div>
+
+        <div class="nav-item">
+          <span>📝</span>
+          <span>콘텐츠</span>
+        </div>
+
+        <div class="nav-item">
+          <span>🏢</span>
+          <span>발주기관</span>
+        </div>
+
+        <div class="nav-item">
+          <span>🎯</span>
+          <span>경쟁사</span>
+        </div>
+
+        <div class="nav-item">
+          <span>💡</span>
+          <span>교훈</span>
+        </div>
+
+        <div class="nav-item">
+          <span>❓</span>
+          <span>Q&A</span>
+        </div>
+
+        <div class="nav-item">
+          <span>💰</span>
+          <span>노임단가</span>
+        </div>
+
+        <div class="nav-item">
+          <span>📊</span>
+          <span>시장가격</span>
+        </div>
+
+        <div class="nav-group-label" style="margin-top: 12px">
+          <span>📌 최근 작업</span>
+        </div>
+
+        <div class="nav-item" style="font-size: 12px; padding: 6px 12px">
+          <span>🟠</span>
+          <span>ISP 시스템 제안</span>
+        </div>
+
+        <div class="nav-item" style="font-size: 12px; padding: 6px 12px">
+          <span>🟢</span>
+          <span>보안 솔루션</span>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="nav-item">
+            <span>⚙️</span>
+            <span>설정</span>
+          </div>
+          <div class="nav-item" style="font-size: 12px; padding: 6px 12px">
+            <span>dev@tenopa.co.kr</span>
+          </div>
+          <div class="nav-item">
+            <span>🚪</span>
+            <span>로그아웃</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main">
+        <div class="header">
+          <h1 class="header-title">제안 프로젝트</h1>
+          <div class="header-actions">
+            <button class="btn btn-secondary">📊 분석</button>
+            <button class="btn btn-primary">+ 신규 제안</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="filters">
+            <button class="filter-btn active">전체</button>
+            <button class="filter-btn">⏳ 대기 중</button>
+            <button class="filter-btn">🟢 진행 중</button>
+            <button class="filter-btn">🔵 완료됨</button>
+            <button class="filter-btn">🟡 제출됨</button>
+            <button class="filter-btn">🟣 발표중</button>
+            <button class="filter-btn">🔴 종료됨</button>
+            <button class="filter-btn">⚠️ D-3 이내</button>
+          </div>
+
+          <div class="proposals-grid">
+            <!-- Card 1: WAITING (담당자 할당 완료, 착수 대기) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">K 공사 터널 운영 용역</h3>
+                <span class="status-badge status-waiting">⏳ 대기</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">K 공사</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">수주전략팀</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">마감일</div>
+                  <div class="meta-value dday warning">D-5</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩2.3B</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge" onclick="assignPM(this)"
+                    >할당 필요</span
+                  >
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge" onclick="assignPL(this)"
+                    >할당 필요</span
+                  >
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text">Phase 0/5</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">상세 정보</button>
+                <button class="card-action-btn" onclick="startProposal(this)">
+                  착수
+                </button>
+              </div>
+            </div>
+
+            <!-- Card 2: IN_PROGRESS (제안서 작성 중) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">서울시 교통 시뮬레이션</h3>
+                <span class="status-badge status-in-progress">🟢 진행 중</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">서울시청</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">인프라본부</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">마감일</div>
+                  <div class="meta-value dday warning">D-6</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩1.7B</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge assigned">이순신</span>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge assigned">김영희</span>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 55%"></div>
+                </div>
+                <div class="progress-text">Phase 3/5</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">계속 작성</button>
+                <button class="card-action-btn">미리보기</button>
+              </div>
+            </div>
+
+            <!-- Card 3: COMPLETED (제안서 작성 완료, 최종 검토 중) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">인천항 물류 센터 구축</h3>
+                <span class="status-badge status-completed">🔵 완료됨</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">인천항만공사</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">상수도팀</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">마감일</div>
+                  <div class="meta-value dday critical">D-2</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩4.9B</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge assigned">박준호</span>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge assigned">최민지</span>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="progress-text">Phase 5/5</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">미리보기</button>
+                <button class="card-action-btn">📤 제출하기</button>
+              </div>
+            </div>
+
+            <!-- Card 4: SUBMITTED (제출 후 평가 대기 중) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">부산 신도시 개발 마스터플랜</h3>
+                <span class="status-badge status-submitted">🟡 제출됨</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">부산시청</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">도시개발팀</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제출일</div>
+                  <div class="meta-value">2026-03-20</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩1.1B</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge assigned">이준석</span>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge assigned">정서연</span>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <div class="progress-text">평가 대기</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">조회</button>
+                <button class="card-action-btn">📋 평가현황</button>
+              </div>
+            </div>
+
+            <!-- Card 5: PRESENTATION (발표 준비 및 리허설) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">대구 상수도 망 재구축</h3>
+                <span class="status-badge status-presentation">🟣 발표중</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">대구 상수도</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">상수도사업팀</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">발표일</div>
+                  <div class="meta-value dday warning">D-4</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩2.95B</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge assigned">한동욱</span>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge assigned">이은경</span>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="progress-text">발표 준비</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">🎬 발표자료</button>
+                <button class="card-action-btn">리허설 기록</button>
+              </div>
+            </div>
+
+            <!-- Card 6: CLOSED (평가 결과 등록 및 피드백 정리 완료) -->
+            <div class="proposal-card">
+              <div class="card-header">
+                <h3 class="card-title">경주 문화유산 기록화 사업</h3>
+                <span class="status-badge status-closed">🔴 종료됨</span>
+              </div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <div class="meta-label">발주기관</div>
+                  <div class="meta-value">경주시청</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">제안팀</div>
+                  <div class="meta-value">문화사업팀</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">결과</div>
+                  <div
+                    class="meta-value"
+                    style="color: #22c55e; font-weight: 700"
+                  >
+                    🏆 수주
+                  </div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">입찰가</div>
+                  <div class="meta-value">₩820M</div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PM</div>
+                  <span class="assign-badge assigned">조은미</span>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-label">PL</div>
+                  <span class="assign-badge assigned">황재훈</span>
+                </div>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress">
+                  <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="progress-text">완료 (2026-02-15)</div>
+              </div>
+
+              <div class="card-actions">
+                <button class="card-action-btn">📊 평가 분석</button>
+                <button class="card-action-btn">💡 교훈 보기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <script>
+      function toggleSidebar(event) {
+        event?.stopPropagation?.();
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const isMobile = window.innerWidth < 1024;
+
+        if (isMobile) {
+          sidebar.classList.toggle("open");
+          overlay.classList.toggle("open");
+        } else {
+          sidebar.classList.toggle("collapsed");
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      }
+
+      // PM/PL 할당 함수
+      function assignPM(element) {
+        const pmNames = ["이순신", "박준호", "이준석", "한동욱", "조은미"];
+        const randomName = pmNames[Math.floor(Math.random() * pmNames.length)];
+
+        element.textContent = randomName;
+        element.classList.add("assigned");
+        element.removeAttribute("onclick");
+
+        // 카드 상태 확인 및 진행 상태로 변경
+        checkAndUpdateCardStatus(element.closest(".proposal-card"));
+      }
+
+      function assignPL(element) {
+        const plNames = ["김영희", "최민지", "정서연", "이은경", "황재훈"];
+        const randomName = plNames[Math.floor(Math.random() * plNames.length)];
+
+        element.textContent = randomName;
+        element.classList.add("assigned");
+        element.removeAttribute("onclick");
+
+        // 카드 상태 확인 및 진행 상태로 변경
+        checkAndUpdateCardStatus(element.closest(".proposal-card"));
+      }
+
+      // 카드 상태 자동 업데이트
+      function checkAndUpdateCardStatus(card) {
+        const pmBadge = card.querySelector(
+          ".meta-item:nth-child(5) .assign-badge",
+        );
+        const plBadge = card.querySelector(
+          ".meta-item:nth-child(6) .assign-badge",
+        );
+
+        const pmAssigned = pmBadge?.classList.contains("assigned");
+        const plAssigned = plBadge?.classList.contains("assigned");
+
+        // PM과 PL 모두 할당되면 상태를 진행 중으로 변경
+        if (pmAssigned && plAssigned) {
+          const statusBadge = card.querySelector(".status-badge");
+
+          // 상태 업데이트
+          if (statusBadge.textContent.trim() === "대기") {
+            statusBadge.textContent = "진행 중";
+            statusBadge.classList.remove("status-waiting");
+            statusBadge.classList.add("status-processing");
+
+            // 프로그레스 업데이트
+            const progressBar = card.querySelector(".progress-bar");
+            const progressFill = progressBar.querySelector(".progress-fill");
+            const progressText = progressBar.querySelector(".progress-text");
+
+            progressFill.style.width = "20%";
+            progressText.textContent = "Phase 1/5";
+
+            // 버튼 변경
+            const actionButtons = card.querySelectorAll(".card-action-btn");
+            if (actionButtons.length >= 2) {
+              actionButtons[0].textContent = "계속 작성";
+              actionButtons[1].textContent = "상세 보기";
+            }
+          }
+        }
+      }
+
+      // 착수(진행) 버튼 클릭 시 처리
+      function startProposal(button) {
+        const card = button.closest(".proposal-card");
+        const statusBadge = card.querySelector(".status-badge");
+
+        // PM, PL 확인
+        const pmBadge = card.querySelector(
+          ".meta-item:nth-child(5) .assign-badge",
+        );
+        const plBadge = card.querySelector(
+          ".meta-item:nth-child(6) .assign-badge",
+        );
+
+        const pmAssigned = pmBadge?.classList.contains("assigned");
+        const plAssigned = plBadge?.classList.contains("assigned");
+
+        if (!pmAssigned || !plAssigned) {
+          alert("먼저 PM과 PL을 할당해주세요.");
+          return;
+        }
+
+        // 대기 상태 → 진행 중으로 전환
+        if (statusBadge.textContent.includes("대기")) {
+          statusBadge.textContent = "🟢 진행 중";
+          statusBadge.classList.remove("status-waiting");
+          statusBadge.classList.add("status-in-progress");
+
+          // 프로그레스 업데이트
+          const progressBar = card.querySelector(".progress-bar");
+          const progressFill = progressBar.querySelector(".progress-fill");
+          const progressText = progressBar.querySelector(".progress-text");
+
+          progressFill.style.width = "20%";
+          progressText.textContent = "Phase 1/5";
+
+          // 버튼 변경
+          const actionButtons = card.querySelectorAll(".card-action-btn");
+          if (actionButtons.length >= 2) {
+            actionButtons[0].textContent = "계속 작성";
+            actionButtons[1].textContent = "미리보기";
+          }
+
+          alert("제안 프로젝트가 시작되었습니다. 제안서 작성을 시작합니다.");
+          // window.location.href = '/proposals/' + card.id + '/edit';
+          return;
+        }
+
+        // 진행 중이면 계속 작성 페이지로 이동
+        alert("제안서 작성 페이지로 이동합니다.");
+        // window.location.href = '/proposals/' + card.id + '/edit';
+      }
+
+      // Close sidebar on navigation click (mobile)
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          if (window.innerWidth < 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

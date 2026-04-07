@@ -2,18 +2,61 @@
 Conditional Edge 라우팅 함수 (§11)
 
 각 함수는 ProposalState를 받아 다음 노드 결정 문자열 반환.
+
+단순 approved/rejected 패턴은 _approval_router 팩토리로 생성.
+복잡한 다방향 라우팅은 개별 함수로 유지.
 """
+
+from typing import Callable
 
 from app.graph.state import ProposalState
 
 
+def _approval_router(step_key: str, *, reject_label: str = "rejected") -> Callable:
+    """단순 승인/거부 라우팅 팩토리."""
+    def _route(state: ProposalState) -> str:
+        approval = state.get("approval", {}).get(step_key)
+        if approval and approval.status == "approved":
+            return "approved"
+        return reject_label
+    _route.__doc__ = f"{step_key} 승인/거부 라우팅."
+    _route.__name__ = f"route_after_{step_key}_review"
+    return _route
 
-def route_after_rfp_review(state: ProposalState) -> str:
-    """STEP 1-①: RFP 분석 확인 → 리서치 조사 또는 재분석 (v3.2: research_gather 경유)."""
-    approval = state.get("approval", {}).get("rfp")
+
+# ── 단순 패턴 (팩토리 생성) ──
+
+route_after_rfp_review = _approval_router("rfp")
+route_after_proposal_review = _approval_router("proposal", reject_label="rework")
+route_after_ppt_review = _approval_router("ppt", reject_label="rework")
+route_after_submission_plan_review = _approval_router("submission_plan")
+route_after_cost_sheet_review = _approval_router("cost_sheet")
+route_after_submission_checklist_review = _approval_router("submission_checklist")
+def route_after_mock_eval_review(state: ProposalState) -> str:
+    """STEP 11A: 모의평가 리뷰 라우팅.
+
+    - approved: 수주 가능성 높음 → 발표 준비 / 최종 결과 등록 진행
+    - rework: 특정 섹션/항목 개선 필요 → 섹션 재작성 루프
+    - rejected: 전략/구조 재검토 필요 → 전략 재수립
+    """
+    approval = state.get("approval", {}).get("mock_evaluation")
     if approval and approval.status == "approved":
         return "approved"
+
+    # 피드백에서 재작업 대상 확인
+    feedback = state.get("feedback_history", [])
+    latest = feedback[-1] if feedback else {}
+    rework_targets = latest.get("rework_targets", [])
+
+    if "strategy_generate" in rework_targets:
+        return "rework_strategy"
+    if rework_targets:  # 특정 섹션 개선
+        return "rework_sections"
+
     return "rejected"
+
+
+route_after_eval_result_review = _approval_router("eval_result")
 
 
 def route_after_gng_review(state: ProposalState) -> str:
@@ -90,14 +133,6 @@ def route_after_section_review(state: ProposalState) -> str:
     return "rewrite"
 
 
-def route_after_proposal_review(state: ProposalState) -> str:
-    """v3.5: approved → presentation_strategy. rework → 섹션별 재작성 루프."""
-    approval = state.get("approval", {}).get("proposal")
-    if approval and approval.status == "approved":
-        return "approved"
-    return "rework"
-
-
 def route_after_presentation_strategy(state: ProposalState) -> str:
     """v3.2: 발표전략 조건부. 서류심사이면 건너뛰기."""
     rfp = state.get("rfp_analysis")
@@ -112,8 +147,77 @@ def route_after_presentation_strategy(state: ProposalState) -> str:
     return "proceed"
 
 
-def route_after_ppt_review(state: ProposalState) -> str:
-    approval = state.get("approval", {}).get("ppt")
+def route_after_section_validator_review(state: ProposalState) -> str:
+    """STEP 8B 섹션 검증 리뷰 라우팅.
+
+    - approved: 검증 통과 → 통합(8C) 진행
+    - needs_rework: 섹션 재작성 필요 → proposal_start_gate로 복귀
+    - rejected: 검증 실패 → proposal_section_validator 재실행
+    """
+    approval = state.get("approval", {}).get("section_validation")
     if approval and approval.status == "approved":
         return "approved"
-    return "rework"
+
+    # 피드백 확인
+    feedback = state.get("feedback_history", [])
+    latest = feedback[-1] if feedback else {}
+
+    if latest.get("needs_rework"):
+        return "needs_rework"
+    if latest.get("rejected"):
+        return "rejected"
+
+    return "rejected"
+
+
+def route_after_feedback_processor_review(state: ProposalState) -> str:
+    """STEP 8E 피드백 처리 후 라우팅.
+
+    - proceed_rewrite: 피드백 기반 재작성 필요 → proposal_write_next_v2
+    - skip_to_ppt: 우수한 평가, PPT 직진 → presentation_strategy
+    """
+    feedback_summary = state.get("feedback_summary")
+    if not feedback_summary:
+        # 피드백 없으면 PPT 진행
+        return "skip_to_ppt"
+
+    # 임계값: estimated_score_improvement >= 15점이면 재작성 필요
+    improvement = getattr(feedback_summary, "estimated_score_improvement", 0)
+    if improvement >= 15:
+        return "proceed_rewrite"
+
+    # critical_gaps 확인
+    critical_gaps = getattr(feedback_summary, "critical_gaps", [])
+    if critical_gaps:
+        return "proceed_rewrite"
+
+    return "skip_to_ppt"
+
+
+def route_after_rewrite_review(state: ProposalState) -> str:
+    """STEP 8F 재작성 리뷰 라우팅.
+
+    - approved: 재작성 완료, 품질 통과 → PPT 진행(presentation_strategy)
+    - needs_more_rewrite: 추가 재작성 필요 → proposal_write_next_v2
+    - back_to_validation: 검증 재실행 필요 → proposal_section_validator
+    """
+    approval = state.get("approval", {}).get("rewrite")
+    if approval and approval.status == "approved":
+        return "approved"
+
+    # 피드백 확인
+    feedback = state.get("feedback_history", [])
+    latest = feedback[-1] if feedback else {}
+
+    if latest.get("back_to_validation"):
+        return "back_to_validation"
+    if latest.get("needs_more_rewrite"):
+        return "needs_more_rewrite"
+
+    return "needs_more_rewrite"
+
+
+# ── 복잡한 다방향 라우팅 (개별 유지) ──
+# route_after_gng_review, route_after_strategy_review, route_after_bid_plan_review,
+# route_after_plan_review, route_after_self_review, route_after_section_review,
+# route_after_presentation_strategy — 위에서 개별 정의됨

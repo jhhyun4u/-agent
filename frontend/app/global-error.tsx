@@ -13,7 +13,8 @@ export default function GlobalError({
         <div className="text-center max-w-md">
           <h2 className="text-lg font-semibold mb-2">시스템 오류</h2>
           <p className="text-sm text-[#8c8c8c] mb-6">
-            {error.message || "시스템에 문제가 발생했습니다. 잠시 후 다시 시도해주세요."}
+            {error.message ||
+              "시스템에 문제가 발생했습니다. 잠시 후 다시 시도해주세요."}
           </p>
           <button
             onClick={reset}

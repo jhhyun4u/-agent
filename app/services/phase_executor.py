@@ -8,7 +8,6 @@ import asyncio
 import json
 import logging
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 import anthropic
 from app.config import settings
@@ -159,7 +158,7 @@ class PhaseExecutor:
         docx_ok = pptx_ok = False
         try:
             client = await get_async_client()
-            bucket = "proposal-files"
+            bucket = settings.storage_bucket_proposals
 
             uploads = [
                 (docx_path, f"{self.proposal_id}/proposal.docx",

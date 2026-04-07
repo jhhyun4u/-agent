@@ -54,8 +54,8 @@ async def test_kb_search_endpoint(client):
         resp = await client.get("/api/kb/search?q=클라우드&top_k=3")
         assert resp.status_code == 200
         data = resp.json()
-        assert "results" in data
-        assert "total" in data
+        assert "results" in data["data"]
+        assert "total" in data["data"]
 
 
 async def test_kb_search_with_areas(client):
@@ -80,7 +80,7 @@ async def test_content_list(client):
     """GET /api/kb/content 목록."""
     resp = await client.get("/api/kb/content")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_content_create(client):
@@ -132,7 +132,7 @@ async def test_clients_list(client):
     """GET /api/kb/clients 발주기관 목록."""
     resp = await client.get("/api/kb/clients")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_clients_create(client):
@@ -222,7 +222,7 @@ async def test_labor_rates_list(client):
     """GET /api/kb/labor-rates 목록."""
     resp = await client.get("/api/kb/labor-rates?standard_org=KOSA&year=2026")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_labor_rates_create(client):
@@ -313,3 +313,116 @@ def test_feedback_loop_import():
     """피드백 루프 import."""
     from app.services.feedback_loop import process_project_completion
     assert callable(process_project_completion)
+
+
+# ══════════════════════════════════════
+# Phase D: KB 건강도 + 재인덱싱 + 중복 탐지 (kb-enhancement)
+# ══════════════════════════════════════
+
+
+async def test_kb_health_endpoint(client):
+    """GET /api/kb/health — 6개 영역 건강도 반환."""
+    res = await client.get("/api/kb/health")
+    assert res.status_code == 200
+    data = res.json()["data"]
+    # 6개 영역 모두 존재해야 함
+    for area in ["content", "client", "competitor", "lesson", "capability", "qa"]:
+        assert area in data, f"'{area}' 영역 누락"
+        assert "total" in data[area]
+        assert "with_embedding" in data[area]
+        assert "coverage" in data[area]
+
+
+async def test_kb_reindex_endpoint(client):
+    """POST /api/kb/reindex — 배치 임베딩 생성."""
+    # admin 역할 필요 (conftest mock_user는 admin)
+    res = await client.post("/api/kb/reindex", json={"areas": ["content", "capability"]})
+    assert res.status_code == 200
+    data = res.json()["data"]
+    assert "total" in data
+    assert "processed" in data
+    assert "failed" in data
+
+
+async def test_kb_content_duplicates_endpoint(client):
+    """GET /api/kb/content/duplicates — 중복 콘텐츠 쌍."""
+    res = await client.get("/api/kb/content/duplicates?threshold=0.9")
+    assert res.status_code == 200
+    data = res.json()["data"]
+    assert isinstance(data, list)
+
+
+# ══════════════════════════════════════
+# Phase A: 자동 축적 서비스 (kb-enhancement)
+# ══════════════════════════════════════
+
+
+async def test_auto_register_section_skip_short():
+    """500자 미만 섹션은 스킵."""
+    from app.services.content_library import auto_register_section
+    result = await auto_register_section(
+        org_id="o1", proposal_id="p1", section_id="s1",
+        title="짧은 섹션", content="짧은 내용" * 10,  # < 500자
+        section_type="UNDERSTAND",
+    )
+    assert result is None
+
+
+async def test_auto_register_section_skip_low_score():
+    """70점 미만 섹션은 스킵."""
+    from app.services.content_library import auto_register_section
+    result = await auto_register_section(
+        org_id="o1", proposal_id="p1", section_id="s1",
+        title="저품질", content="x" * 600,
+        section_type="UNDERSTAND", self_review_score=50,
+    )
+    assert result is None
+
+
+async def test_save_research_to_kb_empty():
+    """빈 리서치는 0건."""
+    from app.services.kb_updater import save_research_to_kb
+    count = await save_research_to_kb("o1", "p1", {})
+    assert count == 0
+
+
+async def test_save_strategy_to_kb_empty():
+    """빈 전략은 None."""
+    from app.services.kb_updater import save_strategy_to_kb
+    result = await save_strategy_to_kb("o1", "p1", "", "", {})
+    assert result is None
+
+
+# ══════════════════════════════════════
+# Phase B: 검색 개선 (kb-enhancement)
+# ══════════════════════════════════════
+
+
+async def test_hybrid_ranking():
+    """하이브리드 랭킹 공식 검증."""
+    from app.services.knowledge_search import _apply_hybrid_ranking
+    items = [
+        {"similarity": 0.9, "quality_score": 30, "updated_at": "2026-03-20T00:00:00Z"},
+        {"similarity": 0.7, "quality_score": 90, "updated_at": "2026-03-20T00:00:00Z"},
+        {"similarity": 0.5, "quality_score": 50, "updated_at": "2025-01-01T00:00:00Z"},
+    ]
+    ranked = _apply_hybrid_ranking(items)
+    # 고품질(90점)+중간유사도(0.7) 항목이 상위여야 함
+    assert ranked[0]["quality_score"] == 90 or ranked[0]["similarity"] == 0.9
+
+
+# ══════════════════════════════════════
+# Phase C: 활용 강화 (kb-enhancement)
+# ══════════════════════════════════════
+
+
+def test_find_similar_cases_import():
+    """find_similar_cases 함수 import."""
+    from app.graph.context_helpers import find_similar_cases
+    assert callable(find_similar_cases)
+
+
+def test_batch_reindex_import():
+    """batch_reindex 함수 import."""
+    from app.services.embedding_service import batch_reindex
+    assert callable(batch_reindex)

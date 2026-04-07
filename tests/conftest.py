@@ -4,6 +4,8 @@ import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+from app.models.auth_schemas import CurrentUser
+
 
 # ── 이벤트 루프 ──
 
@@ -29,46 +31,46 @@ def output_dir(tmp_path) -> Path:
 @pytest.fixture
 def mock_user():
     """기본 admin 사용자."""
-    return {
-        "id": "user-001",
-        "email": "admin@tenopa.com",
-        "name": "관리자",
-        "role": "admin",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-001",
+        email="admin@tenopa.com",
+        name="관리자",
+        role="admin",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_member_user():
     """일반 멤버 사용자."""
-    return {
-        "id": "user-002",
-        "email": "member@tenopa.com",
-        "name": "팀원",
-        "role": "member",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-002",
+        email="member@tenopa.com",
+        name="팀원",
+        role="member",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 @pytest.fixture
 def mock_lead_user():
     """팀장 사용자."""
-    return {
-        "id": "user-003",
-        "email": "lead@tenopa.com",
-        "name": "팀장",
-        "role": "lead",
-        "team_id": "team-001",
-        "division_id": "div-001",
-        "org_id": "org-001",
-        "status": "active",
-    }
+    return CurrentUser(
+        id="user-003",
+        email="lead@tenopa.com",
+        name="팀장",
+        role="lead",
+        team_id="team-001",
+        division_id="div-001",
+        org_id="org-001",
+        status="active",
+    )
 
 
 # ── Supabase Mock ──
@@ -79,6 +81,8 @@ class MockQueryBuilder:
     def __init__(self, data=None, count=None):
         self._data = data or []
         self._count = count
+        self._is_single = False
+        self._filters = []  # [(key, value, op), ...]
 
     def _chain(self):
         return self
@@ -89,7 +93,12 @@ class MockQueryBuilder:
     update = property(lambda self: lambda *a, **kw: self._chain())
     delete = property(lambda self: lambda *a, **kw: self._chain())
     upsert = property(lambda self: lambda *a, **kw: self._chain())
-    eq = property(lambda self: lambda *a, **kw: self._chain())
+
+    def eq(self, key, value):
+        """필터 추가: key == value"""
+        self._filters.append((key, value, "=="))
+        return self
+
     neq = property(lambda self: lambda *a, **kw: self._chain())
     gt = property(lambda self: lambda *a, **kw: self._chain())
     gte = property(lambda self: lambda *a, **kw: self._chain())
@@ -97,18 +106,55 @@ class MockQueryBuilder:
     lte = property(lambda self: lambda *a, **kw: self._chain())
     ilike = property(lambda self: lambda *a, **kw: self._chain())
     in_ = property(lambda self: lambda *a, **kw: self._chain())
+    is_ = property(lambda self: lambda *a, **kw: self._chain())
     or_ = property(lambda self: lambda *a, **kw: self._chain())
     contains = property(lambda self: lambda *a, **kw: self._chain())
     not_ = property(lambda self: MagicMock(is_=lambda *a, **kw: self._chain()))
     order = property(lambda self: lambda *a, **kw: self._chain())
     limit = property(lambda self: lambda *a, **kw: self._chain())
     range = property(lambda self: lambda *a, **kw: self._chain())
-    single = property(lambda self: lambda: self._chain())
-    maybe_single = property(lambda self: lambda: self._chain())
+
+    def single(self):
+        """단일 레코드 조회 (있으면 반환, 없으면 error)"""
+        self._is_single = True
+        return self
+
+    def maybe_single(self):
+        """단일 레코드 조회 (있으면 반환, 없으면 None)"""
+        self._is_single = True
+        return self
+
+    def _apply_filters(self, data):
+        """필터 적용 헬퍼"""
+        if not self._filters:
+            return data
+
+        if isinstance(data, list):
+            filtered = data
+            for key, value, op in self._filters:
+                if op == "==":
+                    filtered = [item for item in filtered if isinstance(item, dict) and item.get(key) == value]
+            return filtered
+        elif isinstance(data, dict):
+            for key, value, op in self._filters:
+                if op == "==" and data.get(key) != value:
+                    return None
+            return data
+        return data
 
     async def execute(self):
         result = MagicMock()
-        result.data = self._data
+        # 필터 적용
+        filtered_data = self._apply_filters(self._data)
+
+        # single/maybe_single 호출 시 첫 원소만 반환
+        if self._is_single:
+            if isinstance(filtered_data, list):
+                result.data = filtered_data[0] if filtered_data else None
+            else:
+                result.data = filtered_data
+        else:
+            result.data = filtered_data
         result.count = self._count
         return result
 
@@ -182,15 +228,64 @@ _get_test_app()
 async def client(mock_user):
     """FastAPI 테스트 클라이언트 (인증 mock + Supabase mock)."""
     from httpx import AsyncClient, ASGITransport
-    from app.api.deps import get_current_user
+    from app.api.deps import get_current_user, get_rls_client, require_project_access
 
     app = _get_test_app()
-    supabase_mock = make_supabase_mock()
+
+    # 테스트용 문서 데이터
+    test_document = {
+        "id": "test-doc-001",
+        "org_id": "org-001",
+        "title": "Test Document",
+        "processing_status": "completed",
+        "storage_path": "documents/test-doc.pdf",
+    }
+
+    # Phase 10: 프로젝트 파일 관리 테스트용 더미 데이터
+    test_proposal_files = [
+        {
+            "id": "pf-001",
+            "proposal_id": "prop-001",
+            "category": "rfp",
+            "filename": "test.pdf",
+            "storage_path": "prop-001/rfp/test.pdf",
+            "file_type": "pdf",
+            "file_size": 1024,
+            "uploaded_by": "user-001",
+            "description": None,
+            "created_at": "2026-03-20T10:00:00Z",
+        }
+    ]
+
+    test_artifacts = [
+        {
+            "id": "art-001",
+            "proposal_id": "prop-001",
+            "artifact_type": "section",
+            "version": 1,
+            "status": "completed",
+            "content": "테스트 산출물",
+            "created_at": "2026-03-20T10:00:00Z",
+        }
+    ]
+
+    supabase_mock = make_supabase_mock(
+        table_data={
+            "intranet_documents": [test_document],
+            "proposal_files": test_proposal_files,
+            "artifacts": test_artifacts,
+        }
+    )
 
     # FastAPI dependency override — 모든 엔드포인트에서 인증 우회
     app.dependency_overrides[get_current_user] = lambda: mock_user
+    app.dependency_overrides[get_rls_client] = lambda: supabase_mock
+    app.dependency_overrides[require_project_access] = lambda: {"id": "test-id", "title": "테스트", "status": "initialized"}
 
-    with patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
+    # Patch get_async_client at usage locations (must patch where it's imported, not where it's defined)
+    with patch("app.api.routes_proposal.get_async_client", return_value=supabase_mock), \
+         patch("app.api.routes_files.get_async_client", return_value=supabase_mock), \
+         patch("app.utils.supabase_client.get_async_client", return_value=supabase_mock):
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as ac:
             ac._supabase_mock = supabase_mock
@@ -198,6 +293,8 @@ async def client(mock_user):
 
     # cleanup
     app.dependency_overrides.pop(get_current_user, None)
+    app.dependency_overrides.pop(get_rls_client, None)
+    app.dependency_overrides.pop(require_project_access, None)
 
 
 # ── 기존 fixtures 유지 ──

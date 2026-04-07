@@ -1,11 +1,14 @@
 """
-BidFetcher 유닛 테스트 — fetch_bids_by_preset, _upsert, _enrich_detail
+BidFetcher 유닛 테스트 — fetch_bids_by_preset (v2), _upsert, _enrich_detail
 
-외부 의존성(G2BService, Supabase)은 모두 Mock 처리.
+외부 의존성(G2BService, Supabase, bid_scorer)은 모두 Mock 처리.
+v2: fetch_all_bids 전수 수집 + score_and_rank_bids 스코어링 파이프라인.
 """
 
 import pytest
+from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
 from unittest.mock import AsyncMock, MagicMock, patch, call
 
 from app.models.bid_schemas import BidAnnouncement, SearchPreset
@@ -37,7 +40,7 @@ def make_preset(
 
 def make_raw(
     bid_no="20260001-00",
-    bid_title="AI 행정 시스템",
+    bid_title="AI 전략 수립 시스템",
     agency="행정안전부",
     bid_type="용역",
     budget="300000000",
@@ -63,133 +66,156 @@ def make_fetcher(g2b=None, db=None) -> BidFetcher:
     return BidFetcher(g2b_service=g2b, supabase_client=db)
 
 
+def _make_bid_score(raw, score=50.0, passed=True):
+    """bid_scorer.BidScore를 모방하는 간단한 객체 생성."""
+    from app.services.bid_scorer import BidScore
+    deadline_str = raw.get("bidClseDt", "")
+    return BidScore(
+        bid_no=raw.get("bidNtceNo", ""),
+        title=raw.get("bidNtceNm", ""),
+        agency=raw.get("ntceInsttNm", ""),
+        budget=int(str(raw.get("presmptPrce", "0")).replace(",", "") or "0"),
+        deadline=deadline_str,
+        d_day=10,
+        classification="",
+        classification_large="",
+        score=score,
+        passed=passed,
+        role_keywords_matched=["전략"],
+        raw=raw,
+    )
+
+
+def _make_db_mock():
+    """upsert 가능한 DB mock 생성."""
+    upsert_mock = MagicMock(return_value=MagicMock(execute=AsyncMock(return_value=MagicMock())))
+    table_mock = MagicMock(upsert=upsert_mock)
+    db = MagicMock()
+    db.table = MagicMock(return_value=table_mock)
+    return db, upsert_mock
+
+
 # ─────────────────────────────────────────────────────────────
-# fetch_bids_by_preset — 통합 흐름
+# fetch_bids_by_preset — v2 통합 흐름
+# (fetch_all_bids 전수 수집 + score_and_rank_bids 스코어링)
 # ─────────────────────────────────────────────────────────────
 
 class TestFetchBidsByPreset:
 
     @pytest.mark.asyncio
-    async def test_키워드별_API_호출_중복_제거(self):
-        """동일 bid_no가 두 키워드 결과에 있어도 1건만 처리"""
+    async def test_전수수집_1회_호출(self):
+        """v2: fetch_all_bids 1회 호출로 전수 수집"""
         raw = make_raw(bid_no="001")
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[raw])
+        g2b.fetch_all_bids = AsyncMock(return_value=[raw])
         g2b.get_bid_detail = AsyncMock(return_value={"ntceSpecCn": "자격요건 명세가 있습니다."})
 
-        db = MagicMock()
-        db.table = MagicMock(return_value=MagicMock(
-            upsert=MagicMock(return_value=MagicMock(execute=AsyncMock(return_value=MagicMock())))
-        ))
-
+        db, _ = _make_db_mock()
         fetcher = make_fetcher(g2b=g2b, db=db)
-        preset = make_preset(keywords=["AI", "LLM"])  # 키워드 2개
+        preset = make_preset(keywords=["AI", "LLM"])
 
-        result = await fetcher.fetch_bids_by_preset(preset)
+        bid_score = _make_bid_score(raw)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[bid_score]):
+            result = await fetcher.fetch_bids_by_preset(preset)
 
-        # 두 키워드 각각 API 호출
-        assert g2b.search_bid_announcements.call_count == 2
-        # 중복 제거되어 1건만 반환
+        # v2: fetch_all_bids 1회 호출 (키워드별이 아님)
+        assert g2b.fetch_all_bids.call_count == 1
         assert len(result) == 1
         assert result[0].bid_no == "001"
 
     @pytest.mark.asyncio
-    async def test_키워드_수집_실패_시_나머지_계속(self):
-        """한 키워드 실패해도 다른 키워드 결과는 반환"""
-        raw = make_raw(bid_no="002")
+    async def test_전수수집_실패_시_빈_결과(self):
+        """fetch_all_bids 실패 시 예외 전파"""
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(
-            side_effect=[RuntimeError("API 오류"), [raw]]
-        )
-        g2b.get_bid_detail = AsyncMock(return_value={"ntceSpecCn": "자격요건 명시."})
+        g2b.fetch_all_bids = AsyncMock(side_effect=RuntimeError("API 오류"))
 
-        db = MagicMock()
-        db.table = MagicMock(return_value=MagicMock(
-            upsert=MagicMock(return_value=MagicMock(execute=AsyncMock(return_value=MagicMock())))
-        ))
+        fetcher = make_fetcher(g2b=g2b)
+        preset = make_preset()
 
-        fetcher = make_fetcher(g2b=g2b, db=db)
-        preset = make_preset(keywords=["실패키워드", "AI"])
-
-        result = await fetcher.fetch_bids_by_preset(preset)
-
-        assert len(result) == 1
-        assert result[0].bid_no == "002"
+        with pytest.raises(RuntimeError, match="API 오류"):
+            await fetcher.fetch_bids_by_preset(preset)
 
     @pytest.mark.asyncio
-    async def test_announce_date_range_days_0_당일검색_적용(self):
-        """range_days=0이어도 당일 검색 date_from/date_to가 설정됨"""
+    async def test_당일_날짜범위_전달(self):
+        """v2: 항상 당일 date_from/date_to로 fetch_all_bids 호출"""
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[])
+        g2b.fetch_all_bids = AsyncMock(return_value=[])
 
         fetcher = make_fetcher(g2b=g2b)
         preset = make_preset(announce_date_range_days=0)
 
-        await fetcher.fetch_bids_by_preset(preset)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[]):
+            await fetcher.fetch_bids_by_preset(preset)
 
-        call_kwargs = g2b.search_bid_announcements.call_args
         today_str = date.today().strftime("%Y%m%d")
-        assert call_kwargs.kwargs.get("date_from") == today_str + "0000"
-        assert call_kwargs.kwargs.get("date_to") == today_str + "2359"
+        g2b.fetch_all_bids.assert_called_once_with(
+            today_str + "0000", today_str + "2359"
+        )
 
     @pytest.mark.asyncio
-    async def test_announce_date_range_days_14_날짜필터_적용(self):
-        """range_days=14이면 date_from/date_to 설정"""
+    async def test_프리셋_무관_당일수집(self):
+        """v2: announce_date_range_days 값과 무관하게 항상 당일 수집"""
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[])
+        g2b.fetch_all_bids = AsyncMock(return_value=[])
 
         fetcher = make_fetcher(g2b=g2b)
         preset = make_preset(announce_date_range_days=14)
 
-        await fetcher.fetch_bids_by_preset(preset)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[]):
+            await fetcher.fetch_bids_by_preset(preset)
 
-        call_kwargs = g2b.search_bid_announcements.call_args
-        assert call_kwargs.kwargs.get("date_from") is not None
-        assert call_kwargs.kwargs.get("date_to") is not None
+        today_str = date.today().strftime("%Y%m%d")
+        call_args = g2b.fetch_all_bids.call_args[0]
+        assert call_args[0] == today_str + "0000"
+        assert call_args[1] == today_str + "2359"
 
     @pytest.mark.asyncio
-    async def test_필터_통과_없으면_빈_목록_반환(self):
-        """모든 공고가 min_budget 미달이면 빈 목록"""
+    async def test_예산_미달_필터_빈_목록(self):
+        """스코어링 통과했지만 min_budget 미달이면 빈 목록"""
         raw = make_raw(bid_no="003", budget="50000000")  # 5천만 < 1억
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[raw])
+        g2b.fetch_all_bids = AsyncMock(return_value=[raw])
 
+        bid_score = _make_bid_score(raw)
         fetcher = make_fetcher(g2b=g2b)
         preset = make_preset(min_budget=100_000_000)
 
-        result = await fetcher.fetch_bids_by_preset(preset)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[bid_score]):
+            result = await fetcher.fetch_bids_by_preset(preset)
+
         assert result == []
 
     @pytest.mark.asyncio
-    async def test_bid_type_필터_불일치_제외(self):
-        """bid_types에 없는 공고는 제외"""
+    async def test_bid_type_불일치_제외(self):
+        """bid_types에 없는 공고는 프리셋 필터에서 제외"""
         raw = make_raw(bid_no="004", bid_type="공사")
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[raw])
+        g2b.fetch_all_bids = AsyncMock(return_value=[raw])
 
+        bid_score = _make_bid_score(raw)
         fetcher = make_fetcher(g2b=g2b)
         preset = make_preset(bid_types=["용역"])  # 공사는 제외
 
-        result = await fetcher.fetch_bids_by_preset(preset)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[bid_score]):
+            result = await fetcher.fetch_bids_by_preset(preset)
+
         assert result == []
 
     @pytest.mark.asyncio
-    async def test_upsert_호출됨(self):
-        """필터 통과 공고가 있으면 upsert 호출"""
+    async def test_필터_통과_시_upsert_호출(self):
+        """필터 통과 공고가 있으면 DB upsert 호출"""
         raw = make_raw(bid_no="005")
         g2b = MagicMock()
-        g2b.search_bid_announcements = AsyncMock(return_value=[raw])
+        g2b.fetch_all_bids = AsyncMock(return_value=[raw])
         g2b.get_bid_detail = AsyncMock(return_value={"ntceSpecCn": "자격요건 명세 텍스트."})
 
-        upsert_mock = MagicMock(return_value=MagicMock(execute=AsyncMock(return_value=MagicMock())))
-        table_mock = MagicMock(upsert=upsert_mock)
-        db = MagicMock()
-        db.table = MagicMock(return_value=table_mock)
-
+        db, upsert_mock = _make_db_mock()
         fetcher = make_fetcher(g2b=g2b, db=db)
         preset = make_preset()
 
-        await fetcher.fetch_bids_by_preset(preset)
+        bid_score = _make_bid_score(raw)
+        with patch("app.services.bid_scorer.score_and_rank_bids", return_value=[bid_score]):
+            await fetcher.fetch_bids_by_preset(preset)
 
         db.table.assert_called_with("bid_announcements")
         upsert_mock.assert_called_once()

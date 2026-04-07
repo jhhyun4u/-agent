@@ -35,7 +35,8 @@ async def _get_evolved_prompt(state: ProposalState, prompt_id: str, fallback: st
         proposal_id = state.get("project_id", "")
         text, _, _ = await prompt_registry.get_prompt_for_experiment(prompt_id, proposal_id)
         return text or fallback
-    except Exception:
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
         return fallback
 
 
@@ -54,8 +55,8 @@ async def _track_plan_prompt(state: ProposalState, step: str, prompt_id: str) ->
             prompt_version=ver,
             prompt_hash=hash_,
         )
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
 
 
 def _get_rfp_summary(state: ProposalState) -> str:
@@ -183,6 +184,23 @@ async def plan_story(state: ProposalState) -> dict:
 
     # research_brief에서 고신뢰 근거 추출 (공통 헬퍼)
     evidence_text = extract_evidence_candidates(state.get("research_brief", {}))
+
+    # KB 유사 콘텐츠 보강 (C-4)
+    try:
+        from app.services.content_library import suggest_content_for_section
+        rfp_dict_for_kb = rfp_to_dict(rfp) if rfp else {}
+        suggestions = await suggest_content_for_section(
+            section_topic=rfp_dict_for_kb.get("project_name", ""),
+            org_id=state.get("org_id", ""),
+            top_k=5,
+        )
+        if suggestions:
+            kb_evidence = "\n\n과거 수주 제안서 참고 콘텐츠:\n"
+            for s in suggestions[:5]:
+                kb_evidence += f"- {s.get('title', '')}: {(s.get('body_excerpt') or '')[:200]}\n"
+            evidence_text += kb_evidence
+    except Exception as e:
+        logger.debug(f"보조 데이터 조회 실패 (무시): {e}")
 
     # 평가항목 ID 목록 (커버리지 검증용)
     eval_item_ids = [item.get("item", "") for item in eval_items if isinstance(item, dict)]
@@ -318,6 +336,21 @@ async def plan_price(state: ProposalState) -> dict:
     # v3.8: bid_plan 앵커 컨텍스트 주입
     if bid_plan_context:
         prompt += f"\n\n{bid_plan_context}\n위 확정된 입찰가를 앵커로 하여, 상세 원가 구조와 가격 경쟁력 내러티브(Budget Narrative)를 작성하세요."
+
+    # v3.9: RFP 가격점수 산식 주입 (price_scoring이 있으면 산식 준수 필수)
+    if rfp:
+        ps = rfp.price_scoring if hasattr(rfp, "price_scoring") else (rfp.get("price_scoring") if isinstance(rfp, dict) else None)
+        if ps:
+            ps_dict = ps.model_dump() if hasattr(ps, "model_dump") else (ps if isinstance(ps, dict) else {})
+            if ps_dict.get("formula_type"):
+                prompt += (
+                    f"\n\n## RFP 가격점수 산식 (반드시 준수)\n"
+                    f"- 산식 유형: {ps_dict.get('formula_type', '')}\n"
+                    f"- 설명: {ps_dict.get('description', '')}\n"
+                    f"- 가격 배점: {ps_dict.get('price_weight', 0)}점\n"
+                    f"- 파라미터: {ps_dict.get('parameters', {})}\n"
+                    f"\n위 산식에 따라 가격점수가 계산되므로, 입찰가 산정 시 이를 반영하세요."
+                )
 
     # 알고리즘 분석 결과를 프롬프트에 추가
     if algorithmic_pricing != "(알고리즘 분석 미수행)":

@@ -41,8 +41,8 @@ async def _track_ppt_prompt(state: ProposalState, step: str, prompt_id: str) -> 
             prompt_version=ver,
             prompt_hash=hash_,
         )
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug(f"프롬프트 트래커 기록 실패 (무시): {e}")
 
 
 # ── 발표전략 (기존 유지) ──
@@ -119,7 +119,8 @@ async def presentation_strategy(state: ProposalState) -> dict:
         ps_text, _, _ = await prompt_registry.get_prompt_for_experiment(
             "proposal_prompts.PRESENTATION_STRATEGY_PROMPT", state.get("project_id", "")
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         ps_text = ""
 
     prompt = (ps_text or PRESENTATION_STRATEGY_PROMPT).format(
@@ -217,7 +218,8 @@ async def ppt_toc(state: ProposalState) -> dict:
         toc_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
             "ppt_pipeline.TOC_SYSTEM", state.get("project_id", "")
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         toc_sys = ""
 
     result = await claude_generate(
@@ -256,7 +258,8 @@ async def ppt_visual_brief(state: ProposalState) -> dict:
         vb_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
             "ppt_pipeline.VISUAL_BRIEF_SYSTEM", state.get("project_id", "")
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         vb_sys = ""
 
     result = await claude_generate(
@@ -303,7 +306,8 @@ async def ppt_storyboard_node(state: ProposalState) -> dict:
         sb_sys, _, _ = await prompt_registry.get_prompt_for_experiment(
             "ppt_pipeline.STORYBOARD_SYSTEM", state.get("project_id", "")
         )
-    except Exception:
+    except Exception as e:
+        logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         sb_sys = ""
 
     result = await claude_generate(

@@ -1,0 +1,18 @@
+{
+  "total": 58,
+  "compliance_score": 15,
+  "strategy_score": 14,
+  "quality_score": 15,
+  "trustworthiness": {
+    "trustworthiness_score": 14,
+    "data_sources": [],
+    "credibility_issues": ["출처 미표기 데이터 다수"]
+  },
+  "section_scores": [
+    {"section_id": "understand", "score": 55, "depth_metrics": {"min_pages_met": false, "evidence_count": 0}, "improvement_suggestions": ["분량 부족", "근거 자료 추가"]},
+    {"section_id": "strategy", "score": 60, "depth_metrics": {"min_pages_met": true, "evidence_count": 1}, "improvement_suggestions": ["차별화 포인트 보강"]}
+  ],
+  "key_findings": ["근거 자료 부족", "분량 미달 섹션 존재"],
+  "overall_pass": false,
+  "retry_reason": "품질 기준 미달 — 섹션 재작성 필요"
+}

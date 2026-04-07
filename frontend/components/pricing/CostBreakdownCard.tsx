@@ -12,7 +12,11 @@ interface Props {
 
 export default function CostBreakdownCard({ cost }: Props) {
   const items = [
-    { label: "직접인건비", value: cost.direct_labor_fmt, amount: cost.direct_labor },
+    {
+      label: "직접인건비",
+      value: cost.direct_labor_fmt,
+      amount: cost.direct_labor,
+    },
     { label: "간접비", value: cost.indirect_fmt, amount: cost.indirect_cost },
     { label: "기술료", value: cost.tech_fee_fmt, amount: cost.technical_fee },
     { label: "부가세", value: cost.vat_fmt, amount: cost.vat },
@@ -27,7 +31,12 @@ export default function CostBreakdownCard({ cost }: Props) {
       <div className="flex h-3 rounded overflow-hidden">
         {items.map((item, i) => {
           const pct = (item.amount / total) * 100;
-          const colors = ["bg-blue-500", "bg-cyan-500", "bg-purple-500", "bg-orange-500"];
+          const colors = [
+            "bg-blue-500",
+            "bg-cyan-500",
+            "bg-purple-500",
+            "bg-orange-500",
+          ];
           return (
             <div
               key={i}
@@ -42,7 +51,12 @@ export default function CostBreakdownCard({ cost }: Props) {
       {/* 항목 목록 */}
       <div className="grid grid-cols-2 gap-2">
         {items.map((item, i) => {
-          const dots = ["bg-blue-500", "bg-cyan-500", "bg-purple-500", "bg-orange-500"];
+          const dots = [
+            "bg-blue-500",
+            "bg-cyan-500",
+            "bg-purple-500",
+            "bg-orange-500",
+          ];
           return (
             <div key={i} className="flex items-center gap-2 text-sm">
               <span className={`w-2 h-2 rounded-full ${dots[i]}`} />
@@ -61,11 +75,15 @@ export default function CostBreakdownCard({ cost }: Props) {
       {/* 인력 상세 */}
       {cost.personnel_detail.length > 0 && (
         <details className="text-xs text-[#8c8c8c]">
-          <summary className="cursor-pointer hover:text-[#ededed]">인력 상세 ({cost.personnel_detail.length}명)</summary>
+          <summary className="cursor-pointer hover:text-[#ededed]">
+            인력 상세 ({cost.personnel_detail.length}명)
+          </summary>
           <div className="mt-2 space-y-1">
             {cost.personnel_detail.map((p, i) => (
               <div key={i} className="flex justify-between">
-                <span>{p.role} ({p.grade}) {p.person_months}M/M</span>
+                <span>
+                  {p.role} ({p.grade}) {p.person_months}M/M
+                </span>
                 <span>{p.amount_fmt}</span>
               </div>
             ))}

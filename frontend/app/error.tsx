@@ -14,7 +14,8 @@ export default function Error({
           오류가 발생했습니다
         </h2>
         <p className="text-sm text-[#8c8c8c] mb-6">
-          {error.message || "예기치 않은 문제가 발생했습니다. 다시 시도해주세요."}
+          {error.message ||
+            "예기치 않은 문제가 발생했습니다. 다시 시도해주세요."}
         </p>
         <button
           onClick={reset}

@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Request
 from app.api.deps import get_current_user
 from app.exceptions import TenopAPIError
 from app.middleware.rate_limit import limiter
+from app.models.auth_schemas import AuthMessageResponse, CurrentUser
 from app.models.user_schemas import PasswordChangeRequest
 from app.utils.supabase_client import get_async_client
 
@@ -19,8 +20,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.get("/me")
-async def get_my_profile(user: dict = Depends(get_current_user)):
+@router.get("/me", response_model=CurrentUser)
+async def get_my_profile(user: CurrentUser = Depends(get_current_user)):
     """현재 로그인 사용자 프로필 조회.
 
     must_change_password 필드 포함.
@@ -28,12 +29,12 @@ async def get_my_profile(user: dict = Depends(get_current_user)):
     return user
 
 
-@router.post("/change-password")
+@router.post("/change-password", response_model=AuthMessageResponse)
 @limiter.limit("5/minute")
 async def change_password(
     request: Request,
     body: PasswordChangeRequest,
-    user: dict = Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """비밀번호 변경.
 
@@ -45,7 +46,7 @@ async def change_password(
     # 현재 비밀번호 검증 (로그인 시도)
     try:
         await client.auth.sign_in_with_password({
-            "email": user["email"],
+            "email": user.email,
             "password": body.current_password,
         })
     except Exception:
@@ -54,22 +55,22 @@ async def change_password(
     # 새 비밀번호로 업데이트
     try:
         await client.auth.admin.update_user_by_id(
-            user["id"],
+            user.id,
             {"password": body.new_password},
         )
     except Exception as e:
-        logger.error(f"비밀번호 변경 실패: user={user['id']}: {e}")
+        logger.error(f"비밀번호 변경 실패: user={user.id}: {e}")
         raise TenopAPIError("AUTH_005", "비밀번호 변경에 실패했습니다. 관리자에게 문의하세요.", 500)
 
     # must_change_password 해제
     await client.table("users").update(
         {"must_change_password": False}
-    ).eq("id", user["id"]).execute()
+    ).eq("id", user.id).execute()
 
     return {"message": "비밀번호가 변경되었습니다."}
 
 
-@router.post("/logout")
+@router.post("/logout", response_model=AuthMessageResponse)
 async def logout():
     """로그아웃 처리.
 

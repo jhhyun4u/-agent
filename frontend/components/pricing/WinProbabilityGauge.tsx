@@ -7,7 +7,7 @@
 
 interface Props {
   probability: number; // 0.0 ~ 1.0
-  confidence: string;  // high | medium | low
+  confidence: string; // high | medium | low
 }
 
 const CONF_COLORS: Record<string, string> = {
@@ -16,17 +16,28 @@ const CONF_COLORS: Record<string, string> = {
   low: "text-red-400 bg-red-400/10",
 };
 const CONF_LABELS: Record<string, string> = {
-  high: "높음", medium: "보통", low: "낮음",
+  high: "높음",
+  medium: "보통",
+  low: "낮음",
 };
 
-export default function WinProbabilityGauge({ probability, confidence }: Props) {
+export default function WinProbabilityGauge({
+  probability,
+  confidence,
+}: Props) {
   const pct = Math.round(probability * 100);
   // 게이지 바 — 10칸
   const filled = Math.round(pct / 10);
 
   // 색상 결정
-  const color = pct >= 70 ? "bg-green-500" : pct >= 40 ? "bg-yellow-500" : "bg-red-500";
-  const textColor = pct >= 70 ? "text-green-400" : pct >= 40 ? "text-yellow-400" : "text-red-400";
+  const color =
+    pct >= 70 ? "bg-green-500" : pct >= 40 ? "bg-yellow-500" : "bg-red-500";
+  const textColor =
+    pct >= 70
+      ? "text-green-400"
+      : pct >= 40
+        ? "text-yellow-400"
+        : "text-red-400";
 
   return (
     <div className="space-y-2">
@@ -42,7 +53,9 @@ export default function WinProbabilityGauge({ probability, confidence }: Props) 
           />
         ))}
       </div>
-      <span className={`inline-block text-xs px-2 py-0.5 rounded ${CONF_COLORS[confidence] || CONF_COLORS.low}`}>
+      <span
+        className={`inline-block text-xs px-2 py-0.5 rounded ${CONF_COLORS[confidence] || CONF_COLORS.low}`}
+      >
         신뢰도: {CONF_LABELS[confidence] || confidence}
       </span>
     </div>

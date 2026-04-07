@@ -9,6 +9,8 @@
   DELETE /api/proposals/{id}/submission-docs/{doc_id}
   POST   /api/proposals/{id}/submission-docs/{doc_id}/upload
   POST   /api/proposals/{id}/submission-docs/{doc_id}/verify
+  POST   /api/proposals/{id}/submission-docs/{doc_id}/confirm-original
+  GET    /api/proposals/{id}/submission-docs/bundle
   GET    /api/proposals/{id}/submission-docs/readiness
 
 조직 공통 서류:
@@ -19,46 +21,47 @@
 
 import logging
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi.responses import Response
 
 from app.api.deps import get_current_user, require_project_access, require_role
+from app.api.response import ok, ok_list
+from app.config import settings
+from app.exceptions import (
+    InvalidRequestError,
+    ResourceNotFoundError,
+)
+from app.utils.file_utils import validate_upload
+from app.models.auth_schemas import CurrentUser
 from app.models.stream_schemas import (
     OrgDocTemplateCreate,
-    OrgDocTemplateResponse,
-    ReadinessResponse,
     SubmissionDocCreate,
-    SubmissionDocResponse,
     SubmissionDocUpdate,
 )
 
-router = APIRouter(tags=["submission-docs"])
+router = APIRouter(prefix="/api", tags=["submission-docs"])
 logger = logging.getLogger(__name__)
 
 
 # ── 제안서별 제출서류 ──
 
-@router.get(
-    "/api/proposals/{proposal_id}/submission-docs",
-    response_model=list[SubmissionDocResponse],
-)
+@router.get("/proposals/{proposal_id}/submission-docs")
 async def list_submission_docs(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """제출서류 체크리스트 조회."""
     from app.services.submission_docs_service import get_checklist
 
-    return await get_checklist(proposal_id)
+    items = await get_checklist(proposal_id)
+    return ok_list(items, total=len(items))
 
 
-@router.post(
-    "/api/proposals/{proposal_id}/submission-docs/extract",
-    response_model=list[SubmissionDocResponse],
-)
+@router.post("/proposals/{proposal_id}/submission-docs/extract")
 async def extract_submission_docs(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """AI로 RFP에서 제출서류 목록 추출."""
@@ -77,7 +80,7 @@ async def extract_submission_docs(
     )
     rfp_text = (prop.data or {}).get("rfp_raw_text", "")
     if not rfp_text:
-        raise HTTPException(status_code=400, detail="RFP 원문이 없습니다. RFP 분석을 먼저 실행하세요.")
+        raise InvalidRequestError("RFP 원문이 없습니다. RFP 분석을 먼저 실행하세요.")
 
     # 분석 결과 (artifacts)
     art = await (
@@ -101,34 +104,29 @@ async def extract_submission_docs(
         elif isinstance(content, dict):
             rfp_analysis = content
 
-    return await extract_checklist_from_rfp(proposal_id, rfp_text, rfp_analysis)
+    items = await extract_checklist_from_rfp(proposal_id, rfp_text, rfp_analysis)
+    return ok_list(items, total=len(items))
 
 
-@router.post(
-    "/api/proposals/{proposal_id}/submission-docs",
-    response_model=SubmissionDocResponse,
-)
+@router.post("/proposals/{proposal_id}/submission-docs")
 async def add_submission_doc(
     proposal_id: str,
     body: SubmissionDocCreate,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """수동 서류 추가."""
     from app.services.submission_docs_service import add_document
 
-    return await add_document(proposal_id, body.model_dump(exclude_none=True))
+    return ok(await add_document(proposal_id, body.model_dump(exclude_none=True)))
 
 
-@router.put(
-    "/api/proposals/{proposal_id}/submission-docs/{doc_id}",
-    response_model=SubmissionDocResponse,
-)
+@router.put("/proposals/{proposal_id}/submission-docs/{doc_id}")
 async def update_submission_doc(
     proposal_id: str,
     doc_id: str,
     body: SubmissionDocUpdate,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """상태/담당 변경."""
@@ -136,15 +134,15 @@ async def update_submission_doc(
 
     data = body.model_dump(exclude_none=True)
     if not data:
-        raise HTTPException(status_code=400, detail="변경할 필드가 없습니다.")
-    return await update_document_status(doc_id, data, proposal_id=proposal_id)
+        raise InvalidRequestError("변경할 필드가 없습니다.")
+    return ok(await update_document_status(doc_id, data, proposal_id=proposal_id))
 
 
-@router.delete("/api/proposals/{proposal_id}/submission-docs/{doc_id}")
+@router.delete("/proposals/{proposal_id}/submission-docs/{doc_id}")
 async def delete_submission_doc(
     proposal_id: str,
     doc_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """서류 삭제."""
@@ -152,62 +150,36 @@ async def delete_submission_doc(
 
     deleted = await delete_document(doc_id, proposal_id=proposal_id)
     if not deleted:
-        raise HTTPException(status_code=404, detail="서류를 찾을 수 없습니다.")
-    return {"deleted": True}
+        raise ResourceNotFoundError("서류")
+    return ok(None, message="삭제 완료")
 
 
-_MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50MB
-_ALLOWED_EXTENSIONS = frozenset({
-    "pdf", "hwp", "hwpx", "doc", "docx", "xls", "xlsx",
-    "ppt", "pptx", "jpg", "jpeg", "png", "zip", "txt",
-})
-
-
-@router.post("/api/proposals/{proposal_id}/submission-docs/{doc_id}/upload")
+@router.post("/proposals/{proposal_id}/submission-docs/{doc_id}/upload")
 async def upload_submission_doc(
     proposal_id: str,
     doc_id: str,
     file: UploadFile = File(...),
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """파일 업로드 — Supabase Storage (크기/이름/타입 검증 포함)."""
-    import os
     from app.services.submission_docs_service import upload_document
     from app.utils.supabase_client import get_async_client
 
-    # 파일명 보안: 경로 탐색 방지 + sanitize
-    raw_name = file.filename or "upload"
-    safe_name = os.path.basename(raw_name).strip()
-    if not safe_name or safe_name.startswith("."):
-        raise HTTPException(status_code=400, detail="잘못된 파일명입니다.")
-
-    # 확장자 검증
-    ext = safe_name.rsplit(".", 1)[-1].lower() if "." in safe_name else ""
-    if ext not in _ALLOWED_EXTENSIONS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"허용되지 않는 파일 형식입니다: .{ext}. 허용: {', '.join(sorted(_ALLOWED_EXTENSIONS))}",
-        )
-
-    # 크기 제한 (스트리밍 읽기)
+    # 통합 검증 (파일명 살균 + 확장자 + 크기 50MB)
     file_bytes = await file.read()
-    if len(file_bytes) > _MAX_UPLOAD_SIZE:
-        raise HTTPException(
-            status_code=413,
-            detail=f"파일 크기가 제한(50MB)을 초과합니다: {len(file_bytes) / 1024 / 1024:.1f}MB",
-        )
+    safe_name, ext = validate_upload(file.filename, file_bytes, "submission", max_mb=50)
 
     client = await get_async_client()
     storage_path = f"submission-docs/{proposal_id}/{doc_id}/{safe_name}"
 
     try:
-        await client.storage.from_("proposal-files").upload(
+        await client.storage.from_(settings.storage_bucket_proposals).upload(
             storage_path, file_bytes,
             {"content-type": file.content_type or "application/octet-stream"},
         )
     except Exception:
-        await client.storage.from_("proposal-files").update(
+        await client.storage.from_(settings.storage_bucket_proposals).update(
             storage_path, file_bytes,
             {"content-type": file.content_type or "application/octet-stream"},
         )
@@ -218,77 +190,108 @@ async def upload_submission_doc(
         file_name=safe_name,
         file_size=len(file_bytes),
         file_format=ext.upper(),
-        user_id=user["id"],
+        user_id=user.id,
         proposal_id=proposal_id,
     )
-    return result
+    return ok(result)
 
 
-@router.post("/api/proposals/{proposal_id}/submission-docs/{doc_id}/verify")
+@router.post("/proposals/{proposal_id}/submission-docs/{doc_id}/verify")
 async def verify_submission_doc(
     proposal_id: str,
     doc_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """검증 완료."""
     from app.services.submission_docs_service import verify_document
 
-    return await verify_document(doc_id, user["id"], proposal_id=proposal_id)
+    return ok(await verify_document(doc_id, user.id, proposal_id=proposal_id))
 
 
-@router.get(
-    "/api/proposals/{proposal_id}/submission-docs/readiness",
-    response_model=ReadinessResponse,
-)
+@router.post("/proposals/{proposal_id}/submission-docs/{doc_id}/confirm-original")
+async def confirm_original(
+    proposal_id: str,
+    doc_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """원본 서류 준비 완료 확인 (파일 업로드 없이 verified 처리)."""
+    from app.services.submission_docs_service import confirm_original_document
+
+    try:
+        return ok(await confirm_original_document(doc_id, user.id, proposal_id=proposal_id))
+    except ValueError as e:
+        raise InvalidRequestError(str(e))
+
+
+@router.get("/proposals/{proposal_id}/submission-docs/bundle")
+async def download_copy_bundle(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """사본 서류 묶음 다운로드 (PDF 병합 또는 ZIP)."""
+    from app.services.submission_docs_service import build_copy_bundle
+
+    try:
+        data, content_type = await build_copy_bundle(proposal_id)
+    except ValueError as e:
+        raise InvalidRequestError(str(e))
+
+    ext = "pdf" if "pdf" in content_type else "zip"
+    filename = f"submission_copies_{proposal_id[:8]}.{ext}"
+    return Response(
+        content=data,
+        media_type=content_type,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.get("/proposals/{proposal_id}/submission-docs/readiness")
 async def check_readiness(
     proposal_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _access=Depends(require_project_access),
 ):
     """사전 제출 점검."""
     from app.services.submission_docs_service import check_documents_ready
 
-    return await check_documents_ready(proposal_id)
+    return ok(await check_documents_ready(proposal_id))
 
 
 # ── 조직 공통 서류 ──
 
-@router.get(
-    "/api/org/{org_id}/document-templates",
-    response_model=list[OrgDocTemplateResponse],
-)
+@router.get("/org/{org_id}/document-templates")
 async def list_org_templates(
     org_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
 ):
     """조직 공통 서류 목록."""
     from app.services.submission_docs_service import get_org_templates
 
-    return await get_org_templates(org_id)
+    items = await get_org_templates(org_id)
+    return ok_list(items, total=len(items))
 
 
-@router.post(
-    "/api/org/{org_id}/document-templates",
-    response_model=OrgDocTemplateResponse,
-)
+@router.post("/org/{org_id}/document-templates")
 async def upsert_org_template(
     org_id: str,
     body: OrgDocTemplateCreate,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _role=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """공통 서류 등록/갱신."""
     from app.services.submission_docs_service import upsert_org_template
 
-    return await upsert_org_template(org_id, body.model_dump(exclude_none=True), user["id"])
+    return ok(await upsert_org_template(org_id, body.model_dump(exclude_none=True), user.id))
 
 
-@router.delete("/api/org/{org_id}/document-templates/{template_id}")
+@router.delete("/org/{org_id}/document-templates/{template_id}")
 async def delete_org_template(
     org_id: str,
     template_id: str,
-    user=Depends(get_current_user),
+    user: CurrentUser = Depends(get_current_user),
     _role=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """공통 서류 삭제."""
@@ -296,5 +299,5 @@ async def delete_org_template(
 
     deleted = await delete_org_template(template_id)
     if not deleted:
-        raise HTTPException(status_code=404, detail="템플릿을 찾을 수 없습니다.")
-    return {"deleted": True}
+        raise ResourceNotFoundError("템플릿")
+    return ok(None, message="삭제 완료")

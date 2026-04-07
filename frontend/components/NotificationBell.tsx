@@ -24,8 +24,8 @@ export default function NotificationBell() {
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await api.notifications.list({ limit: 10 });
-      setItems(res.items);
-      setUnreadCount(res.unread_count);
+      setItems(res.data);
+      setUnreadCount(res.meta?.unread_count ?? 0);
     } catch {
       // silent
     }
@@ -55,7 +55,7 @@ export default function NotificationBell() {
   async function handleMarkRead(id: string) {
     await api.notifications.markRead(id);
     setItems((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
     );
     setUnreadCount((c) => Math.max(0, c - 1));
   }

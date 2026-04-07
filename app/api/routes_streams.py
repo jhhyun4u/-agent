@@ -15,14 +15,13 @@ from app.models.stream_schemas import (
     FinalSubmitRequest,
     FinalSubmitResponse,
     StreamProgressResponse,
-    StreamsOverview,
 )
 
 router = APIRouter(prefix="/api/proposals", tags=["streams"])
 logger = logging.getLogger(__name__)
 
 
-@router.get("/{proposal_id}/streams", response_model=StreamsOverview)
+@router.get("/{proposal_id}/streams")
 async def get_streams(
     proposal_id: str,
     user=Depends(get_current_user),
@@ -34,7 +33,7 @@ async def get_streams(
     return await get_streams_status(proposal_id)
 
 
-@router.get("/{proposal_id}/streams/{stream}", response_model=StreamProgressResponse)
+@router.get("/{proposal_id}/streams/{stream}")
 async def get_single_stream(
     proposal_id: str,
     stream: str,
@@ -56,7 +55,7 @@ async def get_single_stream(
     )
 
 
-@router.post("/{proposal_id}/streams/final-submit", response_model=FinalSubmitResponse)
+@router.post("/{proposal_id}/streams/final-submit")
 async def final_submit(
     proposal_id: str,
     body: FinalSubmitRequest,
@@ -67,5 +66,5 @@ async def final_submit(
     """최종 제출 게이트 — 3개 스트림 모두 completed + lead 이상."""
     from app.services.stream_orchestrator import mark_final_submission
 
-    result = await mark_final_submission(proposal_id, user["id"])
+    result = await mark_final_submission(proposal_id, user.id)
     return FinalSubmitResponse(**result)

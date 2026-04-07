@@ -8,11 +8,18 @@
  * 기존 pricing/ 컴포넌트(ScenarioCards, SensitivityChart, WinProbabilityGauge)를 재사용.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PriceScoreTable from "./PriceScoreTable";
 import ScenarioCards from "./ScenarioCards";
 import SensitivityChart from "./SensitivityChart";
 import WinProbabilityGauge from "./WinProbabilityGauge";
-import type { PricingScenario, SensitivityPoint } from "@/lib/api";
+import {
+  pricingApi,
+  type PricingScenario,
+  type PricingSimulationSummary,
+  type ScoreSimulationRow,
+  type SensitivityPoint,
+} from "@/lib/api";
 
 interface BidPlanData {
   recommended_bid: number;
@@ -26,29 +33,92 @@ interface BidPlanData {
   data_quality: string;
   user_override_price: number | null;
   user_override_reason: string;
+  score_simulation?: ScoreSimulationRow[];
 }
 
 interface Props {
   artifact: BidPlanData;
+  proposalId?: string;
   onResume: (payload: Record<string, unknown>) => void;
 }
 
 function fmtWon(amount: number): string {
-  if (Math.abs(amount) >= 100_000_000) return `${(amount / 100_000_000).toFixed(1)}억원`;
+  if (Math.abs(amount) >= 100_000_000)
+    return `${(amount / 100_000_000).toFixed(1)}억원`;
   if (Math.abs(amount) >= 10_000) return `${(amount / 10_000).toFixed(0)}만원`;
   return `${amount.toLocaleString()}원`;
 }
 
-export default function BidPlanReviewPanel({ artifact, onResume }: Props) {
+export default function BidPlanReviewPanel({
+  artifact,
+  proposalId,
+  onResume,
+}: Props) {
   const [selectedScenario, setSelectedScenario] = useState(
-    artifact?.selected_scenario || "balanced"
+    artifact?.selected_scenario || "balanced",
   );
   const [overrideEnabled, setOverrideEnabled] = useState(false);
   const [customPrice, setCustomPrice] = useState("");
   const [customReason, setCustomReason] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  if (!artifact) return null;
+  // 기존 시뮬레이션 불러오기
+  const [showSimPicker, setShowSimPicker] = useState(false);
+  const [simHistory, setSimHistory] = useState<PricingSimulationSummary[]>([]);
+  const [loadingSims, setLoadingSims] = useState(false);
+  const [currentArtifact, setCurrentArtifact] = useState<BidPlanData>(artifact);
+
+  useEffect(() => {
+    setCurrentArtifact(artifact);
+  }, [artifact]);
+
+  async function loadSimHistory() {
+    setShowSimPicker(true);
+    setLoadingSims(true);
+    try {
+      const res = await pricingApi.getPricingSimulations(proposalId);
+      setSimHistory(res.data || []);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingSims(false);
+    }
+  }
+
+  async function applySimulation(simId: string) {
+    try {
+      const detail = await pricingApi.getPricingSimulation(simId);
+      const simResult = (detail as Record<string, unknown>).result as
+        | Record<string, unknown>
+        | undefined;
+      if (simResult) {
+        setCurrentArtifact({
+          recommended_bid: (simResult.recommended_bid as number) || 0,
+          recommended_ratio: (simResult.recommended_ratio as number) || 0,
+          scenarios: (simResult.scenarios as PricingScenario[]) || [],
+          selected_scenario: "balanced",
+          cost_breakdown:
+            (simResult.cost_breakdown as Record<string, unknown>) || {},
+          sensitivity_curve:
+            (simResult.sensitivity_curve as SensitivityPoint[]) || [],
+          win_probability: (simResult.win_probability as number) || 0,
+          market_context:
+            (simResult.market_context as Record<string, unknown>) || {},
+          data_quality: (simResult.data_quality as string) || "rule_based",
+          score_simulation:
+            (simResult.score_simulation as ScoreSimulationRow[]) || [],
+          user_override_price: null,
+          user_override_reason: "",
+        });
+        setSelectedScenario("balanced");
+      }
+    } catch {
+      /* ignore */
+    }
+    setShowSimPicker(false);
+  }
+
+  if (!currentArtifact) return null;
 
   const handleApprove = () => {
     const payload: Record<string, unknown> = {
@@ -79,55 +149,127 @@ export default function BidPlanReviewPanel({ artifact, onResume }: Props) {
     <div className="space-y-4">
       {/* 헤더 */}
       <div className="rounded-lg border border-[#262626] bg-[#161616] p-4">
-        <h2 className="text-base font-semibold text-[#ededed] mb-2">
-          STEP 2.5: 입찰가격계획
-        </h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-base font-semibold text-[#ededed]">
+            STEP 2.5: 입찰가격계획
+          </h2>
+          <button
+            onClick={loadSimHistory}
+            className="text-xs px-2.5 py-1 rounded border border-[#333] text-[#8c8c8c] hover:text-[#ededed] hover:border-[#555] transition-colors"
+          >
+            기존 시뮬레이션 불러오기
+          </button>
+        </div>
         <p className="text-xs text-[#8c8c8c]">
-          전략에 맞는 입찰 시나리오를 선택하세요. 시나리오 선택 후 실행 계획(팀/일정/원가)이 이 예산 범위 내에서 수립됩니다.
+          전략에 맞는 입찰 시나리오를 선택하세요. 시나리오 선택 후 실행
+          계획(팀/일정/원가)이 이 예산 범위 내에서 수립됩니다.
         </p>
         <div className="mt-3 flex items-center gap-4 text-sm">
           <div>
             <span className="text-[#8c8c8c]">추천가: </span>
             <span className="text-[#ededed] font-mono font-medium">
-              {fmtWon(artifact.recommended_bid)}
+              {fmtWon(currentArtifact.recommended_bid)}
             </span>
             <span className="text-[#8c8c8c] ml-1">
-              ({artifact.recommended_ratio.toFixed(1)}%)
+              ({currentArtifact.recommended_ratio.toFixed(1)}%)
             </span>
           </div>
           <div>
             <span className="text-[#8c8c8c]">데이터: </span>
-            <span className={`text-xs px-1.5 py-0.5 rounded ${
-              artifact.data_quality === "statistical"
-                ? "bg-green-400/10 text-green-400"
-                : artifact.data_quality === "hybrid"
-                ? "bg-blue-400/10 text-blue-400"
-                : "bg-yellow-400/10 text-yellow-400"
-            }`}>
-              {artifact.data_quality}
+            <span
+              className={`text-xs px-1.5 py-0.5 rounded ${
+                currentArtifact.data_quality === "statistical"
+                  ? "bg-green-400/10 text-green-400"
+                  : currentArtifact.data_quality === "hybrid"
+                    ? "bg-blue-400/10 text-blue-400"
+                    : "bg-yellow-400/10 text-yellow-400"
+              }`}
+            >
+              {currentArtifact.data_quality}
             </span>
           </div>
         </div>
       </div>
 
+      {/* 시뮬레이션 선택 모달 */}
+      {showSimPicker && (
+        <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-blue-400">
+              기존 시뮬레이션 선택
+            </h3>
+            <button
+              onClick={() => setShowSimPicker(false)}
+              className="text-xs text-[#8c8c8c] hover:text-[#ededed]"
+            >
+              닫기
+            </button>
+          </div>
+          {loadingSims ? (
+            <p className="text-xs text-[#8c8c8c] animate-pulse">
+              불러오는 중...
+            </p>
+          ) : simHistory.length === 0 ? (
+            <p className="text-xs text-[#8c8c8c]">
+              이 프로젝트에 연결된 시뮬레이션이 없습니다
+            </p>
+          ) : (
+            <div className="space-y-1">
+              {simHistory.map((sim) => (
+                <button
+                  key={sim.id}
+                  onClick={() => applySimulation(sim.id)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded border border-[#333] hover:border-blue-500/30 hover:bg-blue-500/5 text-left transition-colors"
+                >
+                  <div className="text-xs">
+                    <span className="text-[#ededed]">{sim.domain || "—"}</span>
+                    <span className="text-[#8c8c8c] ml-2">
+                      {sim.evaluation_method}
+                    </span>
+                    <span className="text-[#8c8c8c] ml-2">
+                      {sim.positioning}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-[#666]">
+                    {sim.created_at
+                      ? new Date(sim.created_at).toLocaleDateString("ko-KR")
+                      : ""}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 수주확률 + 시나리오 카드 */}
       <div className="grid grid-cols-[200px_1fr] gap-4">
         <WinProbabilityGauge
-          probability={artifact.win_probability}
-          confidence={artifact.data_quality === "statistical" ? "high" : "medium"}
+          probability={currentArtifact.win_probability}
+          confidence={
+            currentArtifact.data_quality === "statistical" ? "high" : "medium"
+          }
         />
         <ScenarioCards
-          scenarios={artifact.scenarios}
+          scenarios={currentArtifact.scenarios}
           selected={selectedScenario}
           onSelect={setSelectedScenario}
         />
       </div>
 
       {/* 민감도 곡선 */}
-      {(artifact.sensitivity_curve ?? []).length > 0 && (
+      {(currentArtifact.sensitivity_curve ?? []).length > 0 && (
         <SensitivityChart
-          points={artifact.sensitivity_curve}
-          optimalRatio={artifact.recommended_ratio}
+          points={currentArtifact.sensitivity_curve}
+          optimalRatio={currentArtifact.recommended_ratio}
+        />
+      )}
+
+      {/* 가격점수 시뮬레이션 테이블 */}
+      {(currentArtifact.score_simulation ?? []).length > 0 && (
+        <PriceScoreTable
+          rows={currentArtifact.score_simulation!}
+          recommendedRatio={currentArtifact.recommended_ratio}
         />
       )}
 
@@ -186,7 +328,13 @@ export default function BidPlanReviewPanel({ artifact, onResume }: Props) {
           onClick={handleApprove}
           className="rounded-lg bg-[#3ecf8e] px-4 py-2 text-sm font-medium text-[#0a0a0a] hover:bg-[#3ecf8e]/90 transition-colors"
         >
-          승인 ({selectedScenario === "conservative" ? "보수적" : selectedScenario === "aggressive" ? "공격적" : "균형"})
+          승인 (
+          {selectedScenario === "conservative"
+            ? "보수적"
+            : selectedScenario === "aggressive"
+              ? "공격적"
+              : "균형"}
+          )
         </button>
         <button
           onClick={() => handleReject(false)}

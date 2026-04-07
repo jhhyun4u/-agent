@@ -1,7 +1,25 @@
 """Phase 5: 관리자 + 감사 로그 + 대시보드 + 고도화 테스트."""
 import pytest
-from unittest.mock import patch, AsyncMock
+from unittest.mock import patch, AsyncMock, MagicMock
 from tests.conftest import make_supabase_mock
+
+
+def _make_admin_mock(target_user: dict):
+    """admin 라우트용 mock — maybe_single()이 단일 dict를 반환."""
+    mock_client = AsyncMock()
+
+    class _Chain:
+        def select(self, *a, **kw): return self
+        def eq(self, *a, **kw): return self
+        def update(self, *a, **kw): return self
+        def maybe_single(self): return self
+        async def execute(self):
+            r = MagicMock()
+            r.data = target_user
+            return r
+
+    mock_client.table = MagicMock(return_value=_Chain())
+    return mock_client
 
 
 # ── 관리자: 사용자 관리 ──
@@ -11,14 +29,17 @@ async def test_admin_list_users(client):
     resp = await client.get("/api/admin/users")
     assert resp.status_code == 200
     data = resp.json()
-    assert "items" in data
+    assert "data" in data
 
 
 async def test_admin_update_role(client):
     """PUT /api/admin/users/{id}/role 역할 변경."""
-    resp = await client.put("/api/admin/users/user-002/role", json={"role": "lead"})
+    mock_sb = _make_admin_mock({"id": "user-002", "org_id": "org-001", "role": "member"})
+    with patch("app.api.routes_admin.get_async_client", return_value=mock_sb):
+        resp = await client.put("/api/admin/users/user-002/role", json={"role": "lead"})
     assert resp.status_code == 200
-    assert resp.json()["role"] == "lead"
+    data = resp.json()["data"]
+    assert data["role"] == "lead"
 
 
 async def test_admin_update_invalid_role(client):
@@ -29,7 +50,9 @@ async def test_admin_update_invalid_role(client):
 
 async def test_admin_update_status(client):
     """PUT /api/admin/users/{id}/status 상태 변경."""
-    resp = await client.put("/api/admin/users/user-002/status", json={"status": "inactive"})
+    mock_sb = _make_admin_mock({"id": "user-002", "org_id": "org-001", "status": "active"})
+    with patch("app.api.routes_admin.get_async_client", return_value=mock_sb):
+        resp = await client.put("/api/admin/users/user-002/status", json={"status": "inactive"})
     assert resp.status_code == 200
 
 
@@ -48,7 +71,7 @@ async def test_audit_logs_list(client):
     """GET /api/audit-logs 감사 로그 조회."""
     resp = await client.get("/api/audit-logs?days=7")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_audit_logs_export(client):

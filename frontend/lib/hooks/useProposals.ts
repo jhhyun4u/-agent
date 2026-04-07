@@ -25,7 +25,9 @@ export interface UseProposalsResult {
   refresh: () => void;
 }
 
-export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult {
+export function useProposals(
+  opts: UseProposalsOptions = {},
+): UseProposalsResult {
   const { q, status, page = 1 } = opts;
 
   const [proposals, setProposals] = useState<ProposalSummary[]>([]);
@@ -42,8 +44,8 @@ export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult
     try {
       const data = await api.proposals.list({ q, status, page });
       if (!cancelledRef.current) {
-        setProposals(data.items);
-        setTotal(data.total ?? data.items.length);
+        setProposals(data.data);
+        setTotal(data.meta?.total ?? data.data.length);
       }
     } catch (err) {
       if (!cancelledRef.current) {

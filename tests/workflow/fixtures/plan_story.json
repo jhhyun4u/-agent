@@ -1,0 +1,63 @@
+{
+  "storylines": {
+    "overall_narrative": "검증된 방법론과 풍부한 경험으로 안정적 클라우드 ERP 구축을 보장합니다",
+    "opening_hook": "클라우드 전환은 단순한 기술 이전이 아닌 비즈니스 혁신입니다",
+    "sections": [
+      {
+        "section_id": "understand",
+        "eval_item": "기술 이해도",
+        "key_message": "발주처의 클라우드 전환 니즈를 정확히 파악하고 있습니다",
+        "narrative_arc": "현황분석 → 핵심과제 도출 → 해결방향 제시",
+        "supporting_points": ["현행 시스템 분석 결과", "업계 벤치마크"],
+        "evidence": ["유사 프로젝트 3건 수행 실적"],
+        "win_theme_connection": "검증된 분석 역량으로 정확한 요구사항 도출",
+        "transition_to_next": "이러한 이해를 바탕으로 최적의 전략을 수립하였습니다",
+        "tone": "전문적이고 신뢰감 있는"
+      },
+      {
+        "section_id": "strategy",
+        "eval_item": "수행 방안",
+        "key_message": "차별화된 클라우드 전환 방법론으로 성공을 보장합니다",
+        "narrative_arc": "방법론 소개 → 적용 사례 → 기대 효과",
+        "supporting_points": ["자체 방법론 3단계", "성공 사례"],
+        "evidence": ["방법론 적용 프로젝트 성공률 95%"],
+        "win_theme_connection": "경쟁사 대비 검증된 방법론이 핵심 차별점",
+        "transition_to_next": "이 전략을 실현하기 위한 기술 아키텍처를 제시합니다",
+        "tone": "자신감 있고 구체적인"
+      },
+      {
+        "section_id": "technical",
+        "eval_item": "수행 방안",
+        "key_message": "최신 클라우드 기술로 안정성과 확장성을 동시에 확보합니다",
+        "narrative_arc": "아키텍처 → 핵심 기술 → 품질 보증",
+        "supporting_points": ["하이브리드 클라우드 아키텍처", "마이크로서비스"],
+        "evidence": ["AWS Well-Architected 준수"],
+        "win_theme_connection": "기술 역량이 안정적 구축의 핵심",
+        "transition_to_next": "이를 효과적으로 관리하기 위한 체계를 소개합니다",
+        "tone": "기술적이면서 이해하기 쉬운"
+      },
+      {
+        "section_id": "management",
+        "eval_item": "프로젝트 관리",
+        "key_message": "체계적 관리 체계로 일정·품질·리스크를 통제합니다",
+        "narrative_arc": "관리 체계 → 도구 → 성과 지표",
+        "supporting_points": ["PMO 운영", "주간 보고 체계"],
+        "evidence": ["관리 체계 적용 프로젝트 일정 준수율 98%"],
+        "win_theme_connection": "안정적 관리 = 안정적 납품",
+        "transition_to_next": "구축 후에도 안정적 운영을 보장합니다",
+        "tone": "체계적이고 신뢰할 수 있는"
+      },
+      {
+        "section_id": "maintenance",
+        "eval_item": "프로젝트 관리",
+        "key_message": "24/7 운영 지원 체계로 시스템 안정성을 보장합니다",
+        "narrative_arc": "운영 체계 → SLA → 지속 개선",
+        "supporting_points": ["24/7 모니터링", "SLA 99.9%"],
+        "evidence": ["운영 중인 시스템 5건 SLA 100% 달성"],
+        "win_theme_connection": "장기적 파트너십의 핵심 가치",
+        "transition_to_next": "",
+        "tone": "안정감 있고 미래지향적인"
+      }
+    ]
+  }
+}
