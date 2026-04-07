@@ -291,16 +291,9 @@ function VersionDetailsPanel({
 }) {
   const toast = useToast();
 
-  if (!version) return null;
-
-  const createdDate = new Date(version.created_at);
-  const daysAgo = Math.floor(
-    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
   // Phase 3-4: 버전별 DOCX 다운로드
   const handleVersionDownload = useCallback(async () => {
-    if (!proposalId || !downloadToken || outputKey !== "proposal") {
+    if (!version || !proposalId || !downloadToken || outputKey !== "proposal") {
       toast.warning("이 버전은 다운로드할 수 없습니다");
       return;
     }
@@ -333,7 +326,14 @@ function VersionDetailsPanel({
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "다운로드 실패");
     }
-  }, [proposalId, downloadToken, outputKey, version.version, toast]);
+  }, [version, proposalId, downloadToken, outputKey, toast]);
+
+  if (!version) return null;
+
+  const createdDate = new Date(version.created_at);
+  const daysAgo = Math.floor(
+    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24),
+  );
 
   return (
     <div className="mt-3 pt-3 border-t bg-gray-50 rounded p-3 space-y-2 text-xs">
