@@ -227,6 +227,7 @@ async def get_workflow_state(proposal_id: str, user: CurrentUser = Depends(get_c
                 "nodes_tracked": len(token_usage),
             },
             "streams_status": streams_status,
+            "dynamic_sections": state.get("dynamic_sections", []),
         }
     except Exception as e:
         logger.error(f"상태 조회 실패: {e}", exc_info=True)

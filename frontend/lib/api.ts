@@ -2474,6 +2474,7 @@ export interface WorkflowState {
   streams_status?: StreamsOverview | null;
   artifact_versions?: Record<string, ArtifactVersionInfo[]>;
   dependency_mismatches?: DependencyMismatch[];
+  dynamic_sections?: string[];
 }
 
 export interface WorkflowResumeData {

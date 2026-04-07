@@ -44,6 +44,7 @@ class WorkflowStateResponse(BaseModel):
     next_nodes: list[str] = []
     token_summary: TokenSummary = TokenSummary()
     streams_status: dict | None = None
+    dynamic_sections: list[str] = []
     error: str | None = None
 
 
