@@ -121,7 +121,7 @@ export default function Step8ReviewPage() {
     ],
   };
 
-  if (loading && !status) {
+  if (isLoading && !status) {
     return (
       <div className="min-h-screen bg-[#0f0f0f] text-[#ededed] flex items-center justify-center">
         <div className="text-center">
