@@ -1006,19 +1006,21 @@ class TestGraphHelpers:
         assert result == {}
 
     def test_plan_selective_fan_out_all(self):
-        """rework_targets가 비면 4개 전체 fan-out (plan_team/assign/schedule/story)."""
+        """rework_targets가 비면 5개 전체 fan-out (plan_team/assign/schedule/story/price)."""
         from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
         state = _base_state(rework_targets=[])
         sends = plan_selective_fan_out(state)
-        assert len(sends) == 4
+        assert len(sends) == 5
 
     def test_plan_selective_fan_out_partial(self):
-        """rework_targets가 있으면 해당 항목만 fan-out (plan_price는 ALL_PLAN_NODES에 없음)."""
+        """rework_targets가 있으면 해당 항목만 fan-out (plan_assign은 targets에 없으므로 제외)."""
         from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
         state = _base_state(rework_targets=["plan_team", "plan_price"])
         sends = plan_selective_fan_out(state)
-        assert len(sends) == 1
+        assert len(sends) == 2
         node_names = [s.node for s in sends]
         assert "plan_team" in node_names
+        assert "plan_price" in node_names
+        assert "plan_assign" not in node_names

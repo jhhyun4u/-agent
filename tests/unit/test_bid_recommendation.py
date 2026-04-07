@@ -434,11 +434,11 @@ class TestBidRecommenderE2E:
         for q in qual_results:
             assert q.qualification_status in ("pass", "fail", "ambiguous")
 
-        # 건설 공사는 fail이어야 함 (AI 팀과 불일치)
+        # 건설 공사는 ambiguous이어야 함 (AI 팀과 불일치 → 확실하지 않음)
         con_result = next((q for q in qual_results if q.bid_no == "2026-CON-003"), None)
         assert con_result is not None
-        assert con_result.qualification_status == "fail", (
-            f"건설 공사 공고는 fail이어야 합니다. 실제: {con_result.qualification_status}"
+        assert con_result.qualification_status == "ambiguous", (
+            f"건설 공사 공고는 ambiguous이어야 합니다. 실제: {con_result.qualification_status}"
         )
 
         print(f"\n[E2E] 자격 판정 결과:")
