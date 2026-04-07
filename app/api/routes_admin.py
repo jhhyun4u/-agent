@@ -33,9 +33,8 @@ from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
 from app.models.common import StatusResponse
 from app.models.admin_schemas import (
-    SystemStatsResponse, RoleUpdateResponse, StatusUpdateResponse,
-    DivisionDashboardResponse, ExecutiveDashboardResponse, ReopenResponse,
-    ProposalVersionsResponse, TimeTravelResponse,
+    SystemStatsResponse, DivisionDashboardResponse, ExecutiveDashboardResponse,
+    ReopenResponse, ProposalVersionsResponse, TimeTravelResponse,
 )
 from app.services.audit_service import log_action
 from app.utils.supabase_client import get_async_client

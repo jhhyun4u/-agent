@@ -19,7 +19,7 @@ from app.api.deps import get_current_user
 from app.models.auth_schemas import CurrentUser
 from app.models.analytics_schemas import (
     FailureReasonsResponse, PositioningWinRateResponse, MonthlyTrendsResponse,
-    WinRateResponse, TeamPerformanceResponse, CompetitorResponse, ClientWinRateResponse,
+    WinRateResponse, CompetitorResponse, ClientWinRateResponse,
 )
 from app.utils.supabase_client import get_async_client
 

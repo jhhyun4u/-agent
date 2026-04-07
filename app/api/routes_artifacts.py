@@ -1061,7 +1061,6 @@ async def validate_node_move(
             "downstream_impact": list[str]
         }
     """
-    from app.graph.graph import build_graph
     from app.services.version_manager import validate_move_and_resolve_versions
 
     try:
