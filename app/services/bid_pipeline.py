@@ -273,10 +273,14 @@ async def _run_analysis_if_needed(bid_no: str):
     # TenopaBidReview → 프론트엔드 포맷 변환
     if review:
         score = review.suitability_score
-        if score >= 80: fit_level = "적극 추천"
-        elif score >= 70: fit_level = "추천"
-        elif score >= 40: fit_level = "보통"
-        else: fit_level = "낮음"
+        if score >= 80:
+            fit_level = "적극 추천"
+        elif score >= 70:
+            fit_level = "추천"
+        elif score >= 40:
+            fit_level = "보통"
+        else:
+            fit_level = "낮음"
         positive = review.reason_analysis.strengths
         negative = review.reason_analysis.risks
     else:

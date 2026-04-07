@@ -341,8 +341,6 @@ async def _score_evaluation_item(
         score = float(result.get("score", max_score / 2))
         scoring_range = evaluator["evaluation_bias"]["scoring_range"]
 
-        # 배점 기준의 백분율로 변환
-        base_percentage = (score / 100) * max_score if score > max_score else score
         constrained_score = max(
             scoring_range[0],
             min(scoring_range[1], score)
