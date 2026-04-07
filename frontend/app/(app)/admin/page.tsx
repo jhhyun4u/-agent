@@ -941,8 +941,6 @@ export default function AdminPage() {
                           onResetPw={handleResetPw}
                           onDeactivate={handleDeactivate}
                           onDelete={handleDeleteUser}
-                          divisions={divisions}
-                          teams={teams}
                         />
                       ))}
                   </>
@@ -1162,8 +1160,6 @@ export default function AdminPage() {
                                     onResetPw={handleResetPw}
                                     onDeactivate={handleDeactivate}
                                     onDelete={handleDeleteUser}
-                                    divisions={divisions}
-                                    teams={teams}
                                   />
                                 ))}
                             </div>
