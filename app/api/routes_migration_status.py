@@ -9,7 +9,7 @@ GET /api/migrations/summary  — 통계 요약 (GAP-H5)
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Query

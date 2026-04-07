@@ -583,7 +583,6 @@ class BidFetcher:
                 "instruction_content": "..." # 과업지시서 내용
             }
         """
-        from urllib.parse import unquote
         
         attachments = {}
         
@@ -687,7 +686,7 @@ class BidFetcher:
         Returns:
             문서 텍스트 내용 또는 None
         """
-        from urllib.parse import urlparse, unquote
+        from urllib.parse import urlparse
         
         try:
             # Step 1: URL 검증 (SSRF 방지)

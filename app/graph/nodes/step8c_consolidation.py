@@ -13,7 +13,6 @@ import logging
 from uuid import UUID
 
 from app.graph.state import ProposalState, ConsolidatedProposal
-from app.models.step8_schemas import ConsolidatedSection
 from app.services.version_manager import execute_node_and_create_version
 from app.services.claude_client import claude_generate
 from app.prompts.step8c import CONSOLIDATION_PROMPT

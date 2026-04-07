@@ -9,10 +9,8 @@ v6.0: 상세한 평가위원 프로필 + 평가항목별 세부 점수 산출 + 
 """
 
 import asyncio
-import json
 import logging
 import statistics
-from typing import Any
 
 from app.graph.state import ProposalState
 from app.services.claude_client import claude_generate

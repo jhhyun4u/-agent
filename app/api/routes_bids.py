@@ -17,27 +17,6 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
-# ── 공고 스코어링 파일 캐시 ──────────────────────────────────
-# 서버 재시작 후에도 데이터 유지
-_SCORED_CACHE_FILE = Path("data/bid_scored_cache.json")
-_SCORED_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-
-
-def _load_file_cache() -> dict:
-    try:
-        if _SCORED_CACHE_FILE.exists():
-            return json.loads(_SCORED_CACHE_FILE.read_text(encoding="utf-8"))
-    except Exception:
-        pass
-    return {}
-
-
-def _save_file_cache(cache: dict) -> None:
-    try:
-        _SCORED_CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
-    except Exception as e:
-        logger.warning(f"파일 캐시 저장 실패: {e}")
-
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
 from app.api.deps import get_current_user, get_current_user_or_none
@@ -69,12 +48,34 @@ from app.services.bid_attachment_store import download_bid_attachments
 from app.services.bid_fetcher import BidFetcher
 from app.services.bid_pipeline import get_all_pipeline_status, get_pipeline_status, run_pipeline
 from app.services.bid_recommender import BidRecommender
-from app.services.bid_scorer import score_and_rank_bids
 from app.services.claude_client import _get_client as _get_claude_client
 from app.services.g2b_service import G2BService
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
+
+# ── 공고 스코어링 파일 캐시 ──────────────────────────────────
+# 서버 재시작 후에도 데이터 유지
+_SCORED_CACHE_FILE = Path("data/bid_scored_cache.json")
+_SCORED_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _load_file_cache() -> dict:
+    try:
+        if _SCORED_CACHE_FILE.exists():
+            return json.loads(_SCORED_CACHE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+
+def _save_file_cache(cache: dict) -> None:
+    try:
+        _SCORED_CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:
+        logger.warning(f"파일 캐시 저장 실패: {e}")
+
+
 router = APIRouter(prefix="/api", tags=["bids"])
 
 _BID_NO_PATTERN = re.compile(r'^[A-Za-z0-9\-]+$')
@@ -466,7 +467,6 @@ async def get_scored_bids(
     - 캐시 없음/만료: G2B 크롤링 후 캐시 저장
     - 새로고침은 POST /bids/crawl 사용
     """
-    from app.services.bidding.monitor.fetcher import BidFetcher
 
     try:
         if not date_to:

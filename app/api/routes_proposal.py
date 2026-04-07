@@ -19,8 +19,7 @@ from app.api.response import ok_list
 from app.config import settings
 from app.exceptions import PropNotFoundError, G2BServiceError
 from app.models.auth_schemas import CurrentUser
-from app.models.common import ItemsResponse
-from app.models.proposal_schemas import ProposalCreateResponse, ProposalDetail, ProposalListItem
+from app.models.proposal_schemas import ProposalCreateResponse
 from app.utils.supabase_client import get_async_client
 
 logger = __import__("logging").getLogger(__name__)

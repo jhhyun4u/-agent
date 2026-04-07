@@ -20,10 +20,8 @@ from fastapi import APIRouter, Depends, File, UploadFile, Query, Form, HTTPExcep
 
 from app.api.deps import get_current_user
 from app.config import settings
-from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
 from app.models.document_schemas import (
-    DocumentUploadRequest,
     DocumentResponse,
     DocumentListResponse,
     DocumentDetailResponse,

@@ -6,11 +6,10 @@ Provides access to AI-powered issue flagging, version comparison, and approval w
 """
 
 import logging
-from uuid import UUID
 from typing import Optional
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, Depends, Query, status
+from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, require_project_access, get_async_client

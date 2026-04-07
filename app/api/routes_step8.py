@@ -5,8 +5,7 @@ Endpoints for STEP 8 node management, version selection, and status tracking.
 """
 
 import logging
-from uuid import UUID
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
