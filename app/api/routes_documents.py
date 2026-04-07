@@ -11,12 +11,14 @@ DELETE /api/documents/{id}                      — 문서 삭제
 
 import asyncio
 import logging
+import os
+import uuid
 from datetime import datetime, timezone
 from typing import Optional, Literal
 
 from fastapi import APIRouter, Depends, File, UploadFile, Query, Form, HTTPException, status
 
-from app.api.deps import get_current_user, require_project_access
+from app.api.deps import get_current_user
 from app.config import settings
 from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
@@ -46,6 +48,40 @@ logger = logging.getLogger(__name__)
 # Allowed document types (must match upload validation)
 ALLOWED_DOC_TYPES = {"보고서", "제안서", "실적", "기타"}
 
+# Magic bytes (file signature) validation
+MAGIC_BYTES = {
+    ".pdf": b"%PDF",
+    ".docx": b"PK\x03\x04",  # ZIP archive
+    ".hwpx": b"PK\x03\x04",  # ZIP archive
+    ".pptx": b"PK\x03\x04",  # ZIP archive
+    ".hwp": b"\xd0\xcf\x11\xe0",  # OLE2 (HWP is OLE2-based)
+}
+
+
+def validate_file_magic_bytes(file_content: bytes, file_ext: str) -> bool:
+    """
+    Validate file by magic bytes (file signature) to prevent spoofing.
+
+    Args:
+        file_content: File binary content
+        file_ext: File extension (lowercase, includes dot)
+
+    Returns:
+        True if valid, raises HTTPException if invalid
+    """
+    if file_ext not in MAGIC_BYTES:
+        # No magic bytes check for this format (accept it)
+        return True
+
+    expected_magic = MAGIC_BYTES[file_ext]
+    if not file_content.startswith(expected_magic):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"파일 형식이 유효하지 않습니다. 파일이 손상되었거나 {file_ext} 파일이 아닙니다.",
+        )
+
+    return True
+
 
 @router.post("/upload", response_model=DocumentResponse, status_code=201)
 async def upload_document(
@@ -54,7 +90,6 @@ async def upload_document(
     doc_subtype: Optional[str] = Form(None),
     project_id: Optional[str] = Form(None),
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> DocumentResponse:
     """
     문서 파일 업로드 및 처리 시작
@@ -64,9 +99,6 @@ async def upload_document(
     - 백그라운드에서 process_document() 비동기 호출
     - 즉시 응답 (상태는 클라이언트가 주기적으로 조회)
     """
-    import uuid
-    import os
-
     client = await get_async_client()
 
     # doc_type 검증
@@ -96,6 +128,8 @@ async def upload_document(
     try:
         # 파일 읽기 및 크기 검증
         file_content = await file.read()
+        logger.debug(f"[{current_user.org_id}] 파일 읽기 완료: {file.filename} ({len(file_content)} bytes)")
+
         max_size_bytes = settings.intranet_max_file_size_mb * 1024 * 1024
         if len(file_content) > max_size_bytes:
             raise HTTPException(
@@ -103,40 +137,68 @@ async def upload_document(
                 detail=f"파일이 너무 큽니다 (최대 {settings.intranet_max_file_size_mb}MB)",
             )
 
+        # 매직 바이트 검증 (파일 형식 검증)
+        logger.debug(f"[{current_user.org_id}] 매직 바이트 검증 시작: {file_ext}")
+        validate_file_magic_bytes(file_content, file_ext)
+        logger.debug(f"[{current_user.org_id}] 매직 바이트 검증 완료")
+
         # Supabase Storage에 저장
         bucket = settings.storage_bucket_intranet
         document_id = str(uuid.uuid4())
         storage_path = f"{current_user.org_id}/{document_id}/{file.filename}"
 
-        await client.storage.from_(bucket).upload(
-            path=storage_path,
-            file=file_content,
-            file_options={"upsert": "true"},
-        )
-        logger.info(f"[{current_user.org_id}] Storage 업로드 완료: {storage_path}")
+        logger.debug(f"[{current_user.org_id}] Storage 업로드 시작: {storage_path} (bucket: {bucket})")
+        try:
+            await client.storage.from_(bucket).upload(
+                path=storage_path,
+                file=file_content,
+                file_options={"upsert": "true"},
+            )
+            logger.info(f"[{current_user.org_id}] Storage 업로드 완료: {storage_path}")
+        except Exception as storage_err:
+            logger.error(f"[{current_user.org_id}] Storage 업로드 실패: {storage_err}", exc_info=True)
+            raise
 
         # intranet_documents 레코드 생성
         now = datetime.now(timezone.utc)
-        doc_result = await client.table("intranet_documents").insert({
+        doc_insert_data = {
             "id": document_id,
             "org_id": current_user.org_id,
             "filename": file.filename,
             "doc_type": doc_type,
-            "doc_subtype": doc_subtype,
             "storage_path": storage_path,
             "processing_status": "extracting",
             "total_chars": 0,
             "chunk_count": 0,
             "created_at": now.isoformat(),
             "updated_at": now.isoformat(),
-        }).execute()
+        }
+
+        # Optional fields
+        if doc_subtype:
+            doc_insert_data["doc_subtype"] = doc_subtype
+
+        # If project_id provided, add it (allows project-based organization)
+        if project_id:
+            doc_insert_data["project_id"] = project_id
+
+        logger.debug(f"[{current_user.org_id}] DB 삽입 시작: {document_id}")
+        try:
+            doc_result = await client.table("intranet_documents").insert(doc_insert_data).execute()
+            logger.debug(f"[{current_user.org_id}] DB 삽입 완료, 응답: {doc_result}")
+        except Exception as db_err:
+            logger.error(f"[{current_user.org_id}] DB 삽입 실패: {db_err}", exc_info=True)
+            raise
 
         if not doc_result.data:
+            logger.error(f"[{current_user.org_id}] doc_result.data가 비어있음: {doc_result}")
             raise Exception("문서 레코드 생성 실패")
 
         doc = doc_result.data[0]
+        logger.info(f"[{current_user.org_id}] 문서 레코드 생성 완료: {doc['id']}")
 
         # 백그라운드: 비동기 처리 시작
+        logger.debug(f"[{current_user.org_id}] 비동기 처리 태스크 생성")
         asyncio.create_task(process_document(document_id, current_user.org_id))
 
         return DocumentResponse(
@@ -155,10 +217,13 @@ async def upload_document(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"[{current_user.org_id}] 문서 업로드 실패: {e}")
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        logger.error(f"[{current_user.org_id}] 문서 업로드 실패: {error_msg}", exc_info=True)
+        # Return detailed error in dev mode for debugging
+        detail = error_msg if settings.dev_mode else "문서 업로드 중 오류가 발생했습니다"
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="문서 업로드 중 오류가 발생했습니다",
+            detail=detail,
         )
 
 
@@ -174,7 +239,6 @@ async def list_documents(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> DocumentListResponse:
     """
     문서 목록 조회
@@ -271,7 +335,6 @@ async def list_documents(
 async def get_document(
     document_id: str,
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> DocumentDetailResponse:
     """
     문서 상세 조회
@@ -321,7 +384,6 @@ async def get_document(
 async def reprocess_document(
     document_id: str,
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> DocumentProcessResponse:
     """
     문서 재처리 (실패한 문서 재시도)
@@ -399,7 +461,6 @@ async def get_document_chunks(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> ChunkListResponse:
     """
     문서의 청크 목록 조회
@@ -486,7 +547,6 @@ async def get_document_chunks(
 async def delete_document(
     document_id: str,
     current_user: CurrentUser = Depends(get_current_user),
-    _: None = Depends(require_project_access),
 ) -> None:
     """
     문서 삭제

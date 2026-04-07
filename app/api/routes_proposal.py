@@ -8,6 +8,7 @@ GET  /api/proposals          — 목록
 GET  /api/proposals/{id}     — 상세
 """
 
+import asyncio
 import uuid
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
@@ -173,17 +174,20 @@ async def create_from_bid(
     proposal_id = str(uuid.uuid4())
 
     # 1) bid_announcements에서 공고 정보 조회 (마크다운 경로 포함)
+    logger.info(f"[from-bid] 공고 정보 조회: {body.bid_no}")
     bid_result = await client.table("bid_announcements").select(
         "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data, "
-        "decision, md_rfp_analysis_path, md_notice_path, md_instruction_path"
+        "proposal_status, md_rfp_analysis_path, md_notice_path, md_instruction_path"
     ).eq("bid_no", body.bid_no).maybe_single().execute()
 
     bid = bid_result.data if bid_result.data else {}
+    logger.info(f"[from-bid] 공고 데이터: {bid.get('bid_no')}, proposal_status={bid.get('proposal_status')}")
 
-    # Go/No-Go 의사결정 확인
-    decision = bid.get("decision", "pending")
-    if decision != "Go":
-        raise G2BServiceError(f"'Go' 결정이 된 공고만 제안을 시작할 수 있습니다. (현재: {decision})")
+    # 제안결정 상태 확인 (proposal_status = "제안결정"만 허용)
+    proposal_status = bid.get("proposal_status", "검토중")
+    if proposal_status != "제안결정":
+        logger.error(f"[from-bid] 제안 생성 불가: proposal_status={proposal_status} (필요: 제안결정)")
+        raise G2BServiceError(f"'제안결정'된 공고만 제안을 시작할 수 있습니다. (현재: {proposal_status})")
 
     title = bid.get("bid_title") or f"공고 {body.bid_no}"
     raw_data = bid.get("raw_data") or {}
@@ -205,16 +209,23 @@ async def create_from_bid(
     for doc_name, path in md_paths.items():
         if path:
             try:
-                # Storage에서 파일 다운로드
-                response = await client.storage.from_("documents").download(path)
+                # Storage에서 파일 다운로드 (5초 타임아웃)
+                # 마크다운 파일은 analyze 엔드포인트에서 백그라운드로 생성 중일 수 있음
+                async def download_with_timeout():
+                    return await client.storage.from_("documents").download(path)
+
+                response = await asyncio.wait_for(download_with_timeout(), timeout=5.0)
                 if response:
                     md_content = response.decode("utf-8") if isinstance(response, bytes) else response
                     # 마크다운 섹션 분리
                     rfp_content_parts.append(f"\n\n## {doc_name}\n\n{md_content}")
                     logger.info(f"✓ 마크다운 로드: {doc_name} ({path})")
+            except asyncio.TimeoutError:
+                logger.warning(f"! 마크다운 로드 타임아웃 [{doc_name}] (5초): {path} — 생성 대기 중일 수 있음")
+                # 타임아웃 무시하고 계속 진행 (문서 생성 중일 수 있음)
             except Exception as e:
                 logger.warning(f"! 마크다운 로드 실패 [{doc_name}]: {str(e)}")
-                # 개별 문서 로드 실패는 계속 진행
+                # 개별 문서 로드 실패는 계속 진행 (없어도 proceed)
 
     # 모든 콘텐츠 통합 (최대 50,000자)
     rfp_content = "\n".join(rfp_content_parts) if rfp_content_parts else ""
@@ -230,12 +241,40 @@ async def create_from_bid(
         "rfp_content": rfp_content,
         "rfp_content_truncated": rfp_content_truncated,
     }
+
+    # 선택적 필드 (마이그레이션 상태에 따라)
+    if bid.get("agency"):
+        row["client_name"] = bid["agency"]
+    if bid.get("deadline_date"):
+        row["deadline"] = bid["deadline_date"]
+
     if user.team_id:
         row["team_id"] = user.team_id
     if user.org_id:
         row["org_id"] = user.org_id
 
-    await client.table("proposals").insert(row).execute()
+    logger.info(f"[from-bid] 제안 프로젝트 생성 시작: {proposal_id}")
+    try:
+        await client.table("proposals").insert(row).execute()
+        logger.info(f"[from-bid] ✓ 제안 프로젝트 생성 완료: {proposal_id}")
+    except Exception as e:
+        # 컬럼 누락 오류인 경우 필수 필드만 사용하여 재시도
+        if "does not exist" in str(e):
+            logger.warning(f"[from-bid] 선택적 필드 누락, 최소 필드로 재시도: {e}")
+            row_minimal = {
+                "id": proposal_id,
+                "title": title,
+                "owner_id": user.id,
+                "status": "대기중",
+                "rfp_content": rfp_content,
+                "rfp_content_truncated": rfp_content_truncated,
+            }
+            if user.team_id:
+                row_minimal["team_id"] = user.team_id
+            await client.table("proposals").insert(row_minimal).execute()
+            logger.info(f"[from-bid] ✓ 제안 프로젝트 생성 완료 (최소 필드): {proposal_id}")
+        else:
+            raise
 
     # 4) 공고 첨부파일 → proposal에 복사 (백그라운드)
     if raw_data:

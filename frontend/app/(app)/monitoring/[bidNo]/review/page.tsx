@@ -53,7 +53,7 @@ export default function BidReviewPage() {
 
   const [bidInfo, setBidInfo] = useState<BidInfo | null>(null);
   const [analysis, setAnalysis] = useState<BidAnalysis | null>(() => {
-    // sessionStorage에서 캐시된 분석 결과 복원 (유효한 AI 분석만)
+    // sessionStorage에서 캐시된 분석 결과 복원 (기본값 포함)
     try {
       const cached =
         typeof window !== "undefined"
@@ -61,10 +61,11 @@ export default function BidReviewPage() {
           : null;
       if (!cached) return null;
       const parsed = JSON.parse(cached);
-      // suitability_score가 없거나 0이면 fallback 결과 → 무효 캐시
-      if (!parsed.suitability_score || parsed.suitability_score <= 0)
-        return null;
-      return parsed;
+      // 최소한 하나의 유효한 필드가 있으면 캐시로 간주
+      if (parsed.rfp_summary || parsed.rfp_sections || parsed.positive || parsed.negative || parsed.suitability_score != null) {
+        return parsed;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -239,39 +240,153 @@ export default function BidReviewPage() {
           return;
         }
 
-        // AI 분석 (별도, 60초 타임아웃 — 통합 단일 Claude 호출 45s + 마진)
+        // AI 분석 조회 (DB에서 조회, 폴링 지원)
         setAnalyzing(true);
         let analysisLoaded = false;
+        
         try {
           console.log("[review] Step 4: fetching /bids/" + bidNo + "/analysis");
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 60000);
+          const timeout = setTimeout(() => controller.abort(), 30000);
           const res = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
             signal: controller.signal,
             headers: authHeaders,
           });
           clearTimeout(timeout);
-          console.log("[review] Step 4 response:", res.status);
+          
           if (res.ok && !cancelled) {
             const json = await res.json();
-            console.log(
-              "[review] analysis data:",
-              JSON.stringify(json.data).substring(0, 100),
-            );
-            setAnalysisWithCache(json.data);
-            analysisLoaded = true;
-          } else {
-            console.warn(`AI 분석 실패: ${res.status}`);
+            const data = json.data;
+            console.log("[review] analysis status:", data?.status);
+            
+            if (data?.status === "analyzed") {
+              // ✓ 분석 완료 → 즉시 표시
+              setAnalysisWithCache(data);
+              analysisLoaded = true;
+              setAnalyzing(false);
+              console.log("[review] ✓ 분석 완료, 즉시 표시");
+              return;
+            }
+            
+            else if (data?.status === "analyzing") {
+              // ⏳ 진행 중 → 폴링 시작 (5초 간격, 최대 2분)
+              console.log("[review] ⏳ 분석 진행 중, 폴링 시작");
+              let pollCount = 0;
+              const MAX_POLLS = 24;
+              
+              const pollTimer = setInterval(async () => {
+                pollCount++;
+                if (cancelled || pollCount > MAX_POLLS) {
+                  clearInterval(pollTimer);
+                  if (!cancelled) {
+                    console.warn("[review] 폴링 최대 횟수 초과");
+                    setAnalyzing(false);
+                  }
+                  return;
+                }
+                
+                try {
+                  const pollRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
+                    headers: authHeaders,
+                    signal: AbortSignal.timeout(5000),
+                  });
+                  
+                  if (pollRes.ok) {
+                    const pollData = (await pollRes.json()).data;
+                    console.log("[review] poll #" + pollCount + " status:", pollData?.status);
+                    
+                    if (pollData?.status === "analyzed") {
+                      setAnalysisWithCache(pollData);
+                      setAnalyzing(false);
+                      clearInterval(pollTimer);
+                      console.log("[review] ✓ 폴링 완료");
+                      return;
+                    }
+                    
+                    if (pollData?.status === "failed") {
+                      setAnalysisFailed(true);
+                      setAnalyzing(false);
+                      clearInterval(pollTimer);
+                      setError(pollData?.error || "분석 실패");
+                      return;
+                    }
+                  }
+                } catch (e) {
+                  console.warn("[review] 폴링 오류 (무시, 재시도):", e);
+                }
+              }, 5000);
+              
+              return; // analyzing 상태 유지
+            }
+            
+            else if (data?.status === "failed") {
+              // ✗ 실패 → 에러 표시
+              console.error("[review] ✗ 분석 실패:", data?.error);
+              setAnalysisFailed(true);
+              setAnalyzing(false);
+              setError(data?.error || "분석에 실패했습니다");
+              return;
+            }
+            
+            else {  // pending or unknown
+              // ⧖ 대기 중 → 폴링 시작
+              console.log("[review] ⧖ 분석 대기, 폴링 시작");
+              let pollCount = 0;
+              const MAX_POLLS = 24;
+              
+              const pollTimer = setInterval(async () => {
+                pollCount++;
+                if (cancelled || pollCount > MAX_POLLS) {
+                  clearInterval(pollTimer);
+                  if (!cancelled) setAnalyzing(false);
+                  return;
+                }
+                
+                try {
+                  const pollRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
+                    headers: authHeaders,
+                    signal: AbortSignal.timeout(5000),
+                  });
+                  
+                  if (pollRes.ok) {
+                    const pollData = (await pollRes.json()).data;
+                    if (pollData?.status === "analyzed") {
+                      setAnalysisWithCache(pollData);
+                      setAnalyzing(false);
+                      clearInterval(pollTimer);
+                      return;
+                    }
+                    if (pollData?.status === "failed") {
+                      setAnalysisFailed(true);
+                      setAnalyzing(false);
+                      clearInterval(pollTimer);
+                      setError(pollData?.error || "분석 실패");
+                      return;
+                    }
+                  }
+                } catch (e) {
+                  // 폴링 오류 무시, 다음 폴링에서 재시도
+                }
+              }, 5000);
+              
+              return;
+            }
+          } else if (!res.ok) {
+            const errorText = await res.text();
+            console.error(`분석 조회 실패 (${res.status}):`, errorText.substring(0, 200));
+            setAnalysisFailed(true);
           }
         } catch (e) {
           if (e instanceof DOMException && e.name === "AbortError") {
-            console.warn("AI 분석 타임아웃 (60초 초과)");
+            console.warn("[review] 분석 조회 타임아웃");
           } else {
-            console.warn("AI 분석 오류:", e);
+            console.warn("[review] 분석 조회 오류:", e);
           }
+          setAnalysisFailed(true);
         }
 
-        // analysis API 실패 시 → scored/bidInfo 기반 간이 분석 생성
+        // 분석 조회 실패 시 → scored/bidInfo 기반 간이 분석 생성
+        setAnalyzing(false);
         if (!analysisLoaded && !cancelled) {
           setAnalysisFailed(true);
         }
@@ -346,72 +461,7 @@ export default function BidReviewPage() {
           }
         }
 
-        // 파이프라인 진행 중이면 폴링 (최대 24회 = 2분)
-        const MAX_POLL = 24;
-        if (!analysisLoaded && !cancelled) {
-          try {
-            const pRes = await fetch(
-              `${baseUrl}/bids/pipeline/status?bid_no=${bidNo}`,
-              { signal: AbortSignal.timeout(5000) },
-            );
-            if (pRes.ok) {
-              const pData = await pRes.json();
-              const pStatus = pData.data?.[bidNo];
-              if (pStatus && pStatus.step !== "done" && !pStatus.error) {
-                let pollCount = 0;
-                pollTimer = setInterval(async () => {
-                  pollCount++;
-                  if (cancelled || pollCount > MAX_POLL) {
-                    if (pollTimer) clearInterval(pollTimer);
-                    pollTimer = null;
-                    if (!cancelled) {
-                      console.warn(
-                        `폴링 ${pollCount > MAX_POLL ? "최대 횟수 초과" : "취소"}`,
-                      );
-                      setAnalyzing(false);
-                    }
-                    return;
-                  }
-                  try {
-                    const r = await fetch(
-                      `${baseUrl}/bids/pipeline/status?bid_no=${bidNo}`,
-                      { signal: AbortSignal.timeout(5000) },
-                    );
-                    if (r.ok) {
-                      const p = await r.json();
-                      const s = p.data?.[bidNo];
-                      if (!s || s.step === "done" || s.error) {
-                        if (pollTimer) clearInterval(pollTimer);
-                        pollTimer = null;
-                        if (cancelled) return;
-                        if (!s?.error) {
-                          try {
-                            const aRes = await fetch(
-                              `${baseUrl}/bids/${bidNo}/analysis`,
-                              { signal: AbortSignal.timeout(30000) },
-                            );
-                            if (aRes.ok)
-                              setAnalysisWithCache((await aRes.json()).data);
-                          } catch {
-                            /* 재조회 실패 무시 */
-                          }
-                        }
-                        setAnalyzing(false);
-                      }
-                    }
-                  } catch {
-                    /* 폴링 단건 실패 무시 — 다음 폴링에서 재시도 */
-                  }
-                }, 5000);
-                return; // analyzing 상태 유지
-              }
-            }
-          } catch {
-            /* status API 실패 무시 */
-          }
-        }
-
-        if (!cancelled) setAnalyzing(false);
+        // 분석 폴링은 위의 /analysis 엔드포인트에서 처리됨
       } catch (e) {
         // 최상위 에러 핸들러: 어떤 에러든 UI 상태 복구
         console.error("[review] 치명적 오류:", e);
@@ -498,59 +548,99 @@ export default function BidReviewPage() {
       if (status === "제안결정") {
         try {
           // 1) 공고 분석 (RFP分析, 공고문, 과업지시서 생성)
-          console.log(`[review] 공고 분석 시작: ${bidNo}`);
-          const analyzeRes = await fetch(
-            `${baseUrl}/g2b/bid/${bidNo}/analyze`,
-            {
-              method: "POST",
-              headers,
-            },
-          );
-          if (!analyzeRes.ok) {
-            const err = await analyzeRes.json().catch(() => ({}));
-            console.warn("[review] 공고 분석 실패:", err.detail || err.message);
-            // 분석 실패해도 계속 진행 (fallback)
-          } else {
-            console.log(`✓ 공고 분석 완료: ${bidNo}`);
-            // 분석 완료 후 마크다운 문서 로드
-            await loadMarkdownDocuments();
+          console.log(`[review] 1️⃣ 공고 분석 시작: ${baseUrl}/g2b/bid/${bidNo}/analyze`);
+          try {
+            const analyzeRes = await fetch(
+              `${baseUrl}/g2b/bid/${bidNo}/analyze`,
+              {
+                method: "POST",
+                headers,
+              },
+            );
+            if (!analyzeRes.ok) {
+              const err = await analyzeRes.json().catch(() => ({}));
+              console.warn("[review] 공고 분석 실패:", analyzeRes.status, err);
+              // 분석 실패해도 계속 진행 (fallback)
+            } else {
+              console.log(`✓ 공고 분석 완료: ${bidNo}`);
+              // 분석 완료 후 마크다운 문서 로드
+              await loadMarkdownDocuments();
+            }
+          } catch (e) {
+            console.warn("[review] 공고 분석 요청 오류:", e);
           }
 
           // 2) Go 의사결정 기록
-          console.log(`[review] Go 의사결정 기록: ${bidNo}`);
-          const decisionRes = await fetch(
-            `${baseUrl}/g2b/bid/${bidNo}/decision`,
-            {
+          console.log(`[review] 2️⃣ Go 의사결정 기록: ${baseUrl}/g2b/bid/${bidNo}/decision`);
+          try {
+            const decisionRes = await fetch(
+              `${baseUrl}/g2b/bid/${bidNo}/decision`,
+              {
+                method: "POST",
+                headers,
+                body: JSON.stringify({
+                  decision: "Go",
+                  decision_comment: "AI 검토 후 제안 진행으로 의사결정",
+                }),
+              },
+            );
+            if (!decisionRes.ok) {
+              const err = await decisionRes.json().catch(() => ({}));
+              console.warn("[review] 의사결정 기록 실패:", decisionRes.status, err);
+              // 실패해도 계속 진행
+            } else {
+              console.log(`✓ Go 의사결정 기록 완료: ${bidNo}`);
+            }
+          } catch (e) {
+            console.warn("[review] 의사결정 기록 요청 오류:", e);
+          }
+
+          // 3) proposal_status 업데이트
+          console.log(`[review] 3️⃣ proposal_status 업데이트: ${baseUrl}/bids/${bidNo}/status`);
+          try {
+            const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
+              method: "PUT",
+              headers,
+              body: JSON.stringify({ status: "제안결정" }),
+            });
+            if (!statusRes.ok) {
+              const err = await statusRes.json().catch(() => ({}));
+              console.warn("[review] proposal_status 업데이트 실패:", statusRes.status, err);
+              // 실패해도 계속 진행
+            } else {
+              console.log(`✓ proposal_status 업데이트 완료`);
+            }
+          } catch (e) {
+            console.warn("[review] proposal_status 업데이트 요청 오류:", e);
+          }
+
+          // 4) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
+          console.log(`[review] 4️⃣ 제안 프로젝트 생성: ${baseUrl}/proposals/from-bid`);
+          console.log(`[review] 요청 본문: { bid_no: "${bidNo}" }`);
+          try {
+            const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
               method: "POST",
               headers,
-              body: JSON.stringify({
-                decision: "Go",
-                decision_comment: "AI 검토 후 제안 진행으로 의사결정",
-              }),
-            },
-          );
-          if (!decisionRes.ok) {
-            const err = await decisionRes.json().catch(() => ({}));
-            throw new Error(err.detail || err.message || "의사결정 기록 실패");
+              body: JSON.stringify({ bid_no: bidNo }),
+            });
+            console.log(`[review] 제안 프로젝트 생성 응답: ${createRes.status}`);
+            if (!createRes.ok) {
+              const err = await createRes.json().catch(() => ({}));
+              console.error(
+                "[review] 제안 프로젝트 생성 실패:",
+                createRes.status,
+                JSON.stringify(err),
+              );
+              // 프로젝트 생성 실패해도 의사결정은 완료 → 목록으로 이동
+            } else {
+              const createData = await createRes.json();
+              console.log(`✓ 제안 프로젝트 생성 완료:`, createData);
+            }
+          } catch (e) {
+            console.error("[review] 제안 프로젝트 생성 요청 오류:", e);
           }
-          console.log(`✓ Go 의사결정 기록 완료: ${bidNo}`);
 
-          // 3) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
-          console.log(`[review] 제안 프로젝트 생성: ${bidNo}`);
-          const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ bid_no: bidNo }),
-          });
-          if (!createRes.ok) {
-            const err = await createRes.json().catch(() => ({}));
-            console.warn(
-              "[review] 제안 프로젝트 생성 실패:",
-              err.detail || err.message,
-            );
-            // 프로젝트 생성 실패해도 의사결정은 완료 → 목록으로 이동
-          }
-          console.log(`✓ 제안 프로젝트 생성 완료, 목록으로 이동`);
+          console.log(`✓ 제안 프로세스 완료, proposals 페이지로 이동`);
           router.push("/proposals");
         } catch (e: unknown) {
           const msg =
@@ -560,7 +650,7 @@ export default function BidReviewPage() {
           setDeciding(false);
         }
       } else {
-        // "제안포기" / "제안유보" / "관련없음" → No-Go 기록 후 목록으로
+        // "제안포기" / "제안유보" / "관련없음" → No-Go 기록 → proposal_status 업데이트 후 목록으로
         try {
           const noGoReason = {
             제안포기: "최종 제안 포기",
@@ -568,6 +658,7 @@ export default function BidReviewPage() {
             관련없음: "당사 사업 분야와 무관",
           } as const;
 
+          // 1) No-Go 의사결정 기록
           const decisionRes = await fetch(
             `${baseUrl}/g2b/bid/${bidNo}/decision`,
             {
@@ -581,9 +672,28 @@ export default function BidReviewPage() {
           );
           if (!decisionRes.ok) {
             console.warn("[review] No-Go 의사결정 기록 실패");
-            // 실패해도 목록으로 이동
+            // 실패해도 계속 진행
+          } else {
+            console.log(`✓ No-Go 의사결정 기록 완료: ${bidNo} (${status})`);
           }
-          console.log(`✓ No-Go 의사결정 기록 완료: ${bidNo} (${status})`);
+
+          // 2) proposal_status 업데이트
+          console.log(`[review] proposal_status 업데이트: ${bidNo} → ${status}`);
+          try {
+            const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
+              method: "PUT",
+              headers,
+              body: JSON.stringify({ status }),
+            });
+            if (!statusRes.ok) {
+              console.warn("[review] proposal_status 업데이트 실패");
+              // 실패해도 목록으로 이동
+            } else {
+              console.log(`✓ proposal_status 업데이트 완료: ${status}`);
+            }
+          } catch (e) {
+            console.warn("[review] proposal_status 업데이트 중 오류:", e);
+          }
         } catch (e) {
           console.warn("[review] No-Go 기록 중 오류:", e);
           // 오류 무시하고 목록으로 이동
@@ -657,7 +767,27 @@ export default function BidReviewPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto px-6 py-6">
+      {/* 분석 진행 중 배너 */}
+      {analyzing && (
+        <div className="bg-blue-950/40 border-b border-blue-900/50 px-6 py-3 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs text-blue-400 font-medium">
+                AI 분석 중입니다...
+              </span>
+            </div>
+            <div className="flex-1 bg-[#1c1c1c] rounded-full h-1 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-400 to-blue-300 h-full w-full animate-pulse" />
+            </div>
+            <span className="text-xs text-[#8c8c8c]">
+              RFP 분석 및 적합성 검토 진행 중
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className={`flex-1 overflow-auto px-6 py-6 ${analyzing ? "opacity-60 pointer-events-none" : ""}`}>
         <div className="max-w-2xl space-y-5">
           {/* 공고 정보 */}
           <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
@@ -703,11 +833,6 @@ export default function BidReviewPage() {
             <div className="flex items-center gap-2 mb-3">
               <span className="text-blue-400 text-sm">📋</span>
               <p className="text-xs font-medium text-[#ededed]">RFP 주요내용</p>
-              {analyzing && (
-                <span className="text-[10px] text-[#5c5c5c] animate-pulse">
-                  AI 분석 중...
-                </span>
-              )}
             </div>
             {analyzing ? (
               <div className="flex items-center gap-2 py-6 justify-center">

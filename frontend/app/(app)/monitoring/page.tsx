@@ -38,10 +38,8 @@ const BUDGET_OPTIONS = [
 
 function formatBudget(amount: number | null): string {
   if (!amount) return "미기재";
-  // 천원 단위 콤마 표기
-  const inThousand = Math.round(amount / 1000);
-  if (inThousand >= 100_000) return `${(amount / 100_000_000).toFixed(1)}억`;
-  return `${inThousand.toLocaleString()}천원`;
+  // 억원 단위 통일 (소수점 2자리)
+  return `${(amount / 100_000_000).toFixed(2)}억`;
 }
 
 function calcDday(deadline: string | null | undefined): number | null {
@@ -720,17 +718,15 @@ function ScoredBidsView({
   const filteredBids = useMemo(() => {
     let result = bids
       .filter((b) => stageFilter.has(b.bid_stage || "입찰공고"))
-      .filter((b) => matchesScoredSearch(b, debouncedQuery))
-      .filter((b) => minBudget === 0 || (b.budget ?? 0) >= minBudget)
-      .filter((b) => !agency || b.agency.includes(agency));
+      .filter((b) => matchesScoredSearch(b, debouncedQuery));
 
     return sortBids(result, sortConfig, (b, key) => {
-      if (key === "score") return b.score;
-      if (key === "budget") return b.budget;
-      if (key === "d_day") return b.d_day;
+      if (key === "score") return (b.suitability_score ?? b.score) || 0;
+      if (key === "budget") return b.budget || 0;
+      if (key === "d_day") return b.d_day ?? 999;
       return null;
     });
-  }, [bids, stageFilter, debouncedQuery, minBudget, agency, sortConfig]);
+  }, [bids, stageFilter, debouncedQuery, sortConfig]);
 
   // 정렬 토글
   function handleSort(key: string) {
@@ -755,8 +751,6 @@ function ScoredBidsView({
   // 활성 필터 수
   const activeFilterCount = [
     debouncedQuery !== "",
-    minBudget > 0,
-    agency !== "",
     stageFilter.size < 3,
     sortConfig !== null,
   ].filter(Boolean).length;
@@ -764,8 +758,6 @@ function ScoredBidsView({
   // 초기화
   function resetFilters() {
     setQuery("");
-    setMinBudget(0);
-    setAgency("");
     setStageFilter(new Set(["입찰공고", "사전규격", "발주계획"]));
     setSortConfig(null);
   }
@@ -782,52 +774,7 @@ function ScoredBidsView({
     <div>
       {/* 필터 바 */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        {/* 검색 */}
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="공고명, 발주처, 키워드 검색"
-          className="w-[220px] bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] placeholder:text-[#5c5c5c]"
-        />
-
-        {/* 예산 */}
-        <select
-          value={minBudget}
-          onChange={(e) => setMinBudget(Number(e.target.value))}
-          className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]"
-        >
-          {BUDGET_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-
-        {/* 발주처 */}
-        <AgencyTypeahead
-          agencies={agencies}
-          value={agency}
-          onChange={setAgency}
-        />
-
-        {/* 기간 */}
-        <label className="flex items-center gap-1 text-xs text-[#8c8c8c]">
-          기간
-          <select
-            value={days}
-            onChange={(e) => setDays(Number(e.target.value))}
-            className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed]"
-          >
-            {[1, 3, 5, 7, 10, 14, 30].map((d) => (
-              <option key={d} value={d}>
-                {d === 1 ? "당일" : `${d}일`}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {/* 단계 */}
+        {/* 공고/사전/계획 필터 (상단 좌측) */}
         <div className="flex items-center gap-2 text-[10px] text-[#5c5c5c]">
           {(["입찰공고", "사전규격", "발주계획"] as const).map((stage) => (
             <label
@@ -850,6 +797,15 @@ function ScoredBidsView({
             </label>
           ))}
         </div>
+
+        {/* 검색 */}
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="공고명, 키워드 검색"
+          className="w-[220px] bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] placeholder:text-[#5c5c5c]"
+        />
 
         {/* 필터 카운트 + 초기화 + 크롤링 시각 + 새로고침 */}
         <span className="text-[10px] text-[#5c5c5c] ml-auto flex items-center gap-2">
@@ -1002,9 +958,9 @@ function ScoredBidsView({
                   </td>
                   <td className="px-2 py-3 text-center">
                     <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-md border ${scoreColor(bid.score)}`}
+                      className={`text-xs font-bold px-2 py-0.5 rounded-md border ${scoreColor(bid.suitability_score ?? bid.score)}`}
                     >
-                      {bid.score.toFixed(0)}
+                      {(bid.suitability_score ?? bid.score).toFixed(0)}
                     </span>
                   </td>
                   <td className="px-3 py-3">
@@ -1138,7 +1094,7 @@ function MonitorBidsView({
       setLoading(true);
       setError("");
       try {
-        const res = await api.bids.monitor(s, p, true);
+        const res = await api.bids.monitor(s, p, false);
         const now = Date.now();
         setBids(res.data || []);
         setTotal(res.meta?.total || 0);
@@ -1154,7 +1110,7 @@ function MonitorBidsView({
           const baseUrl =
             process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
           const directRes = await fetch(
-            `${baseUrl}/bids/monitor?scope=${s}&page=${p}&show_all=true`,
+            `${baseUrl}/bids/monitor?scope=${s}&page=${p}&show_all=false`,
           );
           if (directRes.ok) {
             const json = await directRes.json();

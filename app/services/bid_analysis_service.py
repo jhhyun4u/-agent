@@ -40,9 +40,9 @@ async def generate_bid_analysis_documents(
 
     Returns:
         {
-            "md_rfp_analysis_path": "bids/{bid_no}/RFP分析.md",
-            "md_notice_path": "bids/{bid_no}/공고문.md",
-            "md_instruction_path": "bids/{bid_no}/과업지시서.md"
+            "md_rfp_analysis_path": "bids/{bid_no}/rfp_analysis.md",
+            "md_notice_path": "bids/{bid_no}/notice.md",
+            "md_instruction_path": "bids/{bid_no}/instruction.md"
         }
     """
     logger.info(f"[Bid Analysis] 시작: bid_no={bid_no}, title={bid_title}")
@@ -82,22 +82,22 @@ async def generate_bid_analysis_documents(
     folder = f"bids/{bid_no}"
 
     # 문서 저장 (덮어쓰기 모드)
-    rfp_path = f"{folder}/RFP分析.md"
-    notice_path = f"{folder}/공고문.md"
-    instruction_path = f"{folder}/과업지시서.md"
+    # NOTE: Supabase Storage는 ASCII 문자만 지원하므로 romanized 파일명 사용
+    rfp_path = f"{folder}/rfp_analysis.md"
+    notice_path = f"{folder}/notice.md"
+    instruction_path = f"{folder}/instruction.md"
 
     try:
-        # RFP分析 저장
+        # RFP 분석 저장
         try:
-            # Supabase SDK의 storage.from_().upload()은 async를 지원
             await client.storage.from_(bucket_name).upload(
                 rfp_path,
                 rfp_analysis_md.encode("utf-8"),
                 file_options={"cacheControl": "3600", "upsert": "true"},  # type: ignore
             )
-            logger.info(f"✓ RFP分析 저장: {rfp_path}")
+            logger.info(f"✓ RFP Analysis saved: {rfp_path}")
         except Exception as e:
-            logger.error(f"✗ RFP分析 저장 실패: {str(e)}")
+            logger.error(f"✗ RFP Analysis save failed: {str(e)}")
             raise
 
         # 공고문 저장
@@ -107,9 +107,9 @@ async def generate_bid_analysis_documents(
                 notice_md.encode("utf-8"),
                 file_options={"cacheControl": "3600", "upsert": "true"},  # type: ignore
             )
-            logger.info(f"✓ 공고문 저장: {notice_path}")
+            logger.info(f"✓ Notice saved: {notice_path}")
         except Exception as e:
-            logger.error(f"✗ 공고문 저장 실패: {str(e)}")
+            logger.error(f"✗ Notice save failed: {str(e)}")
             raise
 
         # 과업지시서 저장
@@ -119,13 +119,13 @@ async def generate_bid_analysis_documents(
                 instruction_md.encode("utf-8"),
                 file_options={"cacheControl": "3600", "upsert": "true"},  # type: ignore
             )
-            logger.info(f"✓ 과업지시서 저장: {instruction_path}")
+            logger.info(f"✓ Instruction saved: {instruction_path}")
         except Exception as e:
-            logger.error(f"✗ 과업지시서 저장 실패: {str(e)}")
+            logger.error(f"✗ Instruction save failed: {str(e)}")
             raise
 
     except Exception as e:
-        logger.error(f"[Bid Analysis] Storage 저장 실패: {str(e)}")
+        logger.error(f"[Bid Analysis] Storage save failed: {str(e)}")
         raise
 
     return {

@@ -31,9 +31,10 @@ async def process_document(document_id: str, org_id: str) -> dict:
     """
     client = await get_async_client()
 
+    # Get document (with optional project join - handle NULL project_id)
     doc_result = await (
         client.table("intranet_documents")
-        .select("*, intranet_projects!inner(project_name, client_name)")
+        .select("*")
         .eq("id", document_id)
         .single()
         .execute()

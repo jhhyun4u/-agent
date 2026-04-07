@@ -21,10 +21,10 @@ class DocumentResponse(BaseModel):
 
     id: str
     filename: str
-    doc_type: str
+    doc_type: Literal["보고서", "제안서", "실적", "기타"]
     storage_path: str
-    processing_status: str = Field(
-        description="extracting|chunking|embedding|completed|failed"
+    processing_status: Literal["extracting", "chunking", "embedding", "completed", "failed"] = Field(
+        description="문서 처리 상태"
     )
     total_chars: int = 0
     chunk_count: int = 0
@@ -57,8 +57,8 @@ class ChunkResponse(BaseModel):
 
     id: str
     chunk_index: int
-    chunk_type: str = Field(
-        description="title|heading|body|table|image"
+    chunk_type: Literal["section", "slide", "article", "window"] = Field(
+        description="청크 타입"
     )
     section_title: Optional[str] = None
     content: str
@@ -85,5 +85,5 @@ class DocumentProcessResponse(BaseModel):
     """문서 재처리 응답"""
 
     id: str
-    processing_status: str
+    processing_status: Literal["extracting", "chunking", "embedding", "completed", "failed"]
     message: str

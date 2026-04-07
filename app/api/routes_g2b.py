@@ -16,7 +16,7 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query, Body
+from fastapi import APIRouter, Depends, Query, Body, BackgroundTasks
 
 from app.api.deps import get_current_user
 from app.exceptions import G2BExternalError, G2BServiceError, InternalServiceError, TenopAPIError
@@ -180,10 +180,11 @@ async def bid_results(
 @router.post("/bid/{bid_no}/analyze")
 async def analyze_bid(
     bid_no: str,
+    background_tasks: BackgroundTasks,
     current_user=Depends(get_current_user),
 ):
     """
-    공고 상세 분석 — 3가지 마크다운 문서 생성
+    공고 상세 분석 — 3가지 마크다운 문서 생성 (백그라운드)
 
     - RFP分析: 사업개요, 평가항목, 기술요구사항, 가격평가, 강점/약점, 경쟁강도, 제안전략
     - 공고문: 공고 요약
@@ -194,41 +195,50 @@ async def analyze_bid(
     try:
         client = await get_async_client()
 
-        # bid_announcements에서 해당 공고 조회
-        result = await client.table("bid_announcements").select("*").eq(
-            "org_id", str(current_user.org_id)
-        ).eq("bid_no", bid_no).single().execute()
+        # bid_announcements에서 해당 공고 조회 (org_id 필터링 제거)
+        result = await client.table("bid_announcements").select("id, bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data").eq(
+            "bid_no", bid_no
+        ).maybe_single().execute()
 
         if not result.data:
             raise G2BServiceError(f"공고를 찾을 수 없습니다: {bid_no}")
 
         bid = result.data
+        logger.info(f"[analyze] 공고 조회 완료: {bid_no}")
 
-        # 분석 문서 생성
-        doc_paths = await generate_bid_analysis_documents(
-            bid_no=bid["bid_no"],
-            bid_title=bid["bid_title"],
-            agency=bid.get("agency", ""),
-            budget_amount=bid.get("budget_amount"),
-            deadline_date=bid.get("deadline_date", ""),
-            content_text=bid.get("content_text", ""),
-            raw_data=bid.get("raw_data", {}),
-        )
+        # 분석 문서 생성은 백그라운드에서 처리
+        async def _analyze_documents():
+            try:
+                doc_paths = await generate_bid_analysis_documents(
+                    bid_no=bid["bid_no"],
+                    bid_title=bid["bid_title"],
+                    agency=bid.get("agency", ""),
+                    budget_amount=bid.get("budget_amount"),
+                    deadline_date=bid.get("deadline_date", ""),
+                    content_text=bid.get("content_text", ""),
+                    raw_data=bid.get("raw_data", {}),
+                )
 
-        # bid_announcements 업데이트: 문서 경로 및 상태 저장
-        await client.table("bid_announcements").update({
-            "md_rfp_analysis_path": doc_paths["md_rfp_analysis_path"],
-            "md_notice_path": doc_paths["md_notice_path"],
-            "md_instruction_path": doc_paths["md_instruction_path"],
-            "analysis_status": "analyzed",
-        }).eq("id", bid["id"]).execute()
+                # bid_announcements 업데이트: 문서 경로 및 상태 저장
+                await client.table("bid_announcements").update({
+                    "md_rfp_analysis_path": doc_paths["md_rfp_analysis_path"],
+                    "md_notice_path": doc_paths["md_notice_path"],
+                    "md_instruction_path": doc_paths["md_instruction_path"],
+                    "analysis_status": "analyzed",
+                }).eq("id", bid["id"]).execute()
 
-        logger.info(f"✓ 공고 분석 완료: {bid_no}")
+                logger.info(f"✓ 공고 분석 문서 생성 완료: {bid_no}")
+            except Exception as e:
+                logger.error(f"✗ 공고 분석 문서 생성 실패 [{bid_no}]: {str(e)}")
+
+        background_tasks.add_task(_analyze_documents)
+
+        logger.info(f"[analyze] ✓ 공고 분석 시작됨 (백그라운드): {bid_no}")
 
         return {
             "bid_no": bid_no,
-            "status": "analyzed",
-            "documents": doc_paths,
+            "status": "pending",
+            "message": "공고 분석이 백그라운드에서 처리 중입니다",
         }
 
     except Exception as e:
@@ -248,31 +258,25 @@ async def decide_bid(
     current_user=Depends(get_current_user),
 ):
     """
-    공고 의사결정 기록 (Go/No-Go)
+    공고 의사결정 기록 (Go/No-Go) — 로깅 전용
+
+    실제 proposal_status 업데이트는 /api/bids/{bid_no}/status 엔드포인트에서 처리
     """
     try:
         if decision not in ["Go", "No-Go"]:
             raise G2BServiceError("의사결정은 'Go' 또는 'No-Go'만 가능합니다.")
 
-        client = await get_async_client()
+        logger.info(
+            f"✓ 공고 의사결정 기록: {bid_no} = {decision}, "
+            f"사유: {decision_comment}, 결정자: {current_user.id}"
+        )
 
-        # bid_announcements 업데이트
-        result = await client.table("bid_announcements").update({
-            "decision": decision,
-            "decision_comment": decision_comment,
-            "decided_by": str(current_user.id),
-            "decided_at": "now()",  # Supabase에서 현재 시간으로 처리
-        }).eq("org_id", str(current_user.org_id)).eq("bid_no", bid_no).execute()
-
-        if not result.data:
-            raise G2BServiceError(f"공고를 찾을 수 없습니다: {bid_no}")
-
-        logger.info(f"✓ 공고 의사결정 기록: {bid_no} = {decision}")
-
+        # 의사결정 로깅만 수행 (DB 업데이트는 /api/bids/{bid_no}/status에서 처리)
         return {
             "bid_no": bid_no,
             "decision": decision,
-            "decided_at": result.data[0].get("decided_at") if result.data else None,
+            "decision_comment": decision_comment,
+            "message": "의사결정이 기록되었습니다",
         }
 
     except Exception as e:

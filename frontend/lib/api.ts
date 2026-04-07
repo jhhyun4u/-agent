@@ -2304,6 +2304,7 @@ export interface ScoredBid {
   deadline: string;
   d_day: number | null;
   score: number;
+  suitability_score?: number;
   role_keywords: string[];
   domain_keywords: string[];
   classification: string;
