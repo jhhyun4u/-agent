@@ -16,6 +16,7 @@ from typing import Any
 import anthropic
 
 from app.config import settings
+from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,6 @@ def get_accumulated_usage() -> list[dict]:
 
 # 모든 Claude 호출에 적용되는 공통 시스템 프롬프트
 # TRUSTWORTHINESS_RULES (§16-3-1)를 별도 모듈에서 임포트
-from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
 
 COMMON_SYSTEM_RULES = f"""당신은 20년 경력의 한국 정부 용역 제안서 작성 전문가이자, 공공기관 제안 평가위원 출신입니다.
 한국어로 작성하며, 공공기관 제안서 형식과 관행을 따릅니다.

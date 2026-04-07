@@ -17,7 +17,45 @@ import logging
 from app.config import settings
 from app.exceptions import TenopAPIError
 from app.middleware.rate_limit import limiter, rate_limit_exceeded_handler
+from app.middleware.request_id import RequestIdMiddleware
+from app.middleware.security_headers import SecurityHeadersMiddleware
 from slowapi.errors import RateLimitExceeded
+
+# ── 라우터 임포트 (모듈 상단에 위치) ──
+from app.api.routes_auth import router as auth_router
+from app.api.routes_users import router as users_router
+from app.api.routes_proposal import router as proposal_router
+from app.api.routes_workflow import router as workflow_router
+from app.api.routes_artifacts import router as artifacts_router
+from app.api.routes_notification import router as notification_router
+from app.api.routes_performance import router as performance_router
+from app.api.routes_admin import router as admin_router
+from app.api.routes_kb import router as kb_router
+from app.api.routes_intranet import router as intranet_router
+from app.api.routes_documents import router as documents_router
+from app.api.routes_migrations import router as migrations_router
+from app.api.routes_migration_status import router as migration_status_router
+from app.api.routes_analytics import router as analytics_router
+from app.api.routes_qa import router as qa_router
+from app.api.routes_files import router as files_router
+from app.api.routes_project_archive import router as archive_router
+from app.api.routes_pricing import router as pricing_router
+from app.api.routes_bid_submission import router as bid_submission_router
+from app.api.routes_prompt_evolution import router as prompt_evolution_router
+from app.api.routes_streams import router as streams_router
+from app.api.routes_submission_docs import router as submission_docs_router
+from app.api.routes_team import router as team_router
+from app.api.routes_g2b import router as g2b_router
+from app.api.routes_resources import router as resources_router
+from app.api.routes_templates import router as templates_router
+from app.api.routes_stats import router as stats_router
+from app.api.routes_public import router as public_router
+from app.api.routes_calendar import router as calendar_router
+from app.api.routes_v31 import router as v31_router
+from app.api.routes_presentation import router as presentation_router
+from app.api.routes_bids import router as bids_router
+from app.api.routes_step8a import router as step8a_router
+from app.api.routes_step8_review import router as step8_review_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -188,11 +226,9 @@ app = FastAPI(
 )
 
 # ── Request ID 미들웨어 (Zero Script QA 핵심) ──
-from app.middleware.request_id import RequestIdMiddleware
 app.add_middleware(RequestIdMiddleware)
 
 # ── 보안 헤더 미들웨어 (L-1, L-2) ──
-from app.middleware.security_headers import SecurityHeadersMiddleware
 app.add_middleware(SecurityHeadersMiddleware)
 
 # ── Rate Limiting ──
@@ -233,129 +269,95 @@ async def global_exception_handler(request: Request, exc: Exception):
 # ── 라우터 등록 ──
 
 # Phase 0: 인증·사용자
-from app.api.routes_auth import router as auth_router
-from app.api.routes_users import router as users_router
 app.include_router(auth_router)
 app.include_router(users_router)
 
 # Phase 1: 제안서 CRUD + 워크플로
-from app.api.routes_proposal import router as proposal_router
-from app.api.routes_workflow import router as workflow_router
 app.include_router(proposal_router)
 app.include_router(workflow_router)
 
 # Phase 3: 산출물 + 알림
-from app.api.routes_artifacts import router as artifacts_router
-from app.api.routes_notification import router as notification_router
 app.include_router(artifacts_router)
 app.include_router(notification_router)
 
 # Phase 4: 성과 추적 + 대시보드
-from app.api.routes_performance import router as performance_router
 app.include_router(performance_router)
 
 # Phase 5: 관리자 + 감사 로그 + 본부장/경영진 대시보드
-from app.api.routes_admin import router as admin_router
 app.include_router(admin_router)
 
 # Phase 6: Knowledge Base + 시맨틱 검색
-from app.api.routes_kb import router as kb_router
 app.include_router(kb_router)
 
 # 인트라넷 KB 마이그레이션
-from app.api.routes_intranet import router as intranet_router
-from app.api.routes_documents import router as documents_router
 app.include_router(intranet_router)
 app.include_router(documents_router)
 
 # Phase 4: 배치 마이그레이션 관리 (scheduler-integration)
-from app.api.routes_migrations import router as migrations_router
 app.include_router(migrations_router)
 
 # DB 마이그레이션 상태 API (설계 §4.4 — GAP-H3/H4/H5)
-from app.api.routes_migration_status import router as migration_status_router
 app.include_router(migration_status_router)
 
 # Phase 4: 분석 대시보드 (§12-13)
-from app.api.routes_analytics import router as analytics_router
 app.include_router(analytics_router)
 
 # PSM-16: Q&A 기록 CRUD + 검색
-from app.api.routes_qa import router as qa_router
 app.include_router(qa_router)
 
 # 프로젝트 파일 관리 (GAP-1~6)
-from app.api.routes_files import router as files_router
 app.include_router(files_router)
 
 # 프로젝트 아카이브 (중간 산출물 파일 관리)
-from app.api.routes_project_archive import router as archive_router
 app.include_router(archive_router)
 
 # 비딩 가격 시뮬레이션
-from app.api.routes_pricing import router as pricing_router
 app.include_router(pricing_router)
 
 # 투찰 관리
-from app.api.routes_bid_submission import router as bid_submission_router
 app.include_router(bid_submission_router)
 
 # 프롬프트 진화 시스템
-from app.api.routes_prompt_evolution import router as prompt_evolution_router
 app.include_router(prompt_evolution_router)
 
 # 3-Stream 병행 업무
-from app.api.routes_streams import router as streams_router
-from app.api.routes_submission_docs import router as submission_docs_router
 app.include_router(streams_router)
 app.include_router(submission_docs_router)
 
 # 팀 협업: /api/teams/*, /api/proposals/comments/*, /api/invitations/*
-from app.api.routes_team import router as team_router
 app.include_router(team_router)
 
 # 나라장터 프록시: /api/g2b/* (router prefix="/g2b", 여기서 /api 추가)
-from app.api.routes_g2b import router as g2b_router
 app.include_router(g2b_router, prefix="/api")
 
 # 섹션 라이브러리 + 아카이브: /api/resources/*, /api/assets, /api/archive
-from app.api.routes_resources import router as resources_router
 app.include_router(resources_router)
 
 # 공통서식 라이브러리: /api/form-templates/*
-from app.api.routes_templates import router as templates_router
 app.include_router(templates_router)
 
 # 낙찰률 통계: /api/stats/*
-from app.api.routes_stats import router as stats_router
 app.include_router(stats_router)
 
 # 랜딩페이지 공개 통계: /api/public/*
-from app.api.routes_public import router as public_router
 app.include_router(public_router)
 
 # RFP 일정 관리: /api/calendar/*
-from app.api.routes_calendar import router as calendar_router
 app.include_router(calendar_router)
 
 # v3.1 레거시 파이프라인: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
-from app.api.routes_v31 import router as v31_router
 app.include_router(v31_router, prefix="/api")
 
 # 발표 자료 생성: /api/v3.1/* (router prefix="/v3.1", 여기서 /api 추가)
-from app.api.routes_presentation import router as presentation_router
 app.include_router(presentation_router, prefix="/api")
 
 # 입찰 관리: /api/teams/*/bids/*, /api/bids/*
-from app.api.routes_bids import router as bids_router
 app.include_router(bids_router)
 
 # STEP 8A-8F: 새 노드 + 아티팩트 버전 관리 (DB-backed implementation)
-from app.api.routes_step8a import router as step8a_router
 app.include_router(step8a_router)
 
 # STEP 8 Review: AI-powered review interface for STEP 8 nodes
-from app.api.routes_step8_review import router as step8_review_router
 app.include_router(step8_review_router)
 
 

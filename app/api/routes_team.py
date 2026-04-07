@@ -13,6 +13,12 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
+from app.api.permissions import (
+    get_team_member_role as _get_member_role,
+    require_team_admin as _require_team_admin,
+    require_team_member as _require_team_member,
+    can_access_proposal as _can_access_proposal,
+)
 from app.api.response import ok, ok_list
 from app.exceptions import (
     TeamNotFoundError,
@@ -30,15 +36,6 @@ from app.utils.edge_functions import notify_comment_created
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["team"])
-
-
-# ── 헬퍼 (app/api/permissions.py 공유 모듈) ──
-from app.api.permissions import (
-    get_team_member_role as _get_member_role,
-    require_team_admin as _require_team_admin,
-    require_team_member as _require_team_member,
-    can_access_proposal as _can_access_proposal,
-)
 
 
 # ── 팀 ───────────────────────────────────────────────────────────────

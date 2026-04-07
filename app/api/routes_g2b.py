@@ -618,10 +618,10 @@ async def monitor_diagnostics(current_user=Depends(get_current_user)):
                   "teams_with_keywords": 0, "g2b_api_reachable": False, "errors": []}
 
     # 1) APScheduler
-    try:
-        from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    import importlib.util
+    if importlib.util.find_spec("apscheduler") is not None:
         diag["scheduler"] = "installed"
-    except ImportError:
+    else:
         diag["scheduler"] = "NOT_INSTALLED"
         diag["errors"].append("apscheduler 미설치 — 스케줄러 비활성 상태")
 

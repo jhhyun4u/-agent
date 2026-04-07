@@ -14,6 +14,7 @@ GET  /api/pricing/prediction-accuracy — 예측 정확도 리포트
 import logging
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel
 
 from app.api.deps import get_current_user
 from app.api.response import ok, ok_list
@@ -197,8 +198,6 @@ async def market_analysis(
 # ════════════════════════════════════════
 # 단독 민감도 분석
 # ════════════════════════════════════════
-
-from pydantic import BaseModel
 
 
 class SensitivityRequest(BaseModel):

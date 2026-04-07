@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, require_role
 from app.exceptions import InternalServiceError
@@ -27,8 +28,6 @@ router = APIRouter(prefix="/api/migrations", tags=["migration-status"])
 # ─────────────────────────────────────────────
 # Pydantic 응답 모델
 # ─────────────────────────────────────────────
-
-from pydantic import BaseModel, Field
 
 
 class MigrationItem(BaseModel):
