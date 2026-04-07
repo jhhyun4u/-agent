@@ -8,6 +8,7 @@ GET  /api/proposals          — 목록
 GET  /api/proposals/{id}     — 상세
 """
 
+import asyncio
 import uuid
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
@@ -16,7 +17,7 @@ from pydantic import BaseModel
 from app.api.deps import get_current_user, get_rls_client
 from app.api.response import ok_list
 from app.config import settings
-from app.exceptions import PropNotFoundError
+from app.exceptions import PropNotFoundError, G2BServiceError
 from app.models.auth_schemas import CurrentUser
 from app.models.common import ItemsResponse
 from app.models.proposal_schemas import ProposalCreateResponse, ProposalDetail, ProposalListItem
@@ -159,37 +160,123 @@ async def create_from_bid(
     background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
 ):
-    """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결."""
+    """공고 모니터링에서 제안결정 → 제안 프로젝트 생성 + 첨부파일 연결.
+
+    Flow:
+    1. bid_announcements에서 공고 정보 조회
+    2. decision 확인 (Go만 허용)
+    3. 분석 마크다운 문서 3가지 로드 (RFP分析, 공고문, 과업지시서)
+    4. 마크다운 통합하여 rfp_content 설정
+    5. 제안 프로젝트 생성
+    6. 공고 첨부파일 연결 (백그라운드)
+    """
     client = await get_async_client()
     proposal_id = str(uuid.uuid4())
 
-    # 1) bid_announcements에서 공고 정보 조회 (raw_data 포함)
+    # 1) bid_announcements에서 공고 정보 조회 (마크다운 경로 포함)
+    logger.info(f"[from-bid] 공고 정보 조회: {body.bid_no}")
     bid_result = await client.table("bid_announcements").select(
-        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data"
+        "bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data, "
+        "proposal_status, md_rfp_analysis_path, md_notice_path, md_instruction_path"
     ).eq("bid_no", body.bid_no).maybe_single().execute()
 
     bid = bid_result.data if bid_result.data else {}
+    logger.info(f"[from-bid] 공고 데이터: {bid.get('bid_no')}, proposal_status={bid.get('proposal_status')}")
+
+    # 제안결정 상태 확인 (proposal_status = "제안결정"만 허용)
+    proposal_status = bid.get("proposal_status", "검토중")
+    if proposal_status != "제안결정":
+        logger.error(f"[from-bid] 제안 생성 불가: proposal_status={proposal_status} (필요: 제안결정)")
+        raise G2BServiceError(f"'제안결정'된 공고만 제안을 시작할 수 있습니다. (현재: {proposal_status})")
+
     title = bid.get("bid_title") or f"공고 {body.bid_no}"
-    rfp_text = bid.get("content_text") or ""
     raw_data = bid.get("raw_data") or {}
 
-    # 2) 프로젝트 생성 (대기중 — 워크플로 시작 전)
+    # 2) 마크다운 문서 로드 및 통합
+    rfp_content_parts = []
+
+    # 원본 공고문 (있으면 추가)
+    if bid.get("content_text"):
+        rfp_content_parts.append(bid["content_text"])
+
+    # Storage에서 마크다운 문서 다운로드
+    md_paths = {
+        "RFP分析": bid.get("md_rfp_analysis_path"),
+        "공고문": bid.get("md_notice_path"),
+        "과업지시서": bid.get("md_instruction_path"),
+    }
+
+    for doc_name, path in md_paths.items():
+        if path:
+            try:
+                # Storage에서 파일 다운로드 (5초 타임아웃)
+                # 마크다운 파일은 analyze 엔드포인트에서 백그라운드로 생성 중일 수 있음
+                async def download_with_timeout():
+                    return await client.storage.from_("documents").download(path)
+
+                response = await asyncio.wait_for(download_with_timeout(), timeout=5.0)
+                if response:
+                    md_content = response.decode("utf-8") if isinstance(response, bytes) else response
+                    # 마크다운 섹션 분리
+                    rfp_content_parts.append(f"\n\n## {doc_name}\n\n{md_content}")
+                    logger.info(f"✓ 마크다운 로드: {doc_name} ({path})")
+            except asyncio.TimeoutError:
+                logger.warning(f"! 마크다운 로드 타임아웃 [{doc_name}] (5초): {path} — 생성 대기 중일 수 있음")
+                # 타임아웃 무시하고 계속 진행 (문서 생성 중일 수 있음)
+            except Exception as e:
+                logger.warning(f"! 마크다운 로드 실패 [{doc_name}]: {str(e)}")
+                # 개별 문서 로드 실패는 계속 진행 (없어도 proceed)
+
+    # 모든 콘텐츠 통합 (최대 50,000자)
+    rfp_content = "\n".join(rfp_content_parts) if rfp_content_parts else ""
+    rfp_content_truncated = len(rfp_content) > 50000
+    rfp_content = rfp_content[:50000]
+
+    # 3) 프로젝트 생성 (대기중 — 워크플로 시작 전)
     row: dict = {
         "id": proposal_id,
         "title": title,
         "owner_id": user.id,
         "status": "대기중",
-        "rfp_content": rfp_text[:10000] if rfp_text else "",
-        "rfp_content_truncated": len(rfp_text) > 10000,
+        "rfp_content": rfp_content,
+        "rfp_content_truncated": rfp_content_truncated,
     }
+
+    # 선택적 필드 (마이그레이션 상태에 따라)
+    if bid.get("agency"):
+        row["client_name"] = bid["agency"]
+    if bid.get("deadline_date"):
+        row["deadline"] = bid["deadline_date"]
+
     if user.team_id:
         row["team_id"] = user.team_id
     if user.org_id:
         row["org_id"] = user.org_id
 
-    await client.table("proposals").insert(row).execute()
+    logger.info(f"[from-bid] 제안 프로젝트 생성 시작: {proposal_id}")
+    try:
+        await client.table("proposals").insert(row).execute()
+        logger.info(f"[from-bid] ✓ 제안 프로젝트 생성 완료: {proposal_id}")
+    except Exception as e:
+        # 컬럼 누락 오류인 경우 필수 필드만 사용하여 재시도
+        if "does not exist" in str(e):
+            logger.warning(f"[from-bid] 선택적 필드 누락, 최소 필드로 재시도: {e}")
+            row_minimal = {
+                "id": proposal_id,
+                "title": title,
+                "owner_id": user.id,
+                "status": "대기중",
+                "rfp_content": rfp_content,
+                "rfp_content_truncated": rfp_content_truncated,
+            }
+            if user.team_id:
+                row_minimal["team_id"] = user.team_id
+            await client.table("proposals").insert(row_minimal).execute()
+            logger.info(f"[from-bid] ✓ 제안 프로젝트 생성 완료 (최소 필드): {proposal_id}")
+        else:
+            raise
 
-    # 3) 공고 첨부파일 → proposal에 복사 (백그라운드)
+    # 4) 공고 첨부파일 → proposal에 복사 (백그라운드)
     if raw_data:
         async def _link_attachments():
             try:
@@ -199,6 +286,8 @@ async def create_from_bid(
                 logger.warning(f"[{proposal_id}] 첨부파일 연결 실패: {e}")
 
         background_tasks.add_task(_link_attachments)
+
+    logger.info(f"✓ 제안 생성 (from-bid): {proposal_id}, rfp_content={len(rfp_content)}자")
 
     return {
         "proposal_id": proposal_id,
@@ -211,7 +300,7 @@ async def create_from_bid(
 
 # ── 조회 ──
 
-@router.get("", response_model=ItemsResponse[ProposalListItem])
+@router.get("")
 async def list_proposals(
     status: str | None = None,
     scope: str | None = None,
@@ -300,7 +389,7 @@ async def list_proposals(
     return ok_list(result.data or [], total=total, offset=skip, limit=limit)
 
 
-@router.get("/{proposal_id}", response_model=ProposalDetail)
+@router.get("/{proposal_id}")
 async def get_proposal(
     proposal_id: str,
     user: CurrentUser = Depends(get_current_user),
@@ -325,7 +414,9 @@ async def delete_proposal(proposal_id: str, user: CurrentUser = Depends(get_curr
         raise PropNotFoundError(proposal_id)
     if prop.data["owner_id"] != user.id:
         raise HTTPException(403, "프로젝트 소유자만 삭제할 수 있습니다")
-    if prop.data["status"] == "running":
+    # HOTFIX: Check for active workflow states (Phase 0 - was checking for "running" which violates CHECK constraint)
+    active_states = ('processing', 'searching', 'analyzing', 'strategizing', 'submitted', 'presented')
+    if prop.data["status"] in active_states:
         raise HTTPException(409, "실행 중인 프로젝트는 삭제할 수 없습니다")
 
     # Storage 파일 목록 조회 + 삭제 (best-effort)

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import ErrorReporterInit from "@/components/ErrorReporterInit";
+import ToastProvider from "@/components/ui/Toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Proposal Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker",
-  description: "RFP 분석부터 전략 수립, 제안서 작성까지 — AI 동료와 함께하는 용역 제안",
+  description:
+    "RFP 분석부터 전략 수립, 제안서 작성까지 — AI 동료와 함께하는 용역 제안",
 };
 
 export default function RootLayout({
@@ -16,7 +18,9 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <head>
         {/* 테마 깜빡임 방지 — localStorage 선읽기 */}
-        <script dangerouslySetInnerHTML={{ __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
           try {
             var t = localStorage.getItem('theme');
             if (t === 'light') document.documentElement.classList.add('light');
@@ -24,11 +28,13 @@ export default function RootLayout({
               document.documentElement.classList.add('light');
             }
           } catch(e) {}
-        `}} />
+        `,
+          }}
+        />
       </head>
       <body className="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
         <ErrorReporterInit />
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

@@ -14,7 +14,12 @@ import { api, WORKFLOW_STEPS, type WorkflowState } from "@/lib/api";
 
 // STEP별 평균 소요 시간 (분) — 경험 기반 추정치
 const STEP_DURATION_MIN: Record<number, number> = {
-  0: 2, 1: 3, 2: 4, 3: 6, 4: 12, 5: 5,
+  0: 2,
+  1: 3,
+  2: 4,
+  3: 6,
+  4: 12,
+  5: 5,
 };
 
 const REVIEW_LABELS: Record<string, string> = {
@@ -30,19 +35,37 @@ const REVIEW_LABELS: Record<string, string> = {
 };
 
 const STEP_MAP: Record<string, number> = {
-  review_search: 0, review_rfp: 1, review_gng: 1,
-  review_strategy: 2, review_bid_plan: 2,
-  review_plan: 3, review_section: 4, review_proposal: 4,
+  review_search: 0,
+  review_rfp: 1,
+  review_gng: 1,
+  review_strategy: 2,
+  review_bid_plan: 2,
+  review_plan: 3,
+  review_section: 4,
+  review_proposal: 4,
   review_ppt: 5,
 };
 
 // 노드명으로 STEP 번호 추정
 const NODE_STEP_MAP: Record<string, number> = {
-  rfp_analyze: 1, research_gather: 1, go_no_go: 1,
-  strategy_generate: 2, bid_plan: 2,
-  plan_team: 3, plan_assign: 3, plan_schedule: 3, plan_story: 3, plan_price: 3, plan_merge: 3,
-  proposal_start_gate: 4, proposal_write_next: 4, self_review: 4,
-  presentation_strategy: 5, ppt_toc: 5, ppt_visual_brief: 5, ppt_storyboard: 5,
+  rfp_analyze: 1,
+  research_gather: 1,
+  go_no_go: 1,
+  strategy_generate: 2,
+  bid_plan: 2,
+  plan_team: 3,
+  plan_assign: 3,
+  plan_schedule: 3,
+  plan_story: 3,
+  plan_price: 3,
+  plan_merge: 3,
+  proposal_start_gate: 4,
+  proposal_write_next: 4,
+  self_review: 4,
+  presentation_strategy: 5,
+  ppt_toc: 5,
+  ppt_visual_brief: 5,
+  ppt_storyboard: 5,
 };
 
 function estimateStepFromPhase(phase: string): number {
@@ -70,26 +93,41 @@ export default function WorkflowResumeBanner({
   onResumeWorkflow,
   onDismiss,
 }: Props) {
-  const [lastReview, setLastReview] = useState<{ step: string; result: string; feedback?: string } | null>(null);
+  const [lastReview, setLastReview] = useState<{
+    step: string;
+    result: string;
+    feedback?: string;
+  } | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
   // 워크플로 히스토리에서 마지막 리뷰 결과를 가져옴
   useEffect(() => {
     if (!workflowState) return;
-    api.workflow.getHistory(proposalId).then((history) => {
-      const events = (history as { events?: Array<{ node: string; action?: string; feedback?: string }> })?.events;
-      if (!events || events.length === 0) return;
-      const lastReviewEvent = [...events].reverse().find(
-        (e) => e.node?.startsWith("review_") && e.action
-      );
-      if (lastReviewEvent) {
-        setLastReview({
-          step: lastReviewEvent.node,
-          result: lastReviewEvent.action ?? "unknown",
-          feedback: lastReviewEvent.feedback,
-        });
-      }
-    }).catch(() => {});
+    api.workflow
+      .getHistory(proposalId)
+      .then((history) => {
+        const events = (
+          history as {
+            events?: Array<{
+              node: string;
+              action?: string;
+              feedback?: string;
+            }>;
+          }
+        )?.events;
+        if (!events || events.length === 0) return;
+        const lastReviewEvent = [...events]
+          .reverse()
+          .find((e) => e.node?.startsWith("review_") && e.action);
+        if (lastReviewEvent) {
+          setLastReview({
+            step: lastReviewEvent.node,
+            result: lastReviewEvent.action ?? "unknown",
+            feedback: lastReviewEvent.feedback,
+          });
+        }
+      })
+      .catch(() => {});
   }, [proposalId, workflowState]);
 
   if (dismissed) return null;
@@ -105,9 +143,19 @@ export default function WorkflowResumeBanner({
   const isStopped = isOnHold || isAbandoned;
 
   // 3) 워크플로 미시작/완료는 표시 안 함
-  const terminalStatuses = ["completed", "won", "lost", "submitted", "presented", "no_go", "expired", "retrospect"];
+  const terminalStatuses = [
+    "completed",
+    "won",
+    "lost",
+    "submitted",
+    "presented",
+    "no_go",
+    "expired",
+    "retrospect",
+  ];
   if (terminalStatuses.includes(proposalStatus)) return null;
-  if (proposalStatus === "initialized" && !workflowState?.current_step) return null;
+  if (proposalStatus === "initialized" && !workflowState?.current_step)
+    return null;
 
   // 어떤 표시 조건도 해당 없으면 숨김
   if (!isReviewPending && !isStopped) return null;
@@ -129,9 +177,11 @@ export default function WorkflowResumeBanner({
     remainingMin += STEP_DURATION_MIN[s] ?? 5;
   }
 
-  const sectionInfo = workflowState?.current_section_index != null && workflowState?.total_sections != null
-    ? `${workflowState.current_section_index + 1}/${workflowState.total_sections} 섹션`
-    : null;
+  const sectionInfo =
+    workflowState?.current_section_index != null &&
+    workflowState?.total_sections != null
+      ? `${workflowState.current_section_index + 1}/${workflowState.total_sections} 섹션`
+      : null;
 
   function handleDismiss() {
     setDismissed(true);
@@ -140,23 +190,37 @@ export default function WorkflowResumeBanner({
 
   // ── 중단/포기 상태 배너 ──
   if (isStopped) {
-    const STEP_LABELS = ["RFP 분석", "Go/No-Go", "전략 수립", "실행 계획", "제안서 작성", "PPT 생성"];
-    const stoppedAtLabel = STEP_LABELS[currentStepNum] ?? `STEP ${currentStepNum + 1}`;
+    const STEP_LABELS = [
+      "RFP 분석",
+      "Go/No-Go",
+      "전략 수립",
+      "실행 계획",
+      "제안서 작성",
+      "PPT 생성",
+    ];
+    const stoppedAtLabel =
+      STEP_LABELS[currentStepNum] ?? `STEP ${currentStepNum + 1}`;
 
     return (
-      <div className={`border-b px-6 py-4 shrink-0 ${
-        isAbandoned
-          ? "bg-gradient-to-r from-red-500/10 via-[#111111] to-red-500/5 border-red-500/20"
-          : "bg-gradient-to-r from-orange-500/10 via-[#111111] to-orange-500/5 border-orange-500/20"
-      }`}>
+      <div
+        className={`border-b px-6 py-4 shrink-0 ${
+          isAbandoned
+            ? "bg-gradient-to-r from-red-500/10 via-[#111111] to-red-500/5 border-red-500/20"
+            : "bg-gradient-to-r from-orange-500/10 via-[#111111] to-orange-500/5 border-orange-500/20"
+        }`}
+      >
         <div className="max-w-4xl mx-auto">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-3">
-                <span className={`w-2 h-2 rounded-full ${isAbandoned ? "bg-red-400" : "bg-orange-400"}`} />
-                <h3 className={`text-xs font-semibold uppercase tracking-wider ${
-                  isAbandoned ? "text-red-400" : "text-orange-400"
-                }`}>
+                <span
+                  className={`w-2 h-2 rounded-full ${isAbandoned ? "bg-red-400" : "bg-orange-400"}`}
+                />
+                <h3
+                  className={`text-xs font-semibold uppercase tracking-wider ${
+                    isAbandoned ? "text-red-400" : "text-orange-400"
+                  }`}
+                >
                   {isAbandoned ? "제안 포기됨" : "작업 중단됨"}
                 </h3>
               </div>
@@ -164,12 +228,16 @@ export default function WorkflowResumeBanner({
               <div className="grid grid-cols-3 gap-4">
                 {/* 마지막 작업 시점 */}
                 <div>
-                  <p className="text-[10px] text-[#8c8c8c] mb-1">마지막 작업 시점</p>
+                  <p className="text-[10px] text-[#8c8c8c] mb-1">
+                    마지막 작업 시점
+                  </p>
                   <p className="text-xs font-medium text-[#ededed]">
                     STEP {currentStepNum + 1}: {stoppedAtLabel}
                   </p>
                   {sectionInfo && (
-                    <p className="text-[10px] text-orange-400 mt-0.5">{sectionInfo} 진행</p>
+                    <p className="text-[10px] text-orange-400 mt-0.5">
+                      {sectionInfo} 진행
+                    </p>
                   )}
                 </div>
 
@@ -183,7 +251,9 @@ export default function WorkflowResumeBanner({
                     <div className="flex-1 h-1 bg-[#262626] rounded-full overflow-hidden max-w-[80px]">
                       <div
                         className={`h-full rounded-full ${isAbandoned ? "bg-red-400" : "bg-orange-400"}`}
-                        style={{ width: `${(currentStepNum / totalSteps) * 100}%` }}
+                        style={{
+                          width: `${(currentStepNum / totalSteps) * 100}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -191,19 +261,31 @@ export default function WorkflowResumeBanner({
 
                 {/* 재개 시 예상 시간 */}
                 <div>
-                  <p className="text-[10px] text-[#8c8c8c] mb-1">재개 시 예상 잔여 시간</p>
-                  <p className="text-xs font-medium text-[#ededed]">약 {remainingMin}분</p>
+                  <p className="text-[10px] text-[#8c8c8c] mb-1">
+                    재개 시 예상 잔여 시간
+                  </p>
+                  <p className="text-xs font-medium text-[#ededed]">
+                    약 {remainingMin}분
+                  </p>
                 </div>
               </div>
 
               {/* 이전 리뷰 결과 */}
               {lastReview && (
                 <div className="mt-3 flex items-center gap-2 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
-                  <span className="text-[10px] text-[#8c8c8c]">마지막 리뷰:</span>
-                  <span className={`text-[10px] font-medium ${
-                    lastReview.result === "approved" ? "text-[#3ecf8e]" : "text-red-400"
-                  }`}>
-                    {lastReview.result === "approved" ? "승인됨" : "재작업 요청"}
+                  <span className="text-[10px] text-[#8c8c8c]">
+                    마지막 리뷰:
+                  </span>
+                  <span
+                    className={`text-[10px] font-medium ${
+                      lastReview.result === "approved"
+                        ? "text-[#3ecf8e]"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {lastReview.result === "approved"
+                      ? "승인됨"
+                      : "재작업 요청"}
                   </span>
                   {lastReview.feedback && (
                     <span className="text-[10px] text-[#8c8c8c] truncate max-w-[300px]">
@@ -234,8 +316,18 @@ export default function WorkflowResumeBanner({
               className="text-[#8c8c8c] hover:text-[#ededed] p-1 shrink-0 transition-colors"
               title="배너 닫기"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -263,10 +355,14 @@ export default function WorkflowResumeBanner({
               <div>
                 <p className="text-[10px] text-[#8c8c8c] mb-1">현재 대기</p>
                 <p className="text-xs font-medium text-[#ededed]">
-                  {pendingNode ? REVIEW_LABELS[pendingNode] ?? pendingNode : workflowState?.current_step}
+                  {pendingNode
+                    ? (REVIEW_LABELS[pendingNode] ?? pendingNode)
+                    : workflowState?.current_step}
                 </p>
                 {sectionInfo && (
-                  <p className="text-[10px] text-blue-400 mt-0.5">{sectionInfo} 진행</p>
+                  <p className="text-[10px] text-blue-400 mt-0.5">
+                    {sectionInfo} 진행
+                  </p>
                 )}
               </div>
 
@@ -280,7 +376,9 @@ export default function WorkflowResumeBanner({
                   <div className="flex-1 h-1 bg-[#262626] rounded-full overflow-hidden max-w-[80px]">
                     <div
                       className="h-full bg-blue-400 rounded-full"
-                      style={{ width: `${((currentStepNum + 1) / totalSteps) * 100}%` }}
+                      style={{
+                        width: `${((currentStepNum + 1) / totalSteps) * 100}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -291,7 +389,9 @@ export default function WorkflowResumeBanner({
 
               {/* 예상 시간 */}
               <div>
-                <p className="text-[10px] text-[#8c8c8c] mb-1">예상 잔여 시간</p>
+                <p className="text-[10px] text-[#8c8c8c] mb-1">
+                  예상 잔여 시간
+                </p>
                 <p className="text-xs font-medium text-[#ededed]">
                   약 {remainingMin}분
                 </p>
@@ -305,14 +405,20 @@ export default function WorkflowResumeBanner({
             {lastReview && (
               <div className="mt-3 flex items-center gap-2 bg-[#111111] border border-[#262626] rounded-lg px-3 py-2">
                 <span className="text-[10px] text-[#8c8c8c]">이전 리뷰:</span>
-                <span className={`text-[10px] font-medium ${
-                  lastReview.result === "approved" ? "text-[#3ecf8e]" :
-                  lastReview.result === "rejected" ? "text-red-400" :
-                  "text-amber-400"
-                }`}>
-                  {lastReview.result === "approved" ? "승인됨" :
-                   lastReview.result === "rejected" ? "재작업 요청" :
-                   lastReview.result}
+                <span
+                  className={`text-[10px] font-medium ${
+                    lastReview.result === "approved"
+                      ? "text-[#3ecf8e]"
+                      : lastReview.result === "rejected"
+                        ? "text-red-400"
+                        : "text-amber-400"
+                  }`}
+                >
+                  {lastReview.result === "approved"
+                    ? "승인됨"
+                    : lastReview.result === "rejected"
+                      ? "재작업 요청"
+                      : lastReview.result}
                 </span>
                 {lastReview.feedback && (
                   <span className="text-[10px] text-[#8c8c8c] truncate max-w-[300px]">
@@ -328,8 +434,18 @@ export default function WorkflowResumeBanner({
             className="text-[#8c8c8c] hover:text-[#ededed] p-1 shrink-0 transition-colors"
             title="배너 닫기"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

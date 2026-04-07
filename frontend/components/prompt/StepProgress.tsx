@@ -20,7 +20,10 @@ interface StepProgressProps {
   onStepClick?: (step: StepId) => void;
 }
 
-export default function StepProgress({ currentStep, onStepClick }: StepProgressProps) {
+export default function StepProgress({
+  currentStep,
+  onStepClick,
+}: StepProgressProps) {
   const currentIdx = STEPS.findIndex((s) => s.id === currentStep);
 
   return (
@@ -43,10 +46,15 @@ export default function StepProgress({ currentStep, onStepClick }: StepProgressP
                     : "bg-[#1c1c1c] text-[#666] cursor-not-allowed"
               }`}
             >
-              {isDone ? "✓ " : `${i + 1}. `}{step.label}
+              {isDone ? "✓ " : `${i + 1}. `}
+              {step.label}
             </button>
             {i < STEPS.length - 1 && (
-              <span className={`text-xs ${isDone ? "text-[#3ecf8e]" : "text-[#333]"}`}>→</span>
+              <span
+                className={`text-xs ${isDone ? "text-[#3ecf8e]" : "text-[#333]"}`}
+              >
+                →
+              </span>
             )}
           </div>
         );

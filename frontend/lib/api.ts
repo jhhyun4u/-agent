@@ -35,7 +35,8 @@ async function request<T>(
   method: string,
   path: string,
   body?: unknown,
-  isFormData = false
+  isFormData = false,
+  retryCount = 0,
 ): Promise<T> {
   const token = await getToken();
   const headers: Record<string, string> = {
@@ -43,37 +44,82 @@ async function request<T>(
   };
   if (!isFormData) headers["Content-Type"] = "application/json";
 
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers,
-    body: isFormData
-      ? (body as FormData)
-      : body !== undefined
-      ? JSON.stringify(body)
-      : undefined,
-  });
+  // 타임아웃 설정 (GET/POST 등에 따라 다름)
+  // AI 작업 (long-polling): 120초, CRUD: 30초
+  const isLongOperation =
+    method === "GET" &&
+    (path.includes("/stream") || path.includes("/download") || path.includes("/bids/scored"));
+  const timeout = isLongOperation ? 180000 : 30000; // 3분 vs 30초
 
-  if (res.status === 401) {
-    // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
-    if (process.env.NODE_ENV !== "development") {
-      const supabase = createClient();
-      await supabase.auth.signOut();
-      window.location.href = "/login";
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      method,
+      headers,
+      body: isFormData
+        ? (body as FormData)
+        : body !== undefined
+          ? JSON.stringify(body)
+          : undefined,
+      signal: controller.signal,
+    });
+
+    // Issue #3 fix: Clear timeout on success path
+    clearTimeout(timeoutId);
+
+    if (res.status === 401) {
+      // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
+      if (process.env.NODE_ENV !== "development") {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+      }
+      throw new Error("Unauthorized");
     }
-    throw new Error("Unauthorized");
-  }
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    const detail = err.detail;
-    const message = Array.isArray(detail)
-      ? detail.map((d: { msg?: string }) => d.msg ?? JSON.stringify(d)).join(", ")
-      : (typeof detail === "string" ? detail : "API 오류");
-    throw new Error(message);
-  }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      const detail = err.detail;
+      const message = Array.isArray(detail)
+        ? detail
+            .map((d: { msg?: string }) => d.msg ?? JSON.stringify(d))
+            .join(", ")
+        : typeof detail === "string"
+          ? detail
+          : "API 오류";
+      throw new Error(message);
+    }
 
-  if (res.status === 204) return undefined as T;
-  return res.json();
+    if (res.status === 204) return undefined as T;
+    return res.json();
+  } catch (error) {
+    clearTimeout(timeoutId);
+
+    // AbortError 처리 (타임아웃 또는 사용자 취소)
+    if (error instanceof DOMException && error.name === "AbortError") {
+      // 최대 2회까지 재시도
+      if (retryCount < 2) {
+        console.warn(
+          `Request timeout, retrying (${retryCount + 1}/2): ${path}`,
+        );
+        // 재시도 전 1초 대기
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return request<T>(method, path, body, isFormData, retryCount + 1);
+      }
+
+      // 재시도 실패 시 사용자 친화적 메시지
+      const message = isLongOperation
+        ? "작업이 지연되고 있습니다. 잠시 후 다시 시도해주세요"
+        : "네트워크 연결이 끊어졌습니다. 잠시 후 다시 시도해주세요";
+      throw new Error(message);
+    }
+
+    // 다른 에러는 그대로 전파
+    clearTimeout(timeoutId);
+    throw error;
+  }
 }
 
 // ── 제안서 ────────────────────────────────────────────────────────────
@@ -118,6 +164,7 @@ export interface ProposalSummary {
   positioning: string | null;
   win_result: string | null;
   bid_amount: number | null;
+  budget: number | null;
   deadline: string | null;
   client_name: string | null;
   created_at: string;
@@ -306,7 +353,11 @@ export interface FormTemplate {
 
 // ── AUTH 요청 (/api/auth/*) ─────────────────────────────────────────
 
-async function authRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
+async function authRequest<T>(
+  method: string,
+  path: string,
+  body?: unknown,
+): Promise<T> {
   const token = await getToken();
   const res = await fetch(`${BASE}${path}`, {
     method,
@@ -341,36 +392,66 @@ export const api = {
   admin: {
     // 조직
     listOrganizations() {
-      return request<Array<{ id: string; name: string; created_at: string }>>("GET", "/admin/organizations");
+      return request<Array<{ id: string; name: string; created_at: string }>>(
+        "GET",
+        "/admin/organizations",
+      );
     },
     createOrganization(name: string) {
-      return request<{ id: string; name: string }>("POST", "/admin/organizations", { name });
+      return request<{ id: string; name: string }>(
+        "POST",
+        "/admin/organizations",
+        { name },
+      );
     },
     // 본부
     listDivisions(orgId?: string) {
-      return request<Array<{ id: string; org_id: string; name: string; created_at: string }>>(
-        "GET", `/admin/divisions${orgId ? `?org_id=${orgId}` : ""}`
-      );
+      return request<
+        Array<{ id: string; org_id: string; name: string; created_at: string }>
+      >("GET", `/admin/divisions${orgId ? `?org_id=${orgId}` : ""}`);
     },
     createDivision(name: string, orgId: string) {
-      return request<{ id: string; name: string }>("POST", "/admin/divisions", { name, org_id: orgId });
+      return request<{ id: string; name: string }>("POST", "/admin/divisions", {
+        name,
+        org_id: orgId,
+      });
     },
     // 팀
     listTeams(divisionId?: string) {
-      return request<Array<{ id: string; division_id: string; name: string; teams_webhook_url?: string; created_at: string; divisions?: { name: string; org_id: string } }>>(
-        "GET", `/admin/teams${divisionId ? `?division_id=${divisionId}` : ""}`
-      );
+      return request<
+        Array<{
+          id: string;
+          division_id: string;
+          name: string;
+          teams_webhook_url?: string;
+          created_at: string;
+          divisions?: { name: string; org_id: string };
+        }>
+      >("GET", `/admin/teams${divisionId ? `?division_id=${divisionId}` : ""}`);
     },
     createTeam(name: string, divisionId: string, teamsWebhookUrl?: string) {
       return request<{ id: string; name: string }>("POST", "/admin/teams", {
-        name, division_id: divisionId, ...(teamsWebhookUrl ? { teams_webhook_url: teamsWebhookUrl } : {}),
+        name,
+        division_id: divisionId,
+        ...(teamsWebhookUrl ? { teams_webhook_url: teamsWebhookUrl } : {}),
       });
     },
-    updateTeam(teamId: string, data: { name?: string; teams_webhook_url?: string }) {
-      return request<{ id: string; name: string }>("PATCH", `/admin/teams/${teamId}`, data);
+    updateTeam(
+      teamId: string,
+      data: { name?: string; teams_webhook_url?: string },
+    ) {
+      return request<{ id: string; name: string }>(
+        "PATCH",
+        `/admin/teams/${teamId}`,
+        data,
+      );
     },
     updateDivision(divisionId: string, data: { name?: string }) {
-      return request<{ id: string; name: string }>("PATCH", `/admin/divisions/${divisionId}`, data);
+      return request<{ id: string; name: string }>(
+        "PATCH",
+        `/admin/divisions/${divisionId}`,
+        data,
+      );
     },
     // 사용자
     createUser(data: {
@@ -397,26 +478,44 @@ export const api = {
     bulkSetupOrg(file: File) {
       const formData = new FormData();
       formData.append("file", file);
-      return request<Record<string, unknown>>("POST", "/admin/setup/bulk", formData, true);
+      return request<Record<string, unknown>>(
+        "POST",
+        "/admin/setup/bulk",
+        formData,
+        true,
+      );
     },
     resetPassword(userId: string, newPassword?: string) {
       return request<{ user_id: string; temp_password: string }>(
         "POST",
         `/admin/users/${userId}/reset-password`,
-        newPassword ? { new_password: newPassword } : {}
+        newPassword ? { new_password: newPassword } : {},
       );
     },
-    listUsers(params?: { role?: string; team_id?: string; status?: string; page?: number; page_size?: number }) {
+    listUsers(params?: {
+      role?: string;
+      team_id?: string;
+      status?: string;
+      page?: number;
+      page_size?: number;
+    }) {
       return request<{ users: Array<Record<string, unknown>>; total: number }>(
         "GET",
-        `/users${_qs(params)}`
+        `/users${_qs(params)}`,
       );
     },
     updateUser(userId: string, data: Record<string, unknown>) {
-      return request<Record<string, unknown>>("PATCH", `/admin/users/${userId}`, data);
+      return request<Record<string, unknown>>(
+        "PATCH",
+        `/admin/users/${userId}`,
+        data,
+      );
     },
     deactivateUser(userId: string) {
-      return request<{ message: string }>("POST", `/admin/users/${userId}/deactivate`);
+      return request<{ message: string }>(
+        "POST",
+        `/admin/users/${userId}/deactivate`,
+      );
     },
     deleteUser(userId: string) {
       return request<{ message: string }>("DELETE", `/admin/users/${userId}`);
@@ -424,7 +523,13 @@ export const api = {
   },
 
   proposals: {
-    list(params?: { q?: string; status?: string; page?: number; scope?: string; search?: string }) {
+    list(params?: {
+      q?: string;
+      status?: string;
+      page?: number;
+      scope?: string;
+      search?: string;
+    }) {
       const qs = new URLSearchParams();
       if (params?.q) qs.set("q", params.q);
       if (params?.status) qs.set("status", params.status);
@@ -433,7 +538,7 @@ export const api = {
       if (params?.search) qs.set("search", params.search);
       return request<ApiListResponse<ProposalSummary>>(
         "GET",
-        `/proposals?${qs}`
+        `/proposals?${qs}`,
       );
     },
 
@@ -442,7 +547,7 @@ export const api = {
       return request<{ proposal_id: string; status: string }>(
         "POST",
         "/proposals",
-        data
+        data,
       );
     },
 
@@ -452,17 +557,18 @@ export const api = {
         "POST",
         "/proposals/from-rfp",
         formData,
-        true
+        true,
       );
     },
 
     /** 프로젝트 생성 — 공고 모니터링에서 제안 시작 */
     createFromBid(bidNo: string) {
-      return request<{ proposal_id: string; title: string; entry_point: string; bid_no: string }>(
-        "POST",
-        "/proposals/from-bid",
-        { bid_no: bidNo }
-      );
+      return request<{
+        proposal_id: string;
+        title: string;
+        entry_point: string;
+        bid_no: string;
+      }>("POST", "/proposals/from-bid", { bid_no: bidNo });
     },
 
     get(id: string) {
@@ -475,7 +581,7 @@ export const api = {
 
     updateWinResult(
       id: string,
-      data: { win_result: string; bid_amount?: number; notes?: string }
+      data: { win_result: string; bid_amount?: number; notes?: string },
     ) {
       return request("PATCH", `/proposals/${id}/win-result`, data);
     },
@@ -488,38 +594,46 @@ export const api = {
       return request<{ status: string; result: string }>(
         "POST",
         `/proposals/${id}/result`,
-        data
+        data,
       );
     },
     updateResult(id: string, data: Partial<ProposalResultCreate>) {
       return request("PUT", `/proposals/${id}/result`, data);
     },
+    versions(id: string) {
+      return request<ProposalSummary[]>("GET", `/proposals/${id}/versions`);
+    },
     getLessons(id: string) {
       return request<ApiListResponse<Lesson>>(
         "GET",
-        `/proposals/${id}/lessons`
+        `/proposals/${id}/lessons`,
       );
     },
     createLesson(id: string, data: LessonCreate) {
       return request<{ status: string; lesson_id: string }>(
         "POST",
         `/proposals/${id}/lessons`,
-        data
+        data,
       );
     },
 
     // 프로젝트 파일 관리 (GAP-1~6)
     listFiles(id: string, category?: string) {
       const qs = category ? `?category=${category}` : "";
-      return request<{ files: ProposalFile[] }>("GET", `/proposals/${id}/files${qs}`);
+      return request<{ files: ProposalFile[] }>(
+        "GET",
+        `/proposals/${id}/files${qs}`,
+      );
     },
     uploadFile(id: string, file: File, description?: string) {
       const formData = new FormData();
       formData.append("file", file);
       if (description) formData.append("description", description);
-      return request<{ file_id: string; filename: string; storage_path: string }>(
-        "POST", `/proposals/${id}/files`, formData, true
-      );
+      return request<{
+        file_id: string;
+        filename: string;
+        storage_path: string;
+      }>("POST", `/proposals/${id}/files`, formData, true);
     },
     /** 프로그레스 콜백 지원 업로드 (XMLHttpRequest) */
     uploadFileWithProgress(
@@ -527,36 +641,52 @@ export const api = {
       file: File,
       onProgress: (pct: number) => void,
       description?: string,
-    ): { promise: Promise<{ file_id: string; filename: string; storage_path: string }>; abort: () => void } {
+    ): {
+      promise: Promise<{
+        file_id: string;
+        filename: string;
+        storage_path: string;
+      }>;
+      abort: () => void;
+    } {
       const xhr = new XMLHttpRequest();
-      const promise = new Promise<{ file_id: string; filename: string; storage_path: string }>(
-        async (resolve, reject) => {
-          const token = await getToken();
-          const formData = new FormData();
-          formData.append("file", file);
-          if (description) formData.append("description", description);
+      const promise = new Promise<{
+        file_id: string;
+        filename: string;
+        storage_path: string;
+      }>(async (resolve, reject) => {
+        const token = await getToken();
+        const formData = new FormData();
+        formData.append("file", file);
+        if (description) formData.append("description", description);
 
-          xhr.upload.addEventListener("progress", (e) => {
-            if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
-          });
-          xhr.addEventListener("load", () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve(JSON.parse(xhr.responseText));
-            } else {
-              try {
-                const err = JSON.parse(xhr.responseText);
-                reject(new Error(typeof err.detail === "string" ? err.detail : "업로드 실패"));
-              } catch { reject(new Error(`업로드 실패 (${xhr.status})`)); }
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable)
+            onProgress(Math.round((e.loaded / e.total) * 100));
+        });
+        xhr.addEventListener("load", () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            try {
+              const err = JSON.parse(xhr.responseText);
+              reject(
+                new Error(
+                  typeof err.detail === "string" ? err.detail : "업로드 실패",
+                ),
+              );
+            } catch {
+              reject(new Error(`업로드 실패 (${xhr.status})`));
             }
-          });
-          xhr.addEventListener("error", () => reject(new Error("네트워크 오류")));
-          xhr.addEventListener("abort", () => reject(new Error("업로드 취소됨")));
+          }
+        });
+        xhr.addEventListener("error", () => reject(new Error("네트워크 오류")));
+        xhr.addEventListener("abort", () => reject(new Error("업로드 취소됨")));
 
-          xhr.open("POST", `${BASE}/proposals/${id}/files`);
-          xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-          xhr.send(formData);
-        },
-      );
+        xhr.open("POST", `${BASE}/proposals/${id}/files`);
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.send(formData);
+      });
       return { promise, abort: () => xhr.abort() };
     },
     deleteFile(id: string, fileId: string) {
@@ -564,7 +694,8 @@ export const api = {
     },
     getFileUrl(id: string, fileId: string) {
       return request<{ url: string; filename: string; expires_in: number }>(
-        "GET", `/proposals/${id}/files/${fileId}/url`
+        "GET",
+        `/proposals/${id}/files/${fileId}/url`,
       );
     },
     /** 참고자료 일괄 ZIP 다운로드 URL */
@@ -581,14 +712,14 @@ export const api = {
     list(proposalId: string) {
       return request<{ comments: Comment_[] }>(
         "GET",
-        `/proposals/${proposalId}/comments`
+        `/proposals/${proposalId}/comments`,
       );
     },
     create(proposalId: string, content: string) {
       return request<{ comment_id: string }>(
         "POST",
         `/proposals/${proposalId}/comments`,
-        { content }
+        { content },
       );
     },
     update(commentId: string, content: string) {
@@ -625,7 +756,7 @@ export const api = {
       list(teamId: string) {
         return request<{ members: TeamMember[] }>(
           "GET",
-          `/teams/${teamId}/members`
+          `/teams/${teamId}/members`,
         );
       },
       updateRole(teamId: string, userId: string, role: string) {
@@ -640,14 +771,14 @@ export const api = {
       list(teamId: string) {
         return request<{ invitations: Invitation[] }>(
           "GET",
-          `/teams/${teamId}/invitations`
+          `/teams/${teamId}/invitations`,
         );
       },
       create(teamId: string, email: string, role = "member") {
         return request<{ invitation_id: string }>(
           "POST",
           `/teams/${teamId}/invitations`,
-          { email, role }
+          { email, role },
         );
       },
       cancel(teamId: string, invId: string) {
@@ -661,7 +792,7 @@ export const api = {
       return request<{ team_id: string; role: string; message: string }>(
         "POST",
         "/invitations/accept",
-        { invitation_id: invitationId }
+        { invitation_id: invitationId },
       );
     },
   },
@@ -672,7 +803,10 @@ export const api = {
       if (params?.scope) qs.set("scope", params.scope);
       if (params?.category) qs.set("category", params.category);
       if (params?.q) qs.set("q", params.q);
-      return request<{ sections: Section[] }>("GET", `/resources/sections?${qs}`);
+      return request<{ sections: Section[] }>(
+        "GET",
+        `/resources/sections?${qs}`,
+      );
     },
     create(data: {
       title: string;
@@ -685,7 +819,7 @@ export const api = {
       return request<{ section_id: string; title: string; category: string }>(
         "POST",
         "/resources/sections",
-        data
+        data,
       );
     },
     update(
@@ -696,7 +830,7 @@ export const api = {
         content: string;
         tags: string[];
         is_public: boolean;
-      }>
+      }>,
     ) {
       return request("PUT", `/resources/sections/${id}`, data);
     },
@@ -711,7 +845,7 @@ export const api = {
         "POST",
         "/assets",
         formData,
-        true
+        true,
       );
     },
     list() {
@@ -723,13 +857,22 @@ export const api = {
   },
 
   archive: {
-    list(params?: { scope?: string; win_result?: string; page?: number; q?: string }) {
+    list(params?: {
+      scope?: string;
+      win_result?: string;
+      page?: number;
+      q?: string;
+    }) {
       const qs = new URLSearchParams();
       if (params?.scope) qs.set("scope", params.scope);
       if (params?.win_result) qs.set("win_result", params.win_result);
       if (params?.page) qs.set("page", String(params.page));
       if (params?.q) qs.set("q", params.q);
-      return request<ApiListResponse<ArchiveItem> & { meta: { page: number; page_size: number; pages: number } }>("GET", `/archive?${qs}`);
+      return request<
+        ApiListResponse<ArchiveItem> & {
+          meta: { page: number; page_size: number; pages: number };
+        }
+      >("GET", `/archive?${qs}`);
     },
   },
 
@@ -737,17 +880,25 @@ export const api = {
   projectArchive: {
     /** 마스터 파일 일람 (전체 카테고리 통합 인덱스) */
     manifest(proposalId: string) {
-      return request<ProjectManifest>("GET", `/proposals/${proposalId}/archive`);
+      return request<ProjectManifest>(
+        "GET",
+        `/proposals/${proposalId}/archive`,
+      );
     },
     /** 현재 state에서 모든 중간 산출물 파일화 */
     snapshot(proposalId: string) {
-      return request<ArchiveSnapshotResult>("POST", `/proposals/${proposalId}/archive/snapshot`);
+      return request<ArchiveSnapshotResult>(
+        "POST",
+        `/proposals/${proposalId}/archive/snapshot`,
+      );
     },
     /** 버전 이력 조회 */
     versions(proposalId: string, docType: string) {
-      return request<{ doc_type: string; versions: ArchiveVersionEntry[]; total: number }>(
-        "GET", `/proposals/${proposalId}/archive/${docType}/versions`
-      );
+      return request<{
+        doc_type: string;
+        versions: ArchiveVersionEntry[];
+        total: number;
+      }>("GET", `/proposals/${proposalId}/archive/${docType}/versions`);
     },
     /** 개별 파일 다운로드 URL 생성 */
     downloadUrl(proposalId: string, docType: string, version?: number) {
@@ -767,14 +918,29 @@ export const api = {
       if (params?.agency) qs.set("agency", params.agency);
       if (params?.category) qs.set("category", params.category);
       if (params?.scope) qs.set("scope", params.scope);
-      return request<{ templates: FormTemplate[] }>("GET", `/form-templates?${qs}`);
+      return request<{ templates: FormTemplate[] }>(
+        "GET",
+        `/form-templates?${qs}`,
+      );
     },
     upload(formData: FormData) {
       return request<{ template_id: string; title: string }>(
-        "POST", "/form-templates", formData, true
+        "POST",
+        "/form-templates",
+        formData,
+        true,
       );
     },
-    update(id: string, data: Partial<{ title: string; agency: string; category: string; description: string; is_public: boolean }>) {
+    update(
+      id: string,
+      data: Partial<{
+        title: string;
+        agency: string;
+        category: string;
+        description: string;
+        is_public: boolean;
+      }>,
+    ) {
       return request("PATCH", `/form-templates/${id}`, data);
     },
     delete(id: string) {
@@ -784,72 +950,146 @@ export const api = {
 
   bids: {
     getProfile(teamId: string) {
-      return request<{ data: BidProfile | null }>("GET", `/teams/${teamId}/bid-profile`);
+      return request<{ data: BidProfile | null }>(
+        "GET",
+        `/teams/${teamId}/bid-profile`,
+      );
     },
     upsertProfile(teamId: string, data: BidProfileInput) {
-      return request<{ data: BidProfile }>("PUT", `/teams/${teamId}/bid-profile`, data);
+      return request<{ data: BidProfile }>(
+        "PUT",
+        `/teams/${teamId}/bid-profile`,
+        data,
+      );
     },
     listPresets(teamId: string) {
-      return request<{ data: SearchPreset[] }>("GET", `/teams/${teamId}/search-presets`);
+      return request<{ data: SearchPreset[] }>(
+        "GET",
+        `/teams/${teamId}/search-presets`,
+      );
     },
     createPreset(teamId: string, data: SearchPresetInput) {
-      return request<{ data: SearchPreset }>("POST", `/teams/${teamId}/search-presets`, data);
+      return request<{ data: SearchPreset }>(
+        "POST",
+        `/teams/${teamId}/search-presets`,
+        data,
+      );
     },
     updatePreset(teamId: string, presetId: string, data: SearchPresetInput) {
-      return request<{ data: SearchPreset }>("PUT", `/teams/${teamId}/search-presets/${presetId}`, data);
+      return request<{ data: SearchPreset }>(
+        "PUT",
+        `/teams/${teamId}/search-presets/${presetId}`,
+        data,
+      );
     },
     deletePreset(teamId: string, presetId: string) {
-      return request<void>("DELETE", `/teams/${teamId}/search-presets/${presetId}`);
+      return request<void>(
+        "DELETE",
+        `/teams/${teamId}/search-presets/${presetId}`,
+      );
     },
     activatePreset(teamId: string, presetId: string) {
-      return request<{ data: SearchPreset }>("POST", `/teams/${teamId}/search-presets/${presetId}/activate`);
+      return request<{ data: SearchPreset }>(
+        "POST",
+        `/teams/${teamId}/search-presets/${presetId}/activate`,
+      );
     },
     triggerFetch(teamId: string) {
-      return request<{ status: string; message: string }>("POST", `/teams/${teamId}/bids/fetch`);
+      return request<{ status: string; message: string }>(
+        "POST",
+        `/teams/${teamId}/bids/fetch`,
+      );
     },
     getRecommendations(teamId: string, refresh = false) {
-      return request<RecommendationsResponse>("GET", `/teams/${teamId}/bids/recommendations${refresh ? "?refresh=true" : ""}`);
+      return request<RecommendationsResponse>(
+        "GET",
+        `/teams/${teamId}/bids/recommendations${refresh ? "?refresh=true" : ""}`,
+      );
     },
     getDetail(bidNo: string, teamId?: string) {
       const qs = teamId ? `?team_id=${teamId}` : "";
-      return request<{ data: { announcement: BidAnnouncement; recommendation: BidRecommendation | null } }>("GET", `/bids/${bidNo}${qs}`);
+      return request<{
+        data: {
+          announcement: BidAnnouncement;
+          recommendation: BidRecommendation | null;
+        };
+      }>("GET", `/bids/${bidNo}${qs}`);
     },
     createProposalFromBid(bidNo: string) {
-      return request<{ data: { bid_no: string; bid_title: string; rfp_content: string } }>("POST", `/proposals/from-bid/${bidNo}`);
+      return request<{
+        data: { bid_no: string; bid_title: string; rfp_content: string };
+      }>("POST", `/proposals/from-bid/${bidNo}`);
     },
     getAttachments(bidNo: string, proposalId?: string) {
       const qs = proposalId ? `?proposal_id=${proposalId}` : "";
-      return request<{ data: { stored_files: StoredAttachment[]; g2b_urls: G2bUrl[] } }>("GET", `/bids/${bidNo}/attachments${qs}`);
+      return request<{
+        data: { stored_files: StoredAttachment[]; g2b_urls: G2bUrl[] };
+      }>("GET", `/bids/${bidNo}/attachments${qs}`);
     },
     getAttachmentUrl(bidNo: string, fileName: string, proposalId?: string) {
       const qs = proposalId ? `?proposal_id=${proposalId}` : "";
-      return request<{ data: { url: string; file_name: string; expires_in: number } }>("GET", `/bids/${bidNo}/attachments/${encodeURIComponent(fileName)}${qs}`);
+      return request<{
+        data: { url: string; file_name: string; expires_in: number };
+      }>(
+        "GET",
+        `/bids/${bidNo}/attachments/${encodeURIComponent(fileName)}${qs}`,
+      );
     },
     // 적합도 스코어링 기반 공고 조회 (v2)
-    scored(params: { dateFrom?: string; dateTo?: string; days?: number; minBudget?: number; minScore?: number; maxResults?: number } = {}) {
+    scored(
+      params: {
+        dateFrom?: string;
+        dateTo?: string;
+        days?: number;
+        minBudget?: number;
+        minScore?: number;
+        maxResults?: number;
+      } = {},
+    ) {
       const qs = new URLSearchParams();
       if (params.dateFrom) qs.set("date_from", params.dateFrom);
       if (params.dateTo) qs.set("date_to", params.dateTo);
       if (params.days) qs.set("days", String(params.days));
       if (params.minBudget) qs.set("min_budget", String(params.minBudget));
-      if (params.minScore !== undefined) qs.set("min_score", String(params.minScore));
+      if (params.minScore !== undefined)
+        qs.set("min_score", String(params.minScore));
       if (params.maxResults) qs.set("max_results", String(params.maxResults));
       const q = qs.toString();
-      return request<{ date_from: string; date_to: string; total_count: number; total_fetched: number; sources: Record<string, number>; data: ScoredBid[] }>(
-        "GET", `/bids/scored${q ? `?${q}` : ""}`
-      );
+      return request<{
+        date_from: string;
+        date_to: string;
+        total_count: number;
+        total_fetched: number;
+        sources: Record<string, number>;
+        data: ScoredBid[];
+      }>("GET", `/bids/scored${q ? `?${q}` : ""}`);
     },
     // 공고 모니터링 (스코프별)
-    monitor(scope: "my" | "team" | "division" | "company" = "company", page = 1, showAll = false) {
-      return request<{ data: MonitoredBid[]; meta: { total: number; page: number; scope: string; show_all: boolean } }>(
-        "GET", `/bids/monitor?scope=${scope}&page=${page}&show_all=${showAll}`
+    monitor(
+      scope: "my" | "team" | "division" | "company" = "company",
+      page = 1,
+      showAll = false,
+    ) {
+      return request<{
+        data: MonitoredBid[];
+        meta: { total: number; page: number; scope: string; show_all: boolean };
+      }>(
+        "GET",
+        `/bids/monitor?scope=${scope}&page=${page}&show_all=${showAll}`,
       );
     },
     toggleBookmark(bidNo: string) {
-      return request<{ bookmarked: boolean }>("POST", `/bids/${bidNo}/bookmark`);
+      return request<{ bookmarked: boolean }>(
+        "POST",
+        `/bids/${bidNo}/bookmark`,
+      );
     },
     updateStatus(bidNo: string, status: string) {
-      return request<{ bid_no: string; status: string; decided_by: string }>("PUT", `/bids/${bidNo}/status`, { status });
+      return request<{ bid_no: string; status: string; decided_by: string }>(
+        "PUT",
+        `/bids/${bidNo}/status`,
+        { status },
+      );
     },
     analyzeBid(bidNo: string) {
       return request<{ data: BidAnalysis }>("GET", `/bids/${bidNo}/analysis`);
@@ -869,7 +1109,7 @@ export const api = {
       return request<WorkflowStartResult>(
         "POST",
         `/proposals/${proposalId}/start`,
-        { initial_state: initialState ?? {} }
+        { initial_state: initialState ?? {} },
       );
     },
     getState(proposalId: string) {
@@ -879,29 +1119,30 @@ export const api = {
       return request<WorkflowResumeResult>(
         "POST",
         `/proposals/${proposalId}/resume`,
-        data
+        data,
       );
     },
     getTokenUsage(proposalId: string) {
       return request<TokenUsageResponse>(
         "GET",
-        `/proposals/${proposalId}/token-usage`
+        `/proposals/${proposalId}/token-usage`,
       );
     },
     getHistory(proposalId: string) {
       return request<{ proposal_id: string; history: WorkflowHistoryEntry[] }>(
         "GET",
-        `/proposals/${proposalId}/history`
+        `/proposals/${proposalId}/history`,
       );
     },
     streamUrl(proposalId: string) {
       return `${BASE}/proposals/${proposalId}/stream`;
     },
     goto(proposalId: string, step: string) {
-      return request<{ success: boolean; restored_step: string; message: string }>(
-        "POST",
-        `/proposals/${proposalId}/goto/${step}`
-      );
+      return request<{
+        success: boolean;
+        restored_step: string;
+        message: string;
+      }>("POST", `/proposals/${proposalId}/goto/${step}`);
     },
     impact(proposalId: string, step: string) {
       return request<{
@@ -918,20 +1159,64 @@ export const api = {
     listLocks(proposalId: string) {
       return request<{ locks: SectionLock[] }>(
         "GET",
-        `/proposals/${proposalId}/sections/locks`
+        `/proposals/${proposalId}/sections/locks`,
       );
     },
     lockSection(proposalId: string, sectionId: string) {
       return request<SectionLock>(
         "POST",
-        `/proposals/${proposalId}/sections/${sectionId}/lock`
+        `/proposals/${proposalId}/sections/${sectionId}/lock`,
       );
     },
     unlockSection(proposalId: string, sectionId: string) {
       return request<{ released: boolean }>(
         "DELETE",
-        `/proposals/${proposalId}/sections/${sectionId}/lock`
+        `/proposals/${proposalId}/sections/${sectionId}/lock`,
       );
+    },
+
+    // Artifact Versioning — Phase 1
+    validateMove(proposalId: string, targetNode: string) {
+      return request<MoveValidationResult>(
+        "POST",
+        `/proposals/${proposalId}/validate-move`,
+        { target_node: targetNode },
+      );
+    },
+    checkMoveFeasibility(proposalId: string, targetNode: string) {
+      return request<MoveFeasibilityResult>(
+        "POST",
+        `/proposals/${proposalId}/check-node-move/${targetNode}`,
+      );
+    },
+    moveToNode(
+      proposalId: string,
+      targetNode: string,
+      selectedVersions: Record<string, number>,
+    ) {
+      return request<MoveToNodeResult>(
+        "POST",
+        `/proposals/${proposalId}/move-to-node/${targetNode}`,
+        { selected_versions: selectedVersions },
+      );
+    },
+    getArtifactVersions(proposalId: string) {
+      return request<{ versions: ArtifactVersionInfo[]; count: number }>(
+        "GET",
+        `/proposals/${proposalId}/artifact-versions`,
+      );
+    },
+
+    // 피드백 이력 조회 (Phase 2-2)
+    feedbacks(proposalId: string, step: string) {
+      return request<{
+        feedbacks: Array<{
+          id: string;
+          feedback: string;
+          created_at: string;
+          approved?: boolean;
+        }>;
+      }>("GET", `/proposals/${proposalId}/feedbacks?step=${step}`);
     },
   },
 
@@ -941,7 +1226,7 @@ export const api = {
     get(proposalId: string, step: string) {
       return request<ArtifactData>(
         "GET",
-        `/proposals/${proposalId}/artifacts/${step}`
+        `/proposals/${proposalId}/artifacts/${step}`,
       );
     },
     downloadDocxUrl(proposalId: string) {
@@ -953,32 +1238,32 @@ export const api = {
     getCompliance(proposalId: string) {
       return request<ComplianceData>(
         "GET",
-        `/proposals/${proposalId}/compliance`
+        `/proposals/${proposalId}/compliance`,
       );
     },
     checkCompliance(proposalId: string) {
       return request<ComplianceData>(
         "POST",
-        `/proposals/${proposalId}/compliance/check`
+        `/proposals/${proposalId}/compliance/check`,
       );
     },
     save(
       proposalId: string,
       step: string,
       content: unknown,
-      changeSource = "human_edit"
+      changeSource = "human_edit",
     ) {
       return request<{ saved: boolean; step: string; message: string }>(
         "PUT",
         `/proposals/${proposalId}/artifacts/${step}`,
-        { content, change_source: changeSource }
+        { content, change_source: changeSource },
       );
     },
     regenerateSection(
       proposalId: string,
       step: string,
       sectionId: string,
-      instructions = ""
+      instructions = "",
     ) {
       return request<{
         regenerated: boolean;
@@ -988,7 +1273,7 @@ export const api = {
       }>(
         "POST",
         `/proposals/${proposalId}/artifacts/${step}/sections/${sectionId}/regenerate`,
-        { instructions }
+        { instructions },
       );
     },
     diff(proposalId: string, step: string, v1?: number, v2?: number) {
@@ -1002,8 +1287,16 @@ export const api = {
         new_version: number;
         old_content: string;
         new_content: string;
-        old_meta: { change_source: string; created_at: string; created_by: string };
-        new_meta: { change_source: string; created_at: string; created_by: string };
+        old_meta: {
+          change_source: string;
+          created_at: string;
+          created_by: string;
+        };
+        new_meta: {
+          change_source: string;
+          created_at: string;
+          created_by: string;
+        };
         diff?: null;
         message?: string;
       }>("GET", `/proposals/${proposalId}/artifacts/${step}/diff${qs}`);
@@ -1012,7 +1305,7 @@ export const api = {
       proposalId: string,
       text: string,
       mode: "improve" | "shorten" | "expand" | "formalize" = "improve",
-      context = ""
+      context = "",
     ) {
       return request<{
         suggestion: string;
@@ -1020,21 +1313,19 @@ export const api = {
         mode: string;
         original_length: number;
         suggestion_length: number;
-      }>(
-        "POST",
-        `/proposals/${proposalId}/ai-assist`,
-        { text, mode, context }
-      );
+      }>("POST", `/proposals/${proposalId}/ai-assist`, { text, mode, context });
     },
   },
 
   // ── 교훈 전체 검색 ────────────────────────────────────────────────
   lessons: {
-    search(params?: { positioning?: string; category?: string; limit?: number; offset?: number }) {
-      return request<ApiListResponse<Lesson>>(
-        "GET",
-        `/lessons${_qs(params)}`
-      );
+    search(params?: {
+      positioning?: string;
+      category?: string;
+      limit?: number;
+      offset?: number;
+    }) {
+      return request<ApiListResponse<Lesson>>("GET", `/lessons${_qs(params)}`);
     },
   },
 
@@ -1044,43 +1335,43 @@ export const api = {
     failureReasons(params?: AnalyticsParams) {
       return request<FailureReasonsData>(
         "GET",
-        `/analytics/failure-reasons${_qs(params)}`
+        `/analytics/failure-reasons${_qs(params)}`,
       );
     },
     positioningWinRate(params?: AnalyticsParams) {
       return request<PositioningWinRateData>(
         "GET",
-        `/analytics/positioning-win-rate${_qs(params)}`
+        `/analytics/positioning-win-rate${_qs(params)}`,
       );
     },
     monthlyTrends(params?: AnalyticsParams) {
       return request<MonthlyTrendsData>(
         "GET",
-        `/analytics/monthly-trends${_qs(params)}`
+        `/analytics/monthly-trends${_qs(params)}`,
       );
     },
     winRate(params?: AnalyticsParams) {
       return request<WinRateDetailData>(
         "GET",
-        `/analytics/win-rate${_qs(params)}`
+        `/analytics/win-rate${_qs(params)}`,
       );
     },
     teamPerformance(params?: AnalyticsParams) {
       return request<TeamPerformanceData>(
         "GET",
-        `/analytics/team-performance${_qs(params)}`
+        `/analytics/team-performance${_qs(params)}`,
       );
     },
     competitor(params?: AnalyticsParams) {
       return request<CompetitorData>(
         "GET",
-        `/analytics/competitor${_qs(params)}`
+        `/analytics/competitor${_qs(params)}`,
       );
     },
     clientWinRate(params?: AnalyticsParams) {
       return request<ClientWinRateData>(
         "GET",
-        `/analytics/client-win-rate${_qs(params)}`
+        `/analytics/client-win-rate${_qs(params)}`,
       );
     },
   },
@@ -1088,11 +1379,11 @@ export const api = {
   calendar: {
     list(params?: { scope?: string; status?: string }) {
       const qs = new URLSearchParams(
-        params as Record<string, string>
+        params as Record<string, string>,
       ).toString();
       return request<ApiListResponse<CalendarItem>>(
         "GET",
-        `/calendar${qs ? "?" + qs : ""}`
+        `/calendar${qs ? "?" + qs : ""}`,
       );
     },
     create(data: {
@@ -1111,7 +1402,7 @@ export const api = {
         deadline: string;
         proposal_id: string;
         status: string;
-      }>
+      }>,
     ) {
       return request<CalendarItem>("PUT", `/calendar/${id}`, data);
     },
@@ -1124,10 +1415,9 @@ export const api = {
 
   notifications: {
     list(params?: { is_read?: boolean; skip?: number; limit?: number }) {
-      return request<ApiListResponse<Notification> & { meta: { unread_count: number } }>(
-        "GET",
-        `/notifications${_qs(params)}`
-      );
+      return request<
+        ApiListResponse<Notification> & { meta: { unread_count: number } }
+      >("GET", `/notifications${_qs(params)}`);
     },
     markRead(id: string) {
       return request<{ status: string }>("PUT", `/notifications/${id}/read`);
@@ -1142,7 +1432,7 @@ export const api = {
       return request<NotificationSettings>(
         "PUT",
         "/notifications/settings",
-        data
+        data,
       );
     },
   },
@@ -1152,7 +1442,10 @@ export const api = {
   kb: {
     laborRates: {
       list(params?: { agency?: string; year?: string; grade?: string }) {
-        return request<ApiListResponse<LaborRate>>("GET", `/kb/labor-rates${_qs(params)}`);
+        return request<ApiListResponse<LaborRate>>(
+          "GET",
+          `/kb/labor-rates${_qs(params)}`,
+        );
       },
       create(data: Omit<LaborRate, "id" | "created_at" | "updated_at">) {
         return request<LaborRate>("POST", "/kb/labor-rates", data);
@@ -1166,7 +1459,10 @@ export const api = {
     },
     marketPrices: {
       list(params?: { domain?: string; year?: string }) {
-        return request<ApiListResponse<MarketPrice>>("GET", `/kb/market-prices${_qs(params)}`);
+        return request<ApiListResponse<MarketPrice>>(
+          "GET",
+          `/kb/market-prices${_qs(params)}`,
+        );
       },
       create(data: Omit<MarketPrice, "id" | "created_at" | "updated_at">) {
         return request<MarketPrice>("POST", "/kb/market-prices", data);
@@ -1180,7 +1476,10 @@ export const api = {
     },
     content: {
       list(params?: { status?: string; type?: string }) {
-        return request<ApiListResponse<KbContent>>("GET", `/kb/content${_qs(params)}`);
+        return request<ApiListResponse<KbContent>>(
+          "GET",
+          `/kb/content${_qs(params)}`,
+        );
       },
       get(id: string) {
         return request<KbContentDetail>("GET", `/kb/content/${id}`);
@@ -1200,7 +1499,10 @@ export const api = {
     },
     clients: {
       list(params?: { relationship?: string; client_type?: string }) {
-        return request<ApiListResponse<KbClient>>("GET", `/kb/clients${_qs(params)}`);
+        return request<ApiListResponse<KbClient>>(
+          "GET",
+          `/kb/clients${_qs(params)}`,
+        );
       },
       get(id: string) {
         return request<KbClientDetail>("GET", `/kb/clients/${id}`);
@@ -1217,7 +1519,10 @@ export const api = {
     },
     competitors: {
       list(params?: { scale?: string }) {
-        return request<ApiListResponse<KbCompetitor>>("GET", `/kb/competitors${_qs(params)}`);
+        return request<ApiListResponse<KbCompetitor>>(
+          "GET",
+          `/kb/competitors${_qs(params)}`,
+        );
       },
       get(id: string) {
         return request<KbCompetitorDetail>("GET", `/kb/competitors/${id}`);
@@ -1234,7 +1539,10 @@ export const api = {
     },
     lessons: {
       list(params?: { result?: string; positioning?: string }) {
-        return request<ApiListResponse<KbLesson>>("GET", `/kb/lessons${_qs(params)}`);
+        return request<ApiListResponse<KbLesson>>(
+          "GET",
+          `/kb/lessons${_qs(params)}`,
+        );
       },
       get(id: string) {
         return request<KbLessonDetail>("GET", `/kb/lessons/${id}`);
@@ -1246,17 +1554,24 @@ export const api = {
     search(q: string, areas?: string, top_k = 5) {
       return request<KbSearchResult>(
         "GET",
-        `/kb/search?q=${encodeURIComponent(q)}${areas ? `&areas=${areas}` : ""}&top_k=${top_k}`
+        `/kb/search?q=${encodeURIComponent(q)}${areas ? `&areas=${areas}` : ""}&top_k=${top_k}`,
       );
     },
     health() {
       return request<KbHealthResponse>("GET", "/kb/health");
     },
     reindex(areas: string[]) {
-      return request<{ total: number; processed: number; failed: number }>("POST", "/kb/reindex", { areas });
+      return request<{ total: number; processed: number; failed: number }>(
+        "POST",
+        "/kb/reindex",
+        { areas },
+      );
     },
     duplicates(threshold = 0.9) {
-      return request<KbDuplicatePair[]>("GET", `/kb/content/duplicates?threshold=${threshold}`);
+      return request<KbDuplicatePair[]>(
+        "GET",
+        `/kb/content/duplicates?threshold=${threshold}`,
+      );
     },
   },
 
@@ -1265,21 +1580,21 @@ export const api = {
     list(proposalId: string) {
       return request<{ data: QARecord[]; count: number }>(
         "GET",
-        `/proposals/${proposalId}/qa`
+        `/proposals/${proposalId}/qa`,
       );
     },
     create(proposalId: string, records: QARecordCreate[]) {
       return request<{ data: QARecord[]; count: number }>(
         "POST",
         `/proposals/${proposalId}/qa`,
-        records
+        records,
       );
     },
     update(proposalId: string, qaId: string, body: QARecordUpdate) {
       return request<{ data: QARecord }>(
         "PUT",
         `/proposals/${proposalId}/qa/${qaId}`,
-        body
+        body,
       );
     },
     delete(proposalId: string, qaId: string) {
@@ -1298,10 +1613,16 @@ export const api = {
       return request<PromptDashboard>("GET", "/prompts/dashboard");
     },
     list(status = "active") {
-      return request<{ prompts: PromptRegistryItem[] }>("GET", `/prompts/list?status=${status}`);
+      return request<{ prompts: PromptRegistryItem[] }>(
+        "GET",
+        `/prompts/list?status=${status}`,
+      );
     },
     detail(promptId: string) {
-      return request<PromptDetail>("GET", `/prompts/${encodeURIComponent(promptId)}/detail`);
+      return request<PromptDetail>(
+        "GET",
+        `/prompts/${encodeURIComponent(promptId)}/detail`,
+      );
     },
     effectiveness(promptId: string, version?: number) {
       let path = `/prompts/${encodeURIComponent(promptId)}/effectiveness`;
@@ -1309,18 +1630,30 @@ export const api = {
       return request<PromptEffectiveness>("GET", path);
     },
     sectionHeatmap() {
-      return request<{ heatmap: SectionHeatmapItem[] }>("GET", "/prompts/section-heatmap");
+      return request<{ heatmap: SectionHeatmapItem[] }>(
+        "GET",
+        "/prompts/section-heatmap",
+      );
     },
     suggestImprovement(promptId: string) {
-      return request<PromptSuggestion>("POST", `/prompts/${encodeURIComponent(promptId)}/suggest-improvement`);
+      return request<PromptSuggestion>(
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/suggest-improvement`,
+      );
     },
     createCandidate(promptId: string, text: string, reason: string) {
       return request<{ version: number; status: string }>(
-        "POST", `/prompts/${encodeURIComponent(promptId)}/create-candidate`, { text, reason }
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/create-candidate`,
+        { text, reason },
       );
     },
     recordEditAction(body: EditActionBody) {
-      return request<{ recorded: boolean }>("POST", "/prompts/edit-action", body);
+      return request<{ recorded: boolean }>(
+        "POST",
+        "/prompts/edit-action",
+        body,
+      );
     },
     experiments: {
       list(status?: string) {
@@ -1330,25 +1663,42 @@ export const api = {
       },
       create(body: ExperimentCreateBody) {
         return request<{ experiment_id: string; status: string }>(
-          "POST", "/prompts/experiments/create", body
+          "POST",
+          "/prompts/experiments/create",
+          body,
         );
       },
       evaluate(id: string) {
-        return request<ExperimentEvaluation>("POST", `/prompts/experiments/${id}/evaluate`);
+        return request<ExperimentEvaluation>(
+          "POST",
+          `/prompts/experiments/${id}/evaluate`,
+        );
       },
       promote(id: string) {
-        return request<{ promoted: boolean; version?: number }>("POST", `/prompts/experiments/${id}/promote`);
+        return request<{ promoted: boolean; version?: number }>(
+          "POST",
+          `/prompts/experiments/${id}/promote`,
+        );
       },
       rollback(id: string) {
-        return request<{ rolled_back: boolean }>("POST", `/prompts/experiments/${id}/rollback`);
+        return request<{ rolled_back: boolean }>(
+          "POST",
+          `/prompts/experiments/${id}/rollback`,
+        );
       },
     },
     // ── Admin: 카테고리 + 시뮬레이션 ──
     categories() {
-      return request<{ categories: PromptCategory[]; total_prompts: number }>("GET", "/prompts/categories");
+      return request<{ categories: PromptCategory[]; total_prompts: number }>(
+        "GET",
+        "/prompts/categories",
+      );
     },
     worstPerformers(limit = 5) {
-      return request<PromptWorstPerformers>("GET", `/prompts/worst-performers?limit=${limit}`);
+      return request<PromptWorstPerformers>(
+        "GET",
+        `/prompts/worst-performers?limit=${limit}`,
+      );
     },
     simulationQuota() {
       return request<SimulationQuota>("GET", "/prompts/simulation-quota");
@@ -1361,30 +1711,52 @@ export const api = {
       return request<WorkflowMapData>("GET", "/prompts/workflow-map");
     },
     analysis(promptId: string) {
-      return request<PromptAnalysis>("GET", `/prompts/${encodeURIComponent(promptId)}/analysis`);
+      return request<PromptAnalysis>(
+        "GET",
+        `/prompts/${encodeURIComponent(promptId)}/analysis`,
+      );
     },
     runAnalysis(promptId: string) {
-      return request<PromptAnalysis>("POST", `/prompts/${encodeURIComponent(promptId)}/run-analysis`);
+      return request<PromptAnalysis>(
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/run-analysis`,
+      );
     },
     simulate(promptId: string, body: SimulationRequestBody) {
-      return request<SimulationResult>("POST", `/prompts/${encodeURIComponent(promptId)}/simulate`, body);
+      return request<SimulationResult>(
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/simulate`,
+        body,
+      );
     },
     simulateCompare(promptId: string, body: CompareRequestBody) {
-      return request<CompareResult>("POST", `/prompts/${encodeURIComponent(promptId)}/simulate-compare`, body);
+      return request<CompareResult>(
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/simulate-compare`,
+        body,
+      );
     },
     simulations(promptId: string, limit = 20) {
       return request<{ simulations: SimulationHistoryItem[] }>(
-        "GET", `/prompts/${encodeURIComponent(promptId)}/simulations?limit=${limit}`
+        "GET",
+        `/prompts/${encodeURIComponent(promptId)}/simulations?limit=${limit}`,
       );
     },
     suggestionHistory(promptId: string) {
       return request<{ suggestions: SuggestionHistoryItem[] }>(
-        "GET", `/prompts/${encodeURIComponent(promptId)}/suggestions`
+        "GET",
+        `/prompts/${encodeURIComponent(promptId)}/suggestions`,
       );
     },
-    suggestionFeedback(promptId: string, suggestionId: string, body: { accepted_index: number | null; feedback: string }) {
+    suggestionFeedback(
+      promptId: string,
+      suggestionId: string,
+      body: { accepted_index: number | null; feedback: string },
+    ) {
       return request<{ updated: boolean }>(
-        "POST", `/prompts/${encodeURIComponent(promptId)}/suggestions/${suggestionId}/feedback`, body
+        "POST",
+        `/prompts/${encodeURIComponent(promptId)}/suggestions/${suggestionId}/feedback`,
+        body,
       );
     },
   },
@@ -1434,7 +1806,10 @@ export interface PromptEditStat {
 export interface PromptDetail {
   prompt_id: string;
   active_version: PromptRegistryItem | null;
-  versions: (PromptRegistryItem & { content_text: string; change_reason: string })[];
+  versions: (PromptRegistryItem & {
+    content_text: string;
+    change_reason: string;
+  })[];
   total_versions: number;
 }
 
@@ -1527,7 +1902,12 @@ export interface LearningDashboard {
     prompt_id: string;
     label: string;
     priority: string;
-    metrics: { edit_ratio: number; quality: number; win_rate: number; proposals_used?: number };
+    metrics: {
+      edit_ratio: number;
+      quality: number;
+      win_rate: number;
+      proposals_used?: number;
+    };
     top_pattern: { pattern: string; count: number; pct?: number } | null;
     feedback_theme: string | null;
   }[];
@@ -1549,16 +1929,46 @@ export interface PromptAnalysis {
   prompt_id: string;
   label: string;
   priority: string;
-  metrics: { proposals_used: number; win_rate: number | null; avg_quality: number | null; avg_edit_ratio: number | null; edit_count: number };
-  edit_patterns: { pattern: string; count: number; pct: number; examples?: string[] }[];
-  feedback_summary: { keywords: { word: string; count: number }[]; themes: string[] };
-  win_loss_comparison: { win_avg_quality: number; loss_avg_quality: number; win_count: number; loss_count: number; key_differences: string[] };
-  trend: { period: string; quality: number | null; edit_ratio: number | null; win_rate: number | null }[];
+  metrics: {
+    proposals_used: number;
+    win_rate: number | null;
+    avg_quality: number | null;
+    avg_edit_ratio: number | null;
+    edit_count: number;
+  };
+  edit_patterns: {
+    pattern: string;
+    count: number;
+    pct: number;
+    examples?: string[];
+  }[];
+  feedback_summary: {
+    keywords: { word: string; count: number }[];
+    themes: string[];
+  };
+  win_loss_comparison: {
+    win_avg_quality: number;
+    loss_avg_quality: number;
+    win_count: number;
+    loss_count: number;
+    key_differences: string[];
+  };
+  trend: {
+    period: string;
+    quality: number | null;
+    edit_ratio: number | null;
+    win_rate: number | null;
+  }[];
   hypothesis: string;
 }
 
 export interface WorkflowMapData {
-  nodes: { id: string; label: string; prompts: string[]; prompt_count: number }[];
+  nodes: {
+    id: string;
+    label: string;
+    prompts: string[];
+    prompt_count: number;
+  }[];
   edges: { from: string; to: string }[];
 }
 
@@ -1587,8 +1997,16 @@ export interface PromptCategoryItem {
 }
 
 export interface PromptWorstPerformers {
-  worst_by_edit_ratio: { prompt_id: string; avg_edit_ratio: number; edit_count: number }[];
-  worst_by_quality: { prompt_id: string; avg_quality_score: number; proposals_used: number }[];
+  worst_by_edit_ratio: {
+    prompt_id: string;
+    avg_edit_ratio: number;
+    edit_count: number;
+  }[];
+  worst_by_quality: {
+    prompt_id: string;
+    avg_quality_score: number;
+    proposals_used: number;
+  }[];
 }
 
 export interface SimulationRequestBody {
@@ -1664,7 +2082,12 @@ export interface SuggestionHistoryItem {
   id: string;
   prompt_version: number;
   analysis: string;
-  suggestions: { title: string; rationale: string; key_changes: string[]; prompt_text: string }[];
+  suggestions: {
+    title: string;
+    rationale: string;
+    key_changes: string[];
+    prompt_text: string;
+  }[];
   accepted_index: number | null;
   feedback: string | null;
   created_at: string;
@@ -1881,6 +2304,7 @@ export interface ScoredBid {
   deadline: string;
   d_day: number | null;
   score: number;
+  suitability_score?: number;
   role_keywords: string[];
   domain_keywords: string[];
   classification: string;
@@ -1907,7 +2331,14 @@ export interface MonitoredBid {
   related_teams?: string[];
   relevance?: "적극 추천" | "보통" | "낮음";
   bid_stage?: "사전공고" | "본공고";
-  proposal_status?: "검토중" | "제안결정" | "제안포기" | "제안유보" | "제안착수" | "관련없음" | null;
+  proposal_status?:
+    | "검토중"
+    | "제안결정"
+    | "제안포기"
+    | "제안유보"
+    | "제안착수"
+    | "관련없음"
+    | null;
   decided_by?: string | null;
 }
 
@@ -2002,6 +2433,27 @@ export interface WorkflowStartResult {
   interrupted: boolean;
 }
 
+export interface ArtifactVersionInfo {
+  node_name: string;
+  output_key: string;
+  version: number;
+  created_at: string;
+  created_by: string;
+  is_active: boolean;
+  is_deprecated: boolean;
+  used_by?: Array<{ node: string; count: number }>;
+  created_reason?: string;
+  artifact_size?: number;
+}
+
+export interface DependencyMismatch {
+  input_key: string;
+  expected_version: number;
+  actual_version: number;
+  node_name: string;
+  message?: string;
+}
+
 export interface WorkflowState {
   proposal_id: string;
   current_step: string;
@@ -2013,8 +2465,15 @@ export interface WorkflowState {
   current_section_index?: number | null;
   total_sections?: number | null;
   interrupt_data?: Record<string, unknown> | null;
-  review_history?: Array<{ node: string; approved: boolean; feedback?: string; timestamp: string }>;
+  review_history?: Array<{
+    node: string;
+    approved: boolean;
+    feedback?: string;
+    timestamp: string;
+  }>;
   streams_status?: StreamsOverview | null;
+  artifact_versions?: Record<string, ArtifactVersionInfo[]>;
+  dependency_mismatches?: DependencyMismatch[];
 }
 
 export interface WorkflowResumeData {
@@ -2120,7 +2579,12 @@ export interface MonthlyTrendsData {
 
 export interface WinRateDetailData {
   overall: { total: number; won: number; rate: number };
-  by_period: Array<{ period: string; total: number; won: number; rate: number }>;
+  by_period: Array<{
+    period: string;
+    total: number;
+    won: number;
+    rate: number;
+  }>;
 }
 
 export interface TeamPerformanceData {
@@ -2152,6 +2616,52 @@ export interface ClientWinRateData {
   }>;
 }
 
+// ── Artifact Versioning 타입 (Phase 1) ───────────────────────────────
+
+export interface ArtifactVersionInfo {
+  node_name: string;
+  output_key: string;
+  version: number;
+  created_at: string;
+  created_by: string;
+  is_active: boolean;
+  is_deprecated: boolean;
+  used_by?: Array<{ node: string; count: number }>;
+  created_reason?: string;
+  artifact_size?: number;
+}
+
+export interface VersionConflict {
+  input_key: string;
+  versions?: number[];
+  status: "SINGLE" | "MULTIPLE" | "MISSING";
+  dependency_level?: string;
+}
+
+export interface MoveValidationResult {
+  can_move: boolean;
+  conflicts: VersionConflict[];
+  dependency_level: string;
+  recommendation?: string;
+  downstream_impact: string[];
+  message: string;
+}
+
+export interface MoveFeasibilityResult {
+  can_move: boolean;
+  needs_modal: boolean;
+  message: string;
+  conflicts: VersionConflict[];
+}
+
+export interface MoveToNodeResult {
+  success: boolean;
+  proposal_id: string;
+  target_node: string;
+  selected_versions: Record<string, number>;
+  message: string;
+}
+
 // ── 모의평가 타입 ─────────────────────────────────────────────────────
 
 export interface EvaluatorScore {
@@ -2171,7 +2681,11 @@ export interface Evaluator {
 export interface EvaluationSimulation {
   evaluators: Evaluator[];
   average_scores: EvaluatorScore;
-  weaknesses: Array<{ area: string; description: string; related_section: string }>;
+  weaknesses: Array<{
+    area: string;
+    description: string;
+    related_section: string;
+  }>;
   expected_qa: Array<{ question: string; answer: string }>;
 }
 
@@ -2270,7 +2784,12 @@ export interface KbClient {
 export interface KbClientDetail extends KbClient {
   notes: string | null;
   parent_ministry: string | null;
-  bid_history: Array<{ id: string; project_name: string; result: string; created_at: string }>;
+  bid_history: Array<{
+    id: string;
+    project_name: string;
+    result: string;
+    created_at: string;
+  }>;
 }
 
 export interface KbClientCreate {
@@ -2300,7 +2819,12 @@ export interface KbCompetitorDetail extends KbCompetitor {
   strengths: string | null;
   weaknesses: string | null;
   notes: string | null;
-  competition_history: Array<{ id: string; project_name: string; result: string; created_at: string }>;
+  competition_history: Array<{
+    id: string;
+    project_name: string;
+    result: string;
+    created_at: string;
+  }>;
 }
 
 export interface KbCompetitorCreate {
@@ -2372,7 +2896,16 @@ export interface KbDuplicatePair {
 export interface KbSearchResult {
   query: string;
   total: number;
-  results: Record<string, Array<{ id: string; title?: string; summary?: string; score?: number; [key: string]: unknown }>>;
+  results: Record<
+    string,
+    Array<{
+      id: string;
+      title?: string;
+      summary?: string;
+      score?: number;
+      [key: string]: unknown;
+    }>
+  >;
 }
 
 // ── 워크플로 STEP 정의 ───────────────────────────────────────────────
@@ -2414,30 +2947,108 @@ export interface WorkflowStepDef {
  */
 export const WORKFLOW_STEPS: WorkflowStepDef[] = [
   // ── Head (공통) ──
-  { step: 1, stepLabel: "1",  label: "RFP 분석",    nodes: ["rfp_analyze", "research_gather", "go_no_go"], path: "head" },
-  { step: 2, stepLabel: "2",  label: "전략 수립",    nodes: ["strategy_generate"],                          path: "head" },
+  {
+    step: 1,
+    stepLabel: "1",
+    label: "RFP 분석",
+    nodes: ["rfp_analyze", "research_gather", "go_no_go"],
+    path: "head",
+  },
+  {
+    step: 2,
+    stepLabel: "2",
+    label: "전략 수립",
+    nodes: ["strategy_generate"],
+    path: "head",
+  },
   // ── Path A: 제안서 ──
-  { step: 3, stepLabel: "3A", label: "제안 계획",    nodes: ["plan_team", "plan_assign", "plan_schedule", "plan_story", "plan_price"], path: "proposal" },
-  { step: 4, stepLabel: "4A", label: "제안서 작성",  nodes: ["proposal_write_next", "self_review"],         path: "proposal" },
-  { step: 5, stepLabel: "5A", label: "PPT 생성",    nodes: ["presentation_strategy", "ppt_toc", "ppt_visual_brief", "ppt_storyboard"], path: "proposal" },
-  { step: 6, stepLabel: "6A", label: "모의 평가",    nodes: ["mock_evaluation"],                            path: "proposal" },
+  {
+    step: 3,
+    stepLabel: "3A",
+    label: "제안 계획",
+    nodes: [
+      "plan_team",
+      "plan_assign",
+      "plan_schedule",
+      "plan_story",
+      "plan_price",
+    ],
+    path: "proposal",
+  },
+  {
+    step: 4,
+    stepLabel: "4A",
+    label: "제안서 작성",
+    nodes: ["proposal_write_next", "self_review"],
+    path: "proposal",
+  },
+  {
+    step: 5,
+    stepLabel: "5A",
+    label: "PPT 생성",
+    nodes: [
+      "presentation_strategy",
+      "ppt_toc",
+      "ppt_visual_brief",
+      "ppt_storyboard",
+    ],
+    path: "proposal",
+  },
+  {
+    step: 6,
+    stepLabel: "6A",
+    label: "모의 평가",
+    nodes: ["mock_evaluation"],
+    path: "proposal",
+  },
   // ── Path B: 입찰·제출 ──
-  { step: 3, stepLabel: "3B", label: "제출서류 계획", nodes: ["submission_plan"],                            path: "bidding" },
-  { step: 4, stepLabel: "4B", label: "입찰가 결정",   nodes: ["bid_plan"],                                   path: "bidding" },
-  { step: 5, stepLabel: "5B", label: "산출내역서",    nodes: ["cost_sheet_generate"],                       path: "bidding" },
-  { step: 6, stepLabel: "6B", label: "제출서류 확인", nodes: ["submission_checklist"],                       path: "bidding" },
+  {
+    step: 3,
+    stepLabel: "3B",
+    label: "제출서류 계획",
+    nodes: ["submission_plan"],
+    path: "bidding",
+  },
+  {
+    step: 4,
+    stepLabel: "4B",
+    label: "입찰가 결정",
+    nodes: ["bid_plan"],
+    path: "bidding",
+  },
+  {
+    step: 5,
+    stepLabel: "5B",
+    label: "산출내역서",
+    nodes: ["cost_sheet_generate"],
+    path: "bidding",
+  },
+  {
+    step: 6,
+    stepLabel: "6B",
+    label: "제출서류 확인",
+    nodes: ["submission_checklist"],
+    path: "bidding",
+  },
   // ── Tail (통합) ──
-  { step: 7, stepLabel: "7",  label: "평가결과·Closing", nodes: ["eval_result", "project_closing"],          path: "tail" },
+  {
+    step: 7,
+    stepLabel: "7",
+    label: "평가결과·Closing",
+    nodes: ["eval_result", "project_closing"],
+    path: "tail",
+  },
 ];
 
 /** 편의: 경로별 step 필터 */
-export const HEAD_STEPS     = WORKFLOW_STEPS.filter((s) => s.path === "head");
-export const PROPOSAL_STEPS = WORKFLOW_STEPS.filter((s) => s.path === "proposal");
-export const BIDDING_STEPS  = WORKFLOW_STEPS.filter((s) => s.path === "bidding");
-export const TAIL_STEPS     = WORKFLOW_STEPS.filter((s) => s.path === "tail");
+export const HEAD_STEPS = WORKFLOW_STEPS.filter((s) => s.path === "head");
+export const PROPOSAL_STEPS = WORKFLOW_STEPS.filter(
+  (s) => s.path === "proposal",
+);
+export const BIDDING_STEPS = WORKFLOW_STEPS.filter((s) => s.path === "bidding");
+export const TAIL_STEPS = WORKFLOW_STEPS.filter((s) => s.path === "tail");
 // 하위 호환
 export const COMMON_STEPS = HEAD_STEPS;
-
 
 // ── 비딩 가격 시뮬레이션 ─────────────────────────────────────────────
 
@@ -2545,7 +3156,12 @@ export interface PricingSimulationResult {
   cost_standard_reason: string;
   recommended_bid: number;
   recommended_ratio: number;
-  bid_range: { min_price: number; max_price: number; min_ratio: number; max_ratio: number } | null;
+  bid_range: {
+    min_price: number;
+    max_price: number;
+    min_ratio: number;
+    max_ratio: number;
+  } | null;
   win_probability: number;
   win_probability_confidence: string;
   comparable_cases: number;
@@ -2610,34 +3226,68 @@ export interface PricingSensitivityResult {
 // ── Pricing API 메서드 (api 객체에 추가) ──
 
 export const pricingApi = {
-  async simulatePricing(req: PricingSimulationRequest): Promise<PricingSimulationResult> {
+  async simulatePricing(
+    req: PricingSimulationRequest,
+  ): Promise<PricingSimulationResult> {
     return request("POST", "/pricing/simulate", req);
   },
-  async quickEstimate(params: { budget: number; evaluation_method?: string; domain?: string; positioning?: string; competitor_count?: number }): Promise<QuickEstimateResult> {
+  async quickEstimate(params: {
+    budget: number;
+    evaluation_method?: string;
+    domain?: string;
+    positioning?: string;
+    competitor_count?: number;
+  }): Promise<QuickEstimateResult> {
     return request("POST", "/pricing/quick-estimate", params);
   },
-  async getPricingSimulations(proposalId?: string): Promise<ApiListResponse<PricingSimulationSummary>> {
+  async getPricingSimulations(
+    proposalId?: string,
+  ): Promise<ApiListResponse<PricingSimulationSummary>> {
     const qs = proposalId ? `?proposal_id=${proposalId}` : "";
     return request("GET", `/pricing/simulations${qs}`);
   },
   async getPricingSimulation(id: string): Promise<Record<string, unknown>> {
     return request("GET", `/pricing/simulations/${id}`);
   },
-  async getMarketAnalysis(domain: string, method?: string): Promise<MarketAnalysisResult> {
-    const qs = method ? `?domain=${encodeURIComponent(domain)}&evaluation_method=${encodeURIComponent(method)}` : `?domain=${encodeURIComponent(domain)}`;
+  async getMarketAnalysis(
+    domain: string,
+    method?: string,
+  ): Promise<MarketAnalysisResult> {
+    const qs = method
+      ? `?domain=${encodeURIComponent(domain)}&evaluation_method=${encodeURIComponent(method)}`
+      : `?domain=${encodeURIComponent(domain)}`;
     return request("GET", `/pricing/market-analysis${qs}`);
   },
-  async runSensitivity(req: PricingSensitivityRequest): Promise<PricingSensitivityResult> {
+  async runSensitivity(
+    req: PricingSensitivityRequest,
+  ): Promise<PricingSensitivityResult> {
     return request("POST", "/pricing/sensitivity", req);
   },
-  async getPredictionAccuracy(): Promise<{ total_resolved: number; avg_error: number | null; accuracy_by_result: Record<string, { count: number; avg_error: number | null }> }> {
+  async getPredictionAccuracy(): Promise<{
+    total_resolved: number;
+    avg_error: number | null;
+    accuracy_by_result: Record<
+      string,
+      { count: number; avg_error: number | null }
+    >;
+  }> {
     return request("GET", "/pricing/prediction-accuracy");
   },
-  async applyToProposal(simulationId: string, proposalId: string): Promise<{ applied: boolean; proposal_id: string; simulation_id: string; recommended_bid: number }> {
-    return request("POST", `/pricing/simulations/${simulationId}/apply/${proposalId}`);
+  async applyToProposal(
+    simulationId: string,
+    proposalId: string,
+  ): Promise<{
+    applied: boolean;
+    proposal_id: string;
+    simulation_id: string;
+    recommended_bid: number;
+  }> {
+    return request(
+      "POST",
+      `/pricing/simulations/${simulationId}/apply/${proposalId}`,
+    );
   },
 };
-
 
 // ── 투찰 관리 API ─────────────────────────────────────────────
 
@@ -2671,7 +3321,12 @@ export interface BidPriceHistoryEntry {
 // ── 3-Stream 타입 ──────────────────────────────────────────────
 
 export type StreamName = "proposal" | "bidding" | "documents";
-export type StreamStatusType = "not_started" | "in_progress" | "blocked" | "completed" | "error";
+export type StreamStatusType =
+  | "not_started"
+  | "in_progress"
+  | "blocked"
+  | "completed"
+  | "error";
 
 export interface StreamProgress {
   stream: StreamName;
@@ -2690,8 +3345,21 @@ export interface StreamsOverview {
   missing_streams: string[];
 }
 
-export type DocCategory = "proposal" | "qualification" | "certification" | "financial" | "other";
-export type DocStatus = "pending" | "assigned" | "in_progress" | "uploaded" | "verified" | "rejected" | "not_applicable" | "expired";
+export type DocCategory =
+  | "proposal"
+  | "qualification"
+  | "certification"
+  | "financial"
+  | "other";
+export type DocStatus =
+  | "pending"
+  | "assigned"
+  | "in_progress"
+  | "uploaded"
+  | "verified"
+  | "rejected"
+  | "not_applicable"
+  | "expired";
 
 export interface SubmissionDocument {
   id: string;
@@ -2745,7 +3413,12 @@ export interface ReadinessResult {
   ready: boolean;
   total: number;
   completed: number;
-  issues: Array<{ doc_id: string; doc_type: string; status: string; issue: string | null }>;
+  issues: Array<{
+    doc_id: string;
+    doc_type: string;
+    status: string;
+    issue: string | null;
+  }>;
 }
 
 export interface OrgDocTemplate {
@@ -2783,11 +3456,20 @@ export const streamsApi = {
   async getAll(proposalId: string): Promise<StreamsOverview> {
     return request("GET", `/proposals/${proposalId}/streams`);
   },
-  async getOne(proposalId: string, stream: StreamName): Promise<StreamProgress> {
+  async getOne(
+    proposalId: string,
+    stream: StreamName,
+  ): Promise<StreamProgress> {
     return request("GET", `/proposals/${proposalId}/streams/${stream}`);
   },
-  async finalSubmit(proposalId: string): Promise<{ success: boolean; message: string; submission_gate_status: string }> {
-    return request("POST", `/proposals/${proposalId}/streams/final-submit`, { confirm: true });
+  async finalSubmit(proposalId: string): Promise<{
+    success: boolean;
+    message: string;
+    submission_gate_status: string;
+  }> {
+    return request("POST", `/proposals/${proposalId}/streams/final-submit`, {
+      confirm: true,
+    });
   },
 };
 
@@ -2798,28 +3480,60 @@ export const submissionDocsApi = {
   async extract(proposalId: string): Promise<SubmissionDocument[]> {
     return request("POST", `/proposals/${proposalId}/submission-docs/extract`);
   },
-  async add(proposalId: string, data: SubmissionDocCreate): Promise<SubmissionDocument> {
+  async add(
+    proposalId: string,
+    data: SubmissionDocCreate,
+  ): Promise<SubmissionDocument> {
     return request("POST", `/proposals/${proposalId}/submission-docs`, data);
   },
-  async update(proposalId: string, docId: string, data: SubmissionDocUpdate): Promise<SubmissionDocument> {
-    return request("PUT", `/proposals/${proposalId}/submission-docs/${docId}`, data);
+  async update(
+    proposalId: string,
+    docId: string,
+    data: SubmissionDocUpdate,
+  ): Promise<SubmissionDocument> {
+    return request(
+      "PUT",
+      `/proposals/${proposalId}/submission-docs/${docId}`,
+      data,
+    );
   },
   async remove(proposalId: string, docId: string): Promise<void> {
-    return request("DELETE", `/proposals/${proposalId}/submission-docs/${docId}`);
+    return request(
+      "DELETE",
+      `/proposals/${proposalId}/submission-docs/${docId}`,
+    );
   },
-  async upload(proposalId: string, docId: string, file: File): Promise<SubmissionDocument> {
+  async upload(
+    proposalId: string,
+    docId: string,
+    file: File,
+  ): Promise<SubmissionDocument> {
     const formData = new FormData();
     formData.append("file", file);
-    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/upload`, formData, true);
+    return request(
+      "POST",
+      `/proposals/${proposalId}/submission-docs/${docId}/upload`,
+      formData,
+      true,
+    );
   },
   async verify(proposalId: string, docId: string): Promise<SubmissionDocument> {
-    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/verify`);
+    return request(
+      "POST",
+      `/proposals/${proposalId}/submission-docs/${docId}/verify`,
+    );
   },
   async readiness(proposalId: string): Promise<ReadinessResult> {
     return request("GET", `/proposals/${proposalId}/submission-docs/readiness`);
   },
-  async confirmOriginal(proposalId: string, docId: string): Promise<SubmissionDocument> {
-    return request("POST", `/proposals/${proposalId}/submission-docs/${docId}/confirm-original`);
+  async confirmOriginal(
+    proposalId: string,
+    docId: string,
+  ): Promise<SubmissionDocument> {
+    return request(
+      "POST",
+      `/proposals/${proposalId}/submission-docs/${docId}/confirm-original`,
+    );
   },
   bundleUrl(proposalId: string): string {
     return `${BASE}/proposals/${proposalId}/submission-docs/bundle`;
@@ -2830,7 +3544,18 @@ export const orgTemplatesApi = {
   async list(orgId: string): Promise<OrgDocTemplate[]> {
     return request("GET", `/org/${orgId}/document-templates`);
   },
-  async upsert(orgId: string, data: { doc_type: string; doc_category?: string; required_format?: string; valid_from?: string; valid_until?: string; auto_include?: boolean; notes?: string }): Promise<OrgDocTemplate> {
+  async upsert(
+    orgId: string,
+    data: {
+      doc_type: string;
+      doc_category?: string;
+      required_format?: string;
+      valid_from?: string;
+      valid_until?: string;
+      auto_include?: boolean;
+      notes?: string;
+    },
+  ): Promise<OrgDocTemplate> {
     return request("POST", `/org/${orgId}/document-templates`, data);
   },
   async remove(orgId: string, templateId: string): Promise<void> {
@@ -2842,17 +3567,29 @@ export const bidSubmissionApi = {
   async getStatus(proposalId: string): Promise<BidSubmissionStatus> {
     return request("GET", `/proposals/${proposalId}/bid-submission`);
   },
-  async submitBid(proposalId: string, data: { submitted_price: number; note?: string }): Promise<{ status: string; submitted_at: string }> {
+  async submitBid(
+    proposalId: string,
+    data: { submitted_price: number; note?: string },
+  ): Promise<{ status: string; submitted_at: string }> {
     return request("POST", `/proposals/${proposalId}/bid-submission`, data);
   },
-  async verifyBid(proposalId: string): Promise<{ status: string; verified_at: string }> {
+  async verifyBid(
+    proposalId: string,
+  ): Promise<{ status: string; verified_at: string }> {
     return request("POST", `/proposals/${proposalId}/bid-submission/verify`);
   },
   async getPriceHistory(proposalId: string): Promise<BidPriceHistoryEntry[]> {
     return request("GET", `/proposals/${proposalId}/bid-price-history`);
   },
-  async adjustPrice(proposalId: string, data: { adjusted_price: number; reason: string }): Promise<{ success: boolean; new_price: number; message: string }> {
-    return request("PUT", `/proposals/${proposalId}/bid-submission/adjust`, data);
+  async adjustPrice(
+    proposalId: string,
+    data: { adjusted_price: number; reason: string },
+  ): Promise<{ success: boolean; new_price: number; message: string }> {
+    return request(
+      "PUT",
+      `/proposals/${proposalId}/bid-submission/adjust`,
+      data,
+    );
   },
   async getBiddingWorkspace(proposalId: string): Promise<BiddingWorkspace> {
     return request("GET", `/proposals/${proposalId}/bidding-workspace`);
@@ -2902,26 +3639,149 @@ export const costSheetApi = {
   async getDraft(proposalId: string): Promise<CostSheetDraft> {
     return request("GET", `/proposals/${proposalId}/cost-sheet/draft`);
   },
-  async generate(proposalId: string, data: {
-    project_name: string;
-    client: string;
-    proposer_name: string;
-    cost_standard: string;
-    labor_breakdown: LaborItem[];
-    expense_items: ExpenseItem[];
-    overhead_rate: number;
-    profit_rate: number;
-    budget_narrative: BudgetNarrativeItem[];
-  }): Promise<Blob> {
-    const res = await fetch(`${BASE}/proposals/${proposalId}/cost-sheet/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+  async generate(
+    proposalId: string,
+    data: {
+      project_name: string;
+      client: string;
+      proposer_name: string;
+      cost_standard: string;
+      labor_breakdown: LaborItem[];
+      expense_items: ExpenseItem[];
+      overhead_rate: number;
+      profit_rate: number;
+      budget_narrative: BudgetNarrativeItem[];
+    },
+  ): Promise<Blob> {
+    const res = await fetch(
+      `${BASE}/proposals/${proposalId}/cost-sheet/generate`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+    );
     if (!res.ok) throw new Error(`산출내역서 생성 실패: ${res.status}`);
     return res.blob();
+  },
+};
+
+// ── 인트라넷 문서 관리 API ──
+
+export interface DocumentResponse {
+  id: string;
+  filename: string;
+  doc_type: string;
+  storage_path: string;
+  processing_status: string; // extracting|chunking|embedding|completed|failed
+  total_chars: number;
+  chunk_count: number;
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DocumentDetailResponse extends DocumentResponse {
+  extracted_text?: string;
+}
+
+export interface DocumentListResponse {
+  items: DocumentResponse[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export interface ChunkResponse {
+  id: string;
+  chunk_index: number;
+  chunk_type: string; // title|heading|body|table|image
+  section_title?: string;
+  content: string;
+  char_count: number;
+  created_at: string;
+}
+
+export interface ChunkListResponse {
+  items: ChunkResponse[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export const documentsApi = {
+  async list(params?: {
+    status?: string;
+    doc_type?: string;
+    search?: string;
+    sort_by?: "created_at" | "updated_at" | "filename" | "total_chars";
+    order?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<DocumentListResponse> {
+    const query = new URLSearchParams();
+    if (params?.status) query.append("status", params.status);
+    if (params?.doc_type) query.append("doc_type", params.doc_type);
+    if (params?.search) query.append("search", params.search);
+    if (params?.sort_by) query.append("sort_by", params.sort_by);
+    if (params?.order) query.append("order", params.order);
+    if (params?.limit) query.append("limit", params.limit.toString());
+    if (params?.offset) query.append("offset", params.offset.toString());
+    const queryStr = query.toString();
+    return request("GET", `/documents${queryStr ? "?" + queryStr : ""}`);
+  },
+
+  async get(documentId: string): Promise<DocumentDetailResponse> {
+    return request("GET", `/documents/${documentId}`);
+  },
+
+  async upload(
+    file: File,
+    doc_type: string,
+    doc_subtype?: string,
+    project_id?: string,
+  ): Promise<DocumentResponse> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("doc_type", doc_type);
+    if (doc_subtype) formData.append("doc_subtype", doc_subtype);
+    if (project_id) formData.append("project_id", project_id);
+    return request("POST", `/documents/upload`, formData, true);
+  },
+
+  async reprocess(
+    documentId: string,
+  ): Promise<{ id: string; processing_status: string; message: string }> {
+    return request("POST", `/documents/${documentId}/process`);
+  },
+
+  async getChunks(
+    documentId: string,
+    params?: {
+      chunk_type?: string;
+      sort_by?: "chunk_index" | "created_at" | "char_count";
+      order?: "asc" | "desc";
+      limit?: number;
+      offset?: number;
+    },
+  ): Promise<ChunkListResponse> {
+    const query = new URLSearchParams();
+    if (params?.chunk_type) query.append("chunk_type", params.chunk_type);
+    if (params?.sort_by) query.append("sort_by", params.sort_by);
+    if (params?.order) query.append("order", params.order);
+    if (params?.limit) query.append("limit", params.limit.toString());
+    if (params?.offset) query.append("offset", params.offset.toString());
+    const queryStr = query.toString();
+    return request(
+      "GET",
+      `/documents/${documentId}/chunks${queryStr ? "?" + queryStr : ""}`,
+    );
+  },
+
+  async delete(documentId: string): Promise<void> {
+    return request("DELETE", `/documents/${documentId}`);
   },
 };

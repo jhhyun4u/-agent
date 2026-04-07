@@ -18,7 +18,7 @@ setup("로그인 후 인증 상태 저장", async ({ page }) => {
 
   if (!email || !password) {
     console.warn(
-      "⚠️  E2E_USER_EMAIL / E2E_USER_PASSWORD 미설정 — 인증 테스트 스킵"
+      "⚠️  E2E_USER_EMAIL / E2E_USER_PASSWORD 미설정 — 인증 테스트 스킵",
     );
     // 빈 storageState 저장하여 authenticated 프로젝트가 에러 없이 실행되도록 함
     await page.context().storageState({ path: STORAGE_STATE });

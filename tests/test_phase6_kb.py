@@ -54,8 +54,8 @@ async def test_kb_search_endpoint(client):
         resp = await client.get("/api/kb/search?q=클라우드&top_k=3")
         assert resp.status_code == 200
         data = resp.json()
-        assert "results" in data
-        assert "total" in data
+        assert "results" in data["data"]
+        assert "total" in data["data"]
 
 
 async def test_kb_search_with_areas(client):
@@ -80,7 +80,7 @@ async def test_content_list(client):
     """GET /api/kb/content 목록."""
     resp = await client.get("/api/kb/content")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_content_create(client):
@@ -132,7 +132,7 @@ async def test_clients_list(client):
     """GET /api/kb/clients 발주기관 목록."""
     resp = await client.get("/api/kb/clients")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_clients_create(client):
@@ -222,7 +222,7 @@ async def test_labor_rates_list(client):
     """GET /api/kb/labor-rates 목록."""
     resp = await client.get("/api/kb/labor-rates?standard_org=KOSA&year=2026")
     assert resp.status_code == 200
-    assert "items" in resp.json()
+    assert "data" in resp.json()
 
 
 async def test_labor_rates_create(client):
@@ -324,7 +324,7 @@ async def test_kb_health_endpoint(client):
     """GET /api/kb/health — 6개 영역 건강도 반환."""
     res = await client.get("/api/kb/health")
     assert res.status_code == 200
-    data = res.json()
+    data = res.json()["data"]
     # 6개 영역 모두 존재해야 함
     for area in ["content", "client", "competitor", "lesson", "capability", "qa"]:
         assert area in data, f"'{area}' 영역 누락"
@@ -338,7 +338,7 @@ async def test_kb_reindex_endpoint(client):
     # admin 역할 필요 (conftest mock_user는 admin)
     res = await client.post("/api/kb/reindex", json={"areas": ["content", "capability"]})
     assert res.status_code == 200
-    data = res.json()
+    data = res.json()["data"]
     assert "total" in data
     assert "processed" in data
     assert "failed" in data
@@ -348,7 +348,7 @@ async def test_kb_content_duplicates_endpoint(client):
     """GET /api/kb/content/duplicates — 중복 콘텐츠 쌍."""
     res = await client.get("/api/kb/content/duplicates?threshold=0.9")
     assert res.status_code == 200
-    data = res.json()
+    data = res.json()["data"]
     assert isinstance(data, list)
 
 

@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS intranet_projects (
     -- KB 시드 연동 추적
     capability_id    UUID REFERENCES capabilities(id),
     client_intel_id  UUID REFERENCES client_intelligence(id),
+    market_price_id  UUID REFERENCES market_price_data(id),
 
     -- 벡터 검색 (프로젝트 단위 유사도)
     embedding        vector(1536),

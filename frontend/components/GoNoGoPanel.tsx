@@ -9,6 +9,8 @@
 
 import { useEffect, useState } from "react";
 import { api, type WorkflowState, type WorkflowResumeData } from "@/lib/api";
+import { useToast } from "@/components/ui/Toast";
+import PositioningImpactModal from "@/components/PositioningImpactModal";
 
 // ── 타입 ──
 
@@ -92,10 +94,22 @@ const AXES = [
 ] as const;
 
 const TAG_LABELS: Record<string, { text: string; color: string }> = {
-  priority: { text: "적극 참여", color: "text-[#3ecf8e] bg-[#3ecf8e]/10 border-[#3ecf8e]/30" },
-  standard: { text: "일반 참여", color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
-  below_threshold: { text: "기준 미달", color: "text-red-400 bg-red-500/10 border-red-500/30" },
-  disqualified: { text: "자격 미달", color: "text-red-400 bg-red-500/10 border-red-500/30" },
+  priority: {
+    text: "적극 참여",
+    color: "text-[#3ecf8e] bg-[#3ecf8e]/10 border-[#3ecf8e]/30",
+  },
+  standard: {
+    text: "일반 참여",
+    color: "text-amber-400 bg-amber-500/10 border-amber-500/30",
+  },
+  below_threshold: {
+    text: "기준 미달",
+    color: "text-red-400 bg-red-500/10 border-red-500/30",
+  },
+  disqualified: {
+    text: "자격 미달",
+    color: "text-red-400 bg-red-500/10 border-red-500/30",
+  },
 };
 
 function barColor(score: number, max: number) {
@@ -117,10 +131,15 @@ export default function GoNoGoPanel({
   onStateChange,
   className = "",
 }: GoNoGoPanelProps) {
-  const [posOverride, setPosOverride] = useState(workflowState.positioning ?? "");
+  const toast = useToast();
+  const [posOverride, setPosOverride] = useState(
+    workflowState.positioning ?? "",
+  );
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirmNoGo, setConfirmNoGo] = useState(false);
+  const [showImpactModal, setShowImpactModal] = useState(false);
+  const [pendingPositioning, setPendingPositioning] = useState("");
 
   // 접기/펼치기
   const [expandPerf, setExpandPerf] = useState(false);
@@ -130,32 +149,49 @@ export default function GoNoGoPanel({
   // AI 분석 결과 로드
   const [analysis, setAnalysis] = useState<GngAnalysis | null>(null);
   useEffect(() => {
-    api.artifacts.get(proposalId, "go_no_go").then((a) => {
-      const d = a.data as Record<string, unknown>;
-      setAnalysis({
-        win_probability: d.feasibility_score as number | undefined,
-        scores: d.scores as GngAnalysis["scores"],
-        strengths: d.pros as string[] | undefined,
-        risks: d.risks as string[] | undefined,
-        recommendation: d.recommendation as string | undefined,
-        fatal_flaw: (d.fatal_flaw as string | null) ?? null,
-        strategic_focus: (d.strategic_focus as string | null) ?? null,
-        score_tag: d.score_tag as string | undefined,
-        score_breakdown: d.score_breakdown as Record<string, number> | undefined,
-        performance_detail: d.performance_detail as PerformanceDetail | undefined,
-        qualification_detail: d.qualification_detail as QualificationDetail | undefined,
-        competition_detail: d.competition_detail as CompetitionDetail | undefined,
-      });
-    }).catch(() => {});
+    api.artifacts
+      .get(proposalId, "go_no_go")
+      .then((a) => {
+        const d = a.data as Record<string, unknown>;
+        setAnalysis({
+          win_probability: d.feasibility_score as number | undefined,
+          scores: d.scores as GngAnalysis["scores"],
+          strengths: d.pros as string[] | undefined,
+          risks: d.risks as string[] | undefined,
+          recommendation: d.recommendation as string | undefined,
+          fatal_flaw: (d.fatal_flaw as string | null) ?? null,
+          strategic_focus: (d.strategic_focus as string | null) ?? null,
+          score_tag: d.score_tag as string | undefined,
+          score_breakdown: d.score_breakdown as
+            | Record<string, number>
+            | undefined,
+          performance_detail: d.performance_detail as
+            | PerformanceDetail
+            | undefined,
+          qualification_detail: d.qualification_detail as
+            | QualificationDetail
+            | undefined,
+          competition_detail: d.competition_detail as
+            | CompetitionDetail
+            | undefined,
+        });
+      })
+      .catch(() => {});
   }, [proposalId]);
 
   // 포지셔닝 변경 영향 미리보기
-  const [impactInfo, setImpactInfo] = useState<{ affected_steps: number[]; message: string } | null>(null);
+  const [impactInfo, setImpactInfo] = useState<{
+    affected_steps: number[];
+    message: string;
+  } | null>(null);
   useEffect(() => {
     if (posOverride && posOverride !== workflowState.positioning) {
-      api.workflow.impact(proposalId, "go_no_go").then((res) => {
-        setImpactInfo(res);
-      }).catch(() => setImpactInfo(null));
+      api.workflow
+        .impact(proposalId, "go_no_go")
+        .then((res) => {
+          setImpactInfo(res);
+        })
+        .catch(() => setImpactInfo(null));
     } else {
       setImpactInfo(null);
     }
@@ -172,9 +208,14 @@ export default function GoNoGoPanel({
           posOverride !== workflowState.positioning ? posOverride : undefined,
       };
       await api.workflow.resume(proposalId, data);
+      toast.success(
+        approved
+          ? "승인되었습니다. AI가 다음 단계를 시작합니다."
+          : "재작업 지시가 전달되었습니다.",
+      );
       onStateChange?.();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "요청 실패");
+      toast.error(e instanceof Error ? e.message : "요청 실패");
     } finally {
       setSubmitting(false);
     }
@@ -191,9 +232,10 @@ export default function GoNoGoPanel({
           posOverride !== workflowState.positioning ? posOverride : undefined,
       };
       await api.workflow.resume(proposalId, data);
+      toast.success("승인되었습니다. AI가 다음 단계를 시작합니다.");
       onStateChange?.();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "요청 실패");
+      toast.error(e instanceof Error ? e.message : "요청 실패");
     } finally {
       setSubmitting(false);
     }
@@ -205,21 +247,29 @@ export default function GoNoGoPanel({
   const isFatal = analysis?.score_tag === "disqualified";
 
   return (
-    <div className={`bg-[#1c1c1c] rounded-2xl border border-amber-500/30 p-5 ${className}`}>
+    <div
+      className={`bg-[#1c1c1c] rounded-2xl border border-amber-500/30 p-5 ${className}`}
+    >
       <div className="flex items-center gap-2 mb-4">
         <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-        <h2 className="text-sm font-semibold text-[#ededed]">Go/No-Go 의사결정</h2>
+        <h2 className="text-sm font-semibold text-[#ededed]">
+          Go/No-Go 의사결정
+        </h2>
         <span className="text-[10px] text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded">
           승인 대기
         </span>
       </div>
 
-      <p className="text-xs text-[#8c8c8c] mb-4">이 입찰에 자원을 투입할 가치가 있는가?</p>
+      <p className="text-xs text-[#8c8c8c] mb-4">
+        이 입찰에 자원을 투입할 가치가 있는가?
+      </p>
 
       {/* Fatal 배너 */}
       {isFatal && analysis?.fatal_flaw && (
         <div className="mb-4 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3">
-          <p className="text-xs font-semibold text-red-400 mb-1">참가자격 미달</p>
+          <p className="text-xs font-semibold text-red-400 mb-1">
+            참가자격 미달
+          </p>
           <p className="text-[11px] text-[#ededed]">{analysis.fatal_flaw}</p>
         </div>
       )}
@@ -229,11 +279,15 @@ export default function GoNoGoPanel({
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <span className={`text-2xl font-bold ${scoreColor(totalScore)}`}>{totalScore}</span>
+              <span className={`text-2xl font-bold ${scoreColor(totalScore)}`}>
+                {totalScore}
+              </span>
               <span className="text-xs text-[#8c8c8c]">/ 100</span>
             </div>
             {tag && (
-              <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${tag.color}`}>
+              <span
+                className={`text-[10px] font-medium px-2 py-0.5 rounded border ${tag.color}`}
+              >
                 {tag.text}
               </span>
             )}
@@ -250,7 +304,9 @@ export default function GoNoGoPanel({
               title="70점 컷라인"
             />
           </div>
-          <p className="text-[9px] text-[#5c5c5c] mt-1 text-right">70점 컷라인</p>
+          <p className="text-[9px] text-[#5c5c5c] mt-1 text-right">
+            70점 컷라인
+          </p>
         </div>
       )}
 
@@ -262,11 +318,18 @@ export default function GoNoGoPanel({
             const pct = axis.max > 0 ? (val / axis.max) * 100 : 0;
             return (
               <div key={axis.key} className="flex items-center gap-2">
-                <span className="text-[10px] text-[#8c8c8c] w-14 shrink-0">{axis.label}</span>
+                <span className="text-[10px] text-[#8c8c8c] w-14 shrink-0">
+                  {axis.label}
+                </span>
                 <div className="flex-1 h-1.5 bg-[#262626] rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${barColor(val, axis.max)}`} style={{ width: `${pct}%` }} />
+                  <div
+                    className={`h-full rounded-full ${barColor(val, axis.max)}`}
+                    style={{ width: `${pct}%` }}
+                  />
                 </div>
-                <span className="text-[10px] text-[#8c8c8c] w-10 text-right">{val}/{axis.max}</span>
+                <span className="text-[10px] text-[#8c8c8c] w-10 text-right">
+                  {val}/{axis.max}
+                </span>
               </div>
             );
           })}
@@ -287,7 +350,10 @@ export default function GoNoGoPanel({
             <div key={i} className="mb-2">
               <p className="text-[10px] text-[#8c8c8c]">
                 {item.is_met ? "✅" : "❌"} {item.raw_text}
-                <span className="text-[#5c5c5c]"> ({item.matched_count}/{item.min_count}건)</span>
+                <span className="text-[#5c5c5c]">
+                  {" "}
+                  ({item.matched_count}/{item.min_count}건)
+                </span>
               </p>
               {item.matched_projects?.slice(0, 3).map((p, j) => (
                 <p key={j} className="text-[10px] text-[#5c5c5c] pl-4">
@@ -298,7 +364,8 @@ export default function GoNoGoPanel({
           ))}
           {(analysis.performance_detail.same_client_wins ?? 0) > 0 && (
             <p className="text-[10px] text-[#3ecf8e]">
-              동일 발주기관 수주: {analysis.performance_detail.same_client_wins}건
+              동일 발주기관 수주: {analysis.performance_detail.same_client_wins}
+              건
             </p>
           )}
         </CollapsibleSection>
@@ -315,24 +382,35 @@ export default function GoNoGoPanel({
           isFatal={analysis.qualification_detail.is_fatal}
         >
           {analysis.qualification_detail.summary && (
-            <p className="text-[10px] text-[#8c8c8c] mb-1">{analysis.qualification_detail.summary}</p>
+            <p className="text-[10px] text-[#8c8c8c] mb-1">
+              {analysis.qualification_detail.summary}
+            </p>
           )}
           {analysis.qualification_detail.mandatory?.map((m, i) => (
             <p key={i} className="text-[10px] text-[#8c8c8c]">
-              {m.status === "met" ? "✅" : m.status === "partial" ? "⚠️" : "❌"} {m.requirement}
-              {m.matched_capability && <span className="text-[#5c5c5c]"> → {m.matched_capability}</span>}
+              {m.status === "met" ? "✅" : m.status === "partial" ? "⚠️" : "❌"}{" "}
+              {m.requirement}
+              {m.matched_capability && (
+                <span className="text-[#5c5c5c]">
+                  {" "}
+                  → {m.matched_capability}
+                </span>
+              )}
             </p>
           ))}
-          {analysis.qualification_detail.preferred && analysis.qualification_detail.preferred.length > 0 && (
-            <>
-              <p className="text-[9px] text-[#5c5c5c] mt-1 uppercase">가점 항목</p>
-              {analysis.qualification_detail.preferred.map((p, i) => (
-                <p key={i} className="text-[10px] text-[#8c8c8c]">
-                  {p.status === "met" ? "✅" : "⬜"} {p.requirement}
+          {analysis.qualification_detail.preferred &&
+            analysis.qualification_detail.preferred.length > 0 && (
+              <>
+                <p className="text-[9px] text-[#5c5c5c] mt-1 uppercase">
+                  가점 항목
                 </p>
-              ))}
-            </>
-          )}
+                {analysis.qualification_detail.preferred.map((p, i) => (
+                  <p key={i} className="text-[10px] text-[#8c8c8c]">
+                    {p.status === "met" ? "✅" : "⬜"} {p.requirement}
+                  </p>
+                ))}
+              </>
+            )}
         </CollapsibleSection>
       )}
 
@@ -346,12 +424,22 @@ export default function GoNoGoPanel({
           max={20}
         >
           <p className="text-[10px] text-[#8c8c8c]">
-            예상 참여: {analysis.competition_detail.estimated_competitors ?? "?"}개사
-            ({analysis.competition_detail.intensity_level === "low" ? "낮음" : analysis.competition_detail.intensity_level === "high" ? "높음" : "보통"})
+            예상 참여:{" "}
+            {analysis.competition_detail.estimated_competitors ?? "?"}개사 (
+            {analysis.competition_detail.intensity_level === "low"
+              ? "낮음"
+              : analysis.competition_detail.intensity_level === "high"
+                ? "높음"
+                : "보통"}
+            )
           </p>
           {analysis.competition_detail.our_win_rate_at_client != null && (
             <p className="text-[10px] text-[#8c8c8c]">
-              해당 기관 자사 승률: {Math.round(analysis.competition_detail.our_win_rate_at_client * 100)}%
+              해당 기관 자사 승률:{" "}
+              {Math.round(
+                analysis.competition_detail.our_win_rate_at_client * 100,
+              )}
+              %
             </p>
           )}
           {analysis.competition_detail.top_competitors?.map((c, i) => (
@@ -367,17 +455,31 @@ export default function GoNoGoPanel({
         <div className="grid grid-cols-2 gap-2 mb-4">
           {analysis.strengths && analysis.strengths.length > 0 && (
             <div>
-              <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-1">강점</p>
+              <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-1">
+                강점
+              </p>
               {analysis.strengths.slice(0, 3).map((s, i) => (
-                <p key={i} className="text-[10px] text-[#8c8c8c] leading-relaxed">+ {s}</p>
+                <p
+                  key={i}
+                  className="text-[10px] text-[#8c8c8c] leading-relaxed"
+                >
+                  + {s}
+                </p>
               ))}
             </div>
           )}
           {analysis.risks && analysis.risks.length > 0 && (
             <div>
-              <p className="text-[9px] text-red-400 uppercase tracking-wider mb-1">리스크</p>
+              <p className="text-[9px] text-red-400 uppercase tracking-wider mb-1">
+                리스크
+              </p>
               {analysis.risks.slice(0, 3).map((r, i) => (
-                <p key={i} className="text-[10px] text-[#8c8c8c] leading-relaxed">- {r}</p>
+                <p
+                  key={i}
+                  className="text-[10px] text-[#8c8c8c] leading-relaxed"
+                >
+                  - {r}
+                </p>
               ))}
             </div>
           )}
@@ -388,26 +490,46 @@ export default function GoNoGoPanel({
       {analysis?.recommendation && !isFatal && (
         <div className="bg-[#111111] border border-[#262626] rounded-lg px-3 py-2 mb-4">
           <p className="text-[10px] text-[#8c8c8c]">
-            AI 추천: <span className={analysis.recommendation === "go" ? "text-[#3ecf8e] font-bold" : "text-red-400 font-bold"}>{analysis.recommendation.toUpperCase()}</span>
+            AI 추천:{" "}
+            <span
+              className={
+                analysis.recommendation === "go"
+                  ? "text-[#3ecf8e] font-bold"
+                  : "text-red-400 font-bold"
+              }
+            >
+              {analysis.recommendation.toUpperCase()}
+            </span>
           </p>
         </div>
       )}
 
       {analysis?.strategic_focus && !isFatal && (
         <div className="bg-[#3ecf8e]/5 border border-[#3ecf8e]/20 rounded-lg px-3 py-2 mb-4">
-          <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-0.5">핵심 승부수</p>
-          <p className="text-[10px] text-[#ededed]">{analysis.strategic_focus}</p>
+          <p className="text-[9px] text-[#3ecf8e] uppercase tracking-wider mb-0.5">
+            핵심 승부수
+          </p>
+          <p className="text-[10px] text-[#ededed]">
+            {analysis.strategic_focus}
+          </p>
         </div>
       )}
 
       {/* 포지셔닝 선택 */}
       <div className="mb-4">
-        <p className="text-[10px] text-[#8c8c8c] mb-2 uppercase tracking-wider">포지셔닝 추천</p>
+        <p className="text-[10px] text-[#8c8c8c] mb-2 uppercase tracking-wider">
+          포지셔닝 추천
+        </p>
         <div className="flex gap-2">
           {POS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => setPosOverride(opt.value)}
+              onClick={() => {
+                if (opt.value !== posOverride) {
+                  setPendingPositioning(opt.value);
+                  setShowImpactModal(true);
+                }
+              }}
               className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-colors ${
                 posOverride === opt.value
                   ? "bg-[#3ecf8e]/15 text-[#3ecf8e] border-[#3ecf8e]/40"
@@ -423,7 +545,9 @@ export default function GoNoGoPanel({
       {/* 포지셔닝 변경 영향 */}
       {impactInfo && (
         <div className="mb-4 bg-amber-500/5 border border-amber-500/20 rounded-lg px-3 py-2">
-          <p className="text-[10px] text-amber-400 font-medium mb-1">포지셔닝 변경 영향</p>
+          <p className="text-[10px] text-amber-400 font-medium mb-1">
+            포지셔닝 변경 영향
+          </p>
           <p className="text-[10px] text-[#8c8c8c]">{impactInfo.message}</p>
           {impactInfo.affected_steps.length > 0 && (
             <p className="text-[10px] text-amber-400/70 mt-1">
@@ -447,8 +571,12 @@ export default function GoNoGoPanel({
       {/* No-Go 확인 모달 */}
       {confirmNoGo && (
         <div className="mb-4 bg-red-500/5 border border-red-500/30 rounded-lg p-4">
-          <p className="text-xs text-red-400 font-medium mb-2">정말 No-Go 처리하시겠습니까?</p>
-          <p className="text-[10px] text-[#8c8c8c] mb-3">No-Go 결정 시 이 프로젝트의 워크플로가 종료됩니다.</p>
+          <p className="text-xs text-red-400 font-medium mb-2">
+            정말 No-Go 처리하시겠습니까?
+          </p>
+          <p className="text-[10px] text-[#8c8c8c] mb-3">
+            No-Go 결정 시 이 프로젝트의 워크플로가 종료됩니다.
+          </p>
           <div className="flex gap-2">
             <button
               onClick={() => setConfirmNoGo(false)}
@@ -457,7 +585,10 @@ export default function GoNoGoPanel({
               취소
             </button>
             <button
-              onClick={() => { setConfirmNoGo(false); handleSubmit(false); }}
+              onClick={() => {
+                setConfirmNoGo(false);
+                handleSubmit(false);
+              }}
               disabled={submitting}
               className="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 disabled:opacity-40 transition-colors"
             >
@@ -491,6 +622,23 @@ export default function GoNoGoPanel({
           Go
         </button>
       </div>
+
+      {/* 포지셔닝 변경 영향 모달 */}
+      <PositioningImpactModal
+        open={showImpactModal}
+        onClose={() => {
+          setShowImpactModal(false);
+          setPendingPositioning("");
+        }}
+        onConfirm={(confirmed) => {
+          setPosOverride(confirmed);
+          setShowImpactModal(false);
+          setPendingPositioning("");
+        }}
+        proposalId={proposalId}
+        currentPositioning={posOverride}
+        newPositioning={pendingPositioning}
+      />
     </div>
   );
 }
@@ -515,17 +663,25 @@ function CollapsibleSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`mb-3 border rounded-lg ${isFatal ? "border-red-500/30 bg-red-500/5" : "border-[#262626] bg-[#111111]"}`}>
+    <div
+      className={`mb-3 border rounded-lg ${isFatal ? "border-red-500/30 bg-red-500/5" : "border-[#262626] bg-[#111111]"}`}
+    >
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between px-3 py-2 text-left"
       >
         <span className="text-[10px] text-[#8c8c8c] flex items-center gap-1.5">
-          <span className={`transition-transform ${expanded ? "rotate-90" : ""}`}>▸</span>
+          <span
+            className={`transition-transform ${expanded ? "rotate-90" : ""}`}
+          >
+            ▸
+          </span>
           {title}
           {isFatal && <span className="text-red-400 text-[9px]">(미달)</span>}
         </span>
-        <span className={`text-[10px] font-bold ${barColor(score, max).replace("bg-", "text-").replace("500", "400")}`}>
+        <span
+          className={`text-[10px] font-bold ${barColor(score, max).replace("bg-", "text-").replace("500", "400")}`}
+        >
           {score}/{max}
         </span>
       </button>

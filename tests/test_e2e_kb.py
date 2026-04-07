@@ -72,9 +72,10 @@ class TestContentLifecycle:
         resp = await client.get("/api/kb/content")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
-        assert "total" in data
-        assert isinstance(data["items"], list)
+        assert "data" in data
+        assert "meta" in data
+        assert "total" in data["meta"]
+        assert isinstance(data["data"], list)
 
     async def test_list_filter_by_status(self, client):
         """status 필터 쿼리 파라미터."""
@@ -161,8 +162,8 @@ class TestClientIntelligenceLifecycle:
         resp = await client.get("/api/kb/clients")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
-        assert "total" in data
+        assert "data" in data
+        assert "total" in data["meta"]
 
     async def test_list_filter_by_relationship(self, client):
         """관계 필터링."""
@@ -241,7 +242,7 @@ class TestCompetitorLifecycle:
         resp = await client.get("/api/kb/competitors")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
+        assert "data" in data
 
     async def test_list_filter_by_scale(self, client):
         """규모 필터링."""
@@ -303,8 +304,8 @@ class TestLessonsLifecycle:
         resp = await client.get("/api/kb/lessons")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
-        assert "total" in data
+        assert "data" in data
+        assert "total" in data["meta"]
 
     async def test_list_filter_by_result(self, client):
         """결과 필터 (수주/패찰)."""
@@ -367,8 +368,8 @@ class TestLaborRatesLifecycle:
         resp = await client.get("/api/kb/labor-rates")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
-        assert "total" in data
+        assert "data" in data
+        assert "total" in data["meta"]
 
     async def test_list_filter_by_org_and_year(self, client):
         """기관 + 연도 필터."""
@@ -405,8 +406,7 @@ class TestLaborRatesLifecycle:
         )
         assert resp.status_code == 200
         data = resp.json()
-        assert data["status"] == "ok"
-        assert data["imported"] == 3
+        assert data["data"]["imported"] == 3
 
     async def test_csv_import_empty_returns_400(self, client):
         """빈 CSV → 400."""
@@ -476,7 +476,7 @@ class TestMarketPricesLifecycle:
         resp = await client.get("/api/kb/market-prices")
         assert resp.status_code == 200
         data = resp.json()
-        assert "items" in data
+        assert "data" in data
 
     async def test_list_filter_by_domain(self, client):
         """도메인 필터."""
@@ -522,10 +522,10 @@ class TestKbSearch:
             resp = await client.get("/api/kb/search?q=클라우드")
         assert resp.status_code == 200
         data = resp.json()
-        assert "query" in data
-        assert "total" in data
-        assert "results" in data
-        assert data["query"] == "클라우드"
+        assert "query" in data["data"]
+        assert "total" in data["data"]
+        assert "results" in data["data"]
+        assert data["data"]["query"] == "클라우드"
 
     async def test_search_with_area_filter(self, client):
         """영역 필터링 (content, client)."""
@@ -568,7 +568,7 @@ class TestKbSearch:
             resp = await client.get("/api/kb/search?q=아키텍처")
         assert resp.status_code == 200
         data = resp.json()
-        assert isinstance(data["results"], dict)
+        assert isinstance(data["data"]["results"], dict)
 
 
 # ══════════════════════════════════════════════

@@ -27,7 +27,7 @@ from app.api.response import ok, ok_list
 from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
 from app.models.proposal_schemas import ProposalResultResponse
-from app.models.common import ItemsResponse, StatusResponse
+from app.models.common import StatusResponse
 from app.models.performance_schemas import (
     IndividualPerformance, TeamQuarterPerformance, DivisionPerformance,
     CompanyPerformance, PerformanceTrends, MyProjectsDashboard, TeamDashboard,
@@ -246,7 +246,7 @@ async def create_lesson(
     return ok({"lesson_id": lesson_id})
 
 
-@router.get("/api/proposals/{proposal_id}/lessons", response_model=ItemsResponse)
+@router.get("/api/proposals/{proposal_id}/lessons")
 async def get_proposal_lessons(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
     """프로젝트 교훈 조회."""
     client = await get_async_client()
@@ -256,7 +256,7 @@ async def get_proposal_lessons(proposal_id: str, user: CurrentUser = Depends(get
     return ok_list(result.data or [], total=len(result.data or []))
 
 
-@router.get("/api/lessons", response_model=ItemsResponse)
+@router.get("/api/lessons")
 async def search_lessons(
     keyword: str | None = Query(None, description="키워드 검색"),
     category: str | None = Query(None, description="카테고리 필터"),

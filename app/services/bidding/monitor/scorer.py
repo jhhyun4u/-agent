@@ -43,6 +43,10 @@ ROLE_KEYWORDS = [
     "기본계획",
 ]
 
+# score_bid() 호출 전 제목 필터링에 사용하는 frozenset (소문자 변환 완료)
+# score_and_rank_bids()의 루프에서 매번 lower() 변환 없이 O(1) 조회 가능
+_ROLE_KW_LOWER: frozenset[str] = frozenset(kw.lower() for kw in ROLE_KEYWORDS)
+
 # 고가치 역할 조합: 이 키워드들이 2개 이상 동시 매칭되면 추가 가산
 HIGH_VALUE_ROLE_COMBOS = [
     {"전략", "기획"},
@@ -351,6 +355,7 @@ def score_and_rank_bids(
     min_score: float = 0,
     exclude_expired: bool = True,
     max_results: int = 50,
+    min_days_remaining: int = 0,
 ) -> List[BidScore]:
     """
     공고 목록을 스코어링하고 적합도순으로 정렬.
@@ -359,17 +364,30 @@ def score_and_rank_bids(
     """
     scored = []
     for raw in bids:
-        # 수의시담 제외: 이미 업체가 정해진 건이므로 모니터링 불필요
+        # ── Pre-filter: score_bid() 호출 전 저비용 조건으로 먼저 제거 ──
+
+        # 1) 수의시담 제외: 이미 업체가 정해진 건이므로 모니터링 불필요
         bid_method = (raw.get("bidMethdNm") or raw.get("cntrctMthdNm") or "").strip()
         if any(ex in bid_method for ex in EXCLUDED_BID_METHODS):
             continue
 
+        # 2) 역할 키워드 제목 pre-filter
+        #    score_bid() 내부 1단계와 동일한 조건이지만,
+        #    BidScore 객체 생성·예산파싱·마감일파싱 없이 문자열 검색만으로 처리.
+        #    전수 수집 공고의 ~80%를 여기서 제거해 불필요한 연산을 방지.
+        title_lower = raw.get("bidNtceNm", "").lower()
+        if not any(kw in title_lower for kw in _ROLE_KW_LOWER):
+            continue
+
+        # ── 역할 키워드 통과 → 전체 스코어링 실행 ──
         bs = score_bid(raw, reference_date)
         if not bs.passed:
             continue
         if bs.score < min_score:
             continue
         if exclude_expired and bs.d_day is not None and bs.d_day < 0:
+            continue
+        if min_days_remaining > 0 and bs.d_day is not None and bs.d_day < min_days_remaining:
             continue
         scored.append(bs)
 

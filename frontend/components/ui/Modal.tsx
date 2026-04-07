@@ -22,7 +22,13 @@ const SIZES = {
   full: "w-[90vw]",
 } as const;
 
-export default function Modal({ open, onClose, title, children, size = "md" }: ModalProps) {
+export default function Modal({
+  open,
+  onClose,
+  title,
+  children,
+  size = "md",
+}: ModalProps) {
   useEffect(() => {
     if (!open) return;
     function handleKeyDown(e: KeyboardEvent) {
@@ -46,7 +52,9 @@ export default function Modal({ open, onClose, title, children, size = "md" }: M
       >
         {title && (
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border,#262626)]">
-            <h2 className="text-sm font-semibold text-[var(--text,#ededed)]">{title}</h2>
+            <h2 className="text-sm font-semibold text-[var(--text,#ededed)]">
+              {title}
+            </h2>
             <button
               onClick={onClose}
               className="text-[var(--muted,#8c8c8c)] hover:text-[var(--text,#ededed)] transition-colors"

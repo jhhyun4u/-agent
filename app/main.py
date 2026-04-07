@@ -41,13 +41,37 @@ if settings.log_format == "json":
                 log_entry["exc"] = self.formatException(record.exc_info)
             return _json.dumps(log_entry, ensure_ascii=False)
 
-    _handler = logging.StreamHandler()
+    _handler = logging.StreamHandler(encoding='utf-8')
     _handler.setFormatter(_JsonFormatter())
     logging.basicConfig(level=settings.log_level, handlers=[_handler])
 else:
     logging.basicConfig(level=settings.log_level)
 
 logger = logging.getLogger(__name__)
+
+
+async def _init_supabase_rpc(client):
+    """Initialize Supabase RPC calls for stale proposals and cache cleanup"""
+    await client.rpc("mark_stale_running_proposals").execute()
+    await client.rpc("cleanup_expired_g2b_cache").execute()
+
+
+async def _safe_startup_task(task_name: str, coro, critical: bool = False):
+    """Execute a startup task with consistent error handling.
+
+    Args:
+        task_name: Human-readable task name for logging
+        coro: Coroutine to execute
+        critical: If True, raise on exception; if False, log warning and continue
+    """
+    try:
+        await coro
+        logger.info(f"{task_name} 완료")
+    except Exception as e:
+        if critical:
+            logger.error(f"{task_name} 실패: {e}")
+            raise
+        logger.warning(f"{task_name} 경고 (무시): {e}")
 
 
 @asynccontextmanager
@@ -59,34 +83,33 @@ async def lifespan(app: FastAPI):
 
     from app.utils.supabase_client import get_async_client
     client = await get_async_client()
-    try:
-        await client.rpc("mark_stale_running_proposals").execute()
-        await client.rpc("cleanup_expired_g2b_cache").execute()
-        logger.info("lifespan Supabase 초기화 완료")
-    except Exception as e:
-        logger.warning(f"lifespan 초기화 경고 (무시): {e}")
+
+    # Supabase 초기화 (stale proposals + cache cleanup)
+    await _safe_startup_task(
+        "Supabase 초기화",
+        _init_supabase_rpc(client),
+    )
 
     # Storage 버킷 자동 생성
     for bucket_name in [settings.storage_bucket_proposals, settings.storage_bucket_attachments]:
-        try:
-            await client.storage.create_bucket(
-                bucket_name, options={"public": False},
-            )
-            logger.info(f"{bucket_name} 버킷 생성 완료")
-        except Exception:
-            logger.info(f"{bucket_name} 버킷 이미 존재")
+        await _safe_startup_task(
+            f"{bucket_name} 버킷 생성",
+            client.storage.create_bucket(bucket_name, options={"public": False}),
+        )
 
-    # DB에서 활성 세션 복원
+    # Session management
     from app.services.session_manager import session_manager
-    loaded = await session_manager.startup_load()
-    logger.info(f"세션 복원 완료: {loaded}개")
 
-    # PSM-05: 마감 초과 제안서 expired 전환
-    await session_manager.mark_expired_proposals()
+    async def _load_sessions():
+        loaded = await session_manager.startup_load()
+        logger.info(f"세션 복원 완료: {loaded}개")
+        await session_manager.mark_expired_proposals()
 
-    # Dev mode: mock user 자동 생성 (FK 제약 충족)
+    await _safe_startup_task("세션 관리", _load_sessions())
+
+    # Dev mode: mock user auto-creation for FK constraints
     if settings.dev_mode:
-        try:
+        async def _create_dev_user():
             from app.api.deps import _DEV_USER_ID
             check = await client.table("users").select("id").eq("id", _DEV_USER_ID).maybe_single().execute()
             if not (check and check.data):
@@ -97,35 +120,63 @@ async def lifespan(app: FastAPI):
                     "role": "lead",
                 }).execute()
                 logger.info(f"Dev mock user 생성: {_DEV_USER_ID}")
-        except Exception as e:
-            logger.warning(f"Dev mock user 생성 실패 (auth.users FK 필요): {e}")
+
+        await _safe_startup_task("Dev mock user 생성", _create_dev_user())
 
     # §25-2: G2B 정기 모니터링 스케줄러
     from app.services.scheduled_monitor import setup_scheduler
     setup_scheduler()
 
     # 공고 자동 정리 (마감 경과 + days_remaining 갱신)
-    try:
+    async def _cleanup_bids():
         from app.services.bid_cleanup import cleanup_expired_bids
         cleaned = await cleanup_expired_bids()
         logger.info(f"공고 자동 정리 완료: {cleaned}")
-    except Exception as e:
-        logger.warning(f"공고 자동 정리 경고 (무시): {e}")
+
+    await _safe_startup_task("공고 자동 정리", _cleanup_bids())
+
+    # DB 마이그레이션: bid_announcements 테이블 자동 생성
+    async def _ensure_bid_table():
+        try:
+            await client.rpc("create_bid_announcements_table").execute()
+        except Exception:
+            await client.table("bid_announcements").select("id").limit(1).execute()
+
+    await _safe_startup_task("bid_announcements 테이블 생성", _ensure_bid_table())
 
     # 프롬프트 레지스트리 동기화 (코드 → DB)
-    try:
+    async def _sync_prompts():
         from app.services.prompt_registry import sync_all_prompts
         sync_result = await sync_all_prompts()
         logger.info(f"프롬프트 레지스트리 동기화: {sync_result}")
+
+    await _safe_startup_task("프롬프트 레지스트리 동기화", _sync_prompts())
+
+    # DB 마이그레이션: apply_migrations.py 자동 실행 (000~019)
+    async def _run_migrations():
+        from scripts.apply_migrations import apply_all_migrations
+        logger.info("DB 마이그레이션 시작...")
+
+        result = await apply_all_migrations(dry_run=False)
+
+        if result['status'] in ['up_to_date', 'completed']:
+            logger.info(f"DB 마이그레이션 완료: {result['applied']}/{result['total']} 적용됨")
+        else:
+            logger.warning(f"DB 마이그레이션 부분 실패: {result['failed']} 오류, {result['applied']} 성공")
+
+    try:
+        await _run_migrations()
+    except ImportError as e:
+        logger.warning(f"DB 마이그레이션 모듈 미발견 (무시): {e}")
     except Exception as e:
-        logger.warning(f"프롬프트 레지스트리 동기화 경고 (무시): {e}")
+        logger.warning(f"DB 마이그레이션 초기화 경고 (무시): {e}")
 
     yield
     logger.info("시스템 종료")
 
 
 # L-3: 프로덕션에서 OpenAPI docs 비활성화
-_is_production = settings.log_format == "json"
+_is_production = getattr(settings, 'is_production', settings.log_format == "json")
 
 app = FastAPI(
     title="Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker",
@@ -167,6 +218,18 @@ async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
         content=exc.to_dict(),
     )
 
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """미처리 예외 → 500 + 로그 출력 (디버깅용)"""
+    import traceback
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc), "path": str(request.url.path)},
+    )
+
 # ── 라우터 등록 ──
 
 # Phase 0: 인증·사용자
@@ -198,6 +261,20 @@ app.include_router(admin_router)
 # Phase 6: Knowledge Base + 시맨틱 검색
 from app.api.routes_kb import router as kb_router
 app.include_router(kb_router)
+
+# 인트라넷 KB 마이그레이션
+from app.api.routes_intranet import router as intranet_router
+from app.api.routes_documents import router as documents_router
+app.include_router(intranet_router)
+app.include_router(documents_router)
+
+# Phase 4: 배치 마이그레이션 관리 (scheduler-integration)
+from app.api.routes_migrations import router as migrations_router
+app.include_router(migrations_router)
+
+# DB 마이그레이션 상태 API (설계 §4.4 — GAP-H3/H4/H5)
+from app.api.routes_migration_status import router as migration_status_router
+app.include_router(migration_status_router)
 
 # Phase 4: 분석 대시보드 (§12-13)
 from app.api.routes_analytics import router as analytics_router
@@ -272,6 +349,14 @@ app.include_router(presentation_router, prefix="/api")
 # 입찰 관리: /api/teams/*/bids/*, /api/bids/*
 from app.api.routes_bids import router as bids_router
 app.include_router(bids_router)
+
+# STEP 8A-8F: 새 노드 + 아티팩트 버전 관리 (DB-backed implementation)
+from app.api.routes_step8a import router as step8a_router
+app.include_router(step8a_router)
+
+# STEP 8 Review: AI-powered review interface for STEP 8 nodes
+from app.api.routes_step8_review import router as step8_review_router
+app.include_router(step8_review_router)
 
 
 # ── 헬스체크 ──

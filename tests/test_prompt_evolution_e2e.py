@@ -705,7 +705,7 @@ class TestPromptEvolutionAPI:
     async def test_dashboard(self, client):
         resp = await client.get("/api/prompts/dashboard")
         assert resp.status_code == 200
-        data = resp.json()
+        data = resp.json()["data"]
         assert "prompts" in data
         assert "total_prompts" in data
 
@@ -713,14 +713,14 @@ class TestPromptEvolutionAPI:
     async def test_list_prompts(self, client):
         resp = await client.get("/api/prompts/list?status=active")
         assert resp.status_code == 200
-        data = resp.json()
+        data = resp.json()["data"]
         assert "prompts" in data
 
     @pytest.mark.asyncio
     async def test_section_heatmap(self, client):
         resp = await client.get("/api/prompts/section-heatmap")
         assert resp.status_code == 200
-        data = resp.json()
+        data = resp.json()["data"]
         assert "heatmap" in data
 
     @pytest.mark.asyncio
@@ -733,13 +733,13 @@ class TestPromptEvolutionAPI:
             "edited": "수정된 텍스트",
         })
         assert resp.status_code == 200
-        assert resp.json()["recorded"] is True
+        assert resp.json()["meta"]["message"] == "기록 완료"
 
     @pytest.mark.asyncio
     async def test_experiments_list(self, client):
         resp = await client.get("/api/prompts/experiments/list")
         assert resp.status_code == 200
-        assert "experiments" in resp.json()
+        assert "experiments" in resp.json()["data"]
 
 
 # ═══════════════════════════════════════════════════════════

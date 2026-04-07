@@ -160,23 +160,22 @@ class G2BService:
         if not api_key:
             raise RuntimeError("G2B_API_KEY가 설정되지 않았습니다.")
 
-        # serviceKey를 URL에 직접 삽입 (인코딩 불필요한 hex 키)
-        # endpoint에서 서비스명 추출 → prefix 결정
+        # serviceKey + 나머지 파라미터를 모두 URL에 직접 조립
+        # aiohttp의 params= 사용 시 URL 재파싱으로 serviceKey가 변형될 수 있음
+        from urllib.parse import urlencode
+
         svc_name = endpoint.split("/")[0]
         prefix = SERVICE_PREFIX.get(svc_name, "ad")
-        if prefix:
-            url = f"{self.base_url}/{prefix}/{endpoint}?serviceKey={api_key}"
-        else:
-            url = f"{self.base_url}/{endpoint}?serviceKey={api_key}"
-        # type=json을 params에 포함
+        base = f"{self.base_url}/{prefix}/{endpoint}" if prefix else f"{self.base_url}/{endpoint}"
         params = {**params, "type": "json"}
+        query = urlencode(params)
+        full_url = f"{base}?serviceKey={api_key}&{query}"
 
         for attempt in range(settings.g2b_max_retries):
             await asyncio.sleep(0.1)  # 기본 Rate Limit 간격
             try:
                 async with self.session.get(
-                    url,
-                    params=params,
+                    full_url,
                     timeout=aiohttp.ClientTimeout(total=settings.g2b_api_timeout_seconds),
                 ) as resp:
                     if resp.status == 429:

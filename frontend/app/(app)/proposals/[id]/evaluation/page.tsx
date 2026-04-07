@@ -15,7 +15,9 @@ import EvaluationView from "@/components/EvaluationView";
 
 export default function EvaluationPage() {
   const { id } = useParams<{ id: string }>();
-  const [evaluation, setEvaluation] = useState<EvaluationSimulation | null>(null);
+  const [evaluation, setEvaluation] = useState<EvaluationSimulation | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

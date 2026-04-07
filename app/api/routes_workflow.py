@@ -1,13 +1,15 @@
 """
-워크플로 제어 API (§12-1)
+워크플로 제어 API (§12-1, Phase 2: Unified State System)
 
-POST /api/proposals/{id}/start       — 워크플로 시작
-GET  /api/proposals/{id}/state       — 현재 그래프 상태
-POST /api/proposals/{id}/resume      — Human 리뷰 결과 입력 → 재개
-GET  /api/proposals/{id}/stream      — SSE 스트리밍
-GET  /api/proposals/{id}/history     — 체크포인트 이력
-POST /api/proposals/{id}/goto/{step} — 특정 체크포인트로 타임트래블
-GET  /api/proposals/{id}/impact/{step} — step 변경 시 영향 범위 조회
+POST /api/proposals/{id}/start           — 워크플로 시작
+GET  /api/proposals/{id}/state           — 현재 그래프 상태 (3-layer architecture)
+POST /api/proposals/{id}/resume          — Human 리뷰 결과 입력 → 재개
+GET  /api/proposals/{id}/stream          — SSE 스트리밍
+GET  /api/proposals/{id}/history         — 체크포인트 이력 (LangGraph)
+GET  /api/proposals/{id}/state-history   — 상태 전환 이력 (proposal_timelines) [NEW]
+POST /api/proposals/{id}/goto/{step}     — 특정 체크포인트로 타임트래블
+GET  /api/proposals/{id}/impact/{step}   — step 변경 시 영향 범위 조회
+GET  /api/proposals/{id}/feedbacks       — 피드백 이력 조회 (Phase 2-2) [NEW]
 """
 
 import asyncio
@@ -29,6 +31,8 @@ from app.models.workflow_schemas import (
     SectionLockResponse, SectionUnlockResponse,
     TokenUsageResponse, WorkflowHistoryResponse,
     WorkflowResumeResponse, WorkflowStartResponse, WorkflowStateResponse,
+    StateHistoryResponse, TimelineEntry,
+    # EnhancedWorkflowStateResponse,  # Used in future /state endpoint enhancement
 )
 from app.utils.supabase_client import get_async_client
 
@@ -145,12 +149,14 @@ async def start_workflow(
     proposal = await client.table("proposals").select("id, status").eq("id", proposal_id).single().execute()
     if not proposal.data:
         raise PropNotFoundError(proposal_id)
-    if proposal.data["status"] == "running":
+    # HOTFIX: Check for active workflow states instead of "running" (Phase 0 - pending unified state migration)
+    active_states = ('processing', 'searching', 'analyzing', 'strategizing', 'submitted', 'presented')
+    if proposal.data["status"] in active_states:
         raise WFAlreadyRunningError(proposal_id)
 
-    # 상태 업데이트
+    # 상태 업데이트: Set to "processing" (Phase 0 HOTFIX: was "running" which violates CHECK constraint)
     await client.table("proposals").update({
-        "status": "running",
+        "status": "processing",
         "current_phase": "start",
     }).eq("id", proposal_id).execute()
 
@@ -277,15 +283,22 @@ async def resume_workflow(
 
         client = await get_async_client()
 
-        # GAP-3: 피드백 DB 자동 저장
+        # GAP-3: 피드백 DB 자동 저장 (Phase 2-2: approved 정보 포함)
         if resume_data.get("feedback") or resume_data.get("comments"):
             try:
                 step_name = current_step.replace("_rejected", "").replace("_approved", "")
+                # Phase 2-2: comments에 approved 정보 추가
+                comments = resume_data.get("comments") or {}
+                if isinstance(comments, dict):
+                    comments["approved"] = resume_data.get("approved") or resume_data.get("quick_approve", False)
+                else:
+                    comments = {"approved": resume_data.get("approved") or resume_data.get("quick_approve", False)}
+
                 await client.table("feedbacks").insert({
                     "proposal_id": proposal_id,
                     "step": step_name,
                     "feedback": resume_data.get("feedback", ""),
-                    "comments": resume_data.get("comments"),
+                    "comments": comments,
                     "rework_targets": resume_data.get("rework_targets"),
                     "author_id": user.id,
                 }).execute()
@@ -295,10 +308,11 @@ async def resume_workflow(
         update_data = {"current_phase": current_step}
         # 종료 체크
         if current_step in ("go_no_go_no_go", "search_no_interest"):
-            update_data["status"] = "cancelled"
-            logger.info(f"[WF_CANCELLED] proposal={proposal_id}, reason={current_step}", extra={
+            # HOTFIX: Set to "abandoned" (Phase 0 - was "cancelled" which violates CHECK constraint)
+            update_data["status"] = "abandoned"
+            logger.info(f"[WF_ABANDONED] proposal={proposal_id}, reason={current_step}", extra={
                 "request_id": rid,
-                "data": {"event": "workflow_cancelled", "proposal_id": proposal_id, "final_step": current_step},
+                "data": {"event": "workflow_abandoned", "proposal_id": proposal_id, "final_step": current_step},
             })
         await client.table("proposals").update(update_data).eq("id", proposal_id).execute()
 
@@ -381,6 +395,67 @@ async def get_workflow_history(proposal_id: str, user: CurrentUser = Depends(get
     except Exception as e:
         logger.error(f"이력 조회 실패: {e}", exc_info=True)
         return {"proposal_id": proposal_id, "history": [], "error": "이력 조회 중 오류가 발생했습니다."}
+
+
+@router.get("/{proposal_id}/state-history", response_model=StateHistoryResponse)
+async def get_state_history(
+    proposal_id: str,
+    limit: int = 50,
+    offset: int = 0,
+    event_type: str | None = None,
+    user: CurrentUser = Depends(get_current_user),
+    _access=Depends(require_project_access),
+):
+    """상태 전환 이력 조회 (proposal_timelines).
+
+    Args:
+        proposal_id: 제안서 ID
+        limit: 반환할 항목 수 (기본값: 50)
+        offset: 시작 위치 (기본값: 0)
+        event_type: 필터링 이벤트 타입 (status_change, phase_change, approval, review, ai_status)
+
+    Returns:
+        StateHistoryResponse: 상태 전환 이력
+    """
+    client = await get_async_client()
+
+    try:
+        # proposal_timelines 테이블 쿼리
+        query = client.table("proposal_timelines").select("*").eq("proposal_id", proposal_id)
+
+        # event_type 필터 적용
+        if event_type:
+            query = query.eq("event_type", event_type)
+
+        # 정렬 및 페이지네이션
+        result = await query.order("created_at", desc=True).range(offset, offset + limit - 1).execute()
+
+        # 전체 개수 조회
+        count_result = await client.table("proposal_timelines").select("count", count="exact").eq("proposal_id", proposal_id).execute()
+        total_count = count_result.count if hasattr(count_result, "count") else len(result.data or [])
+
+        # TimelineEntry로 변환
+        history = [TimelineEntry(**item) for item in (result.data or [])]
+
+        return {
+            "proposal_id": proposal_id,
+            "total_events": total_count,
+            "history": history,
+            "pagination": {
+                "limit": limit,
+                "offset": offset,
+                "has_more": offset + limit < total_count,
+            },
+        }
+    except Exception as e:
+        logger.error(f"상태 이력 조회 실패 (proposal_id={proposal_id}): {e}", exc_info=True)
+        return {
+            "proposal_id": proposal_id,
+            "total_events": 0,
+            "history": [],
+            "pagination": {"limit": limit, "offset": offset, "has_more": False},
+            "error": f"상태 이력 조회 중 오류: {str(e)}",
+        }
 
 
 @router.get("/{proposal_id}/token-usage", response_model=TokenUsageResponse)
@@ -778,3 +853,69 @@ def _extract_output_summary(node_name: str, output: Any) -> str:
     except Exception:
         pass
     return ""
+
+
+# ── Phase 2-2: 피드백 이력 조회 ──
+
+class FeedbackRecord(BaseModel):
+    id: str
+    feedback: str
+    created_at: str
+    approved: bool | None = None
+
+
+class FeedbackHistoryResponse(BaseModel):
+    feedbacks: list[FeedbackRecord]
+
+
+@router.get("/{proposal_id}/feedbacks", response_model=FeedbackHistoryResponse)
+async def get_feedback_history(
+    proposal_id: str,
+    step: str,
+    user: CurrentUser = Depends(get_current_user),
+    _access = Depends(require_project_access),
+):
+    """Phase 2-2: 특정 STEP의 피드백 이력 조회.
+
+    Query Parameters:
+        step: review_strategy, review_plan, review_proposal, review_ppt 등
+    """
+    from app.utils.supabase_client import get_async_client
+
+    client = await get_async_client()
+
+    try:
+        # feedbacks 테이블에서 proposal_id + step으로 필터링
+        result = await (
+            client.table("feedbacks")
+            .select("id, feedback, created_at, comments")
+            .eq("proposal_id", proposal_id)
+            .eq("step", step)
+            .order("created_at", desc=False)
+            .execute()
+        )
+
+        feedbacks = []
+        if result.data:
+            for row in result.data:
+                # comments에 approved 정보가 있으면 추출
+                approved = None
+                if row.get("comments"):
+                    comments = row["comments"]
+                    if isinstance(comments, dict):
+                        approved = comments.get("approved")
+
+                feedbacks.append(
+                    FeedbackRecord(
+                        id=row["id"],
+                        feedback=row.get("feedback", ""),
+                        created_at=row.get("created_at", ""),
+                        approved=approved,
+                    )
+                )
+
+        return FeedbackHistoryResponse(feedbacks=feedbacks)
+
+    except Exception as e:
+        logger.warning(f"[{proposal_id}] 피드백 이력 조회 실패 (step={step}): {e}")
+        return FeedbackHistoryResponse(feedbacks=[])

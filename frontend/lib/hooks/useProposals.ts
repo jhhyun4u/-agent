@@ -25,7 +25,9 @@ export interface UseProposalsResult {
   refresh: () => void;
 }
 
-export function useProposals(opts: UseProposalsOptions = {}): UseProposalsResult {
+export function useProposals(
+  opts: UseProposalsOptions = {},
+): UseProposalsResult {
   const { q, status, page = 1 } = opts;
 
   const [proposals, setProposals] = useState<ProposalSummary[]>([]);

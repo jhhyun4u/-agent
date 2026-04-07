@@ -235,6 +235,49 @@ CREATE TABLE g2b_monitor_log (
     UNIQUE(team_id, bid_notice_no)
 );
 
+-- ============================================
+-- §15-3b. 공고 분석 및 의사결정
+-- ============================================
+
+CREATE TABLE bid_announcements (
+    id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    org_id                      UUID REFERENCES organizations(id) NOT NULL,
+    bid_no                      TEXT NOT NULL,          -- G2B 공고번호
+    bid_title                   TEXT NOT NULL,          -- 공고제목
+    agency                      TEXT,                   -- 발주기관
+    budget_amount               BIGINT,                 -- 예정가격
+    deadline_date               TIMESTAMPTZ,            -- 공고마감일
+    content_text                TEXT,                   -- 공고 전문 (원본)
+    raw_data                    JSONB,                  -- G2B API 응답 (구조화된 데이터)
+
+    -- 분석 결과 저장 (Supabase Storage 경로)
+    md_rfp_analysis_path        TEXT,                   -- RFP分析 마크다운 경로
+    md_notice_path              TEXT,                   -- 공고문 요약 마크다운 경로
+    md_instruction_path         TEXT,                   -- 과업지시서 마크다운 경로
+
+    -- 상태 관리
+    analysis_status             TEXT DEFAULT 'pending', -- pending | analyzed | reviewed
+    decision                    TEXT DEFAULT 'pending', -- pending | Go | No-Go
+    decision_comment            TEXT,                   -- 의사결정 사유
+    decided_by                  UUID REFERENCES users(id), -- 의사결정자
+    decided_at                  TIMESTAMPTZ,            -- 의사결정 시간
+
+    -- 감사추적
+    created_by                  UUID REFERENCES users(id),
+    created_at                  TIMESTAMPTZ DEFAULT now(),
+    updated_at                  TIMESTAMPTZ DEFAULT now(),
+
+    CONSTRAINT unique_bid_per_org UNIQUE(org_id, bid_no)
+);
+
+CREATE INDEX idx_bid_announcements_org ON bid_announcements(org_id);
+CREATE INDEX idx_bid_announcements_decision ON bid_announcements(decision);
+CREATE INDEX idx_bid_announcements_created ON bid_announcements(created_at);
+CREATE INDEX idx_bid_announcements_status ON bid_announcements(analysis_status);
+
+CREATE TRIGGER update_bid_announcements_updated_at BEFORE UPDATE ON bid_announcements
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 CREATE TABLE notifications (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id         UUID REFERENCES users(id) NOT NULL,

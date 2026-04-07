@@ -8,7 +8,7 @@ UserStatus = Literal["active", "inactive", "suspended"]
 
 # ── 제안서 ──
 ProposalStatus = Literal[
-    "initialized", "processing", "searching", "analyzing", "strategizing",
+    "initialized", "running", "processing", "searching", "analyzing", "strategizing",
     "submitted", "presented", "won", "lost", "no_go", "on_hold",
     "expired", "abandoned", "retrospect", "completed",
 ]

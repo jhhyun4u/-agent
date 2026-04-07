@@ -41,7 +41,9 @@ export default function SimulatePage() {
           <button
             onClick={() => setMode("single")}
             className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              mode === "single" ? "bg-[#262626] text-[#ededed]" : "text-[#8c8c8c] hover:text-[#ededed]"
+              mode === "single"
+                ? "bg-[#262626] text-[#ededed]"
+                : "text-[#8c8c8c] hover:text-[#ededed]"
             }`}
           >
             단독 실행
@@ -49,7 +51,9 @@ export default function SimulatePage() {
           <button
             onClick={() => setMode("compare")}
             className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              mode === "compare" ? "bg-[#262626] text-[#ededed]" : "text-[#8c8c8c] hover:text-[#ededed]"
+              mode === "compare"
+                ? "bg-[#262626] text-[#ededed]"
+                : "text-[#8c8c8c] hover:text-[#ededed]"
             }`}
           >
             A vs B 비교

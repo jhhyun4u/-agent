@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     session_timeout_minutes: int = 30
 
     # 로깅 (OPS-03: 구조화 로깅)
-    log_level: str = "INFO"
+    log_level: str = "DEBUG"  # 개발 환경에서 디버그 정보 확인
     log_format: Literal["text", "json"] = "text"  # 프로덕션 배포 시 "json"
     log_token_usage: bool = True
 
@@ -65,7 +65,10 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
 
     # CORS 허용 오리진
-    cors_origins: list[str] = Field(default=["http://localhost:3000", "http://127.0.0.1:3000"])
+    cors_origins: list[str] = Field(default=[
+        "http://localhost:3000", "http://127.0.0.1:3000",
+        "http://localhost:3001", "http://127.0.0.1:3001",
+    ])
 
     # 나라장터 API 키
     g2b_api_key: str = ""
@@ -85,6 +88,11 @@ class Settings(BaseSettings):
     # Storage 버킷
     storage_bucket_proposals: str = "proposal-files"
     storage_bucket_attachments: str = "bid-attachments"
+    storage_bucket_intranet: str = "intranet-documents"
+
+    # 인트라넷 문서 수집
+    intranet_max_file_size_mb: int = 100
+    intranet_max_batch_size: int = 20
 
     # Timeout (초)
     claude_api_timeout: int = 40
@@ -92,7 +100,7 @@ class Settings(BaseSettings):
     file_download_timeout_seconds: int = 30
     edge_function_timeout_seconds: int = 10
     webhook_timeout_seconds: int = 10
-    g2b_api_timeout_seconds: int = 15
+    g2b_api_timeout_seconds: int = 60
     bid_pipeline_timeout_seconds: int = 120
     heartbeat_timeout_seconds: int = 60
 
@@ -104,7 +112,7 @@ class Settings(BaseSettings):
 
     # 나라장터 API 파라미터
     g2b_api_base_url: str = "https://apis.data.go.kr/1230000"
-    g2b_max_retries: int = 3
+    g2b_max_retries: int = 1
     g2b_default_lookback_days: int = 14
     g2b_historical_days: int = 180
 

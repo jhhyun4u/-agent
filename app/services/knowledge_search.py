@@ -33,7 +33,8 @@ async def unified_search(
     통합 KB 검색 — 시맨틱 + 키워드 하이브리드.
     결과를 영역별로 그룹화하여 반환.
     """
-    all_areas = ["content", "client", "competitor", "lesson", "capability", "qa"]
+    all_areas = ["content", "client", "competitor", "lesson", "capability", "qa",
+                  "intranet_doc", "intranet_project"]
     areas = (filters or {}).get("areas", all_areas)
 
     # 임베딩 생성
@@ -53,6 +54,10 @@ async def unified_search(
         tasks["capability"] = _search_capabilities(query, query_embedding, org_id, top_k)
     if "qa" in areas:
         tasks["qa"] = _search_qa(query, query_embedding, org_id, top_k)
+    if "intranet_doc" in areas:
+        tasks["intranet_doc"] = _search_intranet_docs(query, query_embedding, org_id, top_k, max_body_length)
+    if "intranet_project" in areas:
+        tasks["intranet_project"] = _search_intranet_projects(query, query_embedding, org_id, top_k)
 
     results = await asyncio.gather(*tasks.values(), return_exceptions=True)
 
@@ -304,5 +309,72 @@ async def _search_qa(
         items = result.data or []
         for item in items:
             item.pop("proposals", None)
+            item["match_type"] = "keyword"
+        return items
+
+
+async def _search_intranet_docs(
+    query: str,
+    embedding: list[float],
+    org_id: str,
+    top_k: int,
+    max_body: int,
+) -> list[dict]:
+    """인트라넷 문서 청크 벡터 검색."""
+    client = await get_async_client()
+
+    try:
+        result = await client.rpc("search_document_chunks_by_embedding", {
+            "query_embedding": embedding,
+            "match_org_id": org_id,
+            "match_count": top_k,
+        }).execute()
+        items = result.data or []
+        for item in items:
+            item["content"] = (item.get("content") or "")[:max_body]
+            item["match_type"] = "semantic"
+        return items
+    except Exception:
+        logger.info("search_document_chunks_by_embedding RPC 미등록, 키워드 폴백")
+        result = await client.table("document_chunks").select(
+            "id, section_title, content, document_id"
+        ).eq("org_id", org_id).ilike(
+            "content", f"%{query}%"
+        ).limit(top_k).execute()
+        items = result.data or []
+        for item in items:
+            item["content"] = (item.get("content") or "")[:max_body]
+            item["match_type"] = "keyword"
+        return items
+
+
+async def _search_intranet_projects(
+    query: str,
+    embedding: list[float],
+    org_id: str,
+    top_k: int,
+) -> list[dict]:
+    """인트라넷 프로젝트 벡터 검색 (공고 매칭용)."""
+    client = await get_async_client()
+
+    try:
+        result = await client.rpc("search_projects_by_embedding", {
+            "query_embedding": embedding,
+            "match_org_id": org_id,
+            "match_count": top_k,
+        }).execute()
+        items = result.data or []
+        for item in items:
+            item["match_type"] = "semantic"
+        return items
+    except Exception:
+        logger.info("search_projects_by_embedding RPC 미등록, 키워드 폴백")
+        result = await client.table("intranet_projects").select(
+            "id, project_name, client_name, department, budget_krw, keywords, status"
+        ).eq("org_id", org_id).or_(
+            f"project_name.ilike.%{query}%,client_name.ilike.%{query}%"
+        ).limit(top_k).execute()
+        items = result.data or []
+        for item in items:
             item["match_type"] = "keyword"
         return items

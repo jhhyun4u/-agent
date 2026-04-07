@@ -22,7 +22,7 @@ export default function ExperimentsPage() {
   const [completed, setCompleted] = useState<PromptExperiment[]>([]);
   const [evaluating, setEvaluating] = useState<string | null>(null);
   const [evalResult, setEvalResult] = useState<ExperimentEvaluation | null>(
-    null
+    null,
   );
 
   const fetchData = useCallback(async () => {
@@ -119,12 +119,10 @@ export default function ExperimentsPage() {
                             {exp.experiment_name}
                           </div>
                           <div className="text-xs text-[#8c8c8c] mt-0.5">
-                            <span className="font-mono">
-                              {exp.prompt_id}
-                            </span>{" "}
+                            <span className="font-mono">{exp.prompt_id}</span>{" "}
                             &middot; v{exp.baseline_version} vs v
-                            {exp.candidate_version} &middot;{" "}
-                            {exp.traffic_pct}% 트래픽
+                            {exp.candidate_version} &middot; {exp.traffic_pct}%
+                            트래픽
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -182,19 +180,20 @@ export default function ExperimentsPage() {
                                   evalResult.recommendation === "promote"
                                     ? "bg-[#1a3a2a] text-[#3ecf8e]"
                                     : evalResult.recommendation === "rollback"
-                                    ? "bg-[#3a1a1a] text-[#ff6b6b]"
-                                    : "bg-[#1a1a1a] text-[#8c8c8c]"
+                                      ? "bg-[#3a1a1a] text-[#ff6b6b]"
+                                      : "bg-[#1a1a1a] text-[#8c8c8c]"
                                 }`}
                               >
                                 {evalResult.recommendation === "promote"
                                   ? "승격 권장"
                                   : evalResult.recommendation === "rollback"
-                                  ? "롤백 권장"
-                                  : "계속 진행"}
+                                    ? "롤백 권장"
+                                    : "계속 진행"}
                               </span>
                               {evalResult.improvement != null && (
                                 <span className="ml-2 text-[#8c8c8c]">
-                                  개선도: {evalResult.improvement > 0 ? "+" : ""}
+                                  개선도:{" "}
+                                  {evalResult.improvement > 0 ? "+" : ""}
                                   {evalResult.improvement}
                                 </span>
                               )}

@@ -32,21 +32,24 @@ _DEV_USER_ID = "00000000-0000-0000-0003-000000000003"
 
 
 async def _get_dev_user() -> CurrentUser:
-    """개발 모드: DB에서 테스트 사용자 조회, 실패 시 하드코딩 반환."""
+    """개발 모드: DB에서 테스트 사용자 조회, 실패 시 org_id 있는 사용자로 폴백."""
+    client = await get_async_client()
     try:
-        client = await get_async_client()
-        res = (
-            await client.table("users")
-            .select("*")
-            .eq("id", _DEV_USER_ID)
-            .maybe_single()
-            .execute()
-        )
-        if res and res.data:
-            return CurrentUser(**res.data)
+        # 1차: seed 사용자 조회
+        res = await client.table("users").select("*").eq("id", _DEV_USER_ID).execute()
+        if res.data:
+            return CurrentUser(**res.data[0])
     except Exception:
         pass
-    # DB 조회 실패 시 최소 프로필
+    try:
+        # 2차: org_id가 있는 아무 사용자 (KB 등 org 필터 API 동작 보장)
+        res = await client.table("users").select("*").not_.is_("org_id", "null").limit(1).execute()
+        if res.data:
+            logger.info(f"DEV_MODE: seed 사용자 없어 {res.data[0].get('email')}로 폴백")
+            return CurrentUser(**res.data[0])
+    except Exception:
+        pass
+    # 3차: 하드코딩 최소 프로필
     return CurrentUser(
         id=_DEV_USER_ID,
         email="lead@tenopa.co.kr",
@@ -199,11 +202,11 @@ async def require_project_access(
     role = user.role
 
     # admin / executive: 같은 org면 전사 접근
-    if role in ("admin", "executive") and proposal["org_id"] == user.org_id:
+    if role in ("admin", "executive") and proposal.get("org_id") == user.org_id:
         return proposal
 
     # director: 같은 division
-    if role == "director" and proposal["division_id"] == user.division_id:
+    if role == "director" and proposal.get("division_id") == user.division_id:
         return proposal
 
     # lead: 같은 team
@@ -226,3 +229,8 @@ async def require_project_access(
         return proposal
 
     raise AuthProjectAccessError(proposal_id)
+
+
+async def get_db():
+    """DB 의존성 (레거시 호환 - 실제로 사용되지 않음)"""
+    return None

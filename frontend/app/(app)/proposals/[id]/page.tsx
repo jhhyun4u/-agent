@@ -8,8 +8,17 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
-import { api, Comment_, ProposalFile, ProposalSummary, streamsApi, type StreamProgress, type WorkflowState } from "@/lib/api";
+import {
+  api,
+  Comment_,
+  ProposalFile,
+  ProposalSummary,
+  streamsApi,
+  type StreamProgress,
+  type WorkflowState,
+} from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
 import { usePhaseStatus } from "@/lib/hooks/usePhaseStatus";
 import { useWorkflowStream } from "@/lib/hooks/useWorkflowStream";
@@ -26,17 +35,32 @@ import GuidedTour, { TOUR_PROPOSAL_DETAIL } from "@/components/GuidedTour";
 import ProjectContextHeader from "@/components/ProjectContextHeader";
 import FileHubPanel from "@/components/FileHubPanel";
 
+// Lazy load STEP 8 Review Page
+const Step8ReviewPage = dynamic(() => import("./step8-review/page"), {
+  loading: () => (
+    <div className="p-6 text-[#8c8c8c]">STEP 8 검토 로드 중...</div>
+  ),
+});
+
 // ── 경과 시간 훅 ──
 function useElapsedTime(running: boolean) {
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef(Date.now());
   useEffect(() => {
-    if (!running) { setElapsed(0); startRef.current = Date.now(); return; }
+    if (!running) {
+      setElapsed(0);
+      startRef.current = Date.now();
+      return;
+    }
     startRef.current = Date.now();
-    const t = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000);
+    const t = setInterval(
+      () => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)),
+      1000,
+    );
     return () => clearInterval(t);
   }, [running]);
-  const m = Math.floor(elapsed / 60), s = elapsed % 60;
+  const m = Math.floor(elapsed / 60),
+    s = elapsed % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
@@ -106,13 +130,26 @@ export default function ProposalDetailPage() {
   const [filesLoading, setFilesLoading] = useState(false);
 
   // 워크플로
-  const [workflowState, setWorkflowState] = useState<WorkflowState | null>(null);
+  const [workflowState, setWorkflowState] = useState<WorkflowState | null>(
+    null,
+  );
   const [downloadToken, setDownloadToken] = useState("");
-  const [resultData, setResultData] = useState<Record<string, unknown> | null>(null);
+  const [resultData, setResultData] = useState<Record<string, unknown> | null>(
+    null,
+  );
 
   // SSE + 산출물
-  const isRunning = !!status && (status.status === "processing" || status.status === "initialized" || status.status === "running");
-  const { events: streamEvents, nodeProgress, isStreaming, currentNode } = useWorkflowStream(id, isRunning);
+  const isRunning =
+    !!status &&
+    (status.status === "processing" ||
+      status.status === "initialized" ||
+      status.status === "running");
+  const {
+    events: streamEvents,
+    nodeProgress,
+    isStreaming,
+    currentNode,
+  } = useWorkflowStream(id, isRunning);
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [aborting, setAborting] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -121,22 +158,31 @@ export default function ProposalDetailPage() {
   const isProcessing = isRunning;
   const isCompleted = status?.status === "completed";
   const isFailed = status?.status === "failed";
-  const isPaused = status?.status === "cancelled" && workflowState?.has_pending_interrupt === false;
+  const isPaused =
+    status?.status === "cancelled" &&
+    workflowState?.has_pending_interrupt === false;
   const elapsed = useElapsedTime(isProcessing);
 
   // HITL 리뷰 대기 감지
   const pendingReviewNode = workflowState?.has_pending_interrupt
     ? workflowState.next_nodes.find((n) => REVIEW_LABELS[n])
     : null;
-  const pendingReviewLabel = pendingReviewNode ? REVIEW_LABELS[pendingReviewNode] : null;
+  const pendingReviewLabel = pendingReviewNode
+    ? REVIEW_LABELS[pendingReviewNode]
+    : null;
 
   // W17: 리뷰 대기 시 우측 패널에 해당 STEP 산출물 자동 선택
   useEffect(() => {
     if (!pendingReviewNode) return;
     const reviewStepMap: Record<string, number> = {
-      review_search: 0, review_rfp: 0, review_gng: 0,
-      review_strategy: 1, review_bid_plan: 2,
-      review_plan: 3, review_section: 4, review_proposal: 4,
+      review_search: 0,
+      review_rfp: 0,
+      review_gng: 0,
+      review_strategy: 1,
+      review_bid_plan: 2,
+      review_plan: 3,
+      review_section: 4,
+      review_proposal: 4,
       review_ppt: 5,
     };
     const stepIdx = reviewStepMap[pendingReviewNode];
@@ -147,8 +193,12 @@ export default function ProposalDetailPage() {
 
   // ── 초기 데이터 로드 ──
   useEffect(() => {
-    createClient().auth.getUser().then(({ data }) => setCurrentUserId(data.user?.id ?? ""));
-    createClient().auth.getSession().then(({ data }) => setDownloadToken(data.session?.access_token ?? ""));
+    createClient()
+      .auth.getUser()
+      .then(({ data }) => setCurrentUserId(data.user?.id ?? ""));
+    createClient()
+      .auth.getSession()
+      .then(({ data }) => setDownloadToken(data.session?.access_token ?? ""));
   }, []);
 
   // 3-Stream 상태 폴링
@@ -156,21 +206,33 @@ export default function ProposalDetailPage() {
     try {
       const res = await streamsApi.getAll(id);
       setStreamsData(res.streams as StreamProgress[]);
-    } catch { /* 스트림 미초기화 */ }
+    } catch {
+      /* 스트림 미초기화 */
+    }
   }, [id]);
 
   // 워크플로 상태 폴링
   const fetchWorkflowState = useCallback(async () => {
-    try { setWorkflowState(await api.workflow.getState(id)); } catch { /* 미시작 */ }
+    try {
+      setWorkflowState(await api.workflow.getState(id));
+    } catch {
+      /* 미시작 */
+    }
   }, [id]);
 
   const statusStr = status?.status;
   useEffect(() => {
     fetchWorkflowState();
     fetchStreams();
-    const running = statusStr === "processing" || statusStr === "initialized" || statusStr === "running";
+    const running =
+      statusStr === "processing" ||
+      statusStr === "initialized" ||
+      statusStr === "running";
     if (running) {
-      const t = setInterval(() => { fetchWorkflowState(); fetchStreams(); }, 5000);
+      const t = setInterval(() => {
+        fetchWorkflowState();
+        fetchStreams();
+      }, 5000);
       return () => clearInterval(t);
     }
     // 비실행 상태에서도 스트림 30초 폴링
@@ -189,31 +251,49 @@ export default function ProposalDetailPage() {
 
   // 버전 목록
   const fetchVersions = useCallback(async () => {
-    try { setVersions((await (api.proposals as any).versions(id)) ?? []); } catch { /* 미구현 */ }
+    try {
+      setVersions((await api.proposals.versions(id)) ?? []);
+    } catch {
+      /* 미구현 */
+    }
   }, [id]);
-  useEffect(() => { fetchVersions(); }, [fetchVersions]);
+  useEffect(() => {
+    fetchVersions();
+  }, [fetchVersions]);
 
   // 결과 데이터
   useEffect(() => {
     if (status?.status === "completed") {
-      api.artifacts.get(id, "proposal").then((r) => setResultData(r as any)).catch(() => {});
+      api.artifacts
+        .get(id, "proposal")
+        .then((r) => setResultData(r as any))
+        .catch(() => {});
     }
   }, [id, status?.status]);
 
   // 댓글
   const fetchComments = useCallback(async () => {
-    try { setComments((await api.comments.list(id)).comments); } catch {}
+    try {
+      setComments((await api.comments.list(id)).comments);
+    } catch {}
   }, [id]);
-  useEffect(() => { fetchComments(); }, [fetchComments]);
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   // 파일
   const fetchFiles = useCallback(async () => {
     setFilesLoading(true);
-    try { setFiles((await api.proposals.listFiles(id)).files); } catch {}
-    finally { setFilesLoading(false); }
+    try {
+      setFiles((await api.proposals.listFiles(id)).files);
+    } catch {
+    } finally {
+      setFilesLoading(false);
+    }
   }, [id]);
-  useEffect(() => { fetchFiles(); }, [fetchFiles]);
-
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
 
   // ── 액션 핸들러 ──
   async function handleStartWorkflow() {
@@ -232,14 +312,18 @@ export default function ProposalDetailPage() {
     try {
       const res = await (api.proposals as any).retryFromPhase(id, phaseN);
       if (res?.proposal_id) router.push(`/proposals/${res.proposal_id}`);
-    } catch (e) { alert(e instanceof Error ? e.message : "재시작 실패"); }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "재시작 실패");
+    }
   }
 
   async function handleNewVersion() {
     try {
       const res = await (api.proposals as any).newVersion(id);
       if (res?.proposal_id) router.push(`/proposals/${res.proposal_id}`);
-    } catch (e) { alert(e instanceof Error ? e.message : "새 버전 생성 실패"); }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "새 버전 생성 실패");
+    }
   }
 
   async function handleAbort() {
@@ -247,17 +331,26 @@ export default function ProposalDetailPage() {
     try {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${id}/ai-abort`,
-        { method: "POST", headers: { Authorization: `Bearer ${downloadToken}` } },
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${downloadToken}` },
+        },
       );
       fetchWorkflowState();
-    } catch {} finally { setAborting(false); }
+    } catch {
+    } finally {
+      setAborting(false);
+    }
   }
 
   async function handleRetry() {
     try {
       await fetch(
         `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}/proposals/${id}/ai-retry`,
-        { method: "POST", headers: { Authorization: `Bearer ${downloadToken}` } },
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${downloadToken}` },
+        },
       );
       fetchWorkflowState();
     } catch {}
@@ -268,11 +361,15 @@ export default function ProposalDetailPage() {
       await api.workflow.goto(id, step);
       fetchWorkflowState();
       setSelectedStep(null);
-    } catch (e) { alert(e instanceof Error ? e.message : "복원 실패"); }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "복원 실패");
+    }
   }
 
   // ── 버전 라벨 ──
-  function versionLabel(idx: number) { return `v${idx + 1}`; }
+  function versionLabel(idx: number) {
+    return `v${idx + 1}`;
+  }
   function currentVersionLabel() {
     const idx = versions.findIndex((v) => v.id === id);
     if (idx === -1) return versions.length > 0 ? `v${versions.length}` : "v1";
@@ -322,7 +419,11 @@ export default function ProposalDetailPage() {
             </span>
           </div>
           <button
-            onClick={() => document.getElementById("workflow-panel")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() =>
+              document
+                .getElementById("workflow-panel")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
             className="text-xs text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
           >
             아래에서 확인
@@ -345,43 +446,43 @@ export default function ProposalDetailPage() {
         <main className="flex-1 overflow-y-auto px-6 py-6">
           {/* 정성제안서 탭 (기본) — 기존 워크플로 UI */}
           {(activeTab === "proposal" || streamsData.length === 0) && (
-          <div className="max-w-3xl mx-auto">
-            <DetailCenterPanel
-              proposalId={id}
-              status={status.status}
-              workflowState={workflowState}
-              nodeProgress={nodeProgress}
-              currentNode={currentNode}
-              isStreaming={isStreaming}
-              streamEvents={streamEvents}
-              selectedStep={selectedStep}
-              onStepClick={setSelectedStep}
-              onStateChange={fetchWorkflowState}
-              onStartWorkflow={handleStartWorkflow}
-              isStarting={starting}
-              isProcessing={isProcessing}
-              isFailed={isFailed}
-              isPaused={isPaused}
-              elapsed={elapsed}
-              phasesCompleted={status.phases_completed ?? 0}
-              error={status.error}
-              onAbort={handleAbort}
-              onRetry={handleRetry}
-              onRetryFromPhase={handleRetryFromPhase}
-              aborting={aborting}
-            />
+            <div className="max-w-3xl mx-auto">
+              <DetailCenterPanel
+                proposalId={id}
+                status={status.status}
+                workflowState={workflowState}
+                nodeProgress={nodeProgress}
+                currentNode={currentNode}
+                isStreaming={isStreaming}
+                streamEvents={streamEvents}
+                selectedStep={selectedStep}
+                onStepClick={setSelectedStep}
+                onStateChange={fetchWorkflowState}
+                onStartWorkflow={handleStartWorkflow}
+                isStarting={starting}
+                isProcessing={isProcessing}
+                isFailed={isFailed}
+                isPaused={isPaused}
+                elapsed={elapsed}
+                phasesCompleted={status.phases_completed ?? 0}
+                error={status.error}
+                onAbort={handleAbort}
+                onRetry={handleRetry}
+                onRetryFromPhase={handleRetryFromPhase}
+                aborting={aborting}
+              />
 
-            {/* STEP별 산출물 뷰어 (중앙에 표시 — 넓은 뷰 필요) */}
-            {selectedStep !== null && (
-              <div className="mt-5">
-                <StepArtifactViewer
-                  proposalId={id}
-                  stepIndex={selectedStep}
-                  onGoto={handleGoto}
-                />
-              </div>
-            )}
-          </div>
+              {/* STEP별 산출물 뷰어 (중앙에 표시 — 넓은 뷰 필요) */}
+              {selectedStep !== null && (
+                <div className="mt-5">
+                  <StepArtifactViewer
+                    proposalId={id}
+                    stepIndex={selectedStep}
+                    onGoto={handleGoto}
+                  />
+                </div>
+              )}
+            </div>
           )}
 
           {/* 비딩관리 탭 */}
@@ -412,10 +513,14 @@ export default function ProposalDetailPage() {
                 onSelectFile={(file) => {
                   setActiveDocId(`file-${file.id}`);
                   const viewable = ["pdf", "png", "jpg", "jpeg"];
-                  if (file.file_type && viewable.includes(file.file_type.toLowerCase())) {
+                  if (
+                    file.file_type &&
+                    viewable.includes(file.file_type.toLowerCase())
+                  ) {
                     if (!rightPanelOpen) setRightPanelOpen(true);
                   } else {
-                    api.proposals.getFileUrl(id, file.id)
+                    api.proposals
+                      .getFileUrl(id, file.id)
                       .then((r) => window.open(r.url, "_blank"))
                       .catch(() => alert("다운로드 실패"));
                   }
@@ -423,11 +528,19 @@ export default function ProposalDetailPage() {
               />
             </div>
           )}
+
+          {/* STEP 8 검토 탭 */}
+          {activeTab === "step8" && streamsData.length > 0 && (
+            <Step8ReviewPage />
+          )}
         </main>
 
         {/* 우측 패널 — lg 이상 인라인 표시 + 리사이즈 */}
         {rightPanelOpen && (
-          <div className="relative shrink-0 hidden lg:flex" style={{ width: rightPanelWidth }}>
+          <div
+            className="relative shrink-0 hidden lg:flex"
+            style={{ width: rightPanelWidth }}
+          >
             {/* 리사이즈 핸들 */}
             <div
               onMouseDown={handleResizeStart}
@@ -440,40 +553,45 @@ export default function ProposalDetailPage() {
                 <span className="w-1 h-1 rounded-full bg-[#4a4a4a] group-hover:bg-[#3ecf8e] transition-colors" />
               </div>
             </div>
-          <aside className="flex-1 border-l border-[#262626] bg-[#111111] flex flex-col overflow-hidden">
-            <DetailRightPanel
-              proposalId={id}
-              status={status.status}
-              phasesCompleted={status.phases_completed ?? 0}
-              error={status.error}
-              rfpTitle={status.rfp_title}
-              isProcessing={isProcessing}
-              isCompleted={isCompleted}
-              isFailed={isFailed}
-              elapsed={elapsed}
-              selectedStep={selectedStep}
-              onGoto={handleGoto}
-              downloadToken={downloadToken}
-              versions={versions}
-              currentVersionLabel={currentVersionLabel()}
-              resultData={resultData}
-              comments={comments}
-              currentUserId={currentUserId}
-              onFetchComments={fetchComments}
-              files={files}
-              filesLoading={filesLoading}
-              onFetchFiles={fetchFiles}
-              onRetryFromPhase={handleRetryFromPhase}
-              workflowState={workflowState}
-            />
-          </aside>
+            <aside className="flex-1 border-l border-[#262626] bg-[#111111] flex flex-col overflow-hidden">
+              <DetailRightPanel
+                proposalId={id}
+                status={status.status}
+                phasesCompleted={status.phases_completed ?? 0}
+                error={status.error}
+                rfpTitle={status.rfp_title}
+                isProcessing={isProcessing}
+                isCompleted={isCompleted}
+                isFailed={isFailed}
+                elapsed={elapsed}
+                selectedStep={selectedStep}
+                onGoto={handleGoto}
+                downloadToken={downloadToken}
+                versions={versions}
+                currentVersionLabel={currentVersionLabel()}
+                resultData={resultData}
+                comments={comments}
+                currentUserId={currentUserId}
+                onFetchComments={fetchComments}
+                files={files}
+                filesLoading={filesLoading}
+                onFetchFiles={fetchFiles}
+                onRetryFromPhase={handleRetryFromPhase}
+                workflowState={workflowState}
+              />
+            </aside>
           </div>
         )}
       </div>
 
       {/* 모바일 오버레이 (lg 미만) */}
-      <div className={`lg:hidden fixed inset-0 z-40 ${rightPanelOpen ? "" : "hidden"}`}>
-        <div className="absolute inset-0 bg-black/50" onClick={() => setRightPanelOpen(false)} />
+      <div
+        className={`lg:hidden fixed inset-0 z-40 ${rightPanelOpen ? "" : "hidden"}`}
+      >
+        <div
+          className="absolute inset-0 bg-black/50"
+          onClick={() => setRightPanelOpen(false)}
+        />
         <aside className="absolute right-0 inset-y-0 w-[85vw] max-w-[420px] bg-[#111111] flex flex-col overflow-hidden">
           <DetailRightPanel
             proposalId={id}

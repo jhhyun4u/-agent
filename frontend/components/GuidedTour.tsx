@@ -36,17 +36,20 @@ interface Props {
 export const TOUR_DASHBOARD: TourStep[] = [
   {
     title: "대시보드",
-    description: "수주 현황, 파이프라인, 분석 차트를 한눈에 확인하세요. 상단 스코프 탭으로 개인/팀/본부/전체를 전환할 수 있습니다.",
+    description:
+      "수주 현황, 파이프라인, 분석 차트를 한눈에 확인하세요. 상단 스코프 탭으로 개인/팀/본부/전체를 전환할 수 있습니다.",
     position: "center",
   },
   {
     title: "지금 해야 할 것",
-    description: "마감이 가까운 RFP와 진행 중인 제안서가 우선순위순으로 표시됩니다. '지금 시작'을 클릭하면 제안서 작성이 바로 시작됩니다.",
+    description:
+      "마감이 가까운 RFP와 진행 중인 제안서가 우선순위순으로 표시됩니다. '지금 시작'을 클릭하면 제안서 작성이 바로 시작됩니다.",
     position: "center",
   },
   {
     title: "제안 파이프라인",
-    description: "공고 등록 → 작성 중 → 완료 → 결과 대기 → 수주/실패까지 전체 흐름을 볼 수 있습니다. 숫자를 클릭하면 해당 목록으로 이동합니다.",
+    description:
+      "공고 등록 → 작성 중 → 완료 → 결과 대기 → 수주/실패까지 전체 흐름을 볼 수 있습니다. 숫자를 클릭하면 해당 목록으로 이동합니다.",
     position: "center",
   },
 ];
@@ -54,17 +57,20 @@ export const TOUR_DASHBOARD: TourStep[] = [
 export const TOUR_BIDS: TourStep[] = [
   {
     title: "공고 모니터링",
-    description: "G2B 나라장터 공고를 검색하고, AI가 우리 회사에 적합한 과제를 추천합니다. S/A 등급이 높을수록 적합도가 높습니다.",
+    description:
+      "G2B 나라장터 공고를 검색하고, AI가 우리 회사에 적합한 과제를 추천합니다. S/A 등급이 높을수록 적합도가 높습니다.",
     position: "center",
   },
   {
     title: "프리셋",
-    description: "자주 사용하는 검색 조건(키워드, 지역, 예산)을 프리셋으로 저장하면 반복 검색이 편리합니다.",
+    description:
+      "자주 사용하는 검색 조건(키워드, 지역, 예산)을 프리셋으로 저장하면 반복 검색이 편리합니다.",
     position: "center",
   },
   {
     title: "제안 착수",
-    description: "관심 공고를 선택하면 AI가 RFP를 분석하고, Go/No-Go 판정부터 제안서 작성까지 5단계를 안내합니다.",
+    description:
+      "관심 공고를 선택하면 AI가 RFP를 분석하고, Go/No-Go 판정부터 제안서 작성까지 5단계를 안내합니다.",
     position: "center",
   },
 ];
@@ -72,22 +78,26 @@ export const TOUR_BIDS: TourStep[] = [
 export const TOUR_PROPOSAL_DETAIL: TourStep[] = [
   {
     title: "제안서 워크플로",
-    description: "AI가 5단계(RFP분석→전략→계획→작성→PPT)를 순서대로 진행합니다. 각 단계마다 여러분이 검토하고 승인/재작업을 결정합니다.",
+    description:
+      "AI가 5단계(RFP분석→전략→계획→작성→PPT)를 순서대로 진행합니다. 각 단계마다 여러분이 검토하고 승인/재작업을 결정합니다.",
     position: "center",
   },
   {
     title: "리뷰 게이트",
-    description: "노란색 배너가 나타나면 AI가 결과를 만들고 여러분의 확인을 기다리는 중입니다. '빠른 승인'으로 바로 넘기거나, 피드백을 남길 수 있습니다.",
+    description:
+      "노란색 배너가 나타나면 AI가 결과를 만들고 여러분의 확인을 기다리는 중입니다. '빠른 승인'으로 바로 넘기거나, 피드백을 남길 수 있습니다.",
     position: "center",
   },
   {
     title: "3-Stream 병행",
-    description: "Go 결정 이후부터 '정성제안서', '비딩관리', '제출서류' 3개 탭이 활성화됩니다. 각 스트림은 독립적으로 진행하되, 최종 제출 시 모두 완료되어야 합니다.",
+    description:
+      "Go 결정 이후부터 '정성제안서', '비딩관리', '제출서류' 3개 탭이 활성화됩니다. 각 스트림은 독립적으로 진행하되, 최종 제출 시 모두 완료되어야 합니다.",
     position: "center",
   },
   {
     title: "편집 버튼",
-    description: "오른쪽 상단 '편집' 버튼을 클릭하면 3-Column 에디터가 열립니다. AI 제안을 직접 수정하거나, AI에게 질문할 수 있습니다.",
+    description:
+      "오른쪽 상단 '편집' 버튼을 클릭하면 3-Column 에디터가 열립니다. AI 제안을 직접 수정하거나, AI에게 질문할 수 있습니다.",
     position: "center",
   },
 ];
@@ -95,17 +105,20 @@ export const TOUR_PROPOSAL_DETAIL: TourStep[] = [
 export const TOUR_EDITOR: TourStep[] = [
   {
     title: "3-Column 에디터",
-    description: "왼쪽: 목차+규정 준수 현황 | 중앙: 제안서 본문 편집 | 오른쪽: AI 어시스턴트. 세 영역을 동시에 활용하며 제안서를 다듬으세요.",
+    description:
+      "왼쪽: 목차+규정 준수 현황 | 중앙: 제안서 본문 편집 | 오른쪽: AI 어시스턴트. 세 영역을 동시에 활용하며 제안서를 다듬으세요.",
     position: "center",
   },
   {
     title: "AI 어시스턴트",
-    description: "오른쪽 패널에서 AI에게 질문하거나, 특정 문장을 선택해 '개선/확장/축소'를 요청할 수 있습니다.",
+    description:
+      "오른쪽 패널에서 AI에게 질문하거나, 특정 문장을 선택해 '개선/확장/축소'를 요청할 수 있습니다.",
     position: "center",
   },
   {
     title: "섹션 잠금",
-    description: "다른 팀원이 같은 섹션을 편집 중이면 잠금 아이콘이 표시됩니다. 5분 후 자동 해제됩니다.",
+    description:
+      "다른 팀원이 같은 섹션을 편집 중이면 잠금 아이콘이 표시됩니다. 5분 후 자동 해제됩니다.",
     position: "center",
   },
 ];
@@ -113,19 +126,26 @@ export const TOUR_EDITOR: TourStep[] = [
 export const TOUR_KB: TourStep[] = [
   {
     title: "지식 베이스",
-    description: "콘텐츠, 발주기관, 경쟁사, 교훈, 노임단가, 낙찰정보, Q&A — 7개 영역의 조직 지식을 관리합니다. 프로젝트를 거듭할수록 자동으로 쌓입니다.",
+    description:
+      "콘텐츠, 발주기관, 경쟁사, 교훈, 노임단가, 낙찰정보, Q&A — 7개 영역의 조직 지식을 관리합니다. 프로젝트를 거듭할수록 자동으로 쌓입니다.",
     position: "center",
   },
   {
     title: "통합 검색",
-    description: "상단 검색(/kb/search)에서 모든 KB를 한 번에 검색할 수 있습니다. AI가 제안서 작성 시 이 지식을 자동으로 참조합니다.",
+    description:
+      "상단 검색(/kb/search)에서 모든 KB를 한 번에 검색할 수 있습니다. AI가 제안서 작성 시 이 지식을 자동으로 참조합니다.",
     position: "center",
   },
 ];
 
 // ── 메인 컴포넌트 ──
 
-export default function GuidedTour({ tourId, steps, autoStart = true, onComplete }: Props) {
+export default function GuidedTour({
+  tourId,
+  steps,
+  autoStart = true,
+  onComplete,
+}: Props) {
   const [active, setActive] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -210,10 +230,14 @@ export default function GuidedTour({ tourId, steps, autoStart = true, onComplete
           </div>
 
           {/* 제목 */}
-          <h3 className="text-base font-semibold text-[#ededed] mb-2">{step.title}</h3>
+          <h3 className="text-base font-semibold text-[#ededed] mb-2">
+            {step.title}
+          </h3>
 
           {/* 설명 */}
-          <p className="text-sm text-[#8c8c8c] leading-relaxed mb-5">{step.description}</p>
+          <p className="text-sm text-[#8c8c8c] leading-relaxed mb-5">
+            {step.description}
+          </p>
 
           {/* 버튼 */}
           <div className="flex items-center justify-between">

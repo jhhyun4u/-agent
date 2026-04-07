@@ -211,7 +211,7 @@ async def get_simulation_quota(user=Depends(require_role("admin"))):
     """현재 사용자의 일일 시뮬레이션 잔여 한도."""
     from app.services.prompt_simulator import get_quota_info
 
-    return ok(await get_quota_info(user.get("id", "")))
+    return ok(await get_quota_info(user.id))
 
 
 # ── v2.0: 학습 분석 API ──
@@ -390,7 +390,7 @@ async def record_edit_action(body: EditActionRequest, user=Depends(get_current_u
         action=body.action,
         original=body.original,
         edited=body.edited,
-        user_id=user.get("id"),
+        user_id=user.id,
     )
     return ok(None, message="기록 완료")
 
@@ -615,7 +615,7 @@ async def simulate_prompt(
         SimulationRequest, check_quota, run_simulation,
     )
 
-    user_id = user.get("id", "")
+    user_id = user.id
     allowed, remaining = await check_quota(user_id)
     if not allowed:
         from app.exceptions import RateLimitError
@@ -641,7 +641,7 @@ async def simulate_compare(
     """A vs B 비교 시뮬레이션."""
     from app.services.prompt_simulator import check_quota, run_comparison
 
-    user_id = user.get("id", "")
+    user_id = user.id
     allowed, _ = await check_quota(user_id)
     if not allowed:
         from app.exceptions import RateLimitError

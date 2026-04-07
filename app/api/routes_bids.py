@@ -12,9 +12,31 @@ import asyncio
 import json
 import logging
 import re
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
+
+# ── 공고 스코어링 파일 캐시 ──────────────────────────────────
+# 서버 재시작 후에도 데이터 유지
+_SCORED_CACHE_FILE = Path("data/bid_scored_cache.json")
+_SCORED_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _load_file_cache() -> dict:
+    try:
+        if _SCORED_CACHE_FILE.exists():
+            return json.loads(_SCORED_CACHE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+
+def _save_file_cache(cache: dict) -> None:
+    try:
+        _SCORED_CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+    except Exception as e:
+        logger.warning(f"파일 캐시 저장 실패: {e}")
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Query
 
@@ -343,8 +365,12 @@ async def list_announcements(
     page: int = Query(default=1, ge=1),
     per_page: int = Query(default=20, ge=1, le=100),
     current_user: CurrentUser = Depends(get_current_user),
+    background_tasks: BackgroundTasks = None,
 ):
-    """수집된 공고 목록 (필터/페이징)"""
+    """
+    수집된 공고 목록 (필터/페이징)
+    - 분석이 pending인 공고들은 백그라운드에서 자동 분석
+    """
     client = await get_async_client()
     await _require_team_member(client, team_id, current_user.id)
 
@@ -369,6 +395,12 @@ async def list_announcements(
         .range(offset, offset + per_page - 1)
         .execute()
     )
+
+    # NEW: pending 공고들 분석 큐 등록 (비동기)
+    if background_tasks and res.data:
+        for bid in res.data:
+            if bid.get("analysis_status") == "pending":
+                await _queue_bid_analysis(bid["bid_no"], background_tasks)
 
     return ok_list(res.data or [], total=res.count or 0, offset=offset, limit=per_page)
 
@@ -418,59 +450,79 @@ async def pipeline_trigger(
 
 @router.get("/bids/scored")
 async def get_scored_bids(
-    days: int = Query(7, ge=1, le=30, description="조회 일수 (최근 N일)"),
+    date_from: Optional[str] = Query(None, description="시작일 (YYYYMMDD). 미지정 시 days 사용"),
+    date_to: Optional[str] = Query(None, description="종료일 (YYYYMMDD). 미지정 시 오늘"),
+    days: int = Query(7, ge=1, le=30, description="조회 일수 (date_from 미지정 시 사용)"),
     min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
+    min_score: float = Query(20, description="최소 적합도 점수"),
     max_results: int = Query(100, ge=1, le=300, description="최대 반환 건수"),
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
-    DB 저장된 공고 목록 조회 (적합도 스코어링 기반).
+    적합도 스코어링 기반 공고 추천.
 
-    정기 스케줄러(평일 08~18시 매시 정각)가 수집한 데이터 조회.
-    실시간 G2B 호출 없음 — 수동 크롤링은 POST /bids/crawl 사용.
+    캐시 우선 전략:
+    - 캐시 유효(1시간): 즉시 반환 (G2B 호출 없음)
+    - 캐시 없음/만료: G2B 크롤링 후 캐시 저장
+    - 새로고침은 POST /bids/crawl 사용
     """
-    client = await get_async_client()
+    from app.services.bidding.monitor.fetcher import BidFetcher
 
-    from_date = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
-    query = client.table("bid_announcements").select(
-        "bid_no, bid_title, agency, budget_amount, deadline_date, "
-        "days_remaining, bid_type, created_at, raw_data, proposal_status, decided_by"
-    ).gte("created_at", from_date).order("created_at", desc=True).limit(max_results)
-
-    if min_budget > 0:
-        query = query.gte("budget_amount", min_budget)
-
-    result = await query.execute()
-    db_rows = result.data or []
-
-    # raw_data가 있으면 scorer용으로 사용, 없으면 DB 필드를 G2B 형식으로 매핑
-    data = []
-    for row in db_rows:
-        if row.get("raw_data"):
-            data.append(row["raw_data"])
+    try:
+        if not date_to:
+            date_to_str = datetime.now(timezone.utc).strftime("%Y%m%d") + "2359"
         else:
-            data.append({
-                "bidNtceNo": row.get("bid_no", ""),
-                "bidNtceNm": row.get("bid_title", ""),
-                "ntceInsttNm": row.get("agency", ""),
-                "presmptPrce": str(row.get("budget_amount") or "0"),
-                "bidClseDt": row.get("deadline_date", ""),
-            })
+            date_to_str = date_to + "2359"
 
-    # 적합도 스코어링 (G2B raw 형식 기반)
-    scored = score_and_rank_bids(
-        data,
-        reference_date=datetime.now(timezone.utc).date(),
-        min_score=0,
-        exclude_expired=True,
-        max_results=max_results,
-    )
+        if not date_from:
+            date_from_str = (datetime.now(timezone.utc) - timedelta(days=days - 1)).strftime("%Y%m%d") + "0000"
+        else:
+            date_from_str = date_from + "0000"
 
-    return ok({
-        "total_count": len(scored),
-        "source": "db",
-        "items": scored,
-    })
+        # ── 파일 캐시 확인 (서버 재시작 후에도 유지) ──
+        file_cache = _load_file_cache()
+        if file_cache.get("payload"):
+            logger.info("공고 파일 캐시 HIT")
+            payload = file_cache["payload"]
+
+            # DB에서 각 공고의 suitability_score 조회하여 추가
+            client = await get_async_client()
+            bid_nos = [bid.get("bid_no") for bid in payload.get("data", [])]
+            if bid_nos:
+                try:
+                    scores_map = {}
+                    response = await client.table("bid_announcements").select(
+                        "bid_no, suitability_score"
+                    ).in_("bid_no", bid_nos).execute()
+
+                    for row in response.data:
+                        if row.get("suitability_score"):
+                            scores_map[row["bid_no"]] = row["suitability_score"]
+
+                    # 페이로드의 각 공고에 suitability_score 추가
+                    for bid in payload.get("data", []):
+                        if bid.get("bid_no") in scores_map:
+                            bid["suitability_score"] = scores_map[bid["bid_no"]]
+                except Exception as e:
+                    logger.warning(f"suitability_score 조회 실패: {e}")
+
+            return ok(payload)
+
+        # ── 캐시 없음 → 빈 결과 반환 (자동 크롤링 안 함) ──
+        logger.info("공고 파일 캐시 MISS → 빈 결과 반환 (새로고침 버튼으로 수동 크롤링 필요)")
+        empty_payload = {
+            "date_from": date_from_str[:8],
+            "date_to": date_to_str[:8],
+            "total_count": 0,
+            "total_fetched": 0,
+            "sources": {},
+            "data": [],
+            "requires_crawl": True,
+        }
+        return ok(empty_payload)
+    except Exception as e:
+        logger.error(f"scored bids 오류: {e}", exc_info=True)
+        raise InternalServiceError("공고 스코어링 중 오류가 발생했습니다.")
 
 
 @router.post("/bids/crawl")
@@ -480,9 +532,12 @@ async def manual_crawl(
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
-    수동 크롤링 — G2B에서 최신 공고 수집 후 DB 저장 + 백그라운드 파이프라인.
+    수동 크롤링 — 새로고침 버튼 전용.
 
-    프론트엔드 "새로고침" 버튼에서만 호출.
+    신규 공고만 처리:
+    - 기존 캐시에 있는 공고는 분석 결과 보존 (덮어쓰지 않음)
+    - 신규 공고만 캐시에 추가 + 백그라운드 파이프라인
+    - 캐시 갱신 후 새 데이터 반환
     """
     try:
         date_to_dt = datetime.now(timezone.utc)
@@ -500,17 +555,39 @@ async def manual_crawl(
                 max_results=300,
             )
 
-        # 백그라운드 파이프라인: 상위 scored 공고 DB 저장 + 첨부파일 + AI 분석
         scored_data = results.get("data", [])
-        top_bid_nos = [b["bid_no"] for b in scored_data[:50] if b.get("score", 0) >= 80]
-        if top_bid_nos:
-            raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in scored_data if b["bid_no"] in set(top_bid_nos)}
-            background_tasks.add_task(run_pipeline, top_bid_nos, raw_map)
+
+        # ── 신규 공고만 추출 (기존 파일 캐시와 비교) ──
+        file_cache = _load_file_cache()
+        existing_bid_nos: set[str] = {
+            item.get("bid_no", "")
+            for item in file_cache.get("payload", {}).get("data", [])
+        }
+        new_bids = [b for b in scored_data if b.get("bid_no") not in existing_bid_nos]
+        logger.info(f"크롤링: 전체 {len(scored_data)}건, 신규 {len(new_bids)}건, 기존 {len(existing_bid_nos)}건")
+
+        # ── 파일 캐시 갱신 (전체 결과로 덮어씀) ──
+        payload = {
+            "date_from": date_from_str[:8],
+            "date_to": date_to_str[:8],
+            "total_count": len(scored_data),
+            "total_fetched": results["total_fetched"],
+            "sources": results.get("sources", {}),
+            "data": scored_data,
+        }
+        _save_file_cache({"payload": payload, "saved_at": time.time()})
+
+        # ── 신규 공고만 백그라운드 파이프라인 ──
+        top_new_bid_nos = [b["bid_no"] for b in new_bids[:50] if b.get("score", 0) >= 80]
+        if top_new_bid_nos:
+            raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in new_bids if b["bid_no"] in set(top_new_bid_nos)}
+            background_tasks.add_task(run_pipeline, top_new_bid_nos, raw_map)
 
         return ok({
             "total_fetched": results["total_fetched"],
-            "scored_count": len(results["data"]),
-            "pipeline_queued": len(top_bid_nos),
+            "scored_count": len(scored_data),
+            "new_count": len(new_bids),
+            "pipeline_queued": len(top_new_bid_nos),
         })
     except Exception as e:
         logger.error(f"수동 크롤링 오류: {e}")
@@ -552,7 +629,7 @@ async def get_monitored_bids(
     await _enrich_monitor_data(client, data, user_id)
 
     if not show_all:
-        hidden = {"제안포기", "관련없음"}
+        hidden = {"제안포기", "관련없음", "제안결정"}
         data = [b for b in data if b.get("proposal_status") not in hidden]
         total = len(data)
 
@@ -615,46 +692,116 @@ async def update_bid_status(
 @router.get("/bids/{bid_no}/analysis")
 async def analyze_bid_for_proposal(
     bid_no: str,
+    background_tasks: BackgroundTasks,
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
-    RFP 요약 + TENOPA 적합성 분석 (2단계 파이프라인)
+    공고 분석 결과 조회
 
-    Stage 1: 전처리 에이전트 — 공고문 핵심 섹션 타겟팅 추출
-    Stage 2: TENOPA 수주 심의위원 — 도메인 적합성 0~100점 평가
+    3가지 응답 상태:
+    1. 'analyzed': 분석 완료 → 상세 결과 반환
+    2. 'analyzing': 진행 중 → 클라이언트가 폴링
+    3. 'pending': 대기 중 → 분석 큐 등록 + 클라이언트가 폴링
     """
+    print(f"\n[DEBUG] 분석 API 호출됨: bid_no={bid_no}")
+    print(f"[DEBUG] background_tasks type: {type(background_tasks)}")
+    print(f"[DEBUG] background_tasks: {background_tasks}")
+
     if not _BID_NO_PATTERN.match(bid_no):
         raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
-    cache_dir = Path("data/bid_analyses")
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_file = cache_dir / f"{bid_no}.json"
+    client = await get_async_client()
+    
+    try:
+        # DB에서 조회
+        result = await client.table("bid_announcements")\
+            .select(
+                "bid_no, analysis_status, rfp_summary, rfp_sections, "
+                "suitability_score, verdict, fit_level, positive, negative, "
+                "action_plan, recommended_teams, rfp_period, "
+                "analysis_completed_at, analysis_error"
+            )\
+            .eq("bid_no", bid_no)\
+            .limit(1)\
+            .execute()
 
-    # 캐시 히트 확인
-    cached = _check_analysis_cache(cache_file, bid_no)
-    if cached is not None:
-        return ok(cached)
+        if not result.data or len(result.data) == 0:
+            # 공고 기록이 없으면 → 새 분석 레코드 생성 + 큐 등록
+            try:
+                now_iso = datetime.now(timezone.utc).isoformat()
+                await client.table("bid_announcements")\
+                    .insert({
+                        "bid_no": bid_no,
+                        "bid_title": f"공고 {bid_no}",  # 기본값 제공
+                        "agency": "미분류",  # 기본값 제공
+                        "analysis_status": "pending",
+                        "created_at": now_iso,
+                    })\
+                    .execute()
+                logger.info(f"[{bid_no}] 신규 분석 레코드 생성")
+            except Exception as e:
+                logger.error(f"[{bid_no}] 레코드 생성 실패 ({type(e).__name__}): {e}")
+                # 실패해도 계속 진행 (폴링으로 복구 가능)
+                pass
+            
+            if background_tasks:
+                await _queue_bid_analysis(bid_no, background_tasks)
+            
+            return ok({
+                "status": "pending",
+                "message": "공고를 분석하고 있습니다. 잠시만 기다려주세요..."
+            })
 
-    # 공고 데이터 + 본문 로드 (DB → G2B fallback → 첨부파일)
-    bid, content = await _load_bid_content(bid_no)
-
-    # 팀 조직도 로드
-    teams_info_text, valid_team_names = _load_teams_info()
-
-    # AI 통합 분석
-    result = await _run_unified_analysis(bid_no, bid, content, teams_info_text, valid_team_names)
-
-    # 캐시 저장 (score > 0인 경우만)
-    if result["suitability_score"] > 0:
-        try:
-            cache_file.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-            logger.info(f"[{bid_no}] 분석 캐시 저장 완료")
-        except Exception as e:
-            logger.warning(f"분석 캐시 저장 실패 (무시): {e}")
-    else:
-        logger.info(f"[{bid_no}] 부분 결과 반환 (캐시 미저장, 다음에 재시도)")
-
-    return ok(result)
+        data = result.data[0]  # limit(1)을 사용하므로 첫 번째 항목 접근
+        status = data.get("analysis_status")
+        
+        if status == "analyzed":
+            # ✓ 분석 완료 → 상세 결과 반환
+            return ok({
+                "status": "analyzed",
+                "rfp_summary": data.get("rfp_summary"),
+                "rfp_sections": data.get("rfp_sections"),
+                "suitability_score": data.get("suitability_score"),
+                "verdict": data.get("verdict"),
+                "fit_level": data.get("fit_level"),
+                "positive": data.get("positive", []),
+                "negative": data.get("negative", []),
+                "action_plan": data.get("action_plan"),
+                "recommended_teams": data.get("recommended_teams", []),
+                "rfp_period": data.get("rfp_period"),
+                "analyzed_at": data.get("analysis_completed_at"),
+            })
+        
+        elif status == "analyzing":
+            # ⏳ 진행 중 → 클라이언트가 폴링
+            return ok({
+                "status": "analyzing",
+                "message": "AI가 공고를 분석하는 중입니다...",
+            })
+        
+        elif status == "failed":
+            # ✗ 실패 → 에러 메시지 + 재시도 권유
+            return ok({
+                "status": "failed",
+                "error": data.get("analysis_error", "분석에 실패했습니다."),
+                "message": "분석에 실패했습니다. 다시 시도해주세요.",
+            })
+        
+        else:  # pending or unknown
+            # ⧖ 대기 중 → 분석 큐 등록
+            if background_tasks:
+                await _queue_bid_analysis(bid_no, background_tasks)
+            
+            return ok({
+                "status": "pending",
+                "message": "공고를 분석하고 있습니다. 잠시만 기다려주세요...",
+            })
+    
+    except Exception as e:
+        logger.error(f"[{bid_no}] 분석 조회 실패: {type(e).__name__}: {e}")
+        import traceback
+        logger.error(f"[{bid_no}] 스택 트레이스:\n{traceback.format_exc()}")
+        raise InternalServiceError("분석 결과를 가져올 수 없습니다.")
 
 
 @router.post("/bids/{bid_no}/bookmark")
@@ -1176,18 +1323,23 @@ def _check_analysis_cache(cache_file, bid_no: str) -> dict | None:
         return None
     try:
         cached = json.loads(cache_file.read_text(encoding="utf-8"))
+        # 최소 하나의 유효한 필드가 있으면 캐시로 간주
         has_sections = bool(cached.get("rfp_sections"))
         has_summary = cached.get("rfp_summary") and cached["rfp_summary"] != [
             "공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."
         ]
-        has_score = cached.get("suitability_score") and cached["suitability_score"] > 0
-        if (has_sections or has_summary) and has_score:
-            logger.info(f"[{bid_no}] 분석 캐시 히트")
+        has_positive = bool(cached.get("positive"))
+        has_negative = bool(cached.get("negative"))
+        has_score = cached.get("suitability_score") is not None
+
+        # 최소 2개 이상의 필드가 있으면 유효한 결과
+        valid_fields = sum([has_sections, has_summary, has_positive, has_negative, has_score])
+        if valid_fields >= 2:
+            logger.info(f"[{bid_no}] 분석 캐시 히트 ({valid_fields}개 필드)")
             return cached
-        logger.info(f"[{bid_no}] 분석 캐시 무효 (빈 결과) → 재분석")
-        cache_file.unlink(missing_ok=True)
-    except Exception:
-        pass
+        logger.info(f"[{bid_no}] 분석 캐시 무효 ({valid_fields}개 필드만) → 재분석")
+    except Exception as e:
+        logger.warning(f"[{bid_no}] 캐시 로드 실패: {e}")
     return None
 
 
@@ -1298,8 +1450,12 @@ async def _run_unified_analysis(
     action_plan = ""
     recommended_teams: list[str] = []
 
+    # 디버그: 공고 정보와 본문 크기 로깅
+    logger.info(f"[{bid_no}] 분석 시작: bid={bid}, content_len={len(content.strip())}")
+
     if content.strip():
         try:
+            logger.info(f"[{bid_no}] Claude API 호출 시작 (본문: {len(content)}자)")
             ai_client = _get_claude_client()
             system_prompt = build_unified_analysis_system(teams_info=teams_info_text)
             user_msg = UNIFIED_ANALYSIS_USER.format(
@@ -1308,6 +1464,7 @@ async def _run_unified_analysis(
                 agency=bid.get("agency", ""),
                 content_text=content[:8000],
             )
+            logger.info(f"[{bid_no}] 시스템 프롬프트: {len(system_prompt)}자, 사용자 메시지: {len(user_msg)}자")
             response = await asyncio.wait_for(
                 ai_client.messages.create(
                     model=settings.claude_model,
@@ -1318,11 +1475,14 @@ async def _run_unified_analysis(
                 timeout=45,
             )
             text = response.content[0].text
+            logger.info(f"[{bid_no}] Claude 응답 수신: {len(text)}자")
 
             start = text.find("{")
             end = text.rfind("}") + 1
+            logger.info(f"[{bid_no}] JSON 파싱: start={start}, end={end}")
             if start >= 0 and end > start:
                 parsed = json.loads(text[start:end])
+                logger.info(f"[{bid_no}] JSON 파싱 성공")
 
                 s = parsed.get("summary", {})
                 rfp_period = s.get("period", "")
@@ -1369,8 +1529,17 @@ async def _run_unified_analysis(
 
     if not rfp_summary:
         rfp_summary = ["공고 상세 텍스트를 가져올 수 없습니다. 첨부파일을 확인해주세요."]
-    if score == 0:
-        negative = negative or ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
+    if not positive:
+        positive = ["공고 기본 정보만 확인 가능합니다."]
+    if not negative:
+        negative = ["AI 분석을 수행할 수 없습니다. 첨부된 제안요청서를 직접 검토해주세요."]
+    if not action_plan:
+        action_plan = "제안요청서의 첨부파일을 다운로드하여 직접 검토하세요."
+
+    logger.info(
+        f"[{bid_no}] 분석 완료: score={score}, verdict={verdict}, summary={len(rfp_summary)}항목, "
+        f"positive={len(positive)}개, negative={len(negative)}개"
+    )
 
     return {
         "rfp_summary": rfp_summary,
@@ -1526,32 +1695,54 @@ async def _run_fetch_and_analyze(
     preset: SearchPreset,
     profile: TeamBidProfile,
 ) -> None:
-    """백그라운드: 공고 수집 + AI 분석 + DB 저장"""
+    """
+    백그라운드: 공고 수집 + AI 분석 + DB 저장
+    
+    Pipeline:
+    1. fetch_bids_by_preset() — 신규 공고만 수집 (중복 제거)
+    2. 첨부파일 다운로드 (RFP, 공고문, 과업지시서)
+    3. BidRecommender 분석 (팀 적합도)
+    4. _analyze_bid_background() 큐 등록 (Claude RFP 통합 분석)
+    """
     try:
         client = await get_async_client()
 
         async with G2BService() as g2b:
             fetcher = BidFetcher(g2b, client)
+            
+            # Step 1: 신규 공고 수집 (중복 제거 + 첨부파일 다운로드)
             bids = await fetcher.fetch_bids_by_preset(preset)
-            # 사전규격도 수집
+            
+            # Step 2: 사전규격도 수집 (중복 제거)
             try:
                 pre_bids = await fetcher.fetch_pre_bids_by_preset(preset)
                 bids.extend(pre_bids)
+                logger.info(f"[팀 {team_id}] 신규 공고: 입찰공고 {len([b for b in bids if not b.bid_no.startswith('PRE-')])}건 + 사전규격 {len([b for b in bids if b.bid_no.startswith('PRE-')])}건")
             except Exception as e:
                 logger.debug(f"사전규격 수집 실패 (무시): {e}")
 
         if not bids:
-            logger.info(f"[팀 {team_id}] 수집된 공고 없음")
+            logger.info(f"[팀 {team_id}] 신규 공고 없음 (모두 기존 공고)")
             return
 
+        # Step 3: 팀 적합도 추천 분석
         recommender = BidRecommender()
         recommendations, qual_results = await recommender.analyze_bids(profile, bids)
 
         await _save_recommendations(client, team_id, preset.id, recommendations, qual_results, bids)
-        logger.info(f"[팀 {team_id}] 분석 완료: 추천 {len(recommendations)}건")
+        logger.info(f"[팀 {team_id}] 팀 적합도 분석 완료: 추천 {len(recommendations)}건")
+
+        # Step 4: 신규 공고들 Claude RFP 분석 큐 등록
+        # (bid_announcements에 저장된 공고들 중 analysis_status='pending'인 것들)
+        # 참고: bids는 항상 BidAnnouncement 객체 목록
+        for bid in bids:
+            if bid and hasattr(bid, 'bid_no'):
+                # asyncio.create_task로 비동기 작업 등록
+                asyncio.create_task(_analyze_bid_background(bid.bid_no))
+                logger.debug(f"[{bid.bid_no}] Claude RFP 분석 백그라운드 작업 등록")
 
     except Exception as e:
-        logger.error(f"[팀 {team_id}] 수집/분석 실패: {e}")
+        logger.error(f"[팀 {team_id}] 공고 수집/분석 실패: {e}")
         # 실패 시 last_fetched_at 초기화 → 사용자가 즉시 재수집 가능 (Rate Limit 해제)
         try:
             client = await get_async_client()
@@ -1563,6 +1754,246 @@ async def _run_fetch_and_analyze(
             )
         except Exception as reset_err:
             logger.warning(f"[팀 {team_id}] Rate Limit 초기화 실패 (무시): {reset_err}")
+
+
+
+# ============================================================
+# Phase 2: 백그라운드 분석 큐 (DB 직접 저장)
+# ============================================================
+
+async def _queue_bid_analysis(bid_no: str, background_tasks: BackgroundTasks) -> None:
+    """
+    공고 분석을 백그라운드 작업으로 등록
+    
+    호출 위치:
+    - trigger_fetch 성공 후 신규 공고들
+    - list_announcements 조회 시 pending 상태 공고들
+    """
+    logger.info(f"[{bid_no}] 분석 큐 등록")
+    background_tasks.add_task(_analyze_bid_background, bid_no)
+
+
+async def _analyze_bid_background(bid_no: str) -> None:
+    """
+    백그라운드에서 공고 분석 실행
+    - 공고 내용 로드
+    - Claude AI 분석
+    - Supabase Storage에 마크다운 저장
+    - DB에 분석 결과 저장
+    - 실패 시 error_message 기록
+    """
+    client = await get_async_client()
+    start_time = datetime.now(timezone.utc)
+    start_time_iso = start_time.isoformat()
+
+    try:
+        logger.info(f"[{bid_no}] 백그라운드 분석 시작")
+
+        # 1) DB 상태 -> 'analyzing'
+        await client.table("bid_announcements")\
+            .update({
+                "analysis_status": "analyzing",
+                "analysis_started_at": start_time_iso,
+            })\
+            .eq("bid_no", bid_no)\
+            .execute()
+        
+        # 2) 공고 내용 로드 (G2B 폴백 포함)
+        try:
+            bid, content = await _load_bid_content(bid_no)
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 공고 로드 실패 ({type(e).__name__}), 빈 값으로 진행: {e}")
+            bid = {"bid_title": "", "agency": "", "budget_amount": None}
+            content = ""
+        
+        # 3) 팀 정보 로드
+        teams_info_text, valid_team_names = _load_teams_info()
+        logger.info(f"[{bid_no}] 팀 정보 로드: {len(teams_info_text)}자")
+        
+        # 4) AI 통합 분석 실행
+        analysis_result = await _run_unified_analysis(
+            bid_no, bid, content, teams_info_text, valid_team_names
+        )
+        
+        md_paths = {}
+        
+        # 5) RFP 분석 마크다운 생성 및 저장
+        if analysis_result.get("rfp_sections"):
+            rfp_md = _format_rfp_sections(analysis_result["rfp_sections"])
+            rfp_path = await _save_markdown_to_storage(bid_no, "RFP分析", rfp_md)
+            if rfp_path:
+                md_paths["md_rfp_analysis_path"] = rfp_path
+        
+        # 6) 공고문 마크다운 생성 및 저장
+        try:
+            notice_md = _format_notice_markdown(bid, content)
+            if notice_md:
+                notice_path = await _save_markdown_to_storage(bid_no, "공고문", notice_md)
+                if notice_path:
+                    md_paths["md_notice_path"] = notice_path
+        except Exception as e:
+            logger.warning(f"[{bid_no}] 공고문 마크다운 생성 실패 ({type(e).__name__}): {e}")
+        
+        # 7) DB에 분석 결과 저장
+        end_time = datetime.now(timezone.utc)
+        end_time_iso = end_time.isoformat()
+        duration_seconds = int((end_time - start_time).total_seconds())
+
+        update_data = {
+            "analysis_status": "analyzed",
+            "rfp_summary": analysis_result.get("rfp_summary"),
+            "rfp_sections": analysis_result.get("rfp_sections"),
+            "suitability_score": analysis_result.get("suitability_score"),
+            "verdict": analysis_result.get("verdict"),
+            "fit_level": analysis_result.get("fit_level"),
+            "positive": analysis_result.get("positive"),
+            "negative": analysis_result.get("negative"),
+            "action_plan": analysis_result.get("action_plan"),
+            "recommended_teams": analysis_result.get("recommended_teams"),
+            "rfp_period": analysis_result.get("rfp_period"),
+            "analysis_completed_at": end_time_iso,
+            "analysis_duration_seconds": duration_seconds,
+            "analysis_retry_count": 0,
+            "analysis_error": None,
+            **md_paths,  # md_rfp_analysis_path, md_notice_path 등
+        }
+        
+        await client.table("bid_announcements")\
+            .update(update_data)\
+            .eq("bid_no", bid_no)\
+            .execute()
+        
+        logger.info(
+            f"[{bid_no}] ✓ 분석 완료: {analysis_result.get('suitability_score')}점 "
+            f"({analysis_result.get('verdict')}), {duration_seconds}초 소요"
+        )
+    
+    except Exception as e:
+        logger.error(f"[{bid_no}] ✗ 백그라운드 분석 실패 ({type(e).__name__}): {e}")
+
+        end_time = datetime.now(timezone.utc)
+        end_time_iso = end_time.isoformat()
+
+        try:
+            # 재시도 횟수 증가
+            result = await client.table("bid_announcements")\
+                .select("analysis_retry_count")\
+                .eq("bid_no", bid_no)\
+                .single()\
+                .execute()
+
+            retry_count = (result.data.get("analysis_retry_count") or 0) + 1
+
+            # 상태 업데이트: failed + 에러 메시지
+            await client.table("bid_announcements")\
+                .update({
+                    "analysis_status": "failed",
+                    "analysis_error": str(e)[:500],
+                    "analysis_retry_count": retry_count,
+                    "analysis_completed_at": end_time_iso,
+                })\
+                .eq("bid_no", bid_no)\
+                .execute()
+            
+            logger.warning(f"[{bid_no}] 분석 상태 업데이트 완료 (재시도: {retry_count}회)")
+            
+        except Exception as update_err:
+            logger.error(f"[{bid_no}] DB 상태 업데이트 실패 ({type(update_err).__name__}): {update_err}")
+
+
+async def _save_markdown_to_storage(bid_no: str, doc_type: str, content: str) -> str | None:
+    """
+    마크다운 문서를 Supabase Storage에 저장
+    
+    Args:
+        bid_no: 공고번호
+        doc_type: "RFP分析" | "공고문" | "과업지시서"
+        content: 마크다운 콘텐츠
+    
+    Returns:
+        저장된 경로 (storage/documents/bids/{bid_no}/{doc_type}.md)
+        또는 None (저장 실패)
+    """
+    try:
+        client = await get_async_client()
+        
+        # 파일명 결정
+        filename_map = {
+            "RFP分析": "RFP分析.md",
+            "공고문": "공고문.md",
+            "과업지시서": "과업지시서.md",
+        }
+        filename = filename_map.get(doc_type, f"{doc_type}.md")
+        path = f"bids/{bid_no}/{filename}"
+        
+        # Supabase Storage에 업로드
+        await client.storage\
+            .from_("documents")\
+            .upload(
+                path,
+                content.encode("utf-8"),
+                {
+                    "content-type": "text/markdown; charset=utf-8",
+                    "upsert": True,
+                },
+            )
+        
+        logger.info(f"[{bid_no}] ✓ 마크다운 저장: {path}")
+        return path
+    
+    except Exception as e:
+        logger.warning(f"[{bid_no}] 마크다운 저장 실패 ({doc_type}): {e}")
+        return None
+
+
+def _format_rfp_sections(sections: list[dict]) -> str:
+    """
+    RFP 섹션을 마크다운으로 포매팅
+    
+    Input: [{"label": "목적", "value": "..."}, {"label": "주요 과업", "items": [...]}]
+    Output: 마크다운 문자열
+    """
+    lines = ["# RFP 분석\n"]
+    
+    for section in sections:
+        label = section.get("label", "섹션")
+        value = section.get("value")
+        items = section.get("items", [])
+        
+        lines.append(f"## {label}\n")
+        
+        if value:
+            lines.append(f"{value}\n")
+        
+        if items:
+            for item in items:
+                lines.append(f"- {item}")
+            lines.append("")
+    
+    return "\n".join(lines)
+
+
+def _format_notice_markdown(bid: dict, content: str) -> str:
+    """
+    공고문 기본 정보를 마크다운으로 포매팅
+    """
+    lines = [
+        "# 공고문\n",
+        f"## 공고번호\n{bid.get('bid_no', 'N/A')}\n",
+        f"## 공고명\n{bid.get('bid_title', 'N/A')}\n",
+        f"## 발주기관\n{bid.get('agency', 'N/A')}\n",
+    ]
+    
+    if bid.get("budget_amount"):
+        budget = bid["budget_amount"]
+        formatted_budget = f"{budget:,}" if isinstance(budget, int) else str(budget)
+        lines.append(f"## 예산금액\n{formatted_budget}원\n")
+    
+    if content.strip():
+        lines.append("## 공고문 내용\n")
+        lines.append(content[:5000] + ("..." if len(content) > 5000 else ""))
+    
+    return "\n".join(lines)
 
 
 async def _save_recommendations(

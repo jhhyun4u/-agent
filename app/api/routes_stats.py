@@ -125,7 +125,7 @@ async def get_win_rate(
 
         # proposals 기본 쿼리: win_result 확정된 건만
         query = client.table("proposals").select(
-            "id, win_result, client_name, owner_id, team_id, created_at"
+            "id, win_result, owner_id, team_id, created_at"
         ).in_("win_result", ["won", "lost"])
 
         if scope == "personal":

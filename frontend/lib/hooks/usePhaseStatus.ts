@@ -45,11 +45,21 @@ export function usePhaseStatus(proposalId: string): UsePhaseStatusResult {
       if (!cancelled) setLoading(false);
 
       // processing 상태면 폴링 시작
-      if (data && (data.status === "processing" || data.status === "initialized" || data.status === "running")) {
+      if (
+        data &&
+        (data.status === "processing" ||
+          data.status === "initialized" ||
+          data.status === "running")
+      ) {
         pollRef.current = setInterval(async () => {
           const updated = await fetchStatus();
           // 완료/실패 시 폴링 중단
-          if (updated && updated.status !== "processing" && updated.status !== "initialized" && updated.status !== "running") {
+          if (
+            updated &&
+            updated.status !== "processing" &&
+            updated.status !== "initialized" &&
+            updated.status !== "running"
+          ) {
             if (pollRef.current) clearInterval(pollRef.current);
           }
         }, POLL_INTERVAL);
@@ -76,17 +86,23 @@ export function usePhaseStatus(proposalId: string): UsePhaseStatusResult {
             const updated = {
               ...prev,
               status: (row.status as ProposalStatus_["status"]) ?? prev.status,
-              current_phase: (row.current_phase as string) ?? prev.current_phase,
-              phases_completed: (row.phases_completed as number) ?? prev.phases_completed,
+              current_phase:
+                (row.current_phase as string) ?? prev.current_phase,
+              phases_completed:
+                (row.phases_completed as number) ?? prev.phases_completed,
               error: (row.notes as string) ?? prev.error,
             };
             // Realtime으로 완료/실패 수신 시 폴링 중단
-            if (updated.status !== "processing" && updated.status !== "initialized" && updated.status !== "running") {
+            if (
+              updated.status !== "processing" &&
+              updated.status !== "initialized" &&
+              updated.status !== "running"
+            ) {
               if (pollRef.current) clearInterval(pollRef.current);
             }
             return updated;
           });
-        }
+        },
       )
       .subscribe();
 

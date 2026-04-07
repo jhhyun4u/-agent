@@ -19,7 +19,10 @@ const SHORTCUTS = [
   { keys: ["Escape"], desc: "패널 닫기" },
 ] as const;
 
-export default function KeyboardShortcutsGuide({ open, onClose }: KeyboardShortcutsGuideProps) {
+export default function KeyboardShortcutsGuide({
+  open,
+  onClose,
+}: KeyboardShortcutsGuideProps) {
   if (!open) return null;
 
   return (
@@ -33,7 +36,9 @@ export default function KeyboardShortcutsGuide({ open, onClose }: KeyboardShortc
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-[#ededed]">키보드 단축키</h2>
+          <h2 className="text-sm font-semibold text-[#ededed]">
+            키보드 단축키
+          </h2>
           <button
             onClick={onClose}
             className="text-[#8c8c8c] hover:text-[#ededed] text-sm transition-colors"

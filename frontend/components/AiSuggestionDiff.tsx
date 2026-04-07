@@ -16,7 +16,10 @@ interface AiSuggestionDiffProps {
 }
 
 /** 간단한 문장 단위 diff (diff-match-patch 없이 동작하는 폴백) */
-function computeSimpleDiff(original: string, suggestion: string): Array<[number, string]> {
+function computeSimpleDiff(
+  original: string,
+  suggestion: string,
+): Array<[number, string]> {
   // 줄 단위 비교
   const origLines = original.split("\n");
   const suggLines = suggestion.split("\n");
@@ -87,8 +90,8 @@ export default function AiSuggestionDiff({
                 op === 1
                   ? "bg-green-500/20 text-green-300"
                   : op === -1
-                  ? "bg-red-500/20 text-red-400 line-through"
-                  : "text-[#8c8c8c]"
+                    ? "bg-red-500/20 text-red-400 line-through"
+                    : "text-[#8c8c8c]"
               }
             >
               {text}

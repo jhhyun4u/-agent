@@ -25,45 +25,81 @@
   color-scheme: light;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   background-color: var(--bg);
   color: var(--text);
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
-:root.light ::-webkit-scrollbar-track { background: var(--surface); }
-:root.light ::-webkit-scrollbar-thumb { background: var(--border); }
-:root.light ::-webkit-scrollbar-thumb:hover { background: #cbd5e0; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+:root.light ::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+:root.light ::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+:root.light ::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e0;
+}
 
 /* #1 placeholder 가독성 개선 */
-::placeholder { color: #666 !important; }
-:root.light ::placeholder { color: #a0aec0 !important; }
+::placeholder {
+  color: #666 !important;
+}
+:root.light ::placeholder {
+  color: #a0aec0 !important;
+}
 
 /* #2 focus-visible ring 강화 — 키보드 탐색 시 명확한 표시 */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 4px var(--accent);
   border-radius: 4px;
 }
 
 /* #15 disabled 상태 강화 */
-button:disabled, input:disabled, select:disabled, textarea:disabled {
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
 }
 
 /* #17 텍스트 링크 hover 밑줄 */
-a[class*="text-"]:hover { text-decoration-line: underline; text-underline-offset: 2px; }
-nav a:hover { text-decoration: none !important; }
+a[class*="text-"]:hover {
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+nav a:hover {
+  text-decoration: none !important;
+}
 
 /* #12 모바일 터치 타겟 최소 44px */
 @media (pointer: coarse) {
-  button, a, [role="button"] { min-height: 44px; }
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+  }
 }
 
 /* #18 z-index 체계 */
@@ -74,12 +110,248 @@ nav a:hover { text-decoration: none !important; }
   --z-toast: 80;
 }
 
-/* #14 버튼 사이즈 체계 */
-.btn-sm { @apply px-2.5 py-1.5 text-xs rounded-md; }
-.btn-md { @apply px-4 py-2 text-sm rounded-lg; }
-.btn-lg { @apply px-5 py-2.5 text-sm rounded-lg; }
+/* ─────────────────────────────────────────── */
+/* #14 버튼 시스템 (사이즈 + 스타일) */
+/* ─────────────────────────────────────────── */
+
+/* 사이즈 */
+.btn-sm {
+  @apply px-2.5 py-1.5 text-xs rounded-md;
+}
+.btn-md {
+  @apply px-4 py-2 text-sm rounded-lg;
+}
+.btn-lg {
+  @apply px-5 py-2.5 text-base rounded-lg;
+}
+.btn-xl {
+  @apply px-6 py-3 text-base rounded-lg;
+}
+
+/* Primary 버튼 (주요 액션) */
+.btn-primary {
+  @apply px-4 py-2 rounded-lg bg-[#3ecf8e] text-[#0f0f0f] font-semibold
+    hover:bg-[#34b87a] active:bg-[#2d9966]
+    disabled:opacity-50 disabled:cursor-not-allowed
+    transition-colors duration-150;
+}
+.btn-primary:focus-visible {
+  @apply outline-none ring-2 ring-[#3ecf8e] ring-offset-2 ring-offset-[#0f0f0f];
+}
+
+/* Secondary 버튼 (보조 액션) */
+.btn-secondary {
+  @apply px-4 py-2 rounded-lg bg-[#262626] text-[#ededed] font-medium
+    border border-[#404040]
+    hover:bg-[#303030] hover:border-[#4a4a4a]
+    active:bg-[#1c1c1c]
+    disabled:opacity-50 disabled:cursor-not-allowed
+    transition-colors duration-150;
+}
+.btn-secondary:focus-visible {
+  @apply outline-none ring-2 ring-[#404040] ring-offset-2 ring-offset-[#0f0f0f];
+}
+
+/* Danger 버튼 (삭제, 위험 액션) */
+.btn-danger {
+  @apply px-4 py-2 rounded-lg bg-red-600/20 text-red-400 font-medium
+    hover:bg-red-600/30 active:bg-red-600/40
+    disabled:opacity-50 disabled:cursor-not-allowed
+    transition-colors duration-150;
+}
+.btn-danger:focus-visible {
+  @apply outline-none ring-2 ring-red-500 ring-offset-2 ring-offset-[#0f0f0f];
+}
+
+/* Ghost 버튼 (배경 없음) */
+.btn-ghost {
+  @apply px-4 py-2 rounded-lg text-[#ededed] font-medium
+    hover:bg-[#1c1c1c] active:bg-[#262626]
+    disabled:opacity-50 disabled:cursor-not-allowed
+    transition-colors duration-150;
+}
+
+/* ─────────────────────────────────────────── */
+/* #19 입력 필드 시스템 */
+/* ─────────────────────────────────────────── */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="search"],
+textarea,
+select {
+  @apply w-full bg-[#111111] border border-[#262626] text-[#ededed]
+    rounded-lg px-3 py-2 text-sm
+    placeholder:text-[#666]
+    focus:outline-none focus:border-[#3ecf8e] focus:ring-1 focus:ring-[#3ecf8e]
+    disabled:bg-[#1c1c1c] disabled:opacity-50 disabled:cursor-not-allowed
+    transition-colors duration-150;
+}
+
+/* Textarea 추가 설정 */
+textarea {
+  @apply resize-y min-h-[100px];
+}
+
+/* 라이트 모드 입력 필드 */
+:root.light input[type="text"],
+:root.light input[type="email"],
+:root.light input[type="password"],
+:root.light input[type="number"],
+:root.light input[type="date"],
+:root.light input[type="time"],
+:root.light input[type="search"],
+:root.light textarea,
+:root.light select {
+  @apply bg-white border-gray-300 text-gray-900 placeholder:text-gray-400;
+}
+
+:root.light input[type="text"]:focus,
+:root.light input[type="email"]:focus,
+:root.light input[type="password"]:focus,
+:root.light input[type="number"]:focus,
+:root.light input[type="date"]:focus,
+:root.light input[type="time"]:focus,
+:root.light input[type="search"]:focus,
+:root.light textarea:focus,
+:root.light select:focus {
+  @apply border-green-600 ring-green-600;
+}
+
+/* ─────────────────────────────────────────── */
+/* #20 카드 컴포넌트 시스템 */
+/* ─────────────────────────────────────────── */
+
+.card {
+  @apply bg-[#1c1c1c] border border-[#262626] rounded-lg
+    p-4 shadow-sm
+    hover:border-[#303030] hover:shadow-md
+    transition-all duration-200;
+}
+
+.card-header {
+  @apply flex items-center justify-between pb-3 border-b border-[#262626];
+}
+
+.card-title {
+  @apply text-lg font-semibold text-[#ededed];
+}
+
+.card-subtitle {
+  @apply text-sm text-[#8c8c8c];
+}
+
+.card-body {
+  @apply pt-4;
+}
+
+.card-footer {
+  @apply flex items-center gap-2 pt-4 border-t border-[#262626] mt-4;
+}
+
+/* 라이트 모드 카드 */
+:root.light .card {
+  @apply bg-white border-gray-200;
+}
+
+:root.light .card:hover {
+  @apply border-gray-300;
+}
+
+:root.light .card-header,
+:root.light .card-footer {
+  @apply border-gray-200;
+}
+
+:root.light .card-title {
+  @apply text-gray-900;
+}
+
+:root.light .card-subtitle {
+  @apply text-gray-600;
+}
+
+/* ─────────────────────────────────────────── */
+/* #21 상태 색상 시스템 */
+/* ─────────────────────────────────────────── */
+
+.status-success {
+  @apply text-green-400 bg-green-600/10 px-2 py-1 rounded font-medium;
+}
+
+.status-warning {
+  @apply text-yellow-400 bg-yellow-600/10 px-2 py-1 rounded font-medium;
+}
+
+.status-error {
+  @apply text-red-400 bg-red-600/10 px-2 py-1 rounded font-medium;
+}
+
+.status-info {
+  @apply text-blue-400 bg-blue-600/10 px-2 py-1 rounded font-medium;
+}
+
+/* 라이트 모드 상태 색상 */
+:root.light .status-success {
+  @apply text-green-700 bg-green-50;
+}
+
+:root.light .status-warning {
+  @apply text-yellow-700 bg-yellow-50;
+}
+
+:root.light .status-error {
+  @apply text-red-700 bg-red-50;
+}
+
+:root.light .status-info {
+  @apply text-blue-700 bg-blue-50;
+}
+
+/* ─────────────────────────────────────────── */
+/* 애니메이션 */
+/* ─────────────────────────────────────────── */
 
 @keyframes slideX {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

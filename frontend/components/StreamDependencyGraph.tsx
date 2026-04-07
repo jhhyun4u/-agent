@@ -21,7 +21,8 @@ const DEPENDENCY_FLOWS = [
     sourceLabel: "계획: 입찰가격 산정",
     targetStream: "bidding",
     targetLabel: "비딩: 가격 기초자료",
-    description: "제안서 가격 계획에서 산정된 원가가 비딩 가격 시뮬레이션의 기초가 됩니다.",
+    description:
+      "제안서 가격 계획에서 산정된 원가가 비딩 가격 시뮬레이션의 기초가 됩니다.",
     type: "data" as const,
   },
   {
@@ -39,7 +40,8 @@ const DEPENDENCY_FLOWS = [
     sourceLabel: "제안서: HWPX 생성",
     targetStream: "documents",
     targetLabel: "제출: 기술제안서 파일",
-    description: "완성된 기술제안서 HWPX/DOCX 파일이 제출서류 체크리스트에 포함됩니다.",
+    description:
+      "완성된 기술제안서 HWPX/DOCX 파일이 제출서류 체크리스트에 포함됩니다.",
     type: "artifact" as const,
   },
   {
@@ -62,25 +64,28 @@ const DEPENDENCY_FLOWS = [
   },
 ];
 
-const STREAM_INFO: Record<string, { label: string; icon: string; color: string }> = {
+const STREAM_INFO: Record<
+  string,
+  { label: string; icon: string; color: string }
+> = {
   proposal: { label: "정성제안서", icon: "📝", color: "#3ecf8e" },
-  bidding:  { label: "비딩관리", icon: "💰", color: "#3b82f6" },
-  documents:{ label: "제출서류", icon: "📋", color: "#a855f7" },
+  bidding: { label: "비딩관리", icon: "💰", color: "#3b82f6" },
+  documents: { label: "제출서류", icon: "📋", color: "#a855f7" },
 };
 
 const TYPE_STYLE: Record<string, { color: string; label: string }> = {
-  data:     { color: "text-blue-400", label: "데이터" },
+  data: { color: "text-blue-400", label: "데이터" },
   artifact: { color: "text-purple-400", label: "산출물" },
-  gate:     { color: "text-amber-400", label: "게이트" },
+  gate: { color: "text-amber-400", label: "게이트" },
 };
 
 export default function StreamDependencyGraph({ streams }: Props) {
   function getStreamStatus(name: string): string {
-    const s = streams.find(st => st.stream === name);
+    const s = streams.find((st) => st.stream === name);
     return s?.status ?? "not_started";
   }
 
-  function isResolved(dep: typeof DEPENDENCY_FLOWS[0]): boolean {
+  function isResolved(dep: (typeof DEPENDENCY_FLOWS)[0]): boolean {
     const sourceStatus = getStreamStatus(dep.sourceStream);
     return sourceStatus === "completed";
   }
@@ -106,15 +111,21 @@ export default function StreamDependencyGraph({ streams }: Props) {
                 isComplete
                   ? "border-[#3ecf8e]/30 bg-[#3ecf8e]/5"
                   : isActive
-                  ? "border-blue-500/30 bg-blue-500/5"
-                  : "border-[#262626] bg-[#111111]"
+                    ? "border-blue-500/30 bg-blue-500/5"
+                    : "border-[#262626] bg-[#111111]"
               }`}
             >
               <span className="text-sm">{info.icon}</span>
-              <span className="text-xs font-medium text-[#ededed]">{info.label}</span>
+              <span className="text-xs font-medium text-[#ededed]">
+                {info.label}
+              </span>
               <span
                 className={`ml-auto w-2 h-2 rounded-full ${
-                  isComplete ? "bg-[#3ecf8e]" : isActive ? "bg-blue-400 animate-pulse" : "bg-[#404040]"
+                  isComplete
+                    ? "bg-[#3ecf8e]"
+                    : isActive
+                      ? "bg-blue-400 animate-pulse"
+                      : "bg-[#404040]"
                 }`}
               />
             </div>
@@ -140,7 +151,9 @@ export default function StreamDependencyGraph({ streams }: Props) {
               }`}
             >
               {/* 상태 아이콘 */}
-              <span className={`shrink-0 text-xs ${resolved ? "text-[#3ecf8e]" : "text-[#404040]"}`}>
+              <span
+                className={`shrink-0 text-xs ${resolved ? "text-[#3ecf8e]" : "text-[#404040]"}`}
+              >
                 {resolved ? "●" : "○"}
               </span>
 
@@ -157,10 +170,22 @@ export default function StreamDependencyGraph({ streams }: Props) {
 
               {/* 화살표 + 타입 */}
               <div className="flex items-center gap-1 shrink-0">
-                <svg className="w-4 h-4 text-[#404040]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="w-4 h-4 text-[#404040]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
-                <span className={`text-[9px] px-1.5 py-0.5 rounded border border-[#262626] ${typeStyle.color}`}>
+                <span
+                  className={`text-[9px] px-1.5 py-0.5 rounded border border-[#262626] ${typeStyle.color}`}
+                >
                   {typeStyle.label}
                 </span>
               </div>
@@ -193,7 +218,9 @@ export default function StreamDependencyGraph({ streams }: Props) {
         {Object.entries(TYPE_STYLE).map(([key, style]) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className={`text-[9px] ${style.color}`}>●</span>
-            <span className="text-[10px] text-[#8c8c8c]">{style.label} 의존</span>
+            <span className="text-[10px] text-[#8c8c8c]">
+              {style.label} 의존
+            </span>
           </div>
         ))}
         <div className="ml-auto flex items-center gap-1.5">

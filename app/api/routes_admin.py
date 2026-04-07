@@ -31,7 +31,7 @@ from app.api.deps import get_current_user, get_current_user_or_none, require_rol
 from app.api.response import ok, ok_list
 from app.exceptions import PropNotFoundError, TenopAPIError
 from app.models.auth_schemas import CurrentUser
-from app.models.common import ItemsResponse, StatusResponse
+from app.models.common import StatusResponse
 from app.models.admin_schemas import (
     SystemStatsResponse, RoleUpdateResponse, StatusUpdateResponse,
     DivisionDashboardResponse, ExecutiveDashboardResponse, ReopenResponse,
@@ -47,7 +47,7 @@ router = APIRouter(tags=["admin"])
 
 # ── 관리자: 사용자 관리 ──
 
-@router.get("/api/admin/users", response_model=ItemsResponse)
+@router.get("/api/admin/users")
 async def list_users(
     status: str | None = None,
     role: str | None = None,
@@ -74,7 +74,7 @@ class RoleUpdateBody(BaseModel):
     role: str  # member | lead | director | executive | admin
 
 
-@router.put("/api/admin/users/{user_id}/role", response_model=RoleUpdateResponse)
+@router.put("/api/admin/users/{user_id}/role")
 async def update_user_role(
     user_id: str,
     body: RoleUpdateBody,
@@ -102,7 +102,7 @@ class StatusUpdateBody(BaseModel):
     status: str  # active | inactive | suspended
 
 
-@router.put("/api/admin/users/{user_id}/status", response_model=StatusUpdateResponse)
+@router.put("/api/admin/users/{user_id}/status")
 async def update_user_status(
     user_id: str,
     body: StatusUpdateBody,
@@ -153,7 +153,7 @@ async def get_system_stats(user: CurrentUser = Depends(require_role("admin"))):
 
 # ── 감사 로그 ──
 
-@router.get("/api/audit-logs", response_model=ItemsResponse)
+@router.get("/api/audit-logs")
 async def list_audit_logs(
     action: str | None = None,
     resource_type: str | None = None,
@@ -493,7 +493,7 @@ async def report_client_error(
 
 # ── 모니터링 API (MON-08, MON-09) ──
 
-@router.get("/api/admin/monitoring/node-health", response_model=ItemsResponse)
+@router.get("/api/admin/monitoring/node-health")
 async def get_node_health(
     user: CurrentUser = Depends(require_role("admin")),
 ):
@@ -511,7 +511,7 @@ async def get_node_health(
     return ok_list(result.data or [])
 
 
-@router.get("/api/admin/monitoring/recent-errors", response_model=ItemsResponse)
+@router.get("/api/admin/monitoring/recent-errors")
 async def get_recent_errors(
     limit: int = Query(20, le=100),
     node: str | None = Query(None),

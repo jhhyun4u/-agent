@@ -63,6 +63,37 @@ def _make_claude_mock(fixture_override: str | None = None):
         if "섹션을 작성" in text or "SECTION_PROMPT" in text:
             return load_fixture("proposal_section.json")
 
+        # Path B: 제출서류 계획
+        if "제출서류 준비 계획" in text or "제출서류" in text:
+            return {
+                "documents": [{"doc_id": "D-01", "name": "제안서", "type": "proposal",
+                               "required": True, "format": "DOCX", "status": "pending"}],
+                "timeline": {"preparation_start": "즉시", "milestones": []},
+                "risks": [], "notes": ""
+            }
+
+        # Path B: 산출내역서
+        if "산출내역서" in text or "cost_sheet" in text:
+            return {
+                "items": [{"category": "인건비", "amount": 300_000_000}],
+                "total": 450_000_000, "notes": ""
+            }
+
+        # Path B: 제출 체크리스트
+        if "체크리스트" in text:
+            return {"checklist": [{"item": "제안서", "ready": True}], "all_ready": True}
+
+        # 6A: 모의 평가
+        if "모의 평가" in text or "평가위원" in text:
+            return {
+                "evaluators": [{"role": "기술 전문가", "total_score": 85, "scores": [],
+                                "overall_comment": "양호"}],
+                "aggregate": {"average_score": 85, "min_score": 80, "max_score": 90,
+                              "win_probability": "보통", "strengths": [], "weaknesses": [],
+                              "improvement_suggestions": []},
+                "risk_assessment": "수주 가능성 보통"
+            }
+
         # Fallback — 기본 dict 반환
         return {"status": "ok", "content": "test response"}
 
@@ -187,6 +218,8 @@ def workflow_patches():
             patch("app.graph.nodes.plan_nodes.claude_generate", side_effect=mock_claude),
             patch("app.graph.nodes.proposal_nodes.claude_generate", side_effect=mock_claude),
             patch("app.graph.nodes.ppt_nodes.claude_generate", side_effect=mock_claude),
+            patch("app.graph.nodes.submission_nodes.claude_generate", side_effect=mock_claude),
+            patch("app.graph.nodes.evaluation_nodes.claude_generate", side_effect=mock_claude),
         ]
         other_patches = [
             patch("app.utils.supabase_client.get_async_client", AsyncMock(return_value=mock_supabase)),

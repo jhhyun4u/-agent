@@ -58,7 +58,9 @@ test.describe("제안서 인라인 패널 (인증 상태)", () => {
   test("+ RFP 업로드 클릭 시 닫기 버튼 표시", async ({ page }) => {
     await page.goto("/proposals");
     await page.getByText("+ RFP 업로드").click();
-    await expect(page.getByRole("button", { name: "닫기" }).first()).toBeVisible({
+    await expect(
+      page.getByRole("button", { name: "닫기" }).first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -66,7 +68,9 @@ test.describe("제안서 인라인 패널 (인증 상태)", () => {
   test("공고에서 시작 클릭 시 닫기 버튼 표시", async ({ page }) => {
     await page.goto("/proposals");
     await page.getByText("공고에서 시작").click();
-    await expect(page.getByRole("button", { name: "닫기" }).first()).toBeVisible({
+    await expect(
+      page.getByRole("button", { name: "닫기" }).first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -74,7 +78,10 @@ test.describe("제안서 인라인 패널 (인증 상태)", () => {
   test("닫기 클릭 후 원래 버튼 복원", async ({ page }) => {
     await page.goto("/proposals");
     await page.getByText("+ RFP 업로드").click();
-    await page.getByRole("button", { name: "닫기" }).first().click({ timeout: 10000 });
+    await page
+      .getByRole("button", { name: "닫기" })
+      .first()
+      .click({ timeout: 10000 });
     await expect(page.getByText("+ RFP 업로드")).toBeVisible({
       timeout: 10000,
     });
@@ -120,7 +127,10 @@ test.describe("사이드바 — 인증 전용 요소", () => {
     await page.goto("/proposals");
     // NotificationBell 컴포넌트의 알림 아이콘
     const bell = page.locator('[aria-label="알림"]').or(
-      page.locator("button").filter({ has: page.locator("svg") }).last()
+      page
+        .locator("button")
+        .filter({ has: page.locator("svg") })
+        .last(),
     );
     // 알림 벨은 사이드바에 있으므로 존재 확인
     await expect(page.getByText("로그아웃")).toBeVisible();

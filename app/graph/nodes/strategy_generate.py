@@ -7,6 +7,7 @@ v3.2: 경쟁분석 프레임워크 + 연구수행 전략.
 """
 
 import logging
+from uuid import UUID
 
 from app.graph.state import ProposalState, Strategy, StrategyAlternative
 from app.graph.context_helpers import (
@@ -23,6 +24,7 @@ from app.prompts.strategy import (
 )
 from app.services.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
+from app.services.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -218,6 +220,21 @@ async def strategy_generate(state: ProposalState) -> dict:
         )
     except Exception as e:
         logger.debug(f"전략 KB 축적 실패 (무시): {e}")
+
+    # Phase 1: Create artifact version
+    try:
+        strategy_data = strategy.model_dump() if hasattr(strategy, "model_dump") else strategy
+        version_num, artifact_version = await execute_node_and_create_version(
+            proposal_id=UUID(state.get("project_id")),
+            node_name="strategy_generate",
+            output_key="strategy",
+            artifact_data=strategy_data,
+            user_id=UUID(state.get("created_by")),
+            state=state
+        )
+        logger.info(f"Strategy v{version_num} created for proposal {state.get('project_id')}")
+    except Exception as e:
+        logger.warning(f"Strategy versioning 실패 (계속 진행): {e}")
 
     return {
         "strategy": strategy,

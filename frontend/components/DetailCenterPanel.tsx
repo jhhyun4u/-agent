@@ -6,19 +6,32 @@
  */
 
 import { useCallback, useState } from "react";
+import { useToast } from "@/components/ui/Toast";
 import PhaseGraph from "@/components/PhaseGraph";
 import WorkflowPanel from "@/components/WorkflowPanel";
 import WorkflowLogPanel from "@/components/WorkflowLogPanel";
-import { api, type WorkflowState } from "@/lib/api";
+import { VersionSelectionModal } from "@/components/VersionSelectionModal";
+import { api, type WorkflowState, type VersionConflict } from "@/lib/api";
 import type { NodeProgress, StreamEvent } from "@/lib/hooks/useWorkflowStream";
 
 const NODE_LABELS: Record<string, string> = {
-  rfp_analyze: "RFP 분석", research_gather: "선행 리서치", go_no_go: "Go/No-Go 판정",
-  strategy_generate: "전략 수립", bid_plan: "입찰가격 계획",
-  plan_team: "팀 구성", plan_assign: "역할 배분", plan_schedule: "일정 수립",
-  plan_story: "스토리라인 설계", plan_price: "예산 산정", plan_merge: "계획 통합",
-  proposal_write_next: "섹션 작성", self_review: "자가진단",
-  presentation_strategy: "발표 전략", ppt_toc: "PPT 목차", ppt_visual_brief: "시각 설계", ppt_storyboard: "슬라이드 작성",
+  rfp_analyze: "RFP 분석",
+  research_gather: "선행 리서치",
+  go_no_go: "Go/No-Go 판정",
+  strategy_generate: "전략 수립",
+  bid_plan: "입찰가격 계획",
+  plan_team: "팀 구성",
+  plan_assign: "역할 배분",
+  plan_schedule: "일정 수립",
+  plan_story: "스토리라인 설계",
+  plan_price: "예산 산정",
+  plan_merge: "계획 통합",
+  proposal_write_next: "섹션 작성",
+  self_review: "자가진단",
+  presentation_strategy: "발표 전략",
+  ppt_toc: "PPT 목차",
+  ppt_visual_brief: "시각 설계",
+  ppt_storyboard: "슬라이드 작성",
 };
 
 interface DetailCenterPanelProps {
@@ -69,33 +82,97 @@ export default function DetailCenterPanel({
   onRetryFromPhase,
   aborting,
 }: DetailCenterPanelProps) {
+  const toast = useToast();
   const [logCollapsed, setLogCollapsed] = useState(false);
   const [gateApproving, setGateApproving] = useState(false);
   const failedPhaseN = phasesCompleted + 1;
 
+  // ── 노드 이동 (Artifact Versioning Phase 1) ──
+  const [showVersionModal, setShowVersionModal] = useState(false);
+  const [versionConflicts, setVersionConflicts] = useState<VersionConflict[]>(
+    [],
+  );
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [moveLoading, setMoveLoading] = useState(false);
+
+  const handleMoveToNode = useCallback(
+    async (targetNode: string) => {
+      try {
+        const feasibility = await api.workflow.checkMoveFeasibility(
+          proposalId,
+          targetNode,
+        );
+        if (feasibility.needs_modal && feasibility.conflicts.length > 0) {
+          setVersionConflicts(feasibility.conflicts);
+          setSelectedNode(targetNode);
+          setShowVersionModal(true);
+        } else if (feasibility.can_move) {
+          // 충돌 없음 — 즉시 이동
+          await api.workflow.moveToNode(proposalId, targetNode, {});
+          onStateChange();
+        } else {
+          toast.error("이동 불가: " + feasibility.message);
+        }
+      } catch (e) {
+        toast.error(
+          e instanceof Error ? e.message : "이동 가능 여부 확인 실패",
+        );
+      }
+    },
+    [proposalId, onStateChange],
+  );
+
+  const handleVersionSelect = useCallback(
+    async (selections: Record<string, number>) => {
+      if (!selectedNode) return;
+      setMoveLoading(true);
+      try {
+        await api.workflow.moveToNode(proposalId, selectedNode, selections);
+        setShowVersionModal(false);
+        setSelectedNode(null);
+        setVersionConflicts([]);
+        onStateChange();
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "노드 이동 실패");
+      } finally {
+        setMoveLoading(false);
+      }
+    },
+    [proposalId, selectedNode, onStateChange],
+  );
+
   const handleGateApprove = useCallback(async () => {
     setGateApproving(true);
     try {
-      await api.workflow.resume(proposalId, { approved: true, quick_approve: true });
+      await api.workflow.resume(proposalId, {
+        approved: true,
+        quick_approve: true,
+      });
       onStateChange();
     } catch (e) {
-      alert(e instanceof Error ? e.message : "승인 실패");
+      toast.error(e instanceof Error ? e.message : "승인 실패");
     } finally {
       setGateApproving(false);
     }
   }, [proposalId, onStateChange]);
 
-  const isNotStarted = !workflowState || (!workflowState.current_step && !isProcessing && !isFailed);
+  const isNotStarted =
+    !workflowState ||
+    (!workflowState.current_step && !isProcessing && !isFailed);
 
   return (
     <div className="space-y-4">
       {/* 워크플로 시작 전 안내 */}
       {isNotStarted && (
         <div className="bg-[#1c1c1c] rounded-2xl border border-[#262626] p-6">
-          <h2 className="text-sm font-semibold text-[#ededed] mb-3">AI 워크플로 안내</h2>
+          <h2 className="text-sm font-semibold text-[#ededed] mb-3">
+            AI 워크플로 안내
+          </h2>
           <p className="text-xs text-[#8c8c8c] mb-4 leading-relaxed">
-            워크플로를 시작하면 6단계를 자동으로 진행합니다.<br />
-            각 단계 완료 후 <span className="text-amber-400">사용자 검토</span> 기회가 주어집니다.
+            워크플로를 시작하면 6단계를 자동으로 진행합니다.
+            <br />각 단계 완료 후{" "}
+            <span className="text-amber-400">사용자 검토</span> 기회가
+            주어집니다.
           </p>
           <div className="grid grid-cols-3 gap-2 mb-5">
             {[
@@ -106,10 +183,17 @@ export default function DetailCenterPanel({
               { step: "5", label: "자가진단", hitl: "최종 검토" },
               { step: "6", label: "PPT 생성", hitl: "PPT 검토" },
             ].map((s) => (
-              <div key={s.step} className="bg-[#111111] rounded-lg px-3 py-2.5 border border-[#262626]">
+              <div
+                key={s.step}
+                className="bg-[#111111] rounded-lg px-3 py-2.5 border border-[#262626]"
+              >
                 <div className="flex items-center gap-1.5 mb-1">
-                  <span className="text-[10px] font-bold text-[#3ecf8e] bg-[#3ecf8e]/10 rounded w-5 h-5 flex items-center justify-center">{s.step}</span>
-                  <span className="text-xs font-medium text-[#ededed]">{s.label}</span>
+                  <span className="text-[10px] font-bold text-[#3ecf8e] bg-[#3ecf8e]/10 rounded w-5 h-5 flex items-center justify-center">
+                    {s.step}
+                  </span>
+                  <span className="text-xs font-medium text-[#ededed]">
+                    {s.label}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1 text-[10px] text-amber-400/80">
                   <span>&#9995;</span>
@@ -145,12 +229,28 @@ export default function DetailCenterPanel({
           onStepClick={(idx) => onStepClick(selectedStep === idx ? null : idx)}
           onStartStep={() => onStartWorkflow()}
           onGateApprove={handleGateApprove}
+          onMoveToNode={handleMoveToNode}
           isStarting={isStarting}
           isGateApproving={gateApproving}
           isPaused={isPaused}
           elapsed={elapsed}
           onAbort={onAbort}
           aborting={aborting}
+        />
+      )}
+
+      {/* 버전 선택 모달 */}
+      {showVersionModal && (
+        <VersionSelectionModal
+          conflicts={versionConflicts}
+          availableVersions={{}}
+          onSelect={handleVersionSelect}
+          onCancel={() => {
+            setShowVersionModal(false);
+            setSelectedNode(null);
+            setVersionConflicts([]);
+          }}
+          loading={moveLoading}
         />
       )}
 
@@ -165,12 +265,20 @@ export default function DetailCenterPanel({
       {/* 실패 상태 */}
       {isFailed && (
         <div className="flex items-center justify-between bg-[#1c1c1c] rounded-2xl border border-red-500/30 px-5 py-3">
-          <span className="text-xs text-red-400">{error || "처리 중 오류 발생"}</span>
+          <span className="text-xs text-red-400">
+            {error || "처리 중 오류 발생"}
+          </span>
           <div className="flex items-center gap-2">
-            <button onClick={onRetry} className="text-xs text-[#3ecf8e] hover:text-[#49e59e] border border-[#3ecf8e]/30 rounded-lg px-2.5 py-1 transition-colors">
+            <button
+              onClick={onRetry}
+              className="text-xs text-[#3ecf8e] hover:text-[#49e59e] border border-[#3ecf8e]/30 rounded-lg px-2.5 py-1 transition-colors"
+            >
               재시도
             </button>
-            <button onClick={() => onRetryFromPhase(failedPhaseN)} className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors">
+            <button
+              onClick={() => onRetryFromPhase(failedPhaseN)}
+              className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded-lg px-2.5 py-1 transition-colors"
+            >
               Phase {failedPhaseN}부터 재시작
             </button>
           </div>

@@ -12,6 +12,11 @@ import { useCallback, useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import Placeholder from "@tiptap/extension-placeholder";
 
 interface ProposalEditorProps {
   content: string;
@@ -39,6 +44,13 @@ export default function ProposalEditor({
         HTMLAttributes: {
           class: "bg-amber-500/20 text-amber-200 rounded px-0.5",
         },
+      }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableCell,
+      TableHeader,
+      Placeholder.configure({
+        placeholder: "이 섹션의 내용을 작성하세요...",
       }),
     ],
     content,
@@ -101,7 +113,7 @@ function Toolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
     label: string,
     active: boolean,
     onClick: () => void,
-    ariaLabel?: string
+    ariaLabel?: string,
   ) => (
     <button
       onClick={onClick}
@@ -118,44 +130,67 @@ function Toolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
 
   return (
     <div className="flex items-center gap-0.5 px-3 py-1.5 bg-[#1c1c1c] border-b border-[#262626] flex-wrap">
-      {btn("B", editor.isActive("bold"), () =>
-        editor.chain().focus().toggleBold().run(), "볼드"
+      {btn(
+        "B",
+        editor.isActive("bold"),
+        () => editor.chain().focus().toggleBold().run(),
+        "볼드",
       )}
-      {btn("I", editor.isActive("italic"), () =>
-        editor.chain().focus().toggleItalic().run(), "이탤릭"
+      {btn(
+        "I",
+        editor.isActive("italic"),
+        () => editor.chain().focus().toggleItalic().run(),
+        "이탤릭",
       )}
-      {btn("U̲", editor.isActive("underline"), () =>
-        editor.chain().focus().toggleStrike().run(), "취소선"
+      {btn(
+        "U̲",
+        editor.isActive("underline"),
+        () => editor.chain().focus().toggleStrike().run(),
+        "취소선",
       )}
 
       <div className="w-px h-4 bg-[#262626] mx-1" />
 
       {btn("H1", editor.isActive("heading", { level: 1 }), () =>
-        editor.chain().focus().toggleHeading({ level: 1 }).run()
+        editor.chain().focus().toggleHeading({ level: 1 }).run(),
       )}
       {btn("H2", editor.isActive("heading", { level: 2 }), () =>
-        editor.chain().focus().toggleHeading({ level: 2 }).run()
+        editor.chain().focus().toggleHeading({ level: 2 }).run(),
       )}
       {btn("H3", editor.isActive("heading", { level: 3 }), () =>
-        editor.chain().focus().toggleHeading({ level: 3 }).run()
+        editor.chain().focus().toggleHeading({ level: 3 }).run(),
       )}
 
       <div className="w-px h-4 bg-[#262626] mx-1" />
 
       {btn("• 목록", editor.isActive("bulletList"), () =>
-        editor.chain().focus().toggleBulletList().run()
+        editor.chain().focus().toggleBulletList().run(),
       )}
       {btn("1. 목록", editor.isActive("orderedList"), () =>
-        editor.chain().focus().toggleOrderedList().run()
+        editor.chain().focus().toggleOrderedList().run(),
       )}
       {btn("인용", editor.isActive("blockquote"), () =>
-        editor.chain().focus().toggleBlockquote().run()
+        editor.chain().focus().toggleBlockquote().run(),
       )}
 
       <div className="w-px h-4 bg-[#262626] mx-1" />
 
       {btn("하이라이트", editor.isActive("highlight"), () =>
-        editor.chain().focus().toggleHighlight().run()
+        editor.chain().focus().toggleHighlight().run(),
+      )}
+
+      <div className="w-px h-4 bg-[#262626] mx-1" />
+
+      {btn(
+        "표 삽입",
+        false,
+        () =>
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            .run(),
+        "표 삽입",
       )}
     </div>
   );

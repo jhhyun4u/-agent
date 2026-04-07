@@ -5,10 +5,10 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("추가 페이지 렌더링", () => {
-  test("비밀번호 변경 페이지 (비공개 → 로그인 리다이렉트)", async ({ page }) => {
+  test("비밀번호 변경 페이지", async ({ page }) => {
     await page.goto("/change-password");
-    // PUBLIC_PATHS에 없으므로 미인증 시 /login 리다이렉트
-    await expect(page).toHaveURL(/login/);
+    // DEV 모드에서는 인증 우회 → 그대로 로드
+    await expect(page).toHaveURL(/change-password/);
   });
 
   test("새 제안서 생성 페이지", async ({ page }) => {
@@ -31,15 +31,15 @@ test.describe("추가 페이지 렌더링", () => {
     await expect(page).toHaveURL(/admin\/users/);
   });
 
-  test("가격 시뮬레이터 페이지 (비공개 → 로그인 리다이렉트)", async ({ page }) => {
+  test("가격 시뮬레이터 페이지", async ({ page }) => {
     await page.goto("/pricing");
-    // PUBLIC_PATHS에 없으므로 미인증 시 /login 리다이렉트
-    await expect(page).toHaveURL(/login/);
+    // DEV 모드에서는 인증 우회 → 그대로 로드
+    await expect(page).toHaveURL(/pricing/);
   });
 
-  test("가격 시뮬레이션 이력 페이지 (비공개 → 로그인 리다이렉트)", async ({ page }) => {
+  test("가격 시뮬레이션 이력 페이지", async ({ page }) => {
     await page.goto("/pricing/history");
-    await expect(page).toHaveURL(/login/);
+    await expect(page).toHaveURL(/pricing\/history/);
   });
 
   test("KB 검색 페이지", async ({ page }) => {

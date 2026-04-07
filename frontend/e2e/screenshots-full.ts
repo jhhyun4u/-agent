@@ -49,14 +49,25 @@ async function main() {
     const ctx = p.auth && authCtx ? authCtx : publicCtx;
     const page = await ctx.newPage();
     try {
-      await page.goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 20000 });
+      await page.goto(`${BASE}${p.url}`, {
+        waitUntil: "networkidle",
+        timeout: 20000,
+      });
     } catch {
       try {
-        await page.goto(`${BASE}${p.url}`, { waitUntil: "load", timeout: 10000 });
-      } catch { /* best effort */ }
+        await page.goto(`${BASE}${p.url}`, {
+          waitUntil: "load",
+          timeout: 10000,
+        });
+      } catch {
+        /* best effort */
+      }
     }
     await page.waitForTimeout(1500);
-    await page.screenshot({ path: path.join(OUT, `${p.name}.png`), fullPage: false });
+    await page.screenshot({
+      path: path.join(OUT, `${p.name}.png`),
+      fullPage: false,
+    });
     console.log(`  captured: ${p.name}`);
     await page.close();
   }

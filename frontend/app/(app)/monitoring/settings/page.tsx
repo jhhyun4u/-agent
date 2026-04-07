@@ -56,7 +56,12 @@ function TagInput({
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag(); } }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            addTag();
+          }
+        }}
         onBlur={addTag}
         placeholder={tags.length === 0 ? placeholder : ""}
         className="flex-1 min-w-[80px] bg-transparent text-xs text-[#ededed] placeholder-[#5c5c5c] outline-none"
@@ -79,11 +84,18 @@ export default function BidsSettingsPage() {
   useEffect(() => {
     (async () => {
       const { data } = await createClient().auth.getSession();
-      if (!data.session && process.env.NODE_ENV !== "development") { router.push("/login"); return; }
+      if (!data.session && process.env.NODE_ENV !== "development") {
+        router.push("/login");
+        return;
+      }
       try {
         const res = await api.teams.list();
         const team = res.teams[0];
-        if (!team) { setNoTeam(true); setLoading(false); return; }
+        if (!team) {
+          setNoTeam(true);
+          setLoading(false);
+          return;
+        }
         setTeamId(team.team_id);
 
         // 온보딩 상태 확인
@@ -91,8 +103,10 @@ export default function BidsSettingsPage() {
           api.bids.getProfile(team.team_id),
           api.bids.listPresets(team.team_id),
         ]);
-        if (profileRes.status === "fulfilled") setHasProfile(!!profileRes.value.data);
-        if (presetRes.status === "fulfilled") setHasActivePreset(presetRes.value.data.some((p) => p.is_active));
+        if (profileRes.status === "fulfilled")
+          setHasProfile(!!profileRes.value.data);
+        if (presetRes.status === "fulfilled")
+          setHasActivePreset(presetRes.value.data.some((p) => p.is_active));
       } catch {
         setNoTeam(true);
       } finally {
@@ -102,15 +116,23 @@ export default function BidsSettingsPage() {
   }, [router]);
 
   if (loading) {
-    return <div className="flex-1 flex items-center justify-center"><p className="text-sm text-[#5c5c5c]">불러오는 중...</p></div>;
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-sm text-[#5c5c5c]">불러오는 중...</p>
+      </div>
+    );
   }
 
   if (noTeam) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-6">
-        <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl">👥</div>
+        <div className="w-12 h-12 rounded-xl bg-[#1c1c1c] border border-[#262626] flex items-center justify-center text-2xl">
+          👥
+        </div>
         <h3 className="text-sm font-semibold text-[#ededed]">팀이 없습니다</h3>
-        <p className="text-xs text-[#8c8c8c] max-w-xs">공고 모니터링을 사용하려면 먼저 팀을 생성하세요.</p>
+        <p className="text-xs text-[#8c8c8c] max-w-xs">
+          공고 모니터링을 사용하려면 먼저 팀을 생성하세요.
+        </p>
         <button
           onClick={() => router.push("/admin")}
           className="bg-[#3ecf8e] hover:bg-[#49e59e] text-black font-semibold rounded-lg px-5 py-2 text-sm transition-colors"
@@ -138,30 +160,47 @@ export default function BidsSettingsPage() {
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       {/* 헤더 */}
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
-        <h1 className="text-sm font-semibold text-[#ededed]">공고 모니터링 설정</h1>
-        <p className="text-xs text-[#8c8c8c] mt-0.5">팀 프로필과 검색 조건을 설정합니다</p>
+        <h1 className="text-sm font-semibold text-[#ededed]">
+          공고 모니터링 설정
+        </h1>
+        <p className="text-xs text-[#8c8c8c] mt-0.5">
+          팀 프로필과 검색 조건을 설정합니다
+        </p>
       </div>
 
       {/* 온보딩 진행 상태 */}
       <div className="border-b border-[#262626] px-6 py-2.5 shrink-0 bg-[#111111]">
         <div className="flex items-center gap-2">
-          {([
-            { step: 1, label: "팀 프로필 저장", done: step1Done },
-            { step: 2, label: "검색 조건 활성화", done: step2Done },
-            { step: 3, label: "공고 수집", done: false },
-          ] as const).map((s, i, arr) => (
+          {(
+            [
+              { step: 1, label: "팀 프로필 저장", done: step1Done },
+              { step: 2, label: "검색 조건 활성화", done: step2Done },
+              { step: 3, label: "공고 수집", done: false },
+            ] as const
+          ).map((s, i, arr) => (
             <div key={s.step} className="flex items-center gap-2">
-              <div className={`flex items-center gap-1.5 ${s.done ? "text-[#3ecf8e]" : currentStep === s.step ? "text-[#ededed]" : "text-[#5c5c5c]"}`}>
-                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center border shrink-0 font-bold ${s.done ? "bg-[#3ecf8e] border-[#3ecf8e] text-black" : currentStep === s.step ? "border-[#ededed]" : "border-[#3c3c3c]"}`}>
+              <div
+                className={`flex items-center gap-1.5 ${s.done ? "text-[#3ecf8e]" : currentStep === s.step ? "text-[#ededed]" : "text-[#5c5c5c]"}`}
+              >
+                <span
+                  className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center border shrink-0 font-bold ${s.done ? "bg-[#3ecf8e] border-[#3ecf8e] text-black" : currentStep === s.step ? "border-[#ededed]" : "border-[#3c3c3c]"}`}
+                >
                   {s.done ? "✓" : s.step}
                 </span>
                 <span className="text-xs whitespace-nowrap">{s.label}</span>
               </div>
-              {i < arr.length - 1 && <span className="text-[#3c3c3c] text-xs">→</span>}
+              {i < arr.length - 1 && (
+                <span className="text-[#3c3c3c] text-xs">→</span>
+              )}
             </div>
           ))}
           {currentStep === 3 && (
-            <a href="/monitoring" className="ml-auto text-xs text-[#3ecf8e] hover:underline">공고 수집하러 가기 →</a>
+            <a
+              href="/monitoring"
+              className="ml-auto text-xs text-[#3ecf8e] hover:underline"
+            >
+              공고 수집하러 가기 →
+            </a>
           )}
         </div>
       </div>
@@ -174,7 +213,9 @@ export default function BidsSettingsPage() {
               key={t}
               onClick={() => setTab(t)}
               className={`px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
-                tab === t ? "border-[#3ecf8e] text-[#ededed]" : "border-transparent text-[#8c8c8c] hover:text-[#ededed]"
+                tab === t
+                  ? "border-[#3ecf8e] text-[#ededed]"
+                  : "border-transparent text-[#8c8c8c] hover:text-[#ededed]"
               }`}
             >
               {t === "profile" ? "팀 프로필" : "검색 조건 프리셋"}
@@ -196,7 +237,13 @@ export default function BidsSettingsPage() {
 
 // ── 탭 1: 팀 프로필 ──────────────────────────────────────────
 
-function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void }) {
+function ProfileTab({
+  teamId,
+  onSaved,
+}: {
+  teamId: string;
+  onSaved?: () => void;
+}) {
   const [profile, setProfile] = useState<BidProfileInput>({
     expertise_areas: [],
     tech_keywords: [],
@@ -223,7 +270,8 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
             past_projects: res.data.past_projects,
             company_size: res.data.company_size ?? "",
             certifications: res.data.certifications,
-            business_registration_type: res.data.business_registration_type ?? "",
+            business_registration_type:
+              res.data.business_registration_type ?? "",
             employee_count: res.data.employee_count ?? undefined,
             founded_year: res.data.founded_year ?? undefined,
           });
@@ -251,7 +299,8 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
     }
   }
 
-  if (loading) return <div className="text-sm text-[#5c5c5c]">불러오는 중...</div>;
+  if (loading)
+    return <div className="text-sm text-[#5c5c5c]">불러오는 중...</div>;
 
   return (
     <div className="max-w-2xl space-y-5">
@@ -272,10 +321,15 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
           />
         </Field>
 
-        <Field label="수행실적 요약" hint="자유 텍스트, AI 자격 판정에 활용됩니다">
+        <Field
+          label="수행실적 요약"
+          hint="자유 텍스트, AI 자격 판정에 활용됩니다"
+        >
           <textarea
             value={profile.past_projects}
-            onChange={(e) => setProfile((p) => ({ ...p, past_projects: e.target.value }))}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, past_projects: e.target.value }))
+            }
             rows={4}
             placeholder="예: 행정안전부 AI 챗봇 구축 (2023, 3억), 교육부 LLM 교육 플랫폼 개발 (2024, 5억)..."
             className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] resize-none focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
@@ -286,7 +340,9 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
           <Field label="기업 규모" hint="공공조달 자격 판정 기준">
             <select
               value={profile.company_size ?? ""}
-              onChange={(e) => setProfile((p) => ({ ...p, company_size: e.target.value }))}
+              onChange={(e) =>
+                setProfile((p) => ({ ...p, company_size: e.target.value }))
+              }
               className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
             >
               <option value="">선택 안 함</option>
@@ -300,7 +356,12 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
           <Field label="사업자 유형" hint="일부 공고는 특정 유형만 참여 가능">
             <select
               value={profile.business_registration_type ?? ""}
-              onChange={(e) => setProfile((p) => ({ ...p, business_registration_type: e.target.value }))}
+              onChange={(e) =>
+                setProfile((p) => ({
+                  ...p,
+                  business_registration_type: e.target.value,
+                }))
+              }
               className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
             >
               <option value="">선택 안 함</option>
@@ -317,7 +378,14 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
               type="number"
               min={0}
               value={profile.employee_count ?? ""}
-              onChange={(e) => setProfile((p) => ({ ...p, employee_count: e.target.value ? Number(e.target.value) : undefined }))}
+              onChange={(e) =>
+                setProfile((p) => ({
+                  ...p,
+                  employee_count: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
+                }))
+              }
               placeholder="예: 25"
               className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
             />
@@ -329,7 +397,14 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
               min={1900}
               max={2100}
               value={profile.founded_year ?? ""}
-              onChange={(e) => setProfile((p) => ({ ...p, founded_year: e.target.value ? Number(e.target.value) : undefined }))}
+              onChange={(e) =>
+                setProfile((p) => ({
+                  ...p,
+                  founded_year: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
+                }))
+              }
               placeholder="예: 2018"
               className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
             />
@@ -361,11 +436,11 @@ function ProfileTab({ teamId, onSaved }: { teamId: string; onSaved?: () => void 
 // ── 탭 2: 검색 프리셋 ────────────────────────────────────────
 
 const DATE_RANGE_OPTIONS = [
-  { value: 7,   label: "1주일 이내" },
-  { value: 14,  label: "2주일 이내" },
-  { value: 30,  label: "1개월 이내" },
-  { value: 90,  label: "3개월 이내" },
-  { value: 0,   label: "제한 없음" },
+  { value: 7, label: "1주일 이내" },
+  { value: 14, label: "2주일 이내" },
+  { value: 30, label: "1개월 이내" },
+  { value: 90, label: "3개월 이내" },
+  { value: 0, label: "제한 없음" },
 ] as const;
 
 const DEFAULT_PRESET: SearchPresetInput = {
@@ -378,7 +453,13 @@ const DEFAULT_PRESET: SearchPresetInput = {
   announce_date_range_days: 14,
 };
 
-function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetActivated?: () => void }) {
+function PresetsTab({
+  teamId,
+  onPresetActivated,
+}: {
+  teamId: string;
+  onPresetActivated?: () => void;
+}) {
   const [presets, setPresets] = useState<SearchPreset[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null); // preset id or "new"
@@ -397,7 +478,9 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
     }
   }
 
-  useEffect(() => { load(); }, [teamId]);
+  useEffect(() => {
+    load();
+  }, [teamId]);
 
   function startNew() {
     setForm(DEFAULT_PRESET);
@@ -421,7 +504,8 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
 
   async function handleSave() {
     if (!form.name.trim() || form.keywords.length === 0) {
-      setError("프리셋명과 키워드는 필수입니다."); return;
+      setError("프리셋명과 키워드는 필수입니다.");
+      return;
     }
     setSaving(true);
     setError("");
@@ -460,7 +544,8 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
     }
   }
 
-  if (loading) return <div className="text-sm text-[#5c5c5c]">불러오는 중...</div>;
+  if (loading)
+    return <div className="text-sm text-[#5c5c5c]">불러오는 중...</div>;
 
   return (
     <div className="max-w-2xl space-y-4">
@@ -470,11 +555,16 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
       {presets.length > 0 && !editing && (
         <div className="space-y-2">
           {presets.map((p) => (
-            <div key={p.id} className="rounded-lg border border-[#262626] bg-[#111111] p-4">
+            <div
+              key={p.id}
+              className="rounded-lg border border-[#262626] bg-[#111111] p-4"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-[#ededed]">{p.name}</span>
+                    <span className="text-sm font-medium text-[#ededed]">
+                      {p.name}
+                    </span>
                     {p.is_active && (
                       <span className="text-xs px-1.5 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-900">
                         활성
@@ -482,10 +572,11 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
                     )}
                   </div>
                   <p className="text-xs text-[#5c5c5c]">
-                    키워드: {p.keywords.join(", ")} · 최소 {(p.min_budget / 100_000_000).toFixed(1)}억 · 잔여 {p.min_days_remaining}일
-                    {" · "}
+                    키워드: {p.keywords.join(", ")} · 최소{" "}
+                    {(p.min_budget / 100_000_000).toFixed(1)}억 · 잔여{" "}
+                    {p.min_days_remaining}일{" · "}
                     {p.announce_date_range_days > 0
-                      ? `최근 ${DATE_RANGE_OPTIONS.find(o => o.value === p.announce_date_range_days)?.label ?? `${p.announce_date_range_days}일`}`
+                      ? `최근 ${DATE_RANGE_OPTIONS.find((o) => o.value === p.announce_date_range_days)?.label ?? `${p.announce_date_range_days}일`}`
                       : "기간 제한 없음"}
                   </p>
                 </div>
@@ -536,7 +627,9 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
           <Field label="검색 키워드" hint="Enter로 추가, 최대 5개" required>
             <TagInput
               tags={form.keywords}
-              onChange={(v) => setForm((f) => ({ ...f, keywords: v.slice(0, 5) }))}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, keywords: v.slice(0, 5) }))
+              }
               placeholder="AI, LLM, 교육..."
             />
           </Field>
@@ -548,7 +641,12 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
                 min={0}
                 step={0.5}
                 value={form.min_budget / 100_000_000}
-                onChange={(e) => setForm((f) => ({ ...f, min_budget: Number(e.target.value) * 100_000_000 }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    min_budget: Number(e.target.value) * 100_000_000,
+                  }))
+                }
                 className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
               />
             </Field>
@@ -559,7 +657,12 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
                 min={1}
                 max={30}
                 value={form.min_days_remaining}
-                onChange={(e) => setForm((f) => ({ ...f, min_days_remaining: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    min_days_remaining: Number(e.target.value),
+                  }))
+                }
                 className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
               />
             </Field>
@@ -567,11 +670,18 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
             <Field label="검색 대상 기간" hint="공고 등록일 기준">
               <select
                 value={form.announce_date_range_days}
-                onChange={(e) => setForm((f) => ({ ...f, announce_date_range_days: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    announce_date_range_days: Number(e.target.value),
+                  }))
+                }
                 className="w-full bg-[#1c1c1c] border border-[#262626] rounded-lg px-3 py-1.5 text-sm text-[#ededed] focus:outline-none focus:ring-1 focus:ring-[#3ecf8e]"
               >
                 {DATE_RANGE_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -580,7 +690,10 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
           <Field label="공고 종류">
             <div className="flex gap-3">
               {["용역", "공사", "물품"].map((type) => (
-                <label key={type} className="flex items-center gap-1.5 cursor-pointer">
+                <label
+                  key={type}
+                  className="flex items-center gap-1.5 cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     checked={form.bid_types.includes(type)}
@@ -599,14 +712,21 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
               ))}
             </div>
             {form.bid_types.some((t) => t !== "용역") && (
-              <p className="text-xs text-orange-400 mt-1">공사·물품 공고는 일반 용역과 성격이 다를 수 있습니다.</p>
+              <p className="text-xs text-orange-400 mt-1">
+                공사·물품 공고는 일반 용역과 성격이 다를 수 있습니다.
+              </p>
             )}
           </Field>
 
-          <Field label="우선 발주처" hint="Enter로 추가 · 비워두면 전체 기관 대상">
+          <Field
+            label="우선 발주처"
+            hint="Enter로 추가 · 비워두면 전체 기관 대상"
+          >
             <TagInput
               tags={form.preferred_agencies}
-              onChange={(v) => setForm((f) => ({ ...f, preferred_agencies: v }))}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, preferred_agencies: v }))
+              }
               placeholder="행정안전부, 교육부, 한국지능정보사회진흥원..."
             />
           </Field>
@@ -622,7 +742,10 @@ function PresetsTab({ teamId, onPresetActivated }: { teamId: string; onPresetAct
               {saving ? "저장 중..." : "저장"}
             </button>
             <button
-              onClick={() => { setEditing(null); setError(""); }}
+              onClick={() => {
+                setEditing(null);
+                setError("");
+              }}
               className="px-4 py-1.5 text-sm text-[#8c8c8c] border border-[#262626] rounded-lg hover:bg-[#1a1a1a] hover:text-[#ededed] transition-colors"
             >
               취소
@@ -659,7 +782,9 @@ function Field({
       <label className="block text-xs font-medium text-[#8c8c8c] mb-1.5">
         {label}
         {required && <span className="text-red-400 ml-0.5">*</span>}
-        {hint && <span className="font-normal text-[#5c5c5c] ml-1.5">{hint}</span>}
+        {hint && (
+          <span className="font-normal text-[#5c5c5c] ml-1.5">{hint}</span>
+        )}
       </label>
       {children}
     </div>

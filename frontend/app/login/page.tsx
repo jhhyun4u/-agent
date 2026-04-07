@@ -18,7 +18,10 @@ function LoginContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
 
   const supabase = createClient();
 
@@ -28,7 +31,10 @@ function LoginContent() {
     setMessage(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (error) throw error;
 
       // 프로필 조회 → must_change_password 확인
@@ -47,7 +53,11 @@ function LoginContent() {
             }
           } else {
             // 프로필 조회 실패 — DB 미설정 시에도 로그인 진행 (개발 모드)
-            console.warn("프로필 조회 실패:", res.status, "— 로그인은 계속 진행");
+            console.warn(
+              "프로필 조회 실패:",
+              res.status,
+              "— 로그인은 계속 진행",
+            );
           }
         } catch (err) {
           // 네트워크 오류 시에도 로그인 진행 (개발 모드)
@@ -70,14 +80,22 @@ function LoginContent() {
       {/* 좌측 브랜드 패널 */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 border-r border-[#262626]">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-          <span className="text-[#ededed] font-semibold text-sm">Proposal Coworker</span>
+          <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">
+            PA
+          </div>
+          <span className="text-[#ededed] font-semibold text-sm">
+            Proposal Coworker
+          </span>
         </div>
         <div>
           <blockquote className="text-[#ededed] text-xl font-medium leading-relaxed mb-4">
-            &ldquo;이기는 제안서,<br />AI Coworker와 함께 만듭니다.&rdquo;
+            &ldquo;이기는 제안서,
+            <br />
+            AI Coworker와 함께 만듭니다.&rdquo;
           </blockquote>
-          <p className="text-[#8c8c8c] text-sm">프로젝트 수주 성공률을 높이는 AI Coworker</p>
+          <p className="text-[#8c8c8c] text-sm">
+            프로젝트 수주 성공률을 높이는 AI Coworker
+          </p>
         </div>
         <p className="text-[#8c8c8c] text-xs">&copy; 2026 tenopa</p>
       </div>
@@ -87,8 +105,12 @@ function LoginContent() {
         <div className="w-full max-w-sm">
           {/* 모바일 로고 */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">PA</div>
-            <span className="text-[#ededed] font-semibold text-sm">Proposal Coworker</span>
+            <div className="w-7 h-7 rounded-md bg-[#3ecf8e] flex items-center justify-center font-bold text-black text-[10px]">
+              PA
+            </div>
+            <span className="text-[#ededed] font-semibold text-sm">
+              Proposal Coworker
+            </span>
           </div>
 
           <h2 className="text-xl font-semibold text-[#ededed] mb-1">로그인</h2>
@@ -108,7 +130,9 @@ function LoginContent() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#ededed] mb-1.5">이메일</label>
+              <label className="block text-sm font-medium text-[#ededed] mb-1.5">
+                이메일
+              </label>
               <input
                 type="email"
                 required
@@ -120,7 +144,9 @@ function LoginContent() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#ededed] mb-1.5">비밀번호</label>
+              <label className="block text-sm font-medium text-[#ededed] mb-1.5">
+                비밀번호
+              </label>
               <input
                 type="password"
                 required

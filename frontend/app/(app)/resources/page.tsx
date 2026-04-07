@@ -80,7 +80,9 @@ const EMPTY_TEMPLATE_FORM: TemplateUploadForm = {
 // ── 페이지 컴포넌트 ───────────────────────────────────────────────────
 
 export default function ResourcesPage() {
-  const [pageTab, setPageTab] = useState<"sections" | "company" | "templates">("sections");
+  const [pageTab, setPageTab] = useState<"sections" | "company" | "templates">(
+    "sections",
+  );
   const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -97,7 +99,8 @@ export default function ResourcesPage() {
   const [templateCategory, setTemplateCategory] = useState("");
   const [uploadingTemplate, setUploadingTemplate] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
-  const [templateUploadForm, setTemplateUploadForm] = useState<TemplateUploadForm>(EMPTY_TEMPLATE_FORM);
+  const [templateUploadForm, setTemplateUploadForm] =
+    useState<TemplateUploadForm>(EMPTY_TEMPLATE_FORM);
   const [templateFormError, setTemplateFormError] = useState("");
 
   // 모달 상태
@@ -181,9 +184,12 @@ export default function ResourcesPage() {
     try {
       const fd = new FormData();
       fd.append("title", templateUploadForm.title.trim());
-      if (templateUploadForm.agency) fd.append("agency", templateUploadForm.agency.trim());
-      if (templateUploadForm.category) fd.append("category", templateUploadForm.category.trim());
-      if (templateUploadForm.description) fd.append("description", templateUploadForm.description.trim());
+      if (templateUploadForm.agency)
+        fd.append("agency", templateUploadForm.agency.trim());
+      if (templateUploadForm.category)
+        fd.append("category", templateUploadForm.category.trim());
+      if (templateUploadForm.description)
+        fd.append("description", templateUploadForm.description.trim());
       fd.append("is_public", String(templateUploadForm.is_public));
       fd.append("file", templateUploadForm.file);
       await api.formTemplates.upload(fd);
@@ -285,71 +291,81 @@ export default function ResourcesPage() {
 
   return (
     <>
-        {/* 헤더 */}
-        <header className="border-b border-[#262626] px-6 py-4 bg-[#111111] shrink-0">
-          <h1 className="text-base font-semibold text-[#ededed]">자료 관리</h1>
-        </header>
+      {/* 헤더 */}
+      <header className="border-b border-[#262626] px-6 py-4 bg-[#111111] shrink-0">
+        <h1 className="text-base font-semibold text-[#ededed]">자료 관리</h1>
+      </header>
 
-        {/* 페이지 탭 */}
-        <div className="border-b border-[#262626] px-6 bg-[#111111] shrink-0">
-          <div className="flex gap-0">
-            {(["sections", "company", "templates"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setPageTab(tab)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  pageTab === tab
-                    ? "border-[#3ecf8e] text-[#ededed]"
-                    : "border-transparent text-[#8c8c8c] hover:text-[#ededed]"
-                }`}
-              >
-                {tab === "sections" ? "섹션 라이브러리" : tab === "company" ? "회사 자료" : "공통서식"}
-              </button>
-            ))}
-          </div>
+      {/* 페이지 탭 */}
+      <div className="border-b border-[#262626] px-6 bg-[#111111] shrink-0">
+        <div className="flex gap-0">
+          {(["sections", "company", "templates"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setPageTab(tab)}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                pageTab === tab
+                  ? "border-[#3ecf8e] text-[#ededed]"
+                  : "border-transparent text-[#8c8c8c] hover:text-[#ededed]"
+              }`}
+            >
+              {tab === "sections"
+                ? "섹션 라이브러리"
+                : tab === "company"
+                  ? "회사 자료"
+                  : "공통서식"}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* 콘텐츠 */}
-        <div className="flex-1 overflow-y-auto">
-          {pageTab === "sections" ? (
-            <SectionsTab
-              sections={sections}
-              loading={loading}
-              error={error}
-              scope={scope}
-              setScope={setScope}
-              category={category}
-              setCategory={setCategory}
-              q={q}
-              setQ={setQ}
-              currentUserId={currentUserId}
-              onEdit={openEdit}
-              onDelete={handleDelete}
-              onAdd={openCreate}
-            />
-          ) : pageTab === "company" ? (
-            <CompanyTab />
-          ) : (
-            <TemplatesTab
-              templates={templates}
-              loading={templatesLoading}
-              agency={templateAgency}
-              setAgency={setTemplateAgency}
-              category={templateCategory}
-              setCategory={setTemplateCategory}
-              onSearch={loadTemplates}
-              onDelete={handleTemplateDelete}
-              onAdd={() => { setTemplateFormError(""); setTemplateUploadForm(EMPTY_TEMPLATE_FORM); setShowTemplateModal(true); }}
-            />
-          )}
-        </div>
+      {/* 콘텐츠 */}
+      <div className="flex-1 overflow-y-auto">
+        {pageTab === "sections" ? (
+          <SectionsTab
+            sections={sections}
+            loading={loading}
+            error={error}
+            scope={scope}
+            setScope={setScope}
+            category={category}
+            setCategory={setCategory}
+            q={q}
+            setQ={setQ}
+            currentUserId={currentUserId}
+            onEdit={openEdit}
+            onDelete={handleDelete}
+            onAdd={openCreate}
+          />
+        ) : pageTab === "company" ? (
+          <CompanyTab />
+        ) : (
+          <TemplatesTab
+            templates={templates}
+            loading={templatesLoading}
+            agency={templateAgency}
+            setAgency={setTemplateAgency}
+            category={templateCategory}
+            setCategory={setTemplateCategory}
+            onSearch={loadTemplates}
+            onDelete={handleTemplateDelete}
+            onAdd={() => {
+              setTemplateFormError("");
+              setTemplateUploadForm(EMPTY_TEMPLATE_FORM);
+              setShowTemplateModal(true);
+            }}
+          />
+        )}
+      </div>
 
       {/* 공통서식 업로드 모달 */}
       {showTemplateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl w-full max-w-lg mx-4 flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#262626]">
-              <h2 className="text-sm font-semibold text-[#ededed]">서식 추가</h2>
+              <h2 className="text-sm font-semibold text-[#ededed]">
+                서식 추가
+              </h2>
               <button
                 onClick={() => setShowTemplateModal(false)}
                 className="text-[#8c8c8c] hover:text-[#ededed] text-lg leading-none"
@@ -366,43 +382,71 @@ export default function ResourcesPage() {
               )}
 
               <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">제목 *</label>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">
+                  제목 *
+                </label>
                 <input
                   type="text"
                   value={templateUploadForm.title}
-                  onChange={(e) => setTemplateUploadForm((f) => ({ ...f, title: e.target.value }))}
+                  onChange={(e) =>
+                    setTemplateUploadForm((f) => ({
+                      ...f,
+                      title: e.target.value,
+                    }))
+                  }
                   placeholder="서식 제목"
                   className="w-full bg-[#0f0f0f] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:border-[#3ecf8e] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">발행기관</label>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">
+                  발행기관
+                </label>
                 <input
                   type="text"
                   value={templateUploadForm.agency}
-                  onChange={(e) => setTemplateUploadForm((f) => ({ ...f, agency: e.target.value }))}
+                  onChange={(e) =>
+                    setTemplateUploadForm((f) => ({
+                      ...f,
+                      agency: e.target.value,
+                    }))
+                  }
                   placeholder="예: 행안부, 과기부"
                   className="w-full bg-[#0f0f0f] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:border-[#3ecf8e] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">카테고리</label>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">
+                  카테고리
+                </label>
                 <input
                   type="text"
                   value={templateUploadForm.category}
-                  onChange={(e) => setTemplateUploadForm((f) => ({ ...f, category: e.target.value }))}
+                  onChange={(e) =>
+                    setTemplateUploadForm((f) => ({
+                      ...f,
+                      category: e.target.value,
+                    }))
+                  }
                   placeholder="예: 제안요청서, 계약서"
                   className="w-full bg-[#0f0f0f] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:border-[#3ecf8e] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">설명</label>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">
+                  설명
+                </label>
                 <textarea
                   value={templateUploadForm.description}
-                  onChange={(e) => setTemplateUploadForm((f) => ({ ...f, description: e.target.value }))}
+                  onChange={(e) =>
+                    setTemplateUploadForm((f) => ({
+                      ...f,
+                      description: e.target.value,
+                    }))
+                  }
                   placeholder="서식에 대한 간단한 설명"
                   rows={3}
                   className="w-full bg-[#0f0f0f] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#5c5c5c] focus:outline-none focus:border-[#3ecf8e] transition-colors resize-none"
@@ -410,7 +454,9 @@ export default function ResourcesPage() {
               </div>
 
               <div>
-                <label className="block text-xs text-[#8c8c8c] mb-1.5">파일 *</label>
+                <label className="block text-xs text-[#8c8c8c] mb-1.5">
+                  파일 *
+                </label>
                 <input
                   type="file"
                   accept=".pdf,.docx"
@@ -428,14 +474,23 @@ export default function ResourcesPage() {
                   type="button"
                   role="switch"
                   aria-checked={templateUploadForm.is_public}
-                  onClick={() => setTemplateUploadForm((f) => ({ ...f, is_public: !f.is_public }))}
+                  onClick={() =>
+                    setTemplateUploadForm((f) => ({
+                      ...f,
+                      is_public: !f.is_public,
+                    }))
+                  }
                   className={`relative w-10 h-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#3ecf8e] ${
-                    templateUploadForm.is_public ? "bg-[#3ecf8e]" : "bg-[#262626]"
+                    templateUploadForm.is_public
+                      ? "bg-[#3ecf8e]"
+                      : "bg-[#262626]"
                   }`}
                 >
                   <span
                     className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
-                      templateUploadForm.is_public ? "translate-x-5" : "translate-x-0"
+                      templateUploadForm.is_public
+                        ? "translate-x-5"
+                        : "translate-x-0"
                     }`}
                   />
                 </button>
@@ -875,7 +930,10 @@ function TemplatesTab({
       {loading ? (
         <div className="grid grid-cols-2 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-40 bg-[#1c1c1c] rounded-xl border border-[#262626] animate-pulse" />
+            <div
+              key={i}
+              className="h-40 bg-[#1c1c1c] rounded-xl border border-[#262626] animate-pulse"
+            />
           ))}
         </div>
       ) : templates.length === 0 ? (
@@ -892,7 +950,11 @@ function TemplatesTab({
       ) : (
         <div className="grid grid-cols-2 gap-3">
           {templates.map((t) => (
-            <TemplateCard key={t.id} template={t} onDelete={() => onDelete(t.id)} />
+            <TemplateCard
+              key={t.id}
+              template={t}
+              onDelete={() => onDelete(t.id)}
+            />
           ))}
         </div>
       )}
@@ -946,7 +1008,9 @@ function TemplateCard({ template, onDelete }: TemplateCardProps) {
       <div className="flex items-center justify-between mt-auto pt-1 border-t border-[#262626]">
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-[#5c5c5c]">{date}</span>
-          <span className="text-[10px] text-[#5c5c5c]">· 사용 {template.use_count}회</span>
+          <span className="text-[10px] text-[#5c5c5c]">
+            · 사용 {template.use_count}회
+          </span>
         </div>
         <button
           onClick={onDelete}
@@ -962,10 +1026,10 @@ function TemplateCard({ template, onDelete }: TemplateCardProps) {
 // ── 회사 자료 탭 ──────────────────────────────────────────────────────
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
-  done:       { label: "완료",     cls: "bg-[#3ecf8e]/10 text-[#3ecf8e]" },
+  done: { label: "완료", cls: "bg-[#3ecf8e]/10 text-[#3ecf8e]" },
   processing: { label: "처리 중", cls: "bg-yellow-400/10 text-yellow-400" },
-  pending:    { label: "대기",     cls: "bg-[#5c5c5c]/20 text-[#8c8c8c]" },
-  failed:     { label: "실패",     cls: "bg-red-400/10 text-red-400" },
+  pending: { label: "대기", cls: "bg-[#5c5c5c]/20 text-[#8c8c8c]" },
+  failed: { label: "실패", cls: "bg-red-400/10 text-red-400" },
 };
 
 function CompanyTab() {
@@ -989,12 +1053,14 @@ function CompanyTab() {
     }
   }, []);
 
-  useEffect(() => { loadAssets(); }, [loadAssets]);
+  useEffect(() => {
+    loadAssets();
+  }, [loadAssets]);
 
   // processing/pending 상태 자료가 있으면 3초 폴링으로 갱신
   useEffect(() => {
     const hasPending = assets.some(
-      (a) => a.status === "processing" || a.status === "pending"
+      (a) => a.status === "processing" || a.status === "pending",
     );
     if (!hasPending) return;
     const timer = setInterval(loadAssets, 3000);
@@ -1042,7 +1108,10 @@ function CompanyTab() {
     <div className="px-6 py-5 space-y-5">
       {/* 업로드 존 */}
       <div
-        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
@@ -1056,9 +1125,13 @@ function CompanyTab() {
           {uploading ? "..." : "↑"}
         </div>
         <p className="text-sm font-medium text-[#ededed]">
-          {uploading ? "업로드 중..." : "PDF / DOCX 파일을 드래그하거나 클릭하여 업로드"}
+          {uploading
+            ? "업로드 중..."
+            : "PDF / DOCX 파일을 드래그하거나 클릭하여 업로드"}
         </p>
-        <p className="text-xs text-[#5c5c5c]">업로드한 문서를 AI가 제안서 작성에 활용합니다.</p>
+        <p className="text-xs text-[#5c5c5c]">
+          업로드한 문서를 AI가 제안서 작성에 활용합니다.
+        </p>
         <input
           ref={inputRef}
           type="file"
@@ -1083,11 +1156,16 @@ function CompanyTab() {
       {loading ? (
         <div className="space-y-2">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-14 bg-[#1c1c1c] rounded-lg border border-[#262626] animate-pulse" />
+            <div
+              key={i}
+              className="h-14 bg-[#1c1c1c] rounded-lg border border-[#262626] animate-pulse"
+            />
           ))}
         </div>
       ) : assets.length === 0 ? (
-        <p className="text-sm text-[#5c5c5c] text-center py-8">업로드된 자료가 없습니다.</p>
+        <p className="text-sm text-[#5c5c5c] text-center py-8">
+          업로드된 자료가 없습니다.
+        </p>
       ) : (
         <div className="space-y-2">
           {assets.map((asset) => {
@@ -1102,10 +1180,14 @@ function CompanyTab() {
                   {asset.file_type}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#ededed] truncate">{asset.filename}</p>
+                  <p className="text-sm text-[#ededed] truncate">
+                    {asset.filename}
+                  </p>
                   <p className="text-xs text-[#5c5c5c]">{date}</p>
                 </div>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0 ${badge.cls}`}>
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0 ${badge.cls}`}
+                >
                   {badge.label}
                 </span>
                 <button

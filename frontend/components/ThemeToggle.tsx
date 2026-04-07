@@ -36,7 +36,9 @@ export default function ThemeToggle({ collapsed }: ThemeToggleProps) {
       title={isLight ? "다크 모드로 전환" : "라이트 모드로 전환"}
       aria-label={isLight ? "다크 모드" : "라이트 모드"}
     >
-      <span className="text-base shrink-0">{isLight ? "\u{1F319}" : "\u{2600}\u{FE0F}"}</span>
+      <span className="text-base shrink-0">
+        {isLight ? "\u{1F319}" : "\u{2600}\u{FE0F}"}
+      </span>
       {!collapsed && <span>{isLight ? "다크 모드" : "라이트 모드"}</span>}
     </button>
   );

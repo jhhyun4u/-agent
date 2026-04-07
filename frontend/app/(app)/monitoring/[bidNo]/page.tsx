@@ -7,7 +7,15 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { api, BidAnnouncement, BidRecommendation, RecommendationReason, RiskFactor, StoredAttachment, G2bUrl } from "@/lib/api";
+import {
+  api,
+  BidAnnouncement,
+  BidRecommendation,
+  RecommendationReason,
+  RiskFactor,
+  StoredAttachment,
+  G2bUrl,
+} from "@/lib/api";
 
 const GRADE_COLOR: Record<string, string> = {
   S: "text-purple-400",
@@ -18,11 +26,18 @@ const GRADE_COLOR: Record<string, string> = {
 };
 
 const CATEGORY_ICON: Record<string, string> = {
-  전문성: "⚡", 실적: "📋", 규모: "💰", 기술: "🔧", 지역: "📍", 기타: "•",
+  전문성: "⚡",
+  실적: "📋",
+  규모: "💰",
+  기술: "🔧",
+  지역: "📍",
+  기타: "•",
 };
 
 const STRENGTH_WIDTH: Record<string, string> = {
-  high: "w-4/5", medium: "w-3/5", low: "w-2/5",
+  high: "w-4/5",
+  medium: "w-3/5",
+  low: "w-2/5",
 };
 
 const RISK_COLOR: Record<string, string> = {
@@ -34,8 +49,15 @@ const RISK_COLOR: Record<string, string> = {
 function fileIcon(name: string): string {
   const ext = name.split(".").pop()?.toLowerCase() ?? "";
   const icons: Record<string, string> = {
-    pdf: "📄", hwp: "📝", hwpx: "📝", docx: "📃", doc: "📃",
-    xlsx: "📊", xls: "📊", zip: "📦", pptx: "📑",
+    pdf: "📄",
+    hwp: "📝",
+    hwpx: "📝",
+    docx: "📃",
+    doc: "📃",
+    xlsx: "📊",
+    xls: "📊",
+    zip: "📦",
+    pptx: "📑",
   };
   return icons[ext] ?? "📎";
 }
@@ -60,8 +82,11 @@ function BidDetailContent() {
   const bidNo = params.bidNo as string;
   const teamId = searchParams.get("team_id");
 
-  const [announcement, setAnnouncement] = useState<BidAnnouncement | null>(null);
-  const [recommendation, setRecommendation] = useState<BidRecommendation | null>(null);
+  const [announcement, setAnnouncement] = useState<BidAnnouncement | null>(
+    null,
+  );
+  const [recommendation, setRecommendation] =
+    useState<BidRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [creating, setCreating] = useState(false);
@@ -78,7 +103,8 @@ function BidDetailContent() {
       } catch {
         // 인증 실패 시 직접 호출
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+          const baseUrl =
+            process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
           const qs = teamId ? `?team_id=${teamId}` : "";
           const directRes = await fetch(`${baseUrl}/bids/${bidNo}${qs}`);
           if (directRes.ok) {
@@ -97,7 +123,9 @@ function BidDetailContent() {
         const attRes = await api.bids.getAttachments(bidNo);
         setAttachments(attRes.data.stored_files);
         setG2bUrls(attRes.data.g2b_urls);
-      } catch { /* 첨부파일 없어도 진행 */ }
+      } catch {
+        /* 첨부파일 없어도 진행 */
+      }
       setLoading(false);
     })();
   }, [bidNo, teamId]);
@@ -128,9 +156,12 @@ function BidDetailContent() {
         if (url && name) {
           const lower = (name as string).toLowerCase();
           let type = "기타";
-          if (lower.includes("제안요청") || lower.includes("rfp")) type = "제안요청서";
-          else if (lower.includes("과업지시") || lower.includes("과업내용")) type = "과업지시서";
-          else if (lower.includes("공고") || lower.includes("입찰")) type = "공고문";
+          if (lower.includes("제안요청") || lower.includes("rfp"))
+            type = "제안요청서";
+          else if (lower.includes("과업지시") || lower.includes("과업내용"))
+            type = "과업지시서";
+          else if (lower.includes("공고") || lower.includes("입찰"))
+            type = "공고문";
           files.push({ name: name as string, url: url as string, type });
         }
       }
@@ -144,7 +175,7 @@ function BidDetailContent() {
           bid_no: bidNo,
           budget_amount: announcement!.budget_amount,
           attachments: files,
-        })
+        }),
       );
       router.push("/proposals/new");
     } catch (e: unknown) {
@@ -164,8 +195,15 @@ function BidDetailContent() {
   if (error || !announcement) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <p className="text-sm text-red-400">{error || "공고를 찾을 수 없습니다."}</p>
-        <Link href="/monitoring" className="text-xs text-[#3ecf8e] hover:underline">← 목록으로</Link>
+        <p className="text-sm text-red-400">
+          {error || "공고를 찾을 수 없습니다."}
+        </p>
+        <Link
+          href="/monitoring"
+          className="text-xs text-[#3ecf8e] hover:underline"
+        >
+          ← 목록으로
+        </Link>
       </div>
     );
   }
@@ -179,7 +217,10 @@ function BidDetailContent() {
       {/* 헤더 */}
       <div className="border-b border-[#262626] px-6 py-4 shrink-0">
         <div className="flex items-center gap-2 mb-1">
-          <Link href="/monitoring" className="text-xs text-[#5c5c5c] hover:text-[#ededed] transition-colors">
+          <Link
+            href="/monitoring"
+            className="text-xs text-[#5c5c5c] hover:text-[#ededed] transition-colors"
+          >
             공고 모니터링
           </Link>
           <span className="text-xs text-[#5c5c5c]">/</span>
@@ -187,11 +228,15 @@ function BidDetailContent() {
         </div>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-sm font-semibold text-[#ededed]">{announcement.bid_title}</h1>
+            <h1 className="text-sm font-semibold text-[#ededed]">
+              {announcement.bid_title}
+            </h1>
             <p className="text-xs text-[#8c8c8c] mt-1">
               {announcement.agency}
-              {announcement.budget_amount && ` · ${formatBudget(announcement.budget_amount)}`}
-              {announcement.days_remaining != null && ` · D-${announcement.days_remaining} 마감`}
+              {announcement.budget_amount &&
+                ` · ${formatBudget(announcement.budget_amount)}`}
+              {announcement.days_remaining != null &&
+                ` · D-${announcement.days_remaining} 마감`}
             </p>
           </div>
           <button
@@ -215,9 +260,13 @@ function BidDetailContent() {
             {/* 자격 판정 경고 */}
             {recommendation.qualification_status === "ambiguous" && (
               <div className="mb-4 px-3 py-2 rounded-lg bg-orange-950/40 border border-orange-900/50">
-                <p className="text-xs text-orange-400 font-medium">자격 확인 필요</p>
+                <p className="text-xs text-orange-400 font-medium">
+                  자격 확인 필요
+                </p>
                 {recommendation.qualification_notes && (
-                  <p className="text-xs text-orange-300/70 mt-0.5">{recommendation.qualification_notes}</p>
+                  <p className="text-xs text-orange-300/70 mt-0.5">
+                    {recommendation.qualification_notes}
+                  </p>
                 )}
               </div>
             )}
@@ -226,7 +275,9 @@ function BidDetailContent() {
             <div className="mb-5">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs text-[#5c5c5c]">매칭 점수</span>
-                <span className={`text-xl font-bold ${GRADE_COLOR[grade ?? "D"]}`}>
+                <span
+                  className={`text-xl font-bold ${GRADE_COLOR[grade ?? "D"]}`}
+                >
                   {score}/100
                   <span className="text-sm ml-1.5">({grade}등급)</span>
                 </span>
@@ -247,58 +298,81 @@ function BidDetailContent() {
             )}
 
             {/* 추천 사유 */}
-            {recommendation.recommendation_reasons && recommendation.recommendation_reasons.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-xs font-medium text-[#5c5c5c] mb-2">추천 사유</h3>
-                <div className="space-y-2">
-                  {recommendation.recommendation_reasons.map((r: RecommendationReason, i: number) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <span className="text-sm w-4 text-center shrink-0">{CATEGORY_ICON[r.category] ?? "•"}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-xs font-medium text-[#8c8c8c]">{r.category}</span>
+            {recommendation.recommendation_reasons &&
+              recommendation.recommendation_reasons.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-xs font-medium text-[#5c5c5c] mb-2">
+                    추천 사유
+                  </h3>
+                  <div className="space-y-2">
+                    {recommendation.recommendation_reasons.map(
+                      (r: RecommendationReason, i: number) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <span className="text-sm w-4 text-center shrink-0">
+                            {CATEGORY_ICON[r.category] ?? "•"}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <span className="text-xs font-medium text-[#8c8c8c]">
+                                {r.category}
+                              </span>
+                            </div>
+                            <p className="text-xs text-[#ededed] truncate">
+                              {r.reason}
+                            </p>
+                          </div>
+                          <div className="w-20 h-1.5 bg-[#1c1c1c] rounded-full shrink-0">
+                            <div
+                              className={`h-full bg-[#3ecf8e] rounded-full ${STRENGTH_WIDTH[r.strength] ?? "w-2/5"}`}
+                            />
+                          </div>
                         </div>
-                        <p className="text-xs text-[#ededed] truncate">{r.reason}</p>
-                      </div>
-                      <div className="w-20 h-1.5 bg-[#1c1c1c] rounded-full shrink-0">
-                        <div className={`h-full bg-[#3ecf8e] rounded-full ${STRENGTH_WIDTH[r.strength] ?? "w-2/5"}`} />
-                      </div>
-                    </div>
-                  ))}
+                      ),
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* 리스크 요인 */}
-            {recommendation.risk_factors && recommendation.risk_factors.length > 0 && (
-              <div>
-                <h3 className="text-xs font-medium text-[#5c5c5c] mb-2">리스크 요인</h3>
-                <div className="space-y-1.5">
-                  {recommendation.risk_factors.map((r: RiskFactor, i: number) => (
-                    <div
-                      key={i}
-                      className={`px-3 py-1.5 rounded-lg border text-xs ${RISK_COLOR[r.level] ?? RISK_COLOR.low}`}
-                    >
-                      {r.risk}
-                    </div>
-                  ))}
+            {recommendation.risk_factors &&
+              recommendation.risk_factors.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-medium text-[#5c5c5c] mb-2">
+                    리스크 요인
+                  </h3>
+                  <div className="space-y-1.5">
+                    {recommendation.risk_factors.map(
+                      (r: RiskFactor, i: number) => (
+                        <div
+                          key={i}
+                          className={`px-3 py-1.5 rounded-lg border text-xs ${RISK_COLOR[r.level] ?? RISK_COLOR.low}`}
+                        >
+                          {r.risk}
+                        </div>
+                      ),
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* 종합 의견 */}
-            {(recommendation.win_probability_hint || recommendation.recommended_action) && (
+            {(recommendation.win_probability_hint ||
+              recommendation.recommended_action) && (
               <div className="mt-4 pt-4 border-t border-[#262626] flex items-center gap-4">
                 {recommendation.win_probability_hint && (
                   <div>
                     <span className="text-xs text-[#5c5c5c]">수주 가능성 </span>
-                    <span className="text-xs font-medium text-[#ededed]">{recommendation.win_probability_hint}</span>
+                    <span className="text-xs font-medium text-[#ededed]">
+                      {recommendation.win_probability_hint}
+                    </span>
                   </div>
                 )}
                 {recommendation.recommended_action && (
                   <div>
                     <span className="text-xs text-[#5c5c5c]">권장 행동 </span>
-                    <span className="text-xs font-medium text-[#3ecf8e]">{recommendation.recommended_action}</span>
+                    <span className="text-xs font-medium text-[#3ecf8e]">
+                      {recommendation.recommended_action}
+                    </span>
                   </div>
                 )}
               </div>
@@ -319,11 +393,17 @@ function BidDetailContent() {
                   className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-[#1c1c1c] border border-[#262626] hover:border-[#3ecf8e]/30 transition-colors"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-base shrink-0">{fileIcon(att.name)}</span>
+                    <span className="text-base shrink-0">
+                      {fileIcon(att.name)}
+                    </span>
                     <div className="min-w-0">
-                      <p className="text-xs text-[#ededed] truncate">{att.name}</p>
+                      <p className="text-xs text-[#ededed] truncate">
+                        {att.name}
+                      </p>
                       {att.size > 0 && (
-                        <p className="text-[10px] text-[#5c5c5c]">{formatFileSize(att.size)}</p>
+                        <p className="text-[10px] text-[#5c5c5c]">
+                          {formatFileSize(att.size)}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -336,20 +416,22 @@ function BidDetailContent() {
                   </button>
                 </div>
               ))}
-              {g2bUrls.filter(u => u.index > 0).map((u) => (
-                <a
-                  key={u.index}
-                  href={u.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[#1c1c1c] border border-[#262626] hover:border-blue-500/30 transition-colors"
-                >
-                  <span className="text-base shrink-0">🔗</span>
-                  <span className="text-xs text-blue-400 truncate">
-                    {u.label || `규격서 원본 링크 ${u.index}`}
-                  </span>
-                </a>
-              ))}
+              {g2bUrls
+                .filter((u) => u.index > 0)
+                .map((u) => (
+                  <a
+                    key={u.index}
+                    href={u.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[#1c1c1c] border border-[#262626] hover:border-blue-500/30 transition-colors"
+                  >
+                    <span className="text-base shrink-0">🔗</span>
+                    <span className="text-xs text-blue-400 truncate">
+                      {u.label || `규격서 원본 링크 ${u.index}`}
+                    </span>
+                  </a>
+                ))}
             </div>
             {attachments.length === 0 && g2bUrls.length > 0 && (
               <p className="text-[10px] text-[#5c5c5c] mt-2">
@@ -361,10 +443,14 @@ function BidDetailContent() {
 
         {/* 공고 원문 */}
         <section className="rounded-lg border border-[#262626] bg-[#111111] p-5">
-          <h2 className="text-xs font-semibold text-[#5c5c5c] uppercase tracking-wider mb-3">공고 원문</h2>
+          <h2 className="text-xs font-semibold text-[#5c5c5c] uppercase tracking-wider mb-3">
+            공고 원문
+          </h2>
           {!announcement.qualification_available && (
             <div className="mb-3 px-3 py-2 rounded-lg bg-[#1c1c1c] border border-[#262626]">
-              <p className="text-xs text-[#8c8c8c]">자격요건은 첨부파일을 직접 확인하세요.</p>
+              <p className="text-xs text-[#8c8c8c]">
+                자격요건은 첨부파일을 직접 확인하세요.
+              </p>
             </div>
           )}
           {announcement.content_text ? (
