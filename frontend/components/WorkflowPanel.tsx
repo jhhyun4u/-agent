@@ -232,12 +232,10 @@ function ReviewPanel({
     : isStepPlan
       ? PARALLEL_NODES
       : isStepProposal
-        ? (workflowState.dynamic_sections ?? []).map(
-            (sec: Record<string, unknown>) => ({
-              key: sec.section_id || sec.id,
-              label: sec.title || sec.section_title || "미지정",
-            }),
-          )
+        ? (workflowState.dynamic_sections ?? []).map((sectionId: string) => ({
+            key: sectionId,
+            label: sectionId || "미지정",
+          }))
         : isStepPpt
           ? PPT_NODES
           : [];
