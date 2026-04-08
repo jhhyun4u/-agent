@@ -42,7 +42,7 @@ export function NodeStatusDashboard({
   const getNodeCompletionColor = (node: NodeStatus | undefined): string => {
     if (!node) return "bg-gray-100 border-gray-300";
     if (node.status === "completed") return "bg-green-100 border-green-300";
-    if (node.status === "in_progress") return "bg-blue-100 border-blue-300";
+    if (node.status === "running") return "bg-blue-100 border-blue-300";
     if (node.status === "failed") return "bg-red-100 border-red-300";
     return "bg-yellow-100 border-yellow-300";
   };
@@ -237,7 +237,7 @@ export function NodeStatusDashboard({
                     className={`inline-block w-2 h-2 rounded-full ${
                       node.status === "completed"
                         ? "bg-green-600"
-                        : node.status === "in_progress"
+                        : node.status === "running"
                           ? "bg-blue-600"
                           : node.status === "failed"
                             ? "bg-red-600"
@@ -266,14 +266,6 @@ export function NodeStatusDashboard({
               {/* Expanded Details */}
               {isExpanded && node && (
                 <div className="mt-3 pt-3 border-t space-y-2">
-                  <div>
-                    <p className="text-xs font-semibold text-gray-600 uppercase">
-                      Updated
-                    </p>
-                    <p className="text-sm text-gray-900 mt-1">
-                      {new Date(node.updated_at).toLocaleString()}
-                    </p>
-                  </div>
                   {node.version && (
                     <div>
                       <p className="text-xs font-semibold text-gray-600 uppercase">

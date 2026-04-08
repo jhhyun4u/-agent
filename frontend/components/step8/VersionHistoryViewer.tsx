@@ -27,7 +27,6 @@ export interface VersionComparisonData {
   diff_lines?: string[];
   additions: number;
   deletions: number;
-  net_change: number;
 }
 
 export interface VersionHistoryViewerProps {
@@ -345,10 +344,10 @@ export function VersionHistoryViewer({
                   <div className="p-2 bg-blue-50 rounded text-center">
                     <p className="text-xs text-gray-600">Net Change</p>
                     <p
-                      className={`text-lg font-bold ${diffData.net_change >= 0 ? "text-blue-600" : "text-orange-600"}`}
+                      className={`text-lg font-bold ${(diffData.additions - diffData.deletions) >= 0 ? "text-blue-600" : "text-orange-600"}`}
                     >
-                      {diffData.net_change >= 0 ? "+" : ""}
-                      {diffData.net_change}
+                      {(diffData.additions - diffData.deletions) >= 0 ? "+" : ""}
+                      {diffData.additions - diffData.deletions}
                     </p>
                   </div>
                 </div>

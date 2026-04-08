@@ -41,7 +41,7 @@ export function useNodeStatus(opts: UseNodeStatusOptions): UseNodeStatusResult {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const cancelledRef = useRef(false);
-  const pollTimerRef = useRef<NodeJS.Timeout>();
+  const pollTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const fetch_ = useCallback(async () => {
     if (!proposalId) return;
