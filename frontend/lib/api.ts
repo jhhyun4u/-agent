@@ -169,6 +169,9 @@ export interface ProposalSummary {
   client_name: string | null;
   created_at: string;
   updated_at: string;
+  fit_score?: number | null;
+  team_name?: string | null;
+  owner_name?: string | null;
 }
 
 export interface ProposalResult {
@@ -280,6 +283,10 @@ export interface ArchiveItem extends ProposalSummary {
   storage_path_docx: string | null;
   storage_path_pptx: string | null;
   storage_path_hwpx: string | null;
+  elapsed_seconds: number | null;
+  total_token_cost: number | null;
+  team_name: string | null;
+  participants: string[] | null;
 }
 
 // ── 프로젝트 아카이브 (중간 산출물 파일 관리) ──
@@ -533,7 +540,10 @@ export const api = {
       const qs = new URLSearchParams();
       if (params?.q) qs.set("q", params.q);
       if (params?.status) qs.set("status", params.status);
-      if (params?.page) qs.set("page", String(params.page));
+      // page를 skip으로 변환 (1-indexed → 0-indexed)
+      const page = params?.page ?? 1;
+      qs.set("skip", String((page - 1) * 20));
+      qs.set("limit", "20");
       if (params?.scope) qs.set("scope", params.scope);
       if (params?.search) qs.set("search", params.search);
       return request<ApiListResponse<ProposalSummary>>(

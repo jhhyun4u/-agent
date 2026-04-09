@@ -27,6 +27,7 @@ import {
 import { ProposalsTableHeader } from "@/components/ProposalsTableHeader";
 import { ProposalsTableRow } from "@/components/ProposalsTableRow";
 import { ProposalsTableSkeleton } from "@/components/ProposalsTableSkeleton";
+import { ProposalDetailModal } from "@/components/ProposalDetailModal";
 
 /* ── 메인 컨텐츠 ── */
 function ProposalsContent() {
@@ -90,6 +91,39 @@ function ProposalsContent() {
   // 공통
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // 상세 보기 모달
+  const [selectedProposal, setSelectedProposal] = useState<ProposalSummary | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+
+  // 제안작업 착수
+  const [startingProposal, setStartingProposal] = useState<string | null>(null);
+
+  // 팀 멤버
+  const [teamMembers, setTeamMembers] = useState<Array<{ id: string; name: string; email?: string }>>([]);
+
+  // 팀 멤버 로드
+  useEffect(() => {
+    async function loadTeamMembers() {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+        const res = await fetch(`${baseUrl}/users?scope=team`);
+        if (res.ok) {
+          const data = await res.json();
+          setTeamMembers(
+            (data.data || []).map((u: any) => ({
+              id: u.id,
+              name: u.name || u.email || "Unknown",
+              email: u.email,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("팀 멤버 로드 실패:", err);
+      }
+    }
+    loadTeamMembers();
+  }, []);
 
   // 메뉴 외부 클릭 시 닫기
   useEffect(() => {
@@ -191,6 +225,61 @@ function ProposalsContent() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "제안서 생성 실패");
       setStartingBid(null);
+    }
+  }
+
+  // ── 담당자 선택 핸들러 ──
+  async function handleSelectOwner(ownerId: string) {
+    if (!selectedProposal) return;
+
+    try {
+      // API를 통한 업데이트 (AuthToken 자동 포함)
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+      const res = await fetch(`${baseUrl}/proposals/${selectedProposal.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ owner_id: ownerId }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || "담당자 지정 실패");
+      }
+
+      // 로컬 상태 업데이트
+      setSelectedProposal((prev) =>
+        prev ? { ...prev, owner_id: ownerId } : null
+      );
+      setProposals((prev) =>
+        prev.map((p) =>
+          p.id === selectedProposal.id ? { ...p, owner_id: ownerId } : p
+        )
+      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "담당자 지정 실패";
+      setError(msg);
+      throw err;
+    }
+  }
+
+  // ── 제안작업 착수 (작업대기 상태 → 담당자 지정 후 상세페이지 진입) ──
+  async function handleStartWork() {
+    if (!selectedProposal) return;
+
+    // 담당자가 지정되어 있는지 확인
+    if (!selectedProposal.owner_id) {
+      alert("담당자를 지정해주세요.");
+      return;
+    }
+
+    setStartingProposal(selectedProposal.id);
+    try {
+      // 상세페이지로 이동
+      router.push(`/proposals/${selectedProposal.id}`);
+      setDetailModalOpen(false);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "제안작업 착수 실패");
+      setStartingProposal(null);
     }
   }
 
@@ -655,12 +744,29 @@ function ProposalsContent() {
                         setMenuOpen(menuOpen === id ? null : id)
                       }
                       onMenuAction={(id, action) => {
-                        if (action === "view" || action === "resume") {
+                        if (action === "view") {
+                          // 상세 보기: 모달 열기
+                          const proposal = proposals.find((p) => p.id === id);
+                          if (proposal) {
+                            setSelectedProposal(proposal);
+                            setDetailModalOpen(true);
+                          }
+                        } else if (action === "resume") {
+                          // 워크플로 재개
                           router.push(`/proposals/${id}`);
                         } else if (action === "delete") {
-                          // TODO: Implement delete functionality
+                          // 삭제
+                          if (confirm("이 제안 프로젝트를 삭제하시겠습니까?")) {
+                            setProposals((prev) => prev.filter((p) => p.id !== id));
+                            // TODO: API 호출로 백엔드에 삭제 요청
+                          }
                         }
                         setMenuOpen(null);
+                      }}
+                      onClickRow={(proposal) => {
+                        // 작업대기 상태: 클릭 시 모달 열기
+                        setSelectedProposal(proposal);
+                        setDetailModalOpen(true);
                       }}
                     />
                   ))}
@@ -702,6 +808,20 @@ function ProposalsContent() {
           )}
         </div>
       </div>
+
+      {/* 상세 보기 모달 */}
+      <ProposalDetailModal
+        proposal={selectedProposal}
+        isOpen={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedProposal(null);
+        }}
+        onStartWork={handleStartWork}
+        isStarting={startingProposal === selectedProposal?.id}
+        teamMembers={teamMembers}
+        onSelectOwner={handleSelectOwner}
+      />
     </div>
   );
 }

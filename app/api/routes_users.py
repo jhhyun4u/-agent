@@ -276,13 +276,17 @@ async def reset_user_password(
 
 @router.get("/users")
 async def list_users(
+    scope: str = Query(None),
     role: str = Query(None),
     team_id: str = Query(None),
     status: str = Query("active"),
     pg: PageParams = Depends(),
     user: CurrentUser = Depends(get_current_user),
 ):
-    """같은 조직 사용자 목록 조회."""
+    """사용자 목록 조회.
+
+    scope: 'team' (같은 팀), 'division' (같은 본부), 'company' (같은 조직), None (전체)
+    """
     client = await get_async_client()
     query = (
         client.table("users")
@@ -291,6 +295,25 @@ async def list_users(
         .eq("status", status)
         .order("name")
     )
+
+    # scope 기반 필터링
+    if scope == "team":
+        if user.team_id:
+            query = query.eq("team_id", user.team_id)
+        else:
+            query = query.is_("team_id", "null")
+    elif scope == "division":
+        if user.division_id:
+            # 같은 본부의 팀들 조회 (team_id 대신 팀의 division_id로 필터)
+            teams_result = await client.table("teams").select("id").eq(
+                "division_id", user.division_id
+            ).execute()
+            team_ids = [t["id"] for t in (teams_result.data or [])]
+            if team_ids:
+                query = query.in_("team_id", team_ids)
+            else:
+                query = query.is_("team_id", "null")
+
     if role:
         query = query.eq("role", role)
     if team_id:
