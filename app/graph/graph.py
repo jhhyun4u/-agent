@@ -60,7 +60,7 @@ from app.graph.nodes.rfp_analyze import rfp_analyze
 from app.graph.nodes.bid_plan import bid_plan
 from app.graph.nodes.strategy_generate import strategy_generate
 from app.graph.nodes.plan_nodes import (
-    plan_assign, plan_price, plan_schedule, plan_story, plan_team,
+    plan_assign, plan_schedule, plan_story, plan_team,
 )
 from app.graph.nodes.proposal_nodes import (
     proposal_write_next, self_review_with_auto_improve,
@@ -122,7 +122,6 @@ def build_graph(checkpointer=None):
     g.add_node("plan_assign", track_tokens("plan_assign")(plan_assign))
     g.add_node("plan_schedule", track_tokens("plan_schedule")(plan_schedule))
     g.add_node("plan_story", track_tokens("plan_story")(plan_story))
-    g.add_node("plan_price", track_tokens("plan_price")(plan_price))
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 

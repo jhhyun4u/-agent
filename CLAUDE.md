@@ -50,8 +50,8 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/graph/nodes/review_node.py` — 공통 리뷰 게이트 (Shipley Color Team) + plan 리뷰 (목차+스토리라인)
 - `app/graph/nodes/merge_nodes.py` — plan 병합 (부분 재작업) + storylines→dynamic_sections 동기화
 - `app/graph/nodes/strategy_generate.py` — STEP 2: 포지셔닝 기반 제안전략
-- `app/graph/nodes/bid_plan.py` — STEP 2.5 (Path B-4B): 입찰가격계획 (PricingEngine + 시나리오)
-- `app/graph/nodes/plan_nodes.py` — STEP 3A: 팀/담당/일정/스토리 (4개 병렬) + 가격(plan_price, 그래프 미등록)
+- `app/graph/nodes/bid_plan.py` — STEP 4B (Path B): 입찰가격 결정 (원가산정 + 경쟁분석 + PricingEngine + 마진최적화)
+- `app/graph/nodes/plan_nodes.py` — STEP 3A: 팀/담당/일정/스토리 (4개 병렬)
 - `app/graph/nodes/proposal_nodes.py` — STEP 4A: 순차 섹션 작성 + 자가진단
 - `app/graph/nodes/ppt_nodes.py` — STEP 5A: 발표전략 + PPT toc/visual_brief/storyboard
 - `app/graph/nodes/submission_nodes.py` — Path B: 제출서류 계획(3B) + 산출내역서(5B) + 제출확인(6B)
@@ -90,7 +90,7 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 
 ### 프롬프트 (app/prompts/)
 - `app/prompts/strategy.py` — 포지셔닝 매트릭스 + SWOT + 시나리오 + Win Theme
-- `app/prompts/plan.py` — 5개 plan 노드 프롬프트 (team/assign/schedule/story/price). plan_story는 목차 기획 + 스토리라인 설계
+- `app/prompts/plan.py` — 4개 plan 노드 프롬프트 (team/assign/schedule/story). plan_story는 목차 기획 + 스토리라인 설계
 - `app/prompts/proposal_prompts.py` — 케이스 A/B + 자가진단 + PPT + 발표전략
 - `app/prompts/section_prompts.py` — 10개 섹션 유형별 전문 프롬프트 + 케이스 B + 자동 분류 + 스토리라인 주입
 - `app/prompts/trustworthiness.py` — 데이터 신뢰성 6대 규칙 + 출처 태그 형식 + 금지 표현 (§16-3-1)

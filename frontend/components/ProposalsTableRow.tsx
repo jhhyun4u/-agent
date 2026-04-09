@@ -40,25 +40,13 @@ export function ProposalsTableRow({
 
   // 작업대기 상태일 때는 모달을 열고, 아니면 상세페이지로 이동
   const isAwaitingStart = p.status === "initialized";
-  const WrapperComponent = isAwaitingStart ? "div" : Link;
-  const wrapperProps = isAwaitingStart
-    ? {
-        onClick: () => onClickRow?.(p),
-        className: cn(
-          `grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center cursor-pointer`,
-          (p.status === "completed" || p.status === "failed") && "opacity-60",
-        ),
-      }
-    : {
-        href: `/proposals/${p.id}`,
-        className: cn(
-          `grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center`,
-          (p.status === "completed" || p.status === "failed") && "opacity-60",
-        ),
-      };
+  const commonClassName = cn(
+    `grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center`,
+    (p.status === "completed" || p.status === "failed") && "opacity-60",
+  );
 
   return (
-    <WrapperComponent {...wrapperProps}>
+    <div className={commonClassName}>
       {/* 상태 배지 */}
       <div className="flex justify-center">
         <span
@@ -184,6 +172,6 @@ export function ProposalsTableRow({
           </div>
         )}
       </div>
-    </WrapperComponent>
+    </div>
   );
 }

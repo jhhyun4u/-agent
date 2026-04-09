@@ -18,7 +18,6 @@ export const STEP_MAP = {
   go_no_go: { step: 1, label: "Go/No-Go" },
   strategy_generate: { step: 2, label: "전략수립" },
   plan_story: { step: 3, label: "제안계획" },
-  plan_price: { step: 3, label: "제안계획" },
   plan_team: { step: 4, label: "팀구성" },
   plan_assign: { step: 4, label: "팀구성" },
   plan_schedule: { step: 4, label: "팀구성" },
