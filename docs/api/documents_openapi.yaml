@@ -1,0 +1,459 @@
+openapi: 3.1.0
+info:
+  title: 문서 관리 API
+  version: 1.0.0
+  description: 인트라넷 문서 업로드, 관리, 검색 API
+  contact:
+    name: API Support
+    email: support@example.com
+servers:
+  - url: http://localhost:3000
+    description: 로컬 개발 서버
+  - url: https://api.example.com
+    description: 프로덕션 서버
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/documents/upload:
+    post:
+      summary: 문서 업로드
+      tags:
+        - Documents
+      operationId: uploadDocument
+      parameters:
+        - name: doc_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - 제안서
+              - 보고서
+              - 실적
+              - 기타
+          description: 문서 유형
+        - name: doc_subtype
+          in: query
+          required: false
+          schema:
+            type: string
+          description: 문서 세부 유형
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: 연관 프로젝트 ID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 업로드할 파일 (PDF, HWP, HWPX, DOCX, DOC)
+              required:
+                - file
+      responses:
+        "201":
+          description: 문서 업로드 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+        "400":
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: 지원하지 않는 파일 형식
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: 데이터 검증 실패
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/documents:
+    get:
+      summary: 문서 목록 조회
+      tags:
+        - Documents
+      operationId: listDocuments
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - extracting
+              - chunking
+              - embedding
+              - completed
+              - failed
+          description: 처리 상태 필터
+        - name: doc_type
+          in: query
+          schema:
+            type: string
+          description: 문서 유형 필터
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: 파일명 검색 (ILIKE)
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - created_at
+              - updated_at
+              - filename
+              - total_chars
+            default: updated_at
+          description: 정렬 기준
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+          description: 정렬 순서
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+          description: 페이지당 항목 수
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: 시작 위치
+      responses:
+        "200":
+          description: 문서 목록
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Document"
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+  /api/documents/{document_id}:
+    get:
+      summary: 문서 상세 조회
+      tags:
+        - Documents
+      operationId: getDocument
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 문서 ID
+      responses:
+        "200":
+          description: 문서 상세 정보
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentDetail"
+        "404":
+          description: 문서를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      summary: 문서 삭제
+      tags:
+        - Documents
+      operationId: deleteDocument
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 문서 ID
+      responses:
+        "204":
+          description: 삭제 성공
+        "404":
+          description: 문서를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/documents/{document_id}/process:
+    post:
+      summary: 문서 재처리
+      tags:
+        - Documents
+      operationId: reprocessDocument
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 문서 ID
+      responses:
+        "200":
+          description: 재처리 시작
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  processing_status:
+                    type: string
+                  message:
+                    type: string
+        "409":
+          description: 요청 충돌 (진행 중인 문서)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: 문서를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/documents/{document_id}/chunks:
+    get:
+      summary: 문서 청크 조회
+      tags:
+        - Chunks
+      operationId: getDocumentChunks
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 문서 ID
+        - name: chunk_type
+          in: query
+          schema:
+            type: string
+            enum:
+              - title
+              - heading
+              - body
+              - table
+              - image
+          description: 청크 타입 필터
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+          description: 페이지당 항목 수
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: 시작 위치
+      responses:
+        "200":
+          description: 청크 목록
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Chunk"
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        "404":
+          description: 문서를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 문서 ID
+          example: "doc-0a1f2b3c"
+        filename:
+          type: string
+          description: 파일명
+          example: "proposal.pdf"
+        org_id:
+          type: string
+          description: 조직 ID
+          example: "org-001"
+        doc_type:
+          type: string
+          description: 문서 유형
+          example: "제안서"
+        doc_subtype:
+          type: string
+          nullable: true
+          description: 문서 세부 유형
+          example: "제안전략"
+        processing_status:
+          type: string
+          enum:
+            - pending
+            - extracting
+            - chunking
+            - embedding
+            - completed
+            - failed
+          description: 처리 상태
+          example: "completed"
+        total_chars:
+          type: integer
+          description: 총 문자 수
+          example: 25000
+        chunk_count:
+          type: integer
+          description: 청크 개수
+          example: 50
+        created_at:
+          type: string
+          format: date-time
+          description: 생성 시간
+        updated_at:
+          type: string
+          format: date-time
+          description: 수정 시간
+
+    DocumentDetail:
+      allOf:
+        - $ref: "#/components/schemas/Document"
+        - type: object
+          properties:
+            storage_path:
+              type: string
+              description: Supabase Storage 경로
+              example: "org-001/doc-0a1f2b3c/proposal.pdf"
+            extracted_text:
+              type: string
+              nullable: true
+              description: 추출된 텍스트 (최대 1000자)
+              example: "제안서 내용..."
+            error_message:
+              type: string
+              nullable: true
+              description: 에러 메시지
+              example: null
+
+    Chunk:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 청크 ID
+          example: "chunk-0a1f2b3c"
+        document_id:
+          type: string
+          description: 문서 ID
+          example: "doc-0a1f2b3c"
+        chunk_index:
+          type: integer
+          description: 청크 순서
+          example: 0
+        chunk_type:
+          type: string
+          enum:
+            - title
+            - heading
+            - body
+            - table
+            - image
+          description: 청크 타입
+          example: "body"
+        section_title:
+          type: string
+          description: 섹션 제목
+          example: "본문"
+        content:
+          type: string
+          description: 청크 내용
+          example: "제안서 본문 내용..."
+        char_count:
+          type: integer
+          description: 문자 수
+          example: 1000
+        created_at:
+          type: string
+          format: date-time
+          description: 생성 시간
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: 에러 메시지
+          example: "문서를 찾을 수 없습니다."
+        code:
+          type: string
+          description: 에러 코드 (선택)
+          example: "DOCUMENT_NOT_FOUND"
+      required:
+        - detail
+
+tags:
+  - name: Documents
+    description: 문서 관리 엔드포인트
+  - name: Chunks
+    description: 문서 청크 엔드포인트

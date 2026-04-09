@@ -167,6 +167,8 @@ export interface ProposalSummary {
   budget: number | null;
   deadline: string | null;
   client_name: string | null;
+  bid_no?: string | null;
+  score?: number | null;
   created_at: string;
   updated_at: string;
   fit_score?: number | null;

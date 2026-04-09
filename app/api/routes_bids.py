@@ -667,9 +667,13 @@ async def update_bid_status(
 
     # 1) DB bid_announcements.proposal_status 업데이트
     try:
+        update_data = {"proposal_status": status, "decided_by": decided_by}
+        # 제안결정 시 verdict도 "Go"로 업데이트
+        if status == "제안결정":
+            update_data["verdict"] = "Go"
         await (
             client.table("bid_announcements")
-            .update({"proposal_status": status, "decided_by": decided_by})
+            .update(update_data)
             .eq("bid_no", bid_no)
             .execute()
         )

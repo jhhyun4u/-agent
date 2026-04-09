@@ -228,14 +228,7 @@ app = FastAPI(
 # ── Request ID 미들웨어 (Zero Script QA 핵심) ──
 app.add_middleware(RequestIdMiddleware)
 
-# ── 보안 헤더 미들웨어 (L-1, L-2) ──
-app.add_middleware(SecurityHeadersMiddleware)
-
-# ── Rate Limiting ──
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
-
-# ── CORS ──
+# ── CORS (반드시 먼저!) ──
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -244,15 +237,32 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type", "Accept", "X-Request-ID"],
 )
 
+# ── 보안 헤더 미들웨어 (L-1, L-2) ──
+app.add_middleware(SecurityHeadersMiddleware)
+
+# ── Rate Limiting ──
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
 # ── 표준 에러 핸들러 (§12-0) ──
+
+def _add_cors_headers(response: JSONResponse, request: Request) -> JSONResponse:
+    """응답에 CORS 헤더 추가"""
+    origin = request.headers.get("origin", "")
+    if origin in settings.cors_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
+
 
 @app.exception_handler(TenopAPIError)
 async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
     """TenopAPIError → 표준 JSON 에러 응답"""
-    return JSONResponse(
+    response = JSONResponse(
         status_code=exc.status_code,
         content=exc.to_dict(),
     )
+    return _add_cors_headers(response, request)
 
 
 @app.exception_handler(Exception)
@@ -261,10 +271,11 @@ async def global_exception_handler(request: Request, exc: Exception):
     import traceback
     logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
     logger.error(traceback.format_exc())
-    return JSONResponse(
+    response = JSONResponse(
         status_code=500,
         content={"error": str(exc), "path": str(request.url.path)},
     )
+    return _add_cors_headers(response, request)
 
 # ── 라우터 등록 ──
 

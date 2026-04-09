@@ -279,7 +279,25 @@ class G2BService:
             kw_lower = keyword.lower()
             results = [r for r in results if kw_lower in r.get("bidNtceNm", "").lower()]
 
-        return results
+        # 필터링: 소액과제(3천만원 미만) 및 특정 키워드 제외
+        filtered_results = []
+        for r in results:
+            # 1. 예산 3,000만원 미만 제외
+            try:
+                budget = int(r.get("estmtPrdct", 0) or 0)
+                if budget < 30_000_000:  # 3,000만원 = 30,000,000
+                    continue
+            except (ValueError, TypeError):
+                pass
+
+            # 2. "취소공고" 또는 "수의" 포함 공고 제외
+            title = r.get("bidNtceNm", "").upper()
+            if "취소공고" in title or "수의" in title:
+                continue
+
+            filtered_results.append(r)
+
+        return filtered_results
 
     async def search_pre_bid_specifications(
         self,
@@ -336,7 +354,25 @@ class G2BService:
                 if kw_lower in (r.get("bfSpecRgstNm") or r.get("prcSpcfNm") or "").lower()
             ]
 
-        return results
+        # 필터링: 소액과제(3천만원 미만) 및 특정 키워드 제외
+        filtered_results = []
+        for r in results:
+            # 1. 예산 3,000만원 미만 제외
+            try:
+                budget = int(r.get("estmtPrdct", 0) or 0)
+                if budget < 30_000_000:  # 3,000만원 = 30,000,000
+                    continue
+            except (ValueError, TypeError):
+                pass
+
+            # 2. "취소공고" 또는 "수의" 포함 공고 제외
+            title = (r.get("bfSpecRgstNm") or r.get("prcSpcfNm") or "").upper()
+            if "취소공고" in title or "수의" in title:
+                continue
+
+            filtered_results.append(r)
+
+        return filtered_results
 
     async def get_bid_detail(self, bid_no: str) -> Dict:
         """

@@ -1,0 +1,121 @@
+global:
+  resolve_timeout: 5m
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+route:
+  receiver: 'default'
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+
+  routes:
+    # 중요도별 라우팅
+    - match:
+        severity: critical
+      receiver: 'critical'
+      group_wait: 5s
+      group_interval: 10s
+      repeat_interval: 1h
+      continue: true
+
+    - match:
+        severity: warning
+      receiver: 'warning'
+      group_wait: 30s
+      group_interval: 30s
+      repeat_interval: 4h
+
+    # 컴포넌트별 라우팅
+    - match:
+        component: backend
+      receiver: 'backend-team'
+      group_by: ['instance', 'alertname']
+
+    - match:
+        component: frontend
+      receiver: 'frontend-team'
+      group_by: ['instance', 'alertname']
+
+    - match:
+        component: database
+      receiver: 'devops-team'
+      group_by: ['instance', 'alertname']
+
+    - match:
+        component: host
+      receiver: 'devops-team'
+      group_by: ['instance', 'alertname']
+
+# 수신자 설정
+receivers:
+  - name: 'default'
+    slack_configs:
+      - channel: '#alerts-general'
+        title: 'Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        send_resolved: true
+
+  - name: 'critical'
+    slack_configs:
+      - channel: '#alerts-critical'
+        title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: 'danger'
+        send_resolved: true
+    pagerduty_configs:
+      - service_key: '${PAGERDUTY_SERVICE_KEY}'
+        description: '{{ .GroupLabels.alertname }}: {{ (index .Alerts 0).Annotations.summary }}'
+        severity: '{{ if eq .Status "firing" }}critical{{ else }}resolve{{ end }}'
+
+  - name: 'warning'
+    slack_configs:
+      - channel: '#alerts-warnings'
+        title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: 'warning'
+        send_resolved: true
+
+  - name: 'backend-team'
+    slack_configs:
+      - channel: '#backend-alerts'
+        title: 'Backend Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        send_resolved: true
+
+  - name: 'frontend-team'
+    slack_configs:
+      - channel: '#frontend-alerts'
+        title: 'Frontend Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        send_resolved: true
+
+  - name: 'devops-team'
+    slack_configs:
+      - channel: '#devops-alerts'
+        title: 'DevOps Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        send_resolved: true
+
+# 억제 규칙 (알림 억제)
+inhibit_rules:
+  # Critical이 발생하면 Warning 억제
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
+
+  # 호스트가 다운되면 그 위의 서비스 알림 억제
+  - source_match:
+      component: 'host'
+    target_match_re:
+      component: 'backend|frontend|database'
+    equal: ['instance']

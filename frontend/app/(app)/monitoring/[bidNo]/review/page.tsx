@@ -544,34 +544,11 @@ export default function BidReviewPage() {
 
       setSelectedStatus(status);
 
-      // "제안결정" → 분석 + Go 결정 + 제안 프로젝트 생성
+      // "제안결정" → Go 결정 + 상태 업데이트 + 제안 프로젝트 생성
       if (status === "제안결정") {
         try {
-          // 1) 공고 분석 (RFP分析, 공고문, 과업지시서 생성)
-          console.log(`[review] 1️⃣ 공고 분석 시작: ${baseUrl}/g2b/bid/${bidNo}/analyze`);
-          try {
-            const analyzeRes = await fetch(
-              `${baseUrl}/g2b/bid/${bidNo}/analyze`,
-              {
-                method: "POST",
-                headers,
-              },
-            );
-            if (!analyzeRes.ok) {
-              const err = await analyzeRes.json().catch(() => ({}));
-              console.warn("[review] 공고 분석 실패:", analyzeRes.status, err);
-              // 분석 실패해도 계속 진행 (fallback)
-            } else {
-              console.log(`✓ 공고 분석 완료: ${bidNo}`);
-              // 분석 완료 후 마크다운 문서 로드
-              await loadMarkdownDocuments();
-            }
-          } catch (e) {
-            console.warn("[review] 공고 분석 요청 오류:", e);
-          }
-
-          // 2) Go 의사결정 기록
-          console.log(`[review] 2️⃣ Go 의사결정 기록: ${baseUrl}/g2b/bid/${bidNo}/decision`);
+          // 1) Go 의사결정 기록
+          console.log(`[review] 1️⃣ Go 의사결정 기록: ${baseUrl}/g2b/bid/${bidNo}/decision`);
           try {
             const decisionRes = await fetch(
               `${baseUrl}/g2b/bid/${bidNo}/decision`,
@@ -595,29 +572,36 @@ export default function BidReviewPage() {
             console.warn("[review] 의사결정 기록 요청 오류:", e);
           }
 
-          // 3) proposal_status 업데이트
-          console.log(`[review] 3️⃣ proposal_status 업데이트: ${baseUrl}/bids/${bidNo}/status`);
+          // 2) proposal_status 업데이트
+          console.log(`[review] 2️⃣ proposal_status 업데이트: ${baseUrl}/bids/${bidNo}/status`);
+          let statusUpdateSuccess = false;
           try {
             const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
               method: "PUT",
               headers,
               body: JSON.stringify({ status: "제안결정" }),
             });
+            console.log(`[review] 상태 업데이트 응답: ${statusRes.status}`);
             if (!statusRes.ok) {
               const err = await statusRes.json().catch(() => ({}));
               console.warn("[review] proposal_status 업데이트 실패:", statusRes.status, err);
               // 실패해도 계속 진행
             } else {
-              console.log(`✓ proposal_status 업데이트 완료`);
+              const statusData = await statusRes.json();
+              console.log(`✓ proposal_status 업데이트 완료:`, statusData);
+              statusUpdateSuccess = true;
             }
           } catch (e) {
             console.warn("[review] proposal_status 업데이트 요청 오류:", e);
           }
+          console.log(`[review] 상태 업데이트 성공 여부: ${statusUpdateSuccess}`);
 
-          // 4) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
-          console.log(`[review] 4️⃣ 제안 프로젝트 생성: ${baseUrl}/proposals/from-bid`);
+          // 3) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
+          console.log(`[review] 3️⃣ 제안 프로젝트 생성: ${baseUrl}/proposals/from-bid`);
           console.log(`[review] 요청 본문: { bid_no: "${bidNo}" }`);
+          console.log(`[review] 헤더:`, headers);
           try {
+            console.log(`[review] fetch 시작...`);
             const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
               method: "POST",
               headers,
@@ -638,6 +622,8 @@ export default function BidReviewPage() {
             }
           } catch (e) {
             console.error("[review] 제안 프로젝트 생성 요청 오류:", e);
+            console.error("[review] 에러 상세:", (e as Error).message);
+            console.error("[review] 에러 스택:", (e as Error).stack);
           }
 
           console.log(`✓ 제안 프로세스 완료, proposals 페이지로 이동`);
@@ -1093,8 +1079,8 @@ export default function BidReviewPage() {
             )}
           </div>
 
-          {/* 공고 분석 마크다운 문서 */}
-          {Object.keys(markdownContent).some((k) => markdownContent[k]) && (
+          {/* 공고 분석 마크다운 문서 (제안검토 페이지 초기 분석 시에만 표시) */}
+          {!deciding && Object.keys(markdownContent).some((k) => markdownContent[k]) && (
             <div className="bg-[#1c1c1c] border border-[#262626] rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-blue-400 text-sm">📄</span>

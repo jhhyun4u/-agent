@@ -16,8 +16,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { api, ProposalSummary } from "@/lib/api";
-import NotificationBell from "@/components/NotificationBell";
-import ThemeToggle from "@/components/ThemeToggle";
 
 /* ── SVG 아이콘 ── */
 function SvgIcon({ d, className = "" }: { d: string; className?: string }) {
@@ -44,6 +42,7 @@ const ICONS: Record<string, string> = {
   bids: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
   proposals:
     "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8",
+  archive: "M21 8v13H3V8M1 3h22v5H1zM10 12h4",
   kb: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
   search: "M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z",
   content: "M4 6h16M4 12h16M4 18h7",
@@ -92,8 +91,9 @@ const DASHBOARD: NavItem = {
 const NAV_REST: NavEntry[] = [
   { href: "/monitoring", label: "공고 모니터링", icon: "bids" },
   { href: "/proposals", label: "제안 프로젝트", icon: "proposals" },
+  { href: "/archive", label: "종료 프로젝트", icon: "archive" },
   {
-    label: "지식 베이스",
+    label: "Knowledge Base",
     icon: "kb",
     basePath: "/kb",
     children: [
@@ -385,6 +385,7 @@ export default function AppSidebar() {
     if (href === "/proposals") return pathname.startsWith("/proposals");
     if (href === "/dashboard") return pathname.startsWith("/dashboard");
     if (href === "/monitoring") return pathname.startsWith("/monitoring");
+    if (href === "/archive") return pathname.startsWith("/archive");
     if (href === "/analytics") return pathname.startsWith("/analytics");
     if (href === "/admin") return pathname === "/admin";
     if (href === "/admin/prompts") return pathname === "/admin/prompts";
@@ -536,55 +537,30 @@ export default function AppSidebar() {
           )}
         </nav>
 
-        {/* 하단: 유저 + 테마 + 알림 + Admin */}
+        {/* 하단: 유저 정보 */}
         <div className="border-t border-[#262626] px-3 py-3 space-y-0.5">
-          <ThemeToggle collapsed={false} />
-          <div className="flex items-center justify-between px-3 py-1.5">
-            <span className="text-xs text-[#5c5c5c] truncate flex-1">
+          <div className="px-3 py-1.5">
+            <span className="text-xs text-[#5c5c5c] truncate block">
               {email}
             </span>
-            <NotificationBell />
           </div>
 
-          {/* Admin 관리 메뉴 (하단) */}
+          {/* 설정 (관리자만) */}
           {(userRole === "admin" || userRole === "manager") && (
-            <div className="mt-2 pt-2 border-t border-[#262626]">
-              <button
-                onClick={toggleAdmin}
-                aria-expanded={adminOpen}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
-                  pathname.startsWith("/admin") && !adminOpen
-                    ? "bg-[#1c1c1c] text-[#ededed]"
-                    : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
-                }`}
-              >
-                <SvgIcon
-                  d={ICONS[ADMIN_GROUP.icon] || ""}
-                  className="opacity-70 shrink-0"
-                />
-                <span className="flex-1 text-left">{ADMIN_GROUP.label}</span>
-                <span className="text-[10px] text-[#555]">
-                  {adminOpen ? "▾" : "▸"}
-                </span>
-              </button>
-              {adminOpen && (
-                <div className="ml-3 mt-0.5 space-y-0.5">
-                  {ADMIN_GROUP.children.map((child) => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      className={cLCls(isActive(child.href))}
-                    >
-                      <SvgIcon
-                        d={ICONS[child.icon] || ""}
-                        className="opacity-50 shrink-0 w-3.5 h-3.5"
-                      />
-                      <span>{child.label}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Link
+              href="/settings"
+              className={`mt-2 pt-2 border-t border-[#262626] flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors block w-full ${
+                isActive("/settings")
+                  ? "bg-[#1c1c1c] text-[#ededed]"
+                  : "text-[#8c8c8c] hover:bg-[#1a1a1a] hover:text-[#ededed]"
+              }`}
+            >
+              <SvgIcon
+                d={ICONS["settings"] || ""}
+                className="opacity-70 shrink-0"
+              />
+              <span>설정</span>
+            </Link>
           )}
 
           <button

@@ -34,6 +34,7 @@ import WorkflowResumeBanner from "@/components/WorkflowResumeBanner";
 import GuidedTour, { TOUR_PROPOSAL_DETAIL } from "@/components/GuidedTour";
 import ProjectContextHeader from "@/components/ProjectContextHeader";
 import FileHubPanel from "@/components/FileHubPanel";
+import ProjectDocumentsPanel from "@/components/ProjectDocumentsPanel";
 
 // Lazy load STEP 8 Review Page
 const Step8ReviewPage = dynamic(() => import("./step8-review/page"), {
@@ -252,9 +253,12 @@ export default function ProposalDetailPage() {
   // 버전 목록
   const fetchVersions = useCallback(async () => {
     try {
-      setVersions((await api.proposals.versions(id)) ?? []);
+      const result = await api.proposals.versions(id);
+      const versionsArray = Array.isArray(result) ? result : [];
+      setVersions(versionsArray);
     } catch {
-      /* 미구현 */
+      /* 미구현 — 엔드포인트 없음 */
+      setVersions([]);
     }
   }, [id]);
   useEffect(() => {
@@ -371,6 +375,7 @@ export default function ProposalDetailPage() {
     return `v${idx + 1}`;
   }
   function currentVersionLabel() {
+    if (!Array.isArray(versions)) return "v1";
     const idx = versions.findIndex((v) => v.id === id);
     if (idx === -1) return versions.length > 0 ? `v${versions.length}` : "v1";
     return versionLabel(idx);
@@ -526,6 +531,13 @@ export default function ProposalDetailPage() {
                   }
                 }}
               />
+            </div>
+          )}
+
+          {/* 문서 탭 */}
+          {activeTab === "kb" && (
+            <div className="max-w-3xl mx-auto">
+              <ProjectDocumentsPanel />
             </div>
           )}
 

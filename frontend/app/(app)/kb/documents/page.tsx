@@ -13,7 +13,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { api, type DocumentResponse } from "@/lib/api";
+import { documentsApi, type DocumentResponse } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -28,12 +28,12 @@ const STATUS_OPTS = [
   { value: "failed", label: "실패" },
 ];
 
-const STATUS_COLORS: Record<string, string> = {
-  extracting: "bg-blue-100 text-blue-800",
-  chunking: "bg-purple-100 text-purple-800",
-  embedding: "bg-indigo-100 text-indigo-800",
-  completed: "bg-green-100 text-green-800",
-  failed: "bg-red-100 text-red-800",
+const STATUS_VARIANTS: Record<string, "success" | "warning" | "error" | "info" | "neutral"> = {
+  extracting: "info",
+  chunking: "info",
+  embedding: "info",
+  completed: "success",
+  failed: "error",
 };
 
 const SORT_OPTIONS = [
@@ -75,7 +75,7 @@ export default function DocumentsPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.documentsApi.list({
+      const res = await documentsApi.list({
         status: statusFilter || undefined,
         doc_type: docTypeFilter || undefined,
         search: search || undefined,
@@ -111,7 +111,7 @@ export default function DocumentsPage() {
     setUploading(true);
 
     try {
-      await api.documentsApi.upload(file, uploadDocType);
+      await documentsApi.upload(file, uploadDocType);
       setUploadDocType("보고서");
       e.target.value = "";
       await load();
@@ -132,7 +132,7 @@ export default function DocumentsPage() {
 
     setDeleting(documentId);
     try {
-      await api.documentsApi.delete(documentId);
+      await documentsApi.delete(documentId);
       setDeleteConfirm(null);
       await load();
     } catch (err) {
@@ -158,7 +158,7 @@ export default function DocumentsPage() {
 
     setReprocessing(documentId);
     try {
-      await api.documentsApi.reprocess(documentId);
+      await documentsApi.reprocess(documentId);
       setReprocessConfirm(null);
       await load();
     } catch (err) {
@@ -350,7 +350,7 @@ export default function DocumentsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="font-medium truncate">{doc.filename}</h3>
-                        <Badge className={STATUS_COLORS[doc.processing_status]}>
+                        <Badge variant={STATUS_VARIANTS[doc.processing_status]}>
                           {STATUS_OPTS.find(
                             (s) => s.value === doc.processing_status,
                           )?.label || doc.processing_status}
@@ -390,7 +390,7 @@ export default function DocumentsPage() {
                             <div className="flex gap-2">
                               <Button
                                 onClick={() => setReprocessConfirm(null)}
-                                variant="outline"
+                                variant="secondary"
                                 size="sm"
                               >
                                 취소
@@ -410,7 +410,7 @@ export default function DocumentsPage() {
                           ) : (
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() =>
                                 handleReprocess(doc.id, doc.processing_status)
                               }
@@ -428,7 +428,7 @@ export default function DocumentsPage() {
                         <div className="flex gap-2">
                           <Button
                             onClick={() => setDeleteConfirm(null)}
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                           >
                             취소
@@ -464,7 +464,7 @@ export default function DocumentsPage() {
         {total > limit && (
           <div className="flex gap-2 justify-center mt-4">
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => setOffset(Math.max(0, offset - limit))}
               disabled={offset === 0}
             >
@@ -474,7 +474,7 @@ export default function DocumentsPage() {
               {Math.floor(offset / limit) + 1} / {Math.ceil(total / limit)}
             </span>
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => setOffset(offset + limit)}
               disabled={offset + limit >= total}
             >

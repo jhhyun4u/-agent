@@ -24,7 +24,6 @@ async def generate_bid_analysis_documents(
     agency: str,
     budget_amount: int | None,
     deadline_date: str,
-    content_text: str,
     raw_data: dict[str, Any],
 ) -> dict[str, str]:
     """공고 분석 → 3가지 마크다운 문서 생성 및 Storage 저장.
@@ -35,7 +34,6 @@ async def generate_bid_analysis_documents(
         agency: 발주기관
         budget_amount: 예정가격
         deadline_date: 공고마감일
-        content_text: 공고 전문 (원본)
         raw_data: G2B API 응답 (구조화된 데이터)
 
     Returns:
@@ -54,7 +52,6 @@ async def generate_bid_analysis_documents(
         agency=agency,
         budget_amount=budget_amount,
         deadline_date=deadline_date,
-        content_text=content_text,
         raw_data=raw_data,
     )
 
@@ -64,13 +61,11 @@ async def generate_bid_analysis_documents(
         agency=agency,
         budget_amount=budget_amount,
         deadline_date=deadline_date,
-        content_text=content_text,
     )
 
     instruction_md = await _generate_instruction_md(
         bid_no=bid_no,
         bid_title=bid_title,
-        content_text=content_text,
         raw_data=raw_data,
     )
 

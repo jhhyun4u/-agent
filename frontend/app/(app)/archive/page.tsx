@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * 아카이브 페이지 — 완료된 제안서 조회
+ * 종료 프로젝트(아카이브) 페이지 — 완료된 제안서 조회
+ * - 11개 컬럼 테이블: 연도, 과제명, 키워드, 발주처, 결과, 작업시간, 토큰비용, 팀, 참여자, 낙찰가, 낙찰율
  * - 스코프: 전체 / 우리 팀 / 나의
  * - 수주결과 필터: 전체 / 수주 / 낙찰실패 / 대기
  * - 페이지네이션
@@ -26,14 +27,44 @@ const WIN_RESULT_FILTERS = [
   { value: "pending", label: "대기" },
 ];
 
-// ── 유틸 ──────────────────────────────────────────────────────────────
+// ── 포맷팅 함수 ────────────────────────────────────────────────────────
 
-function formatDate(iso: string): string {
+function extractYear(iso: string): string {
   try {
-    return new Date(iso).toISOString().slice(0, 10);
+    return new Date(iso).getFullYear().toString();
   } catch {
     return "-";
   }
+}
+
+function formatCurrency(value: number | null | undefined): string {
+  if (!value || value <= 0) return "-";
+  const billion = value / 1000000000;
+  if (billion >= 1) {
+    return `${(billion * 10).toFixed(0) === (Math.round(billion * 10) * 10).toString() ? Math.round(billion * 10) / 10 : billion.toFixed(1)}억원`;
+  }
+  return `-`;
+}
+
+function formatElapsedTime(seconds: number | null | undefined): string {
+  if (!seconds || seconds <= 0) return "-";
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m`;
+  return `-`;
+}
+
+function formatTokenCost(cost: number | null | undefined): string {
+  if (cost === null || cost === undefined || cost <= 0) return "-";
+  return `$${cost.toFixed(2)}`;
+}
+
+function formatWinRate(bid: number | null | undefined, budget: number | null | undefined): string {
+  if (!bid || !budget || budget <= 0) return "-";
+  const rate = (bid / budget) * 100;
+  return `${Math.round(rate)}%`;
 }
 
 function WinResultBadge({ value }: { value: string | null }) {
@@ -58,7 +89,7 @@ function WinResultBadge({ value }: { value: string | null }) {
   );
 }
 
-// ── 페이지 컴포넌트 ───────────────────────────────────────────────────
+// ── 페이지 컴포넌트 ────────────────────────────────────────────────────
 
 export default function ArchivePage() {
   const router = useRouter();
@@ -109,7 +140,7 @@ export default function ArchivePage() {
     <>
       {/* 헤더 */}
       <header className="border-b border-[#262626] px-6 py-4 bg-[#111111] shrink-0">
-        <h1 className="text-base font-semibold text-[#ededed]">아카이브</h1>
+        <h1 className="text-base font-semibold text-[#ededed]">종료 프로젝트</h1>
       </header>
 
       {/* 필터 바 */}
@@ -159,21 +190,42 @@ export default function ArchivePage() {
 
         <div className="px-6 py-4">
           {/* 테이블 */}
-          <div className="border border-[#262626] rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="border border-[#262626] rounded-xl overflow-hidden overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="border-b border-[#262626] bg-[#111111]">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] w-full">
-                    제목
+                  <th className="text-center px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-16">
+                    연도
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
-                    날짜
+                  <th className="text-left px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap min-w-[180px]">
+                    과제명
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
+                  <th className="text-left px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap min-w-[80px]">
+                    키워드
+                  </th>
+                  <th className="text-left px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap min-w-[80px]">
+                    발주처
+                  </th>
+                  <th className="text-center px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-16">
                     결과
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap">
-                    단계
+                  <th className="text-right px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-20">
+                    작업시간
+                  </th>
+                  <th className="text-right px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-20">
+                    토큰비용
+                  </th>
+                  <th className="text-left px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap min-w-[80px]">
+                    팀
+                  </th>
+                  <th className="text-left px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap min-w-[120px]">
+                    참여자
+                  </th>
+                  <th className="text-right px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-24">
+                    낙찰가
+                  </th>
+                  <th className="text-center px-3 py-3 text-xs font-medium text-[#8c8c8c] whitespace-nowrap w-16">
+                    낙찰율
                   </th>
                 </tr>
               </thead>
@@ -181,7 +233,7 @@ export default function ArchivePage() {
                 {loading ? (
                   [...Array(5)].map((_, i) => (
                     <tr key={i} className="border-b border-[#262626]">
-                      <td colSpan={4} className="px-4 py-3">
+                      <td colSpan={11} className="px-3 py-3">
                         <div className="h-4 bg-[#1c1c1c] rounded animate-pulse" />
                       </td>
                     </tr>
@@ -189,8 +241,8 @@ export default function ArchivePage() {
                 ) : items.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={4}
-                      className="px-4 py-16 text-center text-sm text-[#5c5c5c]"
+                      colSpan={11}
+                      className="px-3 py-16 text-center text-sm text-[#5c5c5c]"
                     >
                       완료된 제안서가 없습니다
                     </td>
@@ -202,19 +254,38 @@ export default function ArchivePage() {
                       onClick={() => router.push(`/proposals/${item.id}`)}
                       className="border-b border-[#262626] last:border-0 hover:bg-[#1c1c1c] cursor-pointer transition-colors"
                     >
-                      <td className="px-4 py-3 text-[#ededed] font-medium">
-                        <span className="truncate block max-w-xs">
-                          {item.title}
-                        </span>
+                      <td className="text-center px-3 py-3 text-[#8c8c8c] text-xs whitespace-nowrap">
+                        {extractYear(item.created_at)}
                       </td>
-                      <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
-                        {formatDate(item.updated_at)}
+                      <td className="px-3 py-3 text-[#ededed] font-medium truncate">
+                        {item.title}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-3 py-3 text-[#8c8c8c] text-xs truncate">
+                        {item.positioning || "-"}
+                      </td>
+                      <td className="px-3 py-3 text-[#8c8c8c] text-xs truncate">
+                        {item.client_name || "-"}
+                      </td>
+                      <td className="px-3 py-3 text-center">
                         <WinResultBadge value={item.win_result} />
                       </td>
-                      <td className="px-4 py-3 text-[#8c8c8c] whitespace-nowrap text-xs">
-                        {item.current_phase ?? "-"}
+                      <td className="text-right px-3 py-3 text-[#8c8c8c] text-xs whitespace-nowrap">
+                        {formatElapsedTime(item.elapsed_seconds)}
+                      </td>
+                      <td className="text-right px-3 py-3 text-[#8c8c8c] text-xs whitespace-nowrap">
+                        {formatTokenCost(item.total_token_cost)}
+                      </td>
+                      <td className="px-3 py-3 text-[#8c8c8c] text-xs truncate">
+                        {item.team_name || "-"}
+                      </td>
+                      <td className="px-3 py-3 text-[#8c8c8c] text-xs truncate">
+                        {item.participants?.join(", ") || "-"}
+                      </td>
+                      <td className="text-right px-3 py-3 text-[#8c8c8c] text-xs whitespace-nowrap">
+                        {formatCurrency(item.bid_amount)}
+                      </td>
+                      <td className="text-center px-3 py-3 text-[#8c8c8c] text-xs whitespace-nowrap">
+                        {formatWinRate(item.bid_amount, item.budget)}
                       </td>
                     </tr>
                   ))

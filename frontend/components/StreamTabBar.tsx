@@ -18,7 +18,8 @@ export type StreamTab =
   | "documents"
   | "overview"
   | "filehub"
-  | "step8";
+  | "step8"
+  | "kb";
 
 interface Props {
   activeTab: StreamTab;
@@ -33,6 +34,7 @@ const TABS: { key: StreamTab; label: string; stream?: string }[] = [
   { key: "overview", label: "통합현황" },
   { key: "step8", label: "STEP 8 검토", stream: "step8" },
   { key: "filehub", label: "파일 허브" },
+  { key: "kb", label: "문서" },
 ];
 
 const STATUS_BADGE: Record<string, { color: string; label: string }> = {

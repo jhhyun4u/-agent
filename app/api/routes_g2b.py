@@ -196,7 +196,7 @@ async def analyze_bid(
         client = await get_async_client()
 
         # bid_announcements에서 해당 공고 조회 (org_id 필터링 제거)
-        result = await client.table("bid_announcements").select("id, bid_no, bid_title, agency, budget_amount, deadline_date, content_text, raw_data").eq(
+        result = await client.table("bid_announcements").select("id, bid_no, bid_title, agency, budget_amount, deadline_date, raw_data").eq(
             "bid_no", bid_no
         ).maybe_single().execute()
 
@@ -215,7 +215,6 @@ async def analyze_bid(
                     agency=bid.get("agency", ""),
                     budget_amount=bid.get("budget_amount"),
                     deadline_date=bid.get("deadline_date", ""),
-                    content_text=bid.get("content_text", ""),
                     raw_data=bid.get("raw_data", {}),
                 )
 

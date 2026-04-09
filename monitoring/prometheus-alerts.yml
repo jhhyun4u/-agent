@@ -1,0 +1,241 @@
+groups:
+  - name: tenopa_alerts
+    interval: 30s
+    rules:
+      # ════════════════════════════════════════════════════════════════════════════
+      # 호스트 (Node Exporter) 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: host
+        annotations:
+          summary: "High CPU Usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}% on instance {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: host
+        annotations:
+          summary: "High Memory Usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on instance {{ $labels.instance }}"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs"} / node_filesystem_size_bytes) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+          component: host
+        annotations:
+          summary: "Low Disk Space on {{ $labels.instance }}"
+          description: "Disk {{ $labels.device }} has only {{ $value | humanize }}% free space"
+
+      - alert: HighLoadAverage
+        expr: node_load15 > 4
+        for: 10m
+        labels:
+          severity: warning
+          component: host
+        annotations:
+          summary: "High Load Average on {{ $labels.instance }}"
+          description: "Load average is {{ $value | humanize }} on instance {{ $labels.instance }}"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # Docker (cAdvisor) 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: ContainerMemoryUsageHigh
+        expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: docker
+        annotations:
+          summary: "Container {{ $labels.name }} memory usage is high"
+          description: "Memory usage is {{ $value | humanize }}%"
+
+      - alert: ContainerCPUUsageHigh
+        expr: rate(container_cpu_usage_seconds_total[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: docker
+        annotations:
+          summary: "Container {{ $labels.name }} CPU usage is high"
+          description: "CPU usage is {{ $value | humanize }}%"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # FastAPI 백엔드 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: HighHTTPErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: backend
+        annotations:
+          summary: "High HTTP 5xx error rate on {{ $labels.instance }}"
+          description: "Error rate is {{ $value | humanize }} requests/sec"
+
+      - alert: HighHTTPLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          component: backend
+        annotations:
+          summary: "High HTTP request latency on {{ $labels.instance }}"
+          description: "P95 latency is {{ $value | humanize }}s"
+
+      - alert: BackendDown
+        expr: up{job="fastapi-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: backend
+        annotations:
+          summary: "Backend API is down"
+          description: "FastAPI backend on {{ $labels.instance }} is not responding"
+
+      - alert: HighDatabaseConnections
+        expr: pg_stat_activity_count > 50
+        for: 5m
+        labels:
+          severity: warning
+          component: backend
+        annotations:
+          summary: "High database connection count"
+          description: "{{ $value | humanize }} active database connections"
+
+      - alert: SlowDatabaseQueries
+        expr: pg_slow_queries_total > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: backend
+        annotations:
+          summary: "Slow database queries detected"
+          description: "{{ $value | humanize }} slow queries in the last 5 minutes"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # Next.js 프론트엔드 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: FrontendDown
+        expr: up{job="nextjs-frontend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: frontend
+        annotations:
+          summary: "Frontend application is down"
+          description: "Next.js frontend on {{ $labels.instance }} is not responding"
+
+      - alert: HighFrontendErrorRate
+        expr: rate(http_requests_total{status=~"4..|5..", job="nextjs-frontend"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: frontend
+        annotations:
+          summary: "High error rate on frontend"
+          description: "Error rate is {{ $value | humanize }} requests/sec"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # PostgreSQL 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: PostgresDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL on {{ $labels.instance }} is not responding"
+
+      - alert: PostgresDiskSpaceWarning
+        expr: pg_database_size_bytes / 1073741824 > 50
+        for: 10m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL database size is large"
+          description: "Database size is {{ $value | humanize }}GB"
+
+      - alert: PostgresSlowQueries
+        expr: pg_stat_statements_mean_exec_time > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Slow queries detected in PostgreSQL"
+          description: "Average query execution time is {{ $value | humanize }}ms"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # Redis 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis on {{ $labels.instance }} is not responding"
+
+      - alert: RedisMemoryUsageHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Memory usage is {{ $value | humanize }}%"
+
+      - alert: RedisEvictions
+        expr: rate(redis_evicted_keys_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis is evicting keys"
+          description: "Eviction rate is {{ $value | humanize }} keys/sec"
+
+      # ════════════════════════════════════════════════════════════════════════════
+      # 전체 시스템 알림
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: PrometheusScrapeFailing
+        expr: up{job="prometheus"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: monitoring
+        annotations:
+          summary: "Prometheus scrape is failing"
+          description: "Prometheus is unable to scrape metrics"
+
+      - alert: AlertmanagerDown
+        expr: up{job="alertmanager"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: monitoring
+        annotations:
+          summary: "Alertmanager is down"
+          description: "Alertmanager on {{ $labels.instance }} is not responding"

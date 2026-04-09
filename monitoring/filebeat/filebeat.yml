@@ -1,0 +1,97 @@
+filebeat.inputs:
+  # 애플리케이션 로그
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/app/*.log
+      - /var/log/app/**/*.log
+    fields:
+      component: app
+    fields_under_root: true
+
+  # 백엔드 로그
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/app/backend/*.log
+      - /var/log/app/backend/**/*.log
+    fields:
+      component: backend
+      service: fastapi
+    fields_under_root: true
+
+  # 프론트엔드 로그
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/app/frontend/*.log
+      - /var/log/app/frontend/**/*.log
+    fields:
+      component: frontend
+      service: nextjs
+    fields_under_root: true
+
+  # Docker 컨테이너 로그
+  - type: filestream
+    id: docker-logs
+    enabled: true
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    parsers:
+      - ndjson:
+          message_key: log
+          ignore_decoding_error: true
+    fields:
+      component: docker
+    fields_under_root: true
+
+  # Nginx 접근 로그 (있는 경우)
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/access.log
+    fields:
+      component: nginx
+      type: access
+    fields_under_root: true
+
+  # Nginx 에러 로그
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nginx/error.log
+    fields:
+      component: nginx
+      type: error
+    fields_under_root: true
+
+# 프로세서
+processors:
+  - add_kubernetes_metadata: ~
+  - add_docker_metadata: ~
+  - add_host_metadata: ~
+  - add_process_metadata: ~
+
+# 로깅 레벨
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+
+# 출력 설정 - Logstash로 전송
+output.logstash:
+  hosts: ["logstash:5044"]
+  loadbalance: true
+  index: "filebeat"
+
+# 모니터링
+monitoring.enabled: false
+
+# 기본 설정
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: true
+  reload.period: 10s

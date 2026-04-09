@@ -7,7 +7,7 @@
  * - URL 파라미터로 필터 상태 저장
  */
 
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { api, MonitoredBid, ScoredBid, BidAttachment } from "@/lib/api";
@@ -54,6 +54,12 @@ function calcDday(deadline: string | null | undefined): number | null {
 
 function extractDomain(title: string): string[] {
   const DOMAIN_MAP: [RegExp, string][] = [
+    // 구체적 패턴 먼저 배치 (스마트시티/스마트제조 구분 개선)
+    [/스마트제조|산업4\.0|스마트팩토리/i, "제조"],
+    [/제조(?!팩토리)|생산\s*기술/i, "제조"],
+    [/스마트시티|스마트도시/i, "스마트시티"],
+    [/디지털트랜스포메이션|DX\b|디지털화|고도화/i, "DX"],
+
     [/양자/i, "양자"],
     [/공항|항공/i, "항공"],
     [/결핵|감염|방역|보건|의료|건강/i, "보건의료"],
@@ -75,7 +81,6 @@ function extractDomain(title: string): string[] {
     [/우주|위성/i, "우주"],
     [/반도체|디스플레이/i, "반도체"],
     [/바이오|제약|의약/i, "바이오"],
-    [/스마트시티|스마트/i, "스마트시티"],
     [/정보보안|보안|사이버/i, "정보보안"],
     [/ICT|정보통신|SW|소프트웨어/i, "ICT"],
     [/해양|해운|항만/i, "해양"],
@@ -295,6 +300,95 @@ function SortableHeader({
       className={`px-3 py-2.5 text-xs font-medium text-[#5c5c5c] cursor-pointer hover:text-[#8c8c8c] select-none whitespace-nowrap ${className}`}
     >
       {label} <span className={`${arrowColor} ml-0.5`}>{arrow}</span>
+    </th>
+  );
+}
+
+// ── 필터링 + 정렬 헤더 컴포넌트 ────────────────────────────────
+
+function FilterableSortableHeader({
+  sortKey,
+  current,
+  onSort,
+  filterValue,
+  onFilterChange,
+  className = "",
+}: {
+  sortKey: string;
+  current: SortConfig;
+  onSort: (key: string) => void;
+  filterValue: "all" | "under100" | "over100";
+  onFilterChange: (value: "all" | "under100" | "over100") => void;
+  className?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isActive = current?.key === sortKey;
+  const arrowColor = isActive ? "text-[#3ecf8e]" : "text-[#3c3c3c]";
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isOpen]);
+
+  return (
+    <th
+      className={`px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap relative ${className}`}
+    >
+      <div className="flex items-center gap-2 relative" ref={dropdownRef}>
+        {/* 드롭다운 버튼 */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-[#5c5c5c] font-medium hover:text-[#8c8c8c] transition-colors cursor-pointer"
+        >
+          예산 ▼
+        </button>
+
+        {/* 드롭다운 메뉴 */}
+        {isOpen && (
+          <div className="absolute top-full left-0 mt-1 bg-[#1c1c1c] border border-[#262626] rounded shadow-lg z-50 min-w-max">
+            {(["all", "under100", "over100"] as const).map((value) => {
+              const labels = {
+                all: "전체",
+                under100: "1억원 이하",
+                over100: "1억원 초과",
+              };
+              return (
+                <button
+                  key={value}
+                  onClick={() => {
+                    onFilterChange(value);
+                    setIsOpen(false);
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-xs hover:bg-[#262626] transition-colors ${
+                    filterValue === value
+                      ? "text-[#3ecf8e] font-medium"
+                      : "text-[#ededed]"
+                  }`}
+                >
+                  {labels[value]}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 정렬 버튼 */}
+        <button
+          onClick={() => onSort(sortKey)}
+          title="오름/내림차순 정렬"
+          className={`px-1.5 py-0.5 rounded hover:bg-[#262626] transition-colors ${arrowColor} hover:text-[#8c8c8c]`}
+        >
+          {isActive ? (current.dir === "desc" ? "▼" : "▲") : "⇅"}
+        </button>
+      </div>
     </th>
   );
 }
@@ -563,6 +657,9 @@ function ScoredBidsView({
   const [minBudget, setMinBudget] = useState(
     Number(searchParams.get("budget")) || 0,
   );
+  const [budgetFilterType, setBudgetFilterType] = useState<"all" | "under100" | "over100">(
+    (searchParams.get("budgetFilter") as "all" | "under100" | "over100") || "all",
+  );
   const [agency, setAgency] = useState(searchParams.get("agency") || "");
   const [stageFilter, setStageFilter] = useState<Set<string>>(
     new Set(["입찰공고", "사전규격", "발주계획"]),
@@ -718,7 +815,15 @@ function ScoredBidsView({
   const filteredBids = useMemo(() => {
     let result = bids
       .filter((b) => stageFilter.has(b.bid_stage || "입찰공고"))
-      .filter((b) => matchesScoredSearch(b, debouncedQuery));
+      .filter((b) => matchesScoredSearch(b, debouncedQuery))
+      .filter((b) => {
+        // 예산 필터
+        if (budgetFilterType === "all") return true;
+        const budget = b.budget || 0;
+        if (budgetFilterType === "under100") return budget <= 100_000_000;
+        if (budgetFilterType === "over100") return budget > 100_000_000;
+        return true;
+      });
 
     return sortBids(result, sortConfig, (b, key) => {
       if (key === "score") return (b.suitability_score ?? b.score) || 0;
@@ -726,7 +831,7 @@ function ScoredBidsView({
       if (key === "d_day") return b.d_day ?? 999;
       return null;
     });
-  }, [bids, stageFilter, debouncedQuery, sortConfig]);
+  }, [bids, stageFilter, debouncedQuery, sortConfig, budgetFilterType]);
 
   // 정렬 토글
   function handleSort(key: string) {
@@ -751,6 +856,7 @@ function ScoredBidsView({
   // 활성 필터 수
   const activeFilterCount = [
     debouncedQuery !== "",
+    budgetFilterType !== "all",
     stageFilter.size < 3,
     sortConfig !== null,
   ].filter(Boolean).length;
@@ -758,6 +864,7 @@ function ScoredBidsView({
   // 초기화
   function resetFilters() {
     setQuery("");
+    setBudgetFilterType("all");
     setStageFilter(new Set(["입찰공고", "사전규격", "발주계획"]));
     setSortConfig(null);
   }
@@ -905,11 +1012,12 @@ function ScoredBidsView({
                 <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
                   발주기관
                 </th>
-                <SortableHeader
-                  label="예산"
+                <FilterableSortableHeader
                   sortKey="budget"
                   current={sortConfig}
                   onSort={handleSort}
+                  filterValue={budgetFilterType}
+                  onFilterChange={setBudgetFilterType}
                   className="text-right"
                 />
                 <SortableHeader
@@ -920,10 +1028,10 @@ function ScoredBidsView({
                   className="text-center"
                 />
                 <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
-                  역할 키워드
+                  컨설팅 영역
                 </th>
                 <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
-                  도메인
+                  산업/기술
                 </th>
                 <th className="text-center px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
                   추천 팀
@@ -1004,7 +1112,7 @@ function ScoredBidsView({
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap gap-1">
-                      {extractDomain(bid.title).map((kw) => (
+                      {(bid.domain_keywords || extractDomain(bid.title)).map((kw) => (
                         <span
                           key={kw}
                           className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-900/50"
@@ -1012,7 +1120,7 @@ function ScoredBidsView({
                           {kw}
                         </span>
                       ))}
-                      {extractDomain(bid.title).length === 0 && (
+                      {(bid.domain_keywords || extractDomain(bid.title)).length === 0 && (
                         <span className="text-[10px] text-[#3c3c3c]">-</span>
                       )}
                     </div>
@@ -1060,6 +1168,9 @@ function MonitorBidsView({
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const [minBudget, setMinBudget] = useState(
     Number(searchParams.get("budget")) || 0,
+  );
+  const [budgetFilterType, setBudgetFilterType] = useState<"all" | "under100" | "over100">(
+    (searchParams.get("budgetFilter") as "all" | "under100" | "over100") || "all",
   );
   const [agency, setAgency] = useState(searchParams.get("agency") || "");
   const [statusFilter, setStatusFilter] = useState("");
@@ -1165,7 +1276,14 @@ function MonitorBidsView({
   const filteredBids = useMemo(() => {
     let result = bids
       .filter((b) => matchesMonitorSearch(b, debouncedQuery))
-      .filter((b) => minBudget === 0 || (b.budget_amount ?? 0) >= minBudget)
+      .filter((b) => {
+        // 예산 필터
+        if (budgetFilterType === "all") return true;
+        const budget = b.budget_amount ?? 0;
+        if (budgetFilterType === "under100") return budget <= 100_000_000;
+        if (budgetFilterType === "over100") return budget > 100_000_000;
+        return true;
+      })
       .filter((b) => !agency || b.agency.includes(agency))
       .filter((b) => {
         if (!statusFilter) return true;
@@ -1183,7 +1301,7 @@ function MonitorBidsView({
   }, [
     bids,
     debouncedQuery,
-    minBudget,
+    budgetFilterType,
     agency,
     statusFilter,
     relevanceFilter,
@@ -1400,13 +1518,21 @@ function MonitorBidsView({
                   <th className="text-left px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
                     발주처
                   </th>
-                  <SortableHeader
-                    label="용역비"
-                    sortKey="budget"
-                    current={sortConfig}
-                    onSort={handleSort}
-                    className="text-right"
-                  />
+                  <th className="text-right px-3 py-2.5 text-xs font-medium text-[#5c5c5c] whitespace-nowrap">
+                    <select
+                      value={budgetFilterType}
+                      onChange={(e) =>
+                        setBudgetFilterType(
+                          e.target.value as "all" | "under100" | "over100",
+                        )
+                      }
+                      className="bg-[#1c1c1c] border border-[#262626] rounded px-2 py-1 text-xs text-[#ededed] cursor-pointer hover:border-[#3ecf8e]/50 focus:outline-none focus:border-[#3ecf8e]"
+                    >
+                      <option value="all">전체</option>
+                      <option value="under100">1억원 이하</option>
+                      <option value="over100">1억원 초과</option>
+                    </select>
+                  </th>
                   <SortableHeader
                     label="마감일"
                     sortKey="days"

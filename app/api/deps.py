@@ -27,36 +27,31 @@ logger = logging.getLogger(__name__)
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
-# 개발 모드 mock 사용자 (seed_data.py의 이팀장)
-_DEV_USER_ID = "00000000-0000-0000-0003-000000000003"
+# 개발 모드 mock 사용자 - 실제 DB에 존재하는 사용자 ID 사용
+# (RLS 정책이 이 사용자 ID로 필터링하므로 존재해야 함)
+_DEV_USER_ID = "59331eeb-73ce-48da-9019-5e40ffe35ec4"  # yoon@tenopa.co.kr
 
 
 async def _get_dev_user() -> CurrentUser:
-    """개발 모드: DB에서 테스트 사용자 조회, 실패 시 org_id 있는 사용자로 폴백."""
+    """개발 모드: DB에서 dev 사용자 조회 또는 하드코딩된 프로필 반환."""
     client = await get_async_client()
     try:
-        # 1차: seed 사용자 조회
+        # DB에서 dev 사용자 조회
         res = await client.table("users").select("*").eq("id", _DEV_USER_ID).execute()
         if res.data:
             return CurrentUser(**res.data[0])
     except Exception:
         pass
-    try:
-        # 2차: org_id가 있는 아무 사용자 (KB 등 org 필터 API 동작 보장)
-        res = await client.table("users").select("*").not_.is_("org_id", "null").limit(1).execute()
-        if res.data:
-            logger.info(f"DEV_MODE: seed 사용자 없어 {res.data[0].get('email')}로 폴백")
-            return CurrentUser(**res.data[0])
-    except Exception:
-        pass
-    # 3차: 하드코딩 최소 프로필
+
+    # 폴백: 하드코딩된 프로필
+    # NOTE: 이 값들은 실제 DB의 yoon@tenopa.co.kr과 일치해야 RLS 및 팀 필터링이 정상 작동
     return CurrentUser(
         id=_DEV_USER_ID,
-        email="lead@tenopa.co.kr",
-        name="이팀장",
+        email="yoon@tenopa.co.kr",
+        name="Yoon",
         role="lead",
-        org_id=None,
-        team_id=None,
+        org_id="b92b8f14-f0d2-4d9e-a6c8-a5b0ec1dd114",
+        team_id="69acad2a-c3a6-498b-85cf-d383c9c15050",  # SET: Match DB yoon user
         division_id=None,
         status="active",
     )

@@ -616,3 +616,224 @@ async def get_workflow_stats(
     except Exception as e:
         logger.error(f"Error getting workflow stats for {proposal_id}: {str(e)}")
         raise HTTPException(500, f"워크플로우 통계 조회 중 오류: {str(e)}")
+
+
+# ── HITL 리뷰 엔드포인트 ──
+
+
+class ReviewItemStatus(BaseModel):
+    """검토 항목 상태."""
+    id: str
+    step_name: str
+    section_name: str
+    status: str  # pending | in_review | approved | rejected
+    created_at: str
+    updated_at: str | None = None
+
+
+class ReviewFeedback(BaseModel):
+    """검토 피드백."""
+    id: str
+    feedback_text: str
+    submitted_by_name: str
+    submitted_at: str
+    decision: str | None = None
+
+
+class ReviewItemDetail(BaseModel):
+    """검토 항목 상세."""
+    id: str
+    step_name: str
+    section_name: str
+    artifact_content: str
+    artifact_type: str  # text | markdown
+    status: str
+    feedback_history: list[ReviewFeedback] = []
+
+
+class SubmitReviewFeedback(BaseModel):
+    """검토 피드백 제출."""
+    feedback_text: str
+    decision: str  # approved | rejected | pending
+
+
+@router.get("/{proposal_id}/review-items")
+async def get_review_items(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """검토 대기 항목 목록 조회.
+
+    Args:
+        proposal_id: 제안서 ID
+
+    Returns:
+        {
+            "items": [
+                {
+                    "id": str,
+                    "step_name": str,
+                    "section_name": str,
+                    "status": str,
+                    "created_at": str,
+                    "updated_at": str | None
+                }
+            ],
+            "stats": {
+                "total": int,
+                "pending": int,
+                "in_review": int,
+                "approved": int,
+                "rejected": int
+            }
+        }
+    """
+    try:
+        # proposal_id 검증 및 접근 권한 확인
+        result = await rls_client.from_("proposals").select("id").eq("id", proposal_id).single()
+        if not result.data:
+            raise HTTPException(404, "제안서를 찾을 수 없습니다")
+
+        # 검토 항목 조회 (step8_feedback 및 workflow_events 기반)
+        # 현재는 더미 데이터로 반환 - 실제 구현 필요
+        items = [
+            {
+                "id": "review-1",
+                "step_name": "제안서 작성",
+                "section_name": "Executive Summary",
+                "status": "pending",
+                "created_at": "2026-04-09T10:30:00+09:00",
+                "updated_at": None,
+            }
+        ]
+
+        stats = {
+            "total": len(items),
+            "pending": sum(1 for i in items if i["status"] == "pending"),
+            "in_review": sum(1 for i in items if i["status"] == "in_review"),
+            "approved": sum(1 for i in items if i["status"] == "approved"),
+            "rejected": sum(1 for i in items if i["status"] == "rejected"),
+        }
+
+        return {"items": items, "stats": stats}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting review items for {proposal_id}: {str(e)}")
+        raise HTTPException(500, f"검토 항목 조회 중 오류: {str(e)}")
+
+
+@router.get("/{proposal_id}/review-items/{review_id}")
+async def get_review_item_detail(
+    proposal_id: str,
+    review_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """검토 항목 상세 조회.
+
+    Args:
+        proposal_id: 제안서 ID
+        review_id: 검토 항목 ID
+
+    Returns:
+        {
+            "id": str,
+            "step_name": str,
+            "section_name": str,
+            "artifact_content": str,
+            "artifact_type": str,
+            "status": str,
+            "feedback_history": [
+                {
+                    "id": str,
+                    "feedback_text": str,
+                    "submitted_by_name": str,
+                    "submitted_at": str,
+                    "decision": str | None
+                }
+            ]
+        }
+    """
+    try:
+        # proposal_id 검증
+        result = await rls_client.from_("proposals").select("id").eq("id", proposal_id).single()
+        if not result.data:
+            raise HTTPException(404, "제안서를 찾을 수 없습니다")
+
+        # 더미 데이터로 반환 - 실제 구현 필요
+        item_detail = {
+            "id": review_id,
+            "step_name": "제안서 작성",
+            "section_name": "Executive Summary",
+            "artifact_content": "제안서의 핵심을 3-5문장으로 요약하여 의사결정자의 주의를 끌어야 합니다.\n\n실제 산출물 내용이 여기에 표시됩니다.",
+            "artifact_type": "text",
+            "status": "pending",
+            "feedback_history": [],
+        }
+
+        return item_detail
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting review item {review_id}: {str(e)}")
+        raise HTTPException(500, f"검토 항목 상세 조회 중 오류: {str(e)}")
+
+
+@router.post("/{proposal_id}/review-items/{review_id}/feedback")
+async def submit_review_feedback(
+    proposal_id: str,
+    review_id: str,
+    payload: SubmitReviewFeedback,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """검토 피드백 제출.
+
+    Args:
+        proposal_id: 제안서 ID
+        review_id: 검토 항목 ID
+        payload: 피드백 내용 및 의사결정
+
+    Returns:
+        {
+            "id": str,
+            "feedback_text": str,
+            "decision": str,
+            "submitted_by_name": str,
+            "submitted_at": str
+        }
+    """
+    try:
+        # proposal_id 검증
+        result = await rls_client.from_("proposals").select("id").eq("id", proposal_id).single()
+        if not result.data:
+            raise HTTPException(404, "제안서를 찾을 수 없습니다")
+
+        # 피드백 저장 (step8_feedback 테이블)
+        feedback_id = str(uuid.uuid4())
+        feedback_data = {
+            "id": feedback_id,
+            "proposal_id": proposal_id,
+            "feedback_text": payload.feedback_text,
+            "submitted_by": user.id,
+            "submitted_at": "2026-04-09T11:00:00+09:00",
+            "decision": payload.decision,
+        }
+
+        # 실제 DB 저장 로직 필요
+        # await rls_client.from_("step8_feedback").insert(feedback_data)
+
+        return {
+            "id": feedback_id,
+            "feedback_text": payload.feedback_text,
+            "decision": payload.decision,
+            "submitted_by_name": user.name,
+            "submitted_at": feedback_data["submitted_at"],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error submitting review feedback: {str(e)}")
+        raise HTTPException(500, f"피드백 제출 중 오류: {str(e)}")

@@ -1,0 +1,93 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'tenopa-proposer'
+    environment: 'production'
+
+# 알림 규칙 파일
+rule_files:
+  - 'alerts.yml'
+
+# 알림 관리자 설정
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  # Prometheus 자체 메트릭
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter (호스트 시스템 메트릭)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'host-metrics'
+
+  # cAdvisor (Docker 컨테이너 메트릭)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'docker-metrics'
+
+  # FastAPI 백엔드 (포트 8000)
+  - job_name: 'fastapi-backend'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:8000']
+        labels:
+          service: 'backend'
+          environment: 'production'
+    metrics_path: '/metrics'
+    # Relabel 설정으로 서비스명 추가
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'api-server'
+
+  # Next.js 프론트엔드 (포트 3000)
+  - job_name: 'nextjs-frontend'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:3000']
+        labels:
+          service: 'frontend'
+          environment: 'production'
+    metrics_path: '/_next/metrics'
+    scrape_timeout: 5s
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'web-server'
+
+  # PostgreSQL (Supabase 내부 또는 별도 Postgres Exporter)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'database'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'database-server'
+
+  # Redis (캐시)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'cache'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'cache-server'

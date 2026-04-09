@@ -1,0 +1,102 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: true
+  reload.period: 10s
+
+metricbeat.modules:
+  # 시스템 메트릭
+  - module: system
+    period: 10s
+    metricsets:
+      - cpu
+      - memory
+      - load
+      - fsstat
+      - filesystem
+      - diskio
+      - network
+      - process
+      - process_summary
+      - uptime
+    enabled: true
+    processes: ['.*']
+    include_top_n:
+      enabled: true
+      by_cpu: 10
+      by_memory: 10
+
+  # Docker 메트릭
+  - module: docker
+    period: 10s
+    hosts: ["unix:///var/run/docker.sock"]
+    metricsets:
+      - container
+      - cpu
+      - memory
+      - diskio
+      - healthcheck
+      - image
+      - info
+      - network
+    enabled: true
+
+  # PostgreSQL 메트릭 (있는 경우)
+  - module: postgresql
+    period: 10s
+    hosts: ["${POSTGRES_HOST|localhost}:${POSTGRES_PORT|5432}"]
+    username: ${POSTGRES_USER|postgres}
+    password: ${POSTGRES_PASSWORD}
+    database: ${POSTGRES_DB|postgres}
+    metricsets:
+      - activity
+      - bgwriter
+      - database
+      - statement
+    enabled: false
+
+  # Redis 메트릭 (있는 경우)
+  - module: redis
+    period: 10s
+    hosts: ["${REDIS_HOST|localhost}:${REDIS_PORT|6379}"]
+    metricsets:
+      - info
+      - keyspace
+    enabled: false
+
+  # Prometheus 메트릭
+  - module: prometheus
+    period: 10s
+    hosts: ["localhost:9090"]
+    metricsets:
+      - query
+    enabled: true
+    queries:
+      - name: "http_requests_total"
+        query: "http_requests_total"
+      - name: "http_request_duration_seconds"
+        query: "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))"
+
+# 프로세서
+processors:
+  - add_host_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+  - drop_event.when.regexp:
+      message: "^DBG"
+
+# 출력 설정 - Elasticsearch로 전송
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  index: "metricbeat-%{+yyyy.MM.dd}"
+
+# 로깅
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/metricbeat
+  name: metricbeat
+  keepfiles: 7
+  permissions: 0644
+
+# 모니터링
+monitoring.enabled: false

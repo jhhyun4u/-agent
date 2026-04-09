@@ -76,3 +76,58 @@ def summarize_usage(records: list[dict]) -> dict:
         "model": model,
         "num_calls": len(records),
     }
+
+
+class TokenCostTracker:
+    """제안서 워크플로우 중 누적된 토큰 비용을 추적하는 클래스."""
+
+    @staticmethod
+    def format_cost(cost_usd: float) -> str:
+        """USD 비용을 포맷팅된 문자열로 변환.
+
+        Examples:
+            0.00234 → "$0.00"
+            4.2567 → "$4.26"
+            150.0 → "$150.00"
+        """
+        return f"${cost_usd:.2f}"
+
+    @staticmethod
+    def format_elapsed_time(elapsed_seconds: int) -> str:
+        """초 단위 시간을 포맷팅된 문자열로 변환.
+
+        Examples:
+            65 → "1m 5s"
+            3661 → "1h 1m 1s"
+            7200 → "2h 0m"
+        """
+        hours = elapsed_seconds // 3600
+        minutes = (elapsed_seconds % 3600) // 60
+        seconds = elapsed_seconds % 60
+
+        if hours > 0:
+            return f"{hours}h {minutes}m"
+        elif minutes > 0:
+            return f"{minutes}m {seconds}s"
+        else:
+            return f"{seconds}s"
+
+    @staticmethod
+    def aggregate_costs(cost_records: list[dict]) -> dict:
+        """여러 토큰 기록을 집계하여 총 비용 계산.
+
+        Args:
+            cost_records: [
+                {"input_tokens": 100, "output_tokens": 50, "model": "claude-sonnet-4-5-20250929"},
+                ...
+            ]
+
+        Returns:
+            {
+                "total_tokens": 150,
+                "total_cost_usd": 0.001234,
+                "total_cost_formatted": "$0.00",
+                "model": "claude-sonnet-4-5-20250929"
+            }
+        """
+        return summarize_usage(cost_records)
