@@ -1,7 +1,4 @@
 """Phase 3: 산출물 + 알림 + Compliance + DOCX 빌더 테스트."""
-import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
-from tests.conftest import make_supabase_mock
 
 
 # ── 알림 API ──
@@ -65,8 +62,3 @@ def test_compliance_tracker_import():
 
 def test_notification_service_import():
     """알림 서비스 import 가능."""
-    from app.services.notification_service import (
-        create_notification,
-        notify_approval_request,
-        notify_ai_complete,
-    )

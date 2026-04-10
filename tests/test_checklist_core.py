@@ -13,14 +13,14 @@
 """
 
 import pytest
-from datetime import date, datetime, timezone, timedelta
+from datetime import date, datetime
 from unittest.mock import patch, AsyncMock, MagicMock
 
 # ══════════════════════════════════════
 # 1-1. 진도율 계산 정확도
 # ══════════════════════════════════════
 
-from app.utils.date_utils import calc_progress
+from app.utils.date_utils import calc_progress  # noqa: E402
 
 
 class TestCalcProgress:
@@ -49,7 +49,7 @@ class TestCalcProgress:
 # 1-2. 예산 집행률 계산
 # ══════════════════════════════════════
 
-from app.utils.date_utils import calc_budget_rate
+from app.utils.date_utils import calc_budget_rate  # noqa: E402
 
 
 class TestCalcBudgetRate:
@@ -75,7 +75,7 @@ class TestCalcBudgetRate:
 # 1-3. D-day / 잔여일 계산
 # ══════════════════════════════════════
 
-from app.utils.date_utils import calc_dday, deadline_alert_level, KST
+from app.utils.date_utils import calc_dday, deadline_alert_level, KST  # noqa: E402
 
 
 class TestCalcDday:
@@ -149,7 +149,7 @@ class TestDeadlineAlertLevel:
 # 1-4. 과제 상태 전환 로직 (edges.py)
 # ══════════════════════════════════════
 
-from app.graph.edges import (
+from app.graph.edges import (  # noqa: E402
     route_after_rfp_review,
     route_after_gng_review,
     route_after_strategy_review,
@@ -339,7 +339,7 @@ class TestRouteAfterPptReview:
 # 1-4 보조: PropStatusTransitionError
 # ══════════════════════════════════════
 
-from app.exceptions import PropStatusTransitionError
+from app.exceptions import PropStatusTransitionError  # noqa: E402
 
 
 class TestPropStatusTransitionError:
@@ -425,7 +425,7 @@ class TestNotifyDeadlineAlert:
 # 3-1. API 응답 구조 검증 (제안서 목록)
 # ══════════════════════════════════════
 
-from tests.conftest import _get_test_app, make_supabase_mock
+from tests.conftest import _get_test_app  # noqa: E402
 
 app = _get_test_app()
 

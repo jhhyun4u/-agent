@@ -4,9 +4,7 @@
 Unit + Integration tests for document upload, processing, and retrieval.
 """
 
-import asyncio
 import io
-import json
 import pytest
 from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -527,7 +525,7 @@ def test_org_isolation_in_list(client, mock_current_user):
             # Verify .eq() was called with org_id
             assert response.status_code == 200
             call_args = mock_query.eq.call_args_list
-            org_filter_found = any(
+            any(
                 mock_current_user.org_id in str(call)
                 for call in call_args
             )

@@ -5,13 +5,11 @@
 """
 
 import pytest
-import asyncio
 from datetime import datetime, timezone, timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 from app.services.migration_service import MigrationService
-from app.models.migration_schemas import MigrationBatch
 
 
 # ── Fixtures ──

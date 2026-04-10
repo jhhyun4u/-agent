@@ -9,16 +9,13 @@ Tests cover:
 """
 
 import pytest
-from uuid import UUID, uuid4
-from datetime import datetime
+from uuid import UUID
 
 from app.services.version_manager import (
-    execute_node_and_create_version,
     validate_move_and_resolve_versions,
     check_node_move_feasibility,
     DependencyLevel,
     VersionConflict,
-    MoveValidationResult,
     _calculate_checksum,
     _determine_reason,
     _get_node_dependencies,

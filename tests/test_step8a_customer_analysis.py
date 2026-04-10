@@ -11,9 +11,8 @@ Tests cover:
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import UUID
 
-from app.graph.state import ProposalState, CustomerProfile, RFPAnalysis, Strategy
+from app.graph.state import CustomerProfile, RFPAnalysis, Strategy
 from app.graph.nodes.step8a_customer_analysis import proposal_customer_analysis
 
 
@@ -140,7 +139,7 @@ async def test_customer_analysis_artifact_versioning(
         "app.graph.nodes.step8a_customer_analysis.execute_node_and_create_version",
         new_callable=AsyncMock,
         return_value=(1, mock_artifact),
-    ) as mock_version:
+    ):
         mock_state["rfp_analysis"].model_dump_json = MagicMock(
             return_value="{}"
         )

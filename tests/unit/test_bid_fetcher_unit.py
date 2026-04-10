@@ -6,10 +6,8 @@ v2: fetch_all_bids 전수 수집 + score_and_rank_bids 스코어링 파이프라
 """
 
 import pytest
-from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
-from unittest.mock import AsyncMock, MagicMock, patch, call
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from app.models.bid_schemas import BidAnnouncement, SearchPreset
 from app.services.bid_fetcher import BidFetcher

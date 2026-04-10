@@ -3,7 +3,6 @@
 import pytest
 import os
 from datetime import datetime, timezone
-from typing import AsyncGenerator
 from dotenv import load_dotenv
 
 from app.models.auth_schemas import CurrentUser

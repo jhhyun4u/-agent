@@ -632,8 +632,6 @@ async def section_quality_check(state: ProposalState) -> dict:
     
     출력: DiagnosisResult (종합점수, 이슈 목록, 권장조치)
     """
-    from app.prompts.proposal_prompts import SECTION_QUALITY_CHECK_PROMPT
-    
     # 현재 섹션 가져오기
     sections = state.get("proposal_sections", [])
     index = state.get("current_section_index", 0)

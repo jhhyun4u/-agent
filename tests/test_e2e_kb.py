@@ -3,11 +3,10 @@
 KB 전체 CRUD 라이프사이클 + 검색 + 크로스도메인 연동 + 에러 케이스 + 응답 스키마 검증.
 기존 conftest.py 인프라 활용 (MockQueryBuilder + Supabase mock).
 """
-import io
 import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 
-from tests.conftest import make_supabase_mock, MockQueryBuilder
+from tests.conftest import make_supabase_mock
 
 
 # ══════════════════════════════════════════════

@@ -4,7 +4,6 @@ Mock 기반 (Level 1). AsyncPostgresSaver 실패 시 MemorySaver 폴백.
 """
 
 import pytest
-from unittest.mock import patch, AsyncMock
 
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -37,8 +36,7 @@ async def test_memory_saver_basic_checkpoint():
     invoke → aget_state → 상태 복원이 되는지.
     """
     from contextlib import ExitStack
-    from langgraph.types import Command
-    from tests.integration.conftest import build_all_patches, resume_approved
+    from tests.integration.conftest import build_all_patches
 
     patches, _, _ = build_all_patches()
 

@@ -1,5 +1,4 @@
 """Phase 0: 앱 기동 + 헬스체크 + 인증 의존성 테스트."""
-import pytest
 
 
 async def test_health_check(client):

@@ -313,7 +313,7 @@ class TestPromptRegistrySync:
         """같은 내용 재동기화 시 updated=0."""
         with patch("app.utils.supabase_client.get_async_client", AsyncMock(return_value=db)):
             from app.services.prompt_registry import sync_all_prompts
-            r1 = await sync_all_prompts()
+            await sync_all_prompts()
             r2 = await sync_all_prompts()
 
         # 두 번째 실행에서는 해시 일치로 updated=0 이어야 함

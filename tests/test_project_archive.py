@@ -1,6 +1,5 @@
 """프로젝트 아카이브 — 중간 산출물 파일화 + manifest + API 테스트."""
 
-import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 
 from tests.conftest import make_supabase_mock
@@ -309,7 +308,7 @@ class TestManifestAPI:
             "total_size": 0,
         }
         with patch("app.api.routes_project_archive.get_project_manifest",
-                   new_callable=AsyncMock, return_value=mock_manifest) as mock_fn:
+                   new_callable=AsyncMock, return_value=mock_manifest):
             # get_project_manifest is imported inside the endpoint, patch at route level
             with patch("app.services.project_archive_service.get_project_manifest",
                        new_callable=AsyncMock, return_value=mock_manifest):

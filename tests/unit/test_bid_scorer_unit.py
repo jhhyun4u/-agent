@@ -5,12 +5,10 @@ score_bid() 4단계 파이프라인, score_and_rank_bids() 배치 처리,
 정규화 어댑터(normalize_pre_spec/plan)를 검증한다.
 """
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, timedelta
 
-import pytest
 
 from app.services.bidding.monitor.scorer import (
-    BidScore,
     _normalize_title,
     normalize_plan_for_scoring,
     normalize_pre_spec_for_scoring,
@@ -259,7 +257,7 @@ class TestScoreBidBudget:
 
     def test_예산_10억_최대_가산30점(self):
         raw = make_raw(title="AI 전략", budget="1000000000")
-        result = score_bid(raw, REF_DATE)
+        score_bid(raw, REF_DATE)
         # 10억 / 1억 * 2 = 20점, max 30점 이하
         budget_score = min(10 * 2, 30)
         assert budget_score == 20

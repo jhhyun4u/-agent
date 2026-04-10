@@ -1,5 +1,4 @@
 """Phase 1: 제안서 CRUD + 워크플로 API 테스트."""
-import pytest
 from io import BytesIO
 from unittest.mock import patch, AsyncMock, MagicMock
 from tests.conftest import MockQueryBuilder

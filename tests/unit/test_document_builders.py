@@ -184,7 +184,7 @@ def test_document_builders():
     print("\n" + "=" * 60)
     print("[COMPLETE] 테스트 완료!")
     print("=" * 60)
-    print(f"\n생성된 파일:")
+    print("\n생성된 파일:")
     if docx_path.exists():
         print(f"  - Word:  {docx_path}")
     if pptx_path.exists():

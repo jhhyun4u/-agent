@@ -1,7 +1,7 @@
 """Integration test fixtures for API endpoints"""
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from datetime import datetime, timezone
 
 from app.main import app

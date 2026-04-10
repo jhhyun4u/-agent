@@ -1,7 +1,7 @@
 """Integration tests for document routes (I-*)"""
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 from httpx import AsyncClient, ASGITransport
 from datetime import datetime, timezone
 from io import BytesIO

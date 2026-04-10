@@ -13,11 +13,8 @@ import asyncio
 import time
 import psutil
 import os
-from io import BytesIO
-from datetime import datetime, timezone
 from typing import List
-from uuid import uuid4
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 
 # ── 성능 테스트용 Fixture ──
@@ -376,6 +373,6 @@ async def test_repeated_requests_caching(client, mock_user, generate_mock_docume
     # 두 번째 요청이 더 빨라야 함 (캐시 효율성)
     # 이상적으로는 두 번째가 50% 이상 빨라야 함
     if time_first > 50:  # 첫 번째가 충분히 길면
-        efficiency = (time_first - time_second) / time_first
+        (time_first - time_second) / time_first
         # 캐시 효율성 > 0 (이상적으로는 > 50%)
         assert time_second <= time_first, "Second request should be faster (cached)"

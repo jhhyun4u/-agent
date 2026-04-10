@@ -9,9 +9,8 @@
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from io import BytesIO
-from datetime import datetime
 
 
 # ── Fixtures ──
@@ -132,8 +131,6 @@ async def test_upload_document_oversized(client):
     """파일 크기 초과 (500MB)"""
     # Act
     # Create a mock UploadFile with size attribute
-    from fastapi import UploadFile
-    from unittest.mock import AsyncMock
 
     # Instead of testing with actual large file, we'll test through mocking
     response = await client.post(

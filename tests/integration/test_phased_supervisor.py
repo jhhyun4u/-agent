@@ -6,7 +6,6 @@ Mock 데이터와 그래프를 사용하여 v3.1.1 전체 흐름을 시뮬레이
 """
 
 import asyncio
-from datetime import datetime
 
 from state.phased_state import initialize_phased_supervisor_state
 from graph.phased_supervisor import build_phased_supervisor_graph
@@ -50,10 +49,10 @@ async def test_phased_graph_structure():
         return False
 
     print(f"✅ 모든 노드 존재: {len(nodes)}개")
-    print(f"   - Phase 실행 노드: 5개")
-    print(f"   - 압축 노드: 4개")
-    print(f"   - HITL 게이트: 5개")
-    print(f"   - Phase 5 서브노드: 2개 (critique, revise, finalize)")
+    print("   - Phase 실행 노드: 5개")
+    print("   - 압축 노드: 4개")
+    print("   - HITL 게이트: 5개")
+    print("   - Phase 5 서브노드: 2개 (critique, revise, finalize)")
 
     # 엣지 검증
     edge_count = len(graph.edges)
@@ -84,43 +83,43 @@ async def test_phase_state_transitions():
         rfp_document_ref="document_store://rfp-2026-001"
     )
 
-    print(f"\n📋 초기 상태:")
+    print("\n📋 초기 상태:")
     print(f"   current_phase: {state['current_phase']}")
-    print(f"   phase_artifact_1: None")
-    print(f"   phase_working_state: 초기화")
+    print("   phase_artifact_1: None")
+    print("   phase_working_state: 초기화")
 
     # Phase 1 실행
-    print(f"\n▶️ Phase 1: Research 실행...")
+    print("\n▶️ Phase 1: Research 실행...")
     result = await phase_1_research_node(state)
     state.update(result)
 
-    print(f"✅ Phase 1 완료")
+    print("✅ Phase 1 완료")
     print(f"   agent_status.phase_1: {state['agent_status'].get('phase_1')}")
     print(f"   phase_working_state: {len(state['phase_working_state'])} 필드")
 
     # Compress 1
-    print(f"\n▶️ Compress 1: Artifact #1 생성...")
+    print("\n▶️ Compress 1: Artifact #1 생성...")
     result = await compress_phase_1_node(state)
     state.update(result)
 
-    print(f"✅ Compress 1 완료")
+    print("✅ Compress 1 완료")
     print(f"   phase_artifact_1: {bool(state['phase_artifact_1'])} (생성 완료)")
     print(f"   phase_working_state: {bool(state['phase_working_state'])} (비워짐 = 컨텍스트 격리)")
 
     # Phase 2 실행
-    print(f"\n▶️ Phase 2: Analysis 실행...")
+    print("\n▶️ Phase 2: Analysis 실행...")
     result = await phase_2_analysis_node(state)
     state.update(result)
 
-    print(f"✅ Phase 2 완료")
+    print("✅ Phase 2 완료")
     print(f"   agent_status.phase_2: {state['agent_status'].get('phase_2')}")
 
     # Compress 2
-    print(f"\n▶️ Compress 2: Artifact #2 생성...")
+    print("\n▶️ Compress 2: Artifact #2 생성...")
     result = await compress_phase_2_node(state)
     state.update(result)
 
-    print(f"✅ Compress 2 완료")
+    print("✅ Compress 2 완료")
     print(f"   phase_artifact_2: {bool(state['phase_artifact_2'])} (생성 완료)")
 
     return True
@@ -144,23 +143,23 @@ async def test_hitl_logic():
     state["phase_artifact_2"] = create_mock_artifact_2()
 
     # Gate #1 테스트 (조건부)
-    print(f"\n🚪 Gate #1: Research → Analysis")
+    print("\n🚪 Gate #1: Research → Analysis")
     decision1 = evaluate_hitl_gate(1, state)
     print(f"   결정: {decision1.action}")
     print(f"   사유: {decision1.reason[:50]}...")
     assert decision1.action == "auto_pass", "Gate #1은 auto_pass여야 함"
-    print(f"✅ Gate #1: 자동 통과")
+    print("✅ Gate #1: 자동 통과")
 
     # Gate #2 테스트 (조건부)
-    print(f"\n🚪 Gate #2: Analysis → Plan")
+    print("\n🚪 Gate #2: Analysis → Plan")
     decision2 = evaluate_hitl_gate(2, state)
     print(f"   결정: {decision2.action}")
     print(f"   사유: {decision2.reason[:50]}...")
     assert decision2.action == "auto_pass", "Gate #2는 auto_pass여야 함"
-    print(f"✅ Gate #2: 자동 통과")
+    print("✅ Gate #2: 자동 통과")
 
     # Gate #3 테스트 (★필수)
-    print(f"\n🚪 Gate #3: Plan → Implement (★필수)")
+    print("\n🚪 Gate #3: Plan → Implement (★필수)")
     from graph.mock_data import create_mock_artifact_3
 
     state["phase_artifact_3"] = create_mock_artifact_3()
@@ -168,7 +167,7 @@ async def test_hitl_logic():
     print(f"   결정: {decision3.action}")
     print(f"   사유: {decision3.reason}")
     assert decision3.action == "require_human", "Gate #3는 require_human이어야 함"
-    print(f"✅ Gate #3: 필수 승인 (interrupt 예정)")
+    print("✅ Gate #3: 필수 승인 (interrupt 예정)")
 
     return True
 
@@ -188,7 +187,7 @@ async def test_phase5_quality_loop():
     state = initialize_phased_supervisor_state()
 
     # 시나리오 1: 품질 점수 충분 (0.82) → pass
-    print(f"\n📊 시나리오 1: 품질 점수 0.82 (충분)")
+    print("\n📊 시나리오 1: 품질 점수 0.82 (충분)")
     state["phase_working_state"] = {
         "quality_score": 0.82,
         "revision_rounds": 0,
@@ -197,10 +196,10 @@ async def test_phase5_quality_loop():
     action = decide_quality_action(state)
     print(f"   라우팅: {action}")
     assert action == "pass", "0.82는 pass여야 함"
-    print(f"✅ pass (Finalize로 진행)")
+    print("✅ pass (Finalize로 진행)")
 
     # 시나리오 2: 품질 점수 부족 (0.70) + 1회 수정 → revise
-    print(f"\n📊 시나리오 2: 품질 점수 0.70 (부족) + 1회 수정")
+    print("\n📊 시나리오 2: 품질 점수 0.70 (부족) + 1회 수정")
     state["phase_working_state"] = {
         "quality_score": 0.70,
         "revision_rounds": 1,
@@ -209,10 +208,10 @@ async def test_phase5_quality_loop():
     action = decide_quality_action(state)
     print(f"   라우팅: {action}")
     assert action == "revise", "0.70 < 0.75이고 rounds < 3이므로 revise"
-    print(f"✅ revise (수정 후 재평가)")
+    print("✅ revise (수정 후 재평가)")
 
     # 시나리오 3: 구조적 문제 발견 → escalate
-    print(f"\n📊 시나리오 3: 구조적 문제 발견")
+    print("\n📊 시나리오 3: 구조적 문제 발견")
     state["phase_working_state"] = {
         "quality_score": 0.65,
         "revision_rounds": 0,
@@ -221,7 +220,7 @@ async def test_phase5_quality_loop():
     action = decide_quality_action(state)
     print(f"   라우팅: {action}")
     assert action == "escalate", "구조적 문제는 escalate"
-    print(f"✅ escalate (HITL Gate #5로 사람 판단)")
+    print("✅ escalate (HITL Gate #5로 사람 판단)")
 
     return True
 
@@ -255,7 +254,7 @@ async def test_context_compression():
 
     max_tokens = [8_000, 10_000, 12_000, 15_000]
 
-    print(f"\n📦 Artifact 토큰 크기 검증:")
+    print("\n📦 Artifact 토큰 크기 검증:")
     for i, (name, artifact) in enumerate(artifacts):
         artifact_str = str(artifact)
         token_estimate = len(artifact_str) // 5  # 대략 한국어 5자 ≈ 1토큰
@@ -263,8 +262,8 @@ async def test_context_compression():
         status = "✅" if token_estimate <= max_tok else "⚠️"
         print(f"   {status} {name}: ~{token_estimate:,} 토큰 (제한: {max_tok:,})")
 
-    print(f"\n✅ 모든 Artifact가 토큰 예산 내에 있음")
-    print(f"   각 Phase 최대 컨텍스트: ~45K 토큰 (200K의 22%)")
+    print("\n✅ 모든 Artifact가 토큰 예산 내에 있음")
+    print("   각 Phase 최대 컨텍스트: ~45K 토큰 (200K의 22%)")
 
     return True
 

@@ -18,7 +18,7 @@ pytestmark = pytest.mark.live
 @pytest.mark.asyncio
 async def test_checkpointer_write_read(pg_checkpointer):
     """체크포인트 저장 → 읽기 왕복 검증."""
-    from tests.integration.conftest import build_all_patches, resume_approved
+    from tests.integration.conftest import build_all_patches
     from app.graph.graph import build_graph
 
     patches, _, _ = build_all_patches()

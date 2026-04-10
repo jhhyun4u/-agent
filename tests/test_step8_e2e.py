@@ -13,11 +13,9 @@ source venv/bin/activate
 python -m pytest tests/test_step8_e2e.py -v -s
 """
 
-import asyncio
 import time
 from datetime import datetime
 from uuid import uuid4
-from typing import Any
 
 import pytest
 from app.graph.state import ProposalState
