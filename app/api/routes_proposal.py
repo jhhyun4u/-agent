@@ -166,8 +166,9 @@ async def create_from_bid(
 
     1. bid_announcements에서 공고 정보 조회
     2. 마크다운 문서 로드 (RFP분석, 공고문, 과업지시서)
-    3. proposals 테이블에 제안 프로젝트 생성
-    4. 공고 첨부파일 복사 (백그라운드)
+    3. FK 의존성 사전 확인 (조직, 팀, 구분, 사용자)
+    4. proposals 테이블에 제안 프로젝트 생성
+    5. 공고 첨부파일 복사 (백그라운드)
     """
     proposal_id = str(uuid.uuid4())
     client = await get_async_client()
@@ -203,9 +204,23 @@ async def create_from_bid(
         rfp_content = ""
         # ... (선택사항)
 
-    # 3) proposals 테이블에 제안 프로젝트 생성
-    print(f"\n=== [from-bid] 제안 생성 시작: {proposal_id} ===")
-    logger.info(f"[from-bid] 제안 생성: {proposal_id}, owner_id={owner_id}, team_id={user.team_id}")
+    # ✅ Step 3: 사용자 정보 확정 (이미 로그인된 사용자이므로 확인만 함)
+    # 사용자는 이미 조직과 팀에 소속되어 있음
+    print(f"\n=== [from-bid] 사용자 정보 확정: {proposal_id} ===")
+    logger.info(f"[from-bid] 로그인 사용자: id={owner_id}, team_id={user.team_id}, org_id={user.org_id}")
+
+    final_org_id = user.org_id
+    final_team_id = user.team_id
+    final_division_id = division_id  # 공고에서 가져온 것 (있을 수도 없을 수도 있음)
+
+    if not final_org_id or not final_team_id:
+        error_msg = f"[from-bid] 사용자 소속 정보 부족: org_id={final_org_id}, team_id={final_team_id}"
+        logger.error(error_msg)
+        raise G2BServiceError(f"사용자 소속 정보가 불완전합니다. 관리자에게 문의하세요.")
+
+    # ✅ Step 4: 제안 프로젝트 생성
+    print(f"\n=== [from-bid] 제안 생성: {proposal_id} ===")
+    logger.info(f"[from-bid] 제안 생성: {proposal_id}, owner_id={owner_id}, team_id={final_team_id}")
     try:
         proposal_data = {
             "id": proposal_id,
@@ -214,37 +229,93 @@ async def create_from_bid(
             "rfp_content": rfp_content,
             "rfp_content_truncated": len(rfp_content) > 50000,
             "rfp_filename": f"{body.bid_no}.md",
-            "owner_id": owner_id,  # RLS를 위해 owner_id 필수
+            "owner_id": owner_id,
+            "team_id": final_team_id,
+            "org_id": final_org_id,
+            # 제안결정 관련 필드
+            "go_decision": True,  # ✅ 제안결정을 YES로 설정
+            "bid_tracked": False,  # ✅ 공고 모니터링에서 숨기기
         }
 
-        # 사용자의 team_id를 자동으로 설정 (목록 조회 기본 필터가 team_id이므로 필수)
-        if user.team_id:
-            proposal_data["team_id"] = user.team_id
-            logger.info(f"[from-bid] team_id 설정: {user.team_id}")
-        else:
-            logger.warning("[from-bid] 사용자의 team_id가 없음")
-
-        # org_id와 division_id가 있으면 추가
-        if org_id:
-            proposal_data["org_id"] = org_id
-        if division_id:
-            proposal_data["division_id"] = division_id
+        if final_division_id:
+            proposal_data["division_id"] = final_division_id
 
         logger.info(f"[from-bid] INSERT 데이터: {proposal_data}")
 
         # Supabase insert
         insert_result = await client.table("proposals").insert(proposal_data).execute()
+        logger.info(f"[from-bid] ✅ 제안 생성 완료: {proposal_id}")
 
-        logger.info(f"[from-bid] OK 제안 생성 완료: {proposal_id}, 데이터: {insert_result.data}")
     except Exception as e:
         error_msg = f"[from-bid] 제안 생성 실패: {str(e)}"
         print(error_msg)
         print(f"[from-bid] 에러 타입: {type(e).__name__}")
         import traceback
         print(traceback.format_exc())
-        logger.error(error_msg)
+        logger.error(error_msg, exc_info=True)
         logger.error(f"[from-bid] 시도한 데이터: {proposal_data}")
         raise G2BServiceError(f"제안 프로젝트 생성 중 오류: {str(e)}")
+
+    # ✅ Step 5: 제안 작업 목록 생성 (담당팀 배정 + 상태 설정)
+    print(f"\n=== [from-bid] 제안 작업 목록 생성: {proposal_id} ===")
+    try:
+        from datetime import datetime, timedelta
+
+        # 제안 작업 생성
+        task_data = {
+            "proposal_id": proposal_id,
+            "assigned_team_id": final_team_id,  # 제안결정을 선택한 팀
+            "description": f"공고 {body.bid_no} 제안 프로젝트: {title}",
+            "status": "waiting",  # 대기 상태
+            "priority": "normal",
+            "due_date": (datetime.utcnow() + timedelta(days=14)).isoformat(),  # 기본값: 2주 후
+            "created_by_id": owner_id,
+        }
+
+        logger.info(f"[from-bid] 작업 목록 생성: {task_data}")
+        task_result = await client.table("proposal_tasks").insert(task_data).execute()
+        task_id = task_result.data[0]["id"] if task_result.data else None
+        logger.info(f"[from-bid] ✅ 작업 목록 생성 완료: {task_id}, 담당팀={final_team_id}")
+
+    except Exception as task_e:
+        logger.warning(f"[from-bid] 작업 목록 생성 실패 (무시): {task_e}")
+
+    # ✅ Step 6: LangGraph 워크플로 자동 시작
+    try:
+        from app.services.session_manager import session_manager
+        from app.graph.graph import build_graph
+        from app.utils.supabase_client import get_postgres_client
+
+        logger.info(f"[from-bid] 워크플로 시작: {proposal_id}")
+
+        # PostgreSQL 트랜잭션으로 워크플로 시작
+        postgres_client = await get_postgres_client()
+        config = {
+            "configurable": {
+                "thread_id": proposal_id,
+                "checkpoint_ns": "",
+            }
+        }
+
+        # LangGraph 빌드 및 초기 상태 설정
+        graph = build_graph(checkpointer=postgres_client)
+        initial_state = {
+            "project_id": proposal_id,
+            "owner_id": owner_id,
+            "entry_point": "from_bid",
+            "bid_no": body.bid_no,
+            "current_step": "STEP_0",
+        }
+
+        # 백그라운드에서 워크플로 실행 (비동기, 응답 지연 방지)
+        background_tasks.add_task(
+            lambda: _run_workflow_background(graph, initial_state, config, proposal_id)
+        )
+        logger.info(f"[from-bid] 워크플로 백그라운드 시작 완료: {proposal_id}")
+
+    except Exception as wf_e:
+        # 워크플로 시작 실패해도 제안은 생성됨 (로깅만 수행)
+        logger.warning(f"[from-bid] 워크플로 시작 실패 (무시): {wf_e}")
 
     return {
         "proposal_id": proposal_id,
@@ -252,6 +323,7 @@ async def create_from_bid(
         "status": "initialized",
         "entry_point": "from_bid",
         "bid_no": body.bid_no,
+        "workflow_started": True,
     }
 
 
@@ -937,3 +1009,15 @@ async def get_gap_analysis(
     except Exception as e:
         logger.error(f"Error fetching gap analysis: {str(e)}")
         raise HTTPException(500, f"갭 분석 결과 조회 중 오류: {str(e)}")
+
+
+# ── 백그라운드 워크플로 실행 ──
+
+async def _run_workflow_background(graph, initial_state, config, proposal_id):
+    """LangGraph 워크플로를 백그라운드에서 비동기로 실행."""
+    try:
+        logger.info(f"[workflow] 백그라운드 시작: {proposal_id}")
+        result = await graph.ainvoke(initial_state, config=config)
+        logger.info(f"[workflow] 완료: {proposal_id}, 최종 상태: {result.get('current_step', 'unknown')}")
+    except Exception as e:
+        logger.error(f"[workflow] 실패: {proposal_id}: {str(e)}", exc_info=True)

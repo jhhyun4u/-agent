@@ -21,9 +21,10 @@ class DocumentResponse(BaseModel):
 
     id: str
     filename: str
+    file_size_bytes: int = Field(description="파일 크기 (바이트)")
     doc_type: Literal["보고서", "제안서", "실적", "기타"]
     storage_path: str
-    processing_status: Literal["extracting", "chunking", "embedding", "completed", "failed"] = Field(
+    processing_status: Literal["pending", "extracting", "chunking", "embedding", "completed", "failed"] = Field(
         description="문서 처리 상태"
     )
     total_chars: int = 0
