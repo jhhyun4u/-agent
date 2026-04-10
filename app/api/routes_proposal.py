@@ -8,7 +8,6 @@ GET  /api/proposals          — 목록
 GET  /api/proposals/{id}     — 상세
 """
 
-import asyncio
 import uuid
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
@@ -223,7 +222,7 @@ async def create_from_bid(
             proposal_data["team_id"] = user.team_id
             logger.info(f"[from-bid] team_id 설정: {user.team_id}")
         else:
-            logger.warning(f"[from-bid] 사용자의 team_id가 없음")
+            logger.warning("[from-bid] 사용자의 team_id가 없음")
 
         # org_id와 division_id가 있으면 추가
         if org_id:

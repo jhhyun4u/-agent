@@ -6,7 +6,6 @@ v3.3: plan_price에서 labor_rates, market_price_data DB 조회.
 """
 
 import logging
-from datetime import datetime
 from uuid import UUID
 
 from app.graph.state import ProposalState, CustomerProfile

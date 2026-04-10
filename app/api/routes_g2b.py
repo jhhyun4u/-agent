@@ -204,7 +204,7 @@ async def analyze_bid(
             raise G2BServiceError("공고를 찾을 수 없습니다")
 
         bid = result.data
-        logger.info(f"[analyze] 공고 조회 완료")
+        logger.info("[analyze] 공고 조회 완료")
 
         # 분석 문서 생성은 백그라운드에서 처리
         async def _analyze_documents():
@@ -226,13 +226,13 @@ async def analyze_bid(
                     "analysis_status": "analyzed",
                 }).eq("id", bid["id"]).execute()
 
-                logger.info(f"✓ 공고 분석 문서 생성 완료")
+                logger.info("✓ 공고 분석 문서 생성 완료")
             except Exception as e:
                 logger.error(f"✗ 공고 분석 문서 생성 실패: {type(e).__name__}: {str(e)[:100]}")
 
         background_tasks.add_task(_analyze_documents)
 
-        logger.info(f"[analyze] ✓ 공고 분석 시작됨 (백그라운드)")
+        logger.info("[analyze] ✓ 공고 분석 시작됨 (백그라운드)")
 
         return {
             "bid_no": bid_no,
