@@ -5,7 +5,6 @@ Run this script to migrate the intranet_documents table
 """
 
 import asyncio
-import sys
 from app.utils.supabase_client import get_async_client
 
 
@@ -57,7 +56,7 @@ async def apply_migration():
 
     for i, (sql, description) in enumerate(migrations, 1):
         try:
-            result = await client.postgrest.rpc("exec_sql", {"sql": sql}).execute()
+            await client.postgrest.rpc("exec_sql", {"sql": sql}).execute()
             print(f"✅ Step {i}: {description}")
         except Exception as e:
             # For RPC-based approach, we might not have exec_sql

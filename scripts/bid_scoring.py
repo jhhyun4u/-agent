@@ -6,7 +6,7 @@ search_matching_bids.py와 daily_bid_scan.py에서 공유.
 
 import json
 import math
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 

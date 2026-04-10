@@ -79,10 +79,10 @@ async def main():
     except Exception as e:
         print(f"  Profile upsert failed (login still works): {e}")
 
-    print(f"\n=== E2E account ready ===")
+    print("\n=== E2E account ready ===")
     print(f"  Email:    {E2E_EMAIL}")
     print(f"  Password: {E2E_PASSWORD}")
-    print(f"\nAdd to frontend/.env.local:")
+    print("\nAdd to frontend/.env.local:")
     print(f"  E2E_USER_EMAIL={E2E_EMAIL}")
     print(f"  E2E_USER_PASSWORD={E2E_PASSWORD}")
 

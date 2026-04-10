@@ -18,7 +18,7 @@ async def test_api():
     client = await get_async_client()
 
     bid_no = "2026010001"
-    print(f"[TEST] 방식 1: .execute() 사용")
+    print("[TEST] 방식 1: .execute() 사용")
     try:
         result = await client.table("bid_announcements")\
             .select("*")\
@@ -29,7 +29,7 @@ async def test_api():
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    print(f"\n[TEST] 방식 2: await 직접 사용")
+    print("\n[TEST] 방식 2: await 직접 사용")
     try:
         result = await client.table("bid_announcements")\
             .select("*")\
@@ -39,7 +39,7 @@ async def test_api():
     except Exception as e:
         print(f"  ERROR: {e}")
 
-    print(f"\n[TEST] 방식 3: .limit(1) 사용")
+    print("\n[TEST] 방식 3: .limit(1) 사용")
     try:
         response = await client.table("bid_announcements")\
             .select("*")\

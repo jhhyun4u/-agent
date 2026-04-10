@@ -6,7 +6,6 @@
 """
 import asyncio
 import sys
-import json
 from datetime import datetime
 
 # 프로젝트 루트를 path에 추가
@@ -17,7 +16,7 @@ from app.services.g2b_service import G2BService
 
 async def test_search(keyword: str, budget_min: int = 0):
     print(f"\n{'='*60}")
-    print(f"  G2B 공고 검색 테스트")
+    print("  G2B 공고 검색 테스트")
     print(f"  키워드: {keyword}")
     if budget_min:
         print(f"  최소예산: {budget_min:,}원")

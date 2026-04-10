@@ -5,8 +5,7 @@ Tests core logic without full app initialization
 
 import asyncio
 import sys
-from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import UUID
+from unittest.mock import MagicMock
 
 # Add app to path
 sys.path.insert(0, 'c:\\project\\tenopa proposer\\-agent-master')
@@ -15,7 +14,6 @@ sys.path.insert(0, 'c:\\project\\tenopa proposer\\-agent-master')
 async def test_step8a_imports():
     """Test step8a imports and basic function signature"""
     from app.graph.nodes.step8a_customer_analysis import proposal_customer_analysis
-    from app.graph.state import ProposalState, CustomerProfile
 
     # Verify function exists and is async
     assert asyncio.iscoroutinefunction(proposal_customer_analysis)
@@ -25,7 +23,6 @@ async def test_step8a_imports():
 async def test_step8b_imports():
     """Test step8b imports and basic function signature"""
     from app.graph.nodes.step8b_section_validator import proposal_section_validator
-    from app.graph.state import ValidationReport
 
     assert asyncio.iscoroutinefunction(proposal_section_validator)
     print("✅ step8b: imports and signature verified")
@@ -34,7 +31,6 @@ async def test_step8b_imports():
 async def test_step8c_imports():
     """Test step8c imports and basic function signature"""
     from app.graph.nodes.step8c_consolidation import proposal_sections_consolidation
-    from app.graph.state import ConsolidatedProposal
 
     assert asyncio.iscoroutinefunction(proposal_sections_consolidation)
     print("✅ step8c: imports and signature verified")
@@ -43,7 +39,6 @@ async def test_step8c_imports():
 async def test_step8d_imports():
     """Test step8d imports and basic function signature"""
     from app.graph.nodes.step8d_mock_evaluation import mock_evaluation_analysis
-    from app.graph.state import MockEvalResult
 
     assert asyncio.iscoroutinefunction(mock_evaluation_analysis)
     print("✅ step8d: imports and signature verified")
@@ -52,7 +47,6 @@ async def test_step8d_imports():
 async def test_step8e_imports():
     """Test step8e imports and basic function signature"""
     from app.graph.nodes.step8e_feedback_processor import mock_evaluation_feedback_processor
-    from app.graph.state import FeedbackSummary
 
     assert asyncio.iscoroutinefunction(mock_evaluation_feedback_processor)
     print("✅ step8e: imports and signature verified")
@@ -69,7 +63,6 @@ async def test_step8f_imports():
 async def test_constants_helper():
     """Test normalize_proposal_section helper function"""
     from app.graph.nodes._constants import normalize_proposal_section, MAX_REWRITE_ITERATIONS
-    from app.graph.state import ProposalSection
 
     # Test with dict
     dict_section = {"title": "Test", "content": "Content"}

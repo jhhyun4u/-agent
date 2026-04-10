@@ -142,7 +142,7 @@ async def scan(profile: dict, pipeline: dict, init: bool = False,
         print(f"[초기화] 최근 {date_range_days}일 전수 조회 시작...")
     else:
         date_range_days = 1
-        print(f"[증분] 전일 24시간 공고 조회 시작...")
+        print("[증분] 전일 24시간 공고 조회 시작...")
 
     date_from = (datetime.now() - timedelta(days=date_range_days)).strftime("%Y%m%d") + "0000"
 
@@ -311,7 +311,7 @@ def main():
             save_pipeline(pipeline)
             print(f"✓ {args.select} 선택 완료 (by {args.by})")
             print("  이 공고를 제안 파이프라인에 등록하시겠습니까?")
-            print(f"  → uv run python scripts/search_matching_bids.py 에서 상세 확인 가능")
+            print("  → uv run python scripts/search_matching_bids.py 에서 상세 확인 가능")
         else:
             print(f"[ERROR] 공고번호 {args.select}을(를) 활성 목록에서 찾을 수 없습니다.")
             sys.exit(1)
@@ -343,7 +343,7 @@ def main():
 
     save_pipeline(pipeline)
 
-    print(f"\n━━━ 스캔 결과 ━━━")
+    print("\n━━━ 스캔 결과 ━━━")
     print(f"  신규 {added}건 추가 (스코어 {MIN_SCORE}점 이상)")
     print(f"  현재 활성 {len(pipeline['active_bids'])}건\n")
 

@@ -7,7 +7,6 @@ from typing import Dict, List, Any, Optional
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
-import asyncio
 import logging
 
 # 로깅 설정

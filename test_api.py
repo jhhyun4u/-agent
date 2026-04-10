@@ -41,7 +41,7 @@ async def test_api():
             .maybe_single()\
             .execute()
 
-        print(f"[DEBUG] 쿼리 완료")
+        print("[DEBUG] 쿼리 완료")
         print(f"[DEBUG] result type: {type(result)}")
         print(f"[DEBUG] result: {result}")
 
@@ -54,7 +54,7 @@ async def test_api():
             else:
                 print("[WARNING] 데이터가 없습니다 (새 레코드 생성 필요)")
         else:
-            print(f"[ERROR] result에 data 속성이 없습니다!")
+            print("[ERROR] result에 data 속성이 없습니다!")
 
     except Exception as e:
         print(f"[ERROR] 쿼리 실패: {type(e).__name__}: {e}")

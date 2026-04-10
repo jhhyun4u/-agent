@@ -3,7 +3,7 @@ import asyncio
 from pathlib import Path
 from datetime import datetime
 
-from app.models.schemas import ProjectInput, ProposalContent
+from app.models.schemas import ProjectInput
 from app.services.proposal_generator import generate_proposal_from_input
 from app.services.docx_builder import build_docx
 from app.services.pptx_builder import build_pptx
@@ -86,7 +86,7 @@ async def test_full_workflow():
     print("\n" + "=" * 60)
     print("테스트 완료!")
     print("=" * 60)
-    print(f"\n생성된 파일:")
+    print("\n생성된 파일:")
     print(f"  - {docx_path}")
     print(f"  - {pptx_path}")
 

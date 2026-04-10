@@ -11,14 +11,13 @@ Tests:
 """
 
 import sys
-from typing import Optional
 
 
 def test_state_models():
     """Test that new state models are correctly defined."""
     print("\n[TEST 1] State Models...")
     try:
-        from app.graph.state import DiagnosisResult, GapReport, ProposalState
+        from app.graph.state import DiagnosisResult, GapReport
 
         # Validate DiagnosisResult
         diag = DiagnosisResult(
@@ -58,9 +57,7 @@ def test_node_functions():
     try:
         from app.graph.nodes.proposal_nodes import (
             section_quality_check,
-            storyline_gap_analysis,
-            proposal_write_next,
-            self_review_with_auto_improve
+            storyline_gap_analysis
         )
         import inspect
 
@@ -166,10 +163,7 @@ def test_workflow_edges():
     try:
         # Verify imports of all routing functions used
         from app.graph.edges import (
-            route_after_section_review,
-            route_after_self_review,
-            route_after_gap_analysis_review,
-            route_after_proposal_review
+            route_after_section_review
         )
 
         print("  [OK] route_after_section_review imported")

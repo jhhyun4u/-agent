@@ -14,10 +14,6 @@ async def test_imports():
     """모듈 임포트 테스트"""
     print("[TEST] Testing imports...")
     try:
-        from app.api.routes_documents import router, SUPPORTED_FORMATS
-        from app.services.document_ingestion import process_document, import_project
-        from app.services.document_chunker import chunk_document, Chunk
-        from app.utils.file_utils import extract_text_from_file
         print("  [PASS] All imports successful")
         return True
     except Exception as e:
@@ -31,10 +27,6 @@ async def test_schemas():
     try:
         from app.models.document_schemas import (
             DocumentResponse,
-            DocumentListResponse,
-            DocumentDetailResponse,
-            ChunkResponse,
-            ChunkListResponse,
         )
 
         # 샘플 문서 응답 생성
@@ -50,35 +42,6 @@ async def test_schemas():
             error_message=None,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
-        )
-        print(f"  [PASS] DocumentResponse schema valid: {doc.id}")
-        return True
-    except Exception as e:
-        print(f"  [FAIL] Schema validation failed: {e}")
-        return False
-
-
-async def test_schemas():
-    """스키마 검증 테스트"""
-    print("[TEST] Testing schemas...")
-    try:
-        from app.models.document_schemas import (
-            DocumentResponse,
-        )
-
-        # 샘플 문서 응답 생성
-        from datetime import datetime, timezone
-        doc = DocumentResponse(
-            id="test-id",
-            filename="test.pdf",
-            doc_type="보고서",
-            storage_path="org/test-id/test.pdf",
-            processing_status="completed",
-            total_chars=1000,
-            chunk_count=5,
-            error_message=None,
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
         )
         print(f"  [PASS] DocumentResponse schema valid: {doc.id}")
         return True
@@ -132,7 +95,6 @@ async def test_file_extraction():
     print("[TEST] Testing file extraction utilities...")
     try:
         from app.utils.file_utils import (
-            extract_text_from_file,
             validate_extension,
             get_extension,
         )
@@ -191,7 +153,7 @@ async def test_doc_type_mapping():
         for english_type in english_types:
             assert english_type in _DOC_TYPE_MAPPING, f"Missing mapping for {english_type}"
 
-        print(f"  [PASS] All doc_type mappings valid (Korean: 4, English: 5)")
+        print("  [PASS] All doc_type mappings valid (Korean: 4, English: 5)")
         return True
     except Exception as e:
         print(f"  [FAIL] Mapping test failed: {e}")

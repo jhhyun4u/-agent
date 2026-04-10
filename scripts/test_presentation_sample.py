@@ -7,7 +7,6 @@
 
 import asyncio
 import json
-from datetime import datetime
 from pathlib import Path
 
 from types import SimpleNamespace
@@ -181,7 +180,7 @@ async def main():
     slides_json = await generate_presentation_slides(PHASE2, PHASE3, PHASE4, RFP)
 
     print(f"\n[Step 1 완료] 슬라이드 {slides_json.get('total_slides')}장 목차 생성")
-    print(f"[Step 2 완료] 스토리보드 생성 완료")
+    print("[Step 2 완료] 스토리보드 생성 완료")
     print(f"eval_coverage: {json.dumps(slides_json.get('eval_coverage', {}), ensure_ascii=False)}")
 
     print("\n--- 생성된 슬라이드 목차 ---")

@@ -49,7 +49,7 @@ async def check_status():
         elif status == 'analyzed':
             print("\n[INFO] 상태: 분석 완료")
         elif status == 'failed':
-            print(f"\n[ERROR] 상태: 분석 실패")
+            print("\n[ERROR] 상태: 분석 실패")
             print(f"  에러: {data.get('analysis_error')}")
     else:
         print("[ERROR] 데이터를 찾을 수 없습니다")

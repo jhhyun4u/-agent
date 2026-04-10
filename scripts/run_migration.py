@@ -25,7 +25,7 @@ async def run_migration(migration_file: str):
 
         # Supabase RPC를 통해 SQL 실행
         # 또는 직접 실행 (service role 권한 필요)
-        result = await client.rpc("execute_sql", {"sql": sql}).execute()
+        await client.rpc("execute_sql", {"sql": sql}).execute()
 
         print("✅ 마이그레이션 실행 완료!")
         return True
@@ -34,8 +34,8 @@ async def run_migration(migration_file: str):
         # Fallback: 다른 방식으로 시도
         print(f"⚠️  RPC 방식 실패 ({e.__class__.__name__}): {e}")
         print("💡 Supabase Dashboard에서 수동으로 실행해주세요:")
-        print(f"\n1. https://supabase.com/dashboard → SQL Editor")
-        print(f"2. 아래 SQL을 복사하여 실행:\n")
+        print("\n1. https://supabase.com/dashboard → SQL Editor")
+        print("2. 아래 SQL을 복사하여 실행:\n")
         print("---")
         print(sql)
         print("---")

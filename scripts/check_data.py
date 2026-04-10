@@ -45,10 +45,10 @@ async def check_data():
             }).execute()
 
             if insert_result.data:
-                print(f"[SUCCESS] 레코드 생성 완료!")
+                print("[SUCCESS] 레코드 생성 완료!")
                 return True
             else:
-                print(f"[ERROR] 레코드 생성 실패")
+                print("[ERROR] 레코드 생성 실패")
                 return False
 
     except Exception as e:

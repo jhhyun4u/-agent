@@ -4,10 +4,8 @@ Winning Point 결정 및 가격 전략 수립
 """
 
 from typing import Dict, List, Any, Tuple, Optional
-import math
 from dataclasses import dataclass
 from enum import Enum
-from datetime import datetime
 
 class WinningStrategy(Enum):
     # Defence 전략 (강점 분야)
@@ -153,7 +151,7 @@ class StrategyPlanningEngine:
 
         # 회사 역량 분석
         company_expertise = company_profile.get("expertise_areas", [])
-        company_tech_stack = company_profile.get("technology_stack", [])
+        company_profile.get("technology_stack", [])
 
         # 과거 실적 분석
         relevant_experience = self._analyze_relevant_experience(past_proposals, rfp_category, rfp_technical_reqs)
@@ -505,14 +503,11 @@ class StrategyPlanningEngine:
         if strategy_type == "defence":
             # Defence: 기술 우위가 확실할 때 더 높은 점수
             score = max(0, min(1, 0.6 + relative_advantage))
-            strategy_note = "기술 강점 분야 - 방어 전략 강화"
         elif strategy_type == "offence":
             # Offence: 기술 격차가 크더라도 혁신으로 극복 가능
             score = max(0, min(1, 0.4 + relative_advantage))
-            strategy_note = "기술 열세 분야 - 혁신으로 차별화"
         else:  # balanced
             score = max(0, min(1, 0.5 + relative_advantage))
-            strategy_note = "균형 전략 적용"
 
         # 최종 점수는 세부 항목 점수와 전략 점수의 혼합
         final_score = (tech_score_normalized * 0.6) + (score * 0.4)
@@ -560,14 +555,11 @@ class StrategyPlanningEngine:
         if strategy_type == "defence":
             # Defence: 실적 강점이 핵심 경쟁력
             score = min(1.0, (success_rate * 0.8) + (min(performance_volume / 3, 1.0) * 0.2))
-            strategy_note = "실적 강점 분야 - 방어 전략 강화"
         elif strategy_type == "offence":
             # Offence: 실적 부족을 혁신/가격으로 극복
             score = min(1.0, (success_rate * 0.5) + (min(performance_volume / 10, 1.0) * 0.5))
-            strategy_note = "실적 열세 분야 - 혁신으로 차별화"
         else:  # balanced
             score = min(1.0, (success_rate * 0.7) + (min(performance_volume / 5, 1.0) * 0.3))
-            strategy_note = "균형 전략 적용"
 
         evidence = []
         if success_rate > 0.8:
@@ -602,14 +594,11 @@ class StrategyPlanningEngine:
         if strategy_type == "defence":
             # Defence: 가격보다는 품질/실적으로 승부
             score = max(0, min(1, 0.4 + our_price_advantage))
-            strategy_note = "가격보다는 품질/실적 강점 강조"
         elif strategy_type == "offence":
             # Offence: 가격 경쟁력이 핵심 차별화 요소
             score = max(0, min(1, 0.6 + our_price_advantage))
-            strategy_note = "가격 경쟁력으로 시장 진입"
         else:  # balanced
             score = max(0, min(1, 0.5 + our_price_advantage))
-            strategy_note = "균형 가격 전략"
 
         evidence = []
         if company_cost_efficiency > 0.8:
@@ -646,7 +635,6 @@ class StrategyPlanningEngine:
                 score = min(1.0, score)
             else:
                 score = 0.5
-            strategy_note = "안정성 중심 - 혁신보다는 실적 강조"
         elif strategy_type == "offence":
             # Offence: 혁신성이 핵심 차별화 요소
             if innovation_required:
@@ -654,14 +642,12 @@ class StrategyPlanningEngine:
                 score = min(1.0, score)
             else:
                 score = 0.6  # 혁신 요구가 없어도 혁신으로 차별화
-            strategy_note = "혁신성으로 시장 진입"
         else:  # balanced
             if innovation_required:
                 score = (company_innovation * 0.7) + (company_rnd_investment * 10 * 0.3)
                 score = min(1.0, score)
             else:
                 score = 0.5
-            strategy_note = "균형 혁신 전략"
 
         evidence = []
         if company_rnd_investment > 0.03:
@@ -695,16 +681,13 @@ class StrategyPlanningEngine:
             # Defence: 기존 관계가 핵심 경쟁력
             if relationship_score == 0.0:
                 relationship_score = 0.2  # 관계 없음 페널티
-            strategy_note = "기존 관계 활용 - 방어 전략 강화"
         elif strategy_type == "offence":
             # Offence: 관계 구축 기회로 활용
             if relationship_score == 0.0:
                 relationship_score = 0.4  # 관계 구축 가능성 반영
-            strategy_note = "관계 구축으로 시장 진입"
         else:  # balanced
             if relationship_score == 0.0:
                 relationship_score = 0.3  # 기본 점수
-            strategy_note = "균형 관계 전략"
 
         evidence = []
         if relationship_score > 0.7:
@@ -734,14 +717,13 @@ class StrategyPlanningEngine:
         # 전략 타입에 따른 점수 조정 (준수성은 필수이므로 큰 차이는 없음)
         if strategy_type == "defence":
             # Defence: 준수성이 기본 전제
-            strategy_note = "준수성 확보 - 방어 전략 기반"
+            pass
         elif strategy_type == "offence":
             # Offence: 준수성 부족 시 다른 요소로 보완 가능성 고려
             if compliance_score < 0.8:
                 compliance_score = max(compliance_score, 0.6)  # 최소 점수 보장
-            strategy_note = "준수성 보완 - 혁신으로 극복"
         else:  # balanced
-            strategy_note = "균형 준수 전략"
+            pass
 
         evidence = []
         if compliance_score > 0.9:
@@ -782,7 +764,7 @@ class StrategyPlanningEngine:
         performance_point = next((p for p in winning_points if p.factor == "과거 실적"), None)
         price_point = next((p for p in winning_points if p.factor == "가격 경쟁력"), None)
         innovation_point = next((p for p in winning_points if p.factor == "혁신성"), None)
-        relationship_point = next((p for p in winning_points if p.factor == "관계성"), None)
+        next((p for p in winning_points if p.factor == "관계성"), None)
 
         # Defence 전략: 실적/기술 중심 전략 우선
         if strategy_type == "defence":

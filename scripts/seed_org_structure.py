@@ -245,14 +245,14 @@ async def main():
     print(f"XLSX 파싱: {xlsx_path}")
     data = parse_xlsx(xlsx_path)
 
-    print(f"\n파싱 결과:")
+    print("\n파싱 결과:")
     print(f"  조직: {len(data['orgs'])}개")
     print(f"  본부: {len(data['divisions'])}개")
     print(f"  팀:   {len(data['teams'])}개")
     print(f"  사용자: {len(data['users'])}명")
     print(f"  역량: {len(data['capabilities'])}개")
 
-    print(f"\nDB 삽입 시작...")
+    print("\nDB 삽입 시작...")
     await seed(data)
     print("\n완료!")
 

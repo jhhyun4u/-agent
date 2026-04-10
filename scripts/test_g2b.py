@@ -12,7 +12,7 @@
 
 import asyncio
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 
 sys.path.insert(0, ".")
 
@@ -130,7 +130,7 @@ async def main():
     if bids:
         try:
             await test_bid_detail(bids[0]["bid_no"])
-            print(f"\n  ✅ 상세 조회 성공\n")
+            print("\n  ✅ 상세 조회 성공\n")
         except Exception as e:
             print(f"\n  ❌ 상세 조회 실패: {e}\n")
 

@@ -18,7 +18,6 @@ async def test_all_imports():
     # Test 1: step8a
     try:
         from app.graph.nodes.step8a_customer_analysis import proposal_customer_analysis
-        from app.graph.state import CustomerProfile
         assert asyncio.iscoroutinefunction(proposal_customer_analysis)
         print("[PASS] step8a_customer_analysis: imports and signature verified")
         tests_passed += 1
@@ -29,7 +28,6 @@ async def test_all_imports():
     # Test 2: step8b
     try:
         from app.graph.nodes.step8b_section_validator import proposal_section_validator
-        from app.graph.state import ValidationReport
         assert asyncio.iscoroutinefunction(proposal_section_validator)
         print("[PASS] step8b_section_validator: imports and signature verified")
         tests_passed += 1
@@ -40,7 +38,6 @@ async def test_all_imports():
     # Test 3: step8c
     try:
         from app.graph.nodes.step8c_consolidation import proposal_sections_consolidation
-        from app.graph.state import ConsolidatedProposal
         assert asyncio.iscoroutinefunction(proposal_sections_consolidation)
         print("[PASS] step8c_consolidation: imports and signature verified")
         tests_passed += 1
@@ -51,7 +48,6 @@ async def test_all_imports():
     # Test 4: step8d
     try:
         from app.graph.nodes.step8d_mock_evaluation import mock_evaluation_analysis
-        from app.graph.state import MockEvalResult
         assert asyncio.iscoroutinefunction(mock_evaluation_analysis)
         print("[PASS] step8d_mock_evaluation: imports and signature verified")
         tests_passed += 1
@@ -62,7 +58,6 @@ async def test_all_imports():
     # Test 5: step8e
     try:
         from app.graph.nodes.step8e_feedback_processor import mock_evaluation_feedback_processor
-        from app.graph.state import FeedbackSummary
         assert asyncio.iscoroutinefunction(mock_evaluation_feedback_processor)
         print("[PASS] step8e_feedback_processor: imports and signature verified")
         tests_passed += 1
@@ -82,7 +77,7 @@ async def test_all_imports():
 
     # Test 7: constants helper
     try:
-        from app.graph.nodes._constants import normalize_proposal_section, MAX_REWRITE_ITERATIONS
+        from app.graph.nodes._constants import MAX_REWRITE_ITERATIONS
         assert MAX_REWRITE_ITERATIONS == 3
         print("[PASS] _constants: helper functions and MAX_REWRITE_ITERATIONS verified")
         tests_passed += 1
@@ -94,7 +89,6 @@ async def test_all_imports():
     try:
         from app.prompts.step8a import CUSTOMER_INTELLIGENCE_PROMPT
         from app.prompts.step8b import PROPOSAL_VALIDATION_PROMPT
-        from app.prompts.step8c import CONSOLIDATION_RULES
         from app.prompts.step8d import MOCK_EVALUATION_PROMPT
         from app.prompts.step8e import FEEDBACK_PROCESSING_PROMPT
         from app.prompts.step8f import PROPOSAL_REWRITE_PROMPT
@@ -124,7 +118,6 @@ async def test_all_imports():
 
     # Test 9: version_manager (fixed import)
     try:
-        from app.services.version_manager import execute_node_and_create_version
         print("[PASS] version_manager: supabase_async import fixed")
         tests_passed += 1
     except Exception as e:

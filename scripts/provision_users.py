@@ -217,7 +217,7 @@ async def provision(dry_run: bool = False, common_password: str | None = None):
         print(f"\n임시 비밀번호 목록: {creds_path}")
         print("⚠ 이 파일은 배포 후 반드시 삭제하세요!")
     elif credentials and dry_run:
-        print(f"\n[DRY RUN] 실제 생성하려면 --dry-run 없이 실행하세요.")
+        print("\n[DRY RUN] 실제 생성하려면 --dry-run 없이 실행하세요.")
 
 
 def main():

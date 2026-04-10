@@ -38,7 +38,7 @@ async def diagnose():
             masked = parts[0][:30] + "***@" + parts[1]
             print(f"[OK] DATABASE_URL: {masked}")
         except:
-            print(f"[OK] DATABASE_URL: configured")
+            print("[OK] DATABASE_URL: configured")
     else:
         print("[FAIL] DATABASE_URL: not set")
 
@@ -69,7 +69,7 @@ async def diagnose():
             try:
                 print("Attempting to connect...")
                 conn = await asyncpg.connect(clean_url, timeout=10, ssl=False)
-                print(f"[OK] asyncpg connection successful")
+                print("[OK] asyncpg connection successful")
 
                 # 테이블 확인
                 table_count = await conn.fetchval("""
@@ -86,19 +86,19 @@ async def diagnose():
                     )
                     print(f"[OK] migration_history table: {mh_count} records")
                 except Exception:
-                    print(f"[INFO] migration_history table: not found (expected)")
+                    print("[INFO] migration_history table: not found (expected)")
 
                 await conn.close()
 
             except asyncpg.exceptions.InternalServerError as e:
                 if "Tenant or user not found" in str(e):
-                    print(f"[FAIL] Authentication error: Tenant or user not found")
-                    print(f"  - Check DATABASE_URL credentials in .env")
-                    print(f"  - Verify user exists in Supabase dashboard")
+                    print("[FAIL] Authentication error: Tenant or user not found")
+                    print("  - Check DATABASE_URL credentials in .env")
+                    print("  - Verify user exists in Supabase dashboard")
                 else:
                     print(f"[FAIL] Supabase error: {e}")
             except asyncpg.exceptions.AuthenticationFailureError as e:
-                print(f"[FAIL] Auth failure: password or username incorrect")
+                print("[FAIL] Auth failure: password or username incorrect")
                 print(f"  {e}")
             except asyncpg.exceptions.ServerError as e:
                 print(f"[FAIL] Server error: {e}")
@@ -118,12 +118,12 @@ async def diagnose():
         if supabase_url and supabase_key:
             try:
                 client = create_client(supabase_url, supabase_key)
-                print(f"[OK] Supabase client created")
+                print("[OK] Supabase client created")
 
                 # 간단한 쿼리 테스트
                 try:
-                    result = client.table("proposals").select("id", count="exact").limit(1).execute()
-                    print(f"[OK] Query test successful (proposals table)")
+                    client.table("proposals").select("id", count="exact").limit(1).execute()
+                    print("[OK] Query test successful (proposals table)")
                 except Exception as e:
                     print(f"[WARN] Query test failed: {str(e)[:100]}")
 

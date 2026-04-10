@@ -54,7 +54,7 @@ async def test_technical_optimization():
             print(f'   현재: {improvement["현재_점수"]:.0f}점 / 목표: {improvement["목표_점수"]:.0f}점')
             print(f'   우선순위: {improvement["우선순위"]}')
             print(f'   예상 점수 향상: {improvement["예상_점수_향상"]:.1%}')
-            print(f'   개선 방법:')
+            print('   개선 방법:')
             for method in improvement["개선_방법"][:3]:
                 print(f'     - {method}')
         

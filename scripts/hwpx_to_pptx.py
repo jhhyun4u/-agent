@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 from lxml import etree
 from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
+from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 import anthropic
@@ -210,7 +210,6 @@ def set_speaker_notes(slide, notes: str):
     """발표자 노트(Q&A 예상 질문 포함)를 슬라이드에 저장"""
     if not notes:
         return
-    from pptx.util import Pt
     notes_slide = slide.notes_slide
     tf = notes_slide.notes_text_frame
     tf.text = notes
@@ -351,7 +350,6 @@ def build_agenda(prs, sections: list, slide_num: int):
     header_bar(slide, "목  차", slide_num)
     rect(slide, 0, Inches(1.16), SLIDE_W, Inches(0.06), SECONDARY)
 
-    cols = 2
     items_per_col = (len(sections) + 1) // 2
     col_w = Inches(5.8)
     for i, sec in enumerate(sections):
@@ -741,7 +739,7 @@ def main():
 
     stem = Path(hwpx_path).stem
     output_path = f"output/{stem}_발표자료_v2.pptx"
-    print(f"[3/3] Building PPTX...")
+    print("[3/3] Building PPTX...")
     build_pptx(doc, output_path)
 
 

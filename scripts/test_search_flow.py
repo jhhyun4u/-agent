@@ -8,7 +8,6 @@ G2B API 장애/키 미설정 시 mock 데이터로 자동 대체.
 """
 import asyncio
 import sys
-import json
 
 sys.path.insert(0, ".")
 

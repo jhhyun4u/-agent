@@ -78,7 +78,7 @@ async def collect(domain: str, keyword: str, from_year: int, to_year: int, max_p
                         logger.warning(f"  [{i}] {bid_id} 실패: {e}")
 
     logger.info("=" * 50)
-    logger.info(f"수집 완료!")
+    logger.info("수집 완료!")
     logger.info(f"  발견: {total_found}건")
     logger.info(f"  적재: {total_stored}건")
     logger.info(f"  실패: {total_failed}건")

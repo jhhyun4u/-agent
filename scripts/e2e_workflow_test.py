@@ -1,5 +1,6 @@
 """E2E 워크플로 단계별 테스트 스크립트"""
-import asyncio, time
+import asyncio
+import time
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 

@@ -32,14 +32,41 @@ _bearer_scheme = HTTPBearer(auto_error=False)
 UserRole = Literal["admin", "executive", "director", "lead", "member"]
 
 
-def _init_dev_user():
-    """환경변수에서 개발 모드 사용자 정보 검증."""
+async def _init_dev_user():
+    """환경변수에서 개발 모드 사용자 정보 검증 + DB 생성."""
     if settings.dev_mode:
         if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
             raise RuntimeError(
                 "DEV_MODE=true일 때 필수: DEV_USER_ID, DEV_USER_EMAIL, DEV_USER_ORG_ID"
             )
         logger.warning(f"⚠️ DEV_MODE: Mock 사용자 [{settings.dev_user_id}] 활성화됨")
+
+        # DB에 개발 사용자 자동 생성
+        try:
+            from datetime import datetime
+            client = await get_async_client()
+
+            # 조직 생성
+            await client.table("organizations").upsert({
+                "id": settings.dev_user_org_id,
+                "name": "Dev Organization",
+                "created_at": datetime.utcnow().isoformat(),
+            }).execute()
+
+            # 사용자 생성
+            await client.table("users").upsert({
+                "id": settings.dev_user_id,
+                "email": settings.dev_user_email,
+                "name": "Dev User",
+                "role": "admin",
+                "org_id": settings.dev_user_org_id,
+                "created_at": datetime.utcnow().isoformat(),
+                "status": "active",
+            }).execute()
+
+            logger.info("✅ 개발 DB 사용자 준비 완료")
+        except Exception as e:
+            logger.warning(f"⚠️ 개발 사용자 DB 생성 실패 (무시): {e}")
 
 
 def _should_bypass_auth() -> bool:

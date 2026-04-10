@@ -312,7 +312,7 @@ def main():
 
     results, domain = recommender.recommend(title, client)
 
-    print(f"\n━━━ 팀 추천 결과 ━━━")
+    print("\n━━━ 팀 추천 결과 ━━━")
     print(f"공고: {title}")
     if client:
         print(f"발주처: {client}")

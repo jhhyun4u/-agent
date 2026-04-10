@@ -255,4 +255,4 @@ async def test_workflow_history(client):
 async def aiter_empty():
     """빈 async iterator."""
     return
-    yield  # noqa: make it an async generator
+    yield  # noqa: F501 - Make it an async generator (unreachable code)

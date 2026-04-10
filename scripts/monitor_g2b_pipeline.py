@@ -365,7 +365,7 @@ def format_report_console(report: MonitorReport) -> str:
     """콘솔 리포트 출력."""
     lines = [
         f"{'━'*40}",
-        f"  G2B 파이프라인 모니터링 리포트",
+        "  G2B 파이프라인 모니터링 리포트",
         f"  {report.timestamp}",
         f"{'━'*40}",
     ]
@@ -424,7 +424,6 @@ async def notify_teams(report: MonitorReport) -> None:
         logger.warning("Teams Webhook URL 미설정 — 알림 생략")
         return
 
-    counts = report.summary_counts
     status_icon = "🔴" if report.overall == "FAIL" else "🟡"
     title = f"{status_icon} G2B 모니터링: {report.overall}"
     body_lines = [f"**{report.timestamp}**", ""]

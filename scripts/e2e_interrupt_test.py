@@ -134,7 +134,7 @@ async def scenario_1_no_go(c: AsyncClient, headers: dict):
 
     # 1-4. DB 상태 검증 — proposals.status == cancelled
     r = await c.get(f"/api/proposals/{pid}/state", headers=headers)
-    state = r.json()
+    r.json()
     _check("그래프 상태 조회 성공", r.status_code == 200)
 
     # 1-5. 추가 resume 시도 → 실패해야 함
@@ -193,7 +193,7 @@ async def scenario_2_abort_retry(c: AsyncClient, headers: dict):
         retry_data = r.json()
         print(f"    Retry 결과: {json.dumps(retry_data, ensure_ascii=False)[:120]}")
     else:
-        _skip_test("ai-retry", f"abort 시점에 AI가 이미 idle — interrupt 대기 중이었음")
+        _skip_test("ai-retry", "abort 시점에 AI가 이미 idle — interrupt 대기 중이었음")
 
     # 2-5. ai-logs 이력 조회
     r = await c.get(f"/api/proposals/{pid}/ai-logs?limit=5", headers=headers)

@@ -186,7 +186,7 @@ async def main():
         print(f"  발주기관: {rec.get('client', '')}")
         print(f"  예산:     {rec.get('budget', '')}원")
         print(f"  마감:     {rec.get('deadline', '')}")
-        print(f"  ---")
+        print("  ---")
         print(f"  판단근거: {rec.get('fit_rationale', '')}")
 
         strengths = rec.get("key_strengths", [])

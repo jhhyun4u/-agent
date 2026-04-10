@@ -11,8 +11,8 @@ async def main():
     client = create_client(url, key)
     
     # 모든 제안 삭제
-    result = client.table("proposals").delete().neq("id", "ffffffff-ffff-ffff-ffff-ffffffffffff").execute()
-    print(f"Deleted proposals")
+    client.table("proposals").delete().neq("id", "ffffffff-ffff-ffff-ffff-ffffffffffff").execute()
+    print("Deleted proposals")
 
 if __name__ == "__main__":
     asyncio.run(main())

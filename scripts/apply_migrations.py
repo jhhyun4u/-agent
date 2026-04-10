@@ -15,8 +15,6 @@ import sys
 import argparse
 import time
 from pathlib import Path
-from datetime import datetime
-from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
@@ -26,7 +24,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Supabase 클라이언트
-from supabase import create_client, Client
 import asyncpg
 
 async def get_db_connection():
@@ -49,10 +46,10 @@ async def get_db_connection():
         return conn
     except asyncpg.exceptions.InternalServerError as e:
         if "Tenant or user not found" in str(e):
-            print(f"[ERROR] Supabase 자격증명 오류:")
-            print(f"  - DATABASE_URL의 사용자명/비밀번호 확인")
-            print(f"  - Supabase 계정 상태 확인")
-            print(f"  - .env 파일 설정 확인")
+            print("[ERROR] Supabase 자격증명 오류:")
+            print("  - DATABASE_URL의 사용자명/비밀번호 확인")
+            print("  - Supabase 계정 상태 확인")
+            print("  - .env 파일 설정 확인")
             raise ValueError(f"Supabase 인증 실패: {e}")
         else:
             raise
@@ -226,7 +223,7 @@ async def apply_all_migrations(dry_run: bool = False) -> dict:
                 failed_count += 1
 
         print("-" * 70)
-        print(f"\n[SUMMARY]")
+        print("\n[SUMMARY]")
         print(f"  성공: {success_count}개")
         print(f"  실패: {failed_count}개")
         print(f"  총계: {len(migration_files)}개 / 적용됨: {len(applied) + success_count}개")
@@ -250,7 +247,7 @@ async def show_migration_status() -> None:
         migration_files = await get_migration_files()
         applied = await get_applied_migrations(conn)
 
-        print(f"\n[STATUS] 마이그레이션 현황")
+        print("\n[STATUS] 마이그레이션 현황")
         print("-" * 70)
         print(f"{'버전':<10} {'파일명':<45} {'상태':<15}")
         print("-" * 70)
@@ -266,7 +263,7 @@ async def show_migration_status() -> None:
         pending_count = len([m for m in migration_files if m['version'] not in applied])
 
         print("-" * 70)
-        print(f"\n통계:")
+        print("\n통계:")
         print(f"  전체: {len(migration_files)}개")
         print(f"  적용: {len(applied)}개")
         print(f"  대기: {pending_count}개")
@@ -293,7 +290,7 @@ async def main():
         if args.status:
             await show_migration_status()
         elif args.rollback:
-            print(f"[INFO] 롤백 기능은 아직 구현되지 않았습니다")
+            print("[INFO] 롤백 기능은 아직 구현되지 않았습니다")
         else:
             result = await apply_all_migrations(dry_run=args.dry_run)
             sys.exit(0 if result["status"] in ["up_to_date", "completed"] else 1)

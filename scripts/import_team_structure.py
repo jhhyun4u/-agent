@@ -133,7 +133,7 @@ def import_from_excel(excel_path: str) -> dict:
         c_role = _find_col(header, "역할", "role")
         c_team = _find_col(header, "팀명", "team")
         c_div = _find_col(header, "본부명", "division")
-        c_org = _find_col(header, "조직명", "org")
+        _find_col(header, "조직명", "org")
         c_interest = _find_col(header, "관심", "interest")
 
         for row in rows[2:]:  # skip header + 필수/선택 row

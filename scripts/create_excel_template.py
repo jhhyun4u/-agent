@@ -119,7 +119,7 @@ dv_role = DataValidation(type="list", formula1='"member,lead,director,executive,
 dv_role.error = "member, lead, director, executive, admin 중 선택하세요."
 dv_role.errorTitle = "잘못된 역할"
 ws4.add_data_validation(dv_role)
-dv_role.add(f"C3:C200")
+dv_role.add("C3:C200")
 
 
 # ══════════════════════════════════════════════
