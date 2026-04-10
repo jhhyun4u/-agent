@@ -52,7 +52,7 @@ async def test_research_brief_has_topics(graph_with_mocks, standard_rfp_state):
     brief = snapshot.values.get("research_brief", {})
 
     # research_gather의 Claude mock이 topics를 반환하는지 확인
-    topics = brief.get("topics") or brief.get("research_topics") or []
+    brief.get("topics") or brief.get("research_topics") or []
     # mock fixture(research_gather.json) 구조에 따라 키가 다를 수 있음
     assert isinstance(brief, dict), "research_brief가 dict가 아님"
 
@@ -178,7 +178,7 @@ async def test_research_gather_survives_partial_failure():
             # Start → review_rfp
             await graph.ainvoke(state, config=config)
             # Resume → research_gather (KB 실패해도 계속 진행 기대)
-            result = await graph.ainvoke(Command(resume=resume_approved()), config=config)
+            await graph.ainvoke(Command(resume=resume_approved()), config=config)
 
             snapshot = await graph.aget_state(config)
             # research_gather가 에러 없이 완료되고 다음 노드로 진행

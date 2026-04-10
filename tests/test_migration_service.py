@@ -5,15 +5,13 @@ Unit Tests for MigrationService
 """
 
 import pytest
-import asyncio
 from datetime import datetime, timedelta
-from uuid import uuid4, UUID
-from unittest.mock import AsyncMock, MagicMock, patch
+from uuid import uuid4
+from unittest.mock import AsyncMock, patch
 
 from app.services.migration_service import MigrationService
 from app.models.migration_schemas import (
-    MigrationBatch, MigrationSchedule, BatchResult,
-    IntranetDocument, DocumentProcessResult
+    MigrationBatch, IntranetDocument, DocumentProcessResult
 )
 
 
@@ -365,7 +363,7 @@ class TestScheduleManagement:
 
     async def test_get_schedule(self, migration_service):
         """스케줄 조회"""
-        schedule = await migration_service.get_schedule()
+        await migration_service.get_schedule()
 
         # TODO: DB 실제 구현 후 검증
         # 현재는 None 반환 (스텁)
@@ -374,7 +372,7 @@ class TestScheduleManagement:
         """스케줄 업데이트"""
         schedule_id = uuid4()
 
-        result = await migration_service.update_schedule(
+        await migration_service.update_schedule(
             schedule_id=schedule_id,
             enabled=False,
             timeout_seconds=7200

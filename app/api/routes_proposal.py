@@ -8,7 +8,6 @@ GET  /api/proposals          — 목록
 GET  /api/proposals/{id}     — 상세
 """
 
-import asyncio
 import uuid
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
@@ -223,7 +222,7 @@ async def create_from_bid(
             proposal_data["team_id"] = user.team_id
             logger.info(f"[from-bid] team_id 설정: {user.team_id}")
         else:
-            logger.warning(f"[from-bid] 사용자의 team_id가 없음")
+            logger.warning("[from-bid] 사용자의 team_id가 없음")
 
         # org_id와 division_id가 있으면 추가
         if org_id:
@@ -837,3 +836,104 @@ async def submit_review_feedback(
     except Exception as e:
         logger.error(f"Error submitting review feedback: {str(e)}")
         raise HTTPException(500, f"피드백 제출 중 오류: {str(e)}")
+
+
+# ============================================
+# STEP 4A: 진단 및 갭 분석 결과 조회 API
+# ============================================
+
+@router.get("/{proposal_id}/diagnostics")
+async def get_section_diagnostics(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """섹션별 품질 진단 결과 조회.
+
+    Args:
+        proposal_id: 제안서 ID
+
+    Returns:
+        {
+            "section_id": str,
+            "section_title": str,
+            "overall_score": float,
+            "compliance_ok": bool,
+            "evidence_score": float,
+            "diff_score": float,
+            "recommendation": str,
+            "issues": list
+        }
+    """
+    try:
+        # proposal_id 검증
+        result = await rls_client.from_("proposals").select("id").eq("id", proposal_id).single()
+        if not result.data:
+            raise HTTPException(404, "제안서를 찾을 수 없습니다")
+
+        # 모든 섹션 진단 조회
+        diagnostics = await rls_client.from_("section_diagnostics").select(
+            "section_id,section_title,overall_score,compliance_ok,evidence_score,diff_score,recommendation,issues"
+        ).eq("proposal_id", proposal_id).order("section_index").execute()
+
+        return {
+            "proposal_id": proposal_id,
+            "total_sections": len(diagnostics.data or []),
+            "diagnostics": diagnostics.data or []
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching section diagnostics: {str(e)}")
+        raise HTTPException(500, f"진단 결과 조회 중 오류: {str(e)}")
+
+
+@router.get("/{proposal_id}/gap-analysis")
+async def get_gap_analysis(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """제안서 갭 분석 결과 조회.
+
+    Args:
+        proposal_id: 제안서 ID
+
+    Returns:
+        {
+            "missing_points": list,
+            "logic_gaps": list,
+            "weak_transitions": list,
+            "inconsistencies": list,
+            "overall_assessment": str,
+            "recommended_actions": list,
+            "status": str
+        }
+    """
+    try:
+        # proposal_id 검증
+        result = await rls_client.from_("proposals").select("id").eq("id", proposal_id).single()
+        if not result.data:
+            raise HTTPException(404, "제안서를 찾을 수 없습니다")
+
+        # 최신 갭 분석 조회
+        gap_analysis = await rls_client.from_("proposal_gap_analyses").select(
+            "missing_points,logic_gaps,weak_transitions,inconsistencies,overall_assessment,recommended_actions,status,analyzed_at"
+        ).eq("proposal_id", proposal_id).order("analyzed_at", desc=True).limit(1).execute()
+
+        if not gap_analysis.data:
+            return {
+                "proposal_id": proposal_id,
+                "gap_analysis": None,
+                "message": "갭 분석 결과가 없습니다"
+            }
+
+        return {
+            "proposal_id": proposal_id,
+            "gap_analysis": gap_analysis.data[0]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching gap analysis: {str(e)}")
+        raise HTTPException(500, f"갭 분석 결과 조회 중 오류: {str(e)}")

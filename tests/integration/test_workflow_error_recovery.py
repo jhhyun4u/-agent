@@ -5,7 +5,6 @@ Mock 기반 (Level 1). Claude API 에러, self_review 라우팅 검증.
 
 import pytest
 from contextlib import ExitStack
-from unittest.mock import patch
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import Command

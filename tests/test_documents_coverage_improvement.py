@@ -5,10 +5,8 @@
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from io import BytesIO
-from datetime import datetime, timezone
-from uuid import uuid4
 
 
 # ── 추가 Fixtures ──
@@ -201,7 +199,7 @@ async def test_delete_document_with_associated_chunks(client, mock_user):
 async def test_delete_already_deleted_document(client, mock_user):
     """이미 삭제된 문서 재삭제"""
     # 첫 번째 삭제
-    response1 = await client.delete("/api/documents/doc-del-001")
+    await client.delete("/api/documents/doc-del-001")
     # 두 번째 삭제 시도
     response2 = await client.delete("/api/documents/doc-del-001")
     # 두 번째는 404 또는 204

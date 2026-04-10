@@ -109,15 +109,14 @@ export default function BidReviewPage() {
     (async () => {
       const baseUrl =
         process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-      console.log("[review] baseUrl:", baseUrl, "bidNo:", bidNo);
-      let loaded = false;
+            let loaded = false;
 
       // 인증 토큰 (실패해도 계속 진행)
       let token = "";
       try {
         token = await getToken();
       } catch (e) {
-        console.warn("[review] getToken 실패:", e);
+        // 토큰 획득 실패 무시
       }
       const authHeaders: Record<string, string> = {};
       if (token) authHeaders["Authorization"] = `Bearer ${token}`;
@@ -148,16 +147,14 @@ export default function BidReviewPage() {
 
         // 2) DB에서 공고 상세 조회 (10초 타임아웃)
         try {
-          console.log("[review] Step 2: fetching /bids/" + bidNo);
-          const controller = new AbortController();
+                    const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 10000);
           const res = await fetch(`${baseUrl}/bids/${bidNo}`, {
             signal: controller.signal,
             headers: authHeaders,
           });
           clearTimeout(timeout);
-          console.log("[review] Step 2 response:", res.status);
-          if (res.ok) {
+                    if (res.ok) {
             const json = await res.json();
             const ann = json.data.announcement;
             const raw = ann.raw_data || {};
@@ -245,8 +242,7 @@ export default function BidReviewPage() {
         let analysisLoaded = false;
         
         try {
-          console.log("[review] Step 4: fetching /bids/" + bidNo + "/analysis");
-          const controller = new AbortController();
+                    const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 30000);
           const res = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
             signal: controller.signal,
@@ -257,21 +253,18 @@ export default function BidReviewPage() {
           if (res.ok && !cancelled) {
             const json = await res.json();
             const data = json.data;
-            console.log("[review] analysis status:", data?.status);
-            
+                        
             if (data?.status === "analyzed") {
               // ✓ 분석 완료 → 즉시 표시
               setAnalysisWithCache(data);
               analysisLoaded = true;
               setAnalyzing(false);
-              console.log("[review] ✓ 분석 완료, 즉시 표시");
-              return;
+                            return;
             }
             
             else if (data?.status === "analyzing") {
               // ⏳ 진행 중 → 폴링 시작 (5초 간격, 최대 2분)
-              console.log("[review] ⏳ 분석 진행 중, 폴링 시작");
-              let pollCount = 0;
+                            let pollCount = 0;
               const MAX_POLLS = 24;
               
               const pollTimer = setInterval(async () => {
@@ -279,7 +272,6 @@ export default function BidReviewPage() {
                 if (cancelled || pollCount > MAX_POLLS) {
                   clearInterval(pollTimer);
                   if (!cancelled) {
-                    console.warn("[review] 폴링 최대 횟수 초과");
                     setAnalyzing(false);
                   }
                   return;
@@ -293,14 +285,12 @@ export default function BidReviewPage() {
                   
                   if (pollRes.ok) {
                     const pollData = (await pollRes.json()).data;
-                    console.log("[review] poll #" + pollCount + " status:", pollData?.status);
-                    
+                                        
                     if (pollData?.status === "analyzed") {
                       setAnalysisWithCache(pollData);
                       setAnalyzing(false);
                       clearInterval(pollTimer);
-                      console.log("[review] ✓ 폴링 완료");
-                      return;
+                                            return;
                     }
                     
                     if (pollData?.status === "failed") {
@@ -312,7 +302,7 @@ export default function BidReviewPage() {
                     }
                   }
                 } catch (e) {
-                  console.warn("[review] 폴링 오류 (무시, 재시도):", e);
+                  // 폴링 오류 무시, 다음 재시도
                 }
               }, 5000);
               
@@ -321,7 +311,6 @@ export default function BidReviewPage() {
             
             else if (data?.status === "failed") {
               // ✗ 실패 → 에러 표시
-              console.error("[review] ✗ 분석 실패:", data?.error);
               setAnalysisFailed(true);
               setAnalyzing(false);
               setError(data?.error || "분석에 실패했습니다");
@@ -330,8 +319,7 @@ export default function BidReviewPage() {
             
             else {  // pending or unknown
               // ⧖ 대기 중 → 폴링 시작
-              console.log("[review] ⧖ 분석 대기, 폴링 시작");
-              let pollCount = 0;
+                            let pollCount = 0;
               const MAX_POLLS = 24;
               
               const pollTimer = setInterval(async () => {
@@ -372,16 +360,10 @@ export default function BidReviewPage() {
               return;
             }
           } else if (!res.ok) {
-            const errorText = await res.text();
-            console.error(`분석 조회 실패 (${res.status}):`, errorText.substring(0, 200));
             setAnalysisFailed(true);
           }
         } catch (e) {
-          if (e instanceof DOMException && e.name === "AbortError") {
-            console.warn("[review] 분석 조회 타임아웃");
-          } else {
-            console.warn("[review] 분석 조회 오류:", e);
-          }
+          // 분석 조회 타임아웃 또는 오류 무시
           setAnalysisFailed(true);
         }
 
@@ -512,17 +494,15 @@ export default function BidReviewPage() {
           } else {
             const text = await data.text();
             contents[key] = text;
-            console.log(`✓ 마크다운 로드: ${key}`);
-          }
+                      }
         } catch (e) {
-          console.warn(`[markdown] ${key} 처리 실패:`, e);
+          // 문서 로드 중 오류 무시
           contents[key] = `## ${key}\n\n문서 로드 중 오류가 발생했습니다.`;
         }
       }
 
       setMarkdownContent(contents);
     } catch (e) {
-      console.error("[markdown] 로드 실패:", e);
       setError("마크다운 문서 로드 중 오류가 발생했습니다.");
     } finally {
       setMarkdownLoading(false);
@@ -548,8 +528,7 @@ export default function BidReviewPage() {
       if (status === "제안결정") {
         try {
           // 1) Go 의사결정 기록
-          console.log(`[review] 1️⃣ Go 의사결정 기록: ${baseUrl}/g2b/bid/${bidNo}/decision`);
-          try {
+                    try {
             const decisionRes = await fetch(
               `${baseUrl}/g2b/bid/${bidNo}/decision`,
               {
@@ -562,53 +541,39 @@ export default function BidReviewPage() {
               },
             );
             if (!decisionRes.ok) {
-              const err = await decisionRes.json().catch(() => ({}));
-              console.warn("[review] 의사결정 기록 실패:", decisionRes.status, err);
               // 실패해도 계속 진행
             } else {
-              console.log(`✓ Go 의사결정 기록 완료: ${bidNo}`);
-            }
+                          }
           } catch (e) {
-            console.warn("[review] 의사결정 기록 요청 오류:", e);
+            // 의사결정 기록 요청 오류 무시
           }
 
           // 2) proposal_status 업데이트
-          console.log(`[review] 2️⃣ proposal_status 업데이트: ${baseUrl}/bids/${bidNo}/status`);
-          let statusUpdateSuccess = false;
+                    let statusUpdateSuccess = false;
           try {
             const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
               method: "PUT",
               headers,
               body: JSON.stringify({ status: "제안결정" }),
             });
-            console.log(`[review] 상태 업데이트 응답: ${statusRes.status}`);
-            if (!statusRes.ok) {
-              const err = await statusRes.json().catch(() => ({}));
-              console.warn("[review] proposal_status 업데이트 실패:", statusRes.status, err);
+                        if (!statusRes.ok) {
               // 실패해도 계속 진행
             } else {
               const statusData = await statusRes.json();
-              console.log(`✓ proposal_status 업데이트 완료:`, statusData);
-              statusUpdateSuccess = true;
+                            statusUpdateSuccess = true;
             }
           } catch (e) {
-            console.warn("[review] proposal_status 업데이트 요청 오류:", e);
+            // 업데이트 요청 오류 무시
           }
-          console.log(`[review] 상태 업데이트 성공 여부: ${statusUpdateSuccess}`);
-
+          
           // 3) 제안 프로젝트 생성 (마크다운 문서는 routes_proposal.py에서 자동 로드)
-          console.log(`[review] 3️⃣ 제안 프로젝트 생성: ${baseUrl}/proposals/from-bid`);
-          console.log(`[review] 요청 본문: { bid_no: "${bidNo}" }`);
-          console.log(`[review] 헤더:`, headers);
-          try {
-            console.log(`[review] fetch 시작...`);
-            const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
+                                        try {
+                        const createRes = await fetch(`${baseUrl}/proposals/from-bid`, {
               method: "POST",
               headers,
               body: JSON.stringify({ bid_no: bidNo }),
             });
-            console.log(`[review] 제안 프로젝트 생성 응답: ${createRes.status}`);
-            if (!createRes.ok) {
+                        if (!createRes.ok) {
               const err = await createRes.json().catch(() => ({}));
               console.error(
                 "[review] 제안 프로젝트 생성 실패:",
@@ -618,20 +583,15 @@ export default function BidReviewPage() {
               // 프로젝트 생성 실패해도 의사결정은 완료 → 목록으로 이동
             } else {
               const createData = await createRes.json();
-              console.log(`✓ 제안 프로젝트 생성 완료:`, createData);
-            }
+                          }
           } catch (e) {
-            console.error("[review] 제안 프로젝트 생성 요청 오류:", e);
-            console.error("[review] 에러 상세:", (e as Error).message);
-            console.error("[review] 에러 스택:", (e as Error).stack);
+            // 오류 무시하고 계속 진행
           }
 
-          console.log(`✓ 제안 프로세스 완료, proposals 페이지로 이동`);
-          router.push("/proposals");
+                    router.push("/proposals");
         } catch (e: unknown) {
           const msg =
             e instanceof Error ? e.message : "제안 프로세스 중 오류 발생";
-          console.error("[review] 제안 프로세스 오류:", msg);
           setError(msg);
           setDeciding(false);
         }
@@ -657,14 +617,12 @@ export default function BidReviewPage() {
             },
           );
           if (!decisionRes.ok) {
-            console.warn("[review] No-Go 의사결정 기록 실패");
             // 실패해도 계속 진행
           } else {
-            console.log(`✓ No-Go 의사결정 기록 완료: ${bidNo} (${status})`);
+            // No-Go 의사결정 기록 완료
           }
 
           // 2) proposal_status 업데이트
-          console.log(`[review] proposal_status 업데이트: ${bidNo} → ${status}`);
           try {
             const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
               method: "PUT",
@@ -672,16 +630,15 @@ export default function BidReviewPage() {
               body: JSON.stringify({ status }),
             });
             if (!statusRes.ok) {
-              console.warn("[review] proposal_status 업데이트 실패");
               // 실패해도 목록으로 이동
             } else {
-              console.log(`✓ proposal_status 업데이트 완료: ${status}`);
+              // proposal_status 업데이트 완료
             }
           } catch (e) {
-            console.warn("[review] proposal_status 업데이트 중 오류:", e);
+            // proposal_status 업데이트 중 오류 발생
           }
         } catch (e) {
-          console.warn("[review] No-Go 기록 중 오류:", e);
+          // No-Go 기록 중 오류 발생
           // 오류 무시하고 목록으로 이동
         }
         router.push("/monitoring");

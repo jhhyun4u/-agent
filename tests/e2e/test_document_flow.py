@@ -1,7 +1,6 @@
 """E2E tests for complete document processing flow"""
 
 import pytest
-import asyncio
 from datetime import datetime, timezone
 
 
@@ -235,7 +234,7 @@ class TestDocumentUploadFlow:
         assert len(before_delete.data) >= 2
 
         # Delete document
-        delete_result = await supabase_client_real.table("intranet_documents").delete().eq(
+        await supabase_client_real.table("intranet_documents").delete().eq(
             "id", doc_id
         ).execute()
 

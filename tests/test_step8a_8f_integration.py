@@ -10,10 +10,7 @@ Tests cover:
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import UUID
 
-from app.graph.graph import build_graph
-from app.graph.state import ProposalState, ProposalSection
 from app.graph.edges import (
     route_after_section_validator_review,
     route_after_feedback_processor_review,

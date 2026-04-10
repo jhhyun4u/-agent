@@ -57,6 +57,12 @@ const ARTIFACT_MAP: Record<string, ArtifactConfig> = {
     icon: "D",
     step: 4,
   },
+  review_gap_analysis: {
+    title: "갭 분석 결과",
+    artifactKey: "gap_report",
+    icon: "G",
+    step: 4,
+  },
   review_proposal: {
     title: "제안서 최종본",
     artifactKey: "proposal",

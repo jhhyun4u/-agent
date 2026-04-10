@@ -9,6 +9,7 @@ FastAPI Depends()로 주입:
 """
 
 import logging
+from typing import Literal
 
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -27,31 +28,40 @@ logger = logging.getLogger(__name__)
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
-# 개발 모드 mock 사용자 - 실제 DB에 존재하는 사용자 ID 사용
-# (RLS 정책이 이 사용자 ID로 필터링하므로 존재해야 함)
-_DEV_USER_ID = "59331eeb-73ce-48da-9019-5e40ffe35ec4"  # yoon@tenopa.co.kr
+# 역할 타입
+UserRole = Literal["admin", "executive", "director", "lead", "member"]
+
+
+def _init_dev_user():
+    """환경변수에서 개발 모드 사용자 정보 검증."""
+    if settings.dev_mode:
+        if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
+            raise RuntimeError(
+                "DEV_MODE=true일 때 필수: DEV_USER_ID, DEV_USER_EMAIL, DEV_USER_ORG_ID"
+            )
+        logger.warning(f"⚠️ DEV_MODE: Mock 사용자 [{settings.dev_user_id}] 활성화됨")
+
+
+def _should_bypass_auth() -> bool:
+    """인증 우회 여부 판단 (DEV_MODE에서만 true)."""
+    return settings.dev_mode
 
 
 async def _get_dev_user() -> CurrentUser:
-    """개발 모드: DB에서 dev 사용자 조회 또는 하드코딩된 프로필 반환."""
-    client = await get_async_client()
-    try:
-        # DB에서 dev 사용자 조회
-        res = await client.table("users").select("*").eq("id", _DEV_USER_ID).execute()
-        if res.data:
-            return CurrentUser(**res.data[0])
-    except Exception:
-        pass
+    """개발 모드: 설정에서 읽은 사용자 정보 반환."""
+    if not _should_bypass_auth():
+        raise AuthTokenExpiredError({"reason": "DEV_MODE 비활성화됨"})
 
-    # 폴백: 하드코딩된 프로필
-    # NOTE: 이 값들은 실제 DB의 yoon@tenopa.co.kr과 일치해야 RLS 및 팀 필터링이 정상 작동
+    if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
+        raise AuthTokenExpiredError({"reason": "DEV_MODE 설정 불완전"})
+
     return CurrentUser(
-        id=_DEV_USER_ID,
-        email="yoon@tenopa.co.kr",
-        name="Yoon",
+        id=settings.dev_user_id,
+        email=settings.dev_user_email,
+        name="Dev User",
         role="lead",
-        org_id="b92b8f14-f0d2-4d9e-a6c8-a5b0ec1dd114",
-        team_id="69acad2a-c3a6-498b-85cf-d383c9c15050",  # SET: Match DB yoon user
+        org_id=settings.dev_user_org_id,
+        team_id=settings.dev_user_team_id or None,
         division_id=None,
         status="active",
     )
@@ -87,7 +97,7 @@ async def get_current_user(
     try:
         profile = (
             await client.table("users")
-            .select("*")
+            .select("id, email, name, role, org_id, team_id, division_id, status")
             .eq("id", str(user_auth.id))
             .single()
             .execute()
@@ -159,14 +169,37 @@ def require_role(*roles: str):
     async def _check(user: CurrentUser = Depends(get_current_user)) -> CurrentUser:
         if user.role not in roles:
             raise AuthInsufficientRoleError(list(roles), user.role)
-        # 비활성 사용자 차단
-        if user.status != "active":
-            raise TenopAPIError(
-                "AUTH_004", "비활성 계정입니다. 관리자에게 문의하세요.", 403,
-                {"status": user.status},
-            )
+        _validate_user_status(user)
         return user
     return _check
+
+
+def _validate_user_status(user: CurrentUser) -> None:
+    """사용자 활성 상태 검증."""
+    if user.status != "active":
+        raise TenopAPIError(
+            "AUTH_004", "비활성 계정입니다. 관리자에게 문의하세요.", 403,
+            {"status": user.status},
+        )
+
+
+def _has_access_by_role(user: CurrentUser, proposal: dict) -> bool:
+    """역할 기반 프로젝트 접근 권한 확인."""
+    role: UserRole = user.role  # type: ignore
+
+    # admin / executive: 같은 org면 전사 접근
+    if role in ("admin", "executive"):
+        return proposal.get("org_id") == user.org_id
+
+    # director: 같은 division
+    if role == "director":
+        return proposal.get("division_id") == user.division_id
+
+    # lead: 같은 team
+    if role == "lead":
+        return proposal.get("team_id") == user.team_id
+
+    return False
 
 
 async def require_project_access(
@@ -184,7 +217,7 @@ async def require_project_access(
     client = await get_async_client()
     res = (
         await client.table("proposals")
-        .select("*")
+        .select("id, team_id, division_id, org_id, owner_id")
         .eq("id", proposal_id)
         .maybe_single()
         .execute()
@@ -194,21 +227,12 @@ async def require_project_access(
         raise PropNotFoundError(proposal_id)
 
     proposal = res.data
-    role = user.role
 
-    # admin / executive: 같은 org면 전사 접근
-    if role in ("admin", "executive") and proposal.get("org_id") == user.org_id:
+    # 역할 기반 접근 확인
+    if _has_access_by_role(user, proposal):
         return proposal
 
-    # director: 같은 division
-    if role == "director" and proposal.get("division_id") == user.division_id:
-        return proposal
-
-    # lead: 같은 team
-    if role == "lead" and proposal["team_id"] == user.team_id:
-        return proposal
-
-    # member: 참여자 또는 생성자
+    # 참여자 또는 생성자 확인
     if proposal.get("owner_id") == user.id:
         return proposal
 

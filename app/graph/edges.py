@@ -217,6 +217,30 @@ def route_after_rewrite_review(state: ProposalState) -> str:
     return "needs_more_rewrite"
 
 
+
+def route_after_gap_analysis_review(state: ProposalState) -> str:
+    """STEP 4A-⑥: 스토리라인 갭 분석 후 라우팅.
+    
+    - approved: 갭 분석 결과 승인, 추가 수정 불필요 → PPT 진행(presentation_strategy)
+    - rework_section: 특정 섹션 갭 수정 필요 → proposal_start_gate (섹션 재작성)
+    - rework_strategy: 스토리라인 자체 재설계 필요 → strategy_generate
+    """
+    approval = state.get("approval", {}).get("gap_analysis")
+    if approval and approval.status == "approved":
+        return "approved"
+    
+    # 피드백에서 재작업 대상 확인
+    feedback = state.get("feedback_history", [])
+    latest = feedback[-1] if feedback else {}
+    
+    if latest.get("rework_strategy"):
+        return "rework_strategy"
+    if latest.get("rework_targets"):
+        return "rework_section"
+    
+    return "approved"
+
+
 # ── 복잡한 다방향 라우팅 (개별 유지) ──
 # route_after_gng_review, route_after_strategy_review, route_after_bid_plan_review,
 # route_after_plan_review, route_after_self_review, route_after_section_review,

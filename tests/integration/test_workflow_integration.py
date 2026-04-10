@@ -7,7 +7,7 @@ Mock 기반 (Level 1). CI에서 항상 실행.
 import pytest
 from langgraph.types import Command
 
-from tests.integration.conftest import resume_approved, resume_go, resume_rejected
+from tests.integration.conftest import resume_approved, resume_go
 
 
 # ── WF-01: Happy Path 전체 흐름 ──
@@ -25,21 +25,21 @@ async def test_happy_path_head_section(graph_with_mocks, standard_rfp_state):
     config = {"configurable": {"thread_id": "wf01-head"}}
 
     # 1. Start → rfp_analyze → review_rfp (interrupt)
-    result = await graph.ainvoke(standard_rfp_state, config=config)
+    await graph.ainvoke(standard_rfp_state, config=config)
     snapshot = await graph.aget_state(config)
     assert snapshot.next, "그래프가 interrupt 없이 종료됨"
     waiting = [str(n) for n in snapshot.next]
     assert any("review_rfp" in n for n in waiting), f"Expected review_rfp, got {waiting}"
 
     # 2. Resume review_rfp → research → go_no_go → review_gng
-    result = await graph.ainvoke(Command(resume=resume_approved()), config=config)
+    await graph.ainvoke(Command(resume=resume_approved()), config=config)
     snapshot = await graph.aget_state(config)
     assert snapshot.next, "go_no_go 후 interrupt 없음"
     waiting = [str(n) for n in snapshot.next]
     assert any("review_gng" in n for n in waiting), f"Expected review_gng, got {waiting}"
 
     # 3. Resume review_gng (go) → strategy → review_strategy
-    result = await graph.ainvoke(Command(resume=resume_go()), config=config)
+    await graph.ainvoke(Command(resume=resume_go()), config=config)
     snapshot = await graph.aget_state(config)
     assert snapshot.next, "strategy 후 interrupt 없음"
     waiting = [str(n) for n in snapshot.next]
@@ -98,7 +98,7 @@ async def test_no_go_early_termination(graph_with_mocks, standard_rfp_state):
     await graph.ainvoke(Command(resume=resume_approved()), config=config)
 
     # Resume review_gng (no_go) → END
-    result = await graph.ainvoke(
+    await graph.ainvoke(
         Command(resume={"decision": "no_go", "approved": True, "approved_by": "tester"}),
         config=config,
     )
@@ -122,7 +122,7 @@ async def test_review_rejection_loops_back(graph_with_mocks, standard_rfp_state)
     assert any("review_rfp" in str(n) for n in snapshot1.next)
 
     # Resume review_rfp (rejected) → rfp_analyze 재실행 → review_rfp (다시 interrupt)
-    result = await graph.ainvoke(
+    await graph.ainvoke(
         Command(resume={"approved": False, "feedback": "RFP 분석 보완 필요"}),
         config=config,
     )
@@ -137,7 +137,6 @@ async def test_review_rejection_loops_back(graph_with_mocks, standard_rfp_state)
 @pytest.mark.asyncio
 async def test_fork_to_branches_returns_two_sends():
     """fork_to_branches가 Path A (plan) + Path B (submission_plan) 2개 Send 반환."""
-    from langgraph.types import Send
     from app.graph.nodes.gate_nodes import fork_to_branches
 
     mock_state = {"project_id": "fork-test", "current_step": "strategy_complete"}
@@ -166,7 +165,6 @@ async def test_convergence_gate_passthrough():
 @pytest.mark.asyncio
 async def test_plan_selective_fan_out_full():
     """rework_targets 없으면 ALL_PLAN_NODES 전체 실행."""
-    from langgraph.types import Send
     from app.graph.nodes.gate_nodes import plan_selective_fan_out, ALL_PLAN_NODES
 
     mock_state = {"project_id": "fan-test"}
@@ -178,7 +176,6 @@ async def test_plan_selective_fan_out_full():
 @pytest.mark.asyncio
 async def test_plan_selective_fan_out_partial():
     """rework_targets 지정 시 해당 노드만 실행."""
-    from langgraph.types import Send
     from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
     mock_state = {"project_id": "fan-test2", "rework_targets": ["plan_team", "plan_story"]}

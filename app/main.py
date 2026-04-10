@@ -145,8 +145,11 @@ async def lifespan(app: FastAPI):
 
     await _safe_startup_task("세션 관리", _load_sessions())
 
-    # Dev mode: mock user auto-creation for FK constraints
+    # Dev mode: init mock user environment variables at startup (thread-safe)
     if settings.dev_mode:
+        from app.api.deps import _init_dev_user
+        _init_dev_user()  # Call once at startup to avoid race condition in async context
+
         async def _create_dev_user():
             from app.api.deps import _DEV_USER_ID
             check = await client.table("users").select("id").eq("id", _DEV_USER_ID).maybe_single().execute()

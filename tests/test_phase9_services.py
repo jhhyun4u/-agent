@@ -8,8 +8,7 @@
 - compliance_tracker: ComplianceTracker
 """
 
-import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch
 from tests.conftest import make_supabase_mock
 
 
@@ -121,7 +120,7 @@ async def test_section_lock_release():
 
 def test_source_tagger_import():
     """source_tagger 함수 import 가능."""
-    from app.services.source_tagger import SourceTag, extract_source_tags, calculate_grounding_ratio, evaluate_trustworthiness
+    from app.services.source_tagger import SourceTag, extract_source_tags
     assert SourceTag is not None
     assert callable(extract_source_tags)
 

@@ -521,6 +521,7 @@ class TestPlanNodes:
 
         assert "storylines" in result["parallel_results"]
 
+    @pytest.mark.skip(reason="plan_price removed in v4.0 — pricing moved to STEP 4B (bid_plan)")
     @pytest.mark.asyncio
     async def test_plan_price(self):
         from app.graph.nodes.plan_nodes import plan_price
@@ -1017,10 +1018,10 @@ class TestGraphHelpers:
         """rework_targets가 있으면 해당 항목만 fan-out (plan_assign은 targets에 없으므로 제외)."""
         from app.graph.nodes.gate_nodes import plan_selective_fan_out
 
-        state = _base_state(rework_targets=["plan_team", "plan_price"])
+        state = _base_state(rework_targets=["plan_team", "plan_assign"])
         sends = plan_selective_fan_out(state)
         assert len(sends) == 2
         node_names = [s.node for s in sends]
         assert "plan_team" in node_names
-        assert "plan_price" in node_names
-        assert "plan_assign" not in node_names
+        assert "plan_assign" in node_names
+        assert "plan_schedule" not in node_names

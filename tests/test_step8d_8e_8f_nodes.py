@@ -8,10 +8,8 @@ Unit tests for STEP 8D, 8E, 8F nodes.
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import UUID
 
 from app.graph.state import (
-    ProposalState,
     MockEvalResult,
     FeedbackSummary,
     ProposalSection,

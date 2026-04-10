@@ -6,9 +6,9 @@ v3.3: plan_price에서 labor_rates, market_price_data DB 조회.
 """
 
 import logging
-from datetime import datetime
+from uuid import UUID
 
-from app.graph.state import ProposalState
+from app.graph.state import ProposalState, CustomerProfile
 from app.graph.context_helpers import (
     extract_evidence_candidates,
     get_rfp_summary_compact,
@@ -16,15 +16,16 @@ from app.graph.context_helpers import (
     rfp_to_dict,
 )
 from app.prompts.plan import (
-    BUDGET_DETAIL_FRAMEWORK,
     PLAN_ASSIGN_PROMPT,
-    PLAN_PRICE_PROMPT,
     PLAN_SCHEDULE_PROMPT,
     PLAN_STORY_PROMPT,
     PLAN_TEAM_PROMPT,
+    # NOTE: PLAN_PRICE_PROMPT and BUDGET_DETAIL_FRAMEWORK removed (v4.0 - pricing moved to STEP 4B)
 )
+from app.prompts.step8a import CUSTOMER_INTELLIGENCE_PROMPT
 from app.services.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
+from app.services.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -225,142 +226,115 @@ async def plan_story(state: ProposalState) -> dict:
     return {"parallel_results": {"storylines": result.get("storylines", {})}}
 
 
-async def plan_price(state: ProposalState) -> dict:
-    """STEP 3: 예산산정. v3.8: bid_plan 앵커 기반 Budget Narrative 중심 작성."""
-    rfp_summary = _get_rfp_summary(state)
-    sf = _get_strategy_fields(state)
-    rfp = state.get("rfp_analysis")
-    budget_str = ""
-    if rfp:
-        budget_str = rfp.budget if hasattr(rfp, "budget") else (rfp.get("budget", "") if isinstance(rfp, dict) else "")
+async def proposal_customer_analysis(state: ProposalState) -> dict:
+    """
+    Deep client intelligence analysis (moved from STEP 8A to STEP 3A).
 
-    team = state.get("parallel_results", {}).get("team", [])
-    team_summary = "\n".join(f"- {t.get('role', '')}: {t.get('grade', '')}, {t.get('mm', 0)} M/M" for t in team) if team else "(팀 구성 미정)"
+    Input:
+        - rfp_analysis: RFP analysis results
+        - strategy: Proposal strategy
+        - kb_references: Knowledge base references
 
-    # ── v3.8: bid_plan 결과를 앵커로 사용 ──
-    bid_plan_context = ""
-    bbc = state.get("bid_budget_constraint")
-    bp = state.get("bid_plan")
-    if bbc and isinstance(bbc, dict) and bbc.get("total_bid_price"):
-        bid_plan_context = (
-            f"\n## 확정된 입찰가격계획 (STEP 2.5)\n"
-            f"- 확정 입찰가: {bbc['total_bid_price']:,}원 (낙찰률 {bbc.get('bid_ratio', 0):.1f}%)\n"
-            f"- 시나리오: {bbc.get('scenario_name', 'balanced')}\n"
-            f"- 직접인건비 한도: {bbc.get('labor_budget', 0):,}원\n"
-            f"- 비용 기준: {bbc.get('cost_standard', 'KOSA')}\n"
+    Output:
+        - customer_profile: Structured customer profile (versioned)
+
+    Returns:
+        Updated state dict with customer_profile and version info
+    """
+    try:
+        # Step 1: Validate required inputs exist
+        rfp_analysis = state.get("rfp_analysis")
+        if not rfp_analysis:
+            logger.warning("No RFP analysis available for proposal_customer_analysis")
+            return {
+                "customer_profile": None,
+                "node_errors": {
+                    **state.get("node_errors", {}),
+                    "proposal_customer_analysis": "Missing rfp_analysis input",
+                },
+            }
+
+        # Step 2: Gather context data
+        strategy = state.get("strategy")
+        kb_refs = state.get("kb_references", [])
+        competitor_refs = state.get("competitor_refs", [])
+
+        # Build context for Claude
+        kb_context = []
+        if kb_refs:
+            kb_context.extend(
+                [
+                    f"- {ref.get('title', 'Reference')}: {ref.get('summary', '')}"
+                    for ref in kb_refs[:5]
+                ]
+            )  # Limit to 5 refs
+        if competitor_refs:
+            kb_context.extend(
+                [
+                    f"- Competitor: {ref.get('name', 'Unknown')}"
+                    for ref in competitor_refs[:3]
+                ]
+            )
+
+        # Step 3: Call Claude for analysis
+        prompt = CUSTOMER_INTELLIGENCE_PROMPT.format(
+            rfp_analysis=rfp_analysis.model_dump_json()
+            if hasattr(rfp_analysis, "model_dump_json")
+            else str(rfp_analysis),
+            strategy=strategy.model_dump_json()
+            if strategy and hasattr(strategy, "model_dump_json")
+            else "{}",
+            kb_references="\n".join(kb_context)
+            if kb_context
+            else "No KB references available",
         )
-        if bp:
-            bp_dict = bp.model_dump() if hasattr(bp, "model_dump") else (bp if isinstance(bp, dict) else {})
-            if bp_dict.get("user_override_price"):
-                bid_plan_context += f"- 사용자 오버라이드: {bp_dict['user_override_price']:,}원 ({bp_dict.get('user_override_reason', '')})\n"
-            if bp_dict.get("win_probability"):
-                bid_plan_context += f"- 예측 수주확률: {bp_dict['win_probability']:.0%}\n"
 
-    # ── PricingEngine 재실행 (팀 구성 확정 후 정확한 원가 산출) ──
-    algorithmic_pricing = "(알고리즘 분석 미수행)"
-    try:
-        from app.services.bid_calculator import parse_budget_string
-        from app.services.pricing import PricingEngine, PricingSimulationRequest
-        from app.services.pricing.models import PersonnelInput as PricingPersonnel
+        logger.info(
+            f"Calling Claude for customer analysis (proposal {state.get('project_id')})"
+        )
 
-        budget_val = parse_budget_string(budget_str) if budget_str else None
-        rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
+        response = await claude_generate(
+            prompt=prompt,
+            response_format="json",
+            max_tokens=3500,
+            step_name="proposal_customer_analysis",
+        )
 
-        if budget_val and budget_val > 0:
-            pricing_personnel = []
-            for t in team:
-                if isinstance(t, dict) and t.get("grade") and t.get("mm"):
-                    pricing_personnel.append(PricingPersonnel(
-                        role=t.get("role", ""),
-                        grade=t.get("grade", "중급"),
-                        person_months=float(t.get("mm", 0)),
-                    ))
+        # Step 4: Parse response into Pydantic model
+        customer_profile = CustomerProfile(**response)
 
-            engine = PricingEngine()
-            sim = await engine.simulate(PricingSimulationRequest(
-                budget=budget_val,
-                domain=rfp_dict.get("domain", "SI/SW개발"),
-                evaluation_method=rfp_dict.get("eval_method", "종합심사"),
-                tech_price_ratio=rfp_dict.get("tech_price_ratio", {"tech": 80, "price": 20}),
-                positioning=state.get("positioning", "defensive"),
-                competitor_count=5,
-                personnel=pricing_personnel,
-                client_name=rfp_dict.get("client", ""),
-            ))
-            algorithmic_pricing = sim.to_prompt_context()
+        logger.info(f"Generated customer profile for {customer_profile.client_org}")
+
+        # Step 5: Create version artifact
+        version_num, artifact_version = await execute_node_and_create_version(
+            proposal_id=UUID(state["project_id"]),
+            node_name="proposal_customer_analysis",
+            output_key="customer_profile",
+            artifact_data=customer_profile.model_dump(),
+            user_id=UUID(state["created_by"]),
+            state=state,
+            parent_node_name="strategy_generate",
+        )
+
+        logger.info(
+            f"Created customer_profile v{version_num} for proposal {state['project_id']}"
+        )
+
+        # Step 6: Return state update
+        return {
+            "customer_profile": customer_profile,
+            "artifact_versions": {"customer_profile": [artifact_version]},
+            "active_versions": {
+                "proposal_customer_analysis_customer_profile": version_num
+            },
+        }
+
     except Exception as e:
-        logger.warning(f"PricingEngine 분석 실패 (Claude fallback): {e}")
-
-    # ── 기존 DB 기반 벤치마크 (fallback 보완) ──
-    labor_rates_table = "(노임단가 데이터 없음)"
-    benchmark_summary = "(시장 벤치마크 없음)"
-    cost_standard = bbc.get("cost_standard", "KOSA") if bbc else "KOSA"
-
-    try:
-        from app.utils.supabase_client import get_async_client
-        client = await get_async_client()
-        current_year = datetime.now().year
-
-        for year in [current_year, current_year - 1]:
-            rates = await client.table("labor_rates").select("grade, monthly_rate, daily_rate").eq("year", year).order("monthly_rate", desc=True).execute()
-            if rates.data:
-                labor_rates_table = "| 등급 | 월단가(원) | 일단가(원) |\n|------|-----------|----------|\n"
-                for r in rates.data:
-                    labor_rates_table += f"| {r['grade']} | {r['monthly_rate']:,} | {r['daily_rate']:,} |\n"
-                break
-
-        market = await client.table("market_price_data").select("domain, bid_ratio, num_bidders, evaluation_method, year").order("year", desc=True).limit(20).execute()
-        if market.data:
-            avg_ratio = sum(r.get("bid_ratio", 0) for r in market.data) / len(market.data)
-            avg_bidders = sum(r.get("num_bidders", 0) for r in market.data) / len(market.data)
-            benchmark_summary = f"평균 낙찰률: {avg_ratio:.1f}% | 평균 참여 업체 수: {avg_bidders:.1f}개"
-    except Exception as e:
-        logger.warning(f"노임단가/벤치마크 조회 실패: {e}")
-
-    budget_framework = BUDGET_DETAIL_FRAMEWORK.format(
-        cost_standard=cost_standard,
-        labor_rates_table=labor_rates_table,
-        benchmark_summary=benchmark_summary,
-    )
-
-    evolved = await _get_evolved_prompt(state, "plan.PRICE_PROMPT", PLAN_PRICE_PROMPT)
-    prompt = evolved.format(
-        rfp_summary=rfp_summary,
-        budget=budget_str or "(예산 미정)",
-        positioning=state.get("positioning", "defensive"),
-        price_strategy=sf["price_strategy"],
-        team_summary=team_summary,
-        budget_framework=budget_framework,
-    )
-
-    # v3.8: bid_plan 앵커 컨텍스트 주입
-    if bid_plan_context:
-        prompt += f"\n\n{bid_plan_context}\n위 확정된 입찰가를 앵커로 하여, 상세 원가 구조와 가격 경쟁력 내러티브(Budget Narrative)를 작성하세요."
-
-    # v3.9: RFP 가격점수 산식 주입 (price_scoring이 있으면 산식 준수 필수)
-    if rfp:
-        ps = rfp.price_scoring if hasattr(rfp, "price_scoring") else (rfp.get("price_scoring") if isinstance(rfp, dict) else None)
-        if ps:
-            ps_dict = ps.model_dump() if hasattr(ps, "model_dump") else (ps if isinstance(ps, dict) else {})
-            if ps_dict.get("formula_type"):
-                prompt += (
-                    f"\n\n## RFP 가격점수 산식 (반드시 준수)\n"
-                    f"- 산식 유형: {ps_dict.get('formula_type', '')}\n"
-                    f"- 설명: {ps_dict.get('description', '')}\n"
-                    f"- 가격 배점: {ps_dict.get('price_weight', 0)}점\n"
-                    f"- 파라미터: {ps_dict.get('parameters', {})}\n"
-                    f"\n위 산식에 따라 가격점수가 계산되므로, 입찰가 산정 시 이를 반영하세요."
-                )
-
-    # 알고리즘 분석 결과를 프롬프트에 추가
-    if algorithmic_pricing != "(알고리즘 분석 미수행)":
-        prompt += f"\n\n{algorithmic_pricing}\n\n위 알고리즘 분석 결과를 참고하되, 정성적 판단(발주기관 특성, 전략적 맥락)을 추가하여 최종 원가 내역을 작성하세요."
-
-    result = await claude_generate(prompt, max_tokens=6000)
-    await _track_plan_prompt(state, "plan_price", "plan.PRICE_PROMPT")
-    bid_price = result.get("bid_price", result)
-
-    return {
-        "parallel_results": {"bid_price": bid_price},
-        "budget_detail": bid_price,
-    }
+        logger.exception(f"Error in proposal_customer_analysis: {str(e)}")
+        return {
+            "customer_profile": None,
+            "node_errors": {
+                **state.get("node_errors", {}),
+                "proposal_customer_analysis": f"Analysis failed: {str(e)}",
+            },
+        }

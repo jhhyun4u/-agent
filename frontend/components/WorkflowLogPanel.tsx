@@ -20,6 +20,8 @@ const NODE_LABELS: Record<string, string> = {
   plan_price: "예산 산정",
   plan_merge: "계획 통합",
   proposal_write_next: "섹션 작성",
+  section_quality_check: "섹션 품질 진단",
+  storyline_gap_analysis: "갭 분석",
   self_review: "자가진단",
   presentation_strategy: "발표 전략",
   ppt_toc: "PPT 목차",
@@ -31,6 +33,7 @@ const NODE_LABELS: Record<string, string> = {
   review_strategy: "전략 검토",
   review_plan: "계획 검토",
   review_section: "섹션 검토",
+  review_gap_analysis: "갭 분석 검토",
   review_proposal: "제안서 최종 검토",
   review_ppt: "PPT 검토",
 };

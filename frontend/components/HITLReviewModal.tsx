@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { DiagnosticScoreCard } from "./DiagnosticScoreCard";
+import type { SectionDiagnostic } from "@/lib/api";
 
 interface ReviewFeedback {
   id: string;
@@ -19,6 +21,7 @@ interface ReviewItem {
   artifact_type: "text" | "markdown";
   status: "pending" | "in_review" | "approved" | "rejected";
   feedback_history: ReviewFeedback[];
+  diagnostics?: SectionDiagnostic | null;
 }
 
 interface HITLReviewModalProps {
@@ -122,10 +125,24 @@ export function HITLReviewModal({
 
         {/* 콘텐츠 영역 - 2 패널 레이아웃 */}
         <div className="flex-1 overflow-hidden flex gap-4 p-6 bg-[#1c1c1c]">
-          {/* 왼쪽: 산출물 뷰어 */}
-          <div className="flex-1 overflow-auto bg-[#0f0f0f] rounded-lg border border-[#262626] p-6">
-            <div className="text-[#ededed] text-sm leading-relaxed whitespace-pre-wrap break-words">
-              {reviewItem.artifact_content}
+          {/* 왼쪽: 산출물 뷰어 + 진단 결과 */}
+          <div className="flex-1 overflow-auto bg-[#0f0f0f] rounded-lg border border-[#262626] p-6 space-y-6">
+            {/* 진단 결과 (있으면) */}
+            {reviewItem.diagnostics && (
+              <DiagnosticScoreCard diagnostic={reviewItem.diagnostics} />
+            )}
+            
+            {/* 구분선 */}
+            {reviewItem.diagnostics && (
+              <div className="border-t border-[#262626]"></div>
+            )}
+            
+            {/* 산출물 콘텐츠 */}
+            <div>
+              <p className="text-xs font-semibold text-[#5c5c5c] mb-3">산출물 내용</p>
+              <div className="text-[#ededed] text-sm leading-relaxed whitespace-pre-wrap break-words">
+                {reviewItem.artifact_content}
+              </div>
             </div>
           </div>
 

@@ -7,16 +7,13 @@
 3. SearchPresetCreate — 검증 로직 (bid_types, keywords)
 """
 
-import asyncio
-import json
 from datetime import date, datetime, timedelta, timezone
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 from app.models.bid_schemas import (
     BidAnnouncement,
-    QualificationResult,
     SearchPresetCreate,
     TeamBidProfile,
 )
@@ -445,7 +442,7 @@ class TestBidRecommenderE2E:
             f"실제: {con_result.qualification_status}"
         )
 
-        print(f"\n[E2E] 자격 판정 결과:")
+        print("\n[E2E] 자격 판정 결과:")
         for q in qual_results:
             print(f"  {q.bid_no}: {q.qualification_status}")
             if q.disqualification_reason:

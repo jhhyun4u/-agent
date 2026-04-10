@@ -9,11 +9,9 @@ Tests cover:
 """
 
 import pytest
-from unittest.mock import MagicMock, patch
-from uuid import UUID
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from app.graph.state import (
-    ProposalState,
     ProposalSection,
     ConsolidatedProposal,
     ValidationReport,

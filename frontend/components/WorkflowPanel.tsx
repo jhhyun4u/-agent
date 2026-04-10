@@ -56,6 +56,11 @@ const REVIEW_GATES: Record<
     perspective: "이 섹션의 내용이 요구사항을 충족하는가?",
     step: 4,
   },
+  review_gap_analysis: {
+    title: "갭 분석 결과 검토",
+    perspective: "스토리라인 대비 실제 내용에 빠진 부분이 없는가?",
+    step: 4,
+  },
   review_proposal: {
     title: "제안서 최종 검토",
     perspective: "전체 품질과 일관성이 확보되었는가?",
@@ -221,49 +226,77 @@ function ReviewPanel({
     { key: "visual", label: "시각화 자료" },
   ];
 
+  // STEP 4A 갭 분석 리뷰: 특정 재작업 옵션
+  const GAP_REWORK_OPTIONS = [
+    { key: "rework_section", label: "섹션 수정 (특정 섹션 재작성)" },
+    { key: "rework_strategy", label: "전략 재설계 (스토리라인 재구성)" },
+  ];
+
   // STEP별 재작업 선택 옵션
   const isStepStrategy = gate?.step === 2;
   const isStepPlan = gate?.step === 3;
   const isStepProposal = gate?.step === 4;
   const isStepPpt = gate?.step === 5;
+  const isGapAnalysisReview = reviewNode === "review_gap_analysis";
 
-  const reworkOptions = isStepStrategy
-    ? STRATEGY_NODES
-    : isStepPlan
-      ? PARALLEL_NODES
-      : isStepProposal
-        ? (workflowState.dynamic_sections ?? []).map((sectionId: string) => ({
-            key: sectionId,
-            label: sectionId || "미지정",
-          }))
-        : isStepPpt
-          ? PPT_NODES
-          : [];
+  const reworkOptions = isGapAnalysisReview
+    ? GAP_REWORK_OPTIONS
+    : isStepStrategy
+      ? STRATEGY_NODES
+      : isStepPlan
+        ? PARALLEL_NODES
+        : isStepProposal
+          ? (workflowState.dynamic_sections ?? []).map((sectionId: string) => ({
+              key: sectionId,
+              label: sectionId || "미지정",
+            }))
+          : isStepPpt
+            ? PPT_NODES
+            : [];
 
   // STEP 4 리뷰: AI 이슈 플래그 로드
   const isProposalReview =
     reviewNode === "review_proposal" || reviewNode === "review_section";
 
   // Phase 2-3: 재작업 방향 프리셋
-  const FEEDBACK_PRESETS = [
-    {
-      label: "더 기술적으로",
-      text: "내용을 더 기술적이고 전문적인 언어로 작성해주세요.",
-    },
-    {
-      label: "고객 관점",
-      text: "발주기관의 관점과 니즈를 중심으로 재작성해주세요.",
-    },
-    { label: "간결하게", text: "핵심 내용만 남기고 간결하게 정리해주세요." },
-    {
-      label: "근거 강화",
-      text: "주장에 대한 구체적인 근거와 수치를 보강해주세요.",
-    },
-    {
-      label: "차별성 강조",
-      text: "경쟁사 대비 차별화 포인트를 더 부각해주세요.",
-    },
-  ];
+  const FEEDBACK_PRESETS = isGapAnalysisReview
+    ? [
+        {
+          label: "스토리라인 재구성",
+          text: "전체 스토리라인을 다시 검토하고 더 일관성 있게 재구성해주세요.",
+        },
+        {
+          label: "섹션 연결 강화",
+          text: "섹션간 전환을 더 부드럽게 하고 논리적 연결을 강화해주세요.",
+        },
+        {
+          label: "핵심 포인트 보강",
+          text: "스토리라인에 계획된 핵심 포인트가 명확하게 드러나도록 보강해주세요.",
+        },
+        {
+          label: "메시지 일관성",
+          text: "제안서 전체에 일관된 메시지를 전달하도록 재작성해주세요.",
+        },
+      ]
+    : [
+        {
+          label: "더 기술적으로",
+          text: "내용을 더 기술적이고 전문적인 언어로 작성해주세요.",
+        },
+        {
+          label: "고객 관점",
+          text: "발주기관의 관점과 니즈를 중심으로 재작성해주세요.",
+        },
+        { label: "간결하게", text: "핵심 내용만 남기고 간결하게 정리해주세요." },
+        {
+          label: "근거 강화",
+          text: "주장에 대한 구체적인 근거와 수치를 보강해주세요.",
+        },
+        {
+          label: "차별성 강조",
+          text: "경쟁사 대비 차별화 포인트를 더 부각해주세요.",
+        },
+      ];
 
   // W3: 산출물 요약 로드 (리뷰 대상 단계의 산출물)
   useEffect(() => {
@@ -414,6 +447,8 @@ function ReviewPanel({
         quick_approve: quickApprove,
         feedback: combinedFeedback || undefined,
         rework_targets: reworkTargets.length > 0 ? reworkTargets : undefined,
+        // STEP 4A 갭 분석 리뷰: 전략 재설계 플래그
+        rework_strategy: isGapAnalysisReview && reworkTargets.includes("rework_strategy"),
       };
       await api.workflow.resume(proposalId, data);
 
@@ -463,6 +498,19 @@ function ReviewPanel({
         </span>
       </div>
       <p className="text-xs text-[#8c8c8c] mb-2">{gate?.perspective}</p>
+
+      {/* STEP 4A: 갭 분석 리뷰 특화 안내 */}
+      {isGapAnalysisReview && (
+        <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg px-3 py-2 mb-3">
+          <p className="text-xs text-blue-300 mb-1 font-medium">스토리라인 갭 분석 결과</p>
+          <p className="text-[10px] text-blue-200">
+            스토리라인(plan_story)에 계획된 내용이 실제 제안서에 충분히 반영되었는지 검토하세요.
+          </p>
+          <p className="text-[10px] text-blue-200 mt-1">
+            <strong>재작업 선택:</strong> "섹션 수정"(특정 부분만) 또는 "전략 재설계"(전체 스토리라인 재구성)
+          </p>
+        </div>
+      )}
 
       {/* W9: 섹션 리뷰 진행률 */}
       {reviewNode === "review_section" &&

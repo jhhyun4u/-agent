@@ -1,5 +1,4 @@
 """Phase 6: Knowledge Base + 시맨틱 검색 테스트."""
-import pytest
 from unittest.mock import patch, AsyncMock
 from tests.conftest import make_supabase_mock
 

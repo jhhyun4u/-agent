@@ -12,7 +12,7 @@ LangGraph 워크플로 핵심 경로:
 """
 
 import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch
 
 from tests.conftest import make_supabase_mock
 

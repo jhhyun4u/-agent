@@ -205,7 +205,7 @@ def workflow_patches():
     def _apply(rfp_fixture=None):
         mock_claude = _make_claude_mock(rfp_fixture)
         mock_supabase = _make_workflow_supabase_mock()
-        mock_pricing = _make_pricing_mock()
+        _make_pricing_mock()
 
         # 노드 모듈이 'from ... import claude_generate'로 직접 import하므로
         # 각 노드 모듈의 참조도 함께 패치해야 한다.

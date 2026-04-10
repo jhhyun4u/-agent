@@ -1,5 +1,4 @@
 """Phase 5: 관리자 + 감사 로그 + 대시보드 + 고도화 테스트."""
-import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 from tests.conftest import make_supabase_mock
 

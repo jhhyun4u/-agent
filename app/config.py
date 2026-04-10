@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     # 개발 모드 (인증 바이패스)
     # WARNING: 운영 환경에서는 반드시 false. is_production과 동시 활성화 시 서버 시작 거부.
     dev_mode: bool = False
+    dev_user_id: str = ""  # DEV_USER_ID 환경변수에서 읽음
+    dev_user_email: str = ""  # DEV_USER_EMAIL 환경변수에서 읽음
+    dev_user_org_id: str = ""  # DEV_USER_ORG_ID 환경변수에서 읽음
+    dev_user_team_id: str = ""  # DEV_USER_TEAM_ID 환경변수에서 읽음
 
     # 프로덕션 환경 플래그 (Railway/Render에서 ENVIRONMENT=production 설정)
     environment: str = "development"

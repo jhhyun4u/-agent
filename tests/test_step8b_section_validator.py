@@ -10,13 +10,12 @@ Tests cover:
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import UUID
 
 from app.graph.state import (
-    ProposalState,
     ValidationReport,
     ProposalSection,
     RFPAnalysis,
+    Strategy,
 )
 from app.graph.nodes.step8b_section_validator import proposal_section_validator
 

@@ -16,10 +16,8 @@
 - 에러 케이스 (404, 400, 415)
 """
 
-import pytest
 import uuid
 from io import BytesIO
-from unittest.mock import AsyncMock, MagicMock, patch
 from httpx import AsyncClient
 
 

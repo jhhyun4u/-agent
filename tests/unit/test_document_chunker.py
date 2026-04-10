@@ -1,6 +1,5 @@
 """Unit tests for document chunker (U-CHK-*)"""
 
-import pytest
 from app.services.document_chunker import chunk_document, _chunk_by_window, Chunk
 
 

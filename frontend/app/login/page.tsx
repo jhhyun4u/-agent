@@ -53,15 +53,9 @@ function LoginContent() {
             }
           } else {
             // 프로필 조회 실패 — DB 미설정 시에도 로그인 진행 (개발 모드)
-            console.warn(
-              "프로필 조회 실패:",
-              res.status,
-              "— 로그인은 계속 진행",
-            );
           }
         } catch (err) {
           // 네트워크 오류 시에도 로그인 진행 (개발 모드)
-          console.warn("백엔드 연결 실패:", err, "— 로그인은 계속 진행");
         }
       }
 

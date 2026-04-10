@@ -111,7 +111,7 @@ class TestMigrationJob:
 
     async def test_run_scheduled_migration(self):
         """정기 마이그레이션 작업 실행"""
-        with patch('app.jobs.migration_jobs.get_async_client') as mock_client, \
+        with patch('app.jobs.migration_jobs.get_async_client'), \
              patch('app.jobs.migration_jobs.MigrationService') as mock_service_class:
 
             from app.jobs.migration_jobs import run_scheduled_migration
@@ -135,7 +135,7 @@ class TestMigrationJob:
 
     async def test_run_scheduled_migration_error_handling(self):
         """마이그레이션 작업 에러 처리"""
-        with patch('app.jobs.migration_jobs.get_async_client') as mock_client, \
+        with patch('app.jobs.migration_jobs.get_async_client'), \
              patch('app.jobs.migration_jobs.MigrationService') as mock_service_class:
 
             from app.jobs.migration_jobs import run_scheduled_migration

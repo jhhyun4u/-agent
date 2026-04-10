@@ -5,16 +5,8 @@ FastAPI 라우터 등록 및 엔드포인트 검증
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import uuid4, UUID
-from datetime import datetime
 
 from app.api.routes_migrations import router as migrations_router
-from app.models.migration_schemas import (
-    MigrationBatch,
-    MigrationTriggerRequest,
-    BatchListParams,
-)
 
 
 class TestMigrationAPI:

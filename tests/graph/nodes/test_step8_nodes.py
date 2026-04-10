@@ -5,13 +5,11 @@ Tests model schemas, node execution, and routing logic.
 """
 
 import pytest
-from datetime import datetime
-from uuid import uuid4
 
 from app.models.step8_schemas import (
     CustomerProfile, ValidationReport, ConsolidatedProposal,
     MockEvaluationResult, FeedbackSummary, WriteNextV2Output,
-    StakeholderProfile, ValidationIssue, ConsolidatedSection,
+    ValidationIssue, ConsolidatedSection,
     EvaluationDimension, ImprovementAction
 )
 

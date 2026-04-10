@@ -7,7 +7,6 @@ GAP-4: 산출물 버전 관리 (save_artifact/regenerate → artifacts INSERT)
 GAP-5: 프로젝트 삭제 + Storage 정리
 GAP-6: 프로젝트별 참고자료 업로드 (routes_files.py)
 """
-import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 from tests.conftest import MockQueryBuilder
 

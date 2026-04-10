@@ -1,7 +1,4 @@
 """Phase 4: 성과 추적 + PPTX 빌더 + G2B 서비스 테스트."""
-import pytest
-from unittest.mock import patch
-from tests.conftest import make_supabase_mock
 
 
 # ── 성과 API ──

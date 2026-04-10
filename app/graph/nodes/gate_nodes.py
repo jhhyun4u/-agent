@@ -19,7 +19,7 @@ from app.graph.state import ProposalState
 
 logger = logging.getLogger(__name__)
 
-ALL_PLAN_NODES = ["plan_team", "plan_assign", "plan_schedule", "plan_story"]
+ALL_PLAN_NODES = ["proposal_customer_analysis", "plan_team", "plan_assign", "plan_schedule", "plan_story"]
 
 
 def passthrough(state: ProposalState) -> dict:
