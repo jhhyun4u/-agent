@@ -27,31 +27,44 @@ logger = logging.getLogger(__name__)
 
 _bearer_scheme = HTTPBearer(auto_error=False)
 
-# 개발 모드 mock 사용자 - 실제 DB에 존재하는 사용자 ID 사용
-# (RLS 정책이 이 사용자 ID로 필터링하므로 존재해야 함)
-_DEV_USER_ID = "59331eeb-73ce-48da-9019-5e40ffe35ec4"  # yoon@tenopa.co.kr
+# 개발 모드 mock 사용자 - 환경변수에서 읽음 (DEV_MODE=true일 때만 사용)
+_DEV_USER_ID = None
+_DEV_USER_EMAIL = None
+_DEV_USER_ORG_ID = None
+_DEV_USER_TEAM_ID = None
+
+
+def _init_dev_user():
+    """환경변수에서 개발 모드 사용자 정보 읽기."""
+    global _DEV_USER_ID, _DEV_USER_EMAIL, _DEV_USER_ORG_ID, _DEV_USER_TEAM_ID
+    if settings.dev_mode:
+        if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
+            raise RuntimeError(
+                "DEV_MODE=true일 때 필수: DEV_USER_ID, DEV_USER_EMAIL, DEV_USER_ORG_ID"
+            )
+        _DEV_USER_ID = settings.dev_user_id
+        _DEV_USER_EMAIL = settings.dev_user_email
+        _DEV_USER_ORG_ID = settings.dev_user_org_id
+        _DEV_USER_TEAM_ID = settings.dev_user_team_id or None
+        logger.warning(f"⚠️ DEV_MODE: Mock 사용자 [{_DEV_USER_ID}] 활성화됨")
 
 
 async def _get_dev_user() -> CurrentUser:
-    """개발 모드: DB에서 dev 사용자 조회 또는 하드코딩된 프로필 반환."""
-    client = await get_async_client()
-    try:
-        # DB에서 dev 사용자 조회
-        res = await client.table("users").select("*").eq("id", _DEV_USER_ID).execute()
-        if res.data:
-            return CurrentUser(**res.data[0])
-    except Exception:
-        pass
+    """개발 모드: 환경변수에서 읽은 사용자 정보 반환.
 
-    # 폴백: 하드코딩된 프로필
-    # NOTE: 이 값들은 실제 DB의 yoon@tenopa.co.kr과 일치해야 RLS 및 팀 필터링이 정상 작동
+    참고: _init_dev_user()는 app.main의 startup에서 한 번만 호출되므로
+    여기서는 이미 초기화된 전역변수를 그대로 사용함 (race condition 방지)
+    """
+    if not _DEV_USER_ID:
+        raise AuthTokenExpiredError({"reason": "DEV_MODE 초기화 실패"})
+
     return CurrentUser(
         id=_DEV_USER_ID,
-        email="yoon@tenopa.co.kr",
-        name="Yoon",
+        email=_DEV_USER_EMAIL or "dev@tenopa.co.kr",
+        name="Dev User",
         role="lead",
-        org_id="b92b8f14-f0d2-4d9e-a6c8-a5b0ec1dd114",
-        team_id="69acad2a-c3a6-498b-85cf-d383c9c15050",  # SET: Match DB yoon user
+        org_id=_DEV_USER_ORG_ID,
+        team_id=_DEV_USER_TEAM_ID or None,
         division_id=None,
         status="active",
     )
@@ -87,7 +100,7 @@ async def get_current_user(
     try:
         profile = (
             await client.table("users")
-            .select("*")
+            .select("id, email, name, role, org_id, team_id, division_id, status")
             .eq("id", str(user_auth.id))
             .single()
             .execute()

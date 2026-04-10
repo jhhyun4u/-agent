@@ -32,6 +32,8 @@ const NL: Record<string, string> = {
   plan_story: "스토리라인",
   plan_price: "예산산정",
   proposal_write_next: "섹션 작성",
+  section_quality_check: "품질 진단",
+  storyline_gap_analysis: "갭 분석",
   self_review: "자가진단",
   presentation_strategy: "발표전략",
   ppt_toc: "PPT 목차",
@@ -74,7 +76,7 @@ const HEAD_G: GDef[] = [
 ];
 const A_G: GDef[] = [
   { id: "gA3", label: "검토", rn: ["review_plan"] },
-  { id: "gA4", label: "검토", rn: ["review_section", "review_proposal"] },
+  { id: "gA4", label: "검토", rn: ["review_section", "review_gap_analysis", "review_proposal"] },
   { id: "gA5", label: "검토", rn: ["review_ppt"] },
   { id: "gA6", label: "검토", rn: ["review_mock_eval"] },
 ];

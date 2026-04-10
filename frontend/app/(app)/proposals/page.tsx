@@ -119,7 +119,7 @@ function ProposalsContent() {
           );
         }
       } catch (err) {
-        console.error("팀 멤버 로드 실패:", err);
+        // 팀 멤버 로드 실패 무시
       }
     }
     loadTeamMembers();

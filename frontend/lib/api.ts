@@ -9,6 +9,11 @@ import { createClient } from "@/lib/supabase/client";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
+// ── 토큰 캐시 (30초 TTL) ──
+let cachedToken = "";
+let tokenCacheTime = 0;
+const TOKEN_CACHE_TTL_MS = 30000; // 30초
+
 /** 표준 API 응답 */
 export interface ApiResponse<T> {
   data: T;
@@ -26,9 +31,23 @@ export type ApiListResponse<T> = ApiResponse<T[]>;
 
 async function getToken(): Promise<string> {
   if (process.env.NODE_ENV === "development") return "";
+
+  // 캐시된 토큰이 유효하면 사용
+  const now = Date.now();
+  if (cachedToken && now - tokenCacheTime < TOKEN_CACHE_TTL_MS) {
+    return cachedToken;
+  }
+
+  // 캐시 만료 → Supabase에서 새로운 토큰 조회
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
-  return data.session?.access_token ?? "";
+  const token = data.session?.access_token ?? "";
+
+  // 캐시 업데이트
+  cachedToken = token;
+  tokenCacheTime = now;
+
+  return token;
 }
 
 async function request<T>(
@@ -66,9 +85,6 @@ async function request<T>(
       signal: controller.signal,
     });
 
-    // Issue #3 fix: Clear timeout on success path
-    clearTimeout(timeoutId);
-
     if (res.status === 401) {
       // DEV: 인증 우회 모드에서는 리다이렉트 하지 않음
       if (process.env.NODE_ENV !== "development") {
@@ -95,8 +111,6 @@ async function request<T>(
     if (res.status === 204) return undefined as T;
     return res.json();
   } catch (error) {
-    clearTimeout(timeoutId);
-
     // AbortError 처리 (타임아웃 또는 사용자 취소)
     if (error instanceof DOMException && error.name === "AbortError") {
       // 최대 2회까지 재시도
@@ -117,8 +131,9 @@ async function request<T>(
     }
 
     // 다른 에러는 그대로 전파
-    clearTimeout(timeoutId);
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -260,6 +275,66 @@ export interface ProposalFile {
   uploaded_by: string | null;
   description: string | null;
   created_at: string;
+}
+
+// ── STEP 4A 진단 및 갭 분석 타입 ────────────────────────────────────────
+
+export interface DiagnosticIssue {
+  type: string;
+  severity: string;
+  description: string;
+  fix_guidance: string;
+}
+
+export interface SectionDiagnostic {
+  section_id: string;
+  section_title: string;
+  section_index?: number;
+  overall_score: number;
+  compliance_ok: boolean;
+  evidence_score: number;
+  diff_score: number;
+  storyline_gap?: string;
+  recommendation: "approve" | "modify" | "rework";
+  issues: DiagnosticIssue[];
+  diagnosed_at?: string;
+  diagnosed_by?: string;
+}
+
+export interface DiagnosticsResponse {
+  proposal_id: string;
+  total_sections: number;
+  diagnostics: SectionDiagnostic[];
+}
+
+export interface GapLogicGap {
+  section: string;
+  issue: string;
+  impact: string;
+}
+
+export interface GapWeakTransition {
+  from_section: string;
+  to_section: string;
+  issue: string;
+}
+
+export interface GapAnalysisResult {
+  missing_points: string[];
+  logic_gaps: GapLogicGap[];
+  weak_transitions: GapWeakTransition[];
+  inconsistencies: string[];
+  overall_assessment: string;
+  recommended_actions: string[];
+  status: string;
+  analyzed_at?: string;
+  analyzed_by?: string;
+}
+
+export interface GapAnalysisResponse {
+  proposal_id: string;
+  gap_analysis: GapAnalysisResult | null;
+  message?: string;
 }
 
 // ── 자료 관리 타입 ────────────────────────────────────────────────────
@@ -717,6 +792,20 @@ export const api = {
     },
     deleteProposal(id: string) {
       return request<void>("DELETE", `/proposals/${id}`);
+    },
+
+    // STEP 4A: 진단 및 갭 분석 (v4.0)
+    getDiagnostics(id: string) {
+      return request<DiagnosticsResponse>(
+        "GET",
+        `/proposals/${id}/diagnostics`,
+      );
+    },
+    getGapAnalysis(id: string) {
+      return request<GapAnalysisResponse>(
+        "GET",
+        `/proposals/${id}/gap-analysis`,
+      );
     },
   },
 
@@ -2496,6 +2585,7 @@ export interface WorkflowResumeData {
   decision?: string;
   positioning_override?: string;
   rework_targets?: string[];
+  rework_strategy?: boolean;
   picked_bid_no?: string;
   no_interest?: boolean;
   [key: string]: unknown;

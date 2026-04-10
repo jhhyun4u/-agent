@@ -23,21 +23,20 @@ from app.graph.edges import (
     route_after_bid_plan_review,
     route_after_cost_sheet_review,
     route_after_eval_result_review,
-    route_after_feedback_processor_review,
+    route_after_gap_analysis_review,
     route_after_gng_review,
     route_after_mock_eval_review,
     route_after_plan_review,
     route_after_ppt_review,
     route_after_presentation_strategy,
     route_after_proposal_review,
-    route_after_rewrite_review,
     route_after_rfp_review,
     route_after_section_review,
-    route_after_section_validator_review,
     route_after_self_review,
     route_after_strategy_review,
     route_after_submission_checklist_review,
     route_after_submission_plan_review,
+    # Removed (v4.0): route_after_section_validator_review, route_after_feedback_processor_review, route_after_rewrite_review
 )
 
 # 게이트 · Fan-out · 훅
@@ -60,10 +59,11 @@ from app.graph.nodes.rfp_analyze import rfp_analyze
 from app.graph.nodes.bid_plan import bid_plan
 from app.graph.nodes.strategy_generate import strategy_generate
 from app.graph.nodes.plan_nodes import (
-    plan_assign, plan_schedule, plan_story, plan_team,
+    plan_assign, plan_schedule, plan_story, plan_team, proposal_customer_analysis,
 )
 from app.graph.nodes.proposal_nodes import (
-    proposal_write_next, self_review_with_auto_improve,
+    proposal_write_next, self_review_with_auto_improve, 
+    section_quality_check, storyline_gap_analysis,
 )
 from app.graph.nodes.ppt_nodes import (
     presentation_strategy, ppt_toc, ppt_visual_brief, ppt_storyboard_node,
@@ -75,13 +75,10 @@ from app.graph.nodes.evaluation_nodes import (
     mock_evaluation, eval_result_node, project_closing,
 )
 
-# STEP 8A-8F: 신규 분석 노드 (Artifact Versioning System 통합)
-from app.graph.nodes.step8a_customer_analysis import proposal_customer_analysis
-from app.graph.nodes.step8b_section_validator import proposal_section_validator
-from app.graph.nodes.step8c_consolidation import proposal_sections_consolidation
-from app.graph.nodes.step8d_mock_evaluation import mock_evaluation_analysis
-from app.graph.nodes.step8e_feedback_processor import mock_evaluation_feedback_processor
-from app.graph.nodes.step8f_rewrite import proposal_write_next_v2
+# STEP 3A + STEP 4A 통합으로 STEP 8A-8F 모듈 제거 (v4.0)
+# - 8A (customer_analysis) → STEP 3A 병렬 노드로 이동
+# - 8B/8C (validators) → section_quality_check, storyline_gap_analysis로 대체 (STEP 4A)
+# - 8D/8E/8F (evaluation/rewrite) → 별도 구간으로 통합 or 제거
 
 from app.graph.token_tracking import track_tokens
 
@@ -116,8 +113,9 @@ def build_graph(checkpointer=None):
     # PATH A: 3A→4A→5A→6A (제안서 경로)
     # ═══════════════════════════════════════════
 
-    # 3A: 제안 계획 (병렬 fan-out)
+    # 3A: 제안 계획 (병렬 fan-out) + 고객분석 (이동: STEP 8A → 3A)
     g.add_node("plan_fan_out_gate", passthrough)
+    g.add_node("proposal_customer_analysis", track_tokens("proposal_customer_analysis")(proposal_customer_analysis))
     g.add_node("plan_team", track_tokens("plan_team")(plan_team))
     g.add_node("plan_assign", track_tokens("plan_assign")(plan_assign))
     g.add_node("plan_schedule", track_tokens("plan_schedule")(plan_schedule))
@@ -125,22 +123,19 @@ def build_graph(checkpointer=None):
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 
-    # 4A: 제안서 작성
+    # 4A: 제안서 작성 (v4.0: 섹션별 완결 루프 + 갭 분석)
     g.add_node("proposal_start_gate", proposal_start_gate)
     g.add_node("proposal_write_next", track_tokens("proposal_write_next")(proposal_write_next))
+    g.add_node("section_quality_check", track_tokens("section_quality_check")(section_quality_check))
     g.add_node("review_section", review_section_node)
     g.add_node("self_review", track_tokens("self_review")(self_review_with_auto_improve))
+    g.add_node("storyline_gap_analysis", track_tokens("storyline_gap_analysis")(storyline_gap_analysis))
+    g.add_node("review_gap_analysis", review_node("gap_analysis"))
     g.add_node("review_proposal", review_node("proposal"))
 
-    # STEP 8A-8F: 품질 게이트 및 최적화 (Artifact Versioning System)
-    g.add_node("proposal_customer_analysis", track_tokens("proposal_customer_analysis")(proposal_customer_analysis))
-    g.add_node("proposal_section_validator", track_tokens("proposal_section_validator")(proposal_section_validator))
-    g.add_node("review_section_validation", review_node("section_validation"))
-    g.add_node("proposal_sections_consolidation", proposal_sections_consolidation)
-    g.add_node("mock_evaluation_analysis", track_tokens("mock_evaluation_analysis")(mock_evaluation_analysis))
-    g.add_node("mock_evaluation_feedback_processor", track_tokens("mock_evaluation_feedback_processor")(mock_evaluation_feedback_processor))
-    g.add_node("proposal_write_next_v2", track_tokens("proposal_write_next_v2")(proposal_write_next_v2))
-    g.add_node("review_rewrite", review_node("rewrite"))
+    # STEP 8A-8F 노드 제거됨 (v4.0)
+    # - 이전: 8A(분석)→8B(검증)→8C(통합)→8D(평가)→8E(피드백)→8F(재작성)
+    # - 현재: 3A(고객분석) + 4A(섹션진단→갭분석) + 6A(모의평가) 구조로 통합
 
     # 5A: PPT
     g.add_node("presentation_strategy", track_tokens("presentation_strategy")(presentation_strategy))
@@ -218,6 +213,8 @@ def build_graph(checkpointer=None):
 
     # ── PATH A: 3A→4A→5A→6A ──
 
+    # STEP 3A: 고객분석 + 팀/담당/일정/스토리 병렬 실행 (v4.0)
+    # plan_fan_out_gate uses plan_selective_fan_out to send to all nodes in ALL_PLAN_NODES (includes customer_analysis)
     g.add_conditional_edges("plan_fan_out_gate", plan_selective_fan_out)
     for node in ALL_PLAN_NODES:
         g.add_edge(node, "plan_merge")
@@ -229,51 +226,45 @@ def build_graph(checkpointer=None):
         "rework_bid_plan": "bid_plan",
     })
 
+    # STEP 4A: 섹션별 작성 → 진단 → HITL 리뷰 루프
     g.add_edge("proposal_start_gate", "proposal_write_next")
-    g.add_edge("proposal_write_next", "review_section")
+    g.add_edge("proposal_write_next", "section_quality_check")  # 자동 진단 (AI)
+    g.add_edge("section_quality_check", "review_section")  # HITL 리뷰 (진단결과 포함)
     g.add_conditional_edges("review_section", route_after_section_review, {
-        "next_section": "proposal_write_next",
-        "all_done": "self_review",
-        "rewrite": "proposal_write_next",
+        "next_section": "proposal_write_next",  # 다음 섹션으로
+        "all_done": "self_review",  # 모든 섹션 완성 → 자가진단
+        "rewrite": "proposal_write_next",  # 현재 섹션 재작성
     })
+    
+    # STEP 4A: 전체 자가진단 → 갭 분석 (v4.0)
     g.add_conditional_edges("self_review", route_after_self_review, {
-        "pass": "review_proposal",
+        "pass": "storyline_gap_analysis",  # 갭 분석으로
         "retry_research": "research_gather",
         "retry_strategy": "strategy_generate",
         "retry_sections": "proposal_start_gate",
-        "force_review": "review_proposal",
+        "force_review": "storyline_gap_analysis",  # 강제 리뷰도 갭 분석 진행
     })
+    
+    # STEP 4A: 스토리라인 갭 분석 → 갭 리뷰 (v4.0)
+    g.add_edge("storyline_gap_analysis", "review_gap_analysis")  # 자동 분석 → HITL 리뷰
+    g.add_conditional_edges("review_gap_analysis", route_after_gap_analysis_review, {
+        "approved": "review_proposal",  # 갭 승인 → 제안 완성 리뷰
+        "rework_section": "proposal_start_gate",  # 섹션 수정 → 루프백
+        "rework_strategy": "strategy_generate",  # 전략 재수립 필요
+    })
+    
     g.add_conditional_edges("review_proposal", route_after_proposal_review, {
-        "approved": "proposal_customer_analysis",  # → STEP 8A: 고객 분석
-        "rework": "proposal_start_gate",
+        "approved": "presentation_strategy",  # → STEP 5A (v4.0: removed old 8A-8F pipeline)
+        "rework": "proposal_start_gate",  # → STEP 4A 재시작
     })
 
-    # ── STEP 8A-8F: 품질 게이트 및 최적화 ──
-
-    g.add_edge("proposal_customer_analysis", "proposal_section_validator")
-
-    g.add_edge("proposal_section_validator", "review_section_validation")
-    g.add_conditional_edges("review_section_validation", route_after_section_validator_review, {
-        "approved": "proposal_sections_consolidation",
-        "needs_rework": "proposal_start_gate",  # 섹션 재작성
-        "rejected": "proposal_section_validator",
-    })
-
-    g.add_edge("proposal_sections_consolidation", "mock_evaluation_analysis")
-
-    g.add_edge("mock_evaluation_analysis", "mock_evaluation_feedback_processor")
-
-    g.add_conditional_edges("mock_evaluation_feedback_processor", route_after_feedback_processor_review, {
-        "proceed_rewrite": "proposal_write_next_v2",
-        "skip_to_ppt": "presentation_strategy",  # 우수한 평가 → PPT 직진
-    })
-
-    g.add_edge("proposal_write_next_v2", "review_rewrite")
-    g.add_conditional_edges("review_rewrite", route_after_rewrite_review, {
-        "approved": "presentation_strategy",
-        "needs_more_rewrite": "proposal_write_next_v2",
-        "back_to_validation": "proposal_section_validator",
-    })
+    # ═══════════════════════════════════════════
+    # STEP 8A-8F 노드 제거됨 (v4.0)
+    # 이전 8A-8F 파이프라인은 더이상 사용되지 않음:
+    # - 8A (customer_analysis) → STEP 3A로 이동
+    # - 8B (section_validator) → section_quality_check (STEP 4A)로 대체  
+    # - 8C (consolidation) → storyline_gap_analysis (STEP 4A)로 대체
+    # - 8D/8E/8F (evaluation/feedback/rewrite) → STEP 6A 모의평가로 통합
 
     g.add_conditional_edges("presentation_strategy", route_after_presentation_strategy, {
         "proceed": "ppt_toc",

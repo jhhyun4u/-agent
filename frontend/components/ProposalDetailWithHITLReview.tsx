@@ -5,6 +5,9 @@ import { ReviewProgressBanner } from "./ReviewProgressBanner";
 import { HITLReviewStatusList } from "./HITLReviewStatusList";
 import { HITLReviewModal } from "./HITLReviewModal";
 import { FeedbackLoopWorkflow } from "./FeedbackLoopWorkflow";
+import { GapAnalysisResultList } from "./GapAnalysisResultList";
+import { api } from "@/lib/api";
+import type { GapAnalysisResult, SectionDiagnostic } from "@/lib/api";
 
 interface ReviewItemStatus {
   id: string;
@@ -29,6 +32,7 @@ interface ReviewItem {
     submitted_at: string;
     decision?: "approved" | "rejected" | "pending";
   }>;
+  diagnostics?: SectionDiagnostic | null;
 }
 
 interface ProposalDetailWithHITLReviewProps {
@@ -47,6 +51,9 @@ export function ProposalDetailWithHITLReview({
   const [selectedReviewDetail, setSelectedReviewDetail] = useState<ReviewItem | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+  const [gapAnalysis, setGapAnalysis] = useState<GapAnalysisResult | null>(null);
+  const [diagnostics, setDiagnostics] = useState<SectionDiagnostic[]>([]);
+  const [gapAnalysisLoading, setGapAnalysisLoading] = useState(false);
   const [reviewStats, setReviewStats] = useState({
     total: 0,
     pending: 0,
@@ -85,7 +92,31 @@ export function ProposalDetailWithHITLReview({
     }
   }, [proposalId, showReviewPanel]);
 
-  // 검토 항목 상세 조회
+  // 갭 분석 결과 및 진단 데이터 조회 (병렬)
+  useEffect(() => {
+    const fetchGapAnalysisAndDiagnostics = async () => {
+      setGapAnalysisLoading(true);
+      try {
+        const [gapRes, diagRes] = await Promise.all([
+          api.proposals.getGapAnalysis(proposalId),
+          api.proposals.getDiagnostics(proposalId),
+        ]);
+        setGapAnalysis(gapRes.gap_analysis);
+        setDiagnostics(diagRes.diagnostics || []);
+      } catch (err) {
+        // 갭 분석 또는 진단 데이터가 없을 수 있음 - 무시
+        console.debug("갭 분석/진단 조회 실패:", err);
+      } finally {
+        setGapAnalysisLoading(false);
+      }
+    };
+
+    if (showReviewPanel) {
+      fetchGapAnalysisAndDiagnostics();
+    }
+  }, [proposalId, showReviewPanel]);
+
+  // 검토 항목 상세 조회 (진단 데이터는 캐시에서 조회)
   const handleSelectReviewItem = async (reviewId: string) => {
     setSelectedReviewId(reviewId);
     try {
@@ -94,6 +125,15 @@ export function ProposalDetailWithHITLReview({
       );
       if (response.ok) {
         const data = await response.json();
+
+        // 캐시된 진단 데이터에서 해당 섹션 찾기
+        const sectionDiag = diagnostics.find(
+          d => d.section_id === data.section_name || d.section_title === data.section_name
+        );
+        if (sectionDiag) {
+          data.diagnostics = sectionDiag;
+        }
+
         setSelectedReviewDetail(data);
         setReviewModalOpen(true);
       }
@@ -185,7 +225,17 @@ export function ProposalDetailWithHITLReview({
 
         {/* 중앙: 메인 콘텐츠 */}
         <div className="flex-1 overflow-auto">
-          {children}
+          <div className="space-y-6">
+            {children}
+            {gapAnalysis && !gapAnalysisLoading && (
+              <div className="bg-[#0f0f0f] border border-[#262626] rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-[#ededed] mb-4">
+                  갭 분석 결과
+                </h3>
+                <GapAnalysisResultList gapAnalysis={gapAnalysis} />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 오른쪽: 피드백 루프 (선택된 항목이 있을 때만) */}

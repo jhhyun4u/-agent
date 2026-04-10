@@ -195,16 +195,16 @@ async def analyze_bid(
     try:
         client = await get_async_client()
 
-        # bid_announcements에서 해당 공고 조회 (org_id 필터링 제거)
+        # bid_announcements에서 해당 공고 조회 (RLS: org_id 필터링 필수)
         result = await client.table("bid_announcements").select("id, bid_no, bid_title, agency, budget_amount, deadline_date, raw_data").eq(
-            "bid_no", bid_no
-        ).maybe_single().execute()
+            "org_id", str(current_user.org_id)
+        ).eq("bid_no", bid_no).maybe_single().execute()
 
         if not result.data:
-            raise G2BServiceError(f"공고를 찾을 수 없습니다: {bid_no}")
+            raise G2BServiceError("공고를 찾을 수 없습니다")
 
         bid = result.data
-        logger.info(f"[analyze] 공고 조회 완료: {bid_no}")
+        logger.info(f"[analyze] 공고 조회 완료")
 
         # 분석 문서 생성은 백그라운드에서 처리
         async def _analyze_documents():
@@ -226,13 +226,13 @@ async def analyze_bid(
                     "analysis_status": "analyzed",
                 }).eq("id", bid["id"]).execute()
 
-                logger.info(f"✓ 공고 분석 문서 생성 완료: {bid_no}")
+                logger.info(f"✓ 공고 분석 문서 생성 완료")
             except Exception as e:
-                logger.error(f"✗ 공고 분석 문서 생성 실패 [{bid_no}]: {str(e)}")
+                logger.error(f"✗ 공고 분석 문서 생성 실패: {type(e).__name__}: {str(e)[:100]}")
 
         background_tasks.add_task(_analyze_documents)
 
-        logger.info(f"[analyze] ✓ 공고 분석 시작됨 (백그라운드): {bid_no}")
+        logger.info(f"[analyze] ✓ 공고 분석 시작됨 (백그라운드)")
 
         return {
             "bid_no": bid_no,
@@ -241,7 +241,7 @@ async def analyze_bid(
         }
 
     except Exception as e:
-        logger.error(f"공고 분석 오류 [{bid_no}]: {str(e)}")
+        logger.error(f"공고 분석 오류: {type(e).__name__}")
         raise G2BServiceError(f"공고 분석 중 오류가 발생했습니다: {str(e)}")
 
 
@@ -266,8 +266,7 @@ async def decide_bid(
             raise G2BServiceError("의사결정은 'Go' 또는 'No-Go'만 가능합니다.")
 
         logger.info(
-            f"✓ 공고 의사결정 기록: {bid_no} = {decision}, "
-            f"사유: {decision_comment}, 결정자: {current_user.id}"
+            f"✓ 공고 의사결정 기록: {decision}"
         )
 
         # 의사결정 로깅만 수행 (DB 업데이트는 /api/bids/{bid_no}/status에서 처리)

@@ -420,6 +420,28 @@ def _replace(existing, new):
 # ── 핵심 State 정의 ──
 
 
+
+class DiagnosisResult(BaseModel):
+    """STEP 4A: 섹션 품질 진단 결과 (4축 평가)."""
+    compliance_ok: bool  # 규격/요건 준수 여부
+    storyline_gap: str  # 스토리라인 핵심 메시지 반영도 (한 문장 평가)
+    evidence_score: float  # 근거·데이터 충족도 (0-100)
+    diff_score: float  # 경쟁 차별성 표현도 (0-100)
+    overall_score: float = 0  # 종합점수 (0-100)
+    issues: list[dict] = []  # [{type, severity, description, fix_guidance}]
+    recommendation: Literal["approve", "modify", "rework"] = "rework"
+
+
+class GapReport(BaseModel):
+    """STEP 4A: 스토리라인 vs 실제 작성 내용 갭 분석."""
+    missing_points: list[str] = []  # 빠진 핵심 포인트
+    logic_gaps: list[dict] = []  # [{section, issue, impact}]
+    weak_transitions: list[dict] = []  # [{from_section, to_section, issue}]
+    inconsistencies: list[str] = []  # 메시지 일관성 문제
+    overall_assessment: str = ""  # 전체 평가 한 문장
+    recommended_actions: list[str] = []  # 권장 조치 사항
+
+
 class ProposalState(TypedDict):
     """LangGraph 워크플로 전체 상태."""
 
@@ -545,3 +567,7 @@ class ProposalState(TypedDict):
     consolidated_proposal: Annotated[Optional[ConsolidatedProposal], _replace]  # 8C: 통합
     mock_eval_result: Annotated[Optional[MockEvalResult], _replace]  # 8D: 평가자 시뮬레이션 분석
     feedback_summary: Annotated[Optional[FeedbackSummary], _replace]  # 8E: 피드백 처리
+
+    # v4.0: STEP 4A 섹션별 완결 루프 (섹션 진단 + 갭 분석)
+    diagnosis_result: Annotated[Optional[DiagnosisResult], _replace]  # 4A-②: 섹션 품질 진단
+    gap_report: Annotated[Optional[GapReport], _replace]  # 4A-⑤: 스토리라인 갭 분석

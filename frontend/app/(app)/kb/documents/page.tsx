@@ -87,7 +87,6 @@ export default function DocumentsPage() {
       setDocuments(res.items);
       setTotal(res.total);
     } catch (err) {
-      console.error("문서 목록 조회 실패:", err);
       setDocuments([]);
     } finally {
       setLoading(false);
@@ -136,7 +135,6 @@ export default function DocumentsPage() {
       setDeleteConfirm(null);
       await load();
     } catch (err) {
-      console.error("문서 삭제 실패:", err);
       alert("문서 삭제 실패: " + (err instanceof Error ? err.message : ""));
     } finally {
       setDeleting(null);
@@ -162,7 +160,6 @@ export default function DocumentsPage() {
       setReprocessConfirm(null);
       await load();
     } catch (err) {
-      console.error("문서 재처리 실패:", err);
       alert("문서 재처리 실패: " + (err instanceof Error ? err.message : ""));
     } finally {
       setReprocessing(null);

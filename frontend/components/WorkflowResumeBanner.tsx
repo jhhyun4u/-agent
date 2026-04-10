@@ -30,6 +30,7 @@ const REVIEW_LABELS: Record<string, string> = {
   review_bid_plan: "입찰가격 계획 검토",
   review_plan: "제안계획서 검토",
   review_section: "섹션별 검토",
+  review_gap_analysis: "갭 분석 결과 검토",
   review_proposal: "제안서 최종 검토",
   review_ppt: "PPT 검토",
 };
@@ -42,6 +43,7 @@ const STEP_MAP: Record<string, number> = {
   review_bid_plan: 2,
   review_plan: 3,
   review_section: 4,
+  review_gap_analysis: 4,
   review_proposal: 4,
   review_ppt: 5,
 };
@@ -61,6 +63,8 @@ const NODE_STEP_MAP: Record<string, number> = {
   plan_merge: 3,
   proposal_start_gate: 4,
   proposal_write_next: 4,
+  section_quality_check: 4,
+  storyline_gap_analysis: 4,
   self_review: 4,
   presentation_strategy: 5,
   ppt_toc: 5,

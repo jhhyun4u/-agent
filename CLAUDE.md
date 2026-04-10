@@ -38,8 +38,8 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/api/routes_bid_submission.py` — 투찰 관리 (투찰 기록/확인/상태/이력)
 
 ### LangGraph (app/graph/)
-- `app/graph/state.py` — ProposalState TypedDict + 14 서브 모델 + Annotated reducers (§3)
-- `app/graph/edges.py` — 라우팅 함수 15개: 8개 팩토리(_approval_router) + 7개 개별 (§11, v4.0)
+- `app/graph/state.py` — ProposalState TypedDict + 16 서브 모델 + Annotated reducers (§3, v4.0: DiagnosisResult + GapReport 추가)
+- `app/graph/edges.py` — 라우팅 함수 16개: 8개 팩토리(_approval_router) + 8개 개별 (§11, v4.0: route_after_gap_analysis_review 추가)
 - `app/graph/graph.py` — StateGraph v4.0 (40 노드, A/B 분기 워크플로). 인라인 함수 없이 gate_nodes에서 import
 - `app/graph/nodes/gate_nodes.py` — 게이트·Fan-out·훅 (passthrough, fork, convergence, stream1_complete_hook 등)
 - `app/graph/nodes/rfp_search.py` — STEP 0: G2B 공고 검색 + AI 적합도 평가 (그래프 외부, API 직접 호출)
@@ -51,8 +51,8 @@ uv run python scripts/seed_data.py    # 시드 데이터 생성
 - `app/graph/nodes/merge_nodes.py` — plan 병합 (부분 재작업) + storylines→dynamic_sections 동기화
 - `app/graph/nodes/strategy_generate.py` — STEP 2: 포지셔닝 기반 제안전략
 - `app/graph/nodes/bid_plan.py` — STEP 4B (Path B): 입찰가격 결정 (원가산정 + 경쟁분석 + PricingEngine + 마진최적화)
-- `app/graph/nodes/plan_nodes.py` — STEP 3A: 팀/담당/일정/스토리 (4개 병렬)
-- `app/graph/nodes/proposal_nodes.py` — STEP 4A: 순차 섹션 작성 + 자가진단
+- `app/graph/nodes/plan_nodes.py` — STEP 3A: 팀/담당/일정/스토리 + 고객분석 (5개 병렬, v4.0)
+- `app/graph/nodes/proposal_nodes.py` — STEP 4A: 섹션별 완결 루프 (작성→진단→리뷰) + 갭분석 (v4.0)
 - `app/graph/nodes/ppt_nodes.py` — STEP 5A: 발표전략 + PPT toc/visual_brief/storyboard
 - `app/graph/nodes/submission_nodes.py` — Path B: 제출서류 계획(3B) + 산출내역서(5B) + 제출확인(6B)
 - `app/graph/nodes/evaluation_nodes.py` — 6A 모의평가 + 7 평가결과 + 8 Closing

@@ -74,6 +74,7 @@ const REVIEW_LABELS: Record<string, string> = {
   review_bid_plan: "입찰가격 계획 검토",
   review_plan: "제안계획서 검토",
   review_section: "섹션별 검토",
+  review_gap_analysis: "갭 분석 결과 검토",
   review_proposal: "제안서 최종 검토",
   review_ppt: "PPT 검토",
 };
@@ -183,6 +184,7 @@ export default function ProposalDetailPage() {
       review_bid_plan: 2,
       review_plan: 3,
       review_section: 4,
+      review_gap_analysis: 4,
       review_proposal: 4,
       review_ppt: 5,
     };

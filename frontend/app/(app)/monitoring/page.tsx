@@ -536,10 +536,12 @@ export default function BidsMonitorPage() {
       const res = await fetch(`${baseUrl}/bids/crawl?days=1`, {
         method: "POST",
       });
-      if (!res.ok) console.warn("[crawl] 실패:", res.status);
+      if (!res.ok) {
+        // 크롤링 실패해도 새로고침 수행
+      }
       setRefreshKey((k) => k + 1);
     } catch (e) {
-      console.warn("[crawl] 오류:", e);
+      // 크롤링 요청 중 오류 발생
     } finally {
       setCrawling(false);
     }
