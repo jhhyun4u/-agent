@@ -9,11 +9,6 @@ import { createClient } from "@/lib/supabase/client";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
-// ── 토큰 캐시 (30초 TTL) ──
-let cachedToken = "";
-let tokenCacheTime = 0;
-const TOKEN_CACHE_TTL_MS = 30000; // 30초
-
 /** 표준 API 응답 */
 export interface ApiResponse<T> {
   data: T;
@@ -29,13 +24,41 @@ export interface ApiResponse<T> {
 /** 리스트 응답 */
 export type ApiListResponse<T> = ApiResponse<T[]>;
 
+/** TTL이 있는 캐시 매니저 */
+class TTLCache<T> {
+  private value: T | null = null;
+  private expiresAt: number = 0;
+
+  constructor(private ttlMs: number) {}
+
+  get(): T | null {
+    if (!this.value || Date.now() > this.expiresAt) {
+      return null;
+    }
+    return this.value;
+  }
+
+  set(value: T): void {
+    this.value = value;
+    this.expiresAt = Date.now() + this.ttlMs;
+  }
+
+  clear(): void {
+    this.value = null;
+    this.expiresAt = 0;
+  }
+}
+
+// 토큰 캐시 (30초 TTL)
+const tokenCache = new TTLCache<string>(30000);
+
 async function getToken(): Promise<string> {
   if (process.env.NODE_ENV === "development") return "";
 
-  // 캐시된 토큰이 유효하면 사용
-  const now = Date.now();
-  if (cachedToken && now - tokenCacheTime < TOKEN_CACHE_TTL_MS) {
-    return cachedToken;
+  // 캐시에서 토큰 조회
+  const cached = tokenCache.get();
+  if (cached) {
+    return cached;
   }
 
   // 캐시 만료 → Supabase에서 새로운 토큰 조회
@@ -43,9 +66,8 @@ async function getToken(): Promise<string> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token ?? "";
 
-  // 캐시 업데이트
-  cachedToken = token;
-  tokenCacheTime = now;
+  // 캐시에 저장
+  tokenCache.set(token);
 
   return token;
 }
