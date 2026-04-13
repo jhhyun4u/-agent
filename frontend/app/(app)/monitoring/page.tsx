@@ -192,11 +192,25 @@ function StageBadge({ stage }: { stage: string }) {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 120) return "text-purple-400 bg-purple-950/60 border-purple-900";
-  if (score >= 100)
-    return "text-emerald-400 bg-emerald-950/60 border-emerald-900";
-  if (score >= 80) return "text-blue-400 bg-blue-950/60 border-blue-900";
-  if (score >= 50) return "text-yellow-400 bg-yellow-950/60 border-yellow-900";
+  // 점수 범위 감지: 0-100 (AI 분석) vs 0-150+ (규칙 기반)
+  // AI 점수: 0-100 → 80%, 67%, 53%, 33% 기준
+  // 규칙 점수: 0-150+ → 120, 100, 80, 50 기준
+  const isAiScore = score <= 100;
+
+  if (isAiScore) {
+    // 0-100 범위 (AI 분석 점수)
+    if (score >= 80) return "text-purple-400 bg-purple-950/60 border-purple-900";
+    if (score >= 67) return "text-emerald-400 bg-emerald-950/60 border-emerald-900";
+    if (score >= 53) return "text-blue-400 bg-blue-950/60 border-blue-900";
+    if (score >= 33) return "text-yellow-400 bg-yellow-950/60 border-yellow-900";
+  } else {
+    // 0-150+ 범위 (규칙 기반 점수)
+    if (score >= 120) return "text-purple-400 bg-purple-950/60 border-purple-900";
+    if (score >= 100) return "text-emerald-400 bg-emerald-950/60 border-emerald-900";
+    if (score >= 80) return "text-blue-400 bg-blue-950/60 border-blue-900";
+    if (score >= 50) return "text-yellow-400 bg-yellow-950/60 border-yellow-900";
+  }
+
   return "text-[#8c8c8c] bg-[#1c1c1c] border-[#262626]";
 }
 
@@ -526,6 +540,10 @@ export default function BidsMonitorPage() {
   const [lastCrawledAt, setLastCrawledAt] = useState<number | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [crawling, setCrawling] = useState(false);
+  // 크롤링할 때 사용할 최소 예산 (기본값: 5천만원)
+  const [minBudgetForCrawl, setMinBudgetForCrawl] = useState(
+    Number(searchParams.get("budget")) || 0,
+  );
 
   // 수동 크롤링 트리거 (POST /bids/crawl → DB 저장 후 목록 갱신)
   async function handleManualCrawl() {
@@ -533,7 +551,8 @@ export default function BidsMonitorPage() {
     try {
       const baseUrl =
         process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-      const res = await fetch(`${baseUrl}/bids/crawl?days=1`, {
+      // min_budget 파라미터 포함: 사용자 선택 예산 이상의 공고만 크롤링
+      const res = await fetch(`${baseUrl}/bids/crawl?days=1&min_budget=${minBudgetForCrawl}`, {
         method: "POST",
       });
       if (!res.ok) {
