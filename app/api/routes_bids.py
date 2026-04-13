@@ -607,8 +607,13 @@ async def manual_crawl(
             background_tasks.add_task(run_pipeline, top_new_bid_nos, raw_map)
 
         # 경로 B: _analyze_bid_background (DB 저장) - 모든 신규 공고 (최대 50개)
+        # 크롤링 단계에서 분석 큐 등록 → 백그라운드에서 비동기 실행
+        # 분석 완료 후 analysis_status = "analyzed" + 결과 DB 저장
+        queued_count = 0
         for bid in new_bids[:50]:
             _queue_bid_analysis(bid["bid_no"], background_tasks)
+            queued_count += 1
+        logger.info(f"[Crawl] 신규 공고 분석 큐 등록: {queued_count}건")
 
         return ok({
             "total_fetched": results["total_fetched"],

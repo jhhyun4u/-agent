@@ -236,97 +236,57 @@ export default function BidReviewPage() {
           return;
         }
 
-        // AI 분석 조회 (DB에서 조회, 폴링 지원)
-        setAnalyzing(true);
-        let analysisLoaded = false;
-        
+        // AI 분석 조회 (크롤링 단계에서 이미 분석 완료됨)
+        // - 크롤링: _analyze_bid_background() → analysis_status = "analyzed" 저장
+        // - review 페이지: DB 결과만 조회, 폴링 불필요
+
         try {
-                    const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 30000);
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000);
           const res = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
             signal: controller.signal,
             headers: authHeaders,
           });
           clearTimeout(timeout);
-          
+
           if (res.ok && !cancelled) {
             const json = await res.json();
             const data = json.data;
-                        
+            console.log(`[review] 분석 조회 완료 (status=${data?.status})`);
+
             if (data?.status === "analyzed") {
               // ✓ 분석 완료 → 즉시 표시
               setAnalysisWithCache(data);
-              analysisLoaded = true;
               setAnalyzing(false);
-                            return;
+              return;
             }
-            
-            else if (data?.status === "analyzing") {
-              // ⏳ 진행 중 → 폴링 시작 (5초 간격, 최대 2분)
-                            let pollCount = 0;
-              const MAX_POLLS = 24;
-              
-              const pollTimer = setInterval(async () => {
-                pollCount++;
-                if (cancelled || pollCount > MAX_POLLS) {
-                  clearInterval(pollTimer);
-                  if (!cancelled) {
-                    setAnalyzing(false);
-                  }
-                  return;
-                }
-                
-                try {
-                  const pollRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
-                    headers: authHeaders,
-                    signal: AbortSignal.timeout(5000),
-                  });
-                  
-                  if (pollRes.ok) {
-                    const pollData = (await pollRes.json()).data;
-                                        
-                    if (pollData?.status === "analyzed") {
-                      setAnalysisWithCache(pollData);
-                      setAnalyzing(false);
-                      clearInterval(pollTimer);
-                                            return;
-                    }
 
-                    if (pollData?.status === "failed") {
-                      setAnalyzing(false);
-                      clearInterval(pollTimer);
-                      setError(pollData?.error || "분석 실패");
-                      return;
-                    }
-                  }
-                } catch (e) {
-                  // 폴링 오류 무시, 다음 재시도
-                }
-              }, 5000);
-              
-              return; // analyzing 상태 유지
-            }
-            
             else if (data?.status === "failed") {
               // ✗ 실패 → 에러 표시
               setAnalyzing(false);
               setError(data?.error || "분석에 실패했습니다");
               return;
             }
-            
-            else {  // pending or unknown
-              // ⧖ 대기 중 → 폴링 시작
-                            let pollCount = 0;
-              const MAX_POLLS = 24;
-              
+
+            else {
+              // pending, analyzing, 또는 unknown
+              // → DB에서 조회 불가 (크롤링 단계에서 실패했거나 진행 중)
+              // 최대 3회만 재시도 (15초)
+              let pollCount = 0;
+              const MAX_POLLS = 3;
+
               const pollTimer = setInterval(async () => {
                 pollCount++;
                 if (cancelled || pollCount > MAX_POLLS) {
                   clearInterval(pollTimer);
-                  if (!cancelled) setAnalyzing(false);
+                  if (!cancelled) {
+                    // 3회 재시도 후에도 완료 안 됨 → 타임아웃
+                    setAnalyzing(false);
+                    console.warn(`[review] 분석 조회 타임아웃 (${MAX_POLLS}회 시도 후)`);
+                  }
                   return;
                 }
-                
+
                 try {
                   const pollRes = await fetch(`${baseUrl}/bids/${bidNo}/analysis`, {
                     headers: authHeaders,
