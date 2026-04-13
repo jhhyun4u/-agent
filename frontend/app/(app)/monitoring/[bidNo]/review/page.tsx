@@ -240,6 +240,7 @@ export default function BidReviewPage() {
         // - 크롤링: _analyze_bid_background() → analysis_status = "analyzed" 저장
         // - review 페이지: DB 결과만 조회, 폴링 불필요
 
+        let analysisLoaded = false;
         try {
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 10000);
@@ -257,6 +258,7 @@ export default function BidReviewPage() {
             if (data?.status === "analyzed") {
               // ✓ 분석 완료 → 즉시 표시
               setAnalysisWithCache(data);
+              analysisLoaded = true;
               setAnalyzing(false);
               return;
             }
@@ -292,11 +294,12 @@ export default function BidReviewPage() {
                     headers: authHeaders,
                     signal: AbortSignal.timeout(5000),
                   });
-                  
+
                   if (pollRes.ok) {
                     const pollData = (await pollRes.json()).data;
                     if (pollData?.status === "analyzed") {
                       setAnalysisWithCache(pollData);
+                      analysisLoaded = true;
                       setAnalyzing(false);
                       clearInterval(pollTimer);
                       return;
@@ -312,7 +315,7 @@ export default function BidReviewPage() {
                   // 폴링 오류 무시, 다음 폴링에서 재시도
                 }
               }, 5000);
-              
+
               return;
             }
           }
