@@ -1087,7 +1087,7 @@ async def download_bid_attachment(
 
 _MONITOR_BASE_FIELDS = (
     "bid_no, bid_title, agency, budget_amount, deadline_date, "
-    "days_remaining, bid_type, content_text, raw_data"
+    "days_remaining, bid_type, content_text, raw_data, proposal_status"
 )
 
 
@@ -1170,7 +1170,7 @@ async def _monitor_team_or_division(
                 return None
             rec_res = (
                 await client.table("bid_recommendations")
-                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining, proposal_status)")
                 .eq("team_id", team_id)
                 .neq("qualification_status", "fail")
                 .order("match_score", desc=True)
@@ -1192,7 +1192,7 @@ async def _monitor_team_or_division(
                 return None
             rec_res = (
                 await client.table("bid_recommendations")
-                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining)")
+                .select("*, bid_announcements(bid_no, bid_title, agency, budget_amount, deadline_date, days_remaining, proposal_status)")
                 .in_("team_id", team_ids)
                 .neq("qualification_status", "fail")
                 .order("match_score", desc=True)
