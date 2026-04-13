@@ -659,12 +659,33 @@ async def get_monitored_bids(
         # 1) proposal_status 필터: "제안포기", "관련없음", "제안결정" 제외
         # 2) 마감일 3일 이내 공고 제외 (제안 작업 시간 확보 어려움)
         hidden = {"제안포기", "관련없음", "제안결정"}
-        data = [
-            b for b in data
-            if b.get("proposal_status") not in hidden
-            and (b.get("days_remaining") is None or int(b.get("days_remaining", 0)) >= 3)
-        ]
+        filtered = []
+        excluded_count = 0
+        for b in data:
+            # proposal_status 확인
+            status = b.get("proposal_status", "신규")
+            if status in hidden:
+                excluded_count += 1
+                logger.debug(f"필터: {b.get('bid_no')} - proposal_status={status}")
+                continue
+
+            # days_remaining 확인 (None이거나 >= 3이어야 포함)
+            days = b.get("days_remaining")
+            try:
+                days_int = int(days) if days is not None else None
+            except (ValueError, TypeError):
+                days_int = None
+
+            if days_int is not None and days_int < 3:
+                excluded_count += 1
+                logger.debug(f"필터: {b.get('bid_no')} - days_remaining={days_int} (<3)")
+                continue
+
+            filtered.append(b)
+
+        data = filtered
         total = len(data)
+        logger.debug(f"필터링 결과: 제외 {excluded_count}건, 표시 {len(data)}건")
 
     return ok_list(data, total=total, offset=offset, limit=per_page)
 

@@ -614,6 +614,7 @@ export default function BidReviewPage() {
           } else {
             // 제안 생성 성공 - 제안 목록으로 이동
             console.log("[review] /proposals로 이동");
+            // 모니터링 캐시도 무효화해야 함 (next.js router.prefetch 캐시 정리)
             router.push("/proposals");
           }
         } catch (e: unknown) {
@@ -683,8 +684,9 @@ export default function BidReviewPage() {
         } catch (e) {
           console.error("[review] No-Go 프로세스 실패:", e);
         }
-        console.log(`[review] /monitoring으로 이동 (${status})`);
-        router.push("/monitoring");
+        console.log(`[review] /monitoring으로 이동 (${status}) - 캐시 무효화`);
+        // 캐시 무효화 쿼리 파라미터 추가 (refresh=타임스탐프)
+        router.push(`/monitoring?refresh=${Date.now()}`);
       }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "상태 변경 실패";

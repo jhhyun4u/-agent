@@ -566,6 +566,17 @@ export default function BidsMonitorPage() {
     }
   }
 
+  // refresh 파라미터 감지 → 캐시 무효화 (제안결정/관련없음 후 자동 새로고침)
+  useEffect(() => {
+    const refreshParam = searchParams.get("refresh");
+    if (refreshParam) {
+      console.log("[monitoring] refresh 파라미터 감지 → 캐시 무효화");
+      setRefreshKey((k) => k + 1);
+      // URL에서 refresh 파라미터 제거 (히스토리 정리)
+      window.history.replaceState({}, "", "/monitoring");
+    }
+  }, [searchParams]);
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-[#0f0f0f]">
       {/* 헤더 */}
