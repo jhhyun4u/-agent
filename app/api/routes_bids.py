@@ -667,11 +667,13 @@ async def get_monitored_bids(
         filtered = []
         excluded_count = 0
         for b in data:
+            bid_no = b.get("bid_no", "")
+
             # proposal_status 확인
             status = b.get("proposal_status", "신규")
             if status in hidden:
                 excluded_count += 1
-                logger.debug(f"필터: {b.get('bid_no')} - proposal_status={status}")
+                logger.info(f"필터 제외 (상태): {bid_no} - proposal_status={status}")
                 continue
 
             # days_remaining 확인 (None이거나 >= 3이어야 포함)
@@ -683,14 +685,14 @@ async def get_monitored_bids(
 
             if days_int is not None and days_int < 3:
                 excluded_count += 1
-                logger.debug(f"필터: {b.get('bid_no')} - days_remaining={days_int} (<3)")
+                logger.info(f"필터 제외 (마감): {bid_no} - days_remaining={days_int} (<3), deadline_date={b.get('deadline_date')}")
                 continue
 
             filtered.append(b)
 
         data = filtered
         total = len(data)
-        logger.debug(f"필터링 결과: 제외 {excluded_count}건, 표시 {len(data)}건")
+        logger.info(f"필터링 결과: 제외 {excluded_count}건, 표시 {len(data)}건")
 
     return ok_list(data, total=total, offset=offset, limit=per_page)
 
@@ -1265,13 +1267,18 @@ async def _enrich_monitor_data(client, data: list[dict], user_id: str | None) ->
     # days_remaining 동적 재계산
     _today = datetime.now(timezone.utc).date()
     for b in data:
+        bid_no = b.get("bid_no", "")
         dl = b.get("deadline_date")
         if dl:
             try:
                 dl_date = datetime.fromisoformat(str(dl).replace("Z", "+00:00")).date()
-                b["days_remaining"] = (dl_date - _today).days
-            except (ValueError, TypeError):
-                pass
+                new_days = (dl_date - _today).days
+                old_days = b.get("days_remaining")
+                if old_days != new_days:
+                    logger.debug(f"days_remaining 재계산: {bid_no} - DB값={old_days}, 재계산값={new_days}, 마감일={dl_date}")
+                b["days_remaining"] = new_days
+            except (ValueError, TypeError) as e:
+                logger.warning(f"days_remaining 재계산 실패: {bid_no} - {dl} ({e})")
 
     # raw_data → 첨부파일 + 공고단계 추출
     for b in data:
