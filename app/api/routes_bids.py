@@ -451,6 +451,7 @@ async def pipeline_trigger(
 
 @router.get("/bids/scored")
 async def get_scored_bids(
+    background_tasks: BackgroundTasks,
     date_from: Optional[str] = Query(None, description="시작일 (YYYYMMDD). 미지정 시 days 사용"),
     date_to: Optional[str] = Query(None, description="종료일 (YYYYMMDD). 미지정 시 오늘"),
     days: int = Query(7, ge=1, le=30, description="조회 일수 (date_from 미지정 시 사용)"),
@@ -506,7 +507,27 @@ async def get_scored_bids(
                 except Exception as e:
                     logger.warning(f"suitability_score 조회 실패: {e}")
 
-            return ok(payload)
+            # ✅ min_budget 필터링: 예산이 min_budget 이상인 공고만 반환
+            filtered_data = [bid for bid in payload.get("data", [])
+                           if bid.get("budget", 0) >= min_budget]
+
+            # ✅ 분석이 없는 공고들의 백그라운드 분석 큐 추가
+            # analysis_status가 pending 또는 suitability_score가 없는 공고만 분석 시작
+            try:
+                for bid in filtered_data:
+                    bid_no = bid.get("bid_no")
+                    has_score = bid.get("suitability_score") is not None
+                    # 분석 점수가 없으면 백그라운드 분석 트리거
+                    if bid_no and not has_score:
+                        await _queue_bid_analysis(bid_no, background_tasks)
+                        logger.info(f"[scored] {bid_no} 백그라운드 분석 큐 추가")
+            except Exception as e:
+                logger.warning(f"[scored] 분석 큐 추가 중 오류: {e}")
+
+            # 필터링된 페이로드 반환
+            filtered_payload = {**payload, "data": filtered_data}
+            logger.info(f"min_budget={min_budget}원 필터링: {len(payload.get('data', []))}건 → {len(filtered_data)}건")
+            return ok(filtered_payload)
 
         # ── 캐시 없음 → 빈 결과 반환 (자동 크롤링 안 함) ──
         logger.info("공고 파일 캐시 MISS → 빈 결과 반환 (새로고침 버튼으로 수동 크롤링 필요)")
@@ -529,6 +550,7 @@ async def get_scored_bids(
 async def manual_crawl(
     background_tasks: BackgroundTasks,
     days: int = Query(1, ge=1, le=7, description="수집 일수"),
+    min_budget: int = Query(0, ge=0, description="최소 예산 (원)"),
     current_user: CurrentUser | None = Depends(get_current_user_or_none),
 ):
     """
@@ -550,7 +572,7 @@ async def manual_crawl(
             results = await fetcher.fetch_bids_scored(
                 date_from=date_from_str,
                 date_to=date_to_str,
-                min_budget=0,
+                min_budget=min_budget,
                 min_score=0,
                 max_results=300,
             )
@@ -577,11 +599,16 @@ async def manual_crawl(
         }
         _save_file_cache({"payload": payload, "saved_at": time.time()})
 
-        # ── 신규 공고만 백그라운드 파이프라인 ──
+        # ── 신규 공고 백그라운드 분석 ──
+        # 경로 A: run_pipeline (파일 캐시) - score >= 80인 공고만 (기존 유지)
         top_new_bid_nos = [b["bid_no"] for b in new_bids[:50] if b.get("score", 0) >= 80]
         if top_new_bid_nos:
             raw_map = {b["bid_no"]: b.get("raw_data", {}) for b in new_bids if b["bid_no"] in set(top_new_bid_nos)}
             background_tasks.add_task(run_pipeline, top_new_bid_nos, raw_map)
+
+        # 경로 B: _analyze_bid_background (DB 저장) - 모든 신규 공고 (최대 50개)
+        for bid in new_bids[:50]:
+            _queue_bid_analysis(bid["bid_no"], background_tasks)
 
         return ok({
             "total_fetched": results["total_fetched"],
@@ -629,8 +656,14 @@ async def get_monitored_bids(
     await _enrich_monitor_data(client, data, user_id)
 
     if not show_all:
+        # 1) proposal_status 필터: "제안포기", "관련없음", "제안결정" 제외
+        # 2) 마감일 3일 이내 공고 제외 (제안 작업 시간 확보 어려움)
         hidden = {"제안포기", "관련없음", "제안결정"}
-        data = [b for b in data if b.get("proposal_status") not in hidden]
+        data = [
+            b for b in data
+            if b.get("proposal_status") not in hidden
+            and (b.get("days_remaining") is None or int(b.get("days_remaining", 0)) >= 3)
+        ]
         total = len(data)
 
     return ok_list(data, total=total, offset=offset, limit=per_page)
