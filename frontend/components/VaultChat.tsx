@@ -5,7 +5,7 @@
  * Displays chat messages and message input for selected conversation
  */
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ReactNode } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { ChatMessage } from "@/lib/api";
 import { useVaultChatStream } from "@/lib/hooks/useVaultChatStream";
@@ -15,8 +15,71 @@ interface VaultChatProps {
   userId: string;
 }
 
-interface Message extends ChatMessage {
-  timestamp?: string;
+// frontend/components/VaultChat.tsx 상단에 추가 또는 수정
+
+interface Message {
+  id: string;              // id 에러 해결
+  role: 'user' | 'assistant'; // role 에러 해결
+  content: string;         // content 에러 해결
+  sources?: any[];         // sources 에러 해결
+  confidence?: number;     // confidence 에러 해결
+}
+
+/**
+ * Parse citation markers [출처 N] and convert to clickable superscripts
+ * Returns JSX with <sup> elements that link to source cards
+ */
+function parseCitations(text: string): ReactNode {
+  // Match [출처 N] pattern where N is a number
+  const citationPattern = /\[출처\s+(\d+)\]/g;
+  const parts: (string | ReactNode)[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = citationPattern.exec(text)) !== null) {
+    // Add text before citation
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+
+    // Add citation as clickable superscript
+    const sourceNumber = match[1];
+    parts.push(
+      <sup key={`cite-${lastIndex}-${sourceNumber}`}>
+        <button
+          onClick={() => scrollToSource(sourceNumber)}
+          className="text-[#10a37f] hover:underline cursor-pointer ml-0.5"
+          data-testid={`citation-link-${sourceNumber}`}
+          aria-label={`출처 ${sourceNumber}로 이동`}
+        >
+          [{sourceNumber}]
+        </button>
+      </sup>
+    );
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
+/**
+ * Scroll to source card with given number
+ */
+function scrollToSource(sourceNumber: string): void {
+  const sourceElement = document.getElementById(`source-${sourceNumber}`);
+  if (sourceElement) {
+    sourceElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    sourceElement.classList.add("ring-2", "ring-[#10a37f]");
+    setTimeout(() => {
+      sourceElement.classList.remove("ring-2", "ring-[#10a37f]");
+    }, 2000);
+  }
 }
 
 export default function VaultChat({ conversationId, userId }: VaultChatProps) {
@@ -66,6 +129,72 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
     }
   };
 
+  const handleRegenerateMessage = async (messageId: string) => {
+    if (!conversationId) return;
+
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex === -1) return;
+
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/vault/messages/${messageId}/regenerate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: conversationId,
+          variation: 0.15,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("재생성에 실패했습니다");
+      }
+
+      const data = await response.json();
+
+      // Update the message with regenerated response
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId
+            ? {
+                ...m,
+                content: data.response,
+                sources: data.sources || [],
+                confidence: data.confidence,
+                timestamp: new Date().toISOString(),
+              }
+            : m
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "오류가 발생했습니다");
+    }
+  };
+
+  const handleEditMessage = async (messageId: string) => {
+    if (!conversationId) return;
+
+    const messageIndex = messages.findIndex((m) => m.id === messageId);
+    if (messageIndex === -1 || messages[messageIndex].role !== "user") return;
+
+    const originalContent = messages[messageIndex].content;
+
+    // Prompt for new text
+    const newText = prompt("메시지를 편집하세요:", originalContent);
+    if (!newText || newText === originalContent) return;
+
+    try {
+      // Remove the edited message and all subsequent messages
+      setMessages((prev) => prev.slice(0, messageIndex));
+
+      // Resend the message
+      await handleSendMessage(newText);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "편집 중 오류가 발생했습니다");
+    }
+  };
+
   const handleSendMessage = async (messageTextOverride?: string) => {
     const messageText = messageTextOverride || inputValue.trim();
 
@@ -94,46 +223,34 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
 
       // Try streaming first
       if (!useStreamingFallback) {
-        await streamState.startStream({
-          message: messageText,
-          conversationId: conversationId,
-        });
+        try {
+          // Design Ref: §6.1 — Capture returned Promise value to avoid stale closure
+          // Plan SC: SC-7 — Streaming response time <2s (not 60s timeout)
+          const finalStreamState = await streamState.startStream({
+            message: messageText,
+            conversationId: conversationId,
+          });
 
-        // Wait for streaming to complete
-        let streamComplete = false;
-        const maxWait = 60000; // 60 seconds max
-        const startTime = Date.now();
-
-        while (!streamComplete && Date.now() - startTime < maxWait) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-          if (streamState.isComplete || streamState.error) {
-            streamComplete = true;
+          // Streaming succeeded - add message from returned stream state (not component state)
+          if (finalStreamState.streamingText) {
+            setMessages((prev) => [
+              ...prev.filter((m) => m.id !== userMessage.id),
+              {
+                id: `stream-${Date.now()}`,
+                role: "assistant",
+                content: finalStreamState.streamingText,
+                timestamp: new Date().toISOString(),
+                sources: finalStreamState.sources || [],
+                confidence: finalStreamState.confidence,
+              },
+            ]);
           }
-        }
-
-        // Check if streaming failed
-        if (streamState.error) {
-          console.warn("Streaming failed, falling back to non-streaming:", streamState.error);
+        } catch (streamErr) {
           setUseStreamingFallback(true);
           // Remove temp assistant message and retry with non-streaming
           setMessages((prev) => prev.filter((m) => m.id !== userMessage.id));
           streamState.reset();
           return handleSendMessage(messageText);
-        }
-
-        // Streaming succeeded - add message from stream state
-        if (streamState.streamingText) {
-          setMessages((prev) => [
-            ...prev.filter((m) => m.id !== userMessage.id),
-            {
-              id: `stream-${Date.now()}`,
-              role: "assistant",
-              content: streamState.streamingText,
-              timestamp: new Date().toISOString(),
-              sources: streamState.sources || [],
-              confidence: streamState.confidence,
-            },
-          ]);
         }
       } else {
         // Use non-streaming fallback
@@ -215,7 +332,7 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex gap-4 ${
+            className={`flex gap-4 group ${
               message.role === "user" ? "justify-end" : "justify-start"
             }`}
             data-testid="chat-message"
@@ -229,7 +346,7 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
               data-testid={message.role === "user" ? "message-user" : "message-assistant"}
             >
               <div className="text-sm whitespace-pre-wrap" data-testid="message-content">
-                {message.content}
+                {message.role === "assistant" ? parseCitations(message.content) : message.content}
               </div>
 
               {/* Sources */}
@@ -244,20 +361,33 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
                   {message.sources.map((source, idx) => (
                     <div
                       key={idx}
-                      className="text-xs bg-[#1a1a1a]/50 p-2 rounded border border-[#404040]"
+                      id={`source-${idx + 1}`}
+                      className="text-xs bg-[#1a1a1a]/50 p-2 rounded border border-[#404040] transition-all"
                       data-testid="source-item"
                     >
-                      <div className="font-medium text-[#10a37f]" data-testid="source-title">
-                        {source.section}
-                      </div>
-                      <div className="text-[#b4b4b4] mt-1 truncate">
-                        {source.snippet || ""}
-                      </div>
-                      {source.confidence !== undefined && (
-                        <div className="text-[#888888] mt-1" data-testid="relevance-score">
-                          신뢰도: {Math.round(source.confidence * 100)}%
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="font-medium text-[#10a37f]" data-testid="source-title">
+                            {source.section}
+                          </div>
+                          <div className="text-[#b4b4b4] mt-1 truncate">
+                            {source.snippet || ""}
+                          </div>
+                          {source.confidence !== undefined && (
+                            <div className="text-[#888888] mt-1" data-testid="relevance-score">
+                              신뢰도: {Math.round(source.confidence * 100)}%
+                            </div>
+                          )}
                         </div>
-                      )}
+                        <div className="flex-shrink-0">
+                          <span
+                            className="inline-flex items-center justify-center w-5 h-5 bg-[#10a37f] text-white text-xs font-bold rounded-full"
+                            data-testid={`source-badge-${idx + 1}`}
+                          >
+                            {idx + 1}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -274,6 +404,32 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
                   신뢰도: {Math.round(message.confidence * 100)}%
                 </div>
               )}
+
+              {/* Hover menu buttons */}
+              <div className="flex gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                {message.role === "assistant" && (
+                  <button
+                    onClick={() => handleRegenerateMessage(message.id!)}
+                    disabled={streamState.isStreaming}
+                    className="text-xs px-2 py-1 rounded bg-[#10a37f]/20 text-[#10a37f] hover:bg-[#10a37f]/30 disabled:opacity-50"
+                    data-testid="regenerate-button"
+                    aria-label="응답 재생성"
+                  >
+                    재생성
+                  </button>
+                )}
+                {message.role === "user" && (
+                  <button
+                    onClick={() => handleEditMessage(message.id!)}
+                    disabled={streamState.isStreaming}
+                    className="text-xs px-2 py-1 rounded bg-[#10a37f]/20 text-[#10a37f] hover:bg-[#10a37f]/30 disabled:opacity-50"
+                    data-testid="edit-button"
+                    aria-label="메시지 편집"
+                  >
+                    편집
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}

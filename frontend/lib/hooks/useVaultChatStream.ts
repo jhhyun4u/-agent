@@ -39,16 +39,22 @@ export function useVaultChatStream() {
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const completionPromiseRef = useRef<{
+    resolve: (value: VaultStreamState) => void;
+    reject: (reason: Error) => void;
+  } | null>(null);
 
   /**
    * 스트리밍 시작
+   * Design Ref: §4.2 — Promise-based streaming with useRef to prevent stale closure
+   * Returns resolved state directly, eliminating need to poll component state
    */
   const startStream = useCallback(
     async (params: {
       message: string;
       conversationId: string;
       token?: string;
-    }) => {
+    }): Promise<VaultStreamState> => {
       // 기존 요청 취소
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -57,16 +63,21 @@ export function useVaultChatStream() {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
 
-      setState({
-        streamingText: "",
-        sources: [],
-        isStreaming: true,
-        isComplete: false,
-        warnings: [],
-        error: undefined,
-      });
+      // 새로운 completion promise 생성
+      return new Promise<VaultStreamState>((resolve, reject) => {
+        completionPromiseRef.current = { resolve, reject };
 
-      try {
+        setState({
+          streamingText: "",
+          sources: [],
+          isStreaming: true,
+          isComplete: false,
+          warnings: [],
+          error: undefined,
+        });
+
+        (async () => {
+          try {
         const response = await fetch(`${BASE}/vault/chat/stream`, {
           method: "POST",
           headers: {
@@ -123,10 +134,15 @@ export function useVaultChatStream() {
 
         // 취소되지 않았으면 완료 표시
         if (!abortController.signal.aborted) {
-          setState((prev) => ({
-            ...prev,
-            isStreaming: false,
-          }));
+          setState((prev) => {
+            const finalState = {
+              ...prev,
+              isStreaming: false,
+            };
+            // Promise 해결
+            completionPromiseRef.current?.resolve(finalState);
+            return finalState;
+          });
         }
       } catch (err: unknown) {
         if (
@@ -135,14 +151,21 @@ export function useVaultChatStream() {
         ) {
           const errorMessage =
             err instanceof Error ? err.message : "Unknown error";
-          setState((prev) => ({
-            ...prev,
-            isStreaming: false,
-            isComplete: false,
-            error: errorMessage,
-          }));
+          setState((prev) => {
+            const finalState = {
+              ...prev,
+              isStreaming: false,
+              isComplete: false,
+              error: errorMessage,
+            };
+            // Promise 거부
+            completionPromiseRef.current?.reject(new Error(errorMessage));
+            return finalState;
+          });
         }
       }
+        })();
+      });
     },
     []
   );
@@ -165,22 +188,34 @@ export function useVaultChatStream() {
           streamingText: prev.streamingText + (data.text || ""),
         }));
       } else if (data.event === "done") {
-        setState((prev) => ({
-          ...prev,
-          isStreaming: false,
-          isComplete: true,
-          confidence: data.confidence,
-          validationPassed: data.validation_passed,
-          warnings: data.warnings || [],
-          messageId: data.message_id,
-        }));
+        setState((prev) => {
+          const finalState = {
+            ...prev,
+            isStreaming: false,
+            isComplete: true,
+            confidence: data.confidence,
+            validationPassed: data.validation_passed,
+            warnings: data.warnings || [],
+            messageId: data.message_id,
+          };
+          // 스트리밍 완료 → Promise 해결
+          completionPromiseRef.current?.resolve(finalState);
+          return finalState;
+        });
       } else if (data.event === "error") {
-        setState((prev) => ({
-          ...prev,
-          isStreaming: false,
-          isComplete: false,
-          error: data.message || "Unknown streaming error",
-        }));
+        setState((prev) => {
+          const finalState = {
+            ...prev,
+            isStreaming: false,
+            isComplete: false,
+            error: data.message || "Unknown streaming error",
+          };
+          // 스트리밍 에러 → Promise 거부
+          completionPromiseRef.current?.reject(
+            new Error(data.message || "Unknown streaming error")
+          );
+          return finalState;
+        });
       }
     } catch {
       // JSON 파싱 실패 무시 (빈 라인 등)
