@@ -370,8 +370,8 @@ Respond based on provided sources."""
         }
 
         # Verify validation logic
-        assert validation_scenarios["good_response"]["expected"]["passed"] == True
-        assert validation_scenarios["hallucinating_response"]["expected"]["passed"] == False
+        assert validation_scenarios["good_response"]["expected"]["passed"] is True
+        assert validation_scenarios["hallucinating_response"]["expected"]["passed"] is False
         assert validation_scenarios["low_confidence_response"]["expected"]["confidence"] < 0.5
 
 
