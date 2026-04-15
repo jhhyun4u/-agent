@@ -15,7 +15,9 @@ concurrency:
 jobs:
   deploy-backend:
     name: Deploy Backend (Railway)
-    if: github.event.workflow_run.conclusion == 'success'
+    if: |
+      (github.event_name == 'push') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     environment: production
     steps:
