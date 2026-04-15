@@ -8,9 +8,9 @@ import asyncio
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import os
+from openai import AsyncOpenAI
 
 from app.utils.supabase_client import get_async_client
-from app.services.claude_client import AsyncOpenAI
 
 logger = logging.getLogger(__name__)
 
