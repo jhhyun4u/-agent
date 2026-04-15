@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Vault AI Chat Layout
  * Main container for Vault chat interface with sidebar and conversation view

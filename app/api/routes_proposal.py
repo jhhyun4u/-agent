@@ -9,6 +9,8 @@ GET  /api/proposals/{id}     — 상세
 """
 
 import uuid
+from datetime import datetime
+from typing import Literal
 
 from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel
@@ -20,6 +22,7 @@ from app.exceptions import PropNotFoundError, G2BServiceError
 from app.models.auth_schemas import CurrentUser
 from app.models.proposal_schemas import ProposalCreateResponse
 from app.utils.supabase_client import get_async_client
+from app.state_machine import StateMachine
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -44,6 +47,14 @@ router = APIRouter(prefix="/api/proposals", tags=["proposals"])
 
 class ProposalFromBid(BaseModel):
     bid_no: str
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Validate bid_no: alphanumeric + hyphens/underscores, max 50 chars
+        if not self.bid_no or len(self.bid_no) > 50:
+            raise ValueError("bid_no must be 1-50 characters")
+        if not all(c.isalnum() or c in '-_' for c in self.bid_no):
+            raise ValueError("bid_no must contain only alphanumeric characters, hyphens, and underscores")
 
 
 class ProposalUpdate(BaseModel):
@@ -161,6 +172,7 @@ async def create_from_bid(
     body: ProposalFromBid,
     background_tasks: BackgroundTasks,
     user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
 ):
     """공고 모니터링에서 제안결정 → 제안 프로젝트 생성.
 
@@ -171,10 +183,10 @@ async def create_from_bid(
     5. 공고 첨부파일 복사 (백그라운드)
     """
     proposal_id = str(uuid.uuid4())
-    client = await get_async_client()
+    client = rls_client
 
     # 현재 사용자의 ID 사용 (get_current_user가 항상 CurrentUser 반환, DEV_MODE에서도)
-    print(f"[HTTP] Received user object: id={user.id[:8]}..., team_id={user.team_id}, email={user.email}")
+    logger.info(f"[from-bid] 사용자 인증 완료")
     owner_id = user.id
 
     # 1) bid_announcements에서 공고 정보 조회
@@ -197,17 +209,80 @@ async def create_from_bid(
         title = bid.get("bid_title", f"공고 {body.bid_no}")
         if not title:
             title = f"공고 {body.bid_no}"
-        org_id = bid.get("org_id")
         division_id = bid.get("division_id")
 
-        # 마크다운 콘텐츠 로드
+        # 마크다운 콘텐츠 로드 (분석 결과 연동)
         rfp_content = ""
-        # ... (선택사항)
+        try:
+            # 경로 검증 함수
+            def validate_storage_path(path: str | None) -> str | None:
+                """스토리지 경로 검증 - 경로 순회 및 불안전한 문자 방지"""
+                if not path:
+                    return None
+                # 경로 순회 방지: ".." 포함 확인
+                if ".." in path or path.startswith("/") or path.startswith("\\"):
+                    logger.warning(f"[from-bid] 안전하지 않은 경로 거부: {path}")
+                    return None
+                # 예상 접두어 확인: proposals/ 로 시작해야 함
+                if not path.startswith("proposals/"):
+                    logger.warning(f"[from-bid] 예상 접두어 불일치: {path}")
+                    return None
+                return path
+
+            # bid_announcements의 md_rfp_analysis_path에서 분석 결과 로드
+            md_rfp_analysis_path = validate_storage_path(bid.get("md_rfp_analysis_path"))
+            md_notice_path = validate_storage_path(bid.get("md_notice_path"))
+            md_instruction_path = validate_storage_path(bid.get("md_instruction_path"))
+
+            # 마크다운 파일들을 모두 로드하여 concat
+            content_parts = []
+
+            if md_rfp_analysis_path:
+                try:
+                    from app.utils.supabase_client import get_async_client as get_storage_client
+                    storage = await get_storage_client()
+                    analysis_content = await storage.storage.from_("proposals").download(md_rfp_analysis_path)
+                    if analysis_content:
+                        content_parts.append(f"# RFP 분석\n\n{analysis_content.decode('utf-8', errors='ignore')}")
+                        logger.info(f"[from-bid] RFP 분석 로드: {md_rfp_analysis_path}")
+                except Exception as e:
+                    logger.warning(f"[from-bid] RFP 분석 로드 실패: {e}")
+
+            if md_notice_path:
+                try:
+                    storage = await get_storage_client()
+                    notice_content = await storage.storage.from_("proposals").download(md_notice_path)
+                    if notice_content:
+                        content_parts.append(f"# 공고문 요약\n\n{notice_content.decode('utf-8', errors='ignore')}")
+                        logger.info(f"[from-bid] 공고문 요약 로드: {md_notice_path}")
+                except Exception as e:
+                    logger.warning(f"[from-bid] 공고문 요약 로드 실패: {e}")
+
+            if md_instruction_path:
+                try:
+                    storage = await get_storage_client()
+                    instruction_content = await storage.storage.from_("proposals").download(md_instruction_path)
+                    if instruction_content:
+                        content_parts.append(f"# 과업지시서\n\n{instruction_content.decode('utf-8', errors='ignore')}")
+                        logger.info(f"[from-bid] 과업지시서 로드: {md_instruction_path}")
+                except Exception as e:
+                    logger.warning(f"[from-bid] 과업지시서 로드 실패: {e}")
+
+            if content_parts:
+                rfp_content = "\n\n---\n\n".join(content_parts)
+                logger.info(f"[from-bid] 마크다운 콘텐츠 통합 완료: {len(rfp_content)} bytes")
+            else:
+                # 마크다운 파일이 없으면 raw_data의 content_text 사용
+                raw_data = bid.get("raw_data", {})
+                rfp_content = raw_data.get("content_text", "")
+                if rfp_content:
+                    logger.info(f"[from-bid] raw_data content_text 사용: {len(rfp_content)} bytes")
+        except Exception as e:
+            logger.warning(f"[from-bid] 마크다운 로드 중 오류 (계속 진행): {e}")
 
     # ✅ Step 3: 사용자 정보 확정 (이미 로그인된 사용자이므로 확인만 함)
     # 사용자는 이미 조직과 팀에 소속되어 있음
-    print(f"\n=== [from-bid] 사용자 정보 확정: {proposal_id} ===")
-    logger.info(f"[from-bid] 로그인 사용자: id={owner_id}, team_id={user.team_id}, org_id={user.org_id}")
+    logger.info(f"[from-bid] 사용자 정보 확정 완료")
 
     final_org_id = user.org_id
     final_team_id = user.team_id
@@ -216,17 +291,16 @@ async def create_from_bid(
     if not final_org_id or not final_team_id:
         error_msg = f"[from-bid] 사용자 소속 정보 부족: org_id={final_org_id}, team_id={final_team_id}"
         logger.error(error_msg)
-        raise G2BServiceError(f"사용자 소속 정보가 불완전합니다. 관리자에게 문의하세요.")
+        raise G2BServiceError("사용자 소속 정보가 불완전합니다. 관리자에게 문의하세요.")
 
     # ✅ Step 4: 제안 프로젝트 생성
-    print(f"\n=== [from-bid] 제안 생성: {proposal_id} ===")
-    logger.info(f"[from-bid] 제안 생성: {proposal_id}, owner_id={owner_id}, team_id={final_team_id}")
+    logger.info(f"[from-bid] 제안 생성 시작: {proposal_id}")
     try:
         proposal_data = {
             "id": proposal_id,
             "title": title,
             "status": "initialized",
-            "rfp_content": rfp_content,
+            "rfp_content": rfp_content,  # ✅ 분석 내용 포함됨
             "rfp_content_truncated": len(rfp_content) > 50000,
             "rfp_filename": f"{body.bid_no}.md",
             "owner_id": owner_id,
@@ -235,31 +309,44 @@ async def create_from_bid(
             # 제안결정 관련 필드
             "go_decision": True,  # ✅ 제안결정을 YES로 설정
             "bid_tracked": False,  # ✅ 공고 모니터링에서 숨기기
+            # 공고 연동 필드 (분석 메타데이터 추적)
+            "source_bid_no": body.bid_no,  # ✅ 원본 공고번호
         }
+
+        # 분석 메타데이터 저장 (bid_announcements에서 연동)
+        if bid:
+            # 적합도 점수
+            if bid.get("fit_score") is not None:
+                proposal_data["fit_score"] = bid.get("fit_score")
+                logger.info(f"[from-bid] 적합도 점수 저장: {bid.get('fit_score')}")
+
+            # 분석 경로들
+            if bid.get("md_rfp_analysis_path"):
+                proposal_data["md_rfp_analysis_path"] = bid.get("md_rfp_analysis_path")
+            if bid.get("md_notice_path"):
+                proposal_data["md_notice_path"] = bid.get("md_notice_path")
+            if bid.get("md_instruction_path"):
+                proposal_data["md_instruction_path"] = bid.get("md_instruction_path")
 
         if final_division_id:
             proposal_data["division_id"] = final_division_id
 
-        logger.info(f"[from-bid] INSERT 데이터: {proposal_data}")
+        # 민감한 데이터(rfp_content) 제외하고 로깅
+        sanitized_data = {k: v for k, v in proposal_data.items() if k != "rfp_content"}
+        logger.info(f"[from-bid] INSERT 데이터: {sanitized_data}")
 
         # Supabase insert
-        insert_result = await client.table("proposals").insert(proposal_data).execute()
+        await client.table("proposals").insert(proposal_data).execute()
         logger.info(f"[from-bid] ✅ 제안 생성 완료: {proposal_id}")
 
     except Exception as e:
         error_msg = f"[from-bid] 제안 생성 실패: {str(e)}"
-        print(error_msg)
-        print(f"[from-bid] 에러 타입: {type(e).__name__}")
-        import traceback
-        print(traceback.format_exc())
         logger.error(error_msg, exc_info=True)
-        logger.error(f"[from-bid] 시도한 데이터: {proposal_data}")
         raise G2BServiceError(f"제안 프로젝트 생성 중 오류: {str(e)}")
 
     # ✅ Step 5: 제안 작업 목록 생성 (담당팀 배정 + 상태 설정)
-    print(f"\n=== [from-bid] 제안 작업 목록 생성: {proposal_id} ===")
     try:
-        from datetime import datetime, timedelta
+        from datetime import datetime, timedelta, timezone
 
         # 제안 작업 생성
         task_data = {
@@ -268,7 +355,7 @@ async def create_from_bid(
             "description": f"공고 {body.bid_no} 제안 프로젝트: {title}",
             "status": "waiting",  # 대기 상태
             "priority": "normal",
-            "due_date": (datetime.utcnow() + timedelta(days=14)).isoformat(),  # 기본값: 2주 후
+            "due_date": (datetime.now(timezone.utc) + timedelta(days=14)).isoformat(),  # 기본값: 2주 후
             "created_by_id": owner_id,
         }
 
@@ -280,13 +367,22 @@ async def create_from_bid(
     except Exception as task_e:
         logger.warning(f"[from-bid] 작업 목록 생성 실패 (무시): {task_e}")
 
-    # ✅ Step 6: LangGraph 워크플로 자동 시작
+    # ✅ Step 6: StateMachine으로 상태 전환 (initialized → in_progress)
     try:
-        from app.services.session_manager import session_manager
+        sm = StateMachine(proposal_id)
+        await sm.start_workflow(user_id=owner_id, initial_phase="rfp_analyze")
+        logger.info(f"[from-bid] StateMachine 상태 전환 완료: initialized → in_progress")
+    except Exception as sm_e:
+        # [CRITICAL] 상태 전환 실패 시 워크플로우 시작 중단 (DB 상태 불일치 방지)
+        logger.error(f"[from-bid] StateMachine 상태 전환 실패, 워크플로우 시작 중단: {sm_e}", exc_info=True)
+        raise G2BServiceError(f"제안 프로젝트 상태 전환 실패: {str(sm_e)}")
+
+    # ✅ Step 7: LangGraph 워크플로 자동 시작
+    try:
         from app.graph.graph import build_graph
         from app.utils.supabase_client import get_postgres_client
 
-        logger.info(f"[from-bid] 워크플로 시작: {proposal_id}")
+        logger.info(f"[from-bid] LangGraph 워크플로 시작: {proposal_id}")
 
         # PostgreSQL 트랜잭션으로 워크플로 시작
         postgres_client = await get_postgres_client()
@@ -309,9 +405,9 @@ async def create_from_bid(
 
         # 백그라운드에서 워크플로 실행 (비동기, 응답 지연 방지)
         background_tasks.add_task(
-            lambda: _run_workflow_background(graph, initial_state, config, proposal_id)
+            _run_workflow_background, graph, initial_state, config, proposal_id
         )
-        logger.info(f"[from-bid] 워크플로 백그라운드 시작 완료: {proposal_id}")
+        logger.info(f"[from-bid] LangGraph 워크플로 백그라운드 시작 완료: {proposal_id}")
 
     except Exception as wf_e:
         # 워크플로 시작 실패해도 제안은 생성됨 (로깅만 수행)
@@ -324,6 +420,69 @@ async def create_from_bid(
         "entry_point": "from_bid",
         "bid_no": body.bid_no,
         "workflow_started": True,
+    }
+
+
+# ── 제안결정 옵션 — 공고에서 직접 결정 기록 ──
+
+class BidDecisionRequest(BaseModel):
+    bid_no: str
+    decision_type: Literal["abandon", "hold", "irrelevant"]
+    comment: str | None = None
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Validate bid_no same as ProposalFromBid
+        if not self.bid_no or len(self.bid_no) > 50:
+            raise ValueError("bid_no must be 1-50 characters")
+        if not all(c.isalnum() or c in '-_' for c in self.bid_no):
+            raise ValueError("bid_no must contain only alphanumeric characters, hyphens, and underscores")
+
+@router.post("/bids/decision")
+async def record_bid_decision(
+    body: BidDecisionRequest,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
+    """공고에서 직접 의사결정을 기록 (제안 진행 없이)."""
+    client = rls_client
+
+    # bid_announcements에서 공고 조회
+    response = await client.table("bid_announcements").select(
+        "id, bid_no, bid_title"
+    ).eq("bid_no", body.bid_no).single().execute()
+    if not response.data:
+        raise HTTPException(status_code=404, detail="Bid not found")
+
+    bid_id = response.data["id"]
+    bid_title = response.data.get("bid_title", "Unknown")
+
+    # 공고 상태 업데이트: 의사결정 기록
+    decision_type_ko = {
+        "abandon": "제안포기",
+        "hold": "제안유보",
+        "irrelevant": "관련없음"
+    }.get(body.decision_type, "기타")
+
+    decision_comment = body.comment or f"[{decision_type_ko}] {body.decision_type}"
+
+    from datetime import timezone
+
+    await client.table("bid_announcements").update({
+        "decision": "No-Go",
+        "decision_comment": decision_comment,
+        "decided_by": user.id,
+        "decided_at": datetime.now(timezone.utc).isoformat(),
+    }).eq("id", bid_id).execute()
+
+    logger.debug(f"[BidDecision] bid_no={body.bid_no}, decision={body.decision_type}, user={user.id}")
+
+    return {
+        "bid_no": body.bid_no,
+        "bid_title": bid_title,
+        "decision_type": body.decision_type,
+        "decision_type_ko": decision_type_ko,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -347,7 +506,7 @@ async def list_proposals(
     """
     client = rls_client
     # deadline, client_name은 DB에 없을 수 있으므로 동적 탐지
-    base_cols = "id, title, status, owner_id, team_id, current_phase, phases_completed, positioning, win_result, bid_amount, created_at, updated_at"
+    base_cols = "id, title, status, owner_id, team_id, current_phase, phases_completed, positioning, win_result, bid_amount, created_at, updated_at, go_decision, bid_tracked, decision_date, source_bid_no, fit_score, md_rfp_analysis_path, md_notice_path, md_instruction_path"
     extra_cols = []
     for col in ("deadline", "client_name", "budget"):
         try:
@@ -435,18 +594,12 @@ async def list_proposals(
             owners_result = await client.table("users").select("id, name").in_("id", list(owner_ids)).execute()
             owner_map = {u["id"]: u.get("name") for u in (owners_result.data or [])}
 
-        # Fetch fit scores from go_no_go
-        proposal_ids = [p["id"] for p in data]
-        fit_map = {}
-        if proposal_ids:
-            gng_result = await client.table("go_no_go").select("proposal_id, feasibility_score").in_("proposal_id", proposal_ids).execute()
-            fit_map = {g["proposal_id"]: g.get("feasibility_score") for g in (gng_result.data or [])}
-
         # Enrich data
         for p in data:
             p["team_name"] = team_map.get(p.get("team_id"))
             p["owner_name"] = owner_map.get(p.get("owner_id"))
-            p["fit_score"] = fit_map.get(p["id"])
+            # fit_score is now stored as go_no_go_score in proposals table
+            p["fit_score"] = p.get("go_no_go_score")
 
     return ok_list(data, total=total, offset=skip, limit=limit)
 
@@ -483,8 +636,8 @@ async def update_proposal(
     if not prop.data:
         raise HTTPException(404, "프로젝트를 찾을 수 없습니다")
 
-    # 작업대기 상태에서는 owner_id 업데이트 가능, 다른 상태에서는 소유자 확인
-    if prop.data["status"] != "initialized" and prop.data["owner_id"] != user.id:
+    # 소유자만 업데이트 가능 (모든 상태에서)
+    if prop.data["owner_id"] != user.id:
         raise HTTPException(403, "수정 권한이 없습니다")
 
     # 업데이트할 필드만 추출
@@ -504,9 +657,13 @@ async def update_proposal(
 
 
 @router.delete("/{proposal_id}", status_code=204)
-async def delete_proposal(proposal_id: str, user: CurrentUser = Depends(get_current_user)):
+async def delete_proposal(
+    proposal_id: str,
+    user: CurrentUser = Depends(get_current_user),
+    rls_client=Depends(get_rls_client),
+):
     """프로젝트 삭제 + Storage 정리 (GAP-5). 소유자만 가능, 실행 중 삭제 방지."""
-    client = await get_async_client()
+    client = rls_client
 
     # 프로젝트 존재 + 소유자 확인
     prop = await client.table("proposals").select("id, owner_id, status").eq("id", proposal_id).maybe_single().execute()

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Vault Chat Component
  * Displays chat messages and message input for selected conversation
@@ -15,11 +17,6 @@ interface VaultChatProps {
 
 interface Message extends ChatMessage {
   timestamp?: string;
-  sources?: Array<{
-    section: string;
-    content: string;
-    confidence?: number;
-  }>;
 }
 
 export default function VaultChat({ conversationId, userId }: VaultChatProps) {
@@ -364,7 +361,7 @@ export default function VaultChat({ conversationId, userId }: VaultChatProps) {
             className="flex-1 px-4 py-3 bg-[#2d2d2d] border border-[#404040] text-white rounded-lg focus:outline-none focus:border-[#10a37f] disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
-            onClick={handleSendMessage}
+            onClick={() => handleSendMessage()}
             disabled={!inputValue.trim() || streamState.isStreaming}
             data-testid="send-button"
             className="px-4 py-3 bg-[#10a37f] hover:bg-[#1a9970] text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

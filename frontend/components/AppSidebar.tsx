@@ -61,6 +61,7 @@ const ICONS: Record<string, string> = {
   org: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
   prompt: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",
   experiment: "M9 3h6v2H9z M10 5v6l-4 7h12l-4-7V5",
+  vault: "M3 9l2 2m0 0l2-2M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8M7 11h10M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2",
   settings:
     "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
 };
@@ -92,6 +93,7 @@ const NAV_REST: NavEntry[] = [
   { href: "/monitoring", label: "공고 모니터링", icon: "bids" },
   { href: "/proposals", label: "제안 프로젝트", icon: "proposals" },
   { href: "/archive", label: "종료 프로젝트", icon: "archive" },
+  { href: "/vault", label: "Vault AI Chat", icon: "vault" },
   {
     label: "Knowledge Base",
     icon: "kb",
@@ -386,6 +388,7 @@ export default function AppSidebar() {
     if (href === "/dashboard") return pathname.startsWith("/dashboard");
     if (href === "/monitoring") return pathname.startsWith("/monitoring");
     if (href === "/archive") return pathname.startsWith("/archive");
+    if (href === "/vault") return pathname.startsWith("/vault");
     if (href === "/analytics") return pathname.startsWith("/analytics");
     if (href === "/admin") return pathname === "/admin";
     if (href === "/admin/prompts") return pathname === "/admin/prompts";
@@ -506,8 +509,13 @@ export default function AppSidebar() {
               </p>
               {recentProposals.map((p) => {
                 const d = calcDDay(p.deadline);
+                // 대기 중 (amber) vs 진행 중 (green)
                 const dotColor =
-                  p.status === "initialized" ? "#f59e0b" : "#3ecf8e";
+                  p.status === "initialized" || p.status === "waiting"
+                    ? "#f59e0b"  // amber: 시작 전
+                    : p.status === "closed" || p.status === "archived" || p.status === "expired"
+                      ? "#8c8c8c"  // gray: 종료됨
+                      : "#3ecf8e";  // green: 진행 중
                 return (
                   <Link
                     key={p.id}

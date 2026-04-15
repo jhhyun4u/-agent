@@ -18,7 +18,7 @@ from typing import Optional, Literal
 
 from fastapi import APIRouter, Depends, File, UploadFile, Query, Form, HTTPException, status
 
-from app.api.deps import get_current_user, require_project_access
+from app.api.deps import get_current_user
 from app.config import settings
 from app.models.auth_schemas import CurrentUser
 from app.models.document_schemas import (
@@ -166,7 +166,7 @@ async def upload_document(
             "file_size_bytes": len(file_content),
             "doc_type": doc_type,
             "storage_path": storage_path,
-            "processing_status": "pending",
+            "processing_status": "extracting",
             "total_chars": 0,
             "chunk_count": 0,
             "created_at": now.isoformat(),
