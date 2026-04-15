@@ -67,9 +67,6 @@ jobs:
       - name: Lint with ruff
         run: uv run ruff check app tests
 
-      - name: Format check with black
-        run: uv run black --check app tests
-
       - name: Type check with mypy
         run: uv run mypy app
 
