@@ -137,7 +137,7 @@ class ConversationDetail(BaseModel):
 
 class ConversationSummary(BaseModel):
     """Summary of conversation (for list view)"""
-    
+
     id: str
     user_id: str
     title: Optional[str] = None
@@ -145,6 +145,20 @@ class ConversationSummary(BaseModel):
     updated_at: datetime
     last_message: Optional[str] = None
     message_count: int
+
+
+class VaultRegenerateRequest(BaseModel):
+    """Request to regenerate a message response (A.2)
+
+    Design Ref: §A.2 — Response regeneration with temperature variation
+    """
+    conversation_id: str = Field(..., description="ID of conversation containing the message")
+    variation: Optional[float] = Field(
+        0.1,
+        ge=0.0,
+        le=1.0,
+        description="Temperature offset (added to base 0.7)"
+    )
 
 
 # ============================================================================

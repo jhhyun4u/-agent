@@ -25,6 +25,7 @@ from app.models.vault_schemas import (
     ChatMessage,
     VaultSection,
     DocumentSource,
+    SearchFilter,
 )
 from app.utils.supabase_client import get_async_client
 from app.services.vault_query_router import vault_router
@@ -950,6 +951,160 @@ async def delete_conversation(
     except Exception as e:
         logger.error(f"Error deleting conversation: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
+
+
+@router.post("/messages/{message_id}/regenerate", response_model=VaultChatResponse)
+async def regenerate_message(
+    message_id: str,
+    body: VaultRegenerateRequest,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """
+    Regenerate a message response with temperature variation.
+
+    Design Ref: §A.2 — Regenerate response with adjusted temperature
+
+    Args:
+        message_id: ID of assistant message to regenerate
+        body: VaultRegenerateRequest with conversation_id and variation
+    """
+    try:
+        client = await get_async_client()
+
+        # Load original message and verify it belongs to current user
+        msg_result = await client.table("vault_messages").select(
+            "id,conversation_id,role,content"
+        ).eq("id", message_id).single().execute()
+
+        if not msg_result.data:
+            raise HTTPException(status_code=404, detail="Message not found")
+
+        message = msg_result.data
+        if message["conversation_id"] != body.conversation_id:
+            raise HTTPException(status_code=400, detail="Message does not belong to conversation")
+
+        # Verify conversation ownership
+        conv_result = await client.table("vault_conversations").select(
+            "user_id"
+        ).eq("id", body.conversation_id).single().execute()
+
+        if not conv_result.data or conv_result.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Not authorized")
+
+        # Load conversation context (messages before this one)
+        context = await _load_conversation_context(
+            body.conversation_id,
+            current_user.id,
+            limit=20
+        )
+
+        # Filter context to only messages before the one being regenerated
+        before_msg_idx = None
+        for i, msg in enumerate(context):
+            if msg.id == message_id:
+                before_msg_idx = i
+                break
+
+        if before_msg_idx is None:
+            context_for_regen = context
+        else:
+            context_for_regen = context[:before_msg_idx]
+
+        # Get the user's original question (the message immediately before)
+        if not context_for_regen or context_for_regen[-1].role != "user":
+            raise HTTPException(status_code=400, detail="Cannot find user question for regeneration")
+
+        original_query = context_for_regen[-1].content
+        user_message = _build_user_message(original_query, context_for_regen[:-1])  # Context without the original question
+
+        # Re-run search (use cache if available)
+        routing_decision = await vault_router.route(original_query, context_hint="regeneration")
+        section_names = [s.value for s in routing_decision.sections]
+        search_cache_key = VaultCacheService._make_cache_key(
+            original_query,
+            section_names,
+            routing_decision.filters
+        )
+
+        # Search sections (from cache or fresh)
+        cached_sources = await VaultCacheService.get_search(
+            cache_key=search_cache_key,
+            sections=section_names
+        )
+
+        if cached_sources:
+            sources = cached_sources
+            source_texts = [s.snippet or "" for s in sources if s.snippet]
+        else:
+            # Cache miss - perform search
+            sources, source_texts = await _search_sections_parallel(
+                sections=routing_decision.sections,
+                query=original_query,
+                filters=routing_decision.filters,
+                limit=5
+            )
+
+            # Cache results
+            await VaultCacheService.set_search(
+                cache_key=search_cache_key,
+                results=sources,
+                sections=section_names,
+                ttl=VaultCacheService.SEARCH_TTL
+            )
+
+        # Generate response with adjusted temperature
+        sources_context = _format_numbered_sources(source_texts)
+        system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
+
+        base_temperature = 0.7
+        adjusted_temperature = base_temperature + (body.variation or 0.1)
+        adjusted_temperature = min(adjusted_temperature, 1.0)
+
+        llm_response = await claude_generate(
+            prompt=user_message,
+            system_prompt=system_prompt,
+            model="claude-sonnet-4-20250514",
+            max_tokens=1500,
+            temperature=adjusted_temperature
+        )
+
+        # Validate response
+        validator = HallucinationValidator()
+        validation_passed, warnings = validator.validate(
+            llm_response,
+            sources=sources
+        )
+
+        # Update message in database with new response
+        confidence = routing_decision.confidence if routing_decision else 0.7
+
+        await client.table("vault_messages").update({
+            "content": llm_response,
+            "updated_at": datetime.utcnow().isoformat()
+        }).eq("id", message_id).execute()
+
+        # Log regeneration
+        await _log_analytics(
+            user_id=current_user.id,
+            query=f"regenerate:{message_id}",
+            sections=section_names,
+            result_count=len(sources),
+            response_time_ms=0.0
+        )
+
+        return VaultChatResponse(
+            response=llm_response,
+            confidence=confidence,
+            sources=sources,
+            validation_passed=validation_passed,
+            warnings=warnings if warnings else []
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error regenerating message: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to regenerate message")
 
 
 # ============================================================================
