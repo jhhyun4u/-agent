@@ -186,7 +186,7 @@ async def create_from_bid(
     client = rls_client
 
     # 현재 사용자의 ID 사용 (get_current_user가 항상 CurrentUser 반환, DEV_MODE에서도)
-    logger.info(f"[from-bid] 사용자 인증 완료")
+    logger.info("[from-bid] 사용자 인증 완료")
     owner_id = user.id
 
     # 1) bid_announcements에서 공고 정보 조회
@@ -281,7 +281,7 @@ async def create_from_bid(
 
     # ✅ Step 3: 사용자 정보 확정 (이미 로그인된 사용자이므로 확인만 함)
     # 사용자는 이미 조직과 팀에 소속되어 있음
-    logger.info(f"[from-bid] 사용자 정보 확정 완료")
+    logger.info("[from-bid] 사용자 정보 확정 완료")
 
     final_org_id = user.org_id
     final_team_id = user.team_id
@@ -370,7 +370,7 @@ async def create_from_bid(
     try:
         sm = StateMachine(proposal_id)
         await sm.start_workflow(user_id=owner_id, initial_phase="rfp_analyze")
-        logger.info(f"[from-bid] StateMachine 상태 전환 완료: initialized → in_progress")
+        logger.info("[from-bid] StateMachine 상태 전환 완료: initialized → in_progress")
     except Exception as sm_e:
         # [CRITICAL] 상태 전환 실패 시 워크플로우 시작 중단 (DB 상태 불일치 방지)
         logger.error(f"[from-bid] StateMachine 상태 전환 실패, 워크플로우 시작 중단: {sm_e}", exc_info=True)

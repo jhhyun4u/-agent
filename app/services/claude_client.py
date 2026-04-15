@@ -14,6 +14,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import anthropic
+from anthropic import Message
 
 from app.config import settings
 from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES

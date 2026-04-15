@@ -27,6 +27,7 @@ from app.models.knowledge_schemas import (
     ProposalContext,
     RecommendationResponse,
     RecommendationResultItem,
+    FlatHealthMetrics,
     HealthMetrics,
     KnowledgeType,
 )

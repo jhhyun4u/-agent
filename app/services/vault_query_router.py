@@ -182,15 +182,15 @@ Analyze this query and provide routing decision in valid JSON format.
         """
         
         try:
-            prompt = """
+            prompt = f"""
 Extract specific search filters from this query:
 
 Query: {query}
 
 Return valid JSON with these fields (only include if mentioned):
-{
+{{
     "date_from": "YYYY-MM-DD",
-    "date_to": "YYYY-MM-DD", 
+    "date_to": "YYYY-MM-DD",
     "client": "client name",
     "team_member": "person name",
     "budget_min": 1000000,
@@ -198,10 +198,10 @@ Return valid JSON with these fields (only include if mentioned):
     "status": ["won", "lost"],
     "keywords": ["keyword1", "keyword2"],
     "category": "category"
-}
+}}
 
 Only return JSON, no explanation.
-""".format(query=query)
+"""
             
             response = await claude_generate(
                 prompt=prompt,
