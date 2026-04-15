@@ -1,18 +1,13 @@
 """전체 Sub-agent 통합 테스트"""
 import asyncio
+import pytest
 from dotenv import load_dotenv
-from agents import (
-    build_rfp_analysis_graph,
-    build_strategy_graph,
-    build_section_generation_graph,
-    build_quality_graph,
-    build_document_graph,
-)
 
 # .env 파일 로드
 load_dotenv()
 
 
+@pytest.mark.skip(reason="Legacy test - referenced modules no longer exist (agents module removed)")
 async def test_full_pipeline():
     """전체 에이전트 파이프라인 테스트"""
 

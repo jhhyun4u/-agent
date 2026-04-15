@@ -3,13 +3,15 @@ v3.1.1 Phase 기반 Supervisor 테스트 (시뮬레이션)
 
 Mock 데이터와 그래프를 사용하여 v3.1.1 전체 흐름을 시뮬레이트.
 실제 LLM 호출이나 MCP 연동 없이 그래프 구조와 상태 전환 검증.
+
+NOTE: Legacy test - modules no longer exist (state.phased_state, graph.phased_supervisor removed)
 """
 
 import asyncio
+import pytest
 
-from state.phased_state import initialize_phased_supervisor_state
-from graph.phased_supervisor import build_phased_supervisor_graph
-from graph.hitl_gates import evaluate_hitl_gate
+# NOTE: Required modules no longer exist - skipping all tests in this file
+pytestmark = pytest.mark.skip(reason="Legacy test - referenced modules no longer exist")
 
 
 async def test_phased_graph_structure():
