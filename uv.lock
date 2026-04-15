@@ -1977,6 +1977,25 @@ wheels = [
 ]
 
 [[package]]
+name = "openai"
+version = "2.31.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "distro" },
+    { name = "httpx" },
+    { name = "jiter" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "tqdm" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/94/fe/64b3d035780b3188f86c4f6f1bc202e7bb74757ef028802112273b9dcacf/openai-2.31.0.tar.gz", hash = "sha256:43ca59a88fc973ad1848d86b98d7fac207e265ebbd1828b5e4bdfc85f79427a5", size = 684772, upload-time = "2026-04-08T21:01:41.797Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/bc/a8f7c3aa03452fedbb9af8be83e959adba96a6b4a35e416faffcc959c568/openai-2.31.0-py3-none-any.whl", hash = "sha256:44e1344d87e56a493d649b17e2fac519d1368cbb0745f59f1957c4c26de50a0a", size = 1153479, upload-time = "2026-04-08T21:01:39.217Z" },
+]
+
+[[package]]
 name = "openpyxl"
 version = "3.1.5"
 source = { registry = "https://pypi.org/simple" }
@@ -2446,6 +2465,7 @@ dependencies = [
     { name = "langchain-core" },
     { name = "langgraph" },
     { name = "olefile" },
+    { name = "openai" },
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
     { name = "pypdf2" },
@@ -2490,6 +2510,7 @@ requires-dist = [
     { name = "langchain-core", specifier = ">=0.1.0" },
     { name = "langgraph", specifier = ">=0.2.0" },
     { name = "olefile", specifier = ">=0.47" },
+    { name = "openai", specifier = ">=1.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.11" },
     { name = "pydantic-settings", specifier = ">=2.6.0" },
     { name = "pypdf2", specifier = ">=3.0.0" },

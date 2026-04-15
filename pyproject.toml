@@ -14,6 +14,8 @@ dependencies = [
     "uvicorn[standard]>=0.30.0",
     # Anthropic Claude API
     "anthropic>=0.40.0",
+    # OpenAI API (for vector embeddings)
+    "openai>=1.0.0",
     # Utilities
     "python-multipart>=0.0.12",
     "pydantic-settings>=2.6.0",
