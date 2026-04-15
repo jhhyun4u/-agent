@@ -13,7 +13,7 @@ from uuid import UUID
 
 from sqlalchemy import String, Integer, Date, DateTime, Text, JSON, ARRAY, ForeignKey, CheckConstraint
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column, relationship
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 from sqlalchemy.sql import func
 
 Base = declarative_base()

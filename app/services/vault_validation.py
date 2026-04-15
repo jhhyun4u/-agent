@@ -4,8 +4,8 @@ Validates AI responses before returning to users
 """
 
 import logging
-from typing import List, Dict, Optional, Any, Tuple
-from app.models.vault_schemas import DocumentSource, ChatMessage
+from typing import List, Dict, Optional, Any
+from app.models.vault_schemas import DocumentSource
 
 logger = logging.getLogger(__name__)
 

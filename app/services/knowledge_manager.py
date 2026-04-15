@@ -19,7 +19,6 @@ from typing import Optional, List, Dict, Any
 from uuid import UUID
 
 from app.models.knowledge_schemas import (
-    ClassificationRequest,
     ClassificationResult,
     SearchRequest,
     SearchFilters,
@@ -82,13 +81,6 @@ class KnowledgeManager:
             ClassificationError: If classification fails
         """
         try:
-            # Build classification request
-            req = ClassificationRequest(
-                chunk_id=chunk_id,
-                content=content,
-                document_context=document_context.get("title") if document_context else None
-            )
-
             # Prepare LLM prompt
             user_message = KNOWLEDGE_CLASSIFICATION_USER_TEMPLATE.format(
                 document_title=document_context.get("title", "Untitled") if document_context else "Untitled",
@@ -511,8 +503,6 @@ class KnowledgeManager:
             RecommendationResponse with ranked recommendations
         """
         try:
-            client = await get_async_client()
-
             # Step 1: Search for candidate knowledge using RFP summary
             search_request = SearchRequest(
                 query=proposal_context.rfp_summary,

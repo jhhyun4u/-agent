@@ -6,7 +6,7 @@ Uses hybrid approach: SQL primary (exact facts) + Vector secondary (semantic sea
 import logging
 from typing import List, Dict, Optional, Any
 from datetime import datetime
-from app.models.vault_schemas import DocumentSource, VaultSection, SearchResult
+from app.models.vault_schemas import VaultSection, SearchResult
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

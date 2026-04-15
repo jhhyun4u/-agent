@@ -130,7 +130,7 @@ async def lifespan(app: FastAPI):
     async def _init_database_schema():
         """제안결정 기능을 위한 필수 컬럼 존재 확인"""
         try:
-            result = await client.table("proposals").select("go_decision, bid_tracked, org_id").limit(1).execute()
+            await client.table("proposals").select("go_decision, bid_tracked, org_id").limit(1).execute()
             logger.info("필요한 스키마 컬럼 이미 존재")
         except Exception as e:
             logger.warning(f"스키마 초기화 필요 - Supabase SQL 에디터에서 migration 005 적용 필요: {str(e)[:100]}")

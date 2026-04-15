@@ -26,12 +26,9 @@ from app.models.knowledge_schemas import (
     ClassificationResult,
     SearchRequest,
     SearchResponse,
-    SearchFilters,
-    ProposalContext,
     RecommendationRequest,
     RecommendationResponse,
     KnowledgeType,
-    HealthMetrics,
     FlatHealthMetrics,
     KnowledgeFeedbackRequest,
     KnowledgeFeedbackResponse,
@@ -41,7 +38,6 @@ from app.models.knowledge_schemas import (
     SharingResponse,
 )
 from app.services.knowledge_manager import get_knowledge_manager
-from app.exceptions import TenopAPIError
 
 logger = logging.getLogger(__name__)
 

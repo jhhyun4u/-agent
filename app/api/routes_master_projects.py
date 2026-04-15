@@ -8,7 +8,6 @@ Master Projects API - Unified interface for historical projects and proposals
 """
 
 from typing import Optional, List
-from datetime import datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query

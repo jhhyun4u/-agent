@@ -203,7 +203,6 @@ async def create_from_bid(
         logger.warning(f"[from-bid] 공고 없음: {body.bid_no}, 기본값으로 진행")
         title = f"공고 {body.bid_no}"
         rfp_content = ""
-        org_id = None
         division_id = None
     else:
         title = bid.get("bid_title", f"공고 {body.bid_no}")

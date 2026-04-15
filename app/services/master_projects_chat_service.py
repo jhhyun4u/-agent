@@ -9,7 +9,6 @@ Master Projects Chat Service — RAG-기반 자연어 검색 및 답변 생성
 
 import json
 import logging
-from typing import Optional
 from uuid import UUID
 
 from app.services.claude_client import ClaudeClient
