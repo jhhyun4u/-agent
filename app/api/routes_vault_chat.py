@@ -622,54 +622,6 @@ async def get_conversation_messages(
     except Exception as e:
         logger.error(f"Error loading messages: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to load messages")
-    """
-    try:
-        client = await get_async_client()
-        
-        # Get conversation
-        conv_result = await client.table("vault_conversations").select(
-            "id, user_id, title, created_at, updated_at"
-        ).eq("id", conversation_id).eq(
-            "user_id", current_user.id
-        ).single().execute()
-        
-        if not conv_result.data:
-            raise HTTPException(status_code=404, detail="Conversation not found")
-        
-        conv = conv_result.data
-        
-        # Get messages
-        messages_result = await client.table("vault_messages").select(
-            "id, role, content, sources, confidence, created_at"
-        ).eq("conversation_id", conversation_id).order(
-            "created_at", asc=True
-        ).execute()
-        
-        messages = []
-        for msg in messages_result.data:
-            messages.append(ChatMessage(
-                id=msg["id"],
-                role=msg["role"],
-                content=msg["content"],
-                confidence=msg.get("confidence"),
-                created_at=datetime.fromisoformat(msg["created_at"])
-            ))
-        
-        return ConversationDetail(
-            id=conv["id"],
-            user_id=conv["user_id"],
-            title=conv.get("title"),
-            created_at=datetime.fromisoformat(conv["created_at"]),
-            updated_at=datetime.fromisoformat(conv["updated_at"]),
-            message_count=len(messages),
-            messages=messages
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error loading conversation: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to load conversation")
 
 
 @router.post("/conversations", response_model=ConversationSummary)
