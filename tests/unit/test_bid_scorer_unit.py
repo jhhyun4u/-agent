@@ -157,7 +157,7 @@ class TestScoreBidDomainKeywords:
         assert result.is_core_domain is True
 
     def test_비핵심_도메인_is_core_domain_False(self):
-        raw = make_raw(title="농업 전략 수립")
+        raw = make_raw(title="농업 전략 수립", agency="농림축산식품부")
         result = score_bid(raw, REF_DATE)
         assert result.is_core_domain is False
 
