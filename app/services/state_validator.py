@@ -9,7 +9,7 @@ StateValidator: 상태 전환 검증 + timeline 로깅
 
 from typing import Optional
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timezone
 from app.utils.supabase_client import get_async_client
 
 import logging
@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class ProposalStatus(str, Enum):
     """제안서 비즈니스 상태 (Layer 1: Business Status) — 10개 통합 상태"""
+    INITIALIZED  = "initialized"   # 0. 제안서 초기 생성 (미사용된 상태, waiting과 동일하게 취급)
     WAITING      = "waiting"       # 1. 생성 후 대기 (PM/PL 미할당 또는 착수 전)
     IN_PROGRESS  = "in_progress"   # 2. AI 워크플로우 진행 중 (RFP분석~제안서 완성)
     COMPLETED    = "completed"     # 3. 내부 완성 (제출 전 검토 완료)
@@ -44,6 +45,7 @@ class StateValidator:
 
     # 유효한 상태 전환: from_state → [to_states]
     VALID_TRANSITIONS: dict[ProposalStatus, list[ProposalStatus]] = {
+        ProposalStatus.INITIALIZED:  [ProposalStatus.WAITING, ProposalStatus.IN_PROGRESS, ProposalStatus.CLOSED, ProposalStatus.EXPIRED, ProposalStatus.ON_HOLD],  # 기존 데이터 호환
         ProposalStatus.WAITING:      [ProposalStatus.IN_PROGRESS, ProposalStatus.CLOSED, ProposalStatus.EXPIRED, ProposalStatus.ON_HOLD],
         ProposalStatus.IN_PROGRESS:  [ProposalStatus.COMPLETED, ProposalStatus.CLOSED, ProposalStatus.ON_HOLD, ProposalStatus.EXPIRED],
         ProposalStatus.COMPLETED:    [ProposalStatus.SUBMITTED, ProposalStatus.CLOSED, ProposalStatus.ON_HOLD],
@@ -142,7 +144,9 @@ class StateValidator:
         )
 
         # closed 전환 시 win_result 유효성 검증
-        if to_status == ProposalStatus.CLOSED.value and win_result is not None:
+        if to_status == ProposalStatus.CLOSED.value:
+            if win_result is None:
+                raise ValueError("closed 상태로 전환할 때 win_result는 필수입니다. 허용값: won, lost, no_go, abandoned, cancelled")
             try:
                 WinResult(win_result)
             except ValueError as e:
@@ -150,7 +154,7 @@ class StateValidator:
 
         # proposals 테이블 업데이트
         try:
-            now = datetime.utcnow().isoformat()
+            now = datetime.now(timezone.utc).isoformat()
             update_data: dict = {
                 "status": to_status,
                 "last_activity_at": now,

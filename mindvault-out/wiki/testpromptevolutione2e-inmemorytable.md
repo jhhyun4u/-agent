@@ -1,0 +1,352 @@
+# test_prompt_evolution_e2e & InMemoryTable
+Cohesion: 0.05 | Nodes: 58
+
+## Key Nodes
+- **test_prompt_evolution_e2e** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 21 connections
+  - -> contains -> [[inmemorydb]]
+  - -> contains -> [[inmemorytable]]
+  - -> contains -> [[testcomputeeditratio]]
+  - -> contains -> [[testextractvariables]]
+  - -> contains -> [[testcontenthash]]
+  - -> contains -> [[testmakepromptid]]
+  - -> contains -> [[testcompositescore]]
+  - -> contains -> [[testpromptregistrysync]]
+  - -> contains -> [[testpromptregistryget]]
+  - -> contains -> [[testprompttracker]]
+  - -> contains -> [[testhumanedittracker]]
+  - -> contains -> [[testcomputeeffectiveness]]
+  - -> contains -> [[testattentionprompts]]
+  - -> contains -> [[testcandidateregistration]]
+  - -> contains -> [[testabexperiment]]
+  - -> contains -> [[testsuggestimprovements]]
+  - -> contains -> [[testpromptevolutionapi]]
+  - -> contains -> [[testfullpipelinescenario]]
+  - -> imports -> [[unresolvedrefhashlib]]
+  - -> imports -> [[unresolvedrefpytest]]
+  - -> imports -> [[unresolvedrefmock]]
+- **InMemoryTable** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 19 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[clone]]
+  - -> contains -> [[select]]
+  - -> contains -> [[insert]]
+  - -> contains -> [[update]]
+  - -> contains -> [[eq]]
+  - -> contains -> [[in]]
+  - -> contains -> [[order]]
+  - -> contains -> [[limit]]
+  - -> contains -> [[neq]]
+  - -> contains -> [[single]]
+  - -> contains -> [[maybesingle]]
+  - -> contains -> [[range]]
+  - -> contains -> [[ilike]]
+  - -> contains -> [[is]]
+  - -> contains -> [[or]]
+  - -> contains -> [[applyfilters]]
+  - -> contains -> [[execute]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **__unresolved__::ref::_clone** () -- 14 connections
+  - <- calls <- [[select]]
+  - <- calls <- [[insert]]
+  - <- calls <- [[update]]
+  - <- calls <- [[eq]]
+  - <- calls <- [[in]]
+  - <- calls <- [[order]]
+  - <- calls <- [[limit]]
+  - <- calls <- [[neq]]
+  - <- calls <- [[single]]
+  - <- calls <- [[maybesingle]]
+  - <- calls <- [[range]]
+  - <- calls <- [[ilike]]
+  - <- calls <- [[is]]
+  - <- calls <- [[or]]
+- **__unresolved__::ref::_extract_variables** () -- 6 connections
+  - <- calls <- [[getcategorieswithprompts]]
+  - <- calls <- [[syncallprompts]]
+  - <- calls <- [[registercandidate]]
+  - <- calls <- [[testsimple]]
+  - <- calls <- [[testescapedbraces]]
+  - <- calls <- [[testnovariables]]
+- **__unresolved__::ref::_make_prompt_id** () -- 6 connections
+  - <- calls <- [[getcategorieswithprompts]]
+  - <- calls <- [[syncallprompts]]
+  - <- calls <- [[fallbackfrompython]]
+  - <- calls <- [[testsectionprompt]]
+  - <- calls <- [[testplanprompt]]
+  - <- calls <- [[testnoprefix]]
+- **__unresolved__::ref::compute_edit_ratio** () -- 6 connections
+  - <- calls <- [[recordaction]]
+  - <- calls <- [[testidentical]]
+  - <- calls <- [[testemptyboth]]
+  - <- calls <- [[testemptyoriginal]]
+  - <- calls <- [[testpartialedit]]
+  - <- calls <- [[testcompleterewrite]]
+- **TestComputeEditRatio** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 6 connections
+  - -> contains -> [[testidentical]]
+  - -> contains -> [[testemptyboth]]
+  - -> contains -> [[testemptyoriginal]]
+  - -> contains -> [[testpartialedit]]
+  - -> contains -> [[testcompleterewrite]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **__unresolved__::ref::_composite_score** () -- 4 connections
+  - <- calls <- [[evaluateexperiment]]
+  - <- calls <- [[testperfect]]
+  - <- calls <- [[testworst]]
+  - <- calls <- [[testmixed]]
+- **InMemoryDB** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 4 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[table]]
+  - -> contains -> [[rpc]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestCompositeScore** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 4 connections
+  - -> contains -> [[testperfect]]
+  - -> contains -> [[testworst]]
+  - -> contains -> [[testmixed]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestExtractVariables** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 4 connections
+  - -> contains -> [[testsimple]]
+  - -> contains -> [[testescapedbraces]]
+  - -> contains -> [[testnovariables]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestMakePromptId** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 4 connections
+  - -> contains -> [[testsectionprompt]]
+  - -> contains -> [[testplanprompt]]
+  - -> contains -> [[testnoprefix]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestContentHash** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 3 connections
+  - -> contains -> [[testdeterministic]]
+  - -> contains -> [[testdifferenttext]]
+  - <- contains <- [[testpromptevolutione2e]]
+- **_clone** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 3 connections
+  - -> calls -> [[unresolvedrefinmemorytable]]
+  - -> calls -> [[unresolvedreflist]]
+  - <- contains <- [[inmemorytable]]
+- **eq** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 3 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[inmemorytable]]
+- **in_** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 3 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[inmemorytable]]
+- **__unresolved__::ref::inmemorytable** () -- 2 connections
+  - <- calls <- [[table]]
+  - <- calls <- [[clone]]
+- **__init__** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - <- contains <- [[inmemorydb]]
+  - <- contains <- [[inmemorytable]]
+- **_apply_filters** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[inmemorytable]]
+- **ilike** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **insert** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **is_** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **limit** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **maybe_single** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **neq** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **or_** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **order** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **range** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **select** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **single** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **table** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefinmemorytable]]
+  - <- contains <- [[inmemorydb]]
+- **test_complete_rewrite** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcomputeeditratio]]
+  - <- contains <- [[testcomputeeditratio]]
+- **test_different_text** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcontenthash]]
+  - <- contains <- [[testcontenthash]]
+- **test_empty_both** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcomputeeditratio]]
+  - <- contains <- [[testcomputeeditratio]]
+- **test_empty_original** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcomputeeditratio]]
+  - <- contains <- [[testcomputeeditratio]]
+- **test_escaped_braces** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefextractvariables]]
+  - <- contains <- [[testextractvariables]]
+- **test_identical** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcomputeeditratio]]
+  - <- contains <- [[testcomputeeditratio]]
+- **test_mixed** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcompositescore]]
+  - <- contains <- [[testcompositescore]]
+- **test_no_prefix** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmakepromptid]]
+  - <- contains <- [[testmakepromptid]]
+- **test_no_variables** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefextractvariables]]
+  - <- contains <- [[testextractvariables]]
+- **test_partial_edit** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcomputeeditratio]]
+  - <- contains <- [[testcomputeeditratio]]
+- **test_perfect** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcompositescore]]
+  - <- contains <- [[testcompositescore]]
+- **test_plan_prompt** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmakepromptid]]
+  - <- contains <- [[testmakepromptid]]
+- **test_section_prompt** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmakepromptid]]
+  - <- contains <- [[testmakepromptid]]
+- **test_simple** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefextractvariables]]
+  - <- contains <- [[testextractvariables]]
+- **test_worst** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcompositescore]]
+  - <- contains <- [[testcompositescore]]
+- **update** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclone]]
+  - <- contains <- [[inmemorytable]]
+- **TestABExperiment** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestAttentionPrompts** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestCandidateRegistration** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestComputeEffectiveness** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestFullPipelineScenario** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestHumanEditTracker** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestPromptEvolutionAPI** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestPromptRegistryGet** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestPromptRegistrySync** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestPromptTracker** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+- **TestSuggestImprovements** (C:\project\tenopa proposer\-agent-master\tests\test_prompt_evolution_e2e.py) -- 1 connections
+  - <- contains <- [[testpromptevolutione2e]]
+
+## Internal Relationships
+- InMemoryDB -> contains -> __init__ [EXTRACTED]
+- InMemoryDB -> contains -> table [EXTRACTED]
+- InMemoryTable -> contains -> __init__ [EXTRACTED]
+- InMemoryTable -> contains -> _clone [EXTRACTED]
+- InMemoryTable -> contains -> select [EXTRACTED]
+- InMemoryTable -> contains -> insert [EXTRACTED]
+- InMemoryTable -> contains -> update [EXTRACTED]
+- InMemoryTable -> contains -> eq [EXTRACTED]
+- InMemoryTable -> contains -> in_ [EXTRACTED]
+- InMemoryTable -> contains -> order [EXTRACTED]
+- InMemoryTable -> contains -> limit [EXTRACTED]
+- InMemoryTable -> contains -> neq [EXTRACTED]
+- InMemoryTable -> contains -> single [EXTRACTED]
+- InMemoryTable -> contains -> maybe_single [EXTRACTED]
+- InMemoryTable -> contains -> range [EXTRACTED]
+- InMemoryTable -> contains -> ilike [EXTRACTED]
+- InMemoryTable -> contains -> is_ [EXTRACTED]
+- InMemoryTable -> contains -> or_ [EXTRACTED]
+- InMemoryTable -> contains -> _apply_filters [EXTRACTED]
+- TestCompositeScore -> contains -> test_perfect [EXTRACTED]
+- TestCompositeScore -> contains -> test_worst [EXTRACTED]
+- TestCompositeScore -> contains -> test_mixed [EXTRACTED]
+- TestComputeEditRatio -> contains -> test_identical [EXTRACTED]
+- TestComputeEditRatio -> contains -> test_empty_both [EXTRACTED]
+- TestComputeEditRatio -> contains -> test_empty_original [EXTRACTED]
+- TestComputeEditRatio -> contains -> test_partial_edit [EXTRACTED]
+- TestComputeEditRatio -> contains -> test_complete_rewrite [EXTRACTED]
+- TestContentHash -> contains -> test_different_text [EXTRACTED]
+- TestExtractVariables -> contains -> test_simple [EXTRACTED]
+- TestExtractVariables -> contains -> test_escaped_braces [EXTRACTED]
+- TestExtractVariables -> contains -> test_no_variables [EXTRACTED]
+- TestMakePromptId -> contains -> test_section_prompt [EXTRACTED]
+- TestMakePromptId -> contains -> test_plan_prompt [EXTRACTED]
+- TestMakePromptId -> contains -> test_no_prefix [EXTRACTED]
+- _clone -> calls -> __unresolved__::ref::inmemorytable [EXTRACTED]
+- eq -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- ilike -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- in_ -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- insert -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- is_ -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- limit -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- maybe_single -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- neq -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- or_ -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- order -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- range -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- select -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- single -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- table -> calls -> __unresolved__::ref::inmemorytable [EXTRACTED]
+- test_complete_rewrite -> calls -> __unresolved__::ref::compute_edit_ratio [EXTRACTED]
+- test_empty_both -> calls -> __unresolved__::ref::compute_edit_ratio [EXTRACTED]
+- test_empty_original -> calls -> __unresolved__::ref::compute_edit_ratio [EXTRACTED]
+- test_escaped_braces -> calls -> __unresolved__::ref::_extract_variables [EXTRACTED]
+- test_identical -> calls -> __unresolved__::ref::compute_edit_ratio [EXTRACTED]
+- test_mixed -> calls -> __unresolved__::ref::_composite_score [EXTRACTED]
+- test_no_prefix -> calls -> __unresolved__::ref::_make_prompt_id [EXTRACTED]
+- test_no_variables -> calls -> __unresolved__::ref::_extract_variables [EXTRACTED]
+- test_partial_edit -> calls -> __unresolved__::ref::compute_edit_ratio [EXTRACTED]
+- test_perfect -> calls -> __unresolved__::ref::_composite_score [EXTRACTED]
+- test_plan_prompt -> calls -> __unresolved__::ref::_make_prompt_id [EXTRACTED]
+- test_section_prompt -> calls -> __unresolved__::ref::_make_prompt_id [EXTRACTED]
+- test_simple -> calls -> __unresolved__::ref::_extract_variables [EXTRACTED]
+- test_worst -> calls -> __unresolved__::ref::_composite_score [EXTRACTED]
+- update -> calls -> __unresolved__::ref::_clone [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> InMemoryDB [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> InMemoryTable [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestComputeEditRatio [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestExtractVariables [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestContentHash [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestMakePromptId [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestCompositeScore [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestPromptRegistrySync [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestPromptRegistryGet [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestPromptTracker [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestHumanEditTracker [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestComputeEffectiveness [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestAttentionPrompts [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestCandidateRegistration [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestABExperiment [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestSuggestImprovements [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestPromptEvolutionAPI [EXTRACTED]
+- test_prompt_evolution_e2e -> contains -> TestFullPipelineScenario [EXTRACTED]
+
+## Cross-Community Connections
+- InMemoryDB -> contains -> rpc (-> [[unresolvedrefget-unresolvedreflen]])
+- InMemoryTable -> contains -> execute (-> [[unresolvedrefget-unresolvedreflen]])
+- TestContentHash -> contains -> test_deterministic (-> [[unresolvedrefget-unresolvedreflen]])
+- _apply_filters -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _clone -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedreflen]])
+- eq -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- in_ -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- test_different_text -> calls -> __unresolved__::ref::_content_hash (-> [[unresolvedrefget-unresolvedreflen]])
+- test_prompt_evolution_e2e -> imports -> __unresolved__::ref::hashlib (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_prompt_evolution_e2e -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
+- test_prompt_evolution_e2e -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 test_prompt_evolution_e2e, InMemoryTable, __unresolved__::ref::_clone를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 test_prompt_evolution_e2e.py이다.
+
+### Key Facts
+- def table(self, name: str) -> "InMemoryTable": if name not in self.tables: self.tables[name] = [] return InMemoryTable(self.tables[name])
+- class TestComputeEditRatio: """human_edit_tracker.compute_edit_ratio 단위 테스트."""
+- class InMemoryDB: """테이블별 인메모리 데이터 스토어."""
+- class TestCompositeScore: """prompt_evolution._composite_score 계산 테스트."""
+- class TestExtractVariables: """prompt_registry._extract_variables 단위 테스트."""

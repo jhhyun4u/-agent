@@ -1,0 +1,138 @@
+# Go/No-Go 스크리닝 고도화 Planning Document & 6. Architecture Considerations
+Cohesion: 0.07 | Nodes: 30
+
+## Key Nodes
+- **Go/No-Go 스크리닝 고도화 Planning Document** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 10 connections
+  - -> contains -> [[1-overview]]
+  - -> contains -> [[2-scope]]
+  - -> contains -> [[3-requirements]]
+  - -> contains -> [[4-success-criteria]]
+  - -> contains -> [[5-risks-and-mitigation]]
+  - -> contains -> [[6-architecture-considerations]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9-next-steps]]
+  - -> contains -> [[version-history]]
+- **6. Architecture Considerations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 6 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63]]
+  - -> contains -> [[64-state]]
+  - -> contains -> [[65]]
+  - <- contains <- [[gono-go-planning-document]]
+- **7. 축별 상세 설계 방향** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[71-30]]
+  - -> contains -> [[72-30]]
+  - -> contains -> [[73-20]]
+  - -> contains -> [[74-20-ai]]
+  - <- contains <- [[gono-go-planning-document]]
+- **1. Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 4 connections
+  - -> contains -> [[11-purpose]]
+  - -> contains -> [[12-background]]
+  - -> contains -> [[13-related-documents]]
+  - <- contains <- [[gono-go-planning-document]]
+- **2. Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 3 connections
+  - -> contains -> [[21-in-scope]]
+  - -> contains -> [[22-out-of-scope]]
+  - <- contains <- [[gono-go-planning-document]]
+- **3. Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 3 connections
+  - -> contains -> [[31-functional-requirements]]
+  - -> contains -> [[32-non-functional-requirements]]
+  - <- contains <- [[gono-go-planning-document]]
+- **4. Success Criteria** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 3 connections
+  - -> contains -> [[41-definition-of-done]]
+  - -> contains -> [[42-quality-criteria]]
+  - <- contains <- [[gono-go-planning-document]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 2 connections
+  - <- has_code_example <- [[63]]
+  - <- has_code_example <- [[64-state]]
+- **6.3 게이트 로직** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[6-architecture-considerations]]
+- **6.4 State 모델 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[6-architecture-considerations]]
+- **1.1 Purpose** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **1.2 Background** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **1.3 Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **2.1 In Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2-scope]]
+- **2.2 Out of Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2-scope]]
+- **3.1 Functional Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[3-requirements]]
+- **3.2 Non-Functional Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[3-requirements]]
+- **4.1 Definition of Done** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4-success-criteria]]
+- **4.2 Quality Criteria** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4-success-criteria]]
+- **5. Risks and Mitigation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[gono-go-planning-document]]
+- **6.1 설계 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[6-architecture-considerations]]
+- **6.2 점수 체계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[6-architecture-considerations]]
+- **6.5 수정 대상 파일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[6-architecture-considerations]]
+- **7.1 ① 유사실적 정량 매칭 (30점)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 ② 자격 적격성 (30점)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.3 ③ 경쟁 강도 (20점)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.4 ④ 전략 가산 (20점) — AI** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[gono-go-planning-document]]
+- **9. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[gono-go-planning-document]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\go-no-go-enhancement\go-no-go-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[gono-go-planning-document]]
+
+## Internal Relationships
+- 1. Overview -> contains -> 1.1 Purpose [EXTRACTED]
+- 1. Overview -> contains -> 1.2 Background [EXTRACTED]
+- 1. Overview -> contains -> 1.3 Related Documents [EXTRACTED]
+- 2. Scope -> contains -> 2.1 In Scope [EXTRACTED]
+- 2. Scope -> contains -> 2.2 Out of Scope [EXTRACTED]
+- 3. Requirements -> contains -> 3.1 Functional Requirements [EXTRACTED]
+- 3. Requirements -> contains -> 3.2 Non-Functional Requirements [EXTRACTED]
+- 4. Success Criteria -> contains -> 4.1 Definition of Done [EXTRACTED]
+- 4. Success Criteria -> contains -> 4.2 Quality Criteria [EXTRACTED]
+- 6.3 게이트 로직 -> has_code_example -> python [EXTRACTED]
+- 6.4 State 모델 확장 -> has_code_example -> python [EXTRACTED]
+- 6. Architecture Considerations -> contains -> 6.1 설계 개요 [EXTRACTED]
+- 6. Architecture Considerations -> contains -> 6.2 점수 체계 [EXTRACTED]
+- 6. Architecture Considerations -> contains -> 6.3 게이트 로직 [EXTRACTED]
+- 6. Architecture Considerations -> contains -> 6.4 State 모델 확장 [EXTRACTED]
+- 6. Architecture Considerations -> contains -> 6.5 수정 대상 파일 [EXTRACTED]
+- 7. 축별 상세 설계 방향 -> contains -> 7.1 ① 유사실적 정량 매칭 (30점) [EXTRACTED]
+- 7. 축별 상세 설계 방향 -> contains -> 7.2 ② 자격 적격성 (30점) [EXTRACTED]
+- 7. 축별 상세 설계 방향 -> contains -> 7.3 ③ 경쟁 강도 (20점) [EXTRACTED]
+- 7. 축별 상세 설계 방향 -> contains -> 7.4 ④ 전략 가산 (20점) — AI [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 1. Overview [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 2. Scope [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 3. Requirements [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 4. Success Criteria [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 5. Risks and Mitigation [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 6. Architecture Considerations [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 7. 축별 상세 설계 방향 [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 8. 구현 순서 [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> 9. Next Steps [EXTRACTED]
+- Go/No-Go 스크리닝 고도화 Planning Document -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Go/No-Go 스크리닝 고도화 Planning Document, 6. Architecture Considerations, 7. 축별 상세 설계 방향를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 go-no-go-enhancement.plan.md이다.
+
+### Key Facts
+- > **Summary**: 유사 수행 이력·요구 자격·경쟁 강도 3축 정량 분석 + 70점 게이트로 리소스 최적화 > > **Project**: 용역제안 Coworker > **Author**: AI > **Date**: 2026-03-26 > **Status**: Draft
+- 7.1 ① 유사실적 정량 매칭 (30점)
+- 3.1 Functional Requirements
+- 4.1 Definition of Done
+- ```python if qual.is_fatal or perf.is_fatal: recommendation = "no-go"       # 점수 무관 강제 No-Go tag = "disqualified" elif total >= 85: recommendation = "go" tag = "priority"               # 적극 참여 elif total >= 70: recommendation = "go" tag = "standard"               # 일반 참여 else: recommendation =…

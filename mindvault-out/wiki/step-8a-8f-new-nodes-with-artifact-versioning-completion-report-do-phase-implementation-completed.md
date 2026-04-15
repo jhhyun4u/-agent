@@ -1,0 +1,242 @@
+# STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report & Do Phase (Implementation Completed)
+Cohesion: 0.04 | Nodes: 56
+
+## Key Nodes
+- **STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 11 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[feature-overview]]
+  - -> contains -> [[pdca-cycle-details]]
+  - -> contains -> [[key-achievements]]
+  - -> contains -> [[timeline-effort-analysis]]
+  - -> contains -> [[quality-metrics]]
+  - -> contains -> [[deliverables-summary]]
+  - -> contains -> [[issues-resolutions]]
+  - -> contains -> [[recommendations]]
+  - -> contains -> [[sign-off]]
+  - -> contains -> [[related-documents]]
+- **Do Phase (Implementation Completed)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 8 connections
+  - -> contains -> [[files-created]]
+  - -> contains -> [[node-implementation-details]]
+  - -> contains -> [[prompt-templates-implemented]]
+  - -> contains -> [[state-schema-extensions]]
+  - -> contains -> [[api-routes-routesstep8apy]]
+  - -> contains -> [[graph-integration]]
+  - -> contains -> [[testing-implementation]]
+  - <- contains <- [[pdca-cycle-details]]
+- **Design Phase (Completed 2026-03-30)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 7 connections
+  - -> contains -> [[node-8a-proposalcustomeranalysis]]
+  - -> contains -> [[node-8b-proposalsectionvalidator]]
+  - -> contains -> [[node-8c-proposalsectionsconsolidation]]
+  - -> contains -> [[node-8d-mockevaluationanalysis]]
+  - -> contains -> [[node-8e-mockevaluationfeedbackprocessor]]
+  - -> contains -> [[node-8f-proposalwritenextv2]]
+  - <- contains <- [[pdca-cycle-details]]
+- **PDCA Cycle Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 6 connections
+  - -> contains -> [[plan-phase-completed-2026-03-30]]
+  - -> contains -> [[design-phase-completed-2026-03-30]]
+  - -> contains -> [[do-phase-implementation-completed]]
+  - -> contains -> [[check-phase-gap-analysis-completed]]
+  - -> contains -> [[act-phase-iteration-1-completed]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 5 connections
+  - -> contains -> [[code-quality]]
+  - -> contains -> [[functional-quality]]
+  - -> contains -> [[production-readiness]]
+  - <- contains <- [[executive-summary]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Deliverables Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 4 connections
+  - -> contains -> [[code-deliverables]]
+  - -> contains -> [[documentation-deliverables]]
+  - -> contains -> [[validation-deliverables]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 4 connections
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[areas-for-improvement]]
+  - -> contains -> [[to-apply-next-time]]
+  - <- contains <- [[key-achievements]]
+- **Recommendations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 4 connections
+  - -> contains -> [[short-term-next-2-4-weeks]]
+  - -> contains -> [[medium-term-next-1-2-months]]
+  - -> contains -> [[long-term-next-3-6-months]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[pdca-cycle-overview]]
+  - -> contains -> [[quality-metrics]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Feature Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[objective]]
+  - -> contains -> [[deliverables-completed]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Issues & Resolutions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[issues-fixed-in-implementation-phase]]
+  - -> contains -> [[potential-issues-mitigations]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Key Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[technical-achievements]]
+  - -> contains -> [[lessons-learned]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[completion-checklist]]
+  - -> contains -> [[status]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Timeline & Effort Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 3 connections
+  - -> contains -> [[actual-timeline]]
+  - -> contains -> [[effort-distribution]]
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Act Phase (Iteration 1 Completed)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[pdca-cycle-details]]
+- **API Routes (routes_step8a.py)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[do-phase-implementation-completed]]
+- **State Schema Extensions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[do-phase-implementation-completed]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- has_code_example <- [[act-phase-iteration-1-completed]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- has_code_example <- [[api-routes-routesstep8apy]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- has_code_example <- [[state-schema-extensions]]
+- **Actual Timeline** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[timeline-effort-analysis]]
+- **Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Check Phase (Gap Analysis Completed)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-details]]
+- **Code Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[deliverables-summary]]
+- **Code Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Completion Checklist** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[sign-off]]
+- **Deliverables Completed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[feature-overview]]
+- **Documentation Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[deliverables-summary]]
+- **Effort Distribution** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[timeline-effort-analysis]]
+- **Files Created** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[do-phase-implementation-completed]]
+- **Functional Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Graph Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[do-phase-implementation-completed]]
+- **Issues Fixed in Implementation Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[issues-resolutions]]
+- **Long-Term (Next 3-6 months)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Medium-Term (Next 1-2 months)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Node 8A: proposal_customer_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node 8B: proposal_section_validator** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node 8C: proposal_sections_consolidation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node 8D: mock_evaluation_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node 8E: mock_evaluation_feedback_processor** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node 8F: proposal_write_next_v2** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[design-phase-completed-2026-03-30]]
+- **Node Implementation Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[do-phase-implementation-completed]]
+- **Objective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[feature-overview]]
+- **PDCA Cycle Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **Plan Phase (Completed 2026-03-30)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-details]]
+- **Potential Issues & Mitigations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[issues-resolutions]]
+- **Production Readiness** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Prompt Templates Implemented** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[do-phase-implementation-completed]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-new-nodes-with-artifact-versioning-completion-report]]
+- **Short-Term (Next 2-4 weeks)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Status** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[sign-off]]
+- **Technical Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **Testing Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[do-phase-implementation-completed]]
+- **To Apply Next Time** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Validation Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[deliverables-summary]]
+- **What Went Well** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+
+## Internal Relationships
+- Act Phase (Iteration 1 Completed) -> has_code_example -> bash [EXTRACTED]
+- API Routes (routes_step8a.py) -> has_code_example -> json [EXTRACTED]
+- Deliverables Summary -> contains -> Code Deliverables [EXTRACTED]
+- Deliverables Summary -> contains -> Documentation Deliverables [EXTRACTED]
+- Deliverables Summary -> contains -> Validation Deliverables [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8A: proposal_customer_analysis [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8B: proposal_section_validator [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8C: proposal_sections_consolidation [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8D: mock_evaluation_analysis [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8E: mock_evaluation_feedback_processor [EXTRACTED]
+- Design Phase (Completed 2026-03-30) -> contains -> Node 8F: proposal_write_next_v2 [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> Files Created [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> Node Implementation Details [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> Prompt Templates Implemented [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> State Schema Extensions [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> API Routes (routes_step8a.py) [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> Graph Integration [EXTRACTED]
+- Do Phase (Implementation Completed) -> contains -> Testing Implementation [EXTRACTED]
+- Executive Summary -> contains -> PDCA Cycle Overview [EXTRACTED]
+- Executive Summary -> contains -> Quality Metrics [EXTRACTED]
+- Feature Overview -> contains -> Objective [EXTRACTED]
+- Feature Overview -> contains -> Deliverables Completed [EXTRACTED]
+- Issues & Resolutions -> contains -> Issues Fixed in Implementation Phase [EXTRACTED]
+- Issues & Resolutions -> contains -> Potential Issues & Mitigations [EXTRACTED]
+- Key Achievements -> contains -> Technical Achievements [EXTRACTED]
+- Key Achievements -> contains -> Lessons Learned [EXTRACTED]
+- Lessons Learned -> contains -> What Went Well [EXTRACTED]
+- Lessons Learned -> contains -> Areas for Improvement [EXTRACTED]
+- Lessons Learned -> contains -> To Apply Next Time [EXTRACTED]
+- PDCA Cycle Details -> contains -> Plan Phase (Completed 2026-03-30) [EXTRACTED]
+- PDCA Cycle Details -> contains -> Design Phase (Completed 2026-03-30) [EXTRACTED]
+- PDCA Cycle Details -> contains -> Do Phase (Implementation Completed) [EXTRACTED]
+- PDCA Cycle Details -> contains -> Check Phase (Gap Analysis Completed) [EXTRACTED]
+- PDCA Cycle Details -> contains -> Act Phase (Iteration 1 Completed) [EXTRACTED]
+- Quality Metrics -> contains -> Code Quality [EXTRACTED]
+- Quality Metrics -> contains -> Functional Quality [EXTRACTED]
+- Quality Metrics -> contains -> Production Readiness [EXTRACTED]
+- Recommendations -> contains -> Short-Term (Next 2-4 weeks) [EXTRACTED]
+- Recommendations -> contains -> Medium-Term (Next 1-2 months) [EXTRACTED]
+- Recommendations -> contains -> Long-Term (Next 3-6 months) [EXTRACTED]
+- Sign-Off -> contains -> Completion Checklist [EXTRACTED]
+- Sign-Off -> contains -> Status [EXTRACTED]
+- State Schema Extensions -> has_code_example -> python [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Executive Summary [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Feature Overview [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> PDCA Cycle Details [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Key Achievements [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Timeline & Effort Analysis [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Quality Metrics [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Deliverables Summary [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Issues & Resolutions [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Recommendations [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Sign-Off [EXTRACTED]
+- STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report -> contains -> Related Documents [EXTRACTED]
+- Timeline & Effort Analysis -> contains -> Actual Timeline [EXTRACTED]
+- Timeline & Effort Analysis -> contains -> Effort Distribution [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 STEP 8A-8F: New Nodes with Artifact Versioning — Completion Report, Do Phase (Implementation Completed), Design Phase (Completed 2026-03-30)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 step-8a-new-nodes.report.md이다.
+
+### Key Facts
+- > **Summary**: Complete PDCA cycle for 6-node artifact versioning system. 92% design-implementation match, production-ready code, all gaps from iteration 1 resolved. > > **Feature**: step-8a-new-nodes > **Author**: Proposal Workflow Team > **Created**: 2026-03-30 > **Completed**: 2026-03-30 >…
+- **Implementation Summary**:
+- **Document**: docs/02-design/features/step-8a-new-nodes.design.md (v1.0, 8,500+ lines)
+- Plan Phase (Completed 2026-03-30)
+- | Metric | Target | Achieved | Status | |--------|:------:|:--------:|:------:| | Match Rate | ≥90% | 92%+ | ✅ | | Code Quality | mypy + ruff pass | 100% pass | ✅ | | Test Coverage | ≥80% per node | 6/6 nodes tested | ✅ | | API Endpoints | 3/3 | 3/3 implemented | ✅ | | Documentation | Complete |…

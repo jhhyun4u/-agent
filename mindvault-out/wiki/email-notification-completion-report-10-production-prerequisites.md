@@ -1,0 +1,230 @@
+# email-notification Completion Report & 10. Production Prerequisites
+Cohesion: 0.04 | Nodes: 53
+
+## Key Nodes
+- **email-notification Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 14 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-what-was-built]]
+  - -> contains -> [[4-pdca-cycle-evolution]]
+  - -> contains -> [[5-completed-items]]
+  - -> contains -> [[6-incompletedeferred-items]]
+  - -> contains -> [[7-quality-metrics-analysis]]
+  - -> contains -> [[8-lessons-learned-retrospective]]
+  - -> contains -> [[9-pdca-process-improvements]]
+  - -> contains -> [[10-production-prerequisites]]
+  - -> contains -> [[11-future-enhancement-opportunities]]
+  - -> contains -> [[12-changelog]]
+  - -> contains -> [[13-sign-off]]
+  - -> contains -> [[version-history]]
+- **10. Production Prerequisites** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 5 connections
+  - -> contains -> [[101-azure-ad-configuration-before-email-enable]]
+  - -> contains -> [[102-environment-variables]]
+  - -> contains -> [[103-database-migration-deployment-order]]
+  - -> contains -> [[104-testing-pre-deployment]]
+  - <- contains <- [[email-notification-completion-report]]
+- **3. What Was Built** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 5 connections
+  - -> contains -> [[31-backend-implementation]]
+  - -> contains -> [[32-frontend-implementation]]
+  - -> contains -> [[33-database-migration]]
+  - -> contains -> [[34-12-notification-to-4-category-integration]]
+  - <- contains <- [[email-notification-completion-report]]
+- **4. PDCA Cycle Evolution** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 5 connections
+  - -> contains -> [[41-plan-evolution]]
+  - -> contains -> [[42-design-evolution]]
+  - -> contains -> [[43-implementation-do-phases]]
+  - -> contains -> [[44-analysis-check-results]]
+  - <- contains <- [[email-notification-completion-report]]
+- **11. Future Enhancement Opportunities** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 4 connections
+  - -> contains -> [[111-phase-31-quick-wins]]
+  - -> contains -> [[112-phase-32-planned]]
+  - -> contains -> [[113-phase-4-strategic]]
+  - <- contains <- [[email-notification-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 4 connections
+  - -> references -> [[unresolvedrefemailnotificationplan]]
+  - -> references -> [[unresolvedrefemailnotificationdesign]]
+  - -> references -> [[unresolvedrefemailnotificationanalysis]]
+  - <- contains <- [[email-notification-completion-report]]
+- **5. Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 4 connections
+  - -> contains -> [[51-functional-requirements]]
+  - -> contains -> [[52-non-functional-requirements]]
+  - -> contains -> [[53-bug-fixes-during-pdca-do-phase]]
+  - <- contains <- [[email-notification-completion-report]]
+- **7. Quality Metrics & Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 4 connections
+  - -> contains -> [[71-final-pdca-metrics]]
+  - -> contains -> [[72-code-quality-improvements]]
+  - -> contains -> [[73-implementation-completeness]]
+  - <- contains <- [[email-notification-completion-report]]
+- **8. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 4 connections
+  - -> contains -> [[81-what-went-well-keep]]
+  - -> contains -> [[82-what-needs-improvement-problem]]
+  - -> contains -> [[83-what-to-try-next-try]]
+  - <- contains <- [[email-notification-completion-report]]
+- **13. Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 3 connections
+  - -> contains -> [[131-quality-assurance]]
+  - -> contains -> [[132-ready-for-production]]
+  - <- contains <- [[email-notification-completion-report]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 3 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - <- contains <- [[email-notification-completion-report]]
+- **6. Incomplete/Deferred Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 3 connections
+  - -> contains -> [[61-pre-existing-bug-non-blocking-for-v20]]
+  - -> contains -> [[62-performance-concerns-non-blocking]]
+  - <- contains <- [[email-notification-completion-report]]
+- **9. PDCA Process Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 3 connections
+  - -> contains -> [[91-by-phase]]
+  - -> contains -> [[92-for-this-feature-domain]]
+  - <- contains <- [[email-notification-completion-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 2 connections
+  - <- has_code_example <- [[102-environment-variables]]
+  - <- has_code_example <- [[104-testing-pre-deployment]]
+- **10.2 Environment Variables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[10-production-prerequisites]]
+- **10.4 Testing Pre-deployment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[10-production-prerequisites]]
+- **12. Changelog** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 2 connections
+  - -> contains -> [[v20-2026-03-26]]
+  - <- contains <- [[email-notification-completion-report]]
+- **3.3 Database Migration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[3-what-was-built]]
+- **__unresolved__::ref::email_notification_analysis** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **__unresolved__::ref::email_notification_design** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **__unresolved__::ref::email_notification_plan** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- has_code_example <- [[33-database-migration]]
+- **10.1 Azure AD Configuration (Before Email Enable)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[10-production-prerequisites]]
+- **10.3 Database Migration Deployment Order** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[10-production-prerequisites]]
+- **11.1 Phase 3.1 (Quick Wins)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[11-future-enhancement-opportunities]]
+- **11.2 Phase 3.2 (Planned)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[11-future-enhancement-opportunities]]
+- **11.3 Phase 4 (Strategic)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[11-future-enhancement-opportunities]]
+- **13.1 Quality Assurance** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[13-sign-off]]
+- **13.2 Ready for Production** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[13-sign-off]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **3.1 Backend Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[3-what-was-built]]
+- **3.2 Frontend Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[3-what-was-built]]
+- **3.4 12-Notification to 4-Category Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[3-what-was-built]]
+- **4.1 Plan Evolution** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[4-pdca-cycle-evolution]]
+- **4.2 Design Evolution** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[4-pdca-cycle-evolution]]
+- **4.3 Implementation (Do) Phases** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[4-pdca-cycle-evolution]]
+- **4.4 Analysis (Check) Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[4-pdca-cycle-evolution]]
+- **5.1 Functional Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[5-completed-items]]
+- **5.2 Non-Functional Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[5-completed-items]]
+- **5.3 Bug Fixes (During PDCA Do Phase)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[5-completed-items]]
+- **6.1 Pre-existing Bug (Non-blocking for v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[6-incompletedeferred-items]]
+- **6.2 Performance Concerns (Non-blocking)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[6-incompletedeferred-items]]
+- **7.1 Final PDCA Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[7-quality-metrics-analysis]]
+- **7.2 Code Quality Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[7-quality-metrics-analysis]]
+- **7.3 Implementation Completeness** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[7-quality-metrics-analysis]]
+- **8.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **8.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **8.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **9.1 By Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[9-pdca-process-improvements]]
+- **9.2 For This Feature Domain** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[9-pdca-process-improvements]]
+- **v2.0 (2026-03-26)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[12-changelog]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.report.md) -- 1 connections
+  - <- contains <- [[email-notification-completion-report]]
+
+## Internal Relationships
+- 10.2 Environment Variables -> has_code_example -> bash [EXTRACTED]
+- 10.4 Testing Pre-deployment -> has_code_example -> bash [EXTRACTED]
+- 10. Production Prerequisites -> contains -> 10.1 Azure AD Configuration (Before Email Enable) [EXTRACTED]
+- 10. Production Prerequisites -> contains -> 10.2 Environment Variables [EXTRACTED]
+- 10. Production Prerequisites -> contains -> 10.3 Database Migration Deployment Order [EXTRACTED]
+- 10. Production Prerequisites -> contains -> 10.4 Testing Pre-deployment [EXTRACTED]
+- 11. Future Enhancement Opportunities -> contains -> 11.1 Phase 3.1 (Quick Wins) [EXTRACTED]
+- 11. Future Enhancement Opportunities -> contains -> 11.2 Phase 3.2 (Planned) [EXTRACTED]
+- 11. Future Enhancement Opportunities -> contains -> 11.3 Phase 4 (Strategic) [EXTRACTED]
+- 12. Changelog -> contains -> v2.0 (2026-03-26) [EXTRACTED]
+- 13. Sign-Off -> contains -> 13.1 Quality Assurance [EXTRACTED]
+- 13. Sign-Off -> contains -> 13.2 Ready for Production [EXTRACTED]
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::email_notification_plan [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::email_notification_design [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::email_notification_analysis [EXTRACTED]
+- 3.3 Database Migration -> has_code_example -> json [EXTRACTED]
+- 3. What Was Built -> contains -> 3.1 Backend Implementation [EXTRACTED]
+- 3. What Was Built -> contains -> 3.2 Frontend Implementation [EXTRACTED]
+- 3. What Was Built -> contains -> 3.3 Database Migration [EXTRACTED]
+- 3. What Was Built -> contains -> 3.4 12-Notification to 4-Category Integration [EXTRACTED]
+- 4. PDCA Cycle Evolution -> contains -> 4.1 Plan Evolution [EXTRACTED]
+- 4. PDCA Cycle Evolution -> contains -> 4.2 Design Evolution [EXTRACTED]
+- 4. PDCA Cycle Evolution -> contains -> 4.3 Implementation (Do) Phases [EXTRACTED]
+- 4. PDCA Cycle Evolution -> contains -> 4.4 Analysis (Check) Results [EXTRACTED]
+- 5. Completed Items -> contains -> 5.1 Functional Requirements [EXTRACTED]
+- 5. Completed Items -> contains -> 5.2 Non-Functional Requirements [EXTRACTED]
+- 5. Completed Items -> contains -> 5.3 Bug Fixes (During PDCA Do Phase) [EXTRACTED]
+- 6. Incomplete/Deferred Items -> contains -> 6.1 Pre-existing Bug (Non-blocking for v2.0) [EXTRACTED]
+- 6. Incomplete/Deferred Items -> contains -> 6.2 Performance Concerns (Non-blocking) [EXTRACTED]
+- 7. Quality Metrics & Analysis -> contains -> 7.1 Final PDCA Metrics [EXTRACTED]
+- 7. Quality Metrics & Analysis -> contains -> 7.2 Code Quality Improvements [EXTRACTED]
+- 7. Quality Metrics & Analysis -> contains -> 7.3 Implementation Completeness [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.1 What Went Well (Keep) [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.2 What Needs Improvement (Problem) [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.3 What to Try Next (Try) [EXTRACTED]
+- 9. PDCA Process Improvements -> contains -> 9.1 By Phase [EXTRACTED]
+- 9. PDCA Process Improvements -> contains -> 9.2 For This Feature Domain [EXTRACTED]
+- email-notification Completion Report -> contains -> 1. Summary [EXTRACTED]
+- email-notification Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- email-notification Completion Report -> contains -> 3. What Was Built [EXTRACTED]
+- email-notification Completion Report -> contains -> 4. PDCA Cycle Evolution [EXTRACTED]
+- email-notification Completion Report -> contains -> 5. Completed Items [EXTRACTED]
+- email-notification Completion Report -> contains -> 6. Incomplete/Deferred Items [EXTRACTED]
+- email-notification Completion Report -> contains -> 7. Quality Metrics & Analysis [EXTRACTED]
+- email-notification Completion Report -> contains -> 8. Lessons Learned & Retrospective [EXTRACTED]
+- email-notification Completion Report -> contains -> 9. PDCA Process Improvements [EXTRACTED]
+- email-notification Completion Report -> contains -> 10. Production Prerequisites [EXTRACTED]
+- email-notification Completion Report -> contains -> 11. Future Enhancement Opportunities [EXTRACTED]
+- email-notification Completion Report -> contains -> 12. Changelog [EXTRACTED]
+- email-notification Completion Report -> contains -> 13. Sign-Off [EXTRACTED]
+- email-notification Completion Report -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 email-notification Completion Report, 10. Production Prerequisites, 3. What Was Built를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 email-notification.report.md이다.
+
+### Key Facts
+- > **Status**: Complete > > **Project**: 용역제안 Coworker > **Feature**: 이메일 알림 + 개인 설정 페이지 > **Author**: Report Generator > **Completion Date**: 2026-03-26 > **PDCA Cycle**: Full Cycle (Plan v2.0 → Design v2.0 → Do v1+v2 → Check v1+v2)
+- 10.1 Azure AD Configuration (Before Email Enable)
+- 3.1 Backend Implementation
+- 11.1 Phase 3.1 (Quick Wins)
+- | Phase | Document | Version | Status | |-------|----------|---------|--------| | Plan | [email-notification.plan.md](../01-plan/features/email-notification.plan.md) | 2.0 | ✅ Finalized | | Design | [email-notification.design.md](../02-design/features/email-notification.design.md) | 2.0 | ✅…

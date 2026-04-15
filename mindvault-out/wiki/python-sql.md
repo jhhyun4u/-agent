@@ -1,0 +1,148 @@
+# python & sql
+Cohesion: 0.12 | Nodes: 25
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 8 connections
+  - <- has_code_example <- [[sql-python]]
+  - <- has_code_example <- [[21-enum]]
+  - <- has_code_example <- [[22-timelineservice]]
+  - <- has_code_example <- [[23-ai-task-status-critical-bug-fix]]
+  - <- has_code_example <- [[24]]
+  - <- has_code_example <- [[25]]
+  - <- has_code_example <- [[26]]
+  - <- has_code_example <- [[42-end-to-end]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 8 connections
+  - <- has_code_example <- [[issue]]
+  - <- has_code_example <- [[11-proposals]]
+  - <- has_code_example <- [[a-proposaltimelines]]
+  - <- has_code_example <- [[b-aitaskstatus-layer-3]]
+  - <- has_code_example <- [[sql-python]]
+  - <- has_code_example <- [[14-check]]
+  - <- has_code_example <- [[41]]
+  - <- has_code_example <- [[44]]
+- ****Phase 2: 백엔드 코드 구현** (1일)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 6 connections
+  - -> contains -> [[21-enum]]
+  - -> contains -> [[22-timelineservice]]
+  - -> contains -> [[23-ai-task-status-critical-bug-fix]]
+  - -> contains -> [[24]]
+  - -> contains -> [[25]]
+  - -> contains -> [[26]]
+- ****Phase 1: 데이터베이스 마이그레이션** (1일)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 4 connections
+  - -> contains -> [[11-proposals]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - -> contains -> [[14-check]]
+- ****Phase 4: 테스트 및 검증** (0.5일)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 4 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42-end-to-end]]
+  - -> contains -> [[43]]
+  - -> contains -> [[44]]
+- **1.2 신규 테이블 생성** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 3 connections
+  - -> contains -> [[a-proposaltimelines]]
+  - -> contains -> [[b-aitaskstatus-layer-3]]
+  - <- contains <- [[phase-1-1]]
+- **2.5 기존 코드 업데이트** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **마이그레이션 로직 (SQL + Python)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 3 connections
+  - -> has_code_example -> [[sql]]
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[13]]
+- **1.1 신규 컬럼 추가 (proposals 테이블)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-1-1]]
+- **1.3 기존 상태값 마이그레이션** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> contains -> [[sql-python]]
+  - <- contains <- [[phase-1-1]]
+- **1.4 CHECK 제약 최종 정의** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-1-1]]
+- **2.1 Enum 정의** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **2.2 TimelineService 구현** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **2.3 AI Task Status 분리 (Critical Bug Fix)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **2.4 상태 전환 로직 통합** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **2.6 쿼리 업데이트** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-2-1]]
+- **4.1 데이터 무결성 테스트** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-4-05]]
+- **4.2 End-to-End 테스트** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-4-05]]
+- **4.4 롤백 계획** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-4-05]]
+- **A. proposal_timelines (이벤트 추적)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[12]]
+- **B. ai_task_status (Layer 3: 임시 실행 상태)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[12]]
+- **Issue** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-0-critical-bug-fix-1]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 1 connections
+  - <- has_code_example <- [[25]]
+- **4.3 성능 테스트** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 1 connections
+  - <- contains <- [[phase-4-05]]
+- **🚨 **Phase 0: CRITICAL BUG FIX** (1일)** (C:\project\tenopa proposer\-agent-master\docs\01-plan\features\unified-state-system.plan.md) -- 1 connections
+  - -> contains -> [[issue]]
+
+## Internal Relationships
+- 1.1 신규 컬럼 추가 (proposals 테이블) -> has_code_example -> sql [EXTRACTED]
+- 1.2 신규 테이블 생성 -> contains -> A. proposal_timelines (이벤트 추적) [EXTRACTED]
+- 1.2 신규 테이블 생성 -> contains -> B. ai_task_status (Layer 3: 임시 실행 상태) [EXTRACTED]
+- 1.3 기존 상태값 마이그레이션 -> contains -> 마이그레이션 로직 (SQL + Python) [EXTRACTED]
+- 1.4 CHECK 제약 최종 정의 -> has_code_example -> sql [EXTRACTED]
+- 2.1 Enum 정의 -> has_code_example -> python [EXTRACTED]
+- 2.2 TimelineService 구현 -> has_code_example -> python [EXTRACTED]
+- 2.3 AI Task Status 분리 (Critical Bug Fix) -> has_code_example -> python [EXTRACTED]
+- 2.4 상태 전환 로직 통합 -> has_code_example -> python [EXTRACTED]
+- 2.5 기존 코드 업데이트 -> has_code_example -> bash [EXTRACTED]
+- 2.5 기존 코드 업데이트 -> has_code_example -> python [EXTRACTED]
+- 2.6 쿼리 업데이트 -> has_code_example -> python [EXTRACTED]
+- 4.1 데이터 무결성 테스트 -> has_code_example -> sql [EXTRACTED]
+- 4.2 End-to-End 테스트 -> has_code_example -> python [EXTRACTED]
+- 4.4 롤백 계획 -> has_code_example -> sql [EXTRACTED]
+- A. proposal_timelines (이벤트 추적) -> has_code_example -> sql [EXTRACTED]
+- B. ai_task_status (Layer 3: 임시 실행 상태) -> has_code_example -> sql [EXTRACTED]
+- Issue -> has_code_example -> sql [EXTRACTED]
+- 🚨 **Phase 0: CRITICAL BUG FIX** (1일) -> contains -> Issue [EXTRACTED]
+- **Phase 1: 데이터베이스 마이그레이션** (1일) -> contains -> 1.1 신규 컬럼 추가 (proposals 테이블) [EXTRACTED]
+- **Phase 1: 데이터베이스 마이그레이션** (1일) -> contains -> 1.2 신규 테이블 생성 [EXTRACTED]
+- **Phase 1: 데이터베이스 마이그레이션** (1일) -> contains -> 1.3 기존 상태값 마이그레이션 [EXTRACTED]
+- **Phase 1: 데이터베이스 마이그레이션** (1일) -> contains -> 1.4 CHECK 제약 최종 정의 [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.1 Enum 정의 [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.2 TimelineService 구현 [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.3 AI Task Status 분리 (Critical Bug Fix) [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.4 상태 전환 로직 통합 [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.5 기존 코드 업데이트 [EXTRACTED]
+- **Phase 2: 백엔드 코드 구현** (1일) -> contains -> 2.6 쿼리 업데이트 [EXTRACTED]
+- **Phase 4: 테스트 및 검증** (0.5일) -> contains -> 4.1 데이터 무결성 테스트 [EXTRACTED]
+- **Phase 4: 테스트 및 검증** (0.5일) -> contains -> 4.2 End-to-End 테스트 [EXTRACTED]
+- **Phase 4: 테스트 및 검증** (0.5일) -> contains -> 4.3 성능 테스트 [EXTRACTED]
+- **Phase 4: 테스트 및 검증** (0.5일) -> contains -> 4.4 롤백 계획 [EXTRACTED]
+- 마이그레이션 로직 (SQL + Python) -> has_code_example -> sql [EXTRACTED]
+- 마이그레이션 로직 (SQL + Python) -> has_code_example -> python [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, sql, **Phase 2: 백엔드 코드 구현** (1일)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 unified-state-system.plan.md이다.
+
+### Key Facts
+- **SQL 부분**: ```sql BEGIN;
+- Issue ``` routes_workflow.py:153 → status = "running" routes_workflow.py:298 → status = "cancelled" database/schema_v3.4.sql:117 → CHECK constraint에 없음 → PostgreSQL UPDATE 거부 → 500 Internal Error ```
+- 목표 - ProposalStatus, WinResult Enum 정의 - routes_workflow.py에서 ai_task_status 분리 - TimelineService 구현 (이벤트 추적) - 상태 전환 로직 통합 - 기존 상태 기반 코드 업데이트
+- 목표 - proposals 테이블에 신규 컬럼 추가 - proposal_timelines, ai_task_status 신규 테이블 생성 - 기존 16개 상태값 → 10개 새 상태값 마이그레이션 - CHECK constraint 정의 완료
+- 목표 - 데이터 무결성 확인 - 전체 워크플로 end-to-end 테스트 - 성능 영향 평가 - 마이그레이션 롤백 계획

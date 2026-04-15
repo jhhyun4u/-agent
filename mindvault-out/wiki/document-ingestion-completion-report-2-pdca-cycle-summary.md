@@ -1,0 +1,155 @@
+# Document Ingestion Completion Report & 2. PDCA Cycle Summary
+Cohesion: 0.06 | Nodes: 35
+
+## Key Nodes
+- **Document Ingestion Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 12 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[2-pdca-cycle-summary]]
+  - -> contains -> [[3-success-criteria-final-status]]
+  - -> contains -> [[4-key-decisions-outcomes]]
+  - -> contains -> [[5-implementation-summary]]
+  - -> contains -> [[6-results-vs-planned-value]]
+  - -> contains -> [[7-lessons-learned]]
+  - -> contains -> [[8-completed-items-summary]]
+  - -> contains -> [[9-next-steps]]
+  - -> contains -> [[10-pdca-metrics-summary]]
+  - -> contains -> [[11-sign-off]]
+  - -> contains -> [[appendix-related-documents]]
+- **2. PDCA Cycle Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 7 connections
+  - -> contains -> [[21-plan-phase]]
+  - -> contains -> [[22-design-phase]]
+  - -> contains -> [[23-do-phase]]
+  - -> contains -> [[24-check-phase]]
+  - -> contains -> [[25-act-phase]]
+  - -> contains -> [[26-report-phase-today]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **5. Implementation Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 4 connections
+  - -> contains -> [[51-files-created]]
+  - -> contains -> [[52-test-coverage]]
+  - -> contains -> [[53-quality-metrics]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **7. Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 4 connections
+  - -> contains -> [[71-what-went-well]]
+  - -> contains -> [[72-areas-for-improvement]]
+  - -> contains -> [[73-to-apply-next-time]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **9. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 4 connections
+  - -> contains -> [[91-immediate-1-3-days]]
+  - -> contains -> [[92-short-term-1-2-weeks]]
+  - -> contains -> [[93-long-term-1-2-months]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 4 connections
+  - -> contains -> [[11-feature-overview]]
+  - -> contains -> [[12-success-rating]]
+  - -> contains -> [[13-value-delivered]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **6. Results vs Planned Value** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 3 connections
+  - -> contains -> [[61-planned-value-streams]]
+  - -> contains -> [[62-scope-expansion]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **8. Completed Items Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 3 connections
+  - -> contains -> [[81-deliverables]]
+  - -> contains -> [[82-incompletedeferred-items]]
+  - <- contains <- [[document-ingestion-completion-report]]
+- **10. PDCA Metrics Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-completion-report]]
+- **11. Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-completion-report]]
+- **1.1 Feature Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **1.2 Success Rating** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **1.3 Value Delivered** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **2.1 Plan Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.2 Design Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.3 Do Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.4 Check Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.5 Act Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.6 Report Phase ⏳ (Today)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **3. Success Criteria Final Status** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-completion-report]]
+- **4. Key Decisions & Outcomes** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-completion-report]]
+- **5.1 Files Created** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[5-implementation-summary]]
+- **5.2 Test Coverage** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[5-implementation-summary]]
+- **5.3 Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[5-implementation-summary]]
+- **6.1 Planned Value Streams** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[6-results-vs-planned-value]]
+- **6.2 Scope Expansion** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[6-results-vs-planned-value]]
+- **7.1 What Went Well ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.2 Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.3 To Apply Next Time (차기 사이클)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **8.1 Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[8-completed-items-summary]]
+- **8.2 Incomplete/Deferred Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[8-completed-items-summary]]
+- **9.1 Immediate (1-3 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **9.2 Short-term (1-2 weeks)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **9.3 Long-term (1-2 months)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **Appendix: Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-04\document_ingestion\document_ingestion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-completion-report]]
+
+## Internal Relationships
+- 2. PDCA Cycle Summary -> contains -> 2.1 Plan Phase ✅ [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.2 Design Phase ✅ [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.3 Do Phase ✅ [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.4 Check Phase ✅ [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.5 Act Phase ✅ [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.6 Report Phase ⏳ (Today) [EXTRACTED]
+- 5. Implementation Summary -> contains -> 5.1 Files Created [EXTRACTED]
+- 5. Implementation Summary -> contains -> 5.2 Test Coverage [EXTRACTED]
+- 5. Implementation Summary -> contains -> 5.3 Quality Metrics [EXTRACTED]
+- 6. Results vs Planned Value -> contains -> 6.1 Planned Value Streams [EXTRACTED]
+- 6. Results vs Planned Value -> contains -> 6.2 Scope Expansion [EXTRACTED]
+- 7. Lessons Learned -> contains -> 7.1 What Went Well ✅ [EXTRACTED]
+- 7. Lessons Learned -> contains -> 7.2 Areas for Improvement [EXTRACTED]
+- 7. Lessons Learned -> contains -> 7.3 To Apply Next Time (차기 사이클) [EXTRACTED]
+- 8. Completed Items Summary -> contains -> 8.1 Deliverables [EXTRACTED]
+- 8. Completed Items Summary -> contains -> 8.2 Incomplete/Deferred Items [EXTRACTED]
+- 9. Next Steps -> contains -> 9.1 Immediate (1-3 days) [EXTRACTED]
+- 9. Next Steps -> contains -> 9.2 Short-term (1-2 weeks) [EXTRACTED]
+- 9. Next Steps -> contains -> 9.3 Long-term (1-2 months) [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> Executive Summary [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 2. PDCA Cycle Summary [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 3. Success Criteria Final Status [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 4. Key Decisions & Outcomes [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 5. Implementation Summary [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 6. Results vs Planned Value [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 7. Lessons Learned [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 8. Completed Items Summary [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 9. Next Steps [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 10. PDCA Metrics Summary [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> 11. Sign-Off [EXTRACTED]
+- Document Ingestion Completion Report -> contains -> Appendix: Related Documents [EXTRACTED]
+- Executive Summary -> contains -> 1.1 Feature Overview [EXTRACTED]
+- Executive Summary -> contains -> 1.2 Success Rating [EXTRACTED]
+- Executive Summary -> contains -> 1.3 Value Delivered [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Document Ingestion Completion Report, 2. PDCA Cycle Summary, 5. Implementation Summary를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 document_ingestion.report.md이다.
+
+### Key Facts
+- > **Summary**: PDCA 사이클 완료 — 조직 문서를 자동 처리하는 문서 수집 기능. 95%+ 설계 일치도 달성, 모든 성공 기준 충족, 34개 테스트 100% 통과. > > **Author**: AI Coworker > **Created**: 2026-04-10 > **Last Modified**: 2026-04-10 > **Status**: Approved
+- 9.1 Immediate (1-3 days)
+- 6.1 Planned Value Streams
+- | Metric | Value | Status | |--------|:-----:|:------:| | **Plan Phase Duration** | 1 day (2026-03-29) | ✅ On-time | | **Design Phase Duration** | Same day as Plan | ✅ Fast iteration | | **Do Phase Duration** | 11 days (2026-03-29 ~ 2026-04-10) | ✅ Within estimate | | **Check Phase Duration** |…
+- | Role | Name | Date | Signature | |------|------|:----:|-----------| | Product | [TBD] | 2026-04-10 | ✅ | | Engineering | [TBD] | 2026-04-10 | ✅ | | QA | [TBD] | 2026-04-10 | ✅ |

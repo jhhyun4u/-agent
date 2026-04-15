@@ -24,6 +24,7 @@ END $$;
 -- 10개 통합 비즈니스 상태로 CHECK constraint 재정의
 ALTER TABLE proposals ADD CONSTRAINT status_check CHECK (
     status IN (
+        'initialized',   -- 0. 제안서 초기 생성 (기존 데이터 호환)
         'waiting',       -- 1. 생성 후 대기
         'in_progress',   -- 2. AI 워크플로우 진행 중
         'completed',     -- 3. 내부 완성 (제출 전)
@@ -191,8 +192,8 @@ COMMIT;
 -- ============================================
 -- Summary
 -- ============================================
--- Layer 1 Business Status (9개):
---   waiting, in_progress, completed, submitted, presentation,
+-- Layer 1 Business Status (10개):
+--   initialized, waiting, in_progress, completed, submitted, presentation,
 --   closed, archived, on_hold, expired
 --
 -- win_result (5개, closed 시 세부 구분):

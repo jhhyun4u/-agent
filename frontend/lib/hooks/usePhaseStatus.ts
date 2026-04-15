@@ -47,18 +47,18 @@ export function usePhaseStatus(proposalId: string): UsePhaseStatusResult {
       // processing 상태면 폴링 시작
       if (
         data &&
-        (data.status === "processing" ||
-          data.status === "initialized" ||
-          data.status === "running")
+        (data.status === "in_progress" ||
+          data.status === "waiting" ||
+          data.status === "initialized")
       ) {
         pollRef.current = setInterval(async () => {
           const updated = await fetchStatus();
           // 완료/실패 시 폴링 중단
           if (
             updated &&
-            updated.status !== "processing" &&
-            updated.status !== "initialized" &&
-            updated.status !== "running"
+            updated.status !== "in_progress" &&
+            updated.status !== "waiting" &&
+            updated.status !== "initialized"
           ) {
             if (pollRef.current) clearInterval(pollRef.current);
           }
@@ -94,9 +94,9 @@ export function usePhaseStatus(proposalId: string): UsePhaseStatusResult {
             };
             // Realtime으로 완료/실패 수신 시 폴링 중단
             if (
-              updated.status !== "processing" &&
-              updated.status !== "initialized" &&
-              updated.status !== "running"
+              updated.status !== "in_progress" &&
+              updated.status !== "waiting" &&
+              updated.status !== "initialized"
             ) {
               if (pollRef.current) clearInterval(pollRef.current);
             }

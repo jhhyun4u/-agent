@@ -1,0 +1,147 @@
+# STEP 8A-8F Deployment Checklist & Deployment Steps
+Cohesion: 0.06 | Nodes: 33
+
+## Key Nodes
+- **STEP 8A-8F Deployment Checklist** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 9 connections
+  - -> contains -> [[phase-1-code-quality]]
+  - -> contains -> [[phase-2-node-implementation]]
+  - -> contains -> [[phase-3-routing-graph]]
+  - -> contains -> [[phase-4-testing]]
+  - -> contains -> [[phase-5-code-metrics]]
+  - -> contains -> [[phase-6-pre-deployment-verification]]
+  - -> contains -> [[deployment-steps]]
+  - -> contains -> [[known-limitations]]
+  - -> contains -> [[sign-off]]
+- **Deployment Steps** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 5 connections
+  - -> contains -> [[1-pre-deployment-now]]
+  - -> contains -> [[2-staging-day-1]]
+  - -> contains -> [[3-production-day-2-3]]
+  - -> contains -> [[4-post-deployment-week-1]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Phase 1: Code Quality ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 4 connections
+  - -> contains -> [[critical-issues-red]]
+  - -> contains -> [[code-style-yellow]]
+  - -> contains -> [[verification]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Phase 3: Routing & Graph ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 4 connections
+  - -> contains -> [[routing-functions-3-new]]
+  - -> contains -> [[graph-integration]]
+  - -> contains -> [[graph-flow]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Phase 5: Code Metrics ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 4 connections
+  - -> contains -> [[lines-of-code]]
+  - -> contains -> [[token-budget]]
+  - -> contains -> [[quality-metrics]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Phase 6: Pre-Deployment Verification** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 4 connections
+  - -> contains -> [[code-review]]
+  - -> contains -> [[documentation]]
+  - -> contains -> [[dependencies]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Test Coverage** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 4 connections
+  - -> contains -> [[unit-tests-35-cases]]
+  - -> contains -> [[integration-tests-18-cases]]
+  - -> contains -> [[coverage-summary]]
+  - <- contains <- [[phase-4-testing]]
+- **Phase 2: Node Implementation ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 3 connections
+  - -> contains -> [[core-nodes-6-files]]
+  - -> contains -> [[features-per-node]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Phase 4: Testing ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 3 connections
+  - -> contains -> [[test-files-created-5-files]]
+  - -> contains -> [[test-coverage]]
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **1. Pre-Deployment (Now)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[deployment-steps]]
+- **2. Staging (Day 1)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[deployment-steps]]
+- **3. Production (Day 2-3)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[deployment-steps]]
+- **4. Post-Deployment (Week 1)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[deployment-steps]]
+- **Code Review ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-6-pre-deployment-verification]]
+- **Code Style (YELLOW)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-1-code-quality]]
+- **Core Nodes (6 files)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-2-node-implementation]]
+- **Coverage Summary** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[test-coverage]]
+- **Critical Issues (RED)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-1-code-quality]]
+- **Dependencies ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-6-pre-deployment-verification]]
+- **Documentation ✅** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-6-pre-deployment-verification]]
+- **Features Per Node** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-2-node-implementation]]
+- **Graph Flow** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-3-routing-graph]]
+- **Graph Integration** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-3-routing-graph]]
+- **Integration Tests (18 cases)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[test-coverage]]
+- **Known Limitations** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Lines of Code** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-5-code-metrics]]
+- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-5-code-metrics]]
+- **Routing Functions (3 new)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-3-routing-graph]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-deployment-checklist]]
+- **Test Files Created (5 files)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-4-testing]]
+- **Token Budget** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-5-code-metrics]]
+- **Unit Tests (35 cases)** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[test-coverage]]
+- **Verification** (C:\project\tenopa proposer\-agent-master\STEP8A_DEPLOYMENT_CHECKLIST.md) -- 1 connections
+  - <- contains <- [[phase-1-code-quality]]
+
+## Internal Relationships
+- Deployment Steps -> contains -> 1. Pre-Deployment (Now) [EXTRACTED]
+- Deployment Steps -> contains -> 2. Staging (Day 1) [EXTRACTED]
+- Deployment Steps -> contains -> 3. Production (Day 2-3) [EXTRACTED]
+- Deployment Steps -> contains -> 4. Post-Deployment (Week 1) [EXTRACTED]
+- Phase 1: Code Quality ✅ -> contains -> Critical Issues (RED) [EXTRACTED]
+- Phase 1: Code Quality ✅ -> contains -> Code Style (YELLOW) [EXTRACTED]
+- Phase 1: Code Quality ✅ -> contains -> Verification [EXTRACTED]
+- Phase 2: Node Implementation ✅ -> contains -> Core Nodes (6 files) [EXTRACTED]
+- Phase 2: Node Implementation ✅ -> contains -> Features Per Node [EXTRACTED]
+- Phase 3: Routing & Graph ✅ -> contains -> Routing Functions (3 new) [EXTRACTED]
+- Phase 3: Routing & Graph ✅ -> contains -> Graph Integration [EXTRACTED]
+- Phase 3: Routing & Graph ✅ -> contains -> Graph Flow [EXTRACTED]
+- Phase 4: Testing ✅ -> contains -> Test Files Created (5 files) [EXTRACTED]
+- Phase 4: Testing ✅ -> contains -> Test Coverage [EXTRACTED]
+- Phase 5: Code Metrics ✅ -> contains -> Lines of Code [EXTRACTED]
+- Phase 5: Code Metrics ✅ -> contains -> Token Budget [EXTRACTED]
+- Phase 5: Code Metrics ✅ -> contains -> Quality Metrics [EXTRACTED]
+- Phase 6: Pre-Deployment Verification -> contains -> Code Review ✅ [EXTRACTED]
+- Phase 6: Pre-Deployment Verification -> contains -> Documentation ✅ [EXTRACTED]
+- Phase 6: Pre-Deployment Verification -> contains -> Dependencies ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 1: Code Quality ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 2: Node Implementation ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 3: Routing & Graph ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 4: Testing ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 5: Code Metrics ✅ [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Phase 6: Pre-Deployment Verification [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Deployment Steps [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Known Limitations [EXTRACTED]
+- STEP 8A-8F Deployment Checklist -> contains -> Sign-Off [EXTRACTED]
+- Test Coverage -> contains -> Unit Tests (35 cases) [EXTRACTED]
+- Test Coverage -> contains -> Integration Tests (18 cases) [EXTRACTED]
+- Test Coverage -> contains -> Coverage Summary [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 STEP 8A-8F Deployment Checklist, Deployment Steps, Phase 1: Code Quality ✅를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 STEP8A_DEPLOYMENT_CHECKLIST.md이다.
+
+### Key Facts
+- **Date:** 2026-03-30 **Status:** ✅ READY FOR TESTING
+- 1. Pre-Deployment (Now) - [x] Run this checklist - [x] Verify all 5 critical fixes - [x] Syntax validation complete
+- Critical Issues (RED) - [x] C-1: `get_claude_client()` → `claude_generate()` — Fixed in 6 files - [x] C-2: `parent_version` parameter removed — Fixed in 3 files - [x] C-3: Hardcoded model names — Fixed via `claude_generate()` - [x] C-4: State field name collision — Clarified with comments - [x]…
+- Routing Functions (3 new) - [x] `route_after_section_validator_review` — 3-way routing (approved/needs_rework/rejected) - [x] `route_after_feedback_processor_review` — 2-way routing (proceed_rewrite/skip_to_ppt) - [x] `route_after_rewrite_review` — 3-way routing…
+- Lines of Code | Component | Lines | Status | |-----------|-------|--------| | Nodes (6) | ~900 | ✅ | | Prompts (6) | ~700 | ✅ | | Routing (3) | ~100 | ✅ | | Graph integration | ~80 | ✅ | | Tests (5 files) | ~800 | ✅ | | **Total** | **~2,580** | **✅** |

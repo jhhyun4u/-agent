@@ -26,6 +26,8 @@ from app.config import settings
 from app.middleware.rate_limit import limiter
 from app.exceptions import PropNotFoundError, WFAlreadyRunningError, WFResumeValidationError
 from app.models.auth_schemas import CurrentUser
+from app.state_machine import StateMachine
+from app.services.state_validator import ProposalStatus
 from app.models.workflow_schemas import (
     AiActionResponse, AiStatusResponse, GotoResponse, ImpactResponse,
     SectionLockResponse, SectionUnlockResponse,
@@ -146,19 +148,29 @@ async def start_workflow(
     client = await get_async_client()
 
     # 프로젝트 존재 확인
-    proposal = await client.table("proposals").select("id, status").eq("id", proposal_id).single().execute()
+    proposal = await client.table("proposals").select("id, status, current_phase").eq("id", proposal_id).single().execute()
     if not proposal.data:
         raise PropNotFoundError(proposal_id)
-    # HOTFIX: Check for active workflow states instead of "running" (Phase 0 - pending unified state migration)
-    active_states = ('processing', 'searching', 'analyzing', 'strategizing', 'submitted', 'presented')
-    if proposal.data["status"] in active_states:
+
+    # 활성 상태 확인: 이미 진행 중인 제안서는 재시작 불가
+    current_status = proposal.data["status"]
+    active_states = (ProposalStatus.IN_PROGRESS.value, ProposalStatus.COMPLETED.value)
+    if current_status in active_states:
         raise WFAlreadyRunningError(proposal_id)
 
-    # 상태 업데이트: Set to "processing" (Phase 0 HOTFIX: was "running" which violates CHECK constraint)
-    await client.table("proposals").update({
-        "status": "processing",
-        "current_phase": "start",
-    }).eq("id", proposal_id).execute()
+    # StateMachine: 상태 전환 (initialized/waiting → in_progress)
+    try:
+        sm = StateMachine(proposal_id)
+        await sm.start_workflow(user_id=user.id, initial_phase="start")
+    except ValueError as e:
+        logger.warning(f"상태 전환 실패 (proposal_id={proposal_id}): {e}")
+        # 오류 발생 시 on_hold 상태로 전환 (재개 가능)
+        try:
+            sm_hold = StateMachine(proposal_id)
+            await sm_hold.hold_proposal(user_id=None, reason=f"워크플로우 시작 오류: {str(e)}")
+        except Exception as hold_error:
+            logger.error(f"on_hold 전환 실패: {hold_error}")
+        raise
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -191,22 +203,52 @@ async def start_workflow(
         }
     except Exception as e:
         logger.error(f"워크플로 시작 실패: {e}")
-        await client.table("proposals").update({
-            "status": "error",
-            "current_phase": f"error: {type(e).__name__}",
-        }).eq("id", proposal_id).execute()
+        # 그래프 실행 오류 시 on_hold로 전환 (수동 재개 가능)
+        try:
+            sm_hold = StateMachine(proposal_id)
+            await sm_hold.hold_proposal(user_id=None, reason=f"워크플로우 실행 오류: {type(e).__name__}: {str(e)}")
+        except Exception as hold_error:
+            logger.error(f"on_hold 전환 실패: {hold_error}")
         raise
 
 
 @router.get("/{proposal_id}/state", response_model=WorkflowStateResponse)
 async def get_workflow_state(proposal_id: str, user: CurrentUser = Depends(get_current_user), _access=Depends(require_project_access)):
-    """현재 그래프 상태 조회."""
+    """현재 그래프 상태 조회 (3-layer: Business Status + Workflow Phase + AI Status)."""
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
+    client = await get_async_client()
 
     try:
+        # Layer 1: Business Status (proposals 테이블)
+        prop = await client.table("proposals").select(
+            "status, current_phase, started_at, last_activity_at, completed_at, submitted_at, presentation_started_at, closed_at, archived_at, expired_at"
+        ).eq("id", proposal_id).single().execute()
+
+        business_status = prop.data.get("status", "") if prop.data else ""
+        workflow_phase = prop.data.get("current_phase", "") if prop.data else ""
+
+        timestamps = {}
+        if prop.data:
+            for ts_field in ["started_at", "last_activity_at", "completed_at", "submitted_at", "presentation_started_at", "closed_at", "archived_at", "expired_at"]:
+                if prop.data.get(ts_field):
+                    timestamps[ts_field] = prop.data[ts_field]
+
+        # Layer 2: Workflow Phase (LangGraph state)
         snapshot = await graph.aget_state(config)
         state = snapshot.values if snapshot else {}
+
+        # Layer 3: AI Status (ai_task_logs 테이블)
+        ai_log = await client.table("ai_task_logs").select(
+            "status, step, error_message, created_at"
+        ).eq("proposal_id", proposal_id).order("created_at", desc=True).limit(1).maybe_single().execute()
+
+        ai_status = {
+            "status": ai_log.data.get("status", "idle") if ai_log.data else "idle",
+            "current_node": ai_log.data.get("step", "") if ai_log.data else "",
+            "error_message": ai_log.data.get("error_message") if ai_log.data and ai_log.data.get("error_message") else None,
+            "last_updated_at": ai_log.data.get("created_at") if ai_log.data else None,
+        }
 
         # 토큰 비용 요약
         token_usage = state.get("token_usage", {})
@@ -217,6 +259,12 @@ async def get_workflow_state(proposal_id: str, user: CurrentUser = Depends(get_c
 
         return {
             "proposal_id": proposal_id,
+            # 3-Layer Architecture
+            "business_status": business_status,
+            "workflow_phase": workflow_phase,
+            "ai_status": ai_status,
+            "timestamps": timestamps,
+            # Legacy fields for backward compatibility
             "current_step": state.get("current_step", ""),
             "positioning": state.get("positioning"),
             "approval": _serialize_approval(state.get("approval", {})),
@@ -307,14 +355,27 @@ async def resume_workflow(
                 logger.warning(f"피드백 DB 저장 실패 (무시): {e}")
 
         update_data = {"current_phase": current_step}
-        # 종료 체크
+
+        # 종료 체크: StateMachine으로 상태 전환
         if current_step in ("go_no_go_no_go", "search_no_interest"):
-            # HOTFIX: Set to "abandoned" (Phase 0 - was "cancelled" which violates CHECK constraint)
-            update_data["status"] = "abandoned"
-            logger.info(f"[WF_ABANDONED] proposal={proposal_id}, reason={current_step}", extra={
-                "request_id": rid,
-                "data": {"event": "workflow_abandoned", "proposal_id": proposal_id, "final_step": current_step},
-            })
+            try:
+                sm = StateMachine(proposal_id)
+                win_result = "no_go" if current_step == "go_no_go_no_go" else "abandoned"
+                await sm.close_proposal(
+                    user_id=user.id,
+                    win_result=win_result,
+                    reason=f"워크플로우 미진행: {current_step}",
+                    actor_type="workflow",
+                )
+                logger.info(f"[WF_CLOSED] proposal={proposal_id}, reason={current_step}, win_result={win_result}", extra={
+                    "request_id": rid,
+                    "data": {"event": "workflow_closed", "proposal_id": proposal_id, "final_step": current_step, "win_result": win_result},
+                })
+            except Exception as e:
+                logger.error(f"제안서 종료 처리 실패 (proposal_id={proposal_id}): {e}")
+                # 실패 시 기존 방식으로 폴백
+                update_data["status"] = "closed"
+
         await client.table("proposals").update(update_data).eq("id", proposal_id).execute()
 
         # 3-Stream 상태 포함

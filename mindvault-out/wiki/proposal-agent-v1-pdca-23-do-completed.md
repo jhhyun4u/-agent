@@ -1,0 +1,271 @@
+# proposal-agent-v1 PDCA 완료 보고서 & 2.3 Do 단계 (구현) — ✅ COMPLETED
+Cohesion: 0.03 | Nodes: 64
+
+## Key Nodes
+- **proposal-agent-v1 PDCA 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 12 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5-medium-5]]
+  - -> contains -> [[6-phase-7-onwards]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+  - -> contains -> [[11]]
+  - -> contains -> [[appendix]]
+- **2.3 Do 단계 (구현) — ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 10 connections
+  - -> contains -> [[231-phase-0]]
+  - -> contains -> [[232-phase-1-langgraph]]
+  - -> contains -> [[233-phase-2-ppt]]
+  - -> contains -> [[234-phase-3]]
+  - -> contains -> [[235-phase-35-grant-writer]]
+  - -> contains -> [[236-phase-4-g2b]]
+  - -> contains -> [[237-phase-45]]
+  - -> contains -> [[238-phase-5-frontend]]
+  - -> contains -> [[239-phase-6-3-stream]]
+  - <- contains <- [[2-pdca]]
+- **2. PDCA 단계별 결과** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 6 connections
+  - -> contains -> [[21-plan-completed]]
+  - -> contains -> [[22-design-completed]]
+  - -> contains -> [[23-do-completed]]
+  - -> contains -> [[24-check-completed]]
+  - -> contains -> [[25-act-completed]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **2.4 Check 단계 (갭 분석) — ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 5 connections
+  - -> contains -> [[241-94]]
+  - -> contains -> [[242-high]]
+  - -> contains -> [[243-medium]]
+  - -> contains -> [[244-low]]
+  - <- contains <- [[2-pdca]]
+- **3.2 기술적 성취** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 5 connections
+  - -> contains -> [[321-stategraph]]
+  - -> contains -> [[322]]
+  - -> contains -> [[323]]
+  - -> contains -> [[324]]
+  - <- contains <- [[3]]
+- **4. 핵심 학습 및 통찰** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 5 connections
+  - -> contains -> [[41-langgraph]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - -> contains -> [[44-pdca]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **10. 결론** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 4 connections
+  - -> contains -> [[101]]
+  - -> contains -> [[102]]
+  - -> contains -> [[103]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **3. 최종 성과 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 4 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **5.1 우선순위별 액션** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 4 connections
+  - -> contains -> [[tier-1-12]]
+  - -> contains -> [[tier-2-1]]
+  - -> contains -> [[tier-3]]
+  - <- contains <- [[5-medium-5]]
+- **6. 다음 단계 (Phase 7 onwards)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 4 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62-12]]
+  - -> contains -> [[63-1]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **1. 프로젝트 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12-pdca]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **2.5 Act 단계 (개선 & 재검증) — ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[251-high]]
+  - -> contains -> [[252-check]]
+  - <- contains <- [[2-pdca]]
+- **3.3 정성적 성취** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[331]]
+  - -> contains -> [[332]]
+  - <- contains <- [[3]]
+- **7. 의존성 및 전제 조건** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **8. 위험 및 완화 전략** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **9. 문서 및 아카이브** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 3 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **5. 남은 과제 (MEDIUM 5건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 2 connections
+  - -> contains -> [[51]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **10.1 최종 평가** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10.2 설계-구현 진화의 가치** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10.3 다음 반복을 위한 권장사항** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **11. 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **1.1 프로젝트 개요** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 PDCA 사이클 완성도** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **2.1 Plan 단계 (요구사항 정의) — ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.2 Design 단계 (아키텍처 설계) — ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.3.1 Phase 0 — 인프라·인증 기반** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.2 Phase 1 — LangGraph 핵심 뼈대** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.3 Phase 2 — 전략·계획·제안서·PPT** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.4 Phase 3 — 산출물 + 알림** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.5 Phase 3.5 — Grant-Writer 프롬프트 개선** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.6 Phase 4 — G2B + 성과 추적** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.7 Phase 4.5 — 갭 정리** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.8 Phase 5 — Frontend 구현** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.3.9 Phase 6 — 3-Stream 병행 업무** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[23-do-completed]]
+- **2.4.1 최종 매치율: **94%**** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[24-check-completed]]
+- **2.4.2 HIGH 갭 해결** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[24-check-completed]]
+- **2.4.3 MEDIUM 갭 (설계 진화, 잔여)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[24-check-completed]]
+- **2.4.4 LOW 갭 (의도적 허용)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[24-check-completed]]
+- **2.5.1 HIGH 갭 즉시 수정** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[25-act-completed]]
+- **2.5.2 재분석 (Check 재실행)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[25-act-completed]]
+- **3.1 정량 지표** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2.1 StateGraph 구현 패턴** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[32]]
+- **3.2.2 멀티 스트림 오케스트레이션** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[32]]
+- **3.2.3 안정성 및 복원력** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[32]]
+- **3.2.4 확장성 및 유지보수성** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[32]]
+- **3.3.1 설계-구현 간 진화 (의도적 개선)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[33]]
+- **3.3.2 팀 협업 효율성** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[33]]
+- **4.1 LangGraph 설계 패턴** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 프롬프트 체계화** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.3 설계-구현 괴리의 원인** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.4 PDCA 사이클의 가치** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **6.1 즉시 실행 (이번 주)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[6-phase-7-onwards]]
+- **6.2 단기 계획 (1~2주)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[6-phase-7-onwards]]
+- **6.3 중기 계획 (1개월)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[6-phase-7-onwards]]
+- **7.1 운영 전제** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 테스트 전제** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 식별된 위험** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 완화 계획** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9.1 최종 문서 위치** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 버전 관리** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **Appendix: 용어 정의** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **Tier 1 (1~2주, 선택적)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[51]]
+- **Tier 2 (1개월, 권장)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[51]]
+- **Tier 3 (운영 관점, 진행중)** (C:\project\tenopa proposer\-agent-master\docs\04-report\proposal-agent-v1.completion.report.md) -- 1 connections
+  - <- contains <- [[51]]
+
+## Internal Relationships
+- 1. 프로젝트 요약 -> contains -> 1.1 프로젝트 개요 [EXTRACTED]
+- 1. 프로젝트 요약 -> contains -> 1.2 PDCA 사이클 완성도 [EXTRACTED]
+- 10. 결론 -> contains -> 10.1 최종 평가 [EXTRACTED]
+- 10. 결론 -> contains -> 10.2 설계-구현 진화의 가치 [EXTRACTED]
+- 10. 결론 -> contains -> 10.3 다음 반복을 위한 권장사항 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.1 Phase 0 — 인프라·인증 기반 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.2 Phase 1 — LangGraph 핵심 뼈대 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.3 Phase 2 — 전략·계획·제안서·PPT [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.4 Phase 3 — 산출물 + 알림 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.5 Phase 3.5 — Grant-Writer 프롬프트 개선 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.6 Phase 4 — G2B + 성과 추적 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.7 Phase 4.5 — 갭 정리 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.8 Phase 5 — Frontend 구현 [EXTRACTED]
+- 2.3 Do 단계 (구현) — ✅ COMPLETED -> contains -> 2.3.9 Phase 6 — 3-Stream 병행 업무 [EXTRACTED]
+- 2.4 Check 단계 (갭 분석) — ✅ COMPLETED -> contains -> 2.4.1 최종 매치율: **94%** [EXTRACTED]
+- 2.4 Check 단계 (갭 분석) — ✅ COMPLETED -> contains -> 2.4.2 HIGH 갭 해결 [EXTRACTED]
+- 2.4 Check 단계 (갭 분석) — ✅ COMPLETED -> contains -> 2.4.3 MEDIUM 갭 (설계 진화, 잔여) [EXTRACTED]
+- 2.4 Check 단계 (갭 분석) — ✅ COMPLETED -> contains -> 2.4.4 LOW 갭 (의도적 허용) [EXTRACTED]
+- 2.5 Act 단계 (개선 & 재검증) — ✅ COMPLETED -> contains -> 2.5.1 HIGH 갭 즉시 수정 [EXTRACTED]
+- 2.5 Act 단계 (개선 & 재검증) — ✅ COMPLETED -> contains -> 2.5.2 재분석 (Check 재실행) [EXTRACTED]
+- 2. PDCA 단계별 결과 -> contains -> 2.1 Plan 단계 (요구사항 정의) — ✅ COMPLETED [EXTRACTED]
+- 2. PDCA 단계별 결과 -> contains -> 2.2 Design 단계 (아키텍처 설계) — ✅ COMPLETED [EXTRACTED]
+- 2. PDCA 단계별 결과 -> contains -> 2.3 Do 단계 (구현) — ✅ COMPLETED [EXTRACTED]
+- 2. PDCA 단계별 결과 -> contains -> 2.4 Check 단계 (갭 분석) — ✅ COMPLETED [EXTRACTED]
+- 2. PDCA 단계별 결과 -> contains -> 2.5 Act 단계 (개선 & 재검증) — ✅ COMPLETED [EXTRACTED]
+- 3. 최종 성과 요약 -> contains -> 3.1 정량 지표 [EXTRACTED]
+- 3. 최종 성과 요약 -> contains -> 3.2 기술적 성취 [EXTRACTED]
+- 3. 최종 성과 요약 -> contains -> 3.3 정성적 성취 [EXTRACTED]
+- 3.2 기술적 성취 -> contains -> 3.2.1 StateGraph 구현 패턴 [EXTRACTED]
+- 3.2 기술적 성취 -> contains -> 3.2.2 멀티 스트림 오케스트레이션 [EXTRACTED]
+- 3.2 기술적 성취 -> contains -> 3.2.3 안정성 및 복원력 [EXTRACTED]
+- 3.2 기술적 성취 -> contains -> 3.2.4 확장성 및 유지보수성 [EXTRACTED]
+- 3.3 정성적 성취 -> contains -> 3.3.1 설계-구현 간 진화 (의도적 개선) [EXTRACTED]
+- 3.3 정성적 성취 -> contains -> 3.3.2 팀 협업 효율성 [EXTRACTED]
+- 4. 핵심 학습 및 통찰 -> contains -> 4.1 LangGraph 설계 패턴 [EXTRACTED]
+- 4. 핵심 학습 및 통찰 -> contains -> 4.2 프롬프트 체계화 [EXTRACTED]
+- 4. 핵심 학습 및 통찰 -> contains -> 4.3 설계-구현 괴리의 원인 [EXTRACTED]
+- 4. 핵심 학습 및 통찰 -> contains -> 4.4 PDCA 사이클의 가치 [EXTRACTED]
+- 5.1 우선순위별 액션 -> contains -> Tier 1 (1~2주, 선택적) [EXTRACTED]
+- 5.1 우선순위별 액션 -> contains -> Tier 2 (1개월, 권장) [EXTRACTED]
+- 5.1 우선순위별 액션 -> contains -> Tier 3 (운영 관점, 진행중) [EXTRACTED]
+- 5. 남은 과제 (MEDIUM 5건) -> contains -> 5.1 우선순위별 액션 [EXTRACTED]
+- 6. 다음 단계 (Phase 7 onwards) -> contains -> 6.1 즉시 실행 (이번 주) [EXTRACTED]
+- 6. 다음 단계 (Phase 7 onwards) -> contains -> 6.2 단기 계획 (1~2주) [EXTRACTED]
+- 6. 다음 단계 (Phase 7 onwards) -> contains -> 6.3 중기 계획 (1개월) [EXTRACTED]
+- 7. 의존성 및 전제 조건 -> contains -> 7.1 운영 전제 [EXTRACTED]
+- 7. 의존성 및 전제 조건 -> contains -> 7.2 테스트 전제 [EXTRACTED]
+- 8. 위험 및 완화 전략 -> contains -> 8.1 식별된 위험 [EXTRACTED]
+- 8. 위험 및 완화 전략 -> contains -> 8.2 완화 계획 [EXTRACTED]
+- 9. 문서 및 아카이브 -> contains -> 9.1 최종 문서 위치 [EXTRACTED]
+- 9. 문서 및 아카이브 -> contains -> 9.2 버전 관리 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 1. 프로젝트 요약 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 2. PDCA 단계별 결과 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 3. 최종 성과 요약 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 4. 핵심 학습 및 통찰 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 5. 남은 과제 (MEDIUM 5건) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 6. 다음 단계 (Phase 7 onwards) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 7. 의존성 및 전제 조건 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 8. 위험 및 완화 전략 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 9. 문서 및 아카이브 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 10. 결론 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 11. 체크리스트 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> Appendix: 용어 정의 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 proposal-agent-v1 PDCA 완료 보고서, 2.3 Do 단계 (구현) — ✅ COMPLETED, 2. PDCA 단계별 결과를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-agent-v1.completion.report.md이다.
+
+### Key Facts
+- > **Summary**: 용역제안 Coworker 메인 제안 시스템 PDCA 사이클 완료. 94% 설계-구현 일치도 달성, HIGH 갭 2건 해결 완료. > > **기간**: 2026-01-15 ~ 2026-03-29 (약 2.5개월) > **최종 Match Rate**: 94% (v3.6 설계 vs v4.0 구현) > **상태**: Production-Ready > **마지막 업데이트**: 2026-03-29
+- **코드량**: 약 44,000줄 (Backend ~9,000줄 + Frontend ~35,000줄)
+- 2.1 Plan 단계 (요구사항 정의) — ✅ COMPLETED
+- **분석 문서**: `docs/03-analysis/features/proposal-agent-v1.analysis.md` (v3.6.1)
+- 3.2.1 StateGraph 구현 패턴 - **Pattern A (monolithic StateGraph + Send 병렬)** 검증 완료 - 토큰 효율성: ~114K/프로젝트 (멀티-에이전트 ~200K 대비 43% 절감) - 단일 상태 유지로 compliance tracking 용이

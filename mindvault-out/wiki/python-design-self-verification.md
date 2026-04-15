@@ -1,0 +1,229 @@
+# python & Design: 플랫폼 자가검증 시스템 (Self-Verification)
+Cohesion: 0.09 | Nodes: 37
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 23 connections
+  - <- has_code_example <- [[3-healthresult]]
+  - <- has_code_example <- [[4-healthcheckrunner]]
+  - <- has_code_example <- [[i-1-db]]
+  - <- has_code_example <- [[i-2-supabase-storage]]
+  - <- has_code_example <- [[i-3-cpu]]
+  - <- has_code_example <- [[d-1-daysremaining]]
+  - <- has_code_example <- [[d-2]]
+  - <- has_code_example <- [[d-3-stale]]
+  - <- has_code_example <- [[d-4-mv]]
+  - <- has_code_example <- [[d-5-db]]
+  - <- has_code_example <- [[e-1-g2b-api]]
+  - <- has_code_example <- [[e-2-claude-api]]
+  - <- has_code_example <- [[e-3-teams-webhook]]
+  - <- has_code_example <- [[a-1-health]]
+  - <- has_code_example <- [[a-2-bidsmonitor]]
+  - <- has_code_example <- [[a-3-a-4-scored-proposals]]
+  - <- has_code_example <- [[6-alertmanager]]
+  - <- has_code_example <- [[scheduledmonitorpy]]
+  - <- has_code_example <- [[get-health-mainpy]]
+  - <- has_code_example <- [[get-apiadminhealthdetail]]
+  - <- has_code_example <- [[post-apiadminhealthrun]]
+  - <- has_code_example <- [[9-supabaseclientpy]]
+  - <- has_code_example <- [[10-configpy]]
+- **Design: 플랫폼 자가검증 시스템 (Self-Verification)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 11 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-db]]
+  - -> contains -> [[3-healthresult]]
+  - -> contains -> [[4-healthcheckrunner]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6-alertmanager]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-api]]
+  - -> contains -> [[9-supabaseclientpy]]
+  - -> contains -> [[10-configpy]]
+  - -> contains -> [[11-plan-8]]
+- **5-2. 데이터 정합성 (D-1 ~ D-5)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 6 connections
+  - -> contains -> [[d-1-daysremaining]]
+  - -> contains -> [[d-2]]
+  - -> contains -> [[d-3-stale]]
+  - -> contains -> [[d-4-mv]]
+  - -> contains -> [[d-5-db]]
+  - <- contains <- [[5]]
+- **5. 검증 항목별 구현 명세** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 5 connections
+  - -> contains -> [[5-1-i-1-i-3]]
+  - -> contains -> [[5-2-d-1-d-5]]
+  - -> contains -> [[5-3-e-1-e-3]]
+  - -> contains -> [[5-4-api-a-1-a-4]]
+  - <- contains <- [[design-self-verification]]
+- **5-1. 인프라 (I-1 ~ I-3)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 4 connections
+  - -> contains -> [[i-1-db]]
+  - -> contains -> [[i-2-supabase-storage]]
+  - -> contains -> [[i-3-cpu]]
+  - <- contains <- [[5]]
+- **5-3. 외부 서비스 (E-1 ~ E-3)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 4 connections
+  - -> contains -> [[e-1-g2b-api]]
+  - -> contains -> [[e-2-claude-api]]
+  - -> contains -> [[e-3-teams-webhook]]
+  - <- contains <- [[5]]
+- **5-4. API 스모크 테스트 (A-1 ~ A-4)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 4 connections
+  - -> contains -> [[a-1-health]]
+  - -> contains -> [[a-2-bidsmonitor]]
+  - -> contains -> [[a-3-a-4-scored-proposals]]
+  - <- contains <- [[5]]
+- **8. API 엔드포인트** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 4 connections
+  - -> contains -> [[get-health-mainpy]]
+  - -> contains -> [[get-apiadminhealthdetail]]
+  - -> contains -> [[post-apiadminhealthrun]]
+  - <- contains <- [[design-self-verification]]
+- **10. 설정 확장 (`config.py`)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-self-verification]]
+- **2. DB 스키마** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> contains -> [[databasemigrations012healthchecklogssql]]
+  - <- contains <- [[design-self-verification]]
+- **3. 핵심 모델: `HealthResult`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-self-verification]]
+- **4. `HealthCheckRunner` 상세 설계** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-self-verification]]
+- **6. `AlertManager` 상세 설계** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-self-verification]]
+- **7. 스케줄러 통합** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> contains -> [[scheduledmonitorpy]]
+  - <- contains <- [[design-self-verification]]
+- **9. `supabase_client.py` 확장** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-self-verification]]
+- **A-1: /health** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-4-api-a-1-a-4]]
+- **A-2: /bids/monitor (핵심 검증)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-4-api-a-1-a-4]]
+- **A-3, A-4: scored, proposals** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-4-api-a-1-a-4]]
+- **D-1: 마감 경과 공고 days_remaining 불일치** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-2-d-1-d-5]]
+- **D-2: 고아 추천 레코드** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-2-d-1-d-5]]
+- **D-3: Stale 세션** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-2-d-1-d-5]]
+- **D-4: MV 최신성** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-2-d-1-d-5]]
+- **D-5: 파일 캐시-DB 불일치** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-2-d-1-d-5]]
+- **`database/migrations/012_health_check_logs.sql`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[2-db]]
+- **E-1: G2B API** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-3-e-1-e-3]]
+- **E-2: Claude API 키 유효성** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-3-e-1-e-3]]
+- **E-3: Teams Webhook** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-3-e-1-e-3]]
+- **`GET /api/admin/health/detail` (관리자용)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[8-api]]
+- **`GET /health` 확장 (`main.py`)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[8-api]]
+- **I-1: DB 연결** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-1-i-1-i-3]]
+- **I-2: Supabase Storage** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-1-i-1-i-3]]
+- **I-3: 메모리/CPU** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-1-i-1-i-3]]
+- **`POST /api/admin/health/run` (수동 실행)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[8-api]]
+- **`scheduled_monitor.py` 추가 잡** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[7]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 1 connections
+  - <- has_code_example <- [[databasemigrations012healthchecklogssql]]
+- **1. 모듈 구조** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 1 connections
+  - <- contains <- [[design-self-verification]]
+- **11. 구현 순서 (Plan §8 기반)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\self-verification.design.md) -- 1 connections
+  - <- contains <- [[design-self-verification]]
+
+## Internal Relationships
+- 10. 설정 확장 (`config.py`) -> has_code_example -> python [EXTRACTED]
+- 2. DB 스키마 -> contains -> `database/migrations/012_health_check_logs.sql` [EXTRACTED]
+- 3. 핵심 모델: `HealthResult` -> has_code_example -> python [EXTRACTED]
+- 4. `HealthCheckRunner` 상세 설계 -> has_code_example -> python [EXTRACTED]
+- 5. 검증 항목별 구현 명세 -> contains -> 5-1. 인프라 (I-1 ~ I-3) [EXTRACTED]
+- 5. 검증 항목별 구현 명세 -> contains -> 5-2. 데이터 정합성 (D-1 ~ D-5) [EXTRACTED]
+- 5. 검증 항목별 구현 명세 -> contains -> 5-3. 외부 서비스 (E-1 ~ E-3) [EXTRACTED]
+- 5. 검증 항목별 구현 명세 -> contains -> 5-4. API 스모크 테스트 (A-1 ~ A-4) [EXTRACTED]
+- 5-1. 인프라 (I-1 ~ I-3) -> contains -> I-1: DB 연결 [EXTRACTED]
+- 5-1. 인프라 (I-1 ~ I-3) -> contains -> I-2: Supabase Storage [EXTRACTED]
+- 5-1. 인프라 (I-1 ~ I-3) -> contains -> I-3: 메모리/CPU [EXTRACTED]
+- 5-2. 데이터 정합성 (D-1 ~ D-5) -> contains -> D-1: 마감 경과 공고 days_remaining 불일치 [EXTRACTED]
+- 5-2. 데이터 정합성 (D-1 ~ D-5) -> contains -> D-2: 고아 추천 레코드 [EXTRACTED]
+- 5-2. 데이터 정합성 (D-1 ~ D-5) -> contains -> D-3: Stale 세션 [EXTRACTED]
+- 5-2. 데이터 정합성 (D-1 ~ D-5) -> contains -> D-4: MV 최신성 [EXTRACTED]
+- 5-2. 데이터 정합성 (D-1 ~ D-5) -> contains -> D-5: 파일 캐시-DB 불일치 [EXTRACTED]
+- 5-3. 외부 서비스 (E-1 ~ E-3) -> contains -> E-1: G2B API [EXTRACTED]
+- 5-3. 외부 서비스 (E-1 ~ E-3) -> contains -> E-2: Claude API 키 유효성 [EXTRACTED]
+- 5-3. 외부 서비스 (E-1 ~ E-3) -> contains -> E-3: Teams Webhook [EXTRACTED]
+- 5-4. API 스모크 테스트 (A-1 ~ A-4) -> contains -> A-1: /health [EXTRACTED]
+- 5-4. API 스모크 테스트 (A-1 ~ A-4) -> contains -> A-2: /bids/monitor (핵심 검증) [EXTRACTED]
+- 5-4. API 스모크 테스트 (A-1 ~ A-4) -> contains -> A-3, A-4: scored, proposals [EXTRACTED]
+- 6. `AlertManager` 상세 설계 -> has_code_example -> python [EXTRACTED]
+- 7. 스케줄러 통합 -> contains -> `scheduled_monitor.py` 추가 잡 [EXTRACTED]
+- 8. API 엔드포인트 -> contains -> `GET /health` 확장 (`main.py`) [EXTRACTED]
+- 8. API 엔드포인트 -> contains -> `GET /api/admin/health/detail` (관리자용) [EXTRACTED]
+- 8. API 엔드포인트 -> contains -> `POST /api/admin/health/run` (수동 실행) [EXTRACTED]
+- 9. `supabase_client.py` 확장 -> has_code_example -> python [EXTRACTED]
+- A-1: /health -> has_code_example -> python [EXTRACTED]
+- A-2: /bids/monitor (핵심 검증) -> has_code_example -> python [EXTRACTED]
+- A-3, A-4: scored, proposals -> has_code_example -> python [EXTRACTED]
+- D-1: 마감 경과 공고 days_remaining 불일치 -> has_code_example -> python [EXTRACTED]
+- D-2: 고아 추천 레코드 -> has_code_example -> python [EXTRACTED]
+- D-3: Stale 세션 -> has_code_example -> python [EXTRACTED]
+- D-4: MV 최신성 -> has_code_example -> python [EXTRACTED]
+- D-5: 파일 캐시-DB 불일치 -> has_code_example -> python [EXTRACTED]
+- `database/migrations/012_health_check_logs.sql` -> has_code_example -> sql [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 1. 모듈 구조 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 2. DB 스키마 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 3. 핵심 모델: `HealthResult` [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 4. `HealthCheckRunner` 상세 설계 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 5. 검증 항목별 구현 명세 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 6. `AlertManager` 상세 설계 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 7. 스케줄러 통합 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 8. API 엔드포인트 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 9. `supabase_client.py` 확장 [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 10. 설정 확장 (`config.py`) [EXTRACTED]
+- Design: 플랫폼 자가검증 시스템 (Self-Verification) -> contains -> 11. 구현 순서 (Plan §8 기반) [EXTRACTED]
+- E-1: G2B API -> has_code_example -> python [EXTRACTED]
+- E-2: Claude API 키 유효성 -> has_code_example -> python [EXTRACTED]
+- E-3: Teams Webhook -> has_code_example -> python [EXTRACTED]
+- `GET /api/admin/health/detail` (관리자용) -> has_code_example -> python [EXTRACTED]
+- `GET /health` 확장 (`main.py`) -> has_code_example -> python [EXTRACTED]
+- I-1: DB 연결 -> has_code_example -> python [EXTRACTED]
+- I-2: Supabase Storage -> has_code_example -> python [EXTRACTED]
+- I-3: 메모리/CPU -> has_code_example -> python [EXTRACTED]
+- `POST /api/admin/health/run` (수동 실행) -> has_code_example -> python [EXTRACTED]
+- `scheduled_monitor.py` 추가 잡 -> has_code_example -> python [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, Design: 플랫폼 자가검증 시스템 (Self-Verification), 5-2. 데이터 정합성 (D-1 ~ D-5)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 self-verification.design.md이다.
+
+### Key Facts
+- ```python app/services/health_checker.py
+- > Plan: `docs/01-plan/features/self-verification.plan.md`
+- D-1: 마감 경과 공고 days_remaining 불일치
+- > **설계 결정**: localhost HTTP 호출 대신 **내부 함수 직접 호출**. 이유: 포트 충돌 없음, 더 빠름, 인증 우회 불필요.
+- `GET /health` 확장 (`main.py`)

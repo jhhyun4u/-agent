@@ -1,0 +1,202 @@
+# bid-recommendation 완료 보고서 (v2.0) & 3.1 백엔드 (100% ✅)
+Cohesion: 0.04 | Nodes: 46
+
+## Key Nodes
+- **bid-recommendation 완료 보고서 (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 9 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-what-went-well]]
+  - -> contains -> [[5-areas-for-improvement]]
+  - -> contains -> [[6-lessons-learned]]
+  - -> contains -> [[7-next-steps]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+- **3.1 백엔드 (100% ✅)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 7 connections
+  - -> contains -> [[311-db-100]]
+  - -> contains -> [[312-pydantic-100]]
+  - -> contains -> [[313-bidfetcher-100]]
+  - -> contains -> [[314-bidrecommender-100]]
+  - -> contains -> [[315-api-100]]
+  - -> contains -> [[316-g2bservice-100]]
+  - <- contains <- [[3]]
+- **9. 결론** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 6 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92]]
+  - -> contains -> [[93]]
+  - -> contains -> [[94-pdca]]
+  - -> contains -> [[pdca]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **2. PDCA 사이클 완료 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 5 connections
+  - -> contains -> [[21-plan]]
+  - -> contains -> [[22-design]]
+  - -> contains -> [[23-do]]
+  - -> contains -> [[24-check-gap-analysis]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **3.2 프론트엔드 (93% ✅)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 5 connections
+  - -> contains -> [[321-bids-93]]
+  - -> contains -> [[322-bidsbidno-100]]
+  - -> contains -> [[323-bidssettings-80]]
+  - -> contains -> [[324-frontend-api-client-100]]
+  - <- contains <- [[3]]
+- **7. 다음 단계 (Next Steps)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 5 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72-2]]
+  - -> contains -> [[73-1]]
+  - -> contains -> [[74]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **4. 핵심 성과 (What Went Well)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 4 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **8. 완료 기준 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 4 connections
+  - -> contains -> [[81-plan]]
+  - -> contains -> [[82]]
+  - -> contains -> [[83]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **3. 구현 완료 현황** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 3 connections
+  - -> contains -> [[31-100]]
+  - -> contains -> [[32-93]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **5. 개선 필요 사항 (Areas for Improvement)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 3 connections
+  - -> contains -> [[51-2]]
+  - -> contains -> [[52]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **6. 핵심 학습 사항 (Lessons Learned)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 3 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - <- contains <- [[bid-recommendation-v20]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 2 connections
+  - <- has_code_example <- [[71]]
+  - <- has_code_example <- [[pdca]]
+- **7.1 즉시 실행 (이번 스프린트)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[7-next-steps]]
+- **PDCA 아카이브** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[9]]
+- **1. 기능 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-v20]]
+- **2.1 Plan 단계 ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.2 Design 단계 ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.3 Do 단계 (구현) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.4 Check 단계 (Gap Analysis) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **3.1.1 DB 스키마 (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.1.2 Pydantic 스키마 (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.1.3 BidFetcher (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.1.4 BidRecommender (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.1.5 API 엔드포인트 (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.1.6 G2BService 확장 (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[31-100]]
+- **3.2.1 /bids 페이지 (93%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[32-93]]
+- **3.2.2 /bids/[bidNo] 페이지 (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[32-93]]
+- **3.2.3 /bids/settings 페이지 (80%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[32-93]]
+- **3.2.4 Frontend API Client (100%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[32-93]]
+- **4.1 기술 결정의 성공** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[4-what-went-well]]
+- **4.2 구현 품질** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[4-what-went-well]]
+- **4.3 코드 구조의 명확성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[4-what-went-well]]
+- **5.1 프론트엔드 미구현 항목 (2건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[5-areas-for-improvement]]
+- **5.2 선택사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[5-areas-for-improvement]]
+- **6.1 적용한 패턴** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned]]
+- **6.2 프로세스 학습** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned]]
+- **7.2 단기 작업 (2주)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[7-next-steps]]
+- **7.3 중기 계획 (1개월)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[7-next-steps]]
+- **7.4 향후 로드맵** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[7-next-steps]]
+- **8.1 Plan 대비 구현 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 기술 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.3 품질 기준** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9.1 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 상태** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.3 권장사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.4 PDCA 사이클 평가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.report.md) -- 1 connections
+  - <- contains <- [[9]]
+
+## Internal Relationships
+- 2. PDCA 사이클 완료 요약 -> contains -> 2.1 Plan 단계 ✅ [EXTRACTED]
+- 2. PDCA 사이클 완료 요약 -> contains -> 2.2 Design 단계 ✅ [EXTRACTED]
+- 2. PDCA 사이클 완료 요약 -> contains -> 2.3 Do 단계 (구현) ✅ [EXTRACTED]
+- 2. PDCA 사이클 완료 요약 -> contains -> 2.4 Check 단계 (Gap Analysis) ✅ [EXTRACTED]
+- 3. 구현 완료 현황 -> contains -> 3.1 백엔드 (100% ✅) [EXTRACTED]
+- 3. 구현 완료 현황 -> contains -> 3.2 프론트엔드 (93% ✅) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.1 DB 스키마 (100%) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.2 Pydantic 스키마 (100%) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.3 BidFetcher (100%) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.4 BidRecommender (100%) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.5 API 엔드포인트 (100%) [EXTRACTED]
+- 3.1 백엔드 (100% ✅) -> contains -> 3.1.6 G2BService 확장 (100%) [EXTRACTED]
+- 3.2 프론트엔드 (93% ✅) -> contains -> 3.2.1 /bids 페이지 (93%) [EXTRACTED]
+- 3.2 프론트엔드 (93% ✅) -> contains -> 3.2.2 /bids/[bidNo] 페이지 (100%) [EXTRACTED]
+- 3.2 프론트엔드 (93% ✅) -> contains -> 3.2.3 /bids/settings 페이지 (80%) [EXTRACTED]
+- 3.2 프론트엔드 (93% ✅) -> contains -> 3.2.4 Frontend API Client (100%) [EXTRACTED]
+- 4. 핵심 성과 (What Went Well) -> contains -> 4.1 기술 결정의 성공 [EXTRACTED]
+- 4. 핵심 성과 (What Went Well) -> contains -> 4.2 구현 품질 [EXTRACTED]
+- 4. 핵심 성과 (What Went Well) -> contains -> 4.3 코드 구조의 명확성 [EXTRACTED]
+- 5. 개선 필요 사항 (Areas for Improvement) -> contains -> 5.1 프론트엔드 미구현 항목 (2건) [EXTRACTED]
+- 5. 개선 필요 사항 (Areas for Improvement) -> contains -> 5.2 선택사항 [EXTRACTED]
+- 6. 핵심 학습 사항 (Lessons Learned) -> contains -> 6.1 적용한 패턴 [EXTRACTED]
+- 6. 핵심 학습 사항 (Lessons Learned) -> contains -> 6.2 프로세스 학습 [EXTRACTED]
+- 7.1 즉시 실행 (이번 스프린트) -> has_code_example -> bash [EXTRACTED]
+- 7. 다음 단계 (Next Steps) -> contains -> 7.1 즉시 실행 (이번 스프린트) [EXTRACTED]
+- 7. 다음 단계 (Next Steps) -> contains -> 7.2 단기 작업 (2주) [EXTRACTED]
+- 7. 다음 단계 (Next Steps) -> contains -> 7.3 중기 계획 (1개월) [EXTRACTED]
+- 7. 다음 단계 (Next Steps) -> contains -> 7.4 향후 로드맵 [EXTRACTED]
+- 8. 완료 기준 체크리스트 -> contains -> 8.1 Plan 대비 구현 검증 [EXTRACTED]
+- 8. 완료 기준 체크리스트 -> contains -> 8.2 기술 요구사항 [EXTRACTED]
+- 8. 완료 기준 체크리스트 -> contains -> 8.3 품질 기준 [EXTRACTED]
+- 9. 결론 -> contains -> 9.1 요약 [EXTRACTED]
+- 9. 결론 -> contains -> 9.2 상태 [EXTRACTED]
+- 9. 결론 -> contains -> 9.3 권장사항 [EXTRACTED]
+- 9. 결론 -> contains -> 9.4 PDCA 사이클 평가 [EXTRACTED]
+- 9. 결론 -> contains -> PDCA 아카이브 [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 1. 기능 개요 [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 2. PDCA 사이클 완료 요약 [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 3. 구현 완료 현황 [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 4. 핵심 성과 (What Went Well) [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 5. 개선 필요 사항 (Areas for Improvement) [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 6. 핵심 학습 사항 (Lessons Learned) [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 7. 다음 단계 (Next Steps) [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 8. 완료 기준 체크리스트 [EXTRACTED]
+- bid-recommendation 완료 보고서 (v2.0) -> contains -> 9. 결론 [EXTRACTED]
+- PDCA 아카이브 -> has_code_example -> bash [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 bid-recommendation 완료 보고서 (v2.0), 3.1 백엔드 (100% ✅), 9. 결론를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 bid-recommendation.report.md이다.
+
+### Key Facts
+- > **Summary**: 조달청 나라장터 공고 자동 수집 및 AI 매칭 추천 기능의 PDCA 사이클 완료. 백엔드 100% + 프론트엔드 93% 구현으로 전체 97% 일치율 달성 (preferred_agencies 추가로 100% 가능). > > **Author**: report-generator > **Created**: 2026-03-08 > **Status**: Approved (v2.0 -- Full Stack)
+- 3.2.1 /bids 페이지 (93%)
+- 5.1 프론트엔드 미구현 항목 (2건)
+- 3. **재분석 실행** ```bash /pdca analyze bid-recommendation ``` - Match Rate 100% 확인
+- 1. **preferred_agencies 입력 필드 구현** (P1 — 필수) - `frontend/app/bids/settings/page.tsx`에 preferred_agencies TagInput 추가 - API: `PATCH /api/teams/{team_id}/search-presets/{id}` 기존 엔드포인트 재사용 - 예상 공수: ~2h

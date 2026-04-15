@@ -1,0 +1,159 @@
+# bash & 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분)
+Cohesion: 0.11 | Nodes: 27
+
+## Key Nodes
+- **bash** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 11 connections
+  - <- has_code_example <- [[1-2]]
+  - <- has_code_example <- [[option-a]]
+  - <- has_code_example <- [[option-b-staging]]
+  - <- has_code_example <- [[2-2]]
+  - <- has_code_example <- [[2-3-e2e]]
+  - <- has_code_example <- [[2-6]]
+  - <- has_code_example <- [[3-2]]
+  - <- has_code_example <- [[3-3]]
+  - <- has_code_example <- [[issue-npm-run-lint]]
+  - <- has_code_example <- [[issue-e2e]]
+  - <- has_code_example <- [[issue]]
+- **🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 7 connections
+  - -> contains -> [[2-1]]
+  - -> contains -> [[2-2]]
+  - -> contains -> [[2-3-e2e]]
+  - -> contains -> [[2-4]]
+  - -> contains -> [[2-5]]
+  - -> contains -> [[2-6]]
+  - <- contains <- [[staging-e2e]]
+- **🔄 5단계: 다음 단계 결정** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 6 connections
+  - -> contains -> [[go]]
+  - -> contains -> [[no-go]]
+  - -> contains -> [[issue-npm-run-lint]]
+  - -> contains -> [[issue-e2e]]
+  - -> contains -> [[issue]]
+  - <- contains <- [[staging-e2e]]
+- **Staging 배포 절차 및 E2E 테스트 가이드** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 5 connections
+  - -> contains -> [[1-cicd]]
+  - -> contains -> [[2-staging-e2e-30-45]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-gono-go]]
+  - -> contains -> [[5]]
+- **📊 3단계: 성능 데이터 수집 및 로그 검토** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 4 connections
+  - -> contains -> [[3-1]]
+  - -> contains -> [[3-2]]
+  - -> contains -> [[3-3]]
+  - <- contains <- [[staging-e2e]]
+- **1-2. 배포 상태 확인** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[1-cicd]]
+- **📋 1단계: CI/CD 파이프라인 확인 (자동화)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 3 connections
+  - -> contains -> [[1-1-github-actions]]
+  - -> contains -> [[1-2]]
+  - <- contains <- [[staging-e2e]]
+- **2-1. 테스트 환경 준비** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 3 connections
+  - -> contains -> [[option-a]]
+  - -> contains -> [[option-b-staging]]
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **✅ 4단계: GO/NO-GO 결정** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 3 connections
+  - -> contains -> [[go]]
+  - -> contains -> [[no-go]]
+  - <- contains <- [[staging-e2e]]
+- **Issue: 데이터베이스 연결 실패** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - -> has_code_example -> [[markdown]]
+  - <- contains <- [[5]]
+- **2-2. 문법 및 임포트 검증** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **2-3. 종합 E2E 파이프라인 테스트** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **2-6. 에러 처리 검증 (선택사항)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **3-2. 수집할 로그 정보** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[3]]
+- **3-3. 로그 내보내기** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[3]]
+- **GO 조건 (모두 만족)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - <- contains <- [[4-gono-go]]
+  - <- contains <- [[5]]
+- **Issue: E2E 테스트 타임아웃** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[5]]
+- **Issue: npm run lint 실패** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[5]]
+- **NO-GO 조건 (하나라도 미충족)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - <- contains <- [[4-gono-go]]
+  - <- contains <- [[5]]
+- **Option A: 로컬 환경에서 (개발자용)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[2-1]]
+- **Option B: Staging 서버에서 (권장)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[2-1]]
+- **json** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- has_code_example <- [[1-2]]
+- **markdown** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- has_code_example <- [[issue]]
+- **1-1. GitHub Actions 모니터링** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- contains <- [[1-cicd]]
+- **2-4. 테스트 실행 중 수집할 메트릭** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **2-5. 성공 기준** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- contains <- [[2-staging-e2e-30-45]]
+- **3-1. 로그 위치** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_PROCEDURE.md) -- 1 connections
+  - <- contains <- [[3]]
+
+## Internal Relationships
+- 1-2. 배포 상태 확인 -> has_code_example -> bash [EXTRACTED]
+- 1-2. 배포 상태 확인 -> has_code_example -> json [EXTRACTED]
+- 📋 1단계: CI/CD 파이프라인 확인 (자동화) -> contains -> 1-1. GitHub Actions 모니터링 [EXTRACTED]
+- 📋 1단계: CI/CD 파이프라인 확인 (자동화) -> contains -> 1-2. 배포 상태 확인 [EXTRACTED]
+- 2-1. 테스트 환경 준비 -> contains -> Option A: 로컬 환경에서 (개발자용) [EXTRACTED]
+- 2-1. 테스트 환경 준비 -> contains -> Option B: Staging 서버에서 (권장) [EXTRACTED]
+- 2-2. 문법 및 임포트 검증 -> has_code_example -> bash [EXTRACTED]
+- 2-3. 종합 E2E 파이프라인 테스트 -> has_code_example -> bash [EXTRACTED]
+- 2-6. 에러 처리 검증 (선택사항) -> has_code_example -> bash [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-1. 테스트 환경 준비 [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-2. 문법 및 임포트 검증 [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-3. 종합 E2E 파이프라인 테스트 [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-4. 테스트 실행 중 수집할 메트릭 [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-5. 성공 기준 [EXTRACTED]
+- 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) -> contains -> 2-6. 에러 처리 검증 (선택사항) [EXTRACTED]
+- 📊 3단계: 성능 데이터 수집 및 로그 검토 -> contains -> 3-1. 로그 위치 [EXTRACTED]
+- 📊 3단계: 성능 데이터 수집 및 로그 검토 -> contains -> 3-2. 수집할 로그 정보 [EXTRACTED]
+- 📊 3단계: 성능 데이터 수집 및 로그 검토 -> contains -> 3-3. 로그 내보내기 [EXTRACTED]
+- 3-2. 수집할 로그 정보 -> has_code_example -> bash [EXTRACTED]
+- 3-3. 로그 내보내기 -> has_code_example -> bash [EXTRACTED]
+- ✅ 4단계: GO/NO-GO 결정 -> contains -> GO 조건 (모두 만족) [EXTRACTED]
+- ✅ 4단계: GO/NO-GO 결정 -> contains -> NO-GO 조건 (하나라도 미충족) [EXTRACTED]
+- 🔄 5단계: 다음 단계 결정 -> contains -> GO 조건 (모두 만족) [EXTRACTED]
+- 🔄 5단계: 다음 단계 결정 -> contains -> NO-GO 조건 (하나라도 미충족) [EXTRACTED]
+- 🔄 5단계: 다음 단계 결정 -> contains -> Issue: npm run lint 실패 [EXTRACTED]
+- 🔄 5단계: 다음 단계 결정 -> contains -> Issue: E2E 테스트 타임아웃 [EXTRACTED]
+- 🔄 5단계: 다음 단계 결정 -> contains -> Issue: 데이터베이스 연결 실패 [EXTRACTED]
+- Issue: 데이터베이스 연결 실패 -> has_code_example -> bash [EXTRACTED]
+- Issue: 데이터베이스 연결 실패 -> has_code_example -> markdown [EXTRACTED]
+- Issue: E2E 테스트 타임아웃 -> has_code_example -> bash [EXTRACTED]
+- Issue: npm run lint 실패 -> has_code_example -> bash [EXTRACTED]
+- Option A: 로컬 환경에서 (개발자용) -> has_code_example -> bash [EXTRACTED]
+- Option B: Staging 서버에서 (권장) -> has_code_example -> bash [EXTRACTED]
+- Staging 배포 절차 및 E2E 테스트 가이드 -> contains -> 📋 1단계: CI/CD 파이프라인 확인 (자동화) [EXTRACTED]
+- Staging 배포 절차 및 E2E 테스트 가이드 -> contains -> 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분) [EXTRACTED]
+- Staging 배포 절차 및 E2E 테스트 가이드 -> contains -> 📊 3단계: 성능 데이터 수집 및 로그 검토 [EXTRACTED]
+- Staging 배포 절차 및 E2E 테스트 가이드 -> contains -> ✅ 4단계: GO/NO-GO 결정 [EXTRACTED]
+- Staging 배포 절차 및 E2E 테스트 가이드 -> contains -> 🔄 5단계: 다음 단계 결정 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 bash, 🧪 2단계: 로컬 또는 Staging E2E 테스트 (30-45분), 🔄 5단계: 다음 단계 결정를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 STAGING_DEPLOYMENT_PROCEDURE.md이다.
+
+### Key Facts
+- ```bash Staging 서버 접속 ssh deploy@staging-server.example.com
+- ✅ GO인 경우 ``` 1. Production 배포 준비 2. 배포 사전 점검 (체크리스트) 3. 배포 날짜 및 시간 공지 4. 데이터 백업 확인 5. 롤백 계획 검토 6. 배포 실행 ```
+- **작성일:** 2026-03-30 **상태:** 배포 준비 완료 **담당:** DevOps / QA Team
+- ```bash Staging 서버 접속 ssh deploy@staging-server.example.com
+- 1-1. GitHub Actions 모니터링

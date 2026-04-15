@@ -1,0 +1,474 @@
+# presentation-generator Gap Analysis Report & presentation-generator Completion Report
+Cohesion: 0.02 | Nodes: 114
+
+## Key Nodes
+- **presentation-generator Gap Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 20 connections
+  - -> references -> [[unresolvedrefpresentationgeneratordesign]]
+  - -> references -> [[unresolvedrefpresentationgeneratorplan]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-overall-scores]]
+  - -> contains -> [[3-api-endpoint-section-2]]
+  - -> contains -> [[4-section-23]]
+  - -> contains -> [[5-section-26]]
+  - -> contains -> [[6-presentationgeneratorpy-section-3]]
+  - -> contains -> [[7-presentationpptxbuilderpy-section-4]]
+  - -> contains -> [[8-section-8]]
+  - -> contains -> [[9-fallback-section-9]]
+  - -> contains -> [[10-section-7]]
+  - -> contains -> [[11-section-6]]
+  - -> contains -> [[12-section-1]]
+  - -> contains -> [[13-differences-summary]]
+  - -> contains -> [[14-match-rate-calculation]]
+  - -> contains -> [[15-recommended-actions]]
+  - -> contains -> [[16-synchronization-options]]
+  - -> contains -> [[17-next-steps]]
+  - -> contains -> [[version-history]]
+- **presentation-generator Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 19 connections
+  - -> contains -> [[1-executive-summary]]
+  - -> contains -> [[2-pdca-cycle-summary]]
+  - -> contains -> [[3-implementation-status]]
+  - -> contains -> [[4-quality-metrics]]
+  - -> contains -> [[5-completed-features]]
+  - -> contains -> [[6-incomplete-items]]
+  - -> contains -> [[7-key-design-decisions-implemented]]
+  - -> contains -> [[8-error-handling-fallback]]
+  - -> contains -> [[9-testing-verification]]
+  - -> contains -> [[10-lessons-learned]]
+  - -> contains -> [[11-process-improvements]]
+  - -> contains -> [[12-next-steps]]
+  - -> contains -> [[13-technical-architecture]]
+  - -> contains -> [[14-file-locations]]
+  - -> contains -> [[15-metrics-summary]]
+  - -> contains -> [[16-related-documentation]]
+  - -> contains -> [[17-changelog-v100]]
+  - -> contains -> [[18-approval-sign-off]]
+  - -> contains -> [[19-version-history]]
+- **7. presentation_pptx_builder.py 비교 (Section 4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 9 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72-initpresentation]]
+  - -> contains -> [[73-7]]
+  - -> contains -> [[74-evalbadge]]
+  - -> contains -> [[75-speakernotes]]
+  - -> contains -> [[76-timeline]]
+  - -> contains -> [[77-fallback]]
+  - -> contains -> [[78-design]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **3. API Endpoint 비교 (Section 2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 7 connections
+  - -> contains -> [[31-endpoint-url-http-method]]
+  - -> contains -> [[32-get-presentationtemplates]]
+  - -> contains -> [[33-post]]
+  - -> contains -> [[34-post]]
+  - -> contains -> [[35-status]]
+  - -> contains -> [[36-download]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **6. presentation_generator.py 비교 (Section 3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 6 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62-buildinput]]
+  - -> contains -> [[63-toc-step-1]]
+  - -> contains -> [[64-storyboard-step-2]]
+  - -> contains -> [[65-design]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **2. PDCA Cycle Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 5 connections
+  - -> contains -> [[21-plan]]
+  - -> contains -> [[22-design]]
+  - -> contains -> [[23-do]]
+  - -> contains -> [[24-check]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **13. Differences Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 4 connections
+  - -> contains -> [[131-missing-features-design-o-implementation-x]]
+  - -> contains -> [[132-added-features-design-x-implementation-o]]
+  - -> contains -> [[133-changed-features-design-implementation]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **15. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 4 connections
+  - -> contains -> [[151-immediate-actions-priority-high]]
+  - -> contains -> [[152-documentation-update-priority-low]]
+  - -> contains -> [[153-no-action-needed]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 4 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - -> contains -> [[13]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **5. 백그라운드 함수 비교 (Section 2.6)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 4 connections
+  - -> contains -> [[51-runpresentation]]
+  - -> contains -> [[52-resolvetemplatepath]]
+  - -> contains -> [[53-uploadpresentation]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **10. Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[101-what-went-well-keep]]
+  - -> contains -> [[102-what-needs-improvement-problem]]
+  - -> contains -> [[103-what-to-try-next-try]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **12. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[121-immediate-this-cycle]]
+  - -> contains -> [[122-next-cycle-2]]
+  - -> contains -> [[123-long-term-roadmap]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **16. Related Documentation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> references -> [[unresolvedrefpresentationgeneratorplan]]
+  - -> references -> [[unresolvedrefpresentationgeneratordesign]]
+  - -> references -> [[unresolvedrefpresentationgeneratoranalysis]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **17. Changelog (v1.0.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[added]]
+  - -> contains -> [[changed]]
+  - -> contains -> [[fixed]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **3. Implementation Status** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[31-api-endpoints-44]]
+  - -> contains -> [[32-core-components-33]]
+  - -> contains -> [[33-design-specification-compliance]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **4. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[41-match-rate-analysis]]
+  - -> contains -> [[42-detailed-scores-by-category]]
+  - -> contains -> [[43-code-quality-assessment]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **7. Key Design Decisions Implemented** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 4 connections
+  - -> contains -> [[71-2-step-pipeline-architecture]]
+  - -> contains -> [[72-layout-types-7]]
+  - -> contains -> [[73-evaluation-badge-xx]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **14. Match Rate Calculation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 3 connections
+  - -> contains -> [[141]]
+  - -> contains -> [[142-match-rate]]
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **11. Process Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[111-pdca-process-enhancements]]
+  - -> contains -> [[112-next-project-recommendations]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **13. Technical Architecture** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[131-component-overview]]
+  - -> contains -> [[132-data-flow-diagram]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **14. File Locations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[141-implementation-files]]
+  - -> contains -> [[142-documentation-files]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **15. Metrics Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[151-quality-metrics]]
+  - -> contains -> [[152-development-metrics]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **1. Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[11-overview]]
+  - -> contains -> [[12-key-achievements]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **5. Completed Features** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[51-implemented-items-design-spec]]
+  - -> contains -> [[52-added-features-not-in-design]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **8. Error Handling & Fallback** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[81-http-error-codes]]
+  - -> contains -> [[82-fallback-chain]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **9. Testing & Verification** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 3 connections
+  - -> contains -> [[91-verification-checklist]]
+  - -> contains -> [[92-quality-assurance-results]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **__unresolved__::ref::presentation_generator_design** () -- 2 connections
+  - <- references <- [[presentation-generator-gap-analysis-report]]
+  - <- references <- [[16-related-documentation]]
+- **__unresolved__::ref::presentation_generator_plan** () -- 2 connections
+  - <- references <- [[presentation-generator-gap-analysis-report]]
+  - <- references <- [[16-related-documentation]]
+- **6. Incomplete Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 2 connections
+  - -> contains -> [[61-not-yet-implemented]]
+  - <- contains <- [[presentation-generator-completion-report]]
+- **__unresolved__::ref::presentation_generator_analysis** () -- 1 connections
+  - <- references <- [[16-related-documentation]]
+- **10. 세션 상태 키 비교 (Section 7)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **11. 라우터 등록 비교 (Section 6)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **12. 템플릿 파일 존재 비교 (Section 1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **13.1 Missing Features (Design O, Implementation X)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[13-differences-summary]]
+- **13.2 Added Features (Design X, Implementation O)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[13-differences-summary]]
+- **13.3 Changed Features (Design != Implementation)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[13-differences-summary]]
+- **14.1 항목별 점수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[14-match-rate-calculation]]
+- **14.2 종합 Match Rate** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[14-match-rate-calculation]]
+- **15.1 Immediate Actions (Priority High)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[15-recommended-actions]]
+- **15.2 Documentation Update (Priority Low)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[15-recommended-actions]]
+- **15.3 No Action Needed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[15-recommended-actions]]
+- **16. Synchronization Options** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **17. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.3 현재 상태** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **2. Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **3.1 Endpoint URL & HTTP Method** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **3.2 GET `/presentation/templates` 응답** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **3.3 POST 요청 파라미터** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **3.4 POST 응답 포맷** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **3.5 Status 응답 포맷** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **3.6 Download 엔드포인트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[3-api-endpoint-section-2]]
+- **4. 전처리/유효성 검증 비교 (Section 2.3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **5.1 `_run_presentation` 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[5-section-26]]
+- **5.2 `_resolve_template_path` 헬퍼** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[5-section-26]]
+- **5.3 `_upload_presentation` 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[5-section-26]]
+- **6.1 공개 인터페이스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[6-presentationgeneratorpy-section-3]]
+- **6.2 `_build_input` 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[6-presentationgeneratorpy-section-3]]
+- **6.3 TOC 프롬프트 (Step 1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[6-presentationgeneratorpy-section-3]]
+- **6.4 STORYBOARD 프롬프트 (Step 2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[6-presentationgeneratorpy-section-3]]
+- **6.5 추가 구현 (Design에 없음)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[6-presentationgeneratorpy-section-3]]
+- **7.1 공개 인터페이스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.2 `_init_presentation` 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.3 레이아웃별 렌더링 함수 (7종)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.4 eval_badge 렌더링 비교** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.5 speaker_notes 추가 비교** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.6 timeline 레이아웃 비교** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.7 fallback 처리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **7.8 추가 구현 (Design에 명시되지 않음)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[7-presentationpptxbuilderpy-section-4]]
+- **8. 오류 처리 비교 (Section 8)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **9. Fallback 체인 비교 (Section 9)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.analysis.md) -- 1 connections
+  - <- contains <- [[presentation-generator-gap-analysis-report]]
+- **10.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[10-lessons-learned]]
+- **10.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[10-lessons-learned]]
+- **10.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[10-lessons-learned]]
+- **11.1 PDCA Process Enhancements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[11-process-improvements]]
+- **11.2 Next Project Recommendations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[11-process-improvements]]
+- **12.1 Immediate (This Cycle)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[12-next-steps]]
+- **12.2 Next Cycle (#2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[12-next-steps]]
+- **12.3 Long-term Roadmap** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[12-next-steps]]
+- **13.1 Component Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[13-technical-architecture]]
+- **13.2 Data Flow Diagram** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[13-technical-architecture]]
+- **14.1 Implementation Files** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[14-file-locations]]
+- **14.2 Documentation Files** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[14-file-locations]]
+- **15.1 Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[15-metrics-summary]]
+- **15.2 Development Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[15-metrics-summary]]
+- **18. Approval & Sign-off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[presentation-generator-completion-report]]
+- **19. Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[presentation-generator-completion-report]]
+- **1.1 Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **1.2 Key Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **2.1 Plan (계획)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.2 Design (설계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.3 Do (구현)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.4 Check (검증)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **3.1 API Endpoints (4/4 완성)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-status]]
+- **3.2 Core Components (3/3 완성)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-status]]
+- **3.3 Design Specification Compliance** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-status]]
+- **4.1 Match Rate Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **4.2 Detailed Scores by Category** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **4.3 Code Quality Assessment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **5.1 Implemented Items (Design Spec)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[5-completed-features]]
+- **5.2 Added Features (Not in Design —合理的補完)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[5-completed-features]]
+- **6.1 Not Yet Implemented** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[6-incomplete-items]]
+- **7.1 2-Step Pipeline Architecture** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[7-key-design-decisions-implemented]]
+- **7.2 Layout Types (7)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[7-key-design-decisions-implemented]]
+- **7.3 Evaluation Badge (평가항목명 | XX점)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[7-key-design-decisions-implemented]]
+- **8.1 HTTP Error Codes** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[8-error-handling-fallback]]
+- **8.2 Fallback Chain** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[8-error-handling-fallback]]
+- **9.1 Verification Checklist** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[9-testing-verification]]
+- **9.2 Quality Assurance Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[9-testing-verification]]
+- **Added** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[17-changelog-v100]]
+- **Changed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[17-changelog-v100]]
+- **Fixed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\presentation-generator\presentation-generator.report.md) -- 1 connections
+  - <- contains <- [[17-changelog-v100]]
+
+## Internal Relationships
+- 13. Differences Summary -> contains -> 13.1 Missing Features (Design O, Implementation X) [EXTRACTED]
+- 13. Differences Summary -> contains -> 13.2 Added Features (Design X, Implementation O) [EXTRACTED]
+- 13. Differences Summary -> contains -> 13.3 Changed Features (Design != Implementation) [EXTRACTED]
+- 14. Match Rate Calculation -> contains -> 14.1 항목별 점수 [EXTRACTED]
+- 14. Match Rate Calculation -> contains -> 14.2 종합 Match Rate [EXTRACTED]
+- 15. Recommended Actions -> contains -> 15.1 Immediate Actions (Priority High) [EXTRACTED]
+- 15. Recommended Actions -> contains -> 15.2 Documentation Update (Priority Low) [EXTRACTED]
+- 15. Recommended Actions -> contains -> 15.3 No Action Needed [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.3 현재 상태 [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.1 Endpoint URL & HTTP Method [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.2 GET `/presentation/templates` 응답 [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.3 POST 요청 파라미터 [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.4 POST 응답 포맷 [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.5 Status 응답 포맷 [EXTRACTED]
+- 3. API Endpoint 비교 (Section 2) -> contains -> 3.6 Download 엔드포인트 [EXTRACTED]
+- 5. 백그라운드 함수 비교 (Section 2.6) -> contains -> 5.1 `_run_presentation` 함수 [EXTRACTED]
+- 5. 백그라운드 함수 비교 (Section 2.6) -> contains -> 5.2 `_resolve_template_path` 헬퍼 [EXTRACTED]
+- 5. 백그라운드 함수 비교 (Section 2.6) -> contains -> 5.3 `_upload_presentation` 함수 [EXTRACTED]
+- 6. presentation_generator.py 비교 (Section 3) -> contains -> 6.1 공개 인터페이스 [EXTRACTED]
+- 6. presentation_generator.py 비교 (Section 3) -> contains -> 6.2 `_build_input` 함수 [EXTRACTED]
+- 6. presentation_generator.py 비교 (Section 3) -> contains -> 6.3 TOC 프롬프트 (Step 1) [EXTRACTED]
+- 6. presentation_generator.py 비교 (Section 3) -> contains -> 6.4 STORYBOARD 프롬프트 (Step 2) [EXTRACTED]
+- 6. presentation_generator.py 비교 (Section 3) -> contains -> 6.5 추가 구현 (Design에 없음) [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.1 공개 인터페이스 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.2 `_init_presentation` 함수 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.3 레이아웃별 렌더링 함수 (7종) [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.4 eval_badge 렌더링 비교 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.5 speaker_notes 추가 비교 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.6 timeline 레이아웃 비교 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.7 fallback 처리 [EXTRACTED]
+- 7. presentation_pptx_builder.py 비교 (Section 4) -> contains -> 7.8 추가 구현 (Design에 명시되지 않음) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> references -> __unresolved__::ref::presentation_generator_design [EXTRACTED]
+- presentation-generator Gap Analysis Report -> references -> __unresolved__::ref::presentation_generator_plan [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 2. Overall Scores [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 3. API Endpoint 비교 (Section 2) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 4. 전처리/유효성 검증 비교 (Section 2.3) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 5. 백그라운드 함수 비교 (Section 2.6) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 6. presentation_generator.py 비교 (Section 3) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 7. presentation_pptx_builder.py 비교 (Section 4) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 8. 오류 처리 비교 (Section 8) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 9. Fallback 체인 비교 (Section 9) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 10. 세션 상태 키 비교 (Section 7) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 11. 라우터 등록 비교 (Section 6) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 12. 템플릿 파일 존재 비교 (Section 1) [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 13. Differences Summary [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 14. Match Rate Calculation [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 15. Recommended Actions [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 16. Synchronization Options [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> 17. Next Steps [EXTRACTED]
+- presentation-generator Gap Analysis Report -> contains -> Version History [EXTRACTED]
+- 10. Lessons Learned -> contains -> 10.1 What Went Well (Keep) [EXTRACTED]
+- 10. Lessons Learned -> contains -> 10.2 What Needs Improvement (Problem) [EXTRACTED]
+- 10. Lessons Learned -> contains -> 10.3 What to Try Next (Try) [EXTRACTED]
+- 11. Process Improvements -> contains -> 11.1 PDCA Process Enhancements [EXTRACTED]
+- 11. Process Improvements -> contains -> 11.2 Next Project Recommendations [EXTRACTED]
+- 12. Next Steps -> contains -> 12.1 Immediate (This Cycle) [EXTRACTED]
+- 12. Next Steps -> contains -> 12.2 Next Cycle (#2) [EXTRACTED]
+- 12. Next Steps -> contains -> 12.3 Long-term Roadmap [EXTRACTED]
+- 13. Technical Architecture -> contains -> 13.1 Component Overview [EXTRACTED]
+- 13. Technical Architecture -> contains -> 13.2 Data Flow Diagram [EXTRACTED]
+- 14. File Locations -> contains -> 14.1 Implementation Files [EXTRACTED]
+- 14. File Locations -> contains -> 14.2 Documentation Files [EXTRACTED]
+- 15. Metrics Summary -> contains -> 15.1 Quality Metrics [EXTRACTED]
+- 15. Metrics Summary -> contains -> 15.2 Development Metrics [EXTRACTED]
+- 16. Related Documentation -> references -> __unresolved__::ref::presentation_generator_plan [EXTRACTED]
+- 16. Related Documentation -> references -> __unresolved__::ref::presentation_generator_design [EXTRACTED]
+- 16. Related Documentation -> references -> __unresolved__::ref::presentation_generator_analysis [EXTRACTED]
+- 17. Changelog (v1.0.0) -> contains -> Added [EXTRACTED]
+- 17. Changelog (v1.0.0) -> contains -> Changed [EXTRACTED]
+- 17. Changelog (v1.0.0) -> contains -> Fixed [EXTRACTED]
+- 1. Executive Summary -> contains -> 1.1 Overview [EXTRACTED]
+- 1. Executive Summary -> contains -> 1.2 Key Achievements [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.1 Plan (계획) [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.2 Design (설계) [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.3 Do (구현) [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.4 Check (검증) [EXTRACTED]
+- 3. Implementation Status -> contains -> 3.1 API Endpoints (4/4 완성) [EXTRACTED]
+- 3. Implementation Status -> contains -> 3.2 Core Components (3/3 완성) [EXTRACTED]
+- 3. Implementation Status -> contains -> 3.3 Design Specification Compliance [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.1 Match Rate Analysis [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.2 Detailed Scores by Category [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.3 Code Quality Assessment [EXTRACTED]
+- 5. Completed Features -> contains -> 5.1 Implemented Items (Design Spec) [EXTRACTED]
+- 5. Completed Features -> contains -> 5.2 Added Features (Not in Design —合理的補完) [EXTRACTED]
+- 6. Incomplete Items -> contains -> 6.1 Not Yet Implemented [EXTRACTED]
+- 7. Key Design Decisions Implemented -> contains -> 7.1 2-Step Pipeline Architecture [EXTRACTED]
+- 7. Key Design Decisions Implemented -> contains -> 7.2 Layout Types (7) [EXTRACTED]
+- 7. Key Design Decisions Implemented -> contains -> 7.3 Evaluation Badge (평가항목명 | XX점) [EXTRACTED]
+- 8. Error Handling & Fallback -> contains -> 8.1 HTTP Error Codes [EXTRACTED]
+- 8. Error Handling & Fallback -> contains -> 8.2 Fallback Chain [EXTRACTED]
+- 9. Testing & Verification -> contains -> 9.1 Verification Checklist [EXTRACTED]
+- 9. Testing & Verification -> contains -> 9.2 Quality Assurance Results [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 1. Executive Summary [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 2. PDCA Cycle Summary [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 3. Implementation Status [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 4. Quality Metrics [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 5. Completed Features [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 6. Incomplete Items [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 7. Key Design Decisions Implemented [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 8. Error Handling & Fallback [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 9. Testing & Verification [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 10. Lessons Learned [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 11. Process Improvements [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 12. Next Steps [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 13. Technical Architecture [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 14. File Locations [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 15. Metrics Summary [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 16. Related Documentation [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 17. Changelog (v1.0.0) [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 18. Approval & Sign-off [EXTRACTED]
+- presentation-generator Completion Report -> contains -> 19. Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 presentation-generator Gap Analysis Report, presentation-generator Completion Report, 7. presentation_pptx_builder.py 비교 (Section 4)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 presentation-generator.analysis.md, presentation-generator.report.md이다.
+
+### Key Facts
+- > **Analysis Type**: Design vs Implementation Gap Analysis (Check Phase) > > **Project**: tenopa-proposer > **Analyst**: gap-detector > **Date**: 2026-03-08 > **Design Doc**: [presentation-generator.design.md](../02-design/features/presentation-generator.design.md) > **Plan Doc**:…
+- > **Status**: Complete > > **Project**: tenopa-proposer > **Feature**: 제안발표 자료 자동 생성 (presentation-generator) > **Author**: bkit-report-generator > **Completion Date**: 2026-03-08 > **PDCA Cycle**: #1
+- 3.1 Endpoint URL & HTTP Method
+- 13.1 Missing Features (Design O, Implementation X)
+- 15.1 Immediate Actions (Priority High)

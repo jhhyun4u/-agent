@@ -1,0 +1,186 @@
+# DB 마이그레이션 자동화 - 요구사항 문서 & 2.1 기능 요구사항 (Functional)
+Cohesion: 0.05 | Nodes: 42
+
+## Key Nodes
+- **DB 마이그레이션 자동화 - 요구사항 문서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 10 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5-004019]]
+  - -> contains -> [[6-timeline]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-definition-of-done]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **2.1 기능 요구사항 (Functional)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 7 connections
+  - -> contains -> [[fr-01-core]]
+  - -> contains -> [[fr-02-core]]
+  - -> contains -> [[fr-03-api-high]]
+  - -> contains -> [[fr-04-high]]
+  - -> contains -> [[fr-05-medium]]
+  - -> contains -> [[fr-06-medium]]
+  - <- contains <- [[2]]
+- **8. 성공 기준 (Definition of Done)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 6 connections
+  - -> contains -> [[81-functional]]
+  - -> contains -> [[82-api]]
+  - -> contains -> [[83]]
+  - -> contains -> [[84]]
+  - -> contains -> [[85]]
+  - <- contains <- [[db]]
+- **2.2 비기능 요구사항 (Non-Functional)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 5 connections
+  - -> contains -> [[nfr-01]]
+  - -> contains -> [[nfr-02]]
+  - -> contains -> [[nfr-03]]
+  - -> contains -> [[nfr-04]]
+  - <- contains <- [[2]]
+- **6. 구현 계획 (Timeline)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 5 connections
+  - -> contains -> [[phase-design]]
+  - -> contains -> [[phase-do]]
+  - -> contains -> [[phase-check]]
+  - -> contains -> [[phase-act]]
+  - <- contains <- [[db]]
+- **4. 기술 아키텍처** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 4 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - <- contains <- [[db]]
+- **1. 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[db]]
+- **10. 부록: 마이그레이션 파일 예시** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 3 connections
+  - -> contains -> [[000initmigrationssql]]
+  - -> contains -> [[004performanceviewssql]]
+  - <- contains <- [[db]]
+- **2. 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 3 connections
+  - -> contains -> [[21-functional]]
+  - -> contains -> [[22-non-functional]]
+  - <- contains <- [[db]]
+- **3. 구현 범위** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 3 connections
+  - -> contains -> [[31-in-scope]]
+  - -> contains -> [[32-out-of-scope-v2]]
+  - <- contains <- [[db]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 2 connections
+  - <- has_code_example <- [[000initmigrationssql]]
+  - <- has_code_example <- [[004performanceviewssql]]
+- **000_init_migrations.sql (신규)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[10]]
+- **004_performance_views.sql (기존 예시)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[10]]
+- **1.1 목표** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 문제 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[1]]
+- **3.1 포함되는 항목 (In Scope)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 제외되는 항목 (Out of Scope - v2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 시스템 구성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 파일 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.3 마이그레이션 파일 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5. 마이그레이션 파일 목록 (004~019)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[db]]
+- **7. 위험 요소 및 완화 전략** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[db]]
+- **8.1 Functional** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[8-definition-of-done]]
+- **8.2 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[8-definition-of-done]]
+- **8.3 자동화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[8-definition-of-done]]
+- **8.4 성능** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[8-definition-of-done]]
+- **8.5 문서화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[8-definition-of-done]]
+- **9. 참고 자료** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[db]]
+- **FR-01: 마이그레이션 추적 (Core)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **FR-02: 자동 실행 스크립트 (Core)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **FR-03: 마이그레이션 상태 조회 API (High)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **FR-04: 자동 마이그레이션 (High)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **FR-05: 롤백 기능 (Medium)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **FR-06: 마이그레이션 검증 (Medium)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[21-functional]]
+- **NFR-01: 성능** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[22-non-functional]]
+- **NFR-02: 안정성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[22-non-functional]]
+- **NFR-03: 추적성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[22-non-functional]]
+- **NFR-04: 확장성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[22-non-functional]]
+- **Phase: Act (최적화)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[6-timeline]]
+- **Phase: Check (검증)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[6-timeline]]
+- **Phase: Design (다음 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[6-timeline]]
+- **Phase: Do (구현)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.plan.md) -- 1 connections
+  - <- contains <- [[6-timeline]]
+
+## Internal Relationships
+- 000_init_migrations.sql (신규) -> has_code_example -> sql [EXTRACTED]
+- 004_performance_views.sql (기존 예시) -> has_code_example -> sql [EXTRACTED]
+- 1. 개요 -> contains -> 1.1 목표 [EXTRACTED]
+- 1. 개요 -> contains -> 1.2 문제 정의 [EXTRACTED]
+- 10. 부록: 마이그레이션 파일 예시 -> contains -> 000_init_migrations.sql (신규) [EXTRACTED]
+- 10. 부록: 마이그레이션 파일 예시 -> contains -> 004_performance_views.sql (기존 예시) [EXTRACTED]
+- 2. 요구사항 -> contains -> 2.1 기능 요구사항 (Functional) [EXTRACTED]
+- 2. 요구사항 -> contains -> 2.2 비기능 요구사항 (Non-Functional) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-01: 마이그레이션 추적 (Core) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-02: 자동 실행 스크립트 (Core) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-03: 마이그레이션 상태 조회 API (High) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-04: 자동 마이그레이션 (High) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-05: 롤백 기능 (Medium) [EXTRACTED]
+- 2.1 기능 요구사항 (Functional) -> contains -> FR-06: 마이그레이션 검증 (Medium) [EXTRACTED]
+- 2.2 비기능 요구사항 (Non-Functional) -> contains -> NFR-01: 성능 [EXTRACTED]
+- 2.2 비기능 요구사항 (Non-Functional) -> contains -> NFR-02: 안정성 [EXTRACTED]
+- 2.2 비기능 요구사항 (Non-Functional) -> contains -> NFR-03: 추적성 [EXTRACTED]
+- 2.2 비기능 요구사항 (Non-Functional) -> contains -> NFR-04: 확장성 [EXTRACTED]
+- 3. 구현 범위 -> contains -> 3.1 포함되는 항목 (In Scope) [EXTRACTED]
+- 3. 구현 범위 -> contains -> 3.2 제외되는 항목 (Out of Scope - v2) [EXTRACTED]
+- 4. 기술 아키텍처 -> contains -> 4.1 시스템 구성 [EXTRACTED]
+- 4. 기술 아키텍처 -> contains -> 4.2 파일 구조 [EXTRACTED]
+- 4. 기술 아키텍처 -> contains -> 4.3 마이그레이션 파일 분석 [EXTRACTED]
+- 6. 구현 계획 (Timeline) -> contains -> Phase: Design (다음 단계) [EXTRACTED]
+- 6. 구현 계획 (Timeline) -> contains -> Phase: Do (구현) [EXTRACTED]
+- 6. 구현 계획 (Timeline) -> contains -> Phase: Check (검증) [EXTRACTED]
+- 6. 구현 계획 (Timeline) -> contains -> Phase: Act (최적화) [EXTRACTED]
+- 8. 성공 기준 (Definition of Done) -> contains -> 8.1 Functional [EXTRACTED]
+- 8. 성공 기준 (Definition of Done) -> contains -> 8.2 API [EXTRACTED]
+- 8. 성공 기준 (Definition of Done) -> contains -> 8.3 자동화 [EXTRACTED]
+- 8. 성공 기준 (Definition of Done) -> contains -> 8.4 성능 [EXTRACTED]
+- 8. 성공 기준 (Definition of Done) -> contains -> 8.5 문서화 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 1. 개요 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 2. 요구사항 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 3. 구현 범위 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 4. 기술 아키텍처 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 5. 마이그레이션 파일 목록 (004~019) [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 6. 구현 계획 (Timeline) [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 7. 위험 요소 및 완화 전략 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 8. 성공 기준 (Definition of Done) [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 9. 참고 자료 [EXTRACTED]
+- DB 마이그레이션 자동화 - 요구사항 문서 -> contains -> 10. 부록: 마이그레이션 파일 예시 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 DB 마이그레이션 자동화 - 요구사항 문서, 2.1 기능 요구사항 (Functional), 8. 성공 기준 (Definition of Done)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 db-migration-automation.plan.md이다.
+
+### Key Facts
+- **Feature**: DB Migration Automation **Level**: Enterprise **Status**: Planning **Created**: 2026-03-30 **Owner**: tenopa DevOps Team
+- FR-01: 마이그레이션 추적 (Core) - **설명**: 모든 마이그레이션 실행 기록을 `migration_history` 테이블에 저장 - **대상**: 000~019 모든 파일 (19개) - **필드**: version, filename, applied_at, status, execution_time, error_message - **우선순위**: CRITICAL
+- 8.1 Functional - [ ] 000_init_migrations.sql 성공적으로 실행 - [ ] 모든 19개 마이그레이션 순차 실행 - [ ] migration_history 테이블에 모든 실행 기록 저장 - [ ] 적용된 마이그레이션 자동 스킵 (중복 실행 방지) - [ ] 오류 발생 시 error_message 기록
+- NFR-01: 성능 - **목표**: 19개 전체 마이그레이션 < 60초 - **병목**: Supabase 네트워크 (SSL, 풀러 오버헤드 고려) - **최적화**: 트랜잭션 단위 최소화, 배치 처리
+- Phase: Design (다음 단계) - [ ] 마이그레이션 실행 순서 정의 및 의존성 분석 - [ ] 에러 처리 전략 수립 (SSL, 네트워크, 권한) - [ ] API 설계 (엔드포인트, 스키마) - [ ] 테스트 계획 수립

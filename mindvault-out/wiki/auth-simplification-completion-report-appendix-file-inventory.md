@@ -1,0 +1,179 @@
+# Auth Simplification (인증 단순화) Completion Report & Appendix: File Inventory
+Cohesion: 0.05 | Nodes: 41
+
+## Key Nodes
+- **Auth Simplification (인증 단순화) Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 13 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-completed-items]]
+  - -> contains -> [[4-quality-metrics]]
+  - -> contains -> [[5-issues-found-resolution]]
+  - -> contains -> [[6-testing-validation]]
+  - -> contains -> [[7-lessons-learned-retrospective]]
+  - -> contains -> [[8-process-improvement-suggestions]]
+  - -> contains -> [[9-next-steps]]
+  - -> contains -> [[10-deployment-checklist]]
+  - -> contains -> [[11-version-history]]
+  - -> contains -> [[appendix-file-inventory]]
+  - -> contains -> [[summary]]
+- **Appendix: File Inventory** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 5 connections
+  - -> contains -> [[backend-files-created]]
+  - -> contains -> [[backend-files-modified]]
+  - -> contains -> [[frontend-files-created]]
+  - -> contains -> [[frontend-files-modified]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **3. Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[31-backend-implementation]]
+  - -> contains -> [[32-frontend-implementation]]
+  - -> contains -> [[33-key-features-completed]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **4. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[41-design-vs-implementation-verification]]
+  - -> contains -> [[42-code-quality]]
+  - -> contains -> [[43-implementation-coverage-by-category]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **5. Issues Found & Resolution** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[51-issues-resolved-during-check-phase]]
+  - -> contains -> [[52-security-recommendations-applied]]
+  - -> contains -> [[53-optional-improvements-not-blocking]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **7. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[71-what-went-well-keep]]
+  - -> contains -> [[72-what-needs-improvement-problem]]
+  - -> contains -> [[73-what-to-try-next-try]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **8. Process Improvement Suggestions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[81-pdca-process]]
+  - -> contains -> [[82-frontend-backend-alignment]]
+  - -> contains -> [[83-security-error-handling]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **9. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 4 connections
+  - -> contains -> [[91-immediate-1]]
+  - -> contains -> [[92-short-term-1-2]]
+  - -> contains -> [[93-long-term-1]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 3 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **6. Testing & Validation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 3 connections
+  - -> contains -> [[61-code-validation]]
+  - -> contains -> [[62-gap-analysis-coverage]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 2 connections
+  - -> references -> [[unresolvedrefauthsimplificationanalysis]]
+  - <- contains <- [[auth-simplification-completion-report]]
+- **__unresolved__::ref::auth_simplification_analysis** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **10. Deployment Checklist** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[auth-simplification-completion-report]]
+- **11. Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[auth-simplification-completion-report]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **3.1 Backend Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.2 Frontend Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.3 Key Features Completed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **4.1 Design vs Implementation Verification** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **4.2 Code Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **4.3 Implementation Coverage by Category** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[4-quality-metrics]]
+- **5.1 Issues Resolved During Check Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[5-issues-found-resolution]]
+- **5.2 Security Recommendations Applied** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[5-issues-found-resolution]]
+- **5.3 Optional Improvements (Not Blocking)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[5-issues-found-resolution]]
+- **6.1 Code Validation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[6-testing-validation]]
+- **6.2 Gap Analysis Coverage** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[6-testing-validation]]
+- **7.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **7.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **7.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **8.1 PDCA Process** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[8-process-improvement-suggestions]]
+- **8.2 Frontend-Backend Alignment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[8-process-improvement-suggestions]]
+- **8.3 Security & Error Handling** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[8-process-improvement-suggestions]]
+- **9.1 Immediate (완료 후 1주일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **9.2 Short-term (1주일 ~ 2주일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **9.3 Long-term (1개월+)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[9-next-steps]]
+- **Backend Files Created** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[appendix-file-inventory]]
+- **Backend Files Modified** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[appendix-file-inventory]]
+- **Frontend Files Created** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[appendix-file-inventory]]
+- **Frontend Files Modified** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[appendix-file-inventory]]
+- **Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\auth-simplification\auth-simplification.report.md) -- 1 connections
+  - <- contains <- [[auth-simplification-completion-report]]
+
+## Internal Relationships
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::auth_simplification_analysis [EXTRACTED]
+- 3. Completed Items -> contains -> 3.1 Backend Implementation [EXTRACTED]
+- 3. Completed Items -> contains -> 3.2 Frontend Implementation [EXTRACTED]
+- 3. Completed Items -> contains -> 3.3 Key Features Completed [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.1 Design vs Implementation Verification [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.2 Code Quality [EXTRACTED]
+- 4. Quality Metrics -> contains -> 4.3 Implementation Coverage by Category [EXTRACTED]
+- 5. Issues Found & Resolution -> contains -> 5.1 Issues Resolved During Check Phase [EXTRACTED]
+- 5. Issues Found & Resolution -> contains -> 5.2 Security Recommendations Applied [EXTRACTED]
+- 5. Issues Found & Resolution -> contains -> 5.3 Optional Improvements (Not Blocking) [EXTRACTED]
+- 6. Testing & Validation -> contains -> 6.1 Code Validation [EXTRACTED]
+- 6. Testing & Validation -> contains -> 6.2 Gap Analysis Coverage [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.1 What Went Well (Keep) [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.2 What Needs Improvement (Problem) [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.3 What to Try Next (Try) [EXTRACTED]
+- 8. Process Improvement Suggestions -> contains -> 8.1 PDCA Process [EXTRACTED]
+- 8. Process Improvement Suggestions -> contains -> 8.2 Frontend-Backend Alignment [EXTRACTED]
+- 8. Process Improvement Suggestions -> contains -> 8.3 Security & Error Handling [EXTRACTED]
+- 9. Next Steps -> contains -> 9.1 Immediate (완료 후 1주일) [EXTRACTED]
+- 9. Next Steps -> contains -> 9.2 Short-term (1주일 ~ 2주일) [EXTRACTED]
+- 9. Next Steps -> contains -> 9.3 Long-term (1개월+) [EXTRACTED]
+- Appendix: File Inventory -> contains -> Backend Files Created [EXTRACTED]
+- Appendix: File Inventory -> contains -> Backend Files Modified [EXTRACTED]
+- Appendix: File Inventory -> contains -> Frontend Files Created [EXTRACTED]
+- Appendix: File Inventory -> contains -> Frontend Files Modified [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 1. Summary [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 3. Completed Items [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 4. Quality Metrics [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 5. Issues Found & Resolution [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 6. Testing & Validation [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 7. Lessons Learned & Retrospective [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 8. Process Improvement Suggestions [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 9. Next Steps [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 10. Deployment Checklist [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> 11. Version History [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> Appendix: File Inventory [EXTRACTED]
+- Auth Simplification (인증 단순화) Completion Report -> contains -> Summary [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Auth Simplification (인증 단순화) Completion Report, Appendix: File Inventory, 3. Completed Items를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 auth-simplification.report.md이다.
+
+### Key Facts
+- > **Status**: Complete > > **Project**: 용역제안 Coworker > **Version**: 1.0 > **Author**: report-generator > **Completion Date**: 2026-03-17 > **PDCA Cycle**: #1
+- Backend Files Created ``` database/migrations/008_user_password_flag.sql app/services/user_account_service.py scripts/provision_users.py ```
+- 3.1 Backend Implementation
+- 4.1 Design vs Implementation Verification
+- 5.1 Issues Resolved During Check Phase

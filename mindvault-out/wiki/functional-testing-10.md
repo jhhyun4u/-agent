@@ -1,0 +1,192 @@
+# 기능 테스트 (Functional Testing) 완료 보고서 & 10. 버전 이력
+Cohesion: 0.05 | Nodes: 42
+
+## Key Nodes
+- **기능 테스트 (Functional Testing) 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 10 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **10. 버전 이력** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 5 connections
+  - -> contains -> [[1-testsconftestpy]]
+  - -> contains -> [[2-teststestphase1proposalpy]]
+  - -> contains -> [[3-teststestphase2graphpy]]
+  - -> contains -> [[47]]
+  - <- contains <- [[functional-testing]]
+- **2. PDCA 사이클 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 5 connections
+  - -> contains -> [[21-plan]]
+  - -> contains -> [[22-design]]
+  - -> contains -> [[23-do]]
+  - -> contains -> [[24-check]]
+  - <- contains <- [[functional-testing]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 4 connections
+  - <- has_code_example <- [[1-testsconftestpy]]
+  - <- has_code_example <- [[2-teststestphase1proposalpy]]
+  - <- has_code_example <- [[3-teststestphase2graphpy]]
+  - <- has_code_example <- [[47]]
+- **2.3 Do 단계 (실행)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 4 connections
+  - -> contains -> [[do-1]]
+  - -> contains -> [[do-2-4]]
+  - -> contains -> [[do-3-3]]
+  - <- contains <- [[2-pdca]]
+- **3. 완료 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 4 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - <- contains <- [[functional-testing]]
+- **5. 품질 지표** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 4 connections
+  - -> contains -> [[51]]
+  - -> contains -> [[52]]
+  - -> contains -> [[53]]
+  - <- contains <- [[functional-testing]]
+- **6. 교훈 및 회고** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 4 connections
+  - -> contains -> [[61-keep]]
+  - -> contains -> [[62-problem]]
+  - -> contains -> [[63-try]]
+  - <- contains <- [[functional-testing]]
+- **1. 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[functional-testing]]
+- **4. 불완료 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 3 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42-phase-2]]
+  - <- contains <- [[functional-testing]]
+- **7. 프로세스 개선 제안** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 3 connections
+  - -> contains -> [[71-pdca]]
+  - -> contains -> [[72]]
+  - <- contains <- [[functional-testing]]
+- **8. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 3 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82-pdca]]
+  - <- contains <- [[functional-testing]]
+- **파일 1: tests/conftest.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10]]
+- **2.4 Check 단계 (검증)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> contains -> [[match-rate]]
+  - <- contains <- [[2-pdca]]
+- **파일 2: tests/test_phase1_proposal.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10]]
+- **파일 3: tests/test_phase2_graph.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10]]
+- **파일 4~7: 프로덕션 코드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10]]
+- **9. 변경 로그** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 2 connections
+  - -> contains -> [[v10-2026-03-23]]
+  - <- contains <- [[functional-testing]]
+- **1.1 프로젝트 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 결과 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **2.1 Plan 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.2 Design 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **3.1 테스트 인프라 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 프로덕션 코드 정비** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 산출물** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 의도적 허용 (낮은 우선순위)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 Phase 2 미처리 갭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5.1 테스트 결과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.2 수정된 버그/경고** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.3 기술 채무 처리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **6.1 잘된 점 (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.2 개선할 점 (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.3 다음에 시도할 것 (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7.1 PDCA 프로세스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 도구/환경 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 즉시 수행 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 향후 PDCA 사이클** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **Do-1: 테스트 실행 및 진단** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Do-2: 테스트 인프라 수정 (4개 파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Do-3: 프로덕션 코드 경고 수정 (3개 파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Match Rate 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[24-check]]
+- **v1.0 (2026-03-23)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\functional-testing\report.md) -- 1 connections
+  - <- contains <- [[9]]
+
+## Internal Relationships
+- 1. 개요 -> contains -> 1.1 프로젝트 개요 [EXTRACTED]
+- 1. 개요 -> contains -> 1.2 결과 요약 [EXTRACTED]
+- 10. 버전 이력 -> contains -> 파일 1: tests/conftest.py [EXTRACTED]
+- 10. 버전 이력 -> contains -> 파일 2: tests/test_phase1_proposal.py [EXTRACTED]
+- 10. 버전 이력 -> contains -> 파일 3: tests/test_phase2_graph.py [EXTRACTED]
+- 10. 버전 이력 -> contains -> 파일 4~7: 프로덕션 코드 [EXTRACTED]
+- 파일 1: tests/conftest.py -> has_code_example -> python [EXTRACTED]
+- 2.3 Do 단계 (실행) -> contains -> Do-1: 테스트 실행 및 진단 [EXTRACTED]
+- 2.3 Do 단계 (실행) -> contains -> Do-2: 테스트 인프라 수정 (4개 파일) [EXTRACTED]
+- 2.3 Do 단계 (실행) -> contains -> Do-3: 프로덕션 코드 경고 수정 (3개 파일) [EXTRACTED]
+- 2.4 Check 단계 (검증) -> contains -> Match Rate 분석 [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.1 Plan 단계 [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.2 Design 단계 [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.3 Do 단계 (실행) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.4 Check 단계 (검증) [EXTRACTED]
+- 파일 2: tests/test_phase1_proposal.py -> has_code_example -> python [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.1 테스트 인프라 개선 [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.2 프로덕션 코드 정비 [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.3 산출물 [EXTRACTED]
+- 파일 3: tests/test_phase2_graph.py -> has_code_example -> python [EXTRACTED]
+- 4. 불완료 항목 -> contains -> 4.1 의도적 허용 (낮은 우선순위) [EXTRACTED]
+- 4. 불완료 항목 -> contains -> 4.2 Phase 2 미처리 갭 [EXTRACTED]
+- 파일 4~7: 프로덕션 코드 -> has_code_example -> python [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.1 테스트 결과 [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.2 수정된 버그/경고 [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.3 기술 채무 처리 [EXTRACTED]
+- 6. 교훈 및 회고 -> contains -> 6.1 잘된 점 (Keep) [EXTRACTED]
+- 6. 교훈 및 회고 -> contains -> 6.2 개선할 점 (Problem) [EXTRACTED]
+- 6. 교훈 및 회고 -> contains -> 6.3 다음에 시도할 것 (Try) [EXTRACTED]
+- 7. 프로세스 개선 제안 -> contains -> 7.1 PDCA 프로세스 [EXTRACTED]
+- 7. 프로세스 개선 제안 -> contains -> 7.2 도구/환경 개선 [EXTRACTED]
+- 8. 다음 단계 -> contains -> 8.1 즉시 수행 사항 [EXTRACTED]
+- 8. 다음 단계 -> contains -> 8.2 향후 PDCA 사이클 [EXTRACTED]
+- 9. 변경 로그 -> contains -> v1.0 (2026-03-23) [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 1. 개요 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 2. PDCA 사이클 요약 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 3. 완료 항목 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 4. 불완료 항목 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 5. 품질 지표 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 6. 교훈 및 회고 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 7. 프로세스 개선 제안 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 8. 다음 단계 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 9. 변경 로그 [EXTRACTED]
+- 기능 테스트 (Functional Testing) 완료 보고서 -> contains -> 10. 버전 이력 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 기능 테스트 (Functional Testing) 완료 보고서, 10. 버전 이력, 2. PDCA 사이클 요약를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 report.md이다.
+
+### Key Facts
+- > **Status**: 완료 > > **Project**: 용역제안 Coworker > **Version**: v3.6 > **Author**: Test Infrastructure Team > **Completion Date**: 2026-03-23 > **PDCA Cycle**: #1 (Do → Check → Report)
+- | Version | Date | 변경 사항 | 작성자 | |---------|------|---------|--------| | 1.0 | 2026-03-23 | 기능 테스트 완료 보고서 작성 | Test Infrastructure Team |
+- 2.1 Plan 단계 - **문서**: 작성하지 않음 (기존 코드 개선 작업이므로 필요 없음) - **범위**: 테스트 실행 및 인프라 개선에만 집중
+- **`app/api/routes_admin.py`** - 수정 항목: `datetime.utcnow()` → `datetime.now(timezone.utc)` (3곳) - 이유: Python 3.12+ deprecation warning 제거 (표준 라이브러리 권고) - 영향: 관리자 조회 엔드포인트 타임스탬프 정확성 향상
+- Do-1: 테스트 실행 및 진단 - **기간**: 2026-03-21 - **활동**: - Phase 0~10, Unit, API, Workflow, Checklist 테스트 순차 실행 - 테스트 인프라 이슈 진단 (401/500 에러) - 프로덕션 코드 경고 분석

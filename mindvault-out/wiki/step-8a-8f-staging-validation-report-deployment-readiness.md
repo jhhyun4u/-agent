@@ -1,0 +1,143 @@
+# STEP 8A-8F Staging Validation Report & 🚀 Deployment Readiness
+Cohesion: 0.06 | Nodes: 32
+
+## Key Nodes
+- **STEP 8A-8F Staging Validation Report** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 11 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[validation-checklist]]
+  - -> contains -> [[quality-metrics]]
+  - -> contains -> [[test-coverage]]
+  - -> contains -> [[implementation-details]]
+  - -> contains -> [[deployment-readiness]]
+  - -> contains -> [[performance-expectations]]
+  - -> contains -> [[known-limitations]]
+  - -> contains -> [[next-steps]]
+  - -> contains -> [[success-criteria]]
+  - -> contains -> [[sign-off]]
+- **🚀 Deployment Readiness** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 4 connections
+  - -> contains -> [[pre-staging-checks]]
+  - -> contains -> [[staging-environment-steps]]
+  - -> contains -> [[production-deployment]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **📝 Implementation Details** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 4 connections
+  - -> contains -> [[node-features]]
+  - -> contains -> [[state-management]]
+  - -> contains -> [[error-handling]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **📋 Next Steps** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 4 connections
+  - -> contains -> [[immediate-today]]
+  - -> contains -> [[short-term-this-week]]
+  - -> contains -> [[medium-term-next-week]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Phase 3: Functional Verification** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 4 connections
+  - -> contains -> [[node-implementations]]
+  - -> contains -> [[helper-functions]]
+  - -> contains -> [[prompts]]
+  - <- contains <- [[validation-checklist]]
+- **✅ Validation Checklist** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 4 connections
+  - -> contains -> [[phase-1-python-syntax-validation]]
+  - -> contains -> [[phase-2-code-style-compliance]]
+  - -> contains -> [[phase-3-functional-verification]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **📈 Performance Expectations** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 3 connections
+  - -> contains -> [[token-budget-per-proposal]]
+  - -> contains -> [[estimated-monthly-cost-50-proposals]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **📊 Quality Metrics** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 3 connections
+  - -> contains -> [[code-quality-score-evolution]]
+  - -> contains -> [[improvements-breakdown]]
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Error Handling** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[implementation-details]]
+- **python** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- has_code_example <- [[error-handling]]
+- **Code Quality Score Evolution** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Estimated Monthly Cost (50 proposals)** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[performance-expectations]]
+- **🎯 Executive Summary** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Helper Functions** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[phase-3-functional-verification]]
+- **Immediate (Today)** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Improvements Breakdown** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **⚠️ Known Limitations** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Medium-term (Next Week)** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Node Features** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[implementation-details]]
+- **Node Implementations** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[phase-3-functional-verification]]
+- **Phase 1: Python Syntax Validation** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[validation-checklist]]
+- **Phase 2: Code Style Compliance** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[validation-checklist]]
+- **Pre-Staging Checks** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[deployment-readiness]]
+- **Production Deployment** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[deployment-readiness]]
+- **Prompts** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[phase-3-functional-verification]]
+- **Short-term (This Week)** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **✅ Sign-Off** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Staging Environment Steps** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[deployment-readiness]]
+- **State Management** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[implementation-details]]
+- **🎯 Success Criteria** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **🧪 Test Coverage** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[step-8a-8f-staging-validation-report]]
+- **Token Budget per Proposal** (C:\project\tenopa proposer\-agent-master\STEP8A_STAGING_VALIDATION_REPORT.md) -- 1 connections
+  - <- contains <- [[performance-expectations]]
+
+## Internal Relationships
+- 🚀 Deployment Readiness -> contains -> Pre-Staging Checks [EXTRACTED]
+- 🚀 Deployment Readiness -> contains -> Staging Environment Steps [EXTRACTED]
+- 🚀 Deployment Readiness -> contains -> Production Deployment [EXTRACTED]
+- Error Handling -> has_code_example -> python [EXTRACTED]
+- 📝 Implementation Details -> contains -> Node Features [EXTRACTED]
+- 📝 Implementation Details -> contains -> State Management [EXTRACTED]
+- 📝 Implementation Details -> contains -> Error Handling [EXTRACTED]
+- 📋 Next Steps -> contains -> Immediate (Today) [EXTRACTED]
+- 📋 Next Steps -> contains -> Short-term (This Week) [EXTRACTED]
+- 📋 Next Steps -> contains -> Medium-term (Next Week) [EXTRACTED]
+- 📈 Performance Expectations -> contains -> Token Budget per Proposal [EXTRACTED]
+- 📈 Performance Expectations -> contains -> Estimated Monthly Cost (50 proposals) [EXTRACTED]
+- Phase 3: Functional Verification -> contains -> Node Implementations [EXTRACTED]
+- Phase 3: Functional Verification -> contains -> Helper Functions [EXTRACTED]
+- Phase 3: Functional Verification -> contains -> Prompts [EXTRACTED]
+- 📊 Quality Metrics -> contains -> Code Quality Score Evolution [EXTRACTED]
+- 📊 Quality Metrics -> contains -> Improvements Breakdown [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 🎯 Executive Summary [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> ✅ Validation Checklist [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 📊 Quality Metrics [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 🧪 Test Coverage [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 📝 Implementation Details [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 🚀 Deployment Readiness [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 📈 Performance Expectations [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> ⚠️ Known Limitations [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 📋 Next Steps [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> 🎯 Success Criteria [EXTRACTED]
+- STEP 8A-8F Staging Validation Report -> contains -> ✅ Sign-Off [EXTRACTED]
+- ✅ Validation Checklist -> contains -> Phase 1: Python Syntax Validation [EXTRACTED]
+- ✅ Validation Checklist -> contains -> Phase 2: Code Style Compliance [EXTRACTED]
+- ✅ Validation Checklist -> contains -> Phase 3: Functional Verification [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 STEP 8A-8F Staging Validation Report, 🚀 Deployment Readiness, 📝 Implementation Details를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 STEP8A_STAGING_VALIDATION_REPORT.md이다.
+
+### Key Facts
+- **Date:** 2026-03-30 **Status:** ✅ **STAGING READY** **Quality Score:** 98.5/100
+- Pre-Staging Checks - [x] Python syntax validated (13/13 files) - [x] Code style compliant (ruff format) - [x] Imports correct and used - [x] Error handling unified - [x] Constants centralized - [x] Documentation updated - [x] Tests pass (13/13)
+- Node Features - **8A (Customer Analysis)**: RFP intelligence extraction → CustomerProfile artifact - **8B (Section Validator)**: Compliance validation → ValidationReport artifact - **8C (Consolidation)**: Section merging, quality metrics → ConsolidatedProposal artifact - **8D (Mock Evaluation)**:…
+- Immediate (Today) - ✅ Code optimization complete (98.5/100) - ✅ Korean translations complete (6/6 prompts) - ✅ Syntax validation complete (13/13 files) - ⏳ Staging deployment setup
+- Node Implementations - ✅ 6 async node functions implemented - ✅ All nodes accept ProposalState - ✅ All nodes return state update dict - ✅ Error handlers in all nodes - ✅ Logging consistent across nodes

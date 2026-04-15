@@ -1,0 +1,251 @@
+# Project Archive Feature Completion Report & Gaps Identified & Resolution
+Cohesion: 0.04 | Nodes: 56
+
+## Key Nodes
+- **Project Archive Feature Completion Report** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 16 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[pdca-cycle-overview]]
+  - -> contains -> [[design-vs-implementation-gap-analysis]]
+  - -> contains -> [[test-results]]
+  - -> contains -> [[implementation-metrics]]
+  - -> contains -> [[artifacts-delivered]]
+  - -> contains -> [[completed-items-checklist]]
+  - -> contains -> [[lessons-learned]]
+  - -> contains -> [[known-issues-deferred-items]]
+  - -> contains -> [[performance-impact]]
+  - -> contains -> [[next-steps-recommendations]]
+  - -> contains -> [[team-ownership]]
+  - -> contains -> [[acceptance-criteria-status]]
+  - -> contains -> [[appendix-api-examples]]
+  - -> contains -> [[sign-off]]
+  - -> contains -> [[related-documents]]
+- **Gaps Identified & Resolution** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 6 connections
+  - -> contains -> [[gap-1-medium-snapshot-endpoint-docstring-mismatch-fixed]]
+  - -> contains -> [[gap-2-low-description-column-underutilized]]
+  - -> contains -> [[gap-3-low-zip-bundle-memory-efficiency]]
+  - -> contains -> [[gap-4-low-test-coverage-for-edge-cases]]
+  - -> contains -> [[gap-5-low-feedback-renderer-todict-consistency-fixed]]
+  - <- contains <- [[design-vs-implementation-gap-analysis]]
+- **Completed Items Checklist** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 5 connections
+  - -> contains -> [[functionality]]
+  - -> contains -> [[quality]]
+  - -> contains -> [[integration]]
+  - -> contains -> [[documentation]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Appendix: API Examples** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[example-1-get-archive-manifest]]
+  - -> contains -> [[example-2-create-snapshot]]
+  - -> contains -> [[example-3-download-artifact-bundle]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Artifacts Delivered** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[core-artifacts]]
+  - -> contains -> [[documentation]]
+  - -> contains -> [[data-artifacts-sample]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Design vs Implementation: Gap Analysis** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[match-rate-96]]
+  - -> contains -> [[gaps-identified-resolution]]
+  - -> contains -> [[intentional-design-impl-differences-verified-ok]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[areas-for-improvement]]
+  - -> contains -> [[principles-to-apply-next-time]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Next Steps & Recommendations** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[immediate-v20-q2-2026]]
+  - -> contains -> [[short-term-v21-q3-2026]]
+  - -> contains -> [[strategic-v30-q4-2026]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **PDCA Cycle Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[plan-phase]]
+  - -> contains -> [[design-phase]]
+  - -> contains -> [[do-phase-implementation]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Performance Impact** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[storage]]
+  - -> contains -> [[api-response-times]]
+  - -> contains -> [[scalability]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Test Results** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 4 connections
+  - -> contains -> [[test-execution-summary]]
+  - -> contains -> [[key-test-cases]]
+  - -> contains -> [[regression-testing]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 3 connections
+  - <- has_code_example <- [[example-1-get-archive-manifest]]
+  - <- has_code_example <- [[example-2-create-snapshot]]
+  - <- has_code_example <- [[example-3-download-artifact-bundle]]
+- **Do Phase (Implementation)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 3 connections
+  - -> contains -> [[new-files-created-4]]
+  - -> contains -> [[modified-files-3]]
+  - <- contains <- [[pdca-cycle-overview]]
+- **Known Issues & Deferred Items** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 3 connections
+  - -> contains -> [[no-blocking-issues]]
+  - -> contains -> [[accepted-technical-debt]]
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **New Files Created (4)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 3 connections
+  - -> has_code_example -> [[sql]]
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[do-phase-implementation]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - <- has_code_example <- [[new-files-created-4]]
+  - <- has_code_example <- [[modified-files-3]]
+- **Documentation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - <- contains <- [[artifacts-delivered]]
+  - <- contains <- [[completed-items-checklist]]
+- **Example 1: Get Archive Manifest** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[appendix-api-examples]]
+- **Example 2: Create Snapshot** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[appendix-api-examples]]
+- **Example 3: Download Artifact Bundle** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[appendix-api-examples]]
+- **Modified Files (3)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[do-phase-implementation]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- has_code_example <- [[new-files-created-4]]
+- **Acceptance Criteria Status** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Accepted Technical Debt** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[known-issues-deferred-items]]
+- **API Response Times** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[performance-impact]]
+- **Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Core Artifacts** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[artifacts-delivered]]
+- **Data Artifacts (Sample)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[artifacts-delivered]]
+- **Design Phase** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-overview]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Functionality** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[completed-items-checklist]]
+- **GAP-1: MEDIUM — Snapshot Endpoint Docstring Mismatch ✅ FIXED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[gaps-identified-resolution]]
+- **GAP-2: LOW — Description Column Underutilized** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[gaps-identified-resolution]]
+- **GAP-3: LOW — ZIP Bundle Memory Efficiency** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[gaps-identified-resolution]]
+- **GAP-4: LOW — Test Coverage for Edge Cases** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[gaps-identified-resolution]]
+- **GAP-5: LOW — Feedback Renderer _to_dict() Consistency ✅ FIXED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[gaps-identified-resolution]]
+- **Immediate (v2.0 — Q2 2026)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[next-steps-recommendations]]
+- **Implementation Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Integration** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[completed-items-checklist]]
+- **Intentional Design-Impl Differences (Verified OK)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[design-vs-implementation-gap-analysis]]
+- **Key Test Cases** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[test-results]]
+- **Match Rate: **96%**** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[design-vs-implementation-gap-analysis]]
+- **No Blocking Issues** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[known-issues-deferred-items]]
+- **Plan Phase** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-overview]]
+- **Principles to Apply Next Time** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Quality** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[completed-items-checklist]]
+- **Regression Testing** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[test-results]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Scalability** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[performance-impact]]
+- **Short-term (v2.1 — Q3 2026)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[next-steps-recommendations]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Storage** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[performance-impact]]
+- **Strategic (v3.0 — Q4 2026)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[next-steps-recommendations]]
+- **Team & Ownership** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[project-archive-feature-completion-report]]
+- **Test Execution Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[test-results]]
+- **What Went Well** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\project-archive.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+
+## Internal Relationships
+- Appendix: API Examples -> contains -> Example 1: Get Archive Manifest [EXTRACTED]
+- Appendix: API Examples -> contains -> Example 2: Create Snapshot [EXTRACTED]
+- Appendix: API Examples -> contains -> Example 3: Download Artifact Bundle [EXTRACTED]
+- Artifacts Delivered -> contains -> Core Artifacts [EXTRACTED]
+- Artifacts Delivered -> contains -> Documentation [EXTRACTED]
+- Artifacts Delivered -> contains -> Data Artifacts (Sample) [EXTRACTED]
+- Completed Items Checklist -> contains -> Functionality [EXTRACTED]
+- Completed Items Checklist -> contains -> Quality [EXTRACTED]
+- Completed Items Checklist -> contains -> Integration [EXTRACTED]
+- Completed Items Checklist -> contains -> Documentation [EXTRACTED]
+- Design vs Implementation: Gap Analysis -> contains -> Match Rate: **96%** [EXTRACTED]
+- Design vs Implementation: Gap Analysis -> contains -> Gaps Identified & Resolution [EXTRACTED]
+- Design vs Implementation: Gap Analysis -> contains -> Intentional Design-Impl Differences (Verified OK) [EXTRACTED]
+- Do Phase (Implementation) -> contains -> New Files Created (4) [EXTRACTED]
+- Do Phase (Implementation) -> contains -> Modified Files (3) [EXTRACTED]
+- Example 1: Get Archive Manifest -> has_code_example -> bash [EXTRACTED]
+- Example 2: Create Snapshot -> has_code_example -> bash [EXTRACTED]
+- Example 3: Download Artifact Bundle -> has_code_example -> bash [EXTRACTED]
+- Gaps Identified & Resolution -> contains -> GAP-1: MEDIUM — Snapshot Endpoint Docstring Mismatch ✅ FIXED [EXTRACTED]
+- Gaps Identified & Resolution -> contains -> GAP-2: LOW — Description Column Underutilized [EXTRACTED]
+- Gaps Identified & Resolution -> contains -> GAP-3: LOW — ZIP Bundle Memory Efficiency [EXTRACTED]
+- Gaps Identified & Resolution -> contains -> GAP-4: LOW — Test Coverage for Edge Cases [EXTRACTED]
+- Gaps Identified & Resolution -> contains -> GAP-5: LOW — Feedback Renderer _to_dict() Consistency ✅ FIXED [EXTRACTED]
+- Known Issues & Deferred Items -> contains -> No Blocking Issues [EXTRACTED]
+- Known Issues & Deferred Items -> contains -> Accepted Technical Debt [EXTRACTED]
+- Lessons Learned -> contains -> What Went Well [EXTRACTED]
+- Lessons Learned -> contains -> Areas for Improvement [EXTRACTED]
+- Lessons Learned -> contains -> Principles to Apply Next Time [EXTRACTED]
+- Modified Files (3) -> has_code_example -> python [EXTRACTED]
+- New Files Created (4) -> has_code_example -> sql [EXTRACTED]
+- New Files Created (4) -> has_code_example -> python [EXTRACTED]
+- Next Steps & Recommendations -> contains -> Immediate (v2.0 — Q2 2026) [EXTRACTED]
+- Next Steps & Recommendations -> contains -> Short-term (v2.1 — Q3 2026) [EXTRACTED]
+- Next Steps & Recommendations -> contains -> Strategic (v3.0 — Q4 2026) [EXTRACTED]
+- PDCA Cycle Overview -> contains -> Plan Phase [EXTRACTED]
+- PDCA Cycle Overview -> contains -> Design Phase [EXTRACTED]
+- PDCA Cycle Overview -> contains -> Do Phase (Implementation) [EXTRACTED]
+- Performance Impact -> contains -> Storage [EXTRACTED]
+- Performance Impact -> contains -> API Response Times [EXTRACTED]
+- Performance Impact -> contains -> Scalability [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Executive Summary [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> PDCA Cycle Overview [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Design vs Implementation: Gap Analysis [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Test Results [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Implementation Metrics [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Artifacts Delivered [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Completed Items Checklist [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Lessons Learned [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Known Issues & Deferred Items [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Performance Impact [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Next Steps & Recommendations [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Team & Ownership [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Acceptance Criteria Status [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Appendix: API Examples [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Sign-Off [EXTRACTED]
+- Project Archive Feature Completion Report -> contains -> Related Documents [EXTRACTED]
+- Test Results -> contains -> Test Execution Summary [EXTRACTED]
+- Test Results -> contains -> Key Test Cases [EXTRACTED]
+- Test Results -> contains -> Regression Testing [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Project Archive Feature Completion Report, Gaps Identified & Resolution, Completed Items Checklist를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 project-archive.report.md이다.
+
+### Key Facts
+- > **Summary**: Implemented Supabase Storage-based project archive system with master index for centralized management of all proposal-related artifacts and intermediate outputs. > > **Author**: AI Coworker > **Created**: 2026-03-24 > **Last Modified**: 2026-03-24 > **Status**: Completed
+- GAP-1: MEDIUM — Snapshot Endpoint Docstring Mismatch ✅ FIXED - **Issue**: Design doc states "captures full state snapshot to **all artifacts**" but initial API docstring said "to **selected artifacts**" - **Found in**: Check phase via docstring comparison - **Resolution**: Updated…
+- Functionality - ✅ 21 artifact types identified and renderers created - ✅ Centralized manifest index (master file) - ✅ Versioned storage with timestamp tracking - ✅ Automated snapshots on workflow completion - ✅ Binary artifact auto-registration on download - ✅ 5-endpoint REST API with full CRUD - ✅…
+- Example 1: Get Archive Manifest ```bash curl -X GET "http://localhost:8000/api/proposals/{proposal_id}/archive" \ -H "Authorization: Bearer {token}"
+- Core Artifacts 1. ✅ **project_archive_service.py** — 480 lines, 16 renderers, 7 core methods 2. ✅ **routes_project_archive.py** — 220 lines, 5 API endpoints 3. ✅ **012_project_archive.sql** — 180 lines, complete schema + triggers 4. ✅ **test_project_archive.py** — 550 lines, 27 tests 5. ✅…

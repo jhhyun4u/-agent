@@ -1,0 +1,207 @@
+# 🚀 PRODUCTION DEPLOYMENT - COMPLETE & Next Steps (Post-Deployment)
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **🚀 PRODUCTION DEPLOYMENT - COMPLETE** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 16 connections
+  - -> contains -> [[deployment-summary]]
+  - -> contains -> [[whats-in-production-now]]
+  - -> contains -> [[production-deployment-status]]
+  - -> contains -> [[files-deployed-to-production]]
+  - -> contains -> [[test-results-staging-validation]]
+  - -> contains -> [[production-validation-checklist]]
+  - -> contains -> [[production-monitoring-setup]]
+  - -> contains -> [[known-issues-workarounds]]
+  - -> contains -> [[production-rollback-plan-if-needed]]
+  - -> contains -> [[success-criteria-all-met]]
+  - -> contains -> [[production-deployment-sign-off]]
+  - -> contains -> [[next-steps-post-deployment]]
+  - -> contains -> [[production-deployment-information]]
+  - -> contains -> [[confidence-level-95]]
+  - -> contains -> [[contact-information]]
+  - -> contains -> [[documentation]]
+- **Next Steps (Post-Deployment)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 5 connections
+  - -> contains -> [[hour-1-verify-deployment]]
+  - -> contains -> [[hours-2-4-run-smoke-tests]]
+  - -> contains -> [[hours-5-24-extended-monitoring]]
+  - -> contains -> [[days-2-7-production-validation]]
+  - <- contains <- [[production-deployment-complete]]
+- **Production Validation Checklist** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 5 connections
+  - -> contains -> [[immediate-first-hour]]
+  - -> contains -> [[smoke-tests-next-1-2-hours]]
+  - -> contains -> [[security-validation-next-24-hours]]
+  - -> contains -> [[performance-monitoring-first-48-hours]]
+  - <- contains <- [[production-deployment-complete]]
+- **What's in Production Now** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 5 connections
+  - -> contains -> [[6-restful-endpoints-production]]
+  - -> contains -> [[async-processing-pipeline-production]]
+  - -> contains -> [[security-controls-active]]
+  - -> contains -> [[database-storage-ready]]
+  - <- contains <- [[production-deployment-complete]]
+- **Files Deployed to Production** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 4 connections
+  - -> contains -> [[core-implementation]]
+  - -> contains -> [[database-storage]]
+  - -> contains -> [[documentation-deployed]]
+  - <- contains <- [[production-deployment-complete]]
+- **Known Issues & Workarounds** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 4 connections
+  - -> contains -> [[issue-1-small-files-may-fail-processing]]
+  - -> contains -> [[issue-2-embedding-api-rate-limits]]
+  - -> contains -> [[issue-3-test-timing-non-production]]
+  - <- contains <- [[production-deployment-complete]]
+- **Production Monitoring Setup** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 4 connections
+  - -> contains -> [[logs-to-watch-real-time]]
+  - -> contains -> [[metrics-to-track-dashboard]]
+  - -> contains -> [[alert-thresholds]]
+  - <- contains <- [[production-deployment-complete]]
+- **Production Rollback Plan (If Needed)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 4 connections
+  - -> contains -> [[immediate-rollback]]
+  - -> contains -> [[optional-database-rollback]]
+  - -> contains -> [[post-rollback-actions]]
+  - <- contains <- [[production-deployment-complete]]
+- **Production Deployment Status** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 3 connections
+  - -> contains -> [[deployment-timeline]]
+  - -> contains -> [[next-production-smoke-tests-pending]]
+  - <- contains <- [[production-deployment-complete]]
+- **Test Results (Staging Validation)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 3 connections
+  - -> contains -> [[e2e-integration-tests]]
+  - -> contains -> [[performance-benchmarks-all-met]]
+  - <- contains <- [[production-deployment-complete]]
+- **Immediate Rollback** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[production-rollback-plan-if-needed]]
+- **Optional: Database Rollback** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[production-rollback-plan-if-needed]]
+- **Production Deployment Sign-Off** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 2 connections
+  - -> contains -> [[team-sign-off]]
+  - <- contains <- [[production-deployment-complete]]
+- **bash** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- has_code_example <- [[immediate-rollback]]
+- **sql** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- has_code_example <- [[optional-database-rollback]]
+- **6 RESTful Endpoints (Production)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[whats-in-production-now]]
+- **Alert Thresholds** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-monitoring-setup]]
+- **Async Processing Pipeline (Production)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[whats-in-production-now]]
+- **Confidence Level: 95% 🎯** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Contact Information** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Core Implementation** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[files-deployed-to-production]]
+- **Database & Storage** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[files-deployed-to-production]]
+- **Database & Storage (Ready)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[whats-in-production-now]]
+- **Days 2-7: Production Validation** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[next-steps-post-deployment]]
+- **DEPLOYMENT SUMMARY** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Deployment Timeline** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-status]]
+- **Documentation** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Documentation (Deployed)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[files-deployed-to-production]]
+- **E2E Integration Tests** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[test-results-staging-validation]]
+- **Hour 1: Verify Deployment** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[next-steps-post-deployment]]
+- **Hours 2-4: Run Smoke Tests** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[next-steps-post-deployment]]
+- **Hours 5-24: Extended Monitoring** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[next-steps-post-deployment]]
+- **Immediate (First Hour)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-validation-checklist]]
+- **Issue 1: Small Files May Fail Processing** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Issue 2: Embedding API Rate Limits** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Issue 3: Test Timing (Non-Production)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Logs to Watch (Real-time)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-monitoring-setup]]
+- **Metrics to Track (Dashboard)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-monitoring-setup]]
+- **Next: Production Smoke Tests (Pending)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-status]]
+- **Performance Benchmarks (All Met)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[test-results-staging-validation]]
+- **Performance Monitoring (First 48 Hours)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-validation-checklist]]
+- **Post-Rollback Actions** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-rollback-plan-if-needed]]
+- **Production Deployment Information** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Security Controls (Active)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[whats-in-production-now]]
+- **Security Validation (Next 24 Hours)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-validation-checklist]]
+- **Smoke Tests (Next 1-2 Hours)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-validation-checklist]]
+- **Success Criteria (All Met)** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-complete]]
+- **Team Sign-Off** (C:\project\tenopa proposer\-agent-master\PRODUCTION_DEPLOYED.md) -- 1 connections
+  - <- contains <- [[production-deployment-sign-off]]
+
+## Internal Relationships
+- Files Deployed to Production -> contains -> Core Implementation [EXTRACTED]
+- Files Deployed to Production -> contains -> Database & Storage [EXTRACTED]
+- Files Deployed to Production -> contains -> Documentation (Deployed) [EXTRACTED]
+- Immediate Rollback -> has_code_example -> bash [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 1: Small Files May Fail Processing [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 2: Embedding API Rate Limits [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 3: Test Timing (Non-Production) [EXTRACTED]
+- Next Steps (Post-Deployment) -> contains -> Hour 1: Verify Deployment [EXTRACTED]
+- Next Steps (Post-Deployment) -> contains -> Hours 2-4: Run Smoke Tests [EXTRACTED]
+- Next Steps (Post-Deployment) -> contains -> Hours 5-24: Extended Monitoring [EXTRACTED]
+- Next Steps (Post-Deployment) -> contains -> Days 2-7: Production Validation [EXTRACTED]
+- Optional: Database Rollback -> has_code_example -> sql [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> DEPLOYMENT SUMMARY [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> What's in Production Now [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Deployment Status [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Files Deployed to Production [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Test Results (Staging Validation) [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Validation Checklist [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Monitoring Setup [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Known Issues & Workarounds [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Rollback Plan (If Needed) [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Success Criteria (All Met) [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Deployment Sign-Off [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Next Steps (Post-Deployment) [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Production Deployment Information [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Confidence Level: 95% 🎯 [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Contact Information [EXTRACTED]
+- 🚀 PRODUCTION DEPLOYMENT - COMPLETE -> contains -> Documentation [EXTRACTED]
+- Production Deployment Sign-Off -> contains -> Team Sign-Off [EXTRACTED]
+- Production Deployment Status -> contains -> Deployment Timeline [EXTRACTED]
+- Production Deployment Status -> contains -> Next: Production Smoke Tests (Pending) [EXTRACTED]
+- Production Monitoring Setup -> contains -> Logs to Watch (Real-time) [EXTRACTED]
+- Production Monitoring Setup -> contains -> Metrics to Track (Dashboard) [EXTRACTED]
+- Production Monitoring Setup -> contains -> Alert Thresholds [EXTRACTED]
+- Production Rollback Plan (If Needed) -> contains -> Immediate Rollback [EXTRACTED]
+- Production Rollback Plan (If Needed) -> contains -> Optional: Database Rollback [EXTRACTED]
+- Production Rollback Plan (If Needed) -> contains -> Post-Rollback Actions [EXTRACTED]
+- Production Validation Checklist -> contains -> Immediate (First Hour) [EXTRACTED]
+- Production Validation Checklist -> contains -> Smoke Tests (Next 1-2 Hours) [EXTRACTED]
+- Production Validation Checklist -> contains -> Security Validation (Next 24 Hours) [EXTRACTED]
+- Production Validation Checklist -> contains -> Performance Monitoring (First 48 Hours) [EXTRACTED]
+- Test Results (Staging Validation) -> contains -> E2E Integration Tests [EXTRACTED]
+- Test Results (Staging Validation) -> contains -> Performance Benchmarks (All Met) [EXTRACTED]
+- What's in Production Now -> contains -> 6 RESTful Endpoints (Production) [EXTRACTED]
+- What's in Production Now -> contains -> Async Processing Pipeline (Production) [EXTRACTED]
+- What's in Production Now -> contains -> Security Controls (Active) [EXTRACTED]
+- What's in Production Now -> contains -> Database & Storage (Ready) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 🚀 PRODUCTION DEPLOYMENT - COMPLETE, Next Steps (Post-Deployment), Production Validation Checklist를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 PRODUCTION_DEPLOYED.md이다.
+
+### Key Facts
+- Hour 1: Verify Deployment ``` 1. Monitor deployment logs 2. Check application startup 3. Verify database connectivity 4. Confirm health endpoint ```
+- Immediate (First Hour) - [ ] CI/CD deployment complete - [ ] Application server started - [ ] Database connectivity verified - [ ] Storage bucket accessible - [ ] Health endpoint returns 200
+- 6 RESTful Endpoints (Production) ``` ✅ POST   /api/documents/upload           Live ✅ GET    /api/documents                  Live ✅ GET    /api/documents/{id}             Live ✅ POST   /api/documents/{id}/process     Live ✅ GET    /api/documents/{id}/chunks      Live ✅ DELETE /api/documents/{id}    …
+- Core Implementation - `app/api/routes_documents.py` (599 lines) - 6 RESTful endpoints - Request validation - Response serialization - Async processing coordination
+- Issue 1: Small Files May Fail Processing - **Severity:** Low (expected behavior) - **Symptom:** Document marked failed with "텍스트가 너무 짧음" - **Workaround:** Test with files >1KB - **Action:** Monitor for customer reports

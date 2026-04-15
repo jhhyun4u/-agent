@@ -1,0 +1,277 @@
+# FinalReviewEngine & conduct_final_review
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **FinalReviewEngine** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 27 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[conductfinalreview]]
+  - -> contains -> [[conductcomprehensivereview]]
+  - -> contains -> [[reviewstrategyalignment]]
+  - -> contains -> [[reviewtechnicalcompleteness]]
+  - -> contains -> [[reviewbusinessviability]]
+  - -> contains -> [[reviewcompliancerequirements]]
+  - -> contains -> [[reviewqualityandcompleteness]]
+  - -> contains -> [[generatepptpresentation]]
+  - -> contains -> [[generateslidecontent]]
+  - -> contains -> [[createpptfile]]
+  - -> contains -> [[createproposaldocument]]
+  - -> contains -> [[calculatefinalscore]]
+  - -> contains -> [[generatefinalrecommendations]]
+  - -> contains -> [[assesssubmissionreadiness]]
+  - -> contains -> [[loadppttemplates]]
+  - -> contains -> [[loadreviewchecklist]]
+  - -> contains -> [[extractstrategyfromproposal]]
+  - -> contains -> [[checkstrategyalignment]]
+  - -> contains -> [[extracttechnicalproposals]]
+  - -> contains -> [[extractproposedprice]]
+  - -> contains -> [[checkpricealignment]]
+  - -> contains -> [[extractbusinesscase]]
+  - -> contains -> [[extractqualifications]]
+  - -> contains -> [[checklegalcompliance]]
+  - -> contains -> [[assessdocumentcompleteness]]
+  - <- contains <- [[finalreviewengine]]
+- **conduct_final_review** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 9 connections
+  - -> calls -> [[unresolvedrefconductcomprehensivereview]]
+  - -> calls -> [[unresolvedrefgeneratepptpresentation]]
+  - -> calls -> [[unresolvedrefcreatepptfile]]
+  - -> calls -> [[unresolvedrefcreateproposaldocument]]
+  - -> calls -> [[unresolvedrefcalculatefinalscore]]
+  - -> calls -> [[unresolvedrefgeneratefinalrecommendations]]
+  - -> calls -> [[unresolvedrefassesssubmissionreadiness]]
+  - -> calls -> [[unresolvedreffinalreviewresult]]
+  - <- contains <- [[finalreviewengine]]
+- **_review_business_viability** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefextractproposedprice]]
+  - -> calls -> [[unresolvedrefcheckpricealignment]]
+  - -> calls -> [[unresolvedrefreviewcomment]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefextractbusinesscase]]
+  - <- contains <- [[finalreviewengine]]
+- **_review_compliance_requirements** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefextractqualifications]]
+  - -> calls -> [[unresolvedrefreviewcomment]]
+  - -> calls -> [[unresolvedrefreplace]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefchecklegalcompliance]]
+  - <- contains <- [[finalreviewengine]]
+- **_review_strategy_alignment** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefextractstrategyfromproposal]]
+  - -> calls -> [[unresolvedrefcheckstrategyalignment]]
+  - -> calls -> [[unresolvedrefreviewcomment]]
+  - -> calls -> [[unresolvedrefreplace]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[finalreviewengine]]
+- **_conduct_comprehensive_review** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefreviewstrategyalignment]]
+  - -> calls -> [[unresolvedrefextend]]
+  - -> calls -> [[unresolvedrefreviewtechnicalcompleteness]]
+  - -> calls -> [[unresolvedrefreviewbusinessviability]]
+  - -> calls -> [[unresolvedrefreviewcompliancerequirements]]
+  - -> calls -> [[unresolvedrefreviewqualityandcompleteness]]
+  - <- contains <- [[finalreviewengine]]
+- **__unresolved__::ref::reviewcomment** () -- 5 connections
+  - <- calls <- [[reviewstrategyalignment]]
+  - <- calls <- [[reviewtechnicalcompleteness]]
+  - <- calls <- [[reviewbusinessviability]]
+  - <- calls <- [[reviewcompliancerequirements]]
+  - <- calls <- [[reviewqualityandcompleteness]]
+- **_generate_ppt_presentation** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefgenerateslidecontent]]
+  - -> calls -> [[unresolvedrefpptslide]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[finalreviewengine]]
+- **__init__** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefloadppttemplates]]
+  - -> calls -> [[unresolvedrefloadreviewchecklist]]
+  - <- contains <- [[finalreviewengine]]
+- **_create_proposal_document** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefreplace]]
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[finalreviewengine]]
+- **_generate_final_recommendations** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **__unresolved__::ref::pptslide** () -- 2 connections
+  - <- calls <- [[pptstoryboardnode]]
+  - <- calls <- [[generatepptpresentation]]
+- **_assess_document_completeness** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[finalreviewengine]]
+- **_calculate_final_score** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmax]]
+  - <- contains <- [[finalreviewengine]]
+- **_check_price_alignment** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **_extract_business_case** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **_extract_proposed_price** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **_extract_qualifications** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **_extract_strategy_from_proposal** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **_extract_technical_proposals** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[finalreviewengine]]
+- **__unresolved__::ref::_assess_submission_readiness** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_calculate_final_score** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_check_legal_compliance** () -- 1 connections
+  - <- calls <- [[reviewcompliancerequirements]]
+- **__unresolved__::ref::_check_price_alignment** () -- 1 connections
+  - <- calls <- [[reviewbusinessviability]]
+- **__unresolved__::ref::_check_strategy_alignment** () -- 1 connections
+  - <- calls <- [[reviewstrategyalignment]]
+- **__unresolved__::ref::_conduct_comprehensive_review** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_create_ppt_file** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_create_proposal_document** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_extract_business_case** () -- 1 connections
+  - <- calls <- [[reviewbusinessviability]]
+- **__unresolved__::ref::_extract_proposed_price** () -- 1 connections
+  - <- calls <- [[reviewbusinessviability]]
+- **__unresolved__::ref::_extract_qualifications** () -- 1 connections
+  - <- calls <- [[reviewcompliancerequirements]]
+- **__unresolved__::ref::_extract_strategy_from_proposal** () -- 1 connections
+  - <- calls <- [[reviewstrategyalignment]]
+- **__unresolved__::ref::_generate_final_recommendations** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_generate_ppt_presentation** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **__unresolved__::ref::_generate_slide_content** () -- 1 connections
+  - <- calls <- [[generatepptpresentation]]
+- **__unresolved__::ref::_load_ppt_templates** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_load_review_checklist** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_review_business_viability** () -- 1 connections
+  - <- calls <- [[conductcomprehensivereview]]
+- **__unresolved__::ref::_review_compliance_requirements** () -- 1 connections
+  - <- calls <- [[conductcomprehensivereview]]
+- **__unresolved__::ref::_review_quality_and_completeness** () -- 1 connections
+  - <- calls <- [[conductcomprehensivereview]]
+- **__unresolved__::ref::_review_strategy_alignment** () -- 1 connections
+  - <- calls <- [[conductcomprehensivereview]]
+- **__unresolved__::ref::_review_technical_completeness** () -- 1 connections
+  - <- calls <- [[conductcomprehensivereview]]
+- **__unresolved__::ref::finalreviewresult** () -- 1 connections
+  - <- calls <- [[conductfinalreview]]
+- **_assess_submission_readiness** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 1 connections
+  - <- contains <- [[finalreviewengine]]
+- **_check_legal_compliance** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 1 connections
+  - <- contains <- [[finalreviewengine]]
+- **_check_strategy_alignment** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 1 connections
+  - <- contains <- [[finalreviewengine]]
+- **_load_ppt_templates** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 1 connections
+  - <- contains <- [[finalreviewengine]]
+- **_load_review_checklist** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 1 connections
+  - <- contains <- [[finalreviewengine]]
+
+## Internal Relationships
+- FinalReviewEngine -> contains -> __init__ [EXTRACTED]
+- FinalReviewEngine -> contains -> conduct_final_review [EXTRACTED]
+- FinalReviewEngine -> contains -> _conduct_comprehensive_review [EXTRACTED]
+- FinalReviewEngine -> contains -> _review_strategy_alignment [EXTRACTED]
+- FinalReviewEngine -> contains -> _review_business_viability [EXTRACTED]
+- FinalReviewEngine -> contains -> _review_compliance_requirements [EXTRACTED]
+- FinalReviewEngine -> contains -> _generate_ppt_presentation [EXTRACTED]
+- FinalReviewEngine -> contains -> _create_proposal_document [EXTRACTED]
+- FinalReviewEngine -> contains -> _calculate_final_score [EXTRACTED]
+- FinalReviewEngine -> contains -> _generate_final_recommendations [EXTRACTED]
+- FinalReviewEngine -> contains -> _assess_submission_readiness [EXTRACTED]
+- FinalReviewEngine -> contains -> _load_ppt_templates [EXTRACTED]
+- FinalReviewEngine -> contains -> _load_review_checklist [EXTRACTED]
+- FinalReviewEngine -> contains -> _extract_strategy_from_proposal [EXTRACTED]
+- FinalReviewEngine -> contains -> _check_strategy_alignment [EXTRACTED]
+- FinalReviewEngine -> contains -> _extract_technical_proposals [EXTRACTED]
+- FinalReviewEngine -> contains -> _extract_proposed_price [EXTRACTED]
+- FinalReviewEngine -> contains -> _check_price_alignment [EXTRACTED]
+- FinalReviewEngine -> contains -> _extract_business_case [EXTRACTED]
+- FinalReviewEngine -> contains -> _extract_qualifications [EXTRACTED]
+- FinalReviewEngine -> contains -> _check_legal_compliance [EXTRACTED]
+- FinalReviewEngine -> contains -> _assess_document_completeness [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_load_ppt_templates [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_load_review_checklist [EXTRACTED]
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::_review_strategy_alignment [EXTRACTED]
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::_review_technical_completeness [EXTRACTED]
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::_review_business_viability [EXTRACTED]
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::_review_compliance_requirements [EXTRACTED]
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::_review_quality_and_completeness [EXTRACTED]
+- _generate_ppt_presentation -> calls -> __unresolved__::ref::_generate_slide_content [EXTRACTED]
+- _generate_ppt_presentation -> calls -> __unresolved__::ref::pptslide [EXTRACTED]
+- _review_business_viability -> calls -> __unresolved__::ref::_extract_proposed_price [EXTRACTED]
+- _review_business_viability -> calls -> __unresolved__::ref::_check_price_alignment [EXTRACTED]
+- _review_business_viability -> calls -> __unresolved__::ref::reviewcomment [EXTRACTED]
+- _review_business_viability -> calls -> __unresolved__::ref::_extract_business_case [EXTRACTED]
+- _review_compliance_requirements -> calls -> __unresolved__::ref::_extract_qualifications [EXTRACTED]
+- _review_compliance_requirements -> calls -> __unresolved__::ref::reviewcomment [EXTRACTED]
+- _review_compliance_requirements -> calls -> __unresolved__::ref::_check_legal_compliance [EXTRACTED]
+- _review_strategy_alignment -> calls -> __unresolved__::ref::_extract_strategy_from_proposal [EXTRACTED]
+- _review_strategy_alignment -> calls -> __unresolved__::ref::_check_strategy_alignment [EXTRACTED]
+- _review_strategy_alignment -> calls -> __unresolved__::ref::reviewcomment [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_conduct_comprehensive_review [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_generate_ppt_presentation [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_create_ppt_file [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_create_proposal_document [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_calculate_final_score [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_generate_final_recommendations [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::_assess_submission_readiness [EXTRACTED]
+- conduct_final_review -> calls -> __unresolved__::ref::finalreviewresult [EXTRACTED]
+
+## Cross-Community Connections
+- FinalReviewEngine -> contains -> _review_technical_completeness (-> [[unresolvedrefget-unresolvedreflen]])
+- FinalReviewEngine -> contains -> _review_quality_and_completeness (-> [[unresolvedrefget-unresolvedreflen]])
+- FinalReviewEngine -> contains -> _generate_slide_content (-> [[unresolvedrefget-unresolvedreflen]])
+- FinalReviewEngine -> contains -> _create_ppt_file (-> [[unresolvedrefget-unresolvedreflen]])
+- _assess_document_completeness -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- _calculate_final_score -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
+- _check_price_alignment -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _conduct_comprehensive_review -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedreflen]])
+- _create_proposal_document -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
+- _create_proposal_document -> calls -> __unresolved__::ref::print (-> [[unresolvedrefget-unresolvedreflen]])
+- _extract_business_case -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _extract_proposed_price -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _extract_qualifications -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _extract_strategy_from_proposal -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _extract_technical_proposals -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _generate_final_recommendations -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- _generate_final_recommendations -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _generate_ppt_presentation -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedreflen]])
+- _generate_ppt_presentation -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_business_viability -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_business_viability -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_business_viability -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_compliance_requirements -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_compliance_requirements -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_compliance_requirements -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_compliance_requirements -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_strategy_alignment -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_strategy_alignment -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_strategy_alignment -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_strategy_alignment -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 FinalReviewEngine, conduct_final_review, _review_business_viability를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 final_review_engine.py이다.
+
+### Key Facts
+- class FinalReviewEngine: """최종 검토 엔진"""
+- async def conduct_final_review(self, proposal_content: Dict, strategy_result: Dict, parallel_work_result: Dict, rfp_analysis: Dict, company_profile: Dict) -> FinalReviewResult: """ 최종 검토 및 PPT 생성 실행
+- 3. 사업적 타당성 검토 business_comments = await self._review_business_viability( proposal_content, strategy_result, company_profile ) comments.extend(business_comments)
+- 4. 준수사항 검토 compliance_comments = await self._review_compliance_requirements( proposal_content, rfp_analysis ) comments.extend(compliance_comments)
+- 1. 전략 일관성 검토 strategy_comments = await self._review_strategy_alignment( proposal_content, strategy_result, rfp_analysis ) comments.extend(strategy_comments)

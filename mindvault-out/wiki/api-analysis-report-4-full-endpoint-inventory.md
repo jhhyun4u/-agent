@@ -1,0 +1,191 @@
+# API Analysis Report & 4. Full Endpoint Inventory
+Cohesion: 0.05 | Nodes: 44
+
+## Key Nodes
+- **API Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 12 connections
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-router-registration-analysis]]
+  - -> contains -> [[3-endpoint-path-conflict-duplication-analysis]]
+  - -> contains -> [[4-full-endpoint-inventory]]
+  - -> contains -> [[5-service-dependency-verification]]
+  - -> contains -> [[6-authentication-jwt-consistency]]
+  - -> contains -> [[7-response-format-consistency]]
+  - -> contains -> [[8-overall-scores]]
+  - -> contains -> [[9-gap-summary]]
+  - -> contains -> [[10-recommended-actions]]
+  - -> contains -> [[version-history]]
+  - -> contains -> [[iteration-1-fix-log-2026-03-08]]
+- **4. Full Endpoint Inventory** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 11 connections
+  - -> contains -> [[41-root-level-endpoints-mainpy]]
+  - -> contains -> [[42-v31-pipeline-routesv31py-prefix-v31]]
+  - -> contains -> [[43-presentation-routespresentationpy-prefix-v31]]
+  - -> contains -> [[44-g2b-proxy-routesg2bpy-prefix-g2b]]
+  - -> contains -> [[45-bids-recommendation-routesbidspy-no-prefix-absolute-paths]]
+  - -> contains -> [[46-calendar-routescalendarpy-no-router-prefix]]
+  - -> contains -> [[47-resources-routesresourcespy-no-router-prefix]]
+  - -> contains -> [[48-form-templates-routestemplatespy-no-router-prefix]]
+  - -> contains -> [[49-stats-routesstatspy-no-router-prefix]]
+  - -> contains -> [[410-team-routesteampy-no-router-prefix]]
+  - <- contains <- [[api-analysis-report]]
+- **10. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 4 connections
+  - -> contains -> [[101-immediate-critical]]
+  - -> contains -> [[102-short-term]]
+  - -> contains -> [[103-long-term]]
+  - <- contains <- [[api-analysis-report]]
+- **3. Endpoint Path Conflict / Duplication Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 4 connections
+  - -> contains -> [[31-critical-double-registration-problem]]
+  - -> contains -> [[32-routesbidspy-path-anomaly]]
+  - -> contains -> [[33-routesteampy-path-conflict-details]]
+  - <- contains <- [[api-analysis-report]]
+- **6. Authentication (JWT) Consistency** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 4 connections
+  - -> contains -> [[61-auth-pattern]]
+  - -> contains -> [[62-auth-gap-detection]]
+  - -> contains -> [[63-user-object-access-inconsistency]]
+  - <- contains <- [[api-analysis-report]]
+- **9. Gap Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 4 connections
+  - -> contains -> [[91-critical-issues]]
+  - -> contains -> [[92-warning-issues]]
+  - -> contains -> [[93-info-issues]]
+  - <- contains <- [[api-analysis-report]]
+- **Iteration 1 Fix Log (2026-03-08)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 4 connections
+  - -> contains -> [[changes-applied]]
+  - -> contains -> [[score-update-estimated]]
+  - -> contains -> [[remaining-issues-not-fixed-this-iteration]]
+  - <- contains <- [[api-analysis-report]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[api-analysis-report]]
+- **7. Response Format Consistency** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 3 connections
+  - -> contains -> [[71-response-envelope-patterns]]
+  - -> contains -> [[72-pagination-format-inconsistency]]
+  - <- contains <- [[api-analysis-report]]
+- **2. Router Registration Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 2 connections
+  - -> contains -> [[21-mainpy-router-registration]]
+  - <- contains <- [[api-analysis-report]]
+- **5. Service Dependency Verification** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 2 connections
+  - -> contains -> [[51-import-dependency-matrix]]
+  - <- contains <- [[api-analysis-report]]
+- **10.1 Immediate (Critical)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[10-recommended-actions]]
+- **10.2 Short-term** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[10-recommended-actions]]
+- **10.3 Long-term** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[10-recommended-actions]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **2.1 main.py Router Registration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[2-router-registration-analysis]]
+- **3.1 Critical: Double Registration Problem** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[3-endpoint-path-conflict-duplication-analysis]]
+- **3.2 routes_bids.py Path Anomaly** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[3-endpoint-path-conflict-duplication-analysis]]
+- **3.3 routes_team.py Path Conflict Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[3-endpoint-path-conflict-duplication-analysis]]
+- **4.10 Team (routes_team.py) -- no router prefix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.1 Root-Level Endpoints (main.py)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.2 v3.1 Pipeline (routes_v31.py) -- prefix `/v3.1`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.3 Presentation (routes_presentation.py) -- prefix `/v3.1`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.4 G2B Proxy (routes_g2b.py) -- prefix `/g2b`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.5 Bids / Recommendation (routes_bids.py) -- no prefix (absolute paths)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.6 Calendar (routes_calendar.py) -- no router prefix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.7 Resources (routes_resources.py) -- no router prefix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.8 Form Templates (routes_templates.py) -- no router prefix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **4.9 Stats (routes_stats.py) -- no router prefix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[4-full-endpoint-inventory]]
+- **5.1 Import Dependency Matrix** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[5-service-dependency-verification]]
+- **6.1 Auth Pattern** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[6-authentication-jwt-consistency]]
+- **6.2 Auth Gap Detection** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[6-authentication-jwt-consistency]]
+- **6.3 User Object Access Inconsistency** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[6-authentication-jwt-consistency]]
+- **7.1 Response Envelope Patterns** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[7-response-format-consistency]]
+- **7.2 Pagination Format Inconsistency** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[7-response-format-consistency]]
+- **8. Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[api-analysis-report]]
+- **9.1 CRITICAL Issues** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[9-gap-summary]]
+- **9.2 WARNING Issues** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[9-gap-summary]]
+- **9.3 INFO Issues** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[9-gap-summary]]
+- **Changes Applied** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[iteration-1-fix-log-2026-03-08]]
+- **Remaining Issues (Not Fixed This Iteration)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[iteration-1-fix-log-2026-03-08]]
+- **Score Update (Estimated)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[iteration-1-fix-log-2026-03-08]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.analysis.md) -- 1 connections
+  - <- contains <- [[api-analysis-report]]
+
+## Internal Relationships
+- 10. Recommended Actions -> contains -> 10.1 Immediate (Critical) [EXTRACTED]
+- 10. Recommended Actions -> contains -> 10.2 Short-term [EXTRACTED]
+- 10. Recommended Actions -> contains -> 10.3 Long-term [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 2. Router Registration Analysis -> contains -> 2.1 main.py Router Registration [EXTRACTED]
+- 3. Endpoint Path Conflict / Duplication Analysis -> contains -> 3.1 Critical: Double Registration Problem [EXTRACTED]
+- 3. Endpoint Path Conflict / Duplication Analysis -> contains -> 3.2 routes_bids.py Path Anomaly [EXTRACTED]
+- 3. Endpoint Path Conflict / Duplication Analysis -> contains -> 3.3 routes_team.py Path Conflict Details [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.1 Root-Level Endpoints (main.py) [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.2 v3.1 Pipeline (routes_v31.py) -- prefix `/v3.1` [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.3 Presentation (routes_presentation.py) -- prefix `/v3.1` [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.4 G2B Proxy (routes_g2b.py) -- prefix `/g2b` [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.5 Bids / Recommendation (routes_bids.py) -- no prefix (absolute paths) [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.6 Calendar (routes_calendar.py) -- no router prefix [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.7 Resources (routes_resources.py) -- no router prefix [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.8 Form Templates (routes_templates.py) -- no router prefix [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.9 Stats (routes_stats.py) -- no router prefix [EXTRACTED]
+- 4. Full Endpoint Inventory -> contains -> 4.10 Team (routes_team.py) -- no router prefix [EXTRACTED]
+- 5. Service Dependency Verification -> contains -> 5.1 Import Dependency Matrix [EXTRACTED]
+- 6. Authentication (JWT) Consistency -> contains -> 6.1 Auth Pattern [EXTRACTED]
+- 6. Authentication (JWT) Consistency -> contains -> 6.2 Auth Gap Detection [EXTRACTED]
+- 6. Authentication (JWT) Consistency -> contains -> 6.3 User Object Access Inconsistency [EXTRACTED]
+- 7. Response Format Consistency -> contains -> 7.1 Response Envelope Patterns [EXTRACTED]
+- 7. Response Format Consistency -> contains -> 7.2 Pagination Format Inconsistency [EXTRACTED]
+- 9. Gap Summary -> contains -> 9.1 CRITICAL Issues [EXTRACTED]
+- 9. Gap Summary -> contains -> 9.2 WARNING Issues [EXTRACTED]
+- 9. Gap Summary -> contains -> 9.3 INFO Issues [EXTRACTED]
+- API Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- API Analysis Report -> contains -> 2. Router Registration Analysis [EXTRACTED]
+- API Analysis Report -> contains -> 3. Endpoint Path Conflict / Duplication Analysis [EXTRACTED]
+- API Analysis Report -> contains -> 4. Full Endpoint Inventory [EXTRACTED]
+- API Analysis Report -> contains -> 5. Service Dependency Verification [EXTRACTED]
+- API Analysis Report -> contains -> 6. Authentication (JWT) Consistency [EXTRACTED]
+- API Analysis Report -> contains -> 7. Response Format Consistency [EXTRACTED]
+- API Analysis Report -> contains -> 8. Overall Scores [EXTRACTED]
+- API Analysis Report -> contains -> 9. Gap Summary [EXTRACTED]
+- API Analysis Report -> contains -> 10. Recommended Actions [EXTRACTED]
+- API Analysis Report -> contains -> Version History [EXTRACTED]
+- API Analysis Report -> contains -> Iteration 1 Fix Log (2026-03-08) [EXTRACTED]
+- Iteration 1 Fix Log (2026-03-08) -> contains -> Changes Applied [EXTRACTED]
+- Iteration 1 Fix Log (2026-03-08) -> contains -> Score Update (Estimated) [EXTRACTED]
+- Iteration 1 Fix Log (2026-03-08) -> contains -> Remaining Issues (Not Fixed This Iteration) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 API Analysis Report, 4. Full Endpoint Inventory, 10. Recommended Actions를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 api.analysis.md이다.
+
+### Key Facts
+- > **Analysis Type**: Implementation Completeness / Consistency / Gap Analysis > > **Project**: tenopa-proposer > **Version**: 3.4.0 > **Analyst**: bkit-gap-detector > **Date**: 2026-03-08 > **Design Doc**: N/A (Design 문서 미존재)
+- 4.1 Root-Level Endpoints (main.py)
+- 10.1 Immediate (Critical)
+- 3.1 Critical: Double Registration Problem
+- 7.1 Response Envelope Patterns

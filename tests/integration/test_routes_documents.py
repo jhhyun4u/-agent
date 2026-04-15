@@ -20,6 +20,7 @@ class TestUploadEndpoint:
         doc_data = {
             "id": "doc-001",
             "filename": "test.pdf",
+            "file_size_bytes": 26,
             "doc_type": "보고서",
             "storage_path": "test-org-001/doc-001/test.pdf",
             "processing_status": "extracting",
@@ -39,7 +40,7 @@ class TestUploadEndpoint:
                 response = await client.post(
                     "/api/documents/upload",
                     data={"doc_type": "보고서"},
-                    files={"file": ("test.pdf", BytesIO(b"PDF content"), "application/pdf")}
+                    files={"file": ("test.pdf", BytesIO(b"%PDF-1.4\nPDF content"), "application/pdf")}
                 )
 
         assert response.status_code == 201

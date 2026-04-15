@@ -15,6 +15,7 @@ from app.services.embedding_service import (
     generate_embedding,
     generate_embeddings_batch,
 )
+from app.services.knowledge_manager import get_knowledge_manager
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -95,6 +96,37 @@ async def process_document(document_id: str, org_id: str) -> dict:
 
         for i in range(0, len(rows), 50):
             await client.table("document_chunks").insert(rows[i : i + 50]).execute()
+
+        # ── Module-6: Knowledge classification ──
+        # Classify each chunk for knowledge management system
+        await _update_doc_status(client, document_id, "classifying")
+        try:
+            manager = get_knowledge_manager()
+            inserted_chunks = await client.table("document_chunks").select(
+                "id, content"
+            ).eq("document_id", document_id).execute()
+
+            if inserted_chunks.data:
+                for chunk in inserted_chunks.data:
+                    try:
+                        await manager.classify_chunk(
+                            chunk_id=chunk["id"],
+                            content=chunk["content"],
+                            document_context=doc.get("title")
+                        )
+                    except Exception as e:
+                        logger.warning(
+                            f"Knowledge classification failed for chunk {chunk['id']}: {e}"
+                        )
+
+                # Mark chunks as knowledge-indexed
+                await client.table("document_chunks").update(
+                    {"is_knowledge_indexed": True}
+                ).eq("document_id", document_id).execute()
+
+        except Exception as e:
+            logger.warning(f"Knowledge indexing failed for document {document_id}: {e}")
+            # Continue even if knowledge indexing fails
 
         await (
             client.table("intranet_documents")

@@ -1,0 +1,159 @@
+# KB 개선 Plan & 2. 현황 분석
+Cohesion: 0.06 | Nodes: 36
+
+## Key Nodes
+- **KB 개선 Plan** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 9 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+- **2. 현황 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[2-1]]
+  - -> contains -> [[2-2]]
+  - -> contains -> [[2-3-langgraph]]
+  - -> contains -> [[2-4-ux]]
+  - <- contains <- [[kb-plan]]
+- **3. 변경 범위** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[phase-a-high]]
+  - -> contains -> [[phase-b-high]]
+  - -> contains -> [[phase-c-medium]]
+  - -> contains -> [[phase-d-ux-low]]
+  - <- contains <- [[kb-plan]]
+- **4. 수정 대상 파일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[phase-a]]
+  - -> contains -> [[phase-b]]
+  - -> contains -> [[phase-c]]
+  - -> contains -> [[phase-d-ux]]
+  - <- contains <- [[kb-plan]]
+- **Phase C: 활용도 강화 (우선순위 MEDIUM)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[c-1-gono-go]]
+  - -> contains -> [[c-2-strategygenerate]]
+  - -> contains -> [[c-3-proposalwritenext]]
+  - -> contains -> [[c-4-kb-planstory]]
+  - <- contains <- [[3]]
+- **Phase D: 관리 UX 개선 (우선순위 LOW)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 5 connections
+  - -> contains -> [[d-1-kb-api]]
+  - -> contains -> [[d-2]]
+  - -> contains -> [[d-3]]
+  - -> contains -> [[d-4-kb]]
+  - <- contains <- [[3]]
+- **Phase A: 자동 축적 강화 (우선순위 HIGH)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 4 connections
+  - -> contains -> [[a-1-contentlibrary]]
+  - -> contains -> [[a-2]]
+  - -> contains -> [[a-3]]
+  - <- contains <- [[3]]
+- **Phase B: 검색 품질 개선 (우선순위 HIGH)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 4 connections
+  - -> contains -> [[b-1-capabilities]]
+  - -> contains -> [[b-2]]
+  - -> contains -> [[b-3]]
+  - <- contains <- [[3]]
+- **1. 배경 및 목적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **2-1. 자동 축적 경로** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-2. 검색 품질** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-3. LangGraph 활용** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-4. 관리 UX** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[2]]
+- **5. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **6. 기술 고려사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **7. 검증 계획** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **8. 리스크** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **9. 우선순위 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[kb-plan]]
+- **A-1. 제안서 섹션 → content_library 자동 등록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-a-high]]
+- **A-2. 리서치 결과 축적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-a-high]]
+- **A-3. 전략 결과 축적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-a-high]]
+- **B-1. capabilities 임베딩 적용** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-b-high]]
+- **B-2. 키워드 폴백 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-b-high]]
+- **B-3. 하이브리드 랭킹** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-b-high]]
+- **C-1. 유사 과거 사례 매칭 (Go/No-Go)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-c-medium]]
+- **C-2. 과거 전략 참조 (strategy_generate)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-c-medium]]
+- **C-3. 섹션 작성 시 유사 콘텐츠 주입 (proposal_write_next)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-c-medium]]
+- **C-4. 스토리라인 작성 시 KB 참조 (plan_story)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-c-medium]]
+- **D-1. KB 건강도 대시보드 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-d-ux-low]]
+- **D-2. 일괄 임베딩 생성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-d-ux-low]]
+- **D-3. 중복 콘텐츠 탐지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-d-ux-low]]
+- **D-4. 프론트엔드 KB 건강도 위젯** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[phase-d-ux-low]]
+- **Phase A (자동 축적)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **Phase B (검색 개선)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **Phase C (활용 강화)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **Phase D (관리 UX)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+
+## Internal Relationships
+- 2. 현황 분석 -> contains -> 2-1. 자동 축적 경로 [EXTRACTED]
+- 2. 현황 분석 -> contains -> 2-2. 검색 품질 [EXTRACTED]
+- 2. 현황 분석 -> contains -> 2-3. LangGraph 활용 [EXTRACTED]
+- 2. 현황 분석 -> contains -> 2-4. 관리 UX [EXTRACTED]
+- 3. 변경 범위 -> contains -> Phase A: 자동 축적 강화 (우선순위 HIGH) [EXTRACTED]
+- 3. 변경 범위 -> contains -> Phase B: 검색 품질 개선 (우선순위 HIGH) [EXTRACTED]
+- 3. 변경 범위 -> contains -> Phase C: 활용도 강화 (우선순위 MEDIUM) [EXTRACTED]
+- 3. 변경 범위 -> contains -> Phase D: 관리 UX 개선 (우선순위 LOW) [EXTRACTED]
+- 4. 수정 대상 파일 -> contains -> Phase A (자동 축적) [EXTRACTED]
+- 4. 수정 대상 파일 -> contains -> Phase B (검색 개선) [EXTRACTED]
+- 4. 수정 대상 파일 -> contains -> Phase C (활용 강화) [EXTRACTED]
+- 4. 수정 대상 파일 -> contains -> Phase D (관리 UX) [EXTRACTED]
+- KB 개선 Plan -> contains -> 1. 배경 및 목적 [EXTRACTED]
+- KB 개선 Plan -> contains -> 2. 현황 분석 [EXTRACTED]
+- KB 개선 Plan -> contains -> 3. 변경 범위 [EXTRACTED]
+- KB 개선 Plan -> contains -> 4. 수정 대상 파일 [EXTRACTED]
+- KB 개선 Plan -> contains -> 5. 구현 순서 [EXTRACTED]
+- KB 개선 Plan -> contains -> 6. 기술 고려사항 [EXTRACTED]
+- KB 개선 Plan -> contains -> 7. 검증 계획 [EXTRACTED]
+- KB 개선 Plan -> contains -> 8. 리스크 [EXTRACTED]
+- KB 개선 Plan -> contains -> 9. 우선순위 요약 [EXTRACTED]
+- Phase A: 자동 축적 강화 (우선순위 HIGH) -> contains -> A-1. 제안서 섹션 → content_library 자동 등록 [EXTRACTED]
+- Phase A: 자동 축적 강화 (우선순위 HIGH) -> contains -> A-2. 리서치 결과 축적 [EXTRACTED]
+- Phase A: 자동 축적 강화 (우선순위 HIGH) -> contains -> A-3. 전략 결과 축적 [EXTRACTED]
+- Phase B: 검색 품질 개선 (우선순위 HIGH) -> contains -> B-1. capabilities 임베딩 적용 [EXTRACTED]
+- Phase B: 검색 품질 개선 (우선순위 HIGH) -> contains -> B-2. 키워드 폴백 개선 [EXTRACTED]
+- Phase B: 검색 품질 개선 (우선순위 HIGH) -> contains -> B-3. 하이브리드 랭킹 [EXTRACTED]
+- Phase C: 활용도 강화 (우선순위 MEDIUM) -> contains -> C-1. 유사 과거 사례 매칭 (Go/No-Go) [EXTRACTED]
+- Phase C: 활용도 강화 (우선순위 MEDIUM) -> contains -> C-2. 과거 전략 참조 (strategy_generate) [EXTRACTED]
+- Phase C: 활용도 강화 (우선순위 MEDIUM) -> contains -> C-3. 섹션 작성 시 유사 콘텐츠 주입 (proposal_write_next) [EXTRACTED]
+- Phase C: 활용도 강화 (우선순위 MEDIUM) -> contains -> C-4. 스토리라인 작성 시 KB 참조 (plan_story) [EXTRACTED]
+- Phase D: 관리 UX 개선 (우선순위 LOW) -> contains -> D-1. KB 건강도 대시보드 API [EXTRACTED]
+- Phase D: 관리 UX 개선 (우선순위 LOW) -> contains -> D-2. 일괄 임베딩 생성 [EXTRACTED]
+- Phase D: 관리 UX 개선 (우선순위 LOW) -> contains -> D-3. 중복 콘텐츠 탐지 [EXTRACTED]
+- Phase D: 관리 UX 개선 (우선순위 LOW) -> contains -> D-4. 프론트엔드 KB 건강도 위젯 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 KB 개선 Plan, 2. 현황 분석, 3. 변경 범위를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 kb-enhancement.plan.md이다.
+
+### Key Facts
+- | 항목 | 내용 | |------|------| | Feature | kb-enhancement | | 버전 | v1.0 | | 작성일 | 2026-03-24 | | 상태 | Plan |
+- Phase A: 자동 축적 강화 (우선순위 HIGH)
+- Phase A (자동 축적) | # | 파일 | 변경 | 라인 추정 | |---|------|------|----------| | A-1 | `app/graph/nodes/proposal_nodes.py` | 섹션 완료 시 content_library 등록 호출 | +25 | | A-1 | `app/services/content_library.py` | `auto_register_section()` 신규 | +40 | | A-2 | `app/graph/nodes/research_gather.py` | 리서치 결과 KB 저장 호출…
+- C-1. 유사 과거 사례 매칭 (Go/No-Go) **파일**: `app/graph/nodes/go_no_go.py`, `app/graph/context_helpers.py`
+- D-1. KB 건강도 대시보드 API **파일**: `app/api/routes_kb.py`

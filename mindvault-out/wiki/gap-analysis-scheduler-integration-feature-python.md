@@ -1,0 +1,193 @@
+# Gap Analysis: scheduler-integration Feature & python
+Cohesion: 0.06 | Nodes: 40
+
+## Key Nodes
+- **Gap Analysis: scheduler-integration Feature** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 12 connections
+  - -> contains -> [[act-1-fix-summary-2026-03-30]]
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[detailed-gap-analysis]]
+  - -> contains -> [[high-severity-gaps-5-blockers]]
+  - -> contains -> [[medium-severity-gaps-6-should-fix-issues]]
+  - -> contains -> [[low-severity-gaps-4-nice-to-have-improvements]]
+  - -> contains -> [[test-coverage-analysis]]
+  - -> contains -> [[architecture-compliance]]
+  - -> contains -> [[match-rate-calculation]]
+  - -> contains -> [[recommendations]]
+  - -> contains -> [[artifacts-analyzed]]
+  - -> contains -> [[conclusion]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 7 connections
+  - <- has_code_example <- [[h-3-all-database-operations-are-stubs-functionality-critical]]
+  - <- has_code_example <- [[h-5-timezone-inconsistency-scheduler-configuration]]
+  - <- has_code_example <- [[m-1-uses-httpexception-instead-of-tenopapierror]]
+  - <- has_code_example <- [[m-2-migrationscheduleupdate-schema-not-used]]
+  - <- has_code_example <- [[m-3-inline-rbac-check-instead-of-requirerole-dependency]]
+  - <- has_code_example <- [[m-5-notification-service-never-wired]]
+  - <- has_code_example <- [[m-6-schedule-table-never-updated-after-job-runs]]
+- **MEDIUM Severity Gaps (6 should-fix issues)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 7 connections
+  - -> contains -> [[m-1-uses-httpexception-instead-of-tenopapierror]]
+  - -> contains -> [[m-2-migrationscheduleupdate-schema-not-used]]
+  - -> contains -> [[m-3-inline-rbac-check-instead-of-requirerole-dependency]]
+  - -> contains -> [[m-4-missing-responsemodel-on-3-endpoints]]
+  - -> contains -> [[m-5-notification-service-never-wired]]
+  - -> contains -> [[m-6-schedule-table-never-updated-after-job-runs]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **HIGH Severity Gaps (5 blockers)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 6 connections
+  - -> contains -> [[h-1-duplicate-apscheduler-instances-architecture-critical]]
+  - -> contains -> [[h-2-missing-design-documents-pdca-process-violation]]
+  - -> contains -> [[h-3-all-database-operations-are-stubs-functionality-critical]]
+  - -> contains -> [[h-4-missing-appjobsinitpy-module-structure]]
+  - -> contains -> [[h-5-timezone-inconsistency-scheduler-configuration]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **LOW Severity Gaps (4 nice-to-have improvements)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 5 connections
+  - -> contains -> [[l-1-no-cron-expression-validation]]
+  - -> contains -> [[l-2-datetimeutcnow-deprecation]]
+  - -> contains -> [[l-3-no-retry-batch-endpoint]]
+  - -> contains -> [[l-4-sortby-and-order-parameters-ignored]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Test Coverage Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 5 connections
+  - -> contains -> [[summary]]
+  - -> contains -> [[breakdown]]
+  - -> contains -> [[coverage-gaps]]
+  - -> contains -> [[test-quality]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Architecture Compliance** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 4 connections
+  - -> contains -> [[dependency-directions]]
+  - -> contains -> [[naming-conventions]]
+  - -> contains -> [[pydantic-v2-compliance]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Recommendations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 4 connections
+  - -> contains -> [[immediate-actions-high-priority]]
+  - -> contains -> [[short-term-actions-medium-priority]]
+  - -> contains -> [[backlog-low-priority]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Detailed Gap Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> contains -> [[match-rate-breakdown]]
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **H-3: All Database Operations Are Stubs [FUNCTIONALITY CRITICAL]** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-severity-gaps-5-blockers]]
+- **H-5: Timezone Inconsistency [SCHEDULER CONFIGURATION]** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-severity-gaps-5-blockers]]
+- **M-1: Uses HTTPException Instead of TenopAPIError** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **M-2: MigrationScheduleUpdate Schema Not Used** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **M-3: Inline RBAC Check Instead of require_role Dependency** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **M-5: Notification Service Never Wired** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **M-6: Schedule Table Never Updated After Job Runs** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **Act-1 Fix Summary (2026-03-30)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Artifacts Analyzed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Backlog (LOW Priority)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Breakdown** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[test-coverage-analysis]]
+- **Conclusion** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Coverage Gaps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[test-coverage-analysis]]
+- **Dependency Directions ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **H-1: Duplicate APScheduler Instances [ARCHITECTURE CRITICAL]** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[high-severity-gaps-5-blockers]]
+- **H-2: Missing Design Documents [PDCA PROCESS VIOLATION]** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[high-severity-gaps-5-blockers]]
+- **H-4: Missing `app/jobs/__init__.py` [MODULE STRUCTURE]** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[high-severity-gaps-5-blockers]]
+- **Immediate Actions (HIGH Priority)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **L-1: No Cron Expression Validation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[low-severity-gaps-4-nice-to-have-improvements]]
+- **L-2: datetime.utcnow() Deprecation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[low-severity-gaps-4-nice-to-have-improvements]]
+- **L-3: No Retry Batch Endpoint** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[low-severity-gaps-4-nice-to-have-improvements]]
+- **L-4: sort_by and order Parameters Ignored** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[low-severity-gaps-4-nice-to-have-improvements]]
+- **M-4: Missing response_model on 3 Endpoints** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[medium-severity-gaps-6-should-fix-issues]]
+- **Match Rate Breakdown** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[detailed-gap-analysis]]
+- **Match Rate Calculation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[gap-analysis-scheduler-integration-feature]]
+- **Naming Conventions ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Pydantic v2 Compliance ⚠️** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Short-term Actions (MEDIUM Priority)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[test-coverage-analysis]]
+- **Test Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\scheduler-integration\scheduler-integration.analysis.md) -- 1 connections
+  - <- contains <- [[test-coverage-analysis]]
+
+## Internal Relationships
+- Architecture Compliance -> contains -> Dependency Directions ✅ [EXTRACTED]
+- Architecture Compliance -> contains -> Naming Conventions ✅ [EXTRACTED]
+- Architecture Compliance -> contains -> Pydantic v2 Compliance ⚠️ [EXTRACTED]
+- Detailed Gap Analysis -> contains -> Match Rate Breakdown [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Act-1 Fix Summary (2026-03-30) [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Executive Summary [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Detailed Gap Analysis [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> HIGH Severity Gaps (5 blockers) [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> MEDIUM Severity Gaps (6 should-fix issues) [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> LOW Severity Gaps (4 nice-to-have improvements) [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Test Coverage Analysis [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Architecture Compliance [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Match Rate Calculation [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Recommendations [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Artifacts Analyzed [EXTRACTED]
+- Gap Analysis: scheduler-integration Feature -> contains -> Conclusion [EXTRACTED]
+- H-3: All Database Operations Are Stubs [FUNCTIONALITY CRITICAL] -> has_code_example -> python [EXTRACTED]
+- H-5: Timezone Inconsistency [SCHEDULER CONFIGURATION] -> has_code_example -> python [EXTRACTED]
+- HIGH Severity Gaps (5 blockers) -> contains -> H-1: Duplicate APScheduler Instances [ARCHITECTURE CRITICAL] [EXTRACTED]
+- HIGH Severity Gaps (5 blockers) -> contains -> H-2: Missing Design Documents [PDCA PROCESS VIOLATION] [EXTRACTED]
+- HIGH Severity Gaps (5 blockers) -> contains -> H-3: All Database Operations Are Stubs [FUNCTIONALITY CRITICAL] [EXTRACTED]
+- HIGH Severity Gaps (5 blockers) -> contains -> H-4: Missing `app/jobs/__init__.py` [MODULE STRUCTURE] [EXTRACTED]
+- HIGH Severity Gaps (5 blockers) -> contains -> H-5: Timezone Inconsistency [SCHEDULER CONFIGURATION] [EXTRACTED]
+- LOW Severity Gaps (4 nice-to-have improvements) -> contains -> L-1: No Cron Expression Validation [EXTRACTED]
+- LOW Severity Gaps (4 nice-to-have improvements) -> contains -> L-2: datetime.utcnow() Deprecation [EXTRACTED]
+- LOW Severity Gaps (4 nice-to-have improvements) -> contains -> L-3: No Retry Batch Endpoint [EXTRACTED]
+- LOW Severity Gaps (4 nice-to-have improvements) -> contains -> L-4: sort_by and order Parameters Ignored [EXTRACTED]
+- M-1: Uses HTTPException Instead of TenopAPIError -> has_code_example -> python [EXTRACTED]
+- M-2: MigrationScheduleUpdate Schema Not Used -> has_code_example -> python [EXTRACTED]
+- M-3: Inline RBAC Check Instead of require_role Dependency -> has_code_example -> python [EXTRACTED]
+- M-5: Notification Service Never Wired -> has_code_example -> python [EXTRACTED]
+- M-6: Schedule Table Never Updated After Job Runs -> has_code_example -> python [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-1: Uses HTTPException Instead of TenopAPIError [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-2: MigrationScheduleUpdate Schema Not Used [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-3: Inline RBAC Check Instead of require_role Dependency [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-4: Missing response_model on 3 Endpoints [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-5: Notification Service Never Wired [EXTRACTED]
+- MEDIUM Severity Gaps (6 should-fix issues) -> contains -> M-6: Schedule Table Never Updated After Job Runs [EXTRACTED]
+- Recommendations -> contains -> Immediate Actions (HIGH Priority) [EXTRACTED]
+- Recommendations -> contains -> Short-term Actions (MEDIUM Priority) [EXTRACTED]
+- Recommendations -> contains -> Backlog (LOW Priority) [EXTRACTED]
+- Test Coverage Analysis -> contains -> Summary [EXTRACTED]
+- Test Coverage Analysis -> contains -> Breakdown [EXTRACTED]
+- Test Coverage Analysis -> contains -> Coverage Gaps [EXTRACTED]
+- Test Coverage Analysis -> contains -> Test Quality [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Gap Analysis: scheduler-integration Feature, python, MEDIUM Severity Gaps (6 should-fix issues)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 scheduler-integration.analysis.md이다.
+
+### Key Facts
+- **Report Date:** 2026-03-30 **Analyzed By:** bkit:gap-detector **Match Rate (Act-1 Post-Fix):** 93% (Target: 90%+) — PASSING **Match Rate (Initial):** 70% ⚠️ **Status:** FIXED — Act-1 iteration resolved all 5 HIGH + 4 MEDIUM gaps
+- ```python app/services/migration_service.py
+- M-1: Uses HTTPException Instead of TenopAPIError
+- H-1: Duplicate APScheduler Instances [ARCHITECTURE CRITICAL]
+- L-1: No Cron Expression Validation

@@ -101,25 +101,82 @@ export function ProposalDetailModal({ proposal, isOpen, onClose, onStartWork, is
             {/* 분석 정보 */}
             <section>
               <h3 className="text-sm font-semibold text-[#ededed] mb-3">분석 정보</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-[#5c5c5c] mb-1">진행 단계</p>
-                  <p className="text-sm text-[#ededed]">{stepInfo.label}</p>
-                  <div className="flex gap-0.5 mt-1">
-                    {[1, 2, 3, 4, 5, 6, 7].map((s) => (
-                      <div
-                        key={s}
-                        className={`flex-1 h-1 rounded-full ${
-                          s <= stepInfo.step ? "bg-[#3ecf8e]" : "bg-[#262626]"
-                        }`}
-                      />
-                    ))}
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-[#5c5c5c] mb-1">진행 단계</p>
+                    <p className="text-sm text-[#ededed]">{stepInfo.label}</p>
+                    <div className="flex gap-0.5 mt-1">
+                      {[1, 2, 3, 4, 5, 6, 7].map((s) => (
+                        <div
+                          key={s}
+                          className={`flex-1 h-1 rounded-full ${
+                            s <= stepInfo.step ? "bg-[#3ecf8e]" : "bg-[#262626]"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#5c5c5c] mb-1">점수</p>
+                    <p className="text-sm text-[#ededed]">{proposal.score || "—"}</p>
                   </div>
                 </div>
-                <div>
-                  <p className="text-xs text-[#5c5c5c] mb-1">점수</p>
-                  <p className="text-sm text-[#ededed]">{proposal.score || "—"}</p>
+
+                {/* 적합도 점수 & 원본 공고번호 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-[#5c5c5c] mb-1">적합도 점수</p>
+                    <p className={`text-sm font-medium ${
+                      proposal.fit_score !== null && proposal.fit_score !== undefined
+                        ? proposal.fit_score >= 70
+                          ? "text-[#3ecf8e]"
+                          : proposal.fit_score >= 50
+                            ? "text-yellow-400"
+                            : "text-[#5c5c5c]"
+                        : "text-[#5c5c5c]"
+                    }`}>
+                      {proposal.fit_score !== null && proposal.fit_score !== undefined ? `${proposal.fit_score}%` : "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#5c5c5c] mb-1">원본 공고번호</p>
+                    <p className="text-sm text-[#ededed]">{proposal.source_bid_no || "—"}</p>
+                  </div>
                 </div>
+
+                {/* 분석 문서 링크 */}
+                {(proposal.md_rfp_analysis_path || proposal.md_notice_path || proposal.md_instruction_path) && (
+                  <div className="p-3 bg-[#262626] rounded-lg border border-[#363636]">
+                    <p className="text-xs text-[#5c5c5c] mb-2">분석 문서</p>
+                    <div className="flex flex-wrap gap-2">
+                      {proposal.md_rfp_analysis_path && (
+                        <a
+                          href={`#${proposal.md_rfp_analysis_path}`}
+                          className="text-xs px-2.5 py-1 bg-[#3ecf8e]/20 hover:bg-[#3ecf8e]/30 text-[#3ecf8e] rounded transition-colors"
+                        >
+                          RFP 분석
+                        </a>
+                      )}
+                      {proposal.md_notice_path && (
+                        <a
+                          href={`#${proposal.md_notice_path}`}
+                          className="text-xs px-2.5 py-1 bg-[#3ecf8e]/20 hover:bg-[#3ecf8e]/30 text-[#3ecf8e] rounded transition-colors"
+                        >
+                          공고문 요약
+                        </a>
+                      )}
+                      {proposal.md_instruction_path && (
+                        <a
+                          href={`#${proposal.md_instruction_path}`}
+                          className="text-xs px-2.5 py-1 bg-[#3ecf8e]/20 hover:bg-[#3ecf8e]/30 text-[#3ecf8e] rounded transition-colors"
+                        >
+                          과업지시서
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 

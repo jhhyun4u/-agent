@@ -1,0 +1,207 @@
+# API 응답 구조 표준화 — 완료 보고서 & 2.3 Do (구현 단계)
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **API 응답 구조 표준화 — 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 10 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **2.3 Do (구현 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 6 connections
+  - -> contains -> [[phase-a]]
+  - -> contains -> [[phase-b-1-crud-8]]
+  - -> contains -> [[phase-b-2-10]]
+  - -> contains -> [[phase-b-3-6]]
+  - -> contains -> [[phase-c]]
+  - <- contains <- [[2-pdca]]
+- **2. PDCA 사이클 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 6 connections
+  - -> contains -> [[21-plan]]
+  - -> contains -> [[22-design]]
+  - -> contains -> [[23-do]]
+  - -> contains -> [[24-check]]
+  - -> contains -> [[25-act]]
+  - <- contains <- [[api]]
+- **3. 구현 결과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 5 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - -> contains -> [[34]]
+  - <- contains <- [[api]]
+- **10. 결론** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 4 connections
+  - -> contains -> [[101]]
+  - -> contains -> [[102]]
+  - -> contains -> [[103]]
+  - <- contains <- [[api]]
+- **4. 성과 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 4 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - <- contains <- [[api]]
+- **5. 주요 발견사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 4 connections
+  - -> contains -> [[51]]
+  - -> contains -> [[52]]
+  - -> contains -> [[53]]
+  - <- contains <- [[api]]
+- **6. 교훈 및 개선사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 4 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63]]
+  - <- contains <- [[api]]
+- **8. 검증 결과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 4 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82]]
+  - -> contains -> [[83]]
+  - <- contains <- [[api]]
+- **1. 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[api]]
+- **2.4 Check (검증 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 3 connections
+  - -> contains -> [[v0-72]]
+  - -> contains -> [[v1-99]]
+  - <- contains <- [[2-pdca]]
+- **7. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 3 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72-phase-2]]
+  - <- contains <- [[api]]
+- **9. 첨부자료** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 3 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92]]
+  - <- contains <- [[api]]
+- **10.1 종합 평가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10.2 기여도** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10.3 최종 권고** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **1.1 문제 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 목표** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **2.1 Plan (계획 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.2 Design (설계 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.5 Act (개선 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **3.1 신규 파일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 수정 파일 — 백엔드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 수정 파일 — 프론트엔드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.4 규모 통계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 기술적 성과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 유지보수성 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.3 버그 감소 효과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5.1 설계 변경** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.2 구현 과정 중 추가 발견** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.3 예외 처리의 타당성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **6.1 잘했던 점 ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.2 개선 기회 🔧** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.3 다음 번 적용사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7.1 즉시 후속 작업** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 향후 개선 (Phase 2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 성공 기준 달성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 매출 영향 (비정량)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.3 기술 부채 감소** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9.1 관련 문서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 핵심 변경 파일 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **Phase A — 기반 (완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Phase B-1 — 핵심 CRUD (8파일, 완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Phase B-2 — 도메인 서비스 (10파일, 완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Phase B-3 — 보조 (6파일, 완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **Phase C — 프론트엔드 동기화 (완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[23-do]]
+- **초기 갭 분석 (v0: 72%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[24-check]]
+- **반복 후 갭 분석 (v1: 99%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.report.md) -- 1 connections
+  - <- contains <- [[24-check]]
+
+## Internal Relationships
+- 1. 개요 -> contains -> 1.1 문제 정의 [EXTRACTED]
+- 1. 개요 -> contains -> 1.2 목표 [EXTRACTED]
+- 10. 결론 -> contains -> 10.1 종합 평가 [EXTRACTED]
+- 10. 결론 -> contains -> 10.2 기여도 [EXTRACTED]
+- 10. 결론 -> contains -> 10.3 최종 권고 [EXTRACTED]
+- 2.3 Do (구현 단계) -> contains -> Phase A — 기반 (완료) [EXTRACTED]
+- 2.3 Do (구현 단계) -> contains -> Phase B-1 — 핵심 CRUD (8파일, 완료) [EXTRACTED]
+- 2.3 Do (구현 단계) -> contains -> Phase B-2 — 도메인 서비스 (10파일, 완료) [EXTRACTED]
+- 2.3 Do (구현 단계) -> contains -> Phase B-3 — 보조 (6파일, 완료) [EXTRACTED]
+- 2.3 Do (구현 단계) -> contains -> Phase C — 프론트엔드 동기화 (완료) [EXTRACTED]
+- 2.4 Check (검증 단계) -> contains -> 초기 갭 분석 (v0: 72%) [EXTRACTED]
+- 2.4 Check (검증 단계) -> contains -> 반복 후 갭 분석 (v1: 99%) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.1 Plan (계획 단계) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.2 Design (설계 단계) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.3 Do (구현 단계) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.4 Check (검증 단계) [EXTRACTED]
+- 2. PDCA 사이클 요약 -> contains -> 2.5 Act (개선 단계) [EXTRACTED]
+- 3. 구현 결과 -> contains -> 3.1 신규 파일 [EXTRACTED]
+- 3. 구현 결과 -> contains -> 3.2 수정 파일 — 백엔드 [EXTRACTED]
+- 3. 구현 결과 -> contains -> 3.3 수정 파일 — 프론트엔드 [EXTRACTED]
+- 3. 구현 결과 -> contains -> 3.4 규모 통계 [EXTRACTED]
+- 4. 성과 분석 -> contains -> 4.1 기술적 성과 [EXTRACTED]
+- 4. 성과 분석 -> contains -> 4.2 유지보수성 개선 [EXTRACTED]
+- 4. 성과 분석 -> contains -> 4.3 버그 감소 효과 [EXTRACTED]
+- 5. 주요 발견사항 -> contains -> 5.1 설계 변경 [EXTRACTED]
+- 5. 주요 발견사항 -> contains -> 5.2 구현 과정 중 추가 발견 [EXTRACTED]
+- 5. 주요 발견사항 -> contains -> 5.3 예외 처리의 타당성 [EXTRACTED]
+- 6. 교훈 및 개선사항 -> contains -> 6.1 잘했던 점 ✅ [EXTRACTED]
+- 6. 교훈 및 개선사항 -> contains -> 6.2 개선 기회 🔧 [EXTRACTED]
+- 6. 교훈 및 개선사항 -> contains -> 6.3 다음 번 적용사항 [EXTRACTED]
+- 7. 다음 단계 -> contains -> 7.1 즉시 후속 작업 [EXTRACTED]
+- 7. 다음 단계 -> contains -> 7.2 향후 개선 (Phase 2) [EXTRACTED]
+- 8. 검증 결과 -> contains -> 8.1 성공 기준 달성 [EXTRACTED]
+- 8. 검증 결과 -> contains -> 8.2 매출 영향 (비정량) [EXTRACTED]
+- 8. 검증 결과 -> contains -> 8.3 기술 부채 감소 [EXTRACTED]
+- 9. 첨부자료 -> contains -> 9.1 관련 문서 [EXTRACTED]
+- 9. 첨부자료 -> contains -> 9.2 핵심 변경 파일 요약 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 1. 개요 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 2. PDCA 사이클 요약 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 3. 구현 결과 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 4. 성과 분석 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 5. 주요 발견사항 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 6. 교훈 및 개선사항 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 7. 다음 단계 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 8. 검증 결과 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 9. 첨부자료 [EXTRACTED]
+- API 응답 구조 표준화 — 완료 보고서 -> contains -> 10. 결론 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 API 응답 구조 표준화 — 완료 보고서, 2.3 Do (구현 단계), 2. PDCA 사이클 요약를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 api-response-standardization.report.md이다.
+
+### Key Facts
+- > **Feature**: api-response-standardization > **Feature Name (KR)**: API 응답 구조 표준화 > **Version**: v1.0 > **Completion Date**: 2026-03-26 > **Status**: ✅ COMPLETED > **Overall Match Rate**: 99% (72% → 99% after iteration 1)
+- **문서**: `docs/03-analysis/features/api-response-standardization.analysis.md`
+- **API 응답 구조 표준화 프로젝트는 성공적으로 완료되었습니다.**
+- | 영역 | 기여 | 영향 | |------|------|------| | **코드 품질** | 응답 형식 표준화 | 높음 | | **개발 속도** | 신규 API 추가 용이 | 중간 | | **팀 협업** | API 계약 명확화 | 높음 | | **기술 부채** | 응답 래핑 혼재 제거 | 높음 |
+- 1. **즉시 배포** — Phase A/B 완성도 높음, 프론트 동기화 완료 2. **모니터링** — OpenAPI 스키마 자동생성 검증 3. **Phase 2 검토** — Pydantic 모델 추가 여부 결정 (선택) 4. **팀 공유** — API 응답 표준 가이드 문서 발행

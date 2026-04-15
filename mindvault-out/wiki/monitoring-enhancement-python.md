@@ -1,0 +1,140 @@
+# 로그/모니터링 개선 설계 (Monitoring Enhancement) & python
+Cohesion: 0.10 | Nodes: 26
+
+## Key Nodes
+- **로그/모니터링 개선 설계 (Monitoring Enhancement)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 8 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-phase-a-silent-exception-db]]
+  - -> contains -> [[3-phase-b]]
+  - -> contains -> [[4-phase-c]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-out-of-scope-plan-6]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 6 connections
+  - <- has_code_example <- [[2-1-tracktokens-mon-03]]
+  - <- has_code_example <- [[state-mon-02]]
+  - <- has_code_example <- [[2-3-aistatusmanagerfailtask-persistlog-mon-04]]
+  - <- has_code_example <- [[3-1-mon-05-mon-06]]
+  - <- has_code_example <- [[3-3-api-mon-08-mon-09]]
+  - <- has_code_example <- [[4-2-api-mon-10]]
+- **2-2. Silent Exception 패턴 정리 (MON-01, MON-02)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 5 connections
+  - -> contains -> [[a]]
+  - -> contains -> [[b]]
+  - -> contains -> [[c]]
+  - -> contains -> [[state-mon-02]]
+  - <- contains <- [[2-phase-a-silent-exception-db]]
+- **3. Phase B — 에러 알림 + 노드 헬스 집계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 5 connections
+  - -> contains -> [[3-1-mon-05-mon-06]]
+  - -> contains -> [[3-2-materialized-view-mon-07]]
+  - -> contains -> [[3-3-api-mon-08-mon-09]]
+  - -> contains -> [[3-4-mv-rpc]]
+  - <- contains <- [[monitoring-enhancement]]
+- **2. Phase A — Silent Exception 제거 + 에러 DB 기록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 4 connections
+  - -> contains -> [[2-1-tracktokens-mon-03]]
+  - -> contains -> [[2-2-silent-exception-mon-01-mon-02]]
+  - -> contains -> [[2-3-aistatusmanagerfailtask-persistlog-mon-04]]
+  - <- contains <- [[monitoring-enhancement]]
+- **4. Phase C — 프론트엔드 에러 수집** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 4 connections
+  - -> contains -> [[4-1-clienterrorlogs-mon-11]]
+  - -> contains -> [[4-2-api-mon-10]]
+  - -> contains -> [[4-3]]
+  - <- contains <- [[monitoring-enhancement]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 3 connections
+  - <- has_code_example <- [[3-2-materialized-view-mon-07]]
+  - <- has_code_example <- [[3-4-mv-rpc]]
+  - <- has_code_example <- [[4-1-clienterrorlogs-mon-11]]
+- **2-1. track_tokens 데코레이터 개선 (MON-03)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-phase-a-silent-exception-db]]
+- **2-3. ai_status_manager.fail_task → persist_log 연동 (MON-04)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-phase-a-silent-exception-db]]
+- **3-1. 에러 알림 함수 (MON-05, MON-06)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-b]]
+- **3-2. 노드 헬스 Materialized View (MON-07)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[3-phase-b]]
+- **3-3. 모니터링 API 엔드포인트 (MON-08, MON-09)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-b]]
+- **3-4. MV 리프레시 RPC 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[3-phase-b]]
+- **4-1. client_error_logs 테이블 (MON-11)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[4-phase-c]]
+- **4-2. 에러 수집 API (MON-10)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-c]]
+- **4-3. 프론트엔드 에러 리포터** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-phase-c]]
+- **State 에러 정보 주입 패턴 (MON-02)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-2-silent-exception-mon-01-mon-02]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- has_code_example <- [[4-3]]
+- **1. 설계 범위** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[monitoring-enhancement]]
+- **5. 파일 변경 매트릭스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[monitoring-enhancement]]
+- **6. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[monitoring-enhancement]]
+- **7. 검증 방법** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[monitoring-enhancement]]
+- **8. Out of Scope (Plan §6 재확인)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[monitoring-enhancement]]
+- **카테고리 A — "보조 데이터 조회 실패" (대부분)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[2-2-silent-exception-mon-01-mon-02]]
+- **카테고리 B — "핵심 로직 실패" (주의 필요)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[2-2-silent-exception-mon-01-mon-02]]
+- **카테고리 C — "이미 로깅 있음" (변경 불필요)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\monitoring-enhancement\monitoring-enhancement.design.md) -- 1 connections
+  - <- contains <- [[2-2-silent-exception-mon-01-mon-02]]
+
+## Internal Relationships
+- 2-1. track_tokens 데코레이터 개선 (MON-03) -> has_code_example -> python [EXTRACTED]
+- 2-2. Silent Exception 패턴 정리 (MON-01, MON-02) -> contains -> 카테고리 A — "보조 데이터 조회 실패" (대부분) [EXTRACTED]
+- 2-2. Silent Exception 패턴 정리 (MON-01, MON-02) -> contains -> 카테고리 B — "핵심 로직 실패" (주의 필요) [EXTRACTED]
+- 2-2. Silent Exception 패턴 정리 (MON-01, MON-02) -> contains -> 카테고리 C — "이미 로깅 있음" (변경 불필요) [EXTRACTED]
+- 2-2. Silent Exception 패턴 정리 (MON-01, MON-02) -> contains -> State 에러 정보 주입 패턴 (MON-02) [EXTRACTED]
+- 2-3. ai_status_manager.fail_task → persist_log 연동 (MON-04) -> has_code_example -> python [EXTRACTED]
+- 2. Phase A — Silent Exception 제거 + 에러 DB 기록 -> contains -> 2-1. track_tokens 데코레이터 개선 (MON-03) [EXTRACTED]
+- 2. Phase A — Silent Exception 제거 + 에러 DB 기록 -> contains -> 2-2. Silent Exception 패턴 정리 (MON-01, MON-02) [EXTRACTED]
+- 2. Phase A — Silent Exception 제거 + 에러 DB 기록 -> contains -> 2-3. ai_status_manager.fail_task → persist_log 연동 (MON-04) [EXTRACTED]
+- 3-1. 에러 알림 함수 (MON-05, MON-06) -> has_code_example -> python [EXTRACTED]
+- 3-2. 노드 헬스 Materialized View (MON-07) -> has_code_example -> sql [EXTRACTED]
+- 3-3. 모니터링 API 엔드포인트 (MON-08, MON-09) -> has_code_example -> python [EXTRACTED]
+- 3-4. MV 리프레시 RPC 함수 -> has_code_example -> sql [EXTRACTED]
+- 3. Phase B — 에러 알림 + 노드 헬스 집계 -> contains -> 3-1. 에러 알림 함수 (MON-05, MON-06) [EXTRACTED]
+- 3. Phase B — 에러 알림 + 노드 헬스 집계 -> contains -> 3-2. 노드 헬스 Materialized View (MON-07) [EXTRACTED]
+- 3. Phase B — 에러 알림 + 노드 헬스 집계 -> contains -> 3-3. 모니터링 API 엔드포인트 (MON-08, MON-09) [EXTRACTED]
+- 3. Phase B — 에러 알림 + 노드 헬스 집계 -> contains -> 3-4. MV 리프레시 RPC 함수 [EXTRACTED]
+- 4-1. client_error_logs 테이블 (MON-11) -> has_code_example -> sql [EXTRACTED]
+- 4-2. 에러 수집 API (MON-10) -> has_code_example -> python [EXTRACTED]
+- 4-3. 프론트엔드 에러 리포터 -> has_code_example -> typescript [EXTRACTED]
+- 4. Phase C — 프론트엔드 에러 수집 -> contains -> 4-1. client_error_logs 테이블 (MON-11) [EXTRACTED]
+- 4. Phase C — 프론트엔드 에러 수집 -> contains -> 4-2. 에러 수집 API (MON-10) [EXTRACTED]
+- 4. Phase C — 프론트엔드 에러 수집 -> contains -> 4-3. 프론트엔드 에러 리포터 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 1. 설계 범위 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 2. Phase A — Silent Exception 제거 + 에러 DB 기록 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 3. Phase B — 에러 알림 + 노드 헬스 집계 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 4. Phase C — 프론트엔드 에러 수집 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 5. 파일 변경 매트릭스 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 6. 구현 순서 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 7. 검증 방법 [EXTRACTED]
+- 로그/모니터링 개선 설계 (Monitoring Enhancement) -> contains -> 8. Out of Scope (Plan §6 재확인) [EXTRACTED]
+- State 에러 정보 주입 패턴 (MON-02) -> has_code_example -> python [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 로그/모니터링 개선 설계 (Monitoring Enhancement), python, 2-2. Silent Exception 패턴 정리 (MON-01, MON-02)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 monitoring-enhancement.design.md이다.
+
+### Key Facts
+- | 항목 | 내용 | |------|------| | 문서 버전 | v1.0 | | 작성일 | 2026-03-26 | | 상태 | 초안 | | Plan 참조 | `docs/01-plan/features/monitoring-enhancement.plan.md` v1.0 |
+- ```python def track_tokens(node_name: str): def decorator(fn): @functools.wraps(fn) async def wrapper(state, *args, **kwargs): reset_usage_context() started_at = time.time()
+- 그래프 노드 11개 파일에서 `except Exception:` (로깅 없는) 26건을 3가지 카테고리로 분류하여 처리:
+- 3-1. 에러 알림 함수 (MON-05, MON-06)
+- 2-1. track_tokens 데코레이터 개선 (MON-03)

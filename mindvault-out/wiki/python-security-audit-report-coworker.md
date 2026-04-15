@@ -1,0 +1,166 @@
+# python & Security Audit Report — 용역제안 Coworker
+Cohesion: 0.08 | Nodes: 31
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 10 connections
+  - <- has_code_example <- [[h-1-dev-mode-authentication-bypass-has-no-environment-guard]]
+  - <- has_code_example <- [[h-2-rls-bypass-in-dev-mode-via-getrlsclient]]
+  - <- has_code_example <- [[h-3-admin-role-change-has-no-cross-organization-guard]]
+  - <- has_code_example <- [[h-4-requireprojectaccess-uses-servicerole-client]]
+  - <- has_code_example <- [[h-5-no-password-complexity-enforcement]]
+  - <- has_code_example <- [[m-1-missing-content-security-policy-csp-header]]
+  - <- has_code_example <- [[m-4-healthstatus-endpoints-expose-internal-details]]
+  - <- has_code_example <- [[m-6-supabase-client-caching-stale-auth-token]]
+  - <- has_code_example <- [[l-2-error-messages-include-internal-state-details]]
+  - <- has_code_example <- [[l-4-openapi-docs-production-toggle-is-weak]]
+- **Security Audit Report — 용역제안 Coworker** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 8 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[critical-findings]]
+  - -> contains -> [[high-findings]]
+  - -> contains -> [[medium-findings]]
+  - -> contains -> [[low-findings]]
+  - -> contains -> [[info-findings]]
+  - -> contains -> [[security-architecture-assessment]]
+  - -> contains -> [[appendix-files-reviewed]]
+- **MEDIUM Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 7 connections
+  - -> contains -> [[m-1-missing-content-security-policy-csp-header]]
+  - -> contains -> [[m-2-unsafe-innerhtml-usage-in-frontend-components]]
+  - -> contains -> [[m-3-no-csrf-protection-on-state-changing-endpoints]]
+  - -> contains -> [[m-4-healthstatus-endpoints-expose-internal-details]]
+  - -> contains -> [[m-5-missing-orgid-scoping-on-kb-write-operations]]
+  - -> contains -> [[m-6-supabase-client-caching-stale-auth-token]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **HIGH Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 6 connections
+  - -> contains -> [[h-1-dev-mode-authentication-bypass-has-no-environment-guard]]
+  - -> contains -> [[h-2-rls-bypass-in-dev-mode-via-getrlsclient]]
+  - -> contains -> [[h-3-admin-role-change-has-no-cross-organization-guard]]
+  - -> contains -> [[h-4-requireprojectaccess-uses-servicerole-client]]
+  - -> contains -> [[h-5-no-password-complexity-enforcement]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **LOW Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 5 connections
+  - -> contains -> [[l-1-rate-limiting-not-applied-uniformly]]
+  - -> contains -> [[l-2-error-messages-include-internal-state-details]]
+  - -> contains -> [[l-3-audit-logging-gaps]]
+  - -> contains -> [[l-4-openapi-docs-production-toggle-is-weak]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **INFO Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 4 connections
+  - -> contains -> [[i-1-ssrf-protection-implemented]]
+  - -> contains -> [[i-2-file-upload-validation-implemented]]
+  - -> contains -> [[i-3-sql-injection-risk-is-low]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **Security Architecture Assessment** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 3 connections
+  - -> contains -> [[positive-controls-already-in-place]]
+  - -> contains -> [[priority-remediation-roadmap]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **CRITICAL Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> contains -> [[c-1-live-api-keys-and-secrets-committed-to-repository]]
+  - <- contains <- [[security-audit-report-coworker]]
+- **H-1. Dev Mode Authentication Bypass Has No Environment Guard** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-findings]]
+- **H-2. RLS Bypass in Dev Mode via get_rls_client** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-findings]]
+- **H-3. Admin Role Change Has No Cross-Organization Guard** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-findings]]
+- **H-4. require_project_access Uses service_role Client** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-findings]]
+- **H-5. No Password Complexity Enforcement** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[high-findings]]
+- **L-2. Error Messages Include Internal State Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[low-findings]]
+- **L-4. OpenAPI Docs Production Toggle Is Weak** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[low-findings]]
+- **M-1. Missing Content Security Policy (CSP) Header** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-findings]]
+- **M-4. Health/Status Endpoints Expose Internal Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-findings]]
+- **M-6. Supabase Client Caching — Stale Auth Token** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[medium-findings]]
+- **Appendix: Files Reviewed** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[security-audit-report-coworker]]
+- **C-1. Live API Keys and Secrets Committed to Repository** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[critical-findings]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[security-audit-report-coworker]]
+- **I-1. SSRF Protection Implemented** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[info-findings]]
+- **I-2. File Upload Validation Implemented** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[info-findings]]
+- **I-3. SQL Injection Risk is Low** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[info-findings]]
+- **L-1. Rate Limiting Not Applied Uniformly** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[low-findings]]
+- **L-3. Audit Logging Gaps** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[low-findings]]
+- **M-2. Unsafe innerHTML Usage in Frontend Components** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[medium-findings]]
+- **M-3. No CSRF Protection on State-Changing Endpoints** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[medium-findings]]
+- **M-5. Missing org_id Scoping on KB Write Operations** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[medium-findings]]
+- **Positive Controls Already in Place** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[security-architecture-assessment]]
+- **Priority Remediation Roadmap** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\security-audit.report.md) -- 1 connections
+  - <- contains <- [[security-architecture-assessment]]
+
+## Internal Relationships
+- CRITICAL Findings -> contains -> C-1. Live API Keys and Secrets Committed to Repository [EXTRACTED]
+- H-1. Dev Mode Authentication Bypass Has No Environment Guard -> has_code_example -> python [EXTRACTED]
+- H-2. RLS Bypass in Dev Mode via get_rls_client -> has_code_example -> python [EXTRACTED]
+- H-3. Admin Role Change Has No Cross-Organization Guard -> has_code_example -> python [EXTRACTED]
+- H-4. require_project_access Uses service_role Client -> has_code_example -> python [EXTRACTED]
+- H-5. No Password Complexity Enforcement -> has_code_example -> python [EXTRACTED]
+- HIGH Findings -> contains -> H-1. Dev Mode Authentication Bypass Has No Environment Guard [EXTRACTED]
+- HIGH Findings -> contains -> H-2. RLS Bypass in Dev Mode via get_rls_client [EXTRACTED]
+- HIGH Findings -> contains -> H-3. Admin Role Change Has No Cross-Organization Guard [EXTRACTED]
+- HIGH Findings -> contains -> H-4. require_project_access Uses service_role Client [EXTRACTED]
+- HIGH Findings -> contains -> H-5. No Password Complexity Enforcement [EXTRACTED]
+- INFO Findings -> contains -> I-1. SSRF Protection Implemented [EXTRACTED]
+- INFO Findings -> contains -> I-2. File Upload Validation Implemented [EXTRACTED]
+- INFO Findings -> contains -> I-3. SQL Injection Risk is Low [EXTRACTED]
+- L-2. Error Messages Include Internal State Details -> has_code_example -> python [EXTRACTED]
+- L-4. OpenAPI Docs Production Toggle Is Weak -> has_code_example -> python [EXTRACTED]
+- LOW Findings -> contains -> L-1. Rate Limiting Not Applied Uniformly [EXTRACTED]
+- LOW Findings -> contains -> L-2. Error Messages Include Internal State Details [EXTRACTED]
+- LOW Findings -> contains -> L-3. Audit Logging Gaps [EXTRACTED]
+- LOW Findings -> contains -> L-4. OpenAPI Docs Production Toggle Is Weak [EXTRACTED]
+- M-1. Missing Content Security Policy (CSP) Header -> has_code_example -> python [EXTRACTED]
+- M-4. Health/Status Endpoints Expose Internal Details -> has_code_example -> python [EXTRACTED]
+- M-6. Supabase Client Caching — Stale Auth Token -> has_code_example -> python [EXTRACTED]
+- MEDIUM Findings -> contains -> M-1. Missing Content Security Policy (CSP) Header [EXTRACTED]
+- MEDIUM Findings -> contains -> M-2. Unsafe innerHTML Usage in Frontend Components [EXTRACTED]
+- MEDIUM Findings -> contains -> M-3. No CSRF Protection on State-Changing Endpoints [EXTRACTED]
+- MEDIUM Findings -> contains -> M-4. Health/Status Endpoints Expose Internal Details [EXTRACTED]
+- MEDIUM Findings -> contains -> M-5. Missing org_id Scoping on KB Write Operations [EXTRACTED]
+- MEDIUM Findings -> contains -> M-6. Supabase Client Caching — Stale Auth Token [EXTRACTED]
+- Security Architecture Assessment -> contains -> Positive Controls Already in Place [EXTRACTED]
+- Security Architecture Assessment -> contains -> Priority Remediation Roadmap [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> Executive Summary [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> CRITICAL Findings [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> HIGH Findings [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> MEDIUM Findings [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> LOW Findings [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> INFO Findings [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> Security Architecture Assessment [EXTRACTED]
+- Security Audit Report — 용역제안 Coworker -> contains -> Appendix: Files Reviewed [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, Security Audit Report — 용역제안 Coworker, MEDIUM Findings를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 security-audit.report.md이다.
+
+### Key Facts
+- ```python if settings.dev_mode and (not credentials or not credentials.credentials): return await _get_dev_user() ```
+- **Date**: 2026-03-26 **Auditor**: Security Architect Agent **Scope**: Full backend (`app/`) + frontend (`frontend/`) security review **Framework**: OWASP Top 10 (2021) + project-specific controls
+- M-1. Missing Content Security Policy (CSP) Header
+- H-1. Dev Mode Authentication Bypass Has No Environment Guard
+- L-1. Rate Limiting Not Applied Uniformly

@@ -1,0 +1,131 @@
+# bid-recommendation Analysis Report (v2.0 -- Full Stack) & 7. Frontend Pages (Design Section 7)
+Cohesion: 0.07 | Nodes: 29
+
+## Key Nodes
+- **bid-recommendation Analysis Report (v2.0 -- Full Stack)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 13 connections
+  - -> contains -> [[analysis-overview]]
+  - -> contains -> [[overall-scores]]
+  - -> contains -> [[1-api-endpoints-design-section-5]]
+  - -> contains -> [[2-db-schema-design-section-2]]
+  - -> contains -> [[3-pydantic-schema-design-section-3]]
+  - -> contains -> [[4-ai-analysis-logic-design-section-42]]
+  - -> contains -> [[5-error-handling-design-section-9]]
+  - -> contains -> [[6-cache-strategy-design-section-6]]
+  - -> contains -> [[7-frontend-pages-design-section-7]]
+  - -> contains -> [[8-differences-found]]
+  - -> contains -> [[9-recommended-actions]]
+  - -> contains -> [[10-conclusion]]
+  - -> contains -> [[version-history]]
+- **7. Frontend Pages (Design Section 7)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 6 connections
+  - -> contains -> [[71-file-existence]]
+  - -> contains -> [[72-bids-page-detail]]
+  - -> contains -> [[73-bidsbidno-page-detail]]
+  - -> contains -> [[74-bidssettings-page-detail]]
+  - -> contains -> [[75-frontend-api-client-apits-bids]]
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **1. API Endpoints (Design Section 5)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 5 connections
+  - -> contains -> [[11-endpoint-match]]
+  - -> contains -> [[12-query-parameters-get-announcements]]
+  - -> contains -> [[13-response-format-get-recommendations]]
+  - -> contains -> [[14-authentication-authorization]]
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **8. Differences Found** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 4 connections
+  - -> contains -> [[81-missing-features-design-o-implementation-x-2]]
+  - -> contains -> [[82-changed-features-design-implementation-3]]
+  - -> contains -> [[83-added-features-design-x-implementation-o-7]]
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **9. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 3 connections
+  - -> contains -> [[91-optional-improvements]]
+  - -> contains -> [[92-design-document-update-needed]]
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 2 connections
+  - -> contains -> [[v10-v20]]
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **10. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **1.1 Endpoint Match** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[1-api-endpoints-design-section-5]]
+- **1.2 Query Parameters (GET /announcements)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[1-api-endpoints-design-section-5]]
+- **1.3 Response Format (GET /recommendations)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[1-api-endpoints-design-section-5]]
+- **1.4 Authentication & Authorization** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[1-api-endpoints-design-section-5]]
+- **2. DB Schema (Design Section 2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **3. Pydantic Schema (Design Section 3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **4. AI Analysis Logic (Design Section 4.2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **5. Error Handling (Design Section 9)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **6. Cache Strategy (Design Section 6)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **7.1 File Existence** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[7-frontend-pages-design-section-7]]
+- **7.2 /bids Page Detail** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[7-frontend-pages-design-section-7]]
+- **7.3 /bids/[bidNo] Page Detail** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[7-frontend-pages-design-section-7]]
+- **7.4 /bids/settings Page Detail** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[7-frontend-pages-design-section-7]]
+- **7.5 Frontend API Client (api.ts bids 섹션)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[7-frontend-pages-design-section-7]]
+- **8.1 Missing Features (Design O, Implementation X) -- 2건** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[8-differences-found]]
+- **8.2 Changed Features (Design != Implementation) -- 3건** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[8-differences-found]]
+- **8.3 Added Features (Design X, Implementation O) -- 7건** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[8-differences-found]]
+- **9.1 Optional Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[9-recommended-actions]]
+- **9.2 Design Document Update Needed** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[9-recommended-actions]]
+- **Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+- **v1.0 -> v2.0 주요 변경 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[analysis-overview]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\bid-recommendation\bid-recommendation.analysis.md) -- 1 connections
+  - <- contains <- [[bid-recommendation-analysis-report-v20-full-stack]]
+
+## Internal Relationships
+- 1. API Endpoints (Design Section 5) -> contains -> 1.1 Endpoint Match [EXTRACTED]
+- 1. API Endpoints (Design Section 5) -> contains -> 1.2 Query Parameters (GET /announcements) [EXTRACTED]
+- 1. API Endpoints (Design Section 5) -> contains -> 1.3 Response Format (GET /recommendations) [EXTRACTED]
+- 1. API Endpoints (Design Section 5) -> contains -> 1.4 Authentication & Authorization [EXTRACTED]
+- 7. Frontend Pages (Design Section 7) -> contains -> 7.1 File Existence [EXTRACTED]
+- 7. Frontend Pages (Design Section 7) -> contains -> 7.2 /bids Page Detail [EXTRACTED]
+- 7. Frontend Pages (Design Section 7) -> contains -> 7.3 /bids/[bidNo] Page Detail [EXTRACTED]
+- 7. Frontend Pages (Design Section 7) -> contains -> 7.4 /bids/settings Page Detail [EXTRACTED]
+- 7. Frontend Pages (Design Section 7) -> contains -> 7.5 Frontend API Client (api.ts bids 섹션) [EXTRACTED]
+- 8. Differences Found -> contains -> 8.1 Missing Features (Design O, Implementation X) -- 2건 [EXTRACTED]
+- 8. Differences Found -> contains -> 8.2 Changed Features (Design != Implementation) -- 3건 [EXTRACTED]
+- 8. Differences Found -> contains -> 8.3 Added Features (Design X, Implementation O) -- 7건 [EXTRACTED]
+- 9. Recommended Actions -> contains -> 9.1 Optional Improvements [EXTRACTED]
+- 9. Recommended Actions -> contains -> 9.2 Design Document Update Needed [EXTRACTED]
+- Analysis Overview -> contains -> v1.0 -> v2.0 주요 변경 사항 [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> Analysis Overview [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> Overall Scores [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 1. API Endpoints (Design Section 5) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 2. DB Schema (Design Section 2) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 3. Pydantic Schema (Design Section 3) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 4. AI Analysis Logic (Design Section 4.2) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 5. Error Handling (Design Section 9) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 6. Cache Strategy (Design Section 6) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 7. Frontend Pages (Design Section 7) [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 8. Differences Found [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 9. Recommended Actions [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> 10. Conclusion [EXTRACTED]
+- bid-recommendation Analysis Report (v2.0 -- Full Stack) -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 bid-recommendation Analysis Report (v2.0 -- Full Stack), 7. Frontend Pages (Design Section 7), 1. API Endpoints (Design Section 5)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 bid-recommendation.analysis.md이다.
+
+### Key Facts
+- > **Summary**: bid-recommendation 기능의 설계-구현 Gap Analysis. 백엔드 100%, 프론트엔드 93%, 전체 97%. > > **Author**: gap-detector > **Created**: 2026-03-08 > **Last Modified**: 2026-03-08 > **Status**: Approved > **Previous**: v1.0 (Backend 95%, Frontend 0%, Overall 91%) -> v2.0 (Backend 100%, Frontend 93%,…
+- 8.1 Missing Features (Design O, Implementation X) -- 2건
+- 9.1 Optional Improvements
+- - **Analysis Target**: bid-recommendation (입찰 추천 기능) - **Design Document**: `docs/archive/2026-03/bid-recommendation/bid-recommendation.design.md` - **Plan Document**: `docs/archive/2026-03/bid-recommendation/bid-recommendation.plan.md` - **Implementation Path**: Backend 7개 파일 + Frontend 5개 파일 + DB…
+- ``` Overall Match Rate = 97% (>=90%)

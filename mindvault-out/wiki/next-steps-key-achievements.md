@@ -1,0 +1,197 @@
+# 🚀 향후 작업 (Next Steps) & 🎯 주요 성과 (Key Achievements)
+Cohesion: 0.06 | Nodes: 41
+
+## Key Nodes
+- **🚀 향후 작업 (Next Steps)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 13 connections
+  - -> contains -> [[phase-act-2-v20]]
+  - -> contains -> [[v20]]
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[areas-for-improvement]]
+  - -> contains -> [[to-apply-next-time]]
+  - -> contains -> [[pdca]]
+  - -> contains -> [[plan-phase]]
+  - -> contains -> [[design-phase]]
+  - -> contains -> [[do-phase]]
+  - -> contains -> [[check-phase]]
+  - -> contains -> [[act-phase]]
+  - -> contains -> [[report-phase]]
+  - <- contains <- [[db-pdca]]
+- **🎯 주요 성과 (Key Achievements)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 7 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3-api]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[3]]
+  - <- contains <- [[db-pdca]]
+- **📋 PDCA 사이클 진행 현황** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 7 connections
+  - -> contains -> [[phase-1-plan]]
+  - -> contains -> [[phase-2-design]]
+  - -> contains -> [[phase-3-do]]
+  - -> contains -> [[phase-4-check]]
+  - -> contains -> [[phase-5-act]]
+  - <- contains <- [[db-pdca]]
+  - <- contains <- [[next-steps]]
+- **Phase 3: Do (구현) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 6 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32-000initmigrationssql]]
+  - -> contains -> [[33-scriptsapplymigrationspy]]
+  - -> contains -> [[34-appapiroutesmigrationstatuspy]]
+  - -> contains -> [[35-appmainpy]]
+  - <- contains <- [[pdca]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 4 connections
+  - <- has_code_example <- [[33-scriptsapplymigrationspy]]
+  - <- has_code_example <- [[34-appapiroutesmigrationstatuspy]]
+  - <- has_code_example <- [[35-appmainpy]]
+  - <- has_code_example <- [[to-apply-next-time]]
+- **DB 마이그레이션 자동화 - PDCA 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 4 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[pdca]]
+  - -> contains -> [[key-achievements]]
+  - -> contains -> [[next-steps]]
+- **Phase 4: Check (검증) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 4 connections
+  - -> contains -> [[41-72]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - <- contains <- [[pdca]]
+- **3.3 scripts/apply_migrations.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-3-do]]
+- **Phase 2: Design (설계) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 3 connections
+  - -> has_code_example -> [[sql]]
+  - -> contains -> [[api-3]]
+  - <- contains <- [[pdca]]
+- **Phase 5: Act (개선) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 3 connections
+  - -> contains -> [[51]]
+  - -> contains -> [[52]]
+  - <- contains <- [[pdca]]
+- **To Apply Next Time (향후 적용사항)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[next-steps]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 2 connections
+  - <- has_code_example <- [[33-scriptsapplymigrationspy]]
+  - <- has_code_example <- [[to-apply-next-time]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 2 connections
+  - <- has_code_example <- [[phase-2-design]]
+  - <- has_code_example <- [[32-000initmigrationssql]]
+- **3.2 000_init_migrations.sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-3-do]]
+- **3.4 app/api/routes_migration_status.py (신규)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-3-do]]
+- **3.5 app/main.py (수정)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[phase-3-do]]
+- **1️⃣ 완전한 마이그레이션 추적 시스템 구축** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **2️⃣ 자동화된 마이그레이션 실행 스크립트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **생성된 파일 (3개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **3.1 구현 항목 목록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-3-do]]
+- **3️⃣ 웹 대시보드 통합 가능한 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **4️⃣ 애플리케이션 시작 시 자동 마이그레이션** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **4.1 초기 갭 분석 (72% 일치도)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-4-check]]
+- **4.2 요구사항별 일치도 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-4-check]]
+- **4.3 아키텍처 준수율** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-4-check]]
+- **5️⃣ 높은 코드 품질** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[key-achievements]]
+- **5.1 자동 개선 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-5-act]]
+- **5.2 최종 일치도 계산** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-5-act]]
+- **Act Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **API 엔드포인트 (3개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[phase-2-design]]
+- **Areas for Improvement (개선 필요 영역)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Check Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Design Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Do Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **📊 Executive Summary (실행 요약)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[db-pdca]]
+- **Phase 1: Plan (계획) ✅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[pdca]]
+- **Phase: Act-2 (v2.0 로드맵)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Plan Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Report Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **v2.0 기능** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **What Went Well (잘 된 것)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\db-migration-automation\db-migration-automation.report.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+
+## Internal Relationships
+- 3.2 000_init_migrations.sql -> has_code_example -> sql [EXTRACTED]
+- 3.3 scripts/apply_migrations.py -> has_code_example -> python [EXTRACTED]
+- 3.3 scripts/apply_migrations.py -> has_code_example -> bash [EXTRACTED]
+- 3.4 app/api/routes_migration_status.py (신규) -> has_code_example -> python [EXTRACTED]
+- 3.5 app/main.py (수정) -> has_code_example -> python [EXTRACTED]
+- DB 마이그레이션 자동화 - PDCA 완료 보고서 -> contains -> 📊 Executive Summary (실행 요약) [EXTRACTED]
+- DB 마이그레이션 자동화 - PDCA 완료 보고서 -> contains -> 📋 PDCA 사이클 진행 현황 [EXTRACTED]
+- DB 마이그레이션 자동화 - PDCA 완료 보고서 -> contains -> 🎯 주요 성과 (Key Achievements) [EXTRACTED]
+- DB 마이그레이션 자동화 - PDCA 완료 보고서 -> contains -> 🚀 향후 작업 (Next Steps) [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 1️⃣ 완전한 마이그레이션 추적 시스템 구축 [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 2️⃣ 자동화된 마이그레이션 실행 스크립트 [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 3️⃣ 웹 대시보드 통합 가능한 API [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 4️⃣ 애플리케이션 시작 시 자동 마이그레이션 [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 5️⃣ 높은 코드 품질 [EXTRACTED]
+- 🎯 주요 성과 (Key Achievements) -> contains -> 생성된 파일 (3개) [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Phase: Act-2 (v2.0 로드맵) [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> v2.0 기능 [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> What Went Well (잘 된 것) [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Areas for Improvement (개선 필요 영역) [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> To Apply Next Time (향후 적용사항) [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> 📋 PDCA 사이클 진행 현황 [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Plan Phase [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Design Phase [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Do Phase [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Check Phase [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Act Phase [EXTRACTED]
+- 🚀 향후 작업 (Next Steps) -> contains -> Report Phase [EXTRACTED]
+- 📋 PDCA 사이클 진행 현황 -> contains -> Phase 1: Plan (계획) ✅ [EXTRACTED]
+- 📋 PDCA 사이클 진행 현황 -> contains -> Phase 2: Design (설계) ✅ [EXTRACTED]
+- 📋 PDCA 사이클 진행 현황 -> contains -> Phase 3: Do (구현) ✅ [EXTRACTED]
+- 📋 PDCA 사이클 진행 현황 -> contains -> Phase 4: Check (검증) ✅ [EXTRACTED]
+- 📋 PDCA 사이클 진행 현황 -> contains -> Phase 5: Act (개선) ✅ [EXTRACTED]
+- Phase 2: Design (설계) ✅ -> has_code_example -> sql [EXTRACTED]
+- Phase 2: Design (설계) ✅ -> contains -> API 엔드포인트 (3개) [EXTRACTED]
+- Phase 3: Do (구현) ✅ -> contains -> 3.1 구현 항목 목록 [EXTRACTED]
+- Phase 3: Do (구현) ✅ -> contains -> 3.2 000_init_migrations.sql [EXTRACTED]
+- Phase 3: Do (구현) ✅ -> contains -> 3.3 scripts/apply_migrations.py [EXTRACTED]
+- Phase 3: Do (구현) ✅ -> contains -> 3.4 app/api/routes_migration_status.py (신규) [EXTRACTED]
+- Phase 3: Do (구현) ✅ -> contains -> 3.5 app/main.py (수정) [EXTRACTED]
+- Phase 4: Check (검증) ✅ -> contains -> 4.1 초기 갭 분석 (72% 일치도) [EXTRACTED]
+- Phase 4: Check (검증) ✅ -> contains -> 4.2 요구사항별 일치도 분석 [EXTRACTED]
+- Phase 4: Check (검증) ✅ -> contains -> 4.3 아키텍처 준수율 [EXTRACTED]
+- Phase 5: Act (개선) ✅ -> contains -> 5.1 자동 개선 사항 [EXTRACTED]
+- Phase 5: Act (개선) ✅ -> contains -> 5.2 최종 일치도 계산 [EXTRACTED]
+- To Apply Next Time (향후 적용사항) -> has_code_example -> python [EXTRACTED]
+- To Apply Next Time (향후 적용사항) -> has_code_example -> bash [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 🚀 향후 작업 (Next Steps), 🎯 주요 성과 (Key Achievements), 📋 PDCA 사이클 진행 현황를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 db-migration-automation.report.md이다.
+
+### Key Facts
+- Phase: Act-2 (v2.0 로드맵)
+- 1️⃣ 완전한 마이그레이션 추적 시스템 구축
+- **완료 날짜**: 2026-03-30 **구현 파일**: 3개 신규 + 1개 수정
+- **설계 vs 구현 차이**: - ✅ 재시도 로직 (§5.2) — 구현됨 (line 199-226) ```python for attempt in range(1, 4):  # 3회 시도 success = await apply_migration(...) if success: break if attempt < 3: wait_sec = 2 ** attempt  # 지수 백오프 await asyncio.sleep(wait_sec) ```
+- > **Summary**: DB 마이그레이션 자동화 시스템 PDCA 사이클 완료. 6개 갭 자동 수정으로 최종 일치도 93% 달성. 마이그레이션 추적 테이블, 자동 실행 스크립트, API 엔드포인트 3개 전부 구현 완료. > > **Feature**: DB Migration Automation > **Owner**: tenopa DevOps Team > **Cycle Completed**: 2026-03-30 > **Final Match Rate**: 93% (초기 72% → 최종 93%) > **Status**: ✅…

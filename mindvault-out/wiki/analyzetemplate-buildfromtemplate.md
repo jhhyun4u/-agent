@@ -1,0 +1,161 @@
+# analyze_template & build_from_template
+Cohesion: 0.08 | Nodes: 27
+
+## Key Nodes
+- **analyze_template** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\analyze_template.py) -- 19 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefmkdtemp]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefextractall]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedrefgetroot]]
+  - -> calls -> [[unresolvedrefparse]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefanalyzefonts]]
+  - -> calls -> [[unresolvedrefanalyzecharstyles]]
+  - -> calls -> [[unresolvedrefanalyzeparastyles]]
+  - -> calls -> [[unresolvedrefanalyzepagesetup]]
+  - -> calls -> [[unresolvedrefanalyzetables]]
+  - -> calls -> [[unresolvedrefxpath]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedreftemplateanalysis]]
+  - -> calls -> [[unresolvedrefrmtree]]
+  - <- contains <- [[analyzetemplate]]
+- **build_from_template** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\build_hwpx.py) -- 14 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefisdir]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedreftemporarydirectory]]
+  - -> calls -> [[unresolvedrefcopytree]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefiterdir]]
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedrefcopy2]]
+  - -> calls -> [[unresolvedrefupdatemetadata]]
+  - -> calls -> [[unresolvedrefrglob]]
+  - -> calls -> [[unresolvedrefvalidatexml]]
+  - -> calls -> [[unresolvedrefpackhwpx]]
+  - <- contains <- [[buildhwpx]]
+- **_pack_hwpx** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\build_hwpx.py) -- 10 connections
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - -> calls -> [[unresolvedrefasposix]]
+  - -> calls -> [[unresolvedrefrelativeto]]
+  - -> calls -> [[unresolvedrefrglob]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefwrite]]
+  - <- contains <- [[buildhwpx]]
+- **__unresolved__::ref::is_file** () -- 4 connections
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[findfile]]
+- **__unresolved__::ref::filenotfounderror** () -- 3 connections
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::getroot** () -- 3 connections
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[updatemetadata]]
+  - <- calls <- [[collectmetrics]]
+- **__unresolved__::ref::xpath** () -- 3 connections
+  - <- calls <- [[analyzetables]]
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[collectmetrics]]
+- **__unresolved__::ref::iterdir** () -- 2 connections
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[findfile]]
+- **__unresolved__::ref::rglob** () -- 2 connections
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::_analyze_char_styles** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_fonts** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_page_setup** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_para_styles** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_tables** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_pack_hwpx** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::_update_metadata** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::_validate_xml** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::as_posix** () -- 1 connections
+  - <- calls <- [[packhwpx]]
+- **__unresolved__::ref::copy2** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::copytree** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::extractall** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::is_dir** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::mkdtemp** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::relative_to** () -- 1 connections
+  - <- calls <- [[packhwpx]]
+- **__unresolved__::ref::rmtree** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::templateanalysis** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::temporarydirectory** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+
+## Internal Relationships
+- analyze_template -> calls -> __unresolved__::ref::mkdtemp [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::extractall [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::filenotfounderror [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::getroot [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_fonts [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_char_styles [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_para_styles [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_page_setup [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_tables [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::xpath [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::templateanalysis [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::rmtree [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::is_file [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::filenotfounderror [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::as_posix [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::relative_to [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::rglob [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::is_dir [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::filenotfounderror [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::temporarydirectory [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::copytree [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::iterdir [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::is_file [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::copy2 [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_update_metadata [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::rglob [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_validate_xml [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_pack_hwpx [EXTRACTED]
+
+## Cross-Community Connections
+- analyze_template -> calls -> __unresolved__::ref::path (-> [[unresolvedrefget-unresolvedreflen]])
+- analyze_template -> calls -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
+- analyze_template -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefget-unresolvedreflen]])
+- analyze_template -> calls -> __unresolved__::ref::parse (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- analyze_template -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- analyze_template -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- _pack_hwpx -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedreflen]])
+- _pack_hwpx -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefget-unresolvedreflen]])
+- _pack_hwpx -> calls -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
+- _pack_hwpx -> calls -> __unresolved__::ref::write (-> [[unresolvedrefget-unresolvedreflen]])
+- build_from_template -> calls -> __unresolved__::ref::path (-> [[unresolvedrefget-unresolvedreflen]])
+- build_from_template -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 analyze_template, build_from_template, _pack_hwpx를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 analyze_template.py, build_hwpx.py이다.
+
+### Key Facts
+- 원본: Canine89/hwpxskill/scripts/analyze_template.py 서비스 모듈로 래핑 — CLI argparse 제거, 함수 API만 노출.
+- def build_from_template( output_path: str | Path, template: str | None = None, header_override: str | Path | None = None, section_override: str | Path | None = None, title: str | None = None, creator: str | None = None, ) -> Path: """템플릿 기반 HWPX 조립.
+- def _pack_hwpx(input_dir: Path, output_path: Path) -> None: """HWPX 아카이브 생성 (mimetype first, ZIP_STORED).""" mimetype_file = input_dir / "mimetype" if not mimetype_file.is_file(): raise FileNotFoundError(f"mimetype 파일 없음: {input_dir}")

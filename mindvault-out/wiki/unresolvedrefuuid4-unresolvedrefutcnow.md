@@ -1,0 +1,749 @@
+# __unresolved__::ref::uuid4 & __unresolved__::ref::utcnow
+Cohesion: 0.03 | Nodes: 103
+
+## Key Nodes
+- **__unresolved__::ref::uuid4** () -- 32 connections
+  - <- calls <- [[dispatch]]
+  - <- calls <- [[extractsectionsfromasset]]
+  - <- calls <- [[copybidattachmentstoproposal]]
+  - <- calls <- [[createbatchrecord]]
+  - <- calls <- [[bulksetuporg]]
+  - <- calls <- [[insertproject]]
+  - <- calls <- [[insertproject]]
+  - <- calls <- [[testbatchsuccessrateproperty]]
+  - <- calls <- [[testbatchsuccessratezerodocuments]]
+  - <- calls <- [[testbatchdurationminutes]]
+  - <- calls <- [[testbatchdurationminutesincomplete]]
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+  - <- calls <- [[testprocessbatchdocumentsemptylist]]
+  - <- calls <- [[testprocesssingledocumentsuccess]]
+  - <- calls <- [[testprocesssingledocumentexponentialbackoff]]
+  - <- calls <- [[testprocesssingledocumentmaxretriesexceeded]]
+  - <- calls <- [[testupdatebatchprogress]]
+  - <- calls <- [[testcompletebatch]]
+  - <- calls <- [[testupdateschedule]]
+  - <- calls <- [[testnotifyonerror]]
+  - <- calls <- [[testbatchimportcompleteflow]]
+  - <- calls <- [[testgetdocumentdetail]]
+  - <- calls <- [[testgetnonexistentdocument]]
+  - <- calls <- [[testgetwithvaliduuid]]
+  - <- calls <- [[testreprocessnonexistentdocument]]
+  - <- calls <- [[testgetchunkssuccess]]
+  - <- calls <- [[testgetchunkswithfilter]]
+  - <- calls <- [[testgetchunkswithpagination]]
+  - <- calls <- [[testdeletenonexistentdocument]]
+  - <- calls <- [[testdeleteresponseformat]]
+  - <- calls <- [[testendpointavailability]]
+- **__unresolved__::ref::utcnow** () -- 20 connections
+  - <- calls <- [[testschemas]]
+  - <- calls <- [[initdevuser]]
+  - <- calls <- [[buildnodestatus]]
+  - <- calls <- [[proposalsectionvalidator]]
+  - <- calls <- [[proposalsectionsconsolidation]]
+  - <- calls <- [[mockevaluationanalysis]]
+  - <- calls <- [[mockevaluationfeedbackprocessor]]
+  - <- calls <- [[importproject]]
+  - <- calls <- [[testbatchsuccessrateproperty]]
+  - <- calls <- [[testbatchsuccessratezerodocuments]]
+  - <- calls <- [[testbatchdurationminutes]]
+  - <- calls <- [[testbatchdurationminutesincomplete]]
+  - <- calls <- [[testdetectchangeddocumentssuccess]]
+  - <- calls <- [[testdetectchangeddocumentsnochanges]]
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+  - <- calls <- [[testprocesssingledocumentsuccess]]
+  - <- calls <- [[testprocesssingledocumentexponentialbackoff]]
+  - <- calls <- [[testprocesssingledocumentmaxretriesexceeded]]
+  - <- calls <- [[testbatchimportcompleteflow]]
+- **test_process_batch_documents_partial_failure** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 9 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefintranetdocument]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefobject]]
+  - -> calls -> [[unresolvedrefdocumentprocessresult]]
+  - -> calls -> [[unresolvedrefexception]]
+  - -> calls -> [[unresolvedrefprocessbatchdocuments]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testprocessdocuments]]
+- **main** (C:\project\tenopa proposer\-agent-master\scripts\migrate_legacy_documents.py) -- 8 connections
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefgetasyncsupabaseclient]]
+  - -> calls -> [[unresolvedrefnotificationservice]]
+  - -> calls -> [[unresolvedrefmigrationservice]]
+  - -> calls -> [[unresolvedrefbatchimportintranetdocuments]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[migratelegacydocuments]]
+- **test_process_single_document_max_retries_exceeded** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 8 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefintranetdocument]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefobject]]
+  - -> calls -> [[unresolvedrefexception]]
+  - -> calls -> [[unresolvedrefraises]]
+  - -> calls -> [[unresolvedrefprocesssingledocument]]
+  - <- contains <- [[testexponentialbackoffretry]]
+- **test_scheduler_integration** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 8 connections
+  - -> contains -> [[testschedulerinitialization]]
+  - -> contains -> [[testschedulerjobs]]
+  - -> contains -> [[testschedulershutdown]]
+  - -> contains -> [[testmigrationjob]]
+  - -> imports -> [[unresolvedrefpytest]]
+  - -> imports -> [[unresolvedrefmock]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefscheduler]]
+- **__unresolved__::ref::intranetdocument** () -- 7 connections
+  - <- calls <- [[detectchangeddocuments]]
+  - <- calls <- [[getfaileddocuments]]
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+  - <- calls <- [[testprocesssingledocumentsuccess]]
+  - <- calls <- [[testprocesssingledocumentexponentialbackoff]]
+  - <- calls <- [[testprocesssingledocumentmaxretriesexceeded]]
+- **__unresolved__::ref::migrationbatch** () -- 7 connections
+  - <- calls <- [[rowtobatch]]
+  - <- calls <- [[createbatchrecord]]
+  - <- calls <- [[testbatchsuccessrateproperty]]
+  - <- calls <- [[testbatchsuccessratezerodocuments]]
+  - <- calls <- [[testbatchdurationminutes]]
+  - <- calls <- [[testbatchdurationminutesincomplete]]
+  - <- calls <- [[testbatchimportcompleteflow]]
+- **TestMigrationServiceBasic** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 7 connections
+  - -> contains -> [[testserviceinitialization]]
+  - -> contains -> [[testbatchrecordcreation]]
+  - -> contains -> [[testbatchsuccessrateproperty]]
+  - -> contains -> [[testbatchsuccessratezerodocuments]]
+  - -> contains -> [[testbatchdurationminutes]]
+  - -> contains -> [[testbatchdurationminutesincomplete]]
+  - <- contains <- [[testmigrationservice]]
+- **test_process_batch_documents_success** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 7 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefintranetdocument]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefobject]]
+  - -> calls -> [[unresolvedrefdocumentprocessresult]]
+  - -> calls -> [[unresolvedrefprocessbatchdocuments]]
+  - <- contains <- [[testprocessdocuments]]
+- **__unresolved__::ref::batch_import_intranet_documents** () -- 6 connections
+  - <- calls <- [[runscheduledmigration]]
+  - <- calls <- [[retryfailedbatch]]
+  - <- calls <- [[runscheduledmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testbatchimportwitherror]]
+  - <- calls <- [[testbatchimportcompleteflow]]
+- **__unresolved__::ref::documentresponse** () -- 6 connections
+  - <- calls <- [[testschemas]]
+  - <- extends <- [[documentdetailresponse]]
+  - <- calls <- [[testusch03fullresponse]]
+  - <- calls <- [[testusch03optionalerrormessage]]
+  - <- calls <- [[testusch03errormessagepresent]]
+  - <- calls <- [[testusch06documentliststructure]]
+- **test_batch_import_complete_flow** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 6 connections
+  - -> calls -> [[unresolvedrefobject]]
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefbatchimportintranetdocuments]]
+  - <- contains <- [[testbatchimportintegration]]
+- **test_batch_import_with_error** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 6 connections
+  - -> calls -> [[unresolvedrefobject]]
+  - -> calls -> [[unresolvedrefexception]]
+  - -> calls -> [[unresolvedrefraises]]
+  - -> calls -> [[unresolvedrefbatchimportintranetdocuments]]
+  - -> calls -> [[unresolvedrefassertcalled]]
+  - <- contains <- [[testerrorhandling]]
+- **__unresolved__::ref::_process_single_document** () -- 5 connections
+  - <- calls <- [[processbatchdocuments]]
+  - <- calls <- [[processsingledocument]]
+  - <- calls <- [[testprocesssingledocumentsuccess]]
+  - <- calls <- [[testprocesssingledocumentexponentialbackoff]]
+  - <- calls <- [[testprocesssingledocumentmaxretriesexceeded]]
+- **__unresolved__::ref::object** () -- 5 connections
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+  - <- calls <- [[testprocesssingledocumentmaxretriesexceeded]]
+  - <- calls <- [[testbatchimportwitherror]]
+  - <- calls <- [[testbatchimportcompleteflow]]
+- **build_node_status** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 5 connections
+  - -> calls -> [[unresolvedrefnodestatusmodel]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefisoformat]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - <- contains <- [[routesstep8review]]
+- **init_scheduler** (C:\project\tenopa proposer\-agent-master\app\scheduler.py) -- 5 connections
+  - -> calls -> [[unresolvedrefgetscheduler]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefregisterjobs]]
+  - -> calls -> [[unresolvedrefstart]]
+  - <- contains <- [[scheduler]]
+- **TestDocumentDetail** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 5 connections
+  - -> contains -> [[testgetdocumentdetail]]
+  - -> contains -> [[testgetnonexistentdocument]]
+  - -> contains -> [[testgetwithvaliduuid]]
+  - -> contains -> [[testgetwithinvaliduuid]]
+  - <- contains <- [[testdocuments]]
+- **test_batch_duration_minutes** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedreftimedelta]]
+  - <- contains <- [[testmigrationservicebasic]]
+- **test_detect_changed_documents_success** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedreftimedelta]]
+  - -> calls -> [[unresolvedrefdetectchangeddocuments]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - <- contains <- [[testdetectchangeddocuments]]
+- **test_notify_on_error** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefexception]]
+  - -> calls -> [[unresolvedrefnotifyonerror]]
+  - -> calls -> [[unresolvedrefassertcalledonce]]
+  - <- contains <- [[testerrorhandling]]
+- **test_process_single_document_exponential_backoff** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefintranetdocument]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefprocesssingledocument]]
+  - <- contains <- [[testexponentialbackoffretry]]
+- **test_process_single_document_success** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefintranetdocument]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefprocesssingledocument]]
+  - <- contains <- [[testexponentialbackoffretry]]
+- **TestSchedulerInitialization** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 5 connections
+  - -> contains -> [[testgetschedulercreatesinstance]]
+  - -> contains -> [[testgetschedulerreturnssameinstance]]
+  - -> contains -> [[testinitschedulerregistersjobs]]
+  - -> contains -> [[testinitschedulerwhenalreadyrunning]]
+  - <- contains <- [[testschedulerintegration]]
+- **__unresolved__::ref::get_scheduler** () -- 4 connections
+  - <- calls <- [[initscheduler]]
+  - <- calls <- [[shutdownscheduler]]
+  - <- calls <- [[testgetschedulercreatesinstance]]
+  - <- calls <- [[testgetschedulerreturnssameinstance]]
+- **__unresolved__::ref::init_scheduler** () -- 4 connections
+  - <- calls <- [[testinitschedulerregistersjobs]]
+  - <- calls <- [[testinitschedulerwhenalreadyrunning]]
+  - <- calls <- [[testmonthlymigrationjobregistered]]
+  - <- calls <- [[testmonthlymigrationcrontrigger]]
+- **__unresolved__::ref::migrationservice** () -- 4 connections
+  - <- calls <- [[getmigrationservice]]
+  - <- calls <- [[runscheduledmigration]]
+  - <- calls <- [[runscheduledmigration]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::process_batch_documents** () -- 4 connections
+  - <- calls <- [[batchimportintranetdocuments]]
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+  - <- calls <- [[testprocessbatchdocumentsemptylist]]
+- **shutdown_scheduler** (C:\project\tenopa proposer\-agent-master\app\scheduler.py) -- 4 connections
+  - -> calls -> [[unresolvedrefgetscheduler]]
+  - -> calls -> [[unresolvedrefshutdown]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[scheduler]]
+- **test_schemas** (C:\project\tenopa proposer\-agent-master\test_document_ingestion.py) -- 4 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefdocumentresponse]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - <- contains <- [[testdocumentingestion]]
+- **TestDocumentChunks** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> contains -> [[testgetchunkssuccess]]
+  - -> contains -> [[testgetchunkswithfilter]]
+  - -> contains -> [[testgetchunkswithpagination]]
+  - <- contains <- [[testdocuments]]
+- **TestDocumentDelete** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> contains -> [[testdeletedocument]]
+  - -> contains -> [[testdeletenonexistentdocument]]
+  - -> contains -> [[testdeleteresponseformat]]
+  - <- contains <- [[testdocuments]]
+- **test_delete_nonexistent_document** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefdelete]]
+  - <- contains <- [[testdocumentdelete]]
+- **test_endpoint_availability** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentintegration]]
+- **test_get_chunks_with_filter** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentchunks]]
+- **test_get_chunks_with_pagination** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentchunks]]
+- **test_get_document_detail** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentdetail]]
+- **test_get_nonexistent_document** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentdetail]]
+- **test_get_with_valid_uuid** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentdetail]]
+- **test_reprocess_nonexistent_document** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 4 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefpost]]
+  - <- contains <- [[testdocumentprocess]]
+- **TestExponentialBackoffRetry** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> contains -> [[testprocesssingledocumentsuccess]]
+  - -> contains -> [[testprocesssingledocumentexponentialbackoff]]
+  - -> contains -> [[testprocesssingledocumentmaxretriesexceeded]]
+  - <- contains <- [[testmigrationservice]]
+- **TestProcessDocuments** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> contains -> [[testprocessbatchdocumentssuccess]]
+  - -> contains -> [[testprocessbatchdocumentspartialfailure]]
+  - -> contains -> [[testprocessbatchdocumentsemptylist]]
+  - <- contains <- [[testmigrationservice]]
+- **TestScheduleManagement** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> contains -> [[testgetschedule]]
+  - -> contains -> [[testupdateschedule]]
+  - -> contains -> [[testcalculatenextrun]]
+  - <- contains <- [[testmigrationservice]]
+- **test_batch_duration_minutes_incomplete** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - <- contains <- [[testmigrationservicebasic]]
+- **test_batch_success_rate_property** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - <- contains <- [[testmigrationservicebasic]]
+- **test_batch_success_rate_zero_documents** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefutcnow]]
+  - <- contains <- [[testmigrationservicebasic]]
+- **test_detect_changed_documents_no_changes** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 4 connections
+  - -> calls -> [[unresolvedrefutcnow]]
+  - -> calls -> [[unresolvedrefdetectchangeddocuments]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - <- contains <- [[testdetectchangeddocuments]]
+- **test_init_scheduler_registers_jobs** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefinitscheduler]]
+  - -> calls -> [[unresolvedrefassertcalledonce]]
+  - <- contains <- [[testschedulerinitialization]]
+- **test_init_scheduler_when_already_running** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefinitscheduler]]
+  - -> calls -> [[unresolvedrefassertnotcalled]]
+  - <- contains <- [[testschedulerinitialization]]
+- **test_monthly_migration_job_registered** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefinitscheduler]]
+  - -> calls -> [[unresolvedrefassertcalled]]
+  - <- contains <- [[testschedulerjobs]]
+- **test_shutdown_scheduler** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefshutdownscheduler]]
+  - -> calls -> [[unresolvedrefassertcalledoncewith]]
+  - <- contains <- [[testschedulershutdown]]
+- **test_shutdown_scheduler_when_not_running** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefshutdownscheduler]]
+  - -> calls -> [[unresolvedrefassertnotcalled]]
+  - <- contains <- [[testschedulershutdown]]
+- **TestDocumentResponse** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_schemas.py) -- 4 connections
+  - -> contains -> [[testusch03fullresponse]]
+  - -> contains -> [[testusch03optionalerrormessage]]
+  - -> contains -> [[testusch03errormessagepresent]]
+  - <- contains <- [[testdocumentschemas]]
+- **__unresolved__::ref::detect_changed_documents** () -- 3 connections
+  - <- calls <- [[batchimportintranetdocuments]]
+  - <- calls <- [[testdetectchangeddocumentssuccess]]
+  - <- calls <- [[testdetectchangeddocumentsnochanges]]
+- **__unresolved__::ref::documentprocessresult** () -- 3 connections
+  - <- calls <- [[processsingledocument]]
+  - <- calls <- [[testprocessbatchdocumentssuccess]]
+  - <- calls <- [[testprocessbatchdocumentspartialfailure]]
+- **__unresolved__::ref::update_batch_progress** () -- 3 connections
+  - <- calls <- [[batchimportintranetdocuments]]
+  - <- calls <- [[processbatchdocuments]]
+  - <- calls <- [[testupdatebatchprogress]]
+- **retry_failed_batch** (C:\project\tenopa proposer\-agent-master\app\services\migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefbatchimportintranetdocuments]]
+  - <- contains <- [[migrationservice]]
+- **TestDocumentIntegration** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 3 connections
+  - -> contains -> [[testendpointavailability]]
+  - -> contains -> [[testresponsestructure]]
+  - <- contains <- [[testdocuments]]
+- **TestDocumentProcess** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 3 connections
+  - -> contains -> [[testreprocessdocument]]
+  - -> contains -> [[testreprocessnonexistentdocument]]
+  - <- contains <- [[testdocuments]]
+- **TestBatchProgressUpdate** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> contains -> [[testupdatebatchprogress]]
+  - -> contains -> [[testcompletebatch]]
+  - <- contains <- [[testmigrationservice]]
+- **TestDetectChangedDocuments** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> contains -> [[testdetectchangeddocumentssuccess]]
+  - -> contains -> [[testdetectchangeddocumentsnochanges]]
+  - <- contains <- [[testmigrationservice]]
+- **TestErrorHandling** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> contains -> [[testnotifyonerror]]
+  - -> contains -> [[testbatchimportwitherror]]
+  - <- contains <- [[testmigrationservice]]
+- **test_calculate_next_run** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefcalculatenextrun]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - <- contains <- [[testschedulemanagement]]
+- **test_complete_batch** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefcompletebatch]]
+  - <- contains <- [[testbatchprogressupdate]]
+- **test_process_batch_documents_empty_list** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefprocessbatchdocuments]]
+  - <- contains <- [[testprocessdocuments]]
+- **test_update_batch_progress** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefupdatebatchprogress]]
+  - <- contains <- [[testbatchprogressupdate]]
+- **test_update_schedule** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefuuid4]]
+  - -> calls -> [[unresolvedrefupdateschedule]]
+  - <- contains <- [[testschedulemanagement]]
+- **TestMigrationJob** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 3 connections
+  - -> contains -> [[testrunscheduledmigration]]
+  - -> contains -> [[testrunscheduledmigrationerrorhandling]]
+  - <- contains <- [[testschedulerintegration]]
+- **TestSchedulerJobs** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 3 connections
+  - -> contains -> [[testmonthlymigrationjobregistered]]
+  - -> contains -> [[testmonthlymigrationcrontrigger]]
+  - <- contains <- [[testschedulerintegration]]
+- **TestSchedulerShutdown** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 3 connections
+  - -> contains -> [[testshutdownscheduler]]
+  - -> contains -> [[testshutdownschedulerwhennotrunning]]
+  - <- contains <- [[testschedulerintegration]]
+- **test_get_scheduler_creates_instance** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 3 connections
+  - -> calls -> [[unresolvedrefgetscheduler]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - <- contains <- [[testschedulerinitialization]]
+- **test_monthly_migration_cron_trigger** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 3 connections
+  - -> calls -> [[unresolvedrefpatch]]
+  - -> calls -> [[unresolvedrefinitscheduler]]
+  - <- contains <- [[testschedulerjobs]]
+- **test_usch_03_error_message_present** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_schemas.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdocumentresponse]]
+  - -> calls -> [[unresolvedrefnow]]
+  - <- contains <- [[testdocumentresponse]]
+- **test_usch_03_full_response** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_schemas.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdocumentresponse]]
+  - -> calls -> [[unresolvedrefnow]]
+  - <- contains <- [[testdocumentresponse]]
+- **test_usch_03_optional_error_message** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_schemas.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdocumentresponse]]
+  - -> calls -> [[unresolvedrefnow]]
+  - <- contains <- [[testdocumentresponse]]
+- **__unresolved__::ref::assert_called** () -- 2 connections
+  - <- calls <- [[testbatchimportwitherror]]
+  - <- calls <- [[testmonthlymigrationjobregistered]]
+- **__unresolved__::ref::assert_not_called** () -- 2 connections
+  - <- calls <- [[testinitschedulerwhenalreadyrunning]]
+  - <- calls <- [[testshutdownschedulerwhennotrunning]]
+- **__unresolved__::ref::complete_batch** () -- 2 connections
+  - <- calls <- [[batchimportintranetdocuments]]
+  - <- calls <- [[testcompletebatch]]
+- **__unresolved__::ref::create_batch_record** () -- 2 connections
+  - <- calls <- [[batchimportintranetdocuments]]
+  - <- calls <- [[testbatchrecordcreation]]
+- **__unresolved__::ref::get_schedule** () -- 2 connections
+  - <- calls <- [[updateschedule]]
+  - <- calls <- [[testgetschedule]]
+- **__unresolved__::ref::shutdown_scheduler** () -- 2 connections
+  - <- calls <- [[testshutdownscheduler]]
+  - <- calls <- [[testshutdownschedulerwhennotrunning]]
+- **_get_migration_service** (C:\project\tenopa proposer\-agent-master\app\api\routes_migrations.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmigrationservice]]
+  - <- contains <- [[routesmigrations]]
+- **DocumentDetailResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefdocumentresponse]]
+  - <- contains <- [[documentschemas]]
+- **_row_to_batch** (C:\project\tenopa proposer\-agent-master\app\services\migration_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - <- contains <- [[migrationservice]]
+- **test_delete_document** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 2 connections
+  - -> calls -> [[unresolvedrefdelete]]
+  - <- contains <- [[testdocumentdelete]]
+- **test_get_with_invalid_uuid** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testdocumentdetail]]
+- **test_reprocess_document** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 2 connections
+  - -> calls -> [[unresolvedrefpost]]
+  - <- contains <- [[testdocumentprocess]]
+- **TestBatchImportIntegration** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 2 connections
+  - -> contains -> [[testbatchimportcompleteflow]]
+  - <- contains <- [[testmigrationservice]]
+- **test_batch_record_creation** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcreatebatchrecord]]
+  - <- contains <- [[testmigrationservicebasic]]
+- **test_get_schedule** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefgetschedule]]
+  - <- contains <- [[testschedulemanagement]]
+- **test_get_scheduler_returns_same_instance** (C:\project\tenopa proposer\-agent-master\tests\test_scheduler_integration.py) -- 2 connections
+  - -> calls -> [[unresolvedrefgetscheduler]]
+  - <- contains <- [[testschedulerinitialization]]
+- **__unresolved__::ref::_calculate_next_run** () -- 1 connections
+  - <- calls <- [[testcalculatenextrun]]
+- **__unresolved__::ref::_notify_on_error** () -- 1 connections
+  - <- calls <- [[testnotifyonerror]]
+- **__unresolved__::ref::_register_jobs** () -- 1 connections
+  - <- calls <- [[initscheduler]]
+- **__unresolved__::ref::assert_called_once_with** () -- 1 connections
+  - <- calls <- [[testshutdownscheduler]]
+- **__unresolved__::ref::get_async_supabase_client** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::nodestatusmodel** () -- 1 connections
+  - <- calls <- [[buildnodestatus]]
+- **__unresolved__::ref::notificationservice** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::scheduler** () -- 1 connections
+  - <- imports <- [[testschedulerintegration]]
+- **__unresolved__::ref::shutdown** () -- 1 connections
+  - <- calls <- [[shutdownscheduler]]
+- **__unresolved__::ref::update_schedule** () -- 1 connections
+  - <- calls <- [[testupdateschedule]]
+- **test_service_initialization** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 1 connections
+  - <- contains <- [[testmigrationservicebasic]]
+
+## Internal Relationships
+- _get_migration_service -> calls -> __unresolved__::ref::migrationservice [EXTRACTED]
+- build_node_status -> calls -> __unresolved__::ref::nodestatusmodel [EXTRACTED]
+- build_node_status -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- DocumentDetailResponse -> extends -> __unresolved__::ref::documentresponse [EXTRACTED]
+- init_scheduler -> calls -> __unresolved__::ref::get_scheduler [EXTRACTED]
+- init_scheduler -> calls -> __unresolved__::ref::_register_jobs [EXTRACTED]
+- shutdown_scheduler -> calls -> __unresolved__::ref::get_scheduler [EXTRACTED]
+- shutdown_scheduler -> calls -> __unresolved__::ref::shutdown [EXTRACTED]
+- _row_to_batch -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- retry_failed_batch -> calls -> __unresolved__::ref::batch_import_intranet_documents [EXTRACTED]
+- main -> calls -> __unresolved__::ref::get_async_supabase_client [EXTRACTED]
+- main -> calls -> __unresolved__::ref::notificationservice [EXTRACTED]
+- main -> calls -> __unresolved__::ref::migrationservice [EXTRACTED]
+- main -> calls -> __unresolved__::ref::batch_import_intranet_documents [EXTRACTED]
+- test_schemas -> calls -> __unresolved__::ref::documentresponse [EXTRACTED]
+- test_schemas -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- TestDocumentChunks -> contains -> test_get_chunks_with_filter [EXTRACTED]
+- TestDocumentChunks -> contains -> test_get_chunks_with_pagination [EXTRACTED]
+- TestDocumentDelete -> contains -> test_delete_document [EXTRACTED]
+- TestDocumentDelete -> contains -> test_delete_nonexistent_document [EXTRACTED]
+- TestDocumentDetail -> contains -> test_get_document_detail [EXTRACTED]
+- TestDocumentDetail -> contains -> test_get_nonexistent_document [EXTRACTED]
+- TestDocumentDetail -> contains -> test_get_with_valid_uuid [EXTRACTED]
+- TestDocumentDetail -> contains -> test_get_with_invalid_uuid [EXTRACTED]
+- TestDocumentIntegration -> contains -> test_endpoint_availability [EXTRACTED]
+- TestDocumentProcess -> contains -> test_reprocess_document [EXTRACTED]
+- TestDocumentProcess -> contains -> test_reprocess_nonexistent_document [EXTRACTED]
+- test_delete_nonexistent_document -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_endpoint_availability -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_get_chunks_with_filter -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_get_chunks_with_pagination -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_get_document_detail -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_get_nonexistent_document -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_get_with_valid_uuid -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_reprocess_nonexistent_document -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- TestBatchImportIntegration -> contains -> test_batch_import_complete_flow [EXTRACTED]
+- TestBatchProgressUpdate -> contains -> test_update_batch_progress [EXTRACTED]
+- TestBatchProgressUpdate -> contains -> test_complete_batch [EXTRACTED]
+- TestDetectChangedDocuments -> contains -> test_detect_changed_documents_success [EXTRACTED]
+- TestDetectChangedDocuments -> contains -> test_detect_changed_documents_no_changes [EXTRACTED]
+- TestErrorHandling -> contains -> test_notify_on_error [EXTRACTED]
+- TestErrorHandling -> contains -> test_batch_import_with_error [EXTRACTED]
+- TestExponentialBackoffRetry -> contains -> test_process_single_document_success [EXTRACTED]
+- TestExponentialBackoffRetry -> contains -> test_process_single_document_exponential_backoff [EXTRACTED]
+- TestExponentialBackoffRetry -> contains -> test_process_single_document_max_retries_exceeded [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_service_initialization [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_batch_record_creation [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_batch_success_rate_property [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_batch_success_rate_zero_documents [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_batch_duration_minutes [EXTRACTED]
+- TestMigrationServiceBasic -> contains -> test_batch_duration_minutes_incomplete [EXTRACTED]
+- TestProcessDocuments -> contains -> test_process_batch_documents_success [EXTRACTED]
+- TestProcessDocuments -> contains -> test_process_batch_documents_partial_failure [EXTRACTED]
+- TestProcessDocuments -> contains -> test_process_batch_documents_empty_list [EXTRACTED]
+- TestScheduleManagement -> contains -> test_get_schedule [EXTRACTED]
+- TestScheduleManagement -> contains -> test_update_schedule [EXTRACTED]
+- TestScheduleManagement -> contains -> test_calculate_next_run [EXTRACTED]
+- test_batch_duration_minutes -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_batch_duration_minutes -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- test_batch_duration_minutes -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_batch_duration_minutes_incomplete -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- test_batch_duration_minutes_incomplete -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_batch_duration_minutes_incomplete -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_batch_import_complete_flow -> calls -> __unresolved__::ref::object [EXTRACTED]
+- test_batch_import_complete_flow -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- test_batch_import_complete_flow -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_batch_import_complete_flow -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_batch_import_complete_flow -> calls -> __unresolved__::ref::batch_import_intranet_documents [EXTRACTED]
+- test_batch_import_with_error -> calls -> __unresolved__::ref::object [EXTRACTED]
+- test_batch_import_with_error -> calls -> __unresolved__::ref::batch_import_intranet_documents [EXTRACTED]
+- test_batch_import_with_error -> calls -> __unresolved__::ref::assert_called [EXTRACTED]
+- test_batch_record_creation -> calls -> __unresolved__::ref::create_batch_record [EXTRACTED]
+- test_batch_success_rate_property -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- test_batch_success_rate_property -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_batch_success_rate_property -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_batch_success_rate_zero_documents -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
+- test_batch_success_rate_zero_documents -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_batch_success_rate_zero_documents -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_calculate_next_run -> calls -> __unresolved__::ref::_calculate_next_run [EXTRACTED]
+- test_complete_batch -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_complete_batch -> calls -> __unresolved__::ref::complete_batch [EXTRACTED]
+- test_detect_changed_documents_no_changes -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_detect_changed_documents_no_changes -> calls -> __unresolved__::ref::detect_changed_documents [EXTRACTED]
+- test_detect_changed_documents_success -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_detect_changed_documents_success -> calls -> __unresolved__::ref::detect_changed_documents [EXTRACTED]
+- test_get_schedule -> calls -> __unresolved__::ref::get_schedule [EXTRACTED]
+- test_notify_on_error -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_notify_on_error -> calls -> __unresolved__::ref::_notify_on_error [EXTRACTED]
+- test_process_batch_documents_empty_list -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_batch_documents_empty_list -> calls -> __unresolved__::ref::process_batch_documents [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::intranetdocument [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::object [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::documentprocessresult [EXTRACTED]
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::process_batch_documents [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::intranetdocument [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::object [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::documentprocessresult [EXTRACTED]
+- test_process_batch_documents_success -> calls -> __unresolved__::ref::process_batch_documents [EXTRACTED]
+- test_process_single_document_exponential_backoff -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_single_document_exponential_backoff -> calls -> __unresolved__::ref::intranetdocument [EXTRACTED]
+- test_process_single_document_exponential_backoff -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_process_single_document_exponential_backoff -> calls -> __unresolved__::ref::_process_single_document [EXTRACTED]
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::intranetdocument [EXTRACTED]
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::object [EXTRACTED]
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::_process_single_document [EXTRACTED]
+- test_process_single_document_success -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_process_single_document_success -> calls -> __unresolved__::ref::intranetdocument [EXTRACTED]
+- test_process_single_document_success -> calls -> __unresolved__::ref::utcnow [EXTRACTED]
+- test_process_single_document_success -> calls -> __unresolved__::ref::_process_single_document [EXTRACTED]
+- test_update_batch_progress -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_update_batch_progress -> calls -> __unresolved__::ref::update_batch_progress [EXTRACTED]
+- test_update_schedule -> calls -> __unresolved__::ref::uuid4 [EXTRACTED]
+- test_update_schedule -> calls -> __unresolved__::ref::update_schedule [EXTRACTED]
+- TestSchedulerInitialization -> contains -> test_get_scheduler_creates_instance [EXTRACTED]
+- TestSchedulerInitialization -> contains -> test_get_scheduler_returns_same_instance [EXTRACTED]
+- TestSchedulerInitialization -> contains -> test_init_scheduler_registers_jobs [EXTRACTED]
+- TestSchedulerInitialization -> contains -> test_init_scheduler_when_already_running [EXTRACTED]
+- TestSchedulerJobs -> contains -> test_monthly_migration_job_registered [EXTRACTED]
+- TestSchedulerJobs -> contains -> test_monthly_migration_cron_trigger [EXTRACTED]
+- TestSchedulerShutdown -> contains -> test_shutdown_scheduler [EXTRACTED]
+- TestSchedulerShutdown -> contains -> test_shutdown_scheduler_when_not_running [EXTRACTED]
+- test_get_scheduler_creates_instance -> calls -> __unresolved__::ref::get_scheduler [EXTRACTED]
+- test_get_scheduler_returns_same_instance -> calls -> __unresolved__::ref::get_scheduler [EXTRACTED]
+- test_init_scheduler_registers_jobs -> calls -> __unresolved__::ref::init_scheduler [EXTRACTED]
+- test_init_scheduler_when_already_running -> calls -> __unresolved__::ref::init_scheduler [EXTRACTED]
+- test_init_scheduler_when_already_running -> calls -> __unresolved__::ref::assert_not_called [EXTRACTED]
+- test_monthly_migration_cron_trigger -> calls -> __unresolved__::ref::init_scheduler [EXTRACTED]
+- test_monthly_migration_job_registered -> calls -> __unresolved__::ref::init_scheduler [EXTRACTED]
+- test_monthly_migration_job_registered -> calls -> __unresolved__::ref::assert_called [EXTRACTED]
+- test_shutdown_scheduler -> calls -> __unresolved__::ref::shutdown_scheduler [EXTRACTED]
+- test_shutdown_scheduler -> calls -> __unresolved__::ref::assert_called_once_with [EXTRACTED]
+- test_shutdown_scheduler_when_not_running -> calls -> __unresolved__::ref::shutdown_scheduler [EXTRACTED]
+- test_shutdown_scheduler_when_not_running -> calls -> __unresolved__::ref::assert_not_called [EXTRACTED]
+- test_scheduler_integration -> contains -> TestSchedulerInitialization [EXTRACTED]
+- test_scheduler_integration -> contains -> TestSchedulerJobs [EXTRACTED]
+- test_scheduler_integration -> contains -> TestSchedulerShutdown [EXTRACTED]
+- test_scheduler_integration -> contains -> TestMigrationJob [EXTRACTED]
+- test_scheduler_integration -> imports -> __unresolved__::ref::scheduler [EXTRACTED]
+- TestDocumentResponse -> contains -> test_usch_03_full_response [EXTRACTED]
+- TestDocumentResponse -> contains -> test_usch_03_optional_error_message [EXTRACTED]
+- TestDocumentResponse -> contains -> test_usch_03_error_message_present [EXTRACTED]
+- test_usch_03_error_message_present -> calls -> __unresolved__::ref::documentresponse [EXTRACTED]
+- test_usch_03_full_response -> calls -> __unresolved__::ref::documentresponse [EXTRACTED]
+- test_usch_03_optional_error_message -> calls -> __unresolved__::ref::documentresponse [EXTRACTED]
+
+## Cross-Community Connections
+- build_node_status -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- build_node_status -> calls -> __unresolved__::ref::isoformat (-> [[unresolvedrefget-unresolvedreflen]])
+- init_scheduler -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- init_scheduler -> calls -> __unresolved__::ref::start (-> [[unresolvedrefget-unresolvedreflen]])
+- shutdown_scheduler -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- retry_failed_batch -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- main -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- main -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
+- main -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
+- test_schemas -> calls -> __unresolved__::ref::print (-> [[unresolvedrefget-unresolvedreflen]])
+- TestDocumentChunks -> contains -> test_get_chunks_success (-> [[unresolvedrefget-unresolvedreflen]])
+- TestDocumentDelete -> contains -> test_delete_response_format (-> [[unresolvedrefget-unresolvedreflen]])
+- TestDocumentIntegration -> contains -> test_response_structure (-> [[unresolvedrefget-unresolvedreflen]])
+- test_delete_document -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedreflen]])
+- test_delete_nonexistent_document -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_delete_nonexistent_document -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedreflen]])
+- test_endpoint_availability -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_endpoint_availability -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_chunks_with_filter -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_chunks_with_filter -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_chunks_with_pagination -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_chunks_with_pagination -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_document_detail -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_document_detail -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_nonexistent_document -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_nonexistent_document -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_with_invalid_uuid -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_with_valid_uuid -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_with_valid_uuid -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_reprocess_document -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedreflen]])
+- test_reprocess_nonexistent_document -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- test_reprocess_nonexistent_document -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedreflen]])
+- test_batch_duration_minutes -> calls -> __unresolved__::ref::timedelta (-> [[unresolvedrefget-unresolvedreflen]])
+- test_batch_import_with_error -> calls -> __unresolved__::ref::exception (-> [[unresolvedrefget-unresolvedreflen]])
+- test_batch_import_with_error -> calls -> __unresolved__::ref::raises (-> [[unresolvedrefraises-unresolvedrefmakebid]])
+- test_calculate_next_run -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedreflen]])
+- test_detect_changed_documents_no_changes -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedreflen]])
+- test_detect_changed_documents_success -> calls -> __unresolved__::ref::timedelta (-> [[unresolvedrefget-unresolvedreflen]])
+- test_detect_changed_documents_success -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedreflen]])
+- test_notify_on_error -> calls -> __unresolved__::ref::exception (-> [[unresolvedrefget-unresolvedreflen]])
+- test_notify_on_error -> calls -> __unresolved__::ref::assert_called_once (-> [[unresolvedrefget-unresolvedreflen]])
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::exception (-> [[unresolvedrefget-unresolvedreflen]])
+- test_process_batch_documents_partial_failure -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::exception (-> [[unresolvedrefget-unresolvedreflen]])
+- test_process_single_document_max_retries_exceeded -> calls -> __unresolved__::ref::raises (-> [[unresolvedrefraises-unresolvedrefmakebid]])
+- TestMigrationJob -> contains -> test_run_scheduled_migration (-> [[unresolvedrefget-unresolvedreflen]])
+- TestMigrationJob -> contains -> test_run_scheduled_migration_error_handling (-> [[unresolvedrefget-unresolvedreflen]])
+- test_get_scheduler_creates_instance -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedreflen]])
+- test_init_scheduler_registers_jobs -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_init_scheduler_registers_jobs -> calls -> __unresolved__::ref::assert_called_once (-> [[unresolvedrefget-unresolvedreflen]])
+- test_init_scheduler_when_already_running -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_monthly_migration_cron_trigger -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_monthly_migration_job_registered -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_shutdown_scheduler -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_shutdown_scheduler_when_not_running -> calls -> __unresolved__::ref::patch (-> [[unresolvedrefget-unresolvedreflen]])
+- test_scheduler_integration -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
+- test_scheduler_integration -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
+- test_scheduler_integration -> imports -> __unresolved__::ref::asyncio (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_usch_03_error_message_present -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+- test_usch_03_full_response -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+- test_usch_03_optional_error_message -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 __unresolved__::ref::uuid4, __unresolved__::ref::utcnow, test_process_batch_documents_partial_failure를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 document_schemas.py, migrate_legacy_documents.py, migration_service.py, routes_migrations.py, routes_step8_review.py이다.
+
+### Key Facts
+- async def test_process_batch_documents_partial_failure(self, migration_service): """배치 문서 처리 부분 실패""" batch_id = uuid4() documents = [ IntranetDocument( path="/docs/file1.pdf", filename="file1.pdf", modified_date=datetime.utcnow(), size_bytes=1024 ), IntranetDocument( path="/docs/file2.pdf",…
+- async def main( batch_type: str = "manual", include_failed: bool = False, days_back: Optional[int] = None, ) -> int: """ 레거시 문서 마이그레이션 실행
+- async def test_process_single_document_max_retries_exceeded(self, migration_service): """최대 재시도 횟수 초과""" batch_id = uuid4() doc = IntranetDocument( path="/docs/corrupt.pdf", filename="corrupt.pdf", modified_date=datetime.utcnow(), size_bytes=1024 )
+- if __name__ == "__main__": # pytest 실행: pytest tests/test_scheduler_integration.py -v pass
+- class TestMigrationServiceBasic: """기본 기능 테스트"""

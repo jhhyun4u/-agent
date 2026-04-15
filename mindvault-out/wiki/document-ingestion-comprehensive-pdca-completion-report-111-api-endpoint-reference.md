@@ -1,0 +1,293 @@
+# Document Ingestion — Comprehensive PDCA Completion Report & 11.1 API Endpoint Reference
+Cohesion: 0.03 | Nodes: 65
+
+## Key Nodes
+- **Document Ingestion — Comprehensive PDCA Completion Report** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 13 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[1-pdca-cycle-metrics]]
+  - -> contains -> [[2-quality-assurance]]
+  - -> contains -> [[3-implementation-highlights]]
+  - -> contains -> [[4-risk-assessment-mitigation]]
+  - -> contains -> [[5-deployment-readiness-checklist]]
+  - -> contains -> [[6-performance-characteristics]]
+  - -> contains -> [[7-lessons-learned]]
+  - -> contains -> [[8-next-steps-recommendations]]
+  - -> contains -> [[9-sign-off-approval]]
+  - -> contains -> [[10-summary-statistics]]
+  - -> contains -> [[11-appendix-technical-details]]
+  - -> contains -> [[conclusion]]
+- **11.1 API Endpoint Reference** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 7 connections
+  - -> contains -> [[1-upload-document]]
+  - -> contains -> [[2-list-documents]]
+  - -> contains -> [[3-get-document-detail]]
+  - -> contains -> [[4-reprocess-document]]
+  - -> contains -> [[5-get-document-chunks]]
+  - -> contains -> [[6-delete-document]]
+  - <- contains <- [[11-appendix-technical-details]]
+- **http** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 6 connections
+  - <- has_code_example <- [[1-upload-document]]
+  - <- has_code_example <- [[2-list-documents]]
+  - <- has_code_example <- [[3-get-document-detail]]
+  - <- has_code_example <- [[4-reprocess-document]]
+  - <- has_code_example <- [[5-get-document-chunks]]
+  - <- has_code_example <- [[6-delete-document]]
+- **1. PDCA Cycle Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 6 connections
+  - -> contains -> [[11-plan-phase-complete]]
+  - -> contains -> [[12-design-phase-complete]]
+  - -> contains -> [[13-implementation-do-phase-complete]]
+  - -> contains -> [[14-check-phase-gap-analysis-complete]]
+  - -> contains -> [[15-act-phase-priority-1-improvements-complete]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **10.3 Key Files & Artifacts** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 5 connections
+  - -> contains -> [[backend-files]]
+  - -> contains -> [[frontend-files]]
+  - -> contains -> [[documentation]]
+  - -> contains -> [[git-commits]]
+  - <- contains <- [[10-summary-statistics]]
+- **2. Quality Assurance** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 5 connections
+  - -> contains -> [[21-security-verification-1010]]
+  - -> contains -> [[22-code-quality-assessment-910]]
+  - -> contains -> [[23-api-compliance-100]]
+  - -> contains -> [[24-frontend-backend-integration-100]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **5. Deployment Readiness Checklist** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 5 connections
+  - -> contains -> [[51-code-review]]
+  - -> contains -> [[52-testing-status]]
+  - -> contains -> [[53-documentation-status]]
+  - -> contains -> [[54-deployment-checklist]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **10. Summary Statistics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 4 connections
+  - -> contains -> [[101-implementation-by-numbers]]
+  - -> contains -> [[102-time-effort-breakdown]]
+  - -> contains -> [[103-key-files-artifacts]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **11. Appendix: Technical Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 4 connections
+  - -> contains -> [[111-api-endpoint-reference]]
+  - -> contains -> [[112-data-models-typescript-types]]
+  - -> contains -> [[113-security-model]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **3. Implementation Highlights** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 4 connections
+  - -> contains -> [[31-backend-architecture]]
+  - -> contains -> [[32-processing-pipeline]]
+  - -> contains -> [[33-frontend-ui]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **9. Sign-Off & Approval** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 4 connections
+  - -> contains -> [[91-quality-assurance]]
+  - -> contains -> [[92-production-readiness-assessment]]
+  - -> contains -> [[93-deployment-recommendation]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **1.3 Implementation (Do Phase) ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[backend-implementation]]
+  - -> contains -> [[frontend-implementation]]
+  - <- contains <- [[1-pdca-cycle-metrics]]
+- **1.4 Check Phase (Gap Analysis) ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[overall-quality-metrics]]
+  - -> contains -> [[gap-resolution-summary]]
+  - <- contains <- [[1-pdca-cycle-metrics]]
+- **4. Risk Assessment & Mitigation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[41-identified-risks]]
+  - -> contains -> [[42-residual-risks-low-priority]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **6. Performance Characteristics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[61-expected-performance]]
+  - -> contains -> [[62-scalability-considerations]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **7. Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[71-what-went-well]]
+  - -> contains -> [[72-what-to-improve-next-time]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **8. Next Steps & Recommendations** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 3 connections
+  - -> contains -> [[81-immediate-actions-next-sprint]]
+  - -> contains -> [[82-future-enhancements-backlog]]
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - <- has_code_example <- [[15-act-phase-priority-1-improvements-complete]]
+  - <- has_code_example <- [[81-immediate-actions-next-sprint]]
+- **11.2 Data Models (TypeScript Types)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[11-appendix-technical-details]]
+- **1.5 Act Phase (Priority 1 Improvements) ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-pdca-cycle-metrics]]
+- **1. Upload Document** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **2.3 API Compliance (100%) ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> contains -> [[endpoint-coverage]]
+  - <- contains <- [[2-quality-assurance]]
+- **2. List Documents** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **3. Get Document Detail** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **4. Reprocess Document** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **5. Get Document Chunks** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **6. Delete Document** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[http]]
+  - <- contains <- [[111-api-endpoint-reference]]
+- **8.1 Immediate Actions (Next Sprint)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[8-next-steps-recommendations]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- has_code_example <- [[112-data-models-typescript-types]]
+- **10.1 Implementation by Numbers** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[10-summary-statistics]]
+- **10.2 Time & Effort Breakdown** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[10-summary-statistics]]
+- **11.3 Security Model** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[11-appendix-technical-details]]
+- **1.1 Plan Phase ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[1-pdca-cycle-metrics]]
+- **1.2 Design Phase ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[1-pdca-cycle-metrics]]
+- **2.1 Security Verification (10/10) ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[2-quality-assurance]]
+- **2.2 Code Quality Assessment (9/10) ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[2-quality-assurance]]
+- **2.4 Frontend-Backend Integration (100%) ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[2-quality-assurance]]
+- **3.1 Backend Architecture** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-highlights]]
+- **3.2 Processing Pipeline** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-highlights]]
+- **3.3 Frontend UI** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[3-implementation-highlights]]
+- **4.1 Identified Risks** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[4-risk-assessment-mitigation]]
+- **4.2 Residual Risks (Low Priority)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[4-risk-assessment-mitigation]]
+- **5.1 Code Review ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[5-deployment-readiness-checklist]]
+- **5.2 Testing Status** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[5-deployment-readiness-checklist]]
+- **5.3 Documentation Status** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[5-deployment-readiness-checklist]]
+- **5.4 Deployment Checklist** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[5-deployment-readiness-checklist]]
+- **6.1 Expected Performance** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[6-performance-characteristics]]
+- **6.2 Scalability Considerations** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[6-performance-characteristics]]
+- **7.1 What Went Well ✨** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.2 What to Improve Next Time ⚙️** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **8.2 Future Enhancements (Backlog)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps-recommendations]]
+- **9.1 Quality Assurance** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[9-sign-off-approval]]
+- **9.2 Production Readiness Assessment** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[9-sign-off-approval]]
+- **9.3 Deployment Recommendation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[9-sign-off-approval]]
+- **Backend Files** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[103-key-files-artifacts]]
+- **Backend Implementation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[13-implementation-do-phase-complete]]
+- **Conclusion** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **Documentation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[103-key-files-artifacts]]
+- **Endpoint Coverage** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[23-api-compliance-100]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-comprehensive-pdca-completion-report]]
+- **Frontend Files** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[103-key-files-artifacts]]
+- **Frontend Implementation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[13-implementation-do-phase-complete]]
+- **Gap Resolution Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[14-check-phase-gap-analysis-complete]]
+- **Git Commits** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[103-key-files-artifacts]]
+- **Overall Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\document_ingestion.pdca.report.md) -- 1 connections
+  - <- contains <- [[14-check-phase-gap-analysis-complete]]
+
+## Internal Relationships
+- 10.3 Key Files & Artifacts -> contains -> Backend Files [EXTRACTED]
+- 10.3 Key Files & Artifacts -> contains -> Frontend Files [EXTRACTED]
+- 10.3 Key Files & Artifacts -> contains -> Documentation [EXTRACTED]
+- 10.3 Key Files & Artifacts -> contains -> Git Commits [EXTRACTED]
+- 10. Summary Statistics -> contains -> 10.1 Implementation by Numbers [EXTRACTED]
+- 10. Summary Statistics -> contains -> 10.2 Time & Effort Breakdown [EXTRACTED]
+- 10. Summary Statistics -> contains -> 10.3 Key Files & Artifacts [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 1. Upload Document [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 2. List Documents [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 3. Get Document Detail [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 4. Reprocess Document [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 5. Get Document Chunks [EXTRACTED]
+- 11.1 API Endpoint Reference -> contains -> 6. Delete Document [EXTRACTED]
+- 11.2 Data Models (TypeScript Types) -> has_code_example -> typescript [EXTRACTED]
+- 11. Appendix: Technical Details -> contains -> 11.1 API Endpoint Reference [EXTRACTED]
+- 11. Appendix: Technical Details -> contains -> 11.2 Data Models (TypeScript Types) [EXTRACTED]
+- 11. Appendix: Technical Details -> contains -> 11.3 Security Model [EXTRACTED]
+- 1.3 Implementation (Do Phase) ✅ COMPLETE -> contains -> Backend Implementation [EXTRACTED]
+- 1.3 Implementation (Do Phase) ✅ COMPLETE -> contains -> Frontend Implementation [EXTRACTED]
+- 1.4 Check Phase (Gap Analysis) ✅ COMPLETE -> contains -> Overall Quality Metrics [EXTRACTED]
+- 1.4 Check Phase (Gap Analysis) ✅ COMPLETE -> contains -> Gap Resolution Summary [EXTRACTED]
+- 1.5 Act Phase (Priority 1 Improvements) ✅ COMPLETE -> has_code_example -> python [EXTRACTED]
+- 1. PDCA Cycle Metrics -> contains -> 1.1 Plan Phase ✅ COMPLETE [EXTRACTED]
+- 1. PDCA Cycle Metrics -> contains -> 1.2 Design Phase ✅ COMPLETE [EXTRACTED]
+- 1. PDCA Cycle Metrics -> contains -> 1.3 Implementation (Do Phase) ✅ COMPLETE [EXTRACTED]
+- 1. PDCA Cycle Metrics -> contains -> 1.4 Check Phase (Gap Analysis) ✅ COMPLETE [EXTRACTED]
+- 1. PDCA Cycle Metrics -> contains -> 1.5 Act Phase (Priority 1 Improvements) ✅ COMPLETE [EXTRACTED]
+- 1. Upload Document -> has_code_example -> http [EXTRACTED]
+- 2.3 API Compliance (100%) ✅ -> contains -> Endpoint Coverage [EXTRACTED]
+- 2. List Documents -> has_code_example -> http [EXTRACTED]
+- 2. Quality Assurance -> contains -> 2.1 Security Verification (10/10) ✅ [EXTRACTED]
+- 2. Quality Assurance -> contains -> 2.2 Code Quality Assessment (9/10) ✅ [EXTRACTED]
+- 2. Quality Assurance -> contains -> 2.3 API Compliance (100%) ✅ [EXTRACTED]
+- 2. Quality Assurance -> contains -> 2.4 Frontend-Backend Integration (100%) ✅ [EXTRACTED]
+- 3. Get Document Detail -> has_code_example -> http [EXTRACTED]
+- 3. Implementation Highlights -> contains -> 3.1 Backend Architecture [EXTRACTED]
+- 3. Implementation Highlights -> contains -> 3.2 Processing Pipeline [EXTRACTED]
+- 3. Implementation Highlights -> contains -> 3.3 Frontend UI [EXTRACTED]
+- 4. Reprocess Document -> has_code_example -> http [EXTRACTED]
+- 4. Risk Assessment & Mitigation -> contains -> 4.1 Identified Risks [EXTRACTED]
+- 4. Risk Assessment & Mitigation -> contains -> 4.2 Residual Risks (Low Priority) [EXTRACTED]
+- 5. Deployment Readiness Checklist -> contains -> 5.1 Code Review ✅ [EXTRACTED]
+- 5. Deployment Readiness Checklist -> contains -> 5.2 Testing Status [EXTRACTED]
+- 5. Deployment Readiness Checklist -> contains -> 5.3 Documentation Status [EXTRACTED]
+- 5. Deployment Readiness Checklist -> contains -> 5.4 Deployment Checklist [EXTRACTED]
+- 5. Get Document Chunks -> has_code_example -> http [EXTRACTED]
+- 6. Delete Document -> has_code_example -> http [EXTRACTED]
+- 6. Performance Characteristics -> contains -> 6.1 Expected Performance [EXTRACTED]
+- 6. Performance Characteristics -> contains -> 6.2 Scalability Considerations [EXTRACTED]
+- 7. Lessons Learned -> contains -> 7.1 What Went Well ✨ [EXTRACTED]
+- 7. Lessons Learned -> contains -> 7.2 What to Improve Next Time ⚙️ [EXTRACTED]
+- 8.1 Immediate Actions (Next Sprint) -> has_code_example -> python [EXTRACTED]
+- 8. Next Steps & Recommendations -> contains -> 8.1 Immediate Actions (Next Sprint) [EXTRACTED]
+- 8. Next Steps & Recommendations -> contains -> 8.2 Future Enhancements (Backlog) [EXTRACTED]
+- 9. Sign-Off & Approval -> contains -> 9.1 Quality Assurance [EXTRACTED]
+- 9. Sign-Off & Approval -> contains -> 9.2 Production Readiness Assessment [EXTRACTED]
+- 9. Sign-Off & Approval -> contains -> 9.3 Deployment Recommendation [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> Executive Summary [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 1. PDCA Cycle Metrics [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 2. Quality Assurance [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 3. Implementation Highlights [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 4. Risk Assessment & Mitigation [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 5. Deployment Readiness Checklist [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 6. Performance Characteristics [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 7. Lessons Learned [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 8. Next Steps & Recommendations [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 9. Sign-Off & Approval [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 10. Summary Statistics [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> 11. Appendix: Technical Details [EXTRACTED]
+- Document Ingestion — Comprehensive PDCA Completion Report -> contains -> Conclusion [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Document Ingestion — Comprehensive PDCA Completion Report, 11.1 API Endpoint Reference, http를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 document_ingestion.pdca.report.md이다.
+
+### Key Facts
+- **Feature**: `document_ingestion` (인트라넷 문서 수집 및 처리 파이프라인) **Version**: v1.0 (Final) **Status**: ✅ COMPLETED & PRODUCTION-READY **Report Date**: 2026-03-29 **Cycle Duration**: Single session (Plan → Design → Do → Check → Act)
+- 1. Upload Document ```http POST /api/documents/upload Content-Type: multipart/form-data
+- | Component | Specification | Status | |-----------|---------------|:------:| | **5 REST Endpoints** | Full request/response schemas | ✅ | | **8 Pydantic Models** | Type-safe validation (4 core + 4 additional) | ✅ | | **Security Model** | Auth + org isolation + role-based access | ✅ | | **Error…
+- 1.1 Plan Phase ✅ COMPLETE
+- Backend Files ``` app/ ├── api/routes_documents.py ................... 410 lines (5 endpoints) ├── models/document_schemas.py ............... 92 lines (8 schemas) ├── services/document_ingestion.py ........... 359 lines (processing pipeline) └── main.py (registration) .................. 3 lines ```

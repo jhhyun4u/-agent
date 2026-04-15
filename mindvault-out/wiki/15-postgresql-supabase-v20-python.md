@@ -1,0 +1,1048 @@
+# 15. PostgreSQL 스키마 (Supabase) — v2.0 & python
+Cohesion: 0.01 | Nodes: 203
+
+## Key Nodes
+- **15. PostgreSQL 스키마 (Supabase) — v2.0** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 17 connections
+  - -> contains -> [[15-1]]
+  - -> contains -> [[15-2-db]]
+  - -> contains -> [[15-3]]
+  - -> contains -> [[15-4-compliance]]
+  - -> contains -> [[15-5]]
+  - -> contains -> [[15-5a-v30]]
+  - -> contains -> [[15-5b-v30-kb-part-b]]
+  - -> contains -> [[15-5c-v30-kb-part-c-db]]
+  - -> contains -> [[15-5d-v30-kb-part-d-db]]
+  - -> contains -> [[15-5e-v30-kb-part-e]]
+  - -> contains -> [[15-5f-v30]]
+  - -> contains -> [[15-5g-v30-ai]]
+  - -> contains -> [[15-5h-v33]]
+  - -> contains -> [[15-5i-v33]]
+  - -> contains -> [[15-6-rls-row-level-security]]
+  - -> contains -> [[15-7-materialized-view]]
+  - <- contains <- [[postgresql-supabase]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 17 connections
+  - <- has_code_example <- [[20-1]]
+  - <- has_code_example <- [[20-2-kb]]
+  - <- has_code_example <- [[20-3]]
+  - <- has_code_example <- [[20-4-kb]]
+  - <- has_code_example <- [[21-1]]
+  - <- has_code_example <- [[21-2-compliance-matrix-ai-tkn-07]]
+  - <- has_code_example <- [[21-3-tkn-08]]
+  - <- has_code_example <- [[22-1-ai]]
+  - <- has_code_example <- [[22-2-sse]]
+  - <- has_code_example <- [[22-4-1-claude-api]]
+  - <- has_code_example <- [[23-2-2-4]]
+  - <- has_code_example <- [[23-3]]
+  - <- has_code_example <- [[23-4]]
+  - <- has_code_example <- [[24-1]]
+  - <- has_code_example <- [[25-1]]
+  - <- has_code_example <- [[25-2-src-11]]
+  - <- has_code_example <- [[26-2-docxpptx]]
+- **설계 문서: 용역 제안서 자동 생성 에이전트 v1** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\_index.md) -- 17 connections
+  - -> references -> [[unresolvedref01architecture]]
+  - -> references -> [[unresolvedref02stateschema]]
+  - -> references -> [[unresolvedref03graphdefinition]]
+  - -> references -> [[unresolvedref04reviewnodes]]
+  - -> references -> [[unresolvedref05step0rfp]]
+  - -> references -> [[unresolvedref06proposalworkflow]]
+  - -> references -> [[unresolvedref07routingedges]]
+  - -> references -> [[unresolvedref08apiendpoints]]
+  - -> references -> [[unresolvedref09frontend]]
+  - -> references -> [[unresolvedref10litemode]]
+  - -> references -> [[unresolvedref11databaseschema]]
+  - -> references -> [[unresolvedref12prompts]]
+  - -> references -> [[unresolvedref13authnotifications]]
+  - -> references -> [[unresolvedref14servicesv3]]
+  - -> references -> [[unresolvedref15agaphigharchive]]
+  - -> references -> [[unresolvedref15bgapmediumarchive]]
+  - -> references -> [[unresolvedref16proposalforgereviews]]
+- **12. API 엔드포인트 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 16 connections
+  - -> contains -> [[12-0-v34]]
+  - -> contains -> [[12-1]]
+  - -> contains -> [[12-1-1-api-u-9]]
+  - -> contains -> [[12-2-resume-api]]
+  - -> contains -> [[12-3-api-u-5]]
+  - -> contains -> [[12-4-g2b-db]]
+  - -> contains -> [[12-6-api-v20]]
+  - -> contains -> [[12-7-api-v20]]
+  - -> contains -> [[12-8-api-v20]]
+  - -> contains -> [[12-9-api-v20]]
+  - -> contains -> [[12-10-api-v20]]
+  - -> contains -> [[12-11-api-v20]]
+  - -> contains -> [[12-12-v30-api]]
+  - -> contains -> [[12-5-sse-u-6]]
+  - -> contains -> [[12-13-api-v34]]
+  - <- contains <- [[api]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 16 connections
+  - <- has_code_example <- [[15-1]]
+  - <- has_code_example <- [[15-2-db]]
+  - <- has_code_example <- [[15-3]]
+  - <- has_code_example <- [[15-4-compliance]]
+  - <- has_code_example <- [[15-5]]
+  - <- has_code_example <- [[15-5a-v30]]
+  - <- has_code_example <- [[15-5b-v30-kb-part-b]]
+  - <- has_code_example <- [[15-5c-v30-kb-part-c-db]]
+  - <- has_code_example <- [[15-5d-v30-kb-part-d-db]]
+  - <- has_code_example <- [[15-5e-v30-kb-part-e]]
+  - <- has_code_example <- [[15-5f-v30]]
+  - <- has_code_example <- [[15-5g-v30-ai]]
+  - <- has_code_example <- [[15-5h-v33]]
+  - <- has_code_example <- [[15-5i-v33]]
+  - <- has_code_example <- [[15-6-rls-row-level-security]]
+  - <- has_code_example <- [[15-7-materialized-view]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 9 connections
+  - <- has_code_example <- [[12-0-v34]]
+  - <- has_code_example <- [[12-1-1-api-u-9]]
+  - <- has_code_example <- [[12-2-resume-api]]
+  - <- has_code_example <- [[12-3-api-u-5]]
+  - <- has_code_example <- [[12-4-1-ai-api-v34-h1]]
+  - <- has_code_example <- [[12-4-2-ai-api-v34-h2]]
+  - <- has_code_example <- [[12-4-3-api-v34-h3]]
+  - <- has_code_example <- [[12-4-4-diff-api-v34-m2]]
+  - <- has_code_example <- [[response]]
+- **서비스 설계 v3.0 (§20-§26)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 9 connections
+  - -> references -> [[unresolvedref11databaseschema]]
+  - -> references -> [[unresolvedref01architecture]]
+  - -> contains -> [[20-knowledge-base-v30]]
+  - -> contains -> [[21-ai-v30]]
+  - -> contains -> [[22-ai-v30]]
+  - -> contains -> [[23-v30]]
+  - -> contains -> [[24-v30]]
+  - -> contains -> [[25-v30]]
+  - -> contains -> [[26-v30]]
+- **31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 9 connections
+  - -> contains -> [[31-1-tenopa]]
+  - -> contains -> [[31-2]]
+  - -> contains -> [[31-3-ui]]
+  - -> contains -> [[31-4]]
+  - -> contains -> [[31-5]]
+  - -> contains -> [[31-6]]
+  - -> contains -> [[31-7]]
+  - -> contains -> [[31-8-proposalforge-api-v34]]
+  - <- contains <- [[proposalforge]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 7 connections
+  - <- has_code_example <- [[8-d-10]]
+  - <- has_code_example <- [[9-b-d-3]]
+  - <- has_code_example <- [[9-1-docx]]
+  - <- has_code_example <- [[10-compliance-matrix-d-4]]
+  - <- has_code_example <- [[10-1-2-planmerge-syncdynamicsections]]
+  - <- has_code_example <- [[10-1-3-proposalwritenext]]
+  - <- has_code_example <- [[10-2-4]]
+- **20. ★ Knowledge Base 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 7 connections
+  - -> contains -> [[20-1]]
+  - -> contains -> [[20-2-kb]]
+  - -> contains -> [[20-3]]
+  - -> contains -> [[20-4-kb]]
+  - -> contains -> [[20-5-kb-api]]
+  - -> contains -> [[20-6-kb-api]]
+  - <- contains <- [[v30-20-26]]
+- **27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 7 connections
+  - -> contains -> [[27-1-trs-09-ai-vs-human]]
+  - -> contains -> [[27-2-psm-05-expired]]
+  - -> contains -> [[27-3-psm-16-qa]]
+  - -> contains -> [[27-4-post-06-presented]]
+  - -> contains -> [[27-5-ops-02-health]]
+  - -> contains -> [[27-6-ops-03]]
+  - <- contains <- [[high-27]]
+- **3. 모듈별 최종 상태** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 7 connections
+  - -> contains -> [[31-tokenmanagerpy-21-100]]
+  - -> contains -> [[32-aistatusmanagerpy-22-100]]
+  - -> contains -> [[33-sectionlockpy-24-96]]
+  - -> contains -> [[34-scheduledmonitorpy-25-2-100]]
+  - -> contains -> [[35-trustworthinesspy-16-3-1-100]]
+  - -> contains -> [[36-sourcetaggerpy-16-3-2-100]]
+  - <- contains <- [[remaining-modules-pdca]]
+- **remaining-modules PDCA 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 7 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+- **4. LangGraph 그래프 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 6 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[4-1-fan-out-d-1]]
+  - -> contains -> [[4-2-planmerge]]
+  - -> contains -> [[32-2-4]]
+  - -> contains -> [[32-9-dead-code]]
+  - <- contains <- [[langgraph]]
+- **12-4. 산출물 / G2B / 역량 DB** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 6 connections
+  - -> contains -> [[12-4-1-ai-api-v34-h1]]
+  - -> contains -> [[12-4-2-ai-api-v34-h2]]
+  - -> contains -> [[12-4-3-api-v34-h3]]
+  - -> contains -> [[12-4-4-diff-api-v34-m2]]
+  - -> contains -> [[12-4-5-hwp-v34-m3]]
+  - <- contains <- [[12-api]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 6 connections
+  - <- has_code_example <- [[api]]
+  - <- has_code_example <- [[27-2-psm-05-expired]]
+  - <- has_code_example <- [[27-3-psm-16-qa]]
+  - <- has_code_example <- [[27-4-post-06-presented]]
+  - <- has_code_example <- [[27-5-ops-02-health]]
+  - <- has_code_example <- [[27-6-ops-03]]
+- **__unresolved__::ref::03_graph_definition** () -- 5 connections
+  - <- references <- [[langgraph-state]]
+  - <- references <- [[step-0-rfp-gono-go]]
+  - <- references <- [[conditional-edge]]
+  - <- references <- [[lite-mode]]
+  - <- references <- [[v1]]
+- **10-2. 유형별 전문 프롬프트 체계 (§32-5 merged)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 5 connections
+  - -> contains -> [[10-2-1-10]]
+  - -> contains -> [[10-2-2-evaluatorperspectiveblock]]
+  - -> contains -> [[10-2-3]]
+  - -> contains -> [[10-2-4]]
+  - -> contains -> [[10-2-5-b]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 5 connections
+  - <- has_code_example <- [[12-4-1-ai-api-v34-h1]]
+  - <- has_code_example <- [[12-4-2-ai-api-v34-h2]]
+  - <- has_code_example <- [[12-4-3-api-v34-h3]]
+  - <- has_code_example <- [[12-4-4-diff-api-v34-m2]]
+  - <- has_code_example <- [[12-4-5-hwp-v34-m3]]
+- **14. 간이 모드 (Lite Mode) — U-1 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 5 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[14-1]]
+  - -> contains -> [[14-2-rfp-u-3]]
+  - -> contains -> [[14-3-from-search-u-2]]
+  - <- contains <- [[lite-mode]]
+- **22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 5 connections
+  - -> contains -> [[22-4-1-claude-api]]
+  - -> contains -> [[22-4-2-mcpg2b]]
+  - -> contains -> [[22-4-3]]
+  - -> contains -> [[22-4-4]]
+  - <- contains <- [[22-ai-v30]]
+- **22. ★ AI 실행 상태 모니터링 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 5 connections
+  - -> contains -> [[22-1-ai]]
+  - -> contains -> [[22-2-sse]]
+  - -> contains -> [[22-3-ai-api]]
+  - -> contains -> [[22-4-v33-fallback-proposalforge]]
+  - <- contains <- [[v30-20-26]]
+- **23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 5 connections
+  - -> contains -> [[23-1-api]]
+  - -> contains -> [[23-2-2-4]]
+  - -> contains -> [[23-3]]
+  - -> contains -> [[23-4]]
+  - <- contains <- [[v30-20-26]]
+- **31-3. UI 라이브러리 인프라 (신규)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 5 connections
+  - -> contains -> [[31-3-1-shadcnui]]
+  - -> contains -> [[31-3-2-tiptap]]
+  - -> contains -> [[31-3-3-recharts]]
+  - -> contains -> [[31-3-4]]
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 5 connections
+  - -> contains -> [[31-8-1-tenopa]]
+  - -> contains -> [[31-8-2-v34]]
+  - -> contains -> [[31-8-3]]
+  - -> contains -> [[31-8-4]]
+  - <- contains <- [[31-proposalforge-v34]]
+- **__unresolved__::ref::01_architecture** () -- 4 connections
+  - <- references <- [[api]]
+  - <- references <- [[teams]]
+  - <- references <- [[v30-20-26]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::07_routing_edges** () -- 4 connections
+  - <- references <- [[langgraph-state]]
+  - <- references <- [[langgraph]]
+  - <- references <- [[step-0-rfp-gono-go]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::12_prompts** () -- 4 connections
+  - <- references <- [[9-b-d-3]]
+  - <- references <- [[proposalforge]]
+  - <- references <- [[v1]]
+  - <- references <- [[7]]
+- **LangGraph 그래프 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 4 connections
+  - -> references -> [[unresolvedref02stateschema]]
+  - -> references -> [[unresolvedref04reviewnodes]]
+  - -> references -> [[unresolvedref07routingedges]]
+  - -> contains -> [[4-langgraph]]
+- **STEP 0: RFP 공고 검색 + Go/No-Go** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\05-step0-rfp.md) -- 4 connections
+  - -> references -> [[unresolvedref03graphdefinition]]
+  - -> references -> [[unresolvedref07routingedges]]
+  - -> contains -> [[6-step-0-rfp]]
+  - -> contains -> [[7-step-1-gono-go-b-2]]
+- **인증 + Teams 알림** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 4 connections
+  - -> references -> [[unresolvedref08apiendpoints]]
+  - -> references -> [[unresolvedref01architecture]]
+  - -> contains -> [[17-v20]]
+  - -> contains -> [[18-teams-v20]]
+- **21. ★ AI 토큰 효율화 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 4 connections
+  - -> contains -> [[21-1]]
+  - -> contains -> [[21-2-compliance-matrix-ai-tkn-07]]
+  - -> contains -> [[21-3-tkn-08]]
+  - <- contains <- [[v30-20-26]]
+- **30. ★ ProposalForge v3.0 비교 검토 — 의도적 스킵 기록 (v3.3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 4 connections
+  - -> contains -> [[30-1]]
+  - -> contains -> [[30-2-v33]]
+  - -> contains -> [[30-3]]
+  - <- contains <- [[proposalforge]]
+- **ProposalForge 비교 검토** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 4 connections
+  - -> references -> [[unresolvedref12prompts]]
+  - -> references -> [[unresolvedref09frontend]]
+  - -> contains -> [[30-proposalforge-v30-v33]]
+  - -> contains -> [[31-proposalforge-v34]]
+- **2. PDCA 사이클 기록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 4 connections
+  - -> contains -> [[21-plan-design]]
+  - -> contains -> [[22-do]]
+  - -> contains -> [[23-check-act-2-iteration]]
+  - <- contains <- [[remaining-modules-pdca]]
+- **7. 성과 지표** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 4 connections
+  - -> references -> [[unresolvedref14servicesv3]]
+  - -> references -> [[unresolvedref12prompts]]
+  - -> references -> [[unresolvedrefremainingmodulesanalysis]]
+  - <- contains <- [[remaining-modules-pdca]]
+- **__unresolved__::ref::02_state_schema** () -- 3 connections
+  - <- references <- [[langgraph]]
+  - <- references <- [[postgresql-supabase]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::04_review_nodes** () -- 3 connections
+  - <- references <- [[langgraph]]
+  - <- references <- [[conditional-edge]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::08_api_endpoints** () -- 3 connections
+  - <- references <- [[lite-mode]]
+  - <- references <- [[teams]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::14_services_v3** () -- 3 connections
+  - <- references <- [[postgresql-supabase]]
+  - <- references <- [[v1]]
+  - <- references <- [[7]]
+- **3. LangGraph State 스키마** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\02-state-schema.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[v35]]
+  - <- contains <- [[langgraph-state]]
+- **LangGraph State 스키마** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\02-state-schema.md) -- 3 connections
+  - -> references -> [[unresolvedref03graphdefinition]]
+  - -> references -> [[unresolvedref07routingedges]]
+  - -> contains -> [[3-langgraph-state]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 3 connections
+  - <- has_code_example <- [[4-langgraph]]
+  - <- has_code_example <- [[4-1-fan-out-d-1]]
+  - <- has_code_example <- [[4-2-planmerge]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\05-step0-rfp.md) -- 3 connections
+  - <- has_code_example <- [[6-step-0-rfp]]
+  - <- has_code_example <- [[6-1-rfpfetch-g2b-rfp-u-1]]
+  - <- has_code_example <- [[7-step-1-gono-go-b-2]]
+- **6. STEP 0: RFP 공고 검색 노드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\05-step0-rfp.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[6-1-rfpfetch-g2b-rfp-u-1]]
+  - <- contains <- [[step-0-rfp-gono-go]]
+- **10-1. 스토리라인 파이프라인 (§32-6 merged)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 3 connections
+  - -> contains -> [[10-1-1-planstory]]
+  - -> contains -> [[10-1-2-planmerge-syncdynamicsections]]
+  - -> contains -> [[10-1-3-proposalwritenext]]
+- **9. 케이스 B (서식 있음) 처리 — D-3 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 3 connections
+  - -> references -> [[unresolvedref12prompts]]
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[9-1-docx]]
+- **11. Conditional Edge 라우팅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\07-routing-edges.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[11-1-routeaftersectionreview-v35-32-4-merged]]
+  - <- contains <- [[conditional-edge]]
+- **Conditional Edge 라우팅** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\07-routing-edges.md) -- 3 connections
+  - -> references -> [[unresolvedref03graphdefinition]]
+  - -> references -> [[unresolvedref04reviewnodes]]
+  - -> contains -> [[11-conditional-edge]]
+- **12-4-1. ★ 섹션 AI 재생성 API (v3.4, H1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-4-g2b-db]]
+- **12-4-2. ★ AI 어시스턴트 인라인 제안 API (v3.4, H2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-4-g2b-db]]
+- **12-4-3. ★ 모의평가 결과 조회 API (v3.4, H3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-4-g2b-db]]
+- **12-4-4. ★ 버전 간 Diff 조회 API (v3.4, M2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-4-g2b-db]]
+- **API 엔드포인트 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 3 connections
+  - -> references -> [[unresolvedref01architecture]]
+  - -> references -> [[unresolvedref13authnotifications]]
+  - -> contains -> [[12-api]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 3 connections
+  - <- has_code_example <- [[14-lite-mode-u-1]]
+  - <- has_code_example <- [[14-2-rfp-u-3]]
+  - <- has_code_example <- [[14-3-from-search-u-2]]
+- **간이 모드 (Lite Mode)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 3 connections
+  - -> references -> [[unresolvedref08apiendpoints]]
+  - -> references -> [[unresolvedref03graphdefinition]]
+  - -> contains -> [[14-lite-mode-u-1]]
+- **PostgreSQL 스키마 (Supabase)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 3 connections
+  - -> references -> [[unresolvedref02stateschema]]
+  - -> references -> [[unresolvedref14servicesv3]]
+  - -> contains -> [[15-postgresql-supabase-v20]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 3 connections
+  - <- has_code_example <- [[17-1]]
+  - <- has_code_example <- [[17-2]]
+  - <- has_code_example <- [[18-teams-v20]]
+- **17. ★ 인증 흐름 (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 3 connections
+  - -> contains -> [[17-1]]
+  - -> contains -> [[17-2]]
+  - <- contains <- [[teams]]
+- **24. ★ 동시 편집 충돌 방지 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 3 connections
+  - -> contains -> [[24-1]]
+  - -> contains -> [[24-2-api]]
+  - <- contains <- [[v30-20-26]]
+- **25. ★ 입력 검증 및 파일 보안 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 3 connections
+  - -> contains -> [[25-1]]
+  - -> contains -> [[25-2-src-11]]
+  - <- contains <- [[v30-20-26]]
+- **26. ★ 회사 템플릿 관리 설계 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 3 connections
+  - -> contains -> [[26-1-api]]
+  - -> contains -> [[26-2-docxpptx]]
+  - <- contains <- [[v30-20-26]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 3 connections
+  - <- has_code_example <- [[db]]
+  - <- has_code_example <- [[presentationqa]]
+  - <- has_code_example <- [[27-4-post-06-presented]]
+- **27-1. TRS-09: AI 생성 vs Human 편집 구분 기록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 3 connections
+  - -> contains -> [[db]]
+  - -> contains -> [[api]]
+  - <- contains <- [[27-high-v30]]
+- **27-3. PSM-16: Q&A 기록 검색 가능 저장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[presentationqa]]
+  - <- contains <- [[27-high-v30]]
+- **27-4. POST-06: 발표 없이 서류 심사 시 presented 건너뛰기** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 3 connections
+  - -> has_code_example -> [[sql]]
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[27-high-v30]]
+- **1. 실행 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[remaining-modules-pdca]]
+- **__unresolved__::ref::09_frontend** () -- 2 connections
+  - <- references <- [[proposalforge]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::11_database_schema** () -- 2 connections
+  - <- references <- [[v30-20-26]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::13_auth_notifications** () -- 2 connections
+  - <- references <- [[api]]
+  - <- references <- [[v1]]
+- **__unresolved__::ref::15b_gap_medium_archive** () -- 2 connections
+  - <- references <- [[high-27]]
+  - <- references <- [[v1]]
+- **4-1. 선택적 Fan-out (부분 재작업) — D-1 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-langgraph]]
+- **4-2. plan_merge — 부분 재작업 시 기존 결과 보존** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-langgraph]]
+- **6-1. rfp_fetch: G2B 상세 수집 + RFP 업로드 게이트 — U-1 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\05-step0-rfp.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[6-step-0-rfp]]
+- **7. STEP 1-②: Go/No-Go 노드 — B-2 추가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\05-step0-rfp.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[step-0-rfp-gono-go]]
+- **10-1-1. plan_story 프롬프트 강화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[10-1-32-6-merged]]
+- **10-1-2. plan_merge에서 목차 동기화 (_sync_dynamic_sections)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10-1-32-6-merged]]
+- **10-1-3. proposal_write_next에서 스토리라인 주입** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10-1-32-6-merged]]
+- **10-2-4. 배점 기반 분량 조절** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10-2-32-5-merged]]
+- **9-1. DOCX 빌더 케이스 분기** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[9-b-d-3]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\07-routing-edges.md) -- 2 connections
+  - <- has_code_example <- [[11-conditional-edge]]
+  - <- has_code_example <- [[11-1-routeaftersectionreview-v35-32-4-merged]]
+- **11-1. route_after_section_review (v3.5 신규, §32-4 merged)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\07-routing-edges.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[11-conditional-edge]]
+- **12-0. ★ 표준 에러 코드 체계 (v3.4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-api]]
+- **12-13. ★ 분석 대시보드 API (v3.4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> contains -> [[response]]
+  - <- contains <- [[12-api]]
+- **12-1-1. 프로젝트 생성 API 요청 바디 (U-9)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-api]]
+- **12-2. resume API 요청 바디** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-api]]
+- **12-3. 영향 범위 조회 API (U-5)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-api]]
+- **12-4-5. ★ HWP 내보내기 (v3.4, M3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[12-4-g2b-db]]
+- **12-5. SSE 클라이언트 자동 재연결 (U-6)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[12-api]]
+- **Response 예시** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[12-13-api-v34]]
+- **14-2. RFP 업로드로 기본 정보 자동 추출 (U-3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[14-lite-mode-u-1]]
+- **14-3. 공고번호 직접 지정 — from-search (U-2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[14-lite-mode-u-1]]
+- **15-1. 조직·사용자 테이블** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-2. 자사 역량 DB** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-3. 제안 프로젝트 테이블** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-4. 산출물·피드백·승인·Compliance** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5. 검색·캐시·알림·감사** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5a. ★ v3.0: 프로젝트 상태 머신 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5b. ★ v3.0: KB Part B — 콘텐츠 라이브러리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5c. ★ v3.0: KB Part C — 발주기관 DB** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5d. ★ v3.0: KB Part D — 경쟁사 DB** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5e. ★ v3.0: KB Part E — 교훈 아카이브** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5f. ★ v3.0: 크로스팀 프로젝트 + 컨소시엄** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5g. ★ v3.0: AI 실행 상태 + 동시 편집 잠금 + 회사 템플릿** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5h. ★ v3.3: 노임단가 테이블** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-5i. ★ v3.3: 시장 낙찰가 벤치마크 테이블** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-6. RLS (Row Level Security) 정책** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **15-7. 성과 추적 뷰 (Materialized View)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\11-database-schema.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[15-postgresql-supabase-v20]]
+- **17-1. 인증 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[17-v20]]
+- **17-2. 결재선 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[17-v20]]
+- **18. ★ Teams 알림 연동 (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\13-auth-notifications.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[teams]]
+- **20-1. 임베딩 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[20-knowledge-base-v30]]
+- **20-2. 통합 KB 검색 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[20-knowledge-base-v30]]
+- **20-3. 콘텐츠 라이브러리 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[20-knowledge-base-v30]]
+- **20-4. 학습 피드백 루프 (프로젝트 완료 시 자동 KB 환류)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[20-knowledge-base-v30]]
+- **21-1. 토큰 매니저** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[21-ai-v30]]
+- **21-2. Compliance Matrix 규칙/AI 분리 (TKN-07)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[21-ai-v30]]
+- **21-3. 섹션별 출력 토큰 상한 (TKN-08)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[21-ai-v30]]
+- **22-1. AI 상태 매니저** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[22-ai-v30]]
+- **22-2. SSE 이벤트 타입 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[22-ai-v30]]
+- **22-4-1. Claude API 장애** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[22-4-v33-fallback-proposalforge]]
+- **23-2. 자기결재 방지 (§2-4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[23-v30]]
+- **23-3. 크로스팀 프로젝트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[23-v30]]
+- **23-4. 컨소시엄 관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[23-v30]]
+- **24-1. 섹션 잠금 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[24-v30]]
+- **25-1. 입력 검증 미들웨어** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[25-v30]]
+- **25-2. 주기적 자동 모니터링 (SRC-11)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[25-v30]]
+- **26-2. DOCX/PPTX 빌더 템플릿 적용** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[26-v30]]
+- **27-2. PSM-05: expired 자동 전환** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[27-high-v30]]
+- **27-5. OPS-02: /health 헬스체크 엔드포인트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[27-high-v30]]
+- **27-6. OPS-03: 구조화 로깅 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[27-high-v30]]
+- **API 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[27-1-trs-09-ai-vs-human]]
+- **DB 스키마 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[27-1-trs-09-ai-vs-human]]
+- **갭 분석 HIGH 항목 보완 (§27)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> references -> [[unresolvedref15bgapmediumarchive]]
+  - -> contains -> [[27-high-v30]]
+- **presentation_qa 테이블 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\15a-gap-high-archive.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[27-3-psm-16-qa]]
+- **31-3-4. 프론트엔드 의존성 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[31-3-ui]]
+- **5. 잔여 갭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 2 connections
+  - -> contains -> [[deferred-1]]
+  - <- contains <- [[remaining-modules-pdca]]
+- **__unresolved__::ref::05_step0_rfp** () -- 1 connections
+  - <- references <- [[v1]]
+- **__unresolved__::ref::06_proposal_workflow** () -- 1 connections
+  - <- references <- [[v1]]
+- **__unresolved__::ref::10_lite_mode** () -- 1 connections
+  - <- references <- [[v1]]
+- **__unresolved__::ref::16_proposalforge_reviews** () -- 1 connections
+  - <- references <- [[v1]]
+- **__unresolved__::ref::remaining_modules_analysis** () -- 1 connections
+  - <- references <- [[7]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\02-state-schema.md) -- 1 connections
+  - <- has_code_example <- [[3-langgraph-state]]
+- **v3.5 추가 필드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\02-state-schema.md) -- 1 connections
+  - <- contains <- [[3-langgraph-state]]
+- **32-2-4. 순차 작성 흐름도** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 1 connections
+  - <- contains <- [[4-langgraph]]
+- **32-9. Dead Code 정리 기록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\03-graph-definition.md) -- 1 connections
+  - <- contains <- [[4-langgraph]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - <- has_code_example <- [[10-1-1-planstory]]
+- **10-2-1. 10개 섹션 유형 분류** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - <- contains <- [[10-2-32-5-merged]]
+- **10-2-2. EVALUATOR_PERSPECTIVE_BLOCK (공통)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - <- contains <- [[10-2-32-5-merged]]
+- **10-2-3. 유형별 프롬프트 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - <- contains <- [[10-2-32-5-merged]]
+- **10-2-5. 케이스 B 프롬프트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - <- contains <- [[10-2-32-5-merged]]
+- **10. Compliance Matrix 생애주기 — D-4 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - -> has_code_example -> [[python]]
+- **8. 자가진단 자동 개선 루프 — D-10 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\06-proposal-workflow.md) -- 1 connections
+  - -> has_code_example -> [[python]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- has_code_example <- [[12-5-sse-u-6]]
+- **12-1. 워크플로 제어** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-10. ★ 알림 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-11. ★ 감사 로그 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-12. ★ v3.0 추가 API (교차 참조)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-6. ★ 인증 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-7. ★ 사용자·조직 관리 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-8. ★ 대시보드 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **12-9. ★ 성과 추적 API (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\08-api-endpoints.md) -- 1 connections
+  - <- contains <- [[12-api]]
+- **14-1. 모드별 동작 차이** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\10-lite-mode.md) -- 1 connections
+  - <- contains <- [[14-lite-mode-u-1]]
+- **20-5. KB 내보내기 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[20-knowledge-base-v30]]
+- **20-6. KB API 엔드포인트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[20-knowledge-base-v30]]
+- **22-3. AI 상태 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[22-ai-v30]]
+- **22-4-2. 외부 데이터 소스 장애 (MCP/G2B/나라장터)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[22-4-v33-fallback-proposalforge]]
+- **22-4-3. 품질 게이트 반복 실패** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[22-4-v33-fallback-proposalforge]]
+- **22-4-4. 노드별 타임아웃** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[22-4-v33-fallback-proposalforge]]
+- **23-1. 사용자 관리 API 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[23-v30]]
+- **24-2. 섹션 잠금 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[24-v30]]
+- **26-1. 템플릿 관리 API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\14-services-v3.md) -- 1 connections
+  - <- contains <- [[26-v30]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- has_code_example <- [[31-3-4]]
+- **30-1. 의도적 스킵 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[30-proposalforge-v30-v33]]
+- **30-2. v3.3에서 반영된 항목 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[30-proposalforge-v30-v33]]
+- **30-3. 갭 분석 영향 예측** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[30-proposalforge-v30-v33]]
+- **31-1. 이미 TENOPA에 있는 것 (차용 불필요)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-2. 차용 항목 및 반영 위치** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-3-1. shadcn/ui** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-3-ui]]
+- **31-3-2. Tiptap 에디터** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-3-ui]]
+- **31-3-3. Recharts** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-3-ui]]
+- **31-4. 의도적 스킵 (프론트엔드)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-5. 구현 우선순위 및 의존 관계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-6. 설계 문서 변경 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-7. 검증 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-proposalforge-v34]]
+- **31-8-1. 이미 TENOPA에 있는 것 (차용 불필요)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-8-proposalforge-api-v34]]
+- **31-8-2. 차용 항목 (본 v3.4에서 반영)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-8-proposalforge-api-v34]]
+- **31-8-3. 의도적 스킵** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-8-proposalforge-api-v34]]
+- **31-8-4. 핵심 시사점** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\design\16-proposalforge-reviews.md) -- 1 connections
+  - <- contains <- [[31-8-proposalforge-api-v34]]
+- **1.1 완료 현황** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 핵심 성과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **2.1 Plan → Design** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.2 Do (구현)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **2.3 Check → Act (2회 Iteration)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[2-pdca]]
+- **3.1 token_manager.py (§21) — 100%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 ai_status_manager.py (§22) — 100%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 section_lock.py (§24) — 96%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.4 scheduled_monitor.py (§25-2) — 100%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.5 trustworthiness.py (§16-3-1) — 100%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.6 source_tagger.py (§16-3-2) — 100%** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4. 통합 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[remaining-modules-pdca]]
+- **6. 교훈** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[remaining-modules-pdca]]
+- **Deferred (1건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.report.md) -- 1 connections
+  - <- contains <- [[5]]
+
+## Internal Relationships
+- 3. LangGraph State 스키마 -> has_code_example -> python [EXTRACTED]
+- 3. LangGraph State 스키마 -> contains -> v3.5 추가 필드 [EXTRACTED]
+- LangGraph State 스키마 -> references -> __unresolved__::ref::03_graph_definition [EXTRACTED]
+- LangGraph State 스키마 -> references -> __unresolved__::ref::07_routing_edges [EXTRACTED]
+- LangGraph State 스키마 -> contains -> 3. LangGraph State 스키마 [EXTRACTED]
+- 4-1. 선택적 Fan-out (부분 재작업) — D-1 해결 -> has_code_example -> python [EXTRACTED]
+- 4-2. plan_merge — 부분 재작업 시 기존 결과 보존 -> has_code_example -> python [EXTRACTED]
+- 4. LangGraph 그래프 정의 -> has_code_example -> python [EXTRACTED]
+- 4. LangGraph 그래프 정의 -> contains -> 4-1. 선택적 Fan-out (부분 재작업) — D-1 해결 [EXTRACTED]
+- 4. LangGraph 그래프 정의 -> contains -> 4-2. plan_merge — 부분 재작업 시 기존 결과 보존 [EXTRACTED]
+- 4. LangGraph 그래프 정의 -> contains -> 32-2-4. 순차 작성 흐름도 [EXTRACTED]
+- 4. LangGraph 그래프 정의 -> contains -> 32-9. Dead Code 정리 기록 [EXTRACTED]
+- LangGraph 그래프 정의 -> references -> __unresolved__::ref::02_state_schema [EXTRACTED]
+- LangGraph 그래프 정의 -> references -> __unresolved__::ref::04_review_nodes [EXTRACTED]
+- LangGraph 그래프 정의 -> references -> __unresolved__::ref::07_routing_edges [EXTRACTED]
+- LangGraph 그래프 정의 -> contains -> 4. LangGraph 그래프 정의 [EXTRACTED]
+- 6-1. rfp_fetch: G2B 상세 수집 + RFP 업로드 게이트 — U-1 해결 -> has_code_example -> python [EXTRACTED]
+- 6. STEP 0: RFP 공고 검색 노드 -> has_code_example -> python [EXTRACTED]
+- 6. STEP 0: RFP 공고 검색 노드 -> contains -> 6-1. rfp_fetch: G2B 상세 수집 + RFP 업로드 게이트 — U-1 해결 [EXTRACTED]
+- 7. STEP 1-②: Go/No-Go 노드 — B-2 추가 -> has_code_example -> python [EXTRACTED]
+- STEP 0: RFP 공고 검색 + Go/No-Go -> references -> __unresolved__::ref::03_graph_definition [EXTRACTED]
+- STEP 0: RFP 공고 검색 + Go/No-Go -> references -> __unresolved__::ref::07_routing_edges [EXTRACTED]
+- STEP 0: RFP 공고 검색 + Go/No-Go -> contains -> 6. STEP 0: RFP 공고 검색 노드 [EXTRACTED]
+- STEP 0: RFP 공고 검색 + Go/No-Go -> contains -> 7. STEP 1-②: Go/No-Go 노드 — B-2 추가 [EXTRACTED]
+- 10-1-1. plan_story 프롬프트 강화 -> has_code_example -> json [EXTRACTED]
+- 10-1-2. plan_merge에서 목차 동기화 (_sync_dynamic_sections) -> has_code_example -> python [EXTRACTED]
+- 10-1-3. proposal_write_next에서 스토리라인 주입 -> has_code_example -> python [EXTRACTED]
+- 10-1. 스토리라인 파이프라인 (§32-6 merged) -> contains -> 10-1-1. plan_story 프롬프트 강화 [EXTRACTED]
+- 10-1. 스토리라인 파이프라인 (§32-6 merged) -> contains -> 10-1-2. plan_merge에서 목차 동기화 (_sync_dynamic_sections) [EXTRACTED]
+- 10-1. 스토리라인 파이프라인 (§32-6 merged) -> contains -> 10-1-3. proposal_write_next에서 스토리라인 주입 [EXTRACTED]
+- 10-2-4. 배점 기반 분량 조절 -> has_code_example -> python [EXTRACTED]
+- 10-2. 유형별 전문 프롬프트 체계 (§32-5 merged) -> contains -> 10-2-1. 10개 섹션 유형 분류 [EXTRACTED]
+- 10-2. 유형별 전문 프롬프트 체계 (§32-5 merged) -> contains -> 10-2-2. EVALUATOR_PERSPECTIVE_BLOCK (공통) [EXTRACTED]
+- 10-2. 유형별 전문 프롬프트 체계 (§32-5 merged) -> contains -> 10-2-3. 유형별 프롬프트 구조 [EXTRACTED]
+- 10-2. 유형별 전문 프롬프트 체계 (§32-5 merged) -> contains -> 10-2-4. 배점 기반 분량 조절 [EXTRACTED]
+- 10-2. 유형별 전문 프롬프트 체계 (§32-5 merged) -> contains -> 10-2-5. 케이스 B 프롬프트 [EXTRACTED]
+- 10. Compliance Matrix 생애주기 — D-4 해결 -> has_code_example -> python [EXTRACTED]
+- 8. 자가진단 자동 개선 루프 — D-10 해결 -> has_code_example -> python [EXTRACTED]
+- 9-1. DOCX 빌더 케이스 분기 -> has_code_example -> python [EXTRACTED]
+- 9. 케이스 B (서식 있음) 처리 — D-3 해결 -> references -> __unresolved__::ref::12_prompts [EXTRACTED]
+- 9. 케이스 B (서식 있음) 처리 — D-3 해결 -> has_code_example -> python [EXTRACTED]
+- 9. 케이스 B (서식 있음) 처리 — D-3 해결 -> contains -> 9-1. DOCX 빌더 케이스 분기 [EXTRACTED]
+- 11-1. route_after_section_review (v3.5 신규, §32-4 merged) -> has_code_example -> python [EXTRACTED]
+- 11. Conditional Edge 라우팅 -> has_code_example -> python [EXTRACTED]
+- 11. Conditional Edge 라우팅 -> contains -> 11-1. route_after_section_review (v3.5 신규, §32-4 merged) [EXTRACTED]
+- Conditional Edge 라우팅 -> references -> __unresolved__::ref::03_graph_definition [EXTRACTED]
+- Conditional Edge 라우팅 -> references -> __unresolved__::ref::04_review_nodes [EXTRACTED]
+- Conditional Edge 라우팅 -> contains -> 11. Conditional Edge 라우팅 [EXTRACTED]
+- 12-0. ★ 표준 에러 코드 체계 (v3.4) -> has_code_example -> json [EXTRACTED]
+- 12-13. ★ 분석 대시보드 API (v3.4) -> contains -> Response 예시 [EXTRACTED]
+- 12-1-1. 프로젝트 생성 API 요청 바디 (U-9) -> has_code_example -> json [EXTRACTED]
+- 12-2. resume API 요청 바디 -> has_code_example -> json [EXTRACTED]
+- 12-3. 영향 범위 조회 API (U-5) -> has_code_example -> json [EXTRACTED]
+- 12-4-1. ★ 섹션 AI 재생성 API (v3.4, H1) -> has_code_example -> python [EXTRACTED]
+- 12-4-1. ★ 섹션 AI 재생성 API (v3.4, H1) -> has_code_example -> json [EXTRACTED]
+- 12-4-2. ★ AI 어시스턴트 인라인 제안 API (v3.4, H2) -> has_code_example -> python [EXTRACTED]
+- 12-4-2. ★ AI 어시스턴트 인라인 제안 API (v3.4, H2) -> has_code_example -> json [EXTRACTED]
+- 12-4-3. ★ 모의평가 결과 조회 API (v3.4, H3) -> has_code_example -> python [EXTRACTED]
+- 12-4-3. ★ 모의평가 결과 조회 API (v3.4, H3) -> has_code_example -> json [EXTRACTED]
+- 12-4-4. ★ 버전 간 Diff 조회 API (v3.4, M2) -> has_code_example -> python [EXTRACTED]
+- 12-4-4. ★ 버전 간 Diff 조회 API (v3.4, M2) -> has_code_example -> json [EXTRACTED]
+- 12-4-5. ★ HWP 내보내기 (v3.4, M3) -> has_code_example -> python [EXTRACTED]
+- 12-4. 산출물 / G2B / 역량 DB -> contains -> 12-4-1. ★ 섹션 AI 재생성 API (v3.4, H1) [EXTRACTED]
+- 12-4. 산출물 / G2B / 역량 DB -> contains -> 12-4-2. ★ AI 어시스턴트 인라인 제안 API (v3.4, H2) [EXTRACTED]
+- 12-4. 산출물 / G2B / 역량 DB -> contains -> 12-4-3. ★ 모의평가 결과 조회 API (v3.4, H3) [EXTRACTED]
+- 12-4. 산출물 / G2B / 역량 DB -> contains -> 12-4-4. ★ 버전 간 Diff 조회 API (v3.4, M2) [EXTRACTED]
+- 12-4. 산출물 / G2B / 역량 DB -> contains -> 12-4-5. ★ HWP 내보내기 (v3.4, M3) [EXTRACTED]
+- 12-5. SSE 클라이언트 자동 재연결 (U-6) -> has_code_example -> typescript [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-0. ★ 표준 에러 코드 체계 (v3.4) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-1. 워크플로 제어 [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-1-1. 프로젝트 생성 API 요청 바디 (U-9) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-2. resume API 요청 바디 [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-3. 영향 범위 조회 API (U-5) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-4. 산출물 / G2B / 역량 DB [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-6. ★ 인증 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-7. ★ 사용자·조직 관리 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-8. ★ 대시보드 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-9. ★ 성과 추적 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-10. ★ 알림 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-11. ★ 감사 로그 API (v2.0) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-12. ★ v3.0 추가 API (교차 참조) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-5. SSE 클라이언트 자동 재연결 (U-6) [EXTRACTED]
+- 12. API 엔드포인트 설계 -> contains -> 12-13. ★ 분석 대시보드 API (v3.4) [EXTRACTED]
+- API 엔드포인트 설계 -> references -> __unresolved__::ref::01_architecture [EXTRACTED]
+- API 엔드포인트 설계 -> references -> __unresolved__::ref::13_auth_notifications [EXTRACTED]
+- API 엔드포인트 설계 -> contains -> 12. API 엔드포인트 설계 [EXTRACTED]
+- Response 예시 -> has_code_example -> json [EXTRACTED]
+- 14-2. RFP 업로드로 기본 정보 자동 추출 (U-3) -> has_code_example -> python [EXTRACTED]
+- 14-3. 공고번호 직접 지정 — from-search (U-2) -> has_code_example -> python [EXTRACTED]
+- 14. 간이 모드 (Lite Mode) — U-1 해결 -> has_code_example -> python [EXTRACTED]
+- 14. 간이 모드 (Lite Mode) — U-1 해결 -> contains -> 14-1. 모드별 동작 차이 [EXTRACTED]
+- 14. 간이 모드 (Lite Mode) — U-1 해결 -> contains -> 14-2. RFP 업로드로 기본 정보 자동 추출 (U-3) [EXTRACTED]
+- 14. 간이 모드 (Lite Mode) — U-1 해결 -> contains -> 14-3. 공고번호 직접 지정 — from-search (U-2) [EXTRACTED]
+- 간이 모드 (Lite Mode) -> references -> __unresolved__::ref::08_api_endpoints [EXTRACTED]
+- 간이 모드 (Lite Mode) -> references -> __unresolved__::ref::03_graph_definition [EXTRACTED]
+- 간이 모드 (Lite Mode) -> contains -> 14. 간이 모드 (Lite Mode) — U-1 해결 [EXTRACTED]
+- 15-1. 조직·사용자 테이블 -> has_code_example -> sql [EXTRACTED]
+- 15-2. 자사 역량 DB -> has_code_example -> sql [EXTRACTED]
+- 15-3. 제안 프로젝트 테이블 -> has_code_example -> sql [EXTRACTED]
+- 15-4. 산출물·피드백·승인·Compliance -> has_code_example -> sql [EXTRACTED]
+- 15-5. 검색·캐시·알림·감사 -> has_code_example -> sql [EXTRACTED]
+- 15-5a. ★ v3.0: 프로젝트 상태 머신 확장 -> has_code_example -> sql [EXTRACTED]
+- 15-5b. ★ v3.0: KB Part B — 콘텐츠 라이브러리 -> has_code_example -> sql [EXTRACTED]
+- 15-5c. ★ v3.0: KB Part C — 발주기관 DB -> has_code_example -> sql [EXTRACTED]
+- 15-5d. ★ v3.0: KB Part D — 경쟁사 DB -> has_code_example -> sql [EXTRACTED]
+- 15-5e. ★ v3.0: KB Part E — 교훈 아카이브 -> has_code_example -> sql [EXTRACTED]
+- 15-5f. ★ v3.0: 크로스팀 프로젝트 + 컨소시엄 -> has_code_example -> sql [EXTRACTED]
+- 15-5g. ★ v3.0: AI 실행 상태 + 동시 편집 잠금 + 회사 템플릿 -> has_code_example -> sql [EXTRACTED]
+- 15-5h. ★ v3.3: 노임단가 테이블 -> has_code_example -> sql [EXTRACTED]
+- 15-5i. ★ v3.3: 시장 낙찰가 벤치마크 테이블 -> has_code_example -> sql [EXTRACTED]
+- 15-6. RLS (Row Level Security) 정책 -> has_code_example -> sql [EXTRACTED]
+- 15-7. 성과 추적 뷰 (Materialized View) -> has_code_example -> sql [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-1. 조직·사용자 테이블 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-2. 자사 역량 DB [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-3. 제안 프로젝트 테이블 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-4. 산출물·피드백·승인·Compliance [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5. 검색·캐시·알림·감사 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5a. ★ v3.0: 프로젝트 상태 머신 확장 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5b. ★ v3.0: KB Part B — 콘텐츠 라이브러리 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5c. ★ v3.0: KB Part C — 발주기관 DB [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5d. ★ v3.0: KB Part D — 경쟁사 DB [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5e. ★ v3.0: KB Part E — 교훈 아카이브 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5f. ★ v3.0: 크로스팀 프로젝트 + 컨소시엄 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5g. ★ v3.0: AI 실행 상태 + 동시 편집 잠금 + 회사 템플릿 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5h. ★ v3.3: 노임단가 테이블 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-5i. ★ v3.3: 시장 낙찰가 벤치마크 테이블 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-6. RLS (Row Level Security) 정책 [EXTRACTED]
+- 15. PostgreSQL 스키마 (Supabase) — v2.0 -> contains -> 15-7. 성과 추적 뷰 (Materialized View) [EXTRACTED]
+- PostgreSQL 스키마 (Supabase) -> references -> __unresolved__::ref::02_state_schema [EXTRACTED]
+- PostgreSQL 스키마 (Supabase) -> references -> __unresolved__::ref::14_services_v3 [EXTRACTED]
+- PostgreSQL 스키마 (Supabase) -> contains -> 15. PostgreSQL 스키마 (Supabase) — v2.0 [EXTRACTED]
+- 17-1. 인증 서비스 -> has_code_example -> python [EXTRACTED]
+- 17-2. 결재선 서비스 -> has_code_example -> python [EXTRACTED]
+- 17. ★ 인증 흐름 (v2.0) -> contains -> 17-1. 인증 서비스 [EXTRACTED]
+- 17. ★ 인증 흐름 (v2.0) -> contains -> 17-2. 결재선 서비스 [EXTRACTED]
+- 18. ★ Teams 알림 연동 (v2.0) -> has_code_example -> python [EXTRACTED]
+- 인증 + Teams 알림 -> references -> __unresolved__::ref::08_api_endpoints [EXTRACTED]
+- 인증 + Teams 알림 -> references -> __unresolved__::ref::01_architecture [EXTRACTED]
+- 인증 + Teams 알림 -> contains -> 17. ★ 인증 흐름 (v2.0) [EXTRACTED]
+- 인증 + Teams 알림 -> contains -> 18. ★ Teams 알림 연동 (v2.0) [EXTRACTED]
+- 20-1. 임베딩 서비스 -> has_code_example -> python [EXTRACTED]
+- 20-2. 통합 KB 검색 서비스 -> has_code_example -> python [EXTRACTED]
+- 20-3. 콘텐츠 라이브러리 서비스 -> has_code_example -> python [EXTRACTED]
+- 20-4. 학습 피드백 루프 (프로젝트 완료 시 자동 KB 환류) -> has_code_example -> python [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-1. 임베딩 서비스 [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-2. 통합 KB 검색 서비스 [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-3. 콘텐츠 라이브러리 서비스 [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-4. 학습 피드백 루프 (프로젝트 완료 시 자동 KB 환류) [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-5. KB 내보내기 API [EXTRACTED]
+- 20. ★ Knowledge Base 설계 (v3.0) -> contains -> 20-6. KB API 엔드포인트 [EXTRACTED]
+- 21-1. 토큰 매니저 -> has_code_example -> python [EXTRACTED]
+- 21-2. Compliance Matrix 규칙/AI 분리 (TKN-07) -> has_code_example -> python [EXTRACTED]
+- 21-3. 섹션별 출력 토큰 상한 (TKN-08) -> has_code_example -> python [EXTRACTED]
+- 21. ★ AI 토큰 효율화 설계 (v3.0) -> contains -> 21-1. 토큰 매니저 [EXTRACTED]
+- 21. ★ AI 토큰 효율화 설계 (v3.0) -> contains -> 21-2. Compliance Matrix 규칙/AI 분리 (TKN-07) [EXTRACTED]
+- 21. ★ AI 토큰 효율화 설계 (v3.0) -> contains -> 21-3. 섹션별 출력 토큰 상한 (TKN-08) [EXTRACTED]
+- 22-1. AI 상태 매니저 -> has_code_example -> python [EXTRACTED]
+- 22-2. SSE 이벤트 타입 확장 -> has_code_example -> python [EXTRACTED]
+- 22-4-1. Claude API 장애 -> has_code_example -> python [EXTRACTED]
+- 22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영) -> contains -> 22-4-1. Claude API 장애 [EXTRACTED]
+- 22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영) -> contains -> 22-4-2. 외부 데이터 소스 장애 (MCP/G2B/나라장터) [EXTRACTED]
+- 22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영) -> contains -> 22-4-3. 품질 게이트 반복 실패 [EXTRACTED]
+- 22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영) -> contains -> 22-4-4. 노드별 타임아웃 [EXTRACTED]
+- 22. ★ AI 실행 상태 모니터링 설계 (v3.0) -> contains -> 22-1. AI 상태 매니저 [EXTRACTED]
+- 22. ★ AI 실행 상태 모니터링 설계 (v3.0) -> contains -> 22-2. SSE 이벤트 타입 확장 [EXTRACTED]
+- 22. ★ AI 실행 상태 모니터링 설계 (v3.0) -> contains -> 22-3. AI 상태 API [EXTRACTED]
+- 22. ★ AI 실행 상태 모니터링 설계 (v3.0) -> contains -> 22-4. ★ v3.3: Fallback 전략 (ProposalForge 비교 검토 반영) [EXTRACTED]
+- 23-2. 자기결재 방지 (§2-4) -> has_code_example -> python [EXTRACTED]
+- 23-3. 크로스팀 프로젝트 -> has_code_example -> python [EXTRACTED]
+- 23-4. 컨소시엄 관리 -> has_code_example -> python [EXTRACTED]
+- 23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0) -> contains -> 23-1. 사용자 관리 API 확장 [EXTRACTED]
+- 23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0) -> contains -> 23-2. 자기결재 방지 (§2-4) [EXTRACTED]
+- 23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0) -> contains -> 23-3. 크로스팀 프로젝트 [EXTRACTED]
+- 23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0) -> contains -> 23-4. 컨소시엄 관리 [EXTRACTED]
+- 24-1. 섹션 잠금 서비스 -> has_code_example -> python [EXTRACTED]
+- 24. ★ 동시 편집 충돌 방지 설계 (v3.0) -> contains -> 24-1. 섹션 잠금 서비스 [EXTRACTED]
+- 24. ★ 동시 편집 충돌 방지 설계 (v3.0) -> contains -> 24-2. 섹션 잠금 API [EXTRACTED]
+- 25-1. 입력 검증 미들웨어 -> has_code_example -> python [EXTRACTED]
+- 25-2. 주기적 자동 모니터링 (SRC-11) -> has_code_example -> python [EXTRACTED]
+- 25. ★ 입력 검증 및 파일 보안 설계 (v3.0) -> contains -> 25-1. 입력 검증 미들웨어 [EXTRACTED]
+- 25. ★ 입력 검증 및 파일 보안 설계 (v3.0) -> contains -> 25-2. 주기적 자동 모니터링 (SRC-11) [EXTRACTED]
+- 26-2. DOCX/PPTX 빌더 템플릿 적용 -> has_code_example -> python [EXTRACTED]
+- 26. ★ 회사 템플릿 관리 설계 (v3.0) -> contains -> 26-1. 템플릿 관리 API [EXTRACTED]
+- 26. ★ 회사 템플릿 관리 설계 (v3.0) -> contains -> 26-2. DOCX/PPTX 빌더 템플릿 적용 [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> references -> __unresolved__::ref::11_database_schema [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> references -> __unresolved__::ref::01_architecture [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 20. ★ Knowledge Base 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 21. ★ AI 토큰 효율화 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 22. ★ AI 실행 상태 모니터링 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 23. ★ 사용자 라이프사이클 + 크로스팀 + 컨소시엄 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 24. ★ 동시 편집 충돌 방지 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 25. ★ 입력 검증 및 파일 보안 설계 (v3.0) [EXTRACTED]
+- 서비스 설계 v3.0 (§20-§26) -> contains -> 26. ★ 회사 템플릿 관리 설계 (v3.0) [EXTRACTED]
+- 27-1. TRS-09: AI 생성 vs Human 편집 구분 기록 -> contains -> DB 스키마 확장 [EXTRACTED]
+- 27-1. TRS-09: AI 생성 vs Human 편집 구분 기록 -> contains -> API 확장 [EXTRACTED]
+- 27-2. PSM-05: expired 자동 전환 -> has_code_example -> python [EXTRACTED]
+- 27-3. PSM-16: Q&A 기록 검색 가능 저장 -> has_code_example -> python [EXTRACTED]
+- 27-3. PSM-16: Q&A 기록 검색 가능 저장 -> contains -> presentation_qa 테이블 확장 [EXTRACTED]
+- 27-4. POST-06: 발표 없이 서류 심사 시 presented 건너뛰기 -> has_code_example -> sql [EXTRACTED]
+- 27-4. POST-06: 발표 없이 서류 심사 시 presented 건너뛰기 -> has_code_example -> python [EXTRACTED]
+- 27-5. OPS-02: /health 헬스체크 엔드포인트 -> has_code_example -> python [EXTRACTED]
+- 27-6. OPS-03: 구조화 로깅 설계 -> has_code_example -> python [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-1. TRS-09: AI 생성 vs Human 편집 구분 기록 [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-2. PSM-05: expired 자동 전환 [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-3. PSM-16: Q&A 기록 검색 가능 저장 [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-4. POST-06: 발표 없이 서류 심사 시 presented 건너뛰기 [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-5. OPS-02: /health 헬스체크 엔드포인트 [EXTRACTED]
+- 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) -> contains -> 27-6. OPS-03: 구조화 로깅 설계 [EXTRACTED]
+- API 확장 -> has_code_example -> python [EXTRACTED]
+- DB 스키마 확장 -> has_code_example -> sql [EXTRACTED]
+- 갭 분석 HIGH 항목 보완 (§27) -> references -> __unresolved__::ref::15b_gap_medium_archive [EXTRACTED]
+- 갭 분석 HIGH 항목 보완 (§27) -> contains -> 27. ★ 갭 분석 HIGH 항목 보완 설계 (v3.0) [EXTRACTED]
+- presentation_qa 테이블 확장 -> has_code_example -> sql [EXTRACTED]
+- 30. ★ ProposalForge v3.0 비교 검토 — 의도적 스킵 기록 (v3.3) -> contains -> 30-1. 의도적 스킵 항목 [EXTRACTED]
+- 30. ★ ProposalForge v3.0 비교 검토 — 의도적 스킵 기록 (v3.3) -> contains -> 30-2. v3.3에서 반영된 항목 요약 [EXTRACTED]
+- 30. ★ ProposalForge v3.0 비교 검토 — 의도적 스킵 기록 (v3.3) -> contains -> 30-3. 갭 분석 영향 예측 [EXTRACTED]
+- 31-3-4. 프론트엔드 의존성 요약 -> has_code_example -> json [EXTRACTED]
+- 31-3. UI 라이브러리 인프라 (신규) -> contains -> 31-3-1. shadcn/ui [EXTRACTED]
+- 31-3. UI 라이브러리 인프라 (신규) -> contains -> 31-3-2. Tiptap 에디터 [EXTRACTED]
+- 31-3. UI 라이브러리 인프라 (신규) -> contains -> 31-3-3. Recharts [EXTRACTED]
+- 31-3. UI 라이브러리 인프라 (신규) -> contains -> 31-3-4. 프론트엔드 의존성 요약 [EXTRACTED]
+- 31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4) -> contains -> 31-8-1. 이미 TENOPA에 있는 것 (차용 불필요) [EXTRACTED]
+- 31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4) -> contains -> 31-8-2. 차용 항목 (본 v3.4에서 반영) [EXTRACTED]
+- 31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4) -> contains -> 31-8-3. 의도적 스킵 [EXTRACTED]
+- 31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4) -> contains -> 31-8-4. 핵심 시사점 [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-1. 이미 TENOPA에 있는 것 (차용 불필요) [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-2. 차용 항목 및 반영 위치 [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-3. UI 라이브러리 인프라 (신규) [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-4. 의도적 스킵 (프론트엔드) [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-5. 구현 우선순위 및 의존 관계 [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-6. 설계 문서 변경 요약 [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-7. 검증 체크리스트 [EXTRACTED]
+- 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) -> contains -> 31-8. ★ ProposalForge API 엔드포인트 비교 검토 (v3.4) [EXTRACTED]
+- ProposalForge 비교 검토 -> references -> __unresolved__::ref::12_prompts [EXTRACTED]
+- ProposalForge 비교 검토 -> references -> __unresolved__::ref::09_frontend [EXTRACTED]
+- ProposalForge 비교 검토 -> contains -> 30. ★ ProposalForge v3.0 비교 검토 — 의도적 스킵 기록 (v3.3) [EXTRACTED]
+- ProposalForge 비교 검토 -> contains -> 31. ★ ProposalForge 프론트엔드 화면 흐름 비교 검토 반영 (v3.4) [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::01_architecture [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::02_state_schema [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::03_graph_definition [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::04_review_nodes [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::05_step0_rfp [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::06_proposal_workflow [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::07_routing_edges [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::08_api_endpoints [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::09_frontend [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::10_lite_mode [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::11_database_schema [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::12_prompts [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::13_auth_notifications [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::14_services_v3 [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::15b_gap_medium_archive [EXTRACTED]
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::16_proposalforge_reviews [EXTRACTED]
+- 1. 실행 개요 -> contains -> 1.1 완료 현황 [EXTRACTED]
+- 1. 실행 개요 -> contains -> 1.2 핵심 성과 [EXTRACTED]
+- 2. PDCA 사이클 기록 -> contains -> 2.1 Plan → Design [EXTRACTED]
+- 2. PDCA 사이클 기록 -> contains -> 2.2 Do (구현) [EXTRACTED]
+- 2. PDCA 사이클 기록 -> contains -> 2.3 Check → Act (2회 Iteration) [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.1 token_manager.py (§21) — 100% [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.2 ai_status_manager.py (§22) — 100% [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.3 section_lock.py (§24) — 96% [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.4 scheduled_monitor.py (§25-2) — 100% [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.5 trustworthiness.py (§16-3-1) — 100% [EXTRACTED]
+- 3. 모듈별 최종 상태 -> contains -> 3.6 source_tagger.py (§16-3-2) — 100% [EXTRACTED]
+- 5. 잔여 갭 -> contains -> Deferred (1건) [EXTRACTED]
+- 7. 성과 지표 -> references -> __unresolved__::ref::14_services_v3 [EXTRACTED]
+- 7. 성과 지표 -> references -> __unresolved__::ref::12_prompts [EXTRACTED]
+- 7. 성과 지표 -> references -> __unresolved__::ref::remaining_modules_analysis [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 1. 실행 개요 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 2. PDCA 사이클 기록 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 3. 모듈별 최종 상태 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 4. 통합 검증 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 5. 잔여 갭 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 6. 교훈 [EXTRACTED]
+- remaining-modules PDCA 완료 보고서 -> contains -> 7. 성과 지표 [EXTRACTED]
+
+## Cross-Community Connections
+- 설계 문서: 용역 제안서 자동 생성 에이전트 v1 -> references -> __unresolved__::ref::15a_gap_high_archive (-> [[28-medium-v31-python]])
+
+## Context
+이 커뮤니티는 15. PostgreSQL 스키마 (Supabase) — v2.0, python, 설계 문서: 용역 제안서 자동 생성 에이전트 v1를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 02-state-schema.md, 03-graph-definition.md, 05-step0-rfp.md, 06-proposal-workflow.md, 07-routing-edges.md이다.
+
+### Key Facts
+- > **v2.0 변경**: SQLite → Supabase PostgreSQL 전환. 조직·사용자·역할 테이블 추가, RLS 정책 적용. > LangGraph checkpointer는 `PostgresSaver`가 자체 테이블을 생성하므로 여기서는 앱 데이터만 정의.
+- ```python app/services/embedding_service.py from openai import AsyncOpenAI
+- | 항목 | 내용 | |------|------| | 문서 버전 | v3.6 | | 작성일 | 2026-03-16 | | 상태 | 초안 | | 기반 요구사항 | docs/01-plan/features/proposal-agent-v1.requirements.md (v4.9) | | 핵심 기술 | LangGraph + FastAPI + **Supabase (PostgreSQL + pgvector)** + Next.js + Azure AD + Teams | | 변경 이력 | v1.0 → v1.1: 포지셔닝 전략, TypedDict,…
+- 12-0. ★ 표준 에러 코드 체계 (v3.4)
+- > **소속**: proposal-agent-v1 설계 문서 v3.5 > **관련 파일**: [02-state-schema.md](02-state-schema.md), [14-services-v3.md](14-services-v3.md) > **원본 섹션**: §15

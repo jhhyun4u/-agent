@@ -1,0 +1,261 @@
+# __unresolved__::ref::chunk_document & TestChunkDocument
+Cohesion: 0.10 | Nodes: 31
+
+## Key Nodes
+- **__unresolved__::ref::chunk_document** () -- 17 connections
+  - <- calls <- [[testchunker]]
+  - <- calls <- [[processdocument]]
+  - <- calls <- [[testchunkexactmaxsize]]
+  - <- calls <- [[testuched01emptytext]]
+  - <- calls <- [[testuchk02shorttext]]
+  - <- calls <- [[testuchk03koreanproposal]]
+  - <- calls <- [[testuchk04koreanreport]]
+  - <- calls <- [[testuchk05koreanperformance]]
+  - <- calls <- [[testuchk06koreanother]]
+  - <- calls <- [[testuchk07englishreport]]
+  - <- calls <- [[testuchk08englishpresentation]]
+  - <- calls <- [[testuchk09englishcontract]]
+  - <- calls <- [[testuchk10englishother]]
+  - <- calls <- [[testheadingchunksections]]
+  - <- calls <- [[testwindowchunkfallback]]
+  - <- calls <- [[testpresentationslidegrouping]]
+  - <- calls <- [[testcontractarticleextraction]]
+- **TestChunkDocument** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 13 connections
+  - -> contains -> [[testuched01emptytext]]
+  - -> contains -> [[testuchk02shorttext]]
+  - -> contains -> [[testuchk03koreanproposal]]
+  - -> contains -> [[testuchk04koreanreport]]
+  - -> contains -> [[testuchk05koreanperformance]]
+  - -> contains -> [[testuchk06koreanother]]
+  - -> contains -> [[testuchk07englishreport]]
+  - -> contains -> [[testuchk08englishpresentation]]
+  - -> contains -> [[testuchk09englishcontract]]
+  - -> contains -> [[testuchk10englishother]]
+  - -> contains -> [[testuchk11chunkdataclass]]
+  - -> contains -> [[testuchk12overlapbehavior]]
+  - <- contains <- [[testdocumentchunker]]
+- **chunk_document** (C:\project\tenopa proposer\-agent-master\app\services\document_chunker.py) -- 8 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefchunkslides]]
+  - -> calls -> [[unresolvedrefchunkarticles]]
+  - -> calls -> [[unresolvedrefchunkbyheadings]]
+  - -> calls -> [[unresolvedrefchunkbywindow]]
+  - <- contains <- [[documentchunker]]
+- **__unresolved__::ref::_chunk_by_window** () -- 7 connections
+  - <- calls <- [[chunkdocument]]
+  - <- calls <- [[chunkbyheadings]]
+  - <- calls <- [[chunkslides]]
+  - <- calls <- [[chunkarticles]]
+  - <- calls <- [[testchunkovermaxsizesplit]]
+  - <- calls <- [[testchunkoverlapbehavior]]
+  - <- calls <- [[testuchk12overlapbehavior]]
+- **TestChunkingDataValidation** (C:\project\tenopa proposer\-agent-master\tests\unit\test_data_validation.py) -- 5 connections
+  - -> contains -> [[testchunkexactmaxsize]]
+  - -> contains -> [[testchunkovermaxsizesplit]]
+  - -> contains -> [[testchunkoverlapbehavior]]
+  - -> contains -> [[testchunkmincharsboundary]]
+  - <- contains <- [[testdatavalidation]]
+- **TestChunkingStrategies** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 5 connections
+  - -> contains -> [[testheadingchunksections]]
+  - -> contains -> [[testwindowchunkfallback]]
+  - -> contains -> [[testpresentationslidegrouping]]
+  - -> contains -> [[testcontractarticleextraction]]
+  - <- contains <- [[testdocumentchunker]]
+- **test_contract_article_extraction** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkingstrategies]]
+- **test_presentation_slide_grouping** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkingstrategies]]
+- **test_uchk_03_korean_proposal** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_04_korean_report** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_05_korean_performance** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_06_korean_other** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefany]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_07_english_report** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_08_english_presentation** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefany]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_09_english_contract** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefany]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_10_english_other** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefany]]
+  - <- contains <- [[testchunkdocument]]
+- **test_window_chunk_fallback** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefall]]
+  - <- contains <- [[testchunkingstrategies]]
+- **test_chunk_exact_max_size** (C:\project\tenopa proposer\-agent-master\tests\unit\test_data_validation.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkingdatavalidation]]
+- **test_chunk_min_chars_boundary** (C:\project\tenopa proposer\-agent-master\tests\unit\test_data_validation.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkbyheadings]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkingdatavalidation]]
+- **test_chunk_over_max_size_split** (C:\project\tenopa proposer\-agent-master\tests\unit\test_data_validation.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkbywindow]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkingdatavalidation]]
+- **test_chunk_overlap_behavior** (C:\project\tenopa proposer\-agent-master\tests\unit\test_data_validation.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkbywindow]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkingdatavalidation]]
+- **test_heading_chunk_sections** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkingstrategies]]
+- **test_uchk_11_chunk_dataclass** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunk]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_12_overlap_behavior** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 3 connections
+  - -> calls -> [[unresolvedrefchunkbywindow]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testchunkdocument]]
+- **test_document_chunker** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 3 connections
+  - -> contains -> [[testchunkdocument]]
+  - -> contains -> [[testchunkingstrategies]]
+  - -> imports -> [[unresolvedrefdocumentchunker]]
+- **__unresolved__::ref::_chunk_by_headings** () -- 2 connections
+  - <- calls <- [[chunkdocument]]
+  - <- calls <- [[testchunkmincharsboundary]]
+- **__unresolved__::ref::document_chunker** () -- 2 connections
+  - <- imports <- [[documentingestion]]
+  - <- imports <- [[testdocumentchunker]]
+- **test_uched_01_empty_text** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - <- contains <- [[testchunkdocument]]
+- **test_uchk_02_short_text** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_chunker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefchunkdocument]]
+  - <- contains <- [[testchunkdocument]]
+- **__unresolved__::ref::_chunk_articles** () -- 1 connections
+  - <- calls <- [[chunkdocument]]
+- **__unresolved__::ref::_chunk_slides** () -- 1 connections
+  - <- calls <- [[chunkdocument]]
+
+## Internal Relationships
+- chunk_document -> calls -> __unresolved__::ref::_chunk_slides [EXTRACTED]
+- chunk_document -> calls -> __unresolved__::ref::_chunk_articles [EXTRACTED]
+- chunk_document -> calls -> __unresolved__::ref::_chunk_by_headings [EXTRACTED]
+- chunk_document -> calls -> __unresolved__::ref::_chunk_by_window [EXTRACTED]
+- TestChunkingDataValidation -> contains -> test_chunk_exact_max_size [EXTRACTED]
+- TestChunkingDataValidation -> contains -> test_chunk_over_max_size_split [EXTRACTED]
+- TestChunkingDataValidation -> contains -> test_chunk_overlap_behavior [EXTRACTED]
+- TestChunkingDataValidation -> contains -> test_chunk_min_chars_boundary [EXTRACTED]
+- test_chunk_exact_max_size -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_chunk_min_chars_boundary -> calls -> __unresolved__::ref::_chunk_by_headings [EXTRACTED]
+- test_chunk_over_max_size_split -> calls -> __unresolved__::ref::_chunk_by_window [EXTRACTED]
+- test_chunk_overlap_behavior -> calls -> __unresolved__::ref::_chunk_by_window [EXTRACTED]
+- TestChunkDocument -> contains -> test_uched_01_empty_text [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_02_short_text [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_03_korean_proposal [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_04_korean_report [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_05_korean_performance [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_06_korean_other [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_07_english_report [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_08_english_presentation [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_09_english_contract [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_10_english_other [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_11_chunk_dataclass [EXTRACTED]
+- TestChunkDocument -> contains -> test_uchk_12_overlap_behavior [EXTRACTED]
+- TestChunkingStrategies -> contains -> test_heading_chunk_sections [EXTRACTED]
+- TestChunkingStrategies -> contains -> test_window_chunk_fallback [EXTRACTED]
+- TestChunkingStrategies -> contains -> test_presentation_slide_grouping [EXTRACTED]
+- TestChunkingStrategies -> contains -> test_contract_article_extraction [EXTRACTED]
+- test_contract_article_extraction -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_heading_chunk_sections -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_presentation_slide_grouping -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uched_01_empty_text -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_02_short_text -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_03_korean_proposal -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_04_korean_report -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_05_korean_performance -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_06_korean_other -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_07_english_report -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_08_english_presentation -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_09_english_contract -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_10_english_other -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_uchk_12_overlap_behavior -> calls -> __unresolved__::ref::_chunk_by_window [EXTRACTED]
+- test_window_chunk_fallback -> calls -> __unresolved__::ref::chunk_document [EXTRACTED]
+- test_document_chunker -> contains -> TestChunkDocument [EXTRACTED]
+- test_document_chunker -> contains -> TestChunkingStrategies [EXTRACTED]
+- test_document_chunker -> imports -> __unresolved__::ref::document_chunker [EXTRACTED]
+
+## Cross-Community Connections
+- chunk_document -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- chunk_document -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedreflen]])
+- chunk_document -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- test_chunk_exact_max_size -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_chunk_min_chars_boundary -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_chunk_over_max_size_split -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_chunk_overlap_behavior -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_contract_article_extraction -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_contract_article_extraction -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_heading_chunk_sections -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_presentation_slide_grouping -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_presentation_slide_grouping -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_03_korean_proposal -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_03_korean_proposal -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_04_korean_report -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_04_korean_report -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_05_korean_performance -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_05_korean_performance -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_06_korean_other -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_06_korean_other -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_07_english_report -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_07_english_report -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_08_english_presentation -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_08_english_presentation -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_09_english_contract -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_09_english_contract -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_10_english_other -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_10_english_other -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_11_chunk_dataclass -> calls -> __unresolved__::ref::chunk (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_11_chunk_dataclass -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_uchk_12_overlap_behavior -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_window_chunk_fallback -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
+- test_window_chunk_fallback -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 __unresolved__::ref::chunk_document, TestChunkDocument, chunk_document를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 document_chunker.py, test_data_validation.py, test_document_chunker.py이다.
+
+### Key Facts
+- class TestChunkDocument: """chunk_document router function tests"""
+- def chunk_document( text: str, doc_type: str, doc_subtype: str = "", max_chunk_chars: int = 3000, window_chars: int = 2000, overlap_chars: int = 200, ) -> list[Chunk]: """문서 유형에 따라 적절한 청킹 전략 선택.""" if not text or len(text.strip()) < 50: return []
+- class TestChunkingDataValidation: """Tests for chunking boundary data validation"""
+- class TestChunkingStrategies: """Tests for specific chunking strategies"""
+- def test_contract_article_extraction(self, sample_contract_text): """Articles are extracted from 제N조 pattern""" result = chunk_document(sample_contract_text, "contract") assert len(result) > 0 assert all(c.chunk_type == "article" for c in result)

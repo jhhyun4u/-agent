@@ -1,0 +1,272 @@
+# _run_presentation & build_proposal_hwpx
+Cohesion: 0.06 | Nodes: 41
+
+## Key Nodes
+- **_run_presentation** (C:\project\tenopa proposer\-agent-master\app\api\routes_presentation.py) -- 18 connections
+  - -> calls -> [[unresolvedrefagetsession]]
+  - -> calls -> [[unresolvedrefphase2artifact]]
+  - -> calls -> [[unresolvedrefphase3artifact]]
+  - -> calls -> [[unresolvedrefphase4artifact]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefrfpdata]]
+  - -> calls -> [[unresolvedrefgeneratepresentationslides]]
+  - -> calls -> [[unresolvedrefdownloadsampletemplate]]
+  - -> calls -> [[unresolvedrefresolvetemplatepath]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - -> calls -> [[unresolvedrefbuildpresentationpptx]]
+  - -> calls -> [[unresolvedrefuploadpresentation]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[routespresentation]]
+- **build_proposal_hwpx** (C:\project\tenopa proposer\-agent-master\app\services\hwpx_service.py) -- 12 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgeneratesectionxml]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - -> calls -> [[unresolvedrefwritetext]]
+  - -> calls -> [[unresolvedrefextractheaderxml]]
+  - -> calls -> [[unresolvedrefbuildfromtemplate]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefvalidate]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefcheckpagedrift]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[hwpxservice]]
+- **__unresolved__::ref::calc_dday** () -- 9 connections
+  - <- imports <- [[init]]
+  - <- calls <- [[testtodayiszero]]
+  - <- calls <- [[testpastisnegative]]
+  - <- calls <- [[testfutureispositive]]
+  - <- calls <- [[teststringinput]]
+  - <- calls <- [[testleapyear]]
+  - <- calls <- [[testnonleapyear]]
+  - <- calls <- [[testdatetimewithtz]]
+  - <- calls <- [[testmonthboundary]]
+- **TestCalcDday** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 9 connections
+  - -> contains -> [[testtodayiszero]]
+  - -> contains -> [[testpastisnegative]]
+  - -> contains -> [[testfutureispositive]]
+  - -> contains -> [[teststringinput]]
+  - -> contains -> [[testleapyear]]
+  - -> contains -> [[testnonleapyear]]
+  - -> contains -> [[testdatetimewithtz]]
+  - -> contains -> [[testmonthboundary]]
+  - <- contains <- [[testchecklistcore]]
+- **parse_rfp** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 7 connections
+  - -> calls -> [[unresolvedrefextracttext]]
+  - -> calls -> [[unresolvedrefcreateanthropicclient]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefformat]]
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefrfpdata]]
+  - <- contains <- [[rfpparser]]
+- **__unresolved__::ref::extract_json_from_response** () -- 6 connections
+  - <- calls <- [[parse]]
+  - <- calls <- [[generatepresentationslides]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+  - <- imports <- [[init]]
+  - <- calls <- [[callclaude]]
+- **parse_rfp_text** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 6 connections
+  - -> calls -> [[unresolvedrefcreateanthropicclient]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefformat]]
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefrfpdata]]
+  - <- contains <- [[rfpparser]]
+- **_call_claude** (C:\project\tenopa proposer\-agent-master\scripts\archive\proposal_generator.py) -- 5 connections
+  - -> calls -> [[unresolvedrefcreateanthropicclient]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefproposalcontent]]
+  - <- contains <- [[proposalgenerator]]
+- **TestFileUploadExtension** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 5 connections
+  - -> contains -> [[testallowedextensionsnoexe]]
+  - -> contains -> [[testallowedextensionsincludepdf]]
+  - -> contains -> [[testvalidatefiletypepdf]]
+  - -> contains -> [[testvalidatefiletypeexeblocked]]
+  - <- contains <- [[testchecklistcore]]
+- **__unresolved__::ref::create_anthropic_client** () -- 4 connections
+  - <- calls <- [[extractsectionsfromasset]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+  - <- calls <- [[callclaude]]
+- **__unresolved__::ref::gettempdir** () -- 4 connections
+  - <- calls <- [[resolvetemplatepath]]
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::rfpdata** () -- 3 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+- **__unresolved__::ref::validate_file_type** () -- 3 connections
+  - <- imports <- [[init]]
+  - <- calls <- [[testvalidatefiletypepdf]]
+  - <- calls <- [[testvalidatefiletypeexeblocked]]
+- **__init__** (C:\project\tenopa proposer\-agent-master\app\utils\__init__.py) -- 3 connections
+  - -> imports -> [[unresolvedrefextractjsonfromresponse]]
+  - -> imports -> [[unresolvedrefvalidatefiletype]]
+  - -> imports -> [[unresolvedrefcalcdday]]
+- **test_datetime_with_tz** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdatetime]]
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_future_is_positive** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdate]]
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_past_is_negative** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdate]]
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_today_is_zero** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 3 connections
+  - -> calls -> [[unresolvedreftoday]]
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **__unresolved__::ref::build_presentation_pptx** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::generate_presentation_slides** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::phase2artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase2analysis]]
+- **__unresolved__::ref::phase3artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase3plan]]
+- **__unresolved__::ref::phase4artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase4implement]]
+- **__unresolved__::ref::proposalcontent** () -- 2 connections
+  - <- calls <- [[callclaude]]
+  - <- calls <- [[testdocumentbuilders]]
+- **test_leap_year** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_month_boundary** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_non_leap_year** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_string_input** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcalcdday]]
+  - <- contains <- [[testcalcdday]]
+- **test_validate_file_type_exe_blocked** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefvalidatefiletype]]
+  - <- contains <- [[testfileuploadextension]]
+- **test_validate_file_type_pdf** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 2 connections
+  - -> calls -> [[unresolvedrefvalidatefiletype]]
+  - <- contains <- [[testfileuploadextension]]
+- **__unresolved__::ref::_download_sample_template** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::_generate_section_xml** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::_resolve_template_path** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::_upload_presentation** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::aget_session** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::build_from_template** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::check_page_drift** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::extract_header_xml** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::validate** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **test_allowed_extensions_include_pdf** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 1 connections
+  - <- contains <- [[testfileuploadextension]]
+- **test_allowed_extensions_no_exe** (C:\project\tenopa proposer\-agent-master\tests\test_checklist_core.py) -- 1 connections
+  - <- contains <- [[testfileuploadextension]]
+
+## Internal Relationships
+- _run_presentation -> calls -> __unresolved__::ref::aget_session [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase2artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase3artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase4artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::rfpdata [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::generate_presentation_slides [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_download_sample_template [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_resolve_template_path [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::build_presentation_pptx [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_upload_presentation [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::_generate_section_xml [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::extract_header_xml [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::build_from_template [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::validate [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::check_page_drift [EXTRACTED]
+- parse_rfp -> calls -> __unresolved__::ref::create_anthropic_client [EXTRACTED]
+- parse_rfp -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- parse_rfp -> calls -> __unresolved__::ref::rfpdata [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::create_anthropic_client [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::rfpdata [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::validate_file_type [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::calc_dday [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::create_anthropic_client [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::proposalcontent [EXTRACTED]
+- TestCalcDday -> contains -> test_today_is_zero [EXTRACTED]
+- TestCalcDday -> contains -> test_past_is_negative [EXTRACTED]
+- TestCalcDday -> contains -> test_future_is_positive [EXTRACTED]
+- TestCalcDday -> contains -> test_string_input [EXTRACTED]
+- TestCalcDday -> contains -> test_leap_year [EXTRACTED]
+- TestCalcDday -> contains -> test_non_leap_year [EXTRACTED]
+- TestCalcDday -> contains -> test_datetime_with_tz [EXTRACTED]
+- TestCalcDday -> contains -> test_month_boundary [EXTRACTED]
+- TestFileUploadExtension -> contains -> test_allowed_extensions_no_exe [EXTRACTED]
+- TestFileUploadExtension -> contains -> test_allowed_extensions_include_pdf [EXTRACTED]
+- TestFileUploadExtension -> contains -> test_validate_file_type_pdf [EXTRACTED]
+- TestFileUploadExtension -> contains -> test_validate_file_type_exe_blocked [EXTRACTED]
+- test_datetime_with_tz -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_future_is_positive -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_leap_year -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_month_boundary -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_non_leap_year -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_past_is_negative -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_string_input -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_today_is_zero -> calls -> __unresolved__::ref::calc_dday [EXTRACTED]
+- test_validate_file_type_exe_blocked -> calls -> __unresolved__::ref::validate_file_type [EXTRACTED]
+- test_validate_file_type_pdf -> calls -> __unresolved__::ref::validate_file_type [EXTRACTED]
+
+## Cross-Community Connections
+- _run_presentation -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _run_presentation -> calls -> __unresolved__::ref::path (-> [[unresolvedrefget-unresolvedreflen]])
+- _run_presentation -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
+- _run_presentation -> calls -> __unresolved__::ref::update_session (-> [[unresolvedrefget-unresolvedreflen]])
+- _run_presentation -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- _run_presentation -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::path (-> [[unresolvedrefget-unresolvedreflen]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::write_text (-> [[unresolvedrefget-unresolvedreflen]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
+- parse_rfp -> calls -> __unresolved__::ref::extract_text (-> [[unresolvedrefget-unresolvedreflen]])
+- parse_rfp -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedreflen]])
+- parse_rfp -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedreflen]])
+- parse_rfp_text -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedreflen]])
+- parse_rfp_text -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedreflen]])
+- _call_claude -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedreflen]])
+- test_datetime_with_tz -> calls -> __unresolved__::ref::datetime (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_future_is_positive -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedreflen]])
+- test_past_is_negative -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedreflen]])
+- test_today_is_zero -> calls -> __unresolved__::ref::today (-> [[unresolvedrefget-unresolvedreflen]])
+
+## Context
+이 커뮤니티는 _run_presentation, build_proposal_hwpx, __unresolved__::ref::calc_dday를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 __init__.py, hwpx_service.py, proposal_generator.py, rfp_parser.py, routes_presentation.py이다.
+
+### Key Facts
+- async def _run_presentation( proposal_id: str, template_mode: str = "standard", template_id: str = "government_blue", sample_storage_path: Optional[str] = None, ): """발표 자료 PPTX 생성 백그라운드 태스크""" try: session = await session_manager.aget_session(proposal_id)
+- 고수준 인터페이스: - analyze_reference: 고객 양식 분석 (스타일/구조 추출) - build_proposal_hwpx: 제안서 HWPX 생성 (템플릿 기반 + 섹션 XML 생성) - validate: HWPX 무결성 검증 - check_page_drift: 레퍼런스 대비 쪽수 드리프트 검사 """
+- class TestCalcDday: def test_today_is_zero(self): """마감일이 오늘이면 D-0.""" today = date.today() assert calc_dday(today, base=today) == 0
+- async def parse_rfp(file_path: Path) -> RFPData: """RFP 파일 파싱 및 분석 (비동기)""" from app.utils import create_anthropic_client, extract_json_from_response
+- async def parse_rfp_text(content: str) -> RFPData: from app.utils import create_anthropic_client, extract_json_from_response client = create_anthropic_client(async_client=True) response = await client.messages.create( model=settings.claude_model, max_tokens=4096, system=SYSTEM_PROMPT, messages=[{…

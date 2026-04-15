@@ -88,7 +88,11 @@ class MockQueryBuilder:
         return self
 
     # 체이닝 메서드
-    select = property(lambda self: lambda *a, **kw: self._chain())
+    def select(self, *args, **kwargs):
+        """select 메서드 — count 파라미터 처리"""
+        if kwargs.get("count"):
+            self._count = len(self._data)  # 실제 데이터 개수로 count 설정
+        return self._chain()
     insert = property(lambda self: lambda *a, **kw: self._chain())
     update = property(lambda self: lambda *a, **kw: self._chain())
     delete = property(lambda self: lambda *a, **kw: self._chain())
@@ -99,20 +103,29 @@ class MockQueryBuilder:
         self._filters.append((key, value, "=="))
         return self
 
+    def in_(self, key, values):
+        """필터 추가: key in values"""
+        self._filters.append((key, values, "in"))
+        return self
+
     neq = property(lambda self: lambda *a, **kw: self._chain())
     gt = property(lambda self: lambda *a, **kw: self._chain())
     gte = property(lambda self: lambda *a, **kw: self._chain())
     lt = property(lambda self: lambda *a, **kw: self._chain())
     lte = property(lambda self: lambda *a, **kw: self._chain())
     ilike = property(lambda self: lambda *a, **kw: self._chain())
-    in_ = property(lambda self: lambda *a, **kw: self._chain())
     is_ = property(lambda self: lambda *a, **kw: self._chain())
     or_ = property(lambda self: lambda *a, **kw: self._chain())
     contains = property(lambda self: lambda *a, **kw: self._chain())
     not_ = property(lambda self: MagicMock(is_=lambda *a, **kw: self._chain()))
     order = property(lambda self: lambda *a, **kw: self._chain())
     limit = property(lambda self: lambda *a, **kw: self._chain())
-    range = property(lambda self: lambda *a, **kw: self._chain())
+
+    def range(self, offset, limit):
+        """range 메서드 — pagination 처리"""
+        # MockQueryBuilder에서는 range를 단순히 체이닝만 함
+        # 실제 데이터는 execute에서 처리
+        return self._chain()
 
     def single(self):
         """단일 레코드 조회 (있으면 반환, 없으면 error)"""
@@ -134,10 +147,14 @@ class MockQueryBuilder:
             for key, value, op in self._filters:
                 if op == "==":
                     filtered = [item for item in filtered if isinstance(item, dict) and item.get(key) == value]
+                elif op == "in":
+                    filtered = [item for item in filtered if isinstance(item, dict) and item.get(key) in value]
             return filtered
         elif isinstance(data, dict):
             for key, value, op in self._filters:
                 if op == "==" and data.get(key) != value:
+                    return None
+                elif op == "in" and data.get(key) not in value:
                     return None
             return data
         return data

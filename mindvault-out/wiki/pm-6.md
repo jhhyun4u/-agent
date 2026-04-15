@@ -1,0 +1,213 @@
+# PM 워크플로우 개선 완료 보고서 & 6. 기술 상세
+Cohesion: 0.05 | Nodes: 45
+
+## Key Nodes
+- **PM 워크플로우 개선 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 16 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7-qa]]
+  - -> contains -> [[8-vs]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+  - -> contains -> [[11-future-work]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - -> contains -> [[14]]
+  - -> contains -> [[15]]
+  - <- contains <- [[14]]
+- **6. 기술 상세** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 5 connections
+  - -> contains -> [[61-toast]]
+  - -> contains -> [[62-api]]
+  - -> contains -> [[63-rfc-5987]]
+  - -> contains -> [[64-api]]
+  - <- contains <- [[pm]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - <- has_code_example <- [[61-toast]]
+  - <- has_code_example <- [[62-api]]
+  - <- has_code_example <- [[toast]]
+  - <- has_code_example <- [[api]]
+- **10. 배포 준비** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[101]]
+  - -> contains -> [[102]]
+  - -> contains -> [[103]]
+  - <- contains <- [[pm]]
+- **13. 성과 분석** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[131]]
+  - -> contains -> [[132]]
+  - -> contains -> [[133]]
+  - <- contains <- [[pm]]
+- **15. 부록** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[151]]
+  - -> contains -> [[152-api]]
+  - -> contains -> [[153]]
+  - <- contains <- [[pm]]
+- **15.1 변경 코드 스니펫** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[toast]]
+  - -> contains -> [[api]]
+  - -> contains -> [[rfc-5987]]
+  - <- contains <- [[15]]
+- **3. 주요 성과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[31-phase-1-error-free]]
+  - -> contains -> [[32-phase-2]]
+  - -> contains -> [[33-phase-3]]
+  - <- contains <- [[pm]]
+- **5. 변경 파일 목록** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 4 connections
+  - -> contains -> [[51-frontend-8]]
+  - -> contains -> [[52-backend-2]]
+  - -> contains -> [[53]]
+  - <- contains <- [[pm]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 3 connections
+  - <- has_code_example <- [[63-rfc-5987]]
+  - <- has_code_example <- [[64-api]]
+  - <- has_code_example <- [[rfc-5987]]
+- **6.4 피드백 히스토리 API** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[6]]
+- **7. QA 결과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 3 connections
+  - -> contains -> [[71-iteration-1-87]]
+  - -> contains -> [[72-iteration-2-87-95]]
+  - <- contains <- [[pm]]
+- **10.2 배포 순서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[10]]
+- **14. 결론** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> contains -> [[pm]]
+  - <- contains <- [[pm]]
+- **2. PDCA 흐름 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[text]]
+  - <- contains <- [[pm]]
+- **6.1 Toast 시스템 아키텍처** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6]]
+- **6.2 API 타임아웃 분기** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6]]
+- **6.3 RFC 5987 파일명 인코딩** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[6]]
+- **API 타임아웃 분기 사용 예** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[151]]
+- **RFC 5987 파일명 인코딩 사용 예** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[151]]
+- **Toast 컴포넌트 사용 예** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[151]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- has_code_example <- [[102]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- has_code_example <- [[64-api]]
+- **text** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- has_code_example <- [[2-pdca]]
+- **1. 메타 정보** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+- **10.1 점검 항목** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10.3 롤백 계획** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[10]]
+- **11. 남은 항목 (Future Work)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+- **12. 문제점 및 해결** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+- **13.1 정량적 성과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[13]]
+- **13.2 정성적 성과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[13]]
+- **13.3 기술 부채 감소** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[13]]
+- **15.2 API 명세** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[15]]
+- **15.3 관련 문서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[15]]
+- **3.1 Phase 1: Error-Free 인터페이스** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 Phase 2: 편의성 개선** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 Phase 3: 산출물 관리** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4. 구현 통계** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+- **5.1 Frontend (8개)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.2 Backend (2개)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.3 상태 추적** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **7.1 Iteration 1 (87%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[7-qa]]
+- **7.2 Iteration 2 (87% → 95%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[7-qa]]
+- **8. 설계 vs 구현 비교** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+- **9. 검증 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\pm-workflow-enhancement.report.md) -- 1 connections
+  - <- contains <- [[pm]]
+
+## Internal Relationships
+- 10. 배포 준비 -> contains -> 10.1 점검 항목 [EXTRACTED]
+- 10. 배포 준비 -> contains -> 10.2 배포 순서 [EXTRACTED]
+- 10. 배포 준비 -> contains -> 10.3 롤백 계획 [EXTRACTED]
+- 10.2 배포 순서 -> has_code_example -> bash [EXTRACTED]
+- 13. 성과 분석 -> contains -> 13.1 정량적 성과 [EXTRACTED]
+- 13. 성과 분석 -> contains -> 13.2 정성적 성과 [EXTRACTED]
+- 13. 성과 분석 -> contains -> 13.3 기술 부채 감소 [EXTRACTED]
+- 14. 결론 -> contains -> PM 워크플로우 개선 완료 보고서 [EXTRACTED]
+- 15. 부록 -> contains -> 15.1 변경 코드 스니펫 [EXTRACTED]
+- 15. 부록 -> contains -> 15.2 API 명세 [EXTRACTED]
+- 15. 부록 -> contains -> 15.3 관련 문서 [EXTRACTED]
+- 15.1 변경 코드 스니펫 -> contains -> Toast 컴포넌트 사용 예 [EXTRACTED]
+- 15.1 변경 코드 스니펫 -> contains -> API 타임아웃 분기 사용 예 [EXTRACTED]
+- 15.1 변경 코드 스니펫 -> contains -> RFC 5987 파일명 인코딩 사용 예 [EXTRACTED]
+- 2. PDCA 흐름 요약 -> has_code_example -> text [EXTRACTED]
+- 3. 주요 성과 -> contains -> 3.1 Phase 1: Error-Free 인터페이스 [EXTRACTED]
+- 3. 주요 성과 -> contains -> 3.2 Phase 2: 편의성 개선 [EXTRACTED]
+- 3. 주요 성과 -> contains -> 3.3 Phase 3: 산출물 관리 [EXTRACTED]
+- 5. 변경 파일 목록 -> contains -> 5.1 Frontend (8개) [EXTRACTED]
+- 5. 변경 파일 목록 -> contains -> 5.2 Backend (2개) [EXTRACTED]
+- 5. 변경 파일 목록 -> contains -> 5.3 상태 추적 [EXTRACTED]
+- 6. 기술 상세 -> contains -> 6.1 Toast 시스템 아키텍처 [EXTRACTED]
+- 6. 기술 상세 -> contains -> 6.2 API 타임아웃 분기 [EXTRACTED]
+- 6. 기술 상세 -> contains -> 6.3 RFC 5987 파일명 인코딩 [EXTRACTED]
+- 6. 기술 상세 -> contains -> 6.4 피드백 히스토리 API [EXTRACTED]
+- 6.1 Toast 시스템 아키텍처 -> has_code_example -> typescript [EXTRACTED]
+- 6.2 API 타임아웃 분기 -> has_code_example -> typescript [EXTRACTED]
+- 6.3 RFC 5987 파일명 인코딩 -> has_code_example -> python [EXTRACTED]
+- 6.4 피드백 히스토리 API -> has_code_example -> python [EXTRACTED]
+- 6.4 피드백 히스토리 API -> has_code_example -> json [EXTRACTED]
+- 7. QA 결과 -> contains -> 7.1 Iteration 1 (87%) [EXTRACTED]
+- 7. QA 결과 -> contains -> 7.2 Iteration 2 (87% → 95%) [EXTRACTED]
+- API 타임아웃 분기 사용 예 -> has_code_example -> typescript [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 1. 메타 정보 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 2. PDCA 흐름 요약 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 3. 주요 성과 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 4. 구현 통계 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 5. 변경 파일 목록 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 6. 기술 상세 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 7. QA 결과 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 8. 설계 vs 구현 비교 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 9. 검증 체크리스트 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 10. 배포 준비 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 11. 남은 항목 (Future Work) [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 12. 문제점 및 해결 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 13. 성과 분석 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 14. 결론 [EXTRACTED]
+- PM 워크플로우 개선 완료 보고서 -> contains -> 15. 부록 [EXTRACTED]
+- RFC 5987 파일명 인코딩 사용 예 -> has_code_example -> python [EXTRACTED]
+- Toast 컴포넌트 사용 예 -> has_code_example -> typescript [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 PM 워크플로우 개선 완료 보고서, 6. 기술 상세, typescript를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 pm-workflow-enhancement.report.md이다.
+
+### Key Facts
+- > **Summary**: Phase 1~3 (Error-Free 인터페이스 + 편의성 + 산출물 관리) 3단계 완성, 95% Match Rate, Production-Ready > > **Author**: pdca-report-generator + pm-team > **Created**: 2026-03-30 > **Status**: Completed ✅
+- ```typescript // Context API 기반 상태 관리 interface Toast { id: string message: string variant: 'success' | 'error' | 'info' | 'warning' duration?: number action?: { label: string; onClick: () => void } }
+- **상태**: ✅ **Production-Ready**
+- Toast 컴포넌트 사용 예 ```typescript const { toast } = useToast()
+- 3.1 Phase 1: Error-Free 인터페이스

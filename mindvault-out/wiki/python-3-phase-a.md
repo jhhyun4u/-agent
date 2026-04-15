@@ -1,0 +1,177 @@
+# python & 3. Phase A — 기반 인프라
+Cohesion: 0.10 | Nodes: 30
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 15 connections
+  - <- has_code_example <- [[3-1-appmodelstypespy-literal]]
+  - <- has_code_example <- [[3-2-appmodelscommonpy]]
+  - <- has_code_example <- [[3-3-appmodelsauthschemaspy-currentuser]]
+  - <- has_code_example <- [[3-4-depspy]]
+  - <- has_code_example <- [[3-5-userschemaspy]]
+  - <- has_code_example <- [[3-7-bidschemaspy-recommendationsresponse]]
+  - <- has_code_example <- [[3-8-phaseschemaspy-pricingmodelspy-datetime]]
+  - <- has_code_example <- [[4-1-appmodelsproposalschemaspy]]
+  - <- has_code_example <- [[4-2-appmodelsworkflowschemaspy]]
+  - <- has_code_example <- [[4-3-appmodelsartifactschemaspy]]
+  - <- has_code_example <- [[4-4-appmodelsnotificationschemaspy]]
+  - <- has_code_example <- [[4-5-appmodelsanalyticsschemaspy]]
+  - <- has_code_example <- [[4-6-appmodelsperformanceschemaspy]]
+  - <- has_code_example <- [[4-7-appmodelsadminschemaspy]]
+  - <- has_code_example <- [[5-1]]
+- **3. Phase A — 기반 인프라** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 9 connections
+  - -> contains -> [[3-1-appmodelstypespy-literal]]
+  - -> contains -> [[3-2-appmodelscommonpy]]
+  - -> contains -> [[3-3-appmodelsauthschemaspy-currentuser]]
+  - -> contains -> [[3-4-depspy]]
+  - -> contains -> [[3-5-userschemaspy]]
+  - -> contains -> [[3-6-schemaspy]]
+  - -> contains -> [[3-7-bidschemaspy-recommendationsresponse]]
+  - -> contains -> [[3-8-phaseschemaspy-pricingmodelspy-datetime]]
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **4. Phase B — 도메인 Response 모델** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 8 connections
+  - -> contains -> [[4-1-appmodelsproposalschemaspy]]
+  - -> contains -> [[4-2-appmodelsworkflowschemaspy]]
+  - -> contains -> [[4-3-appmodelsartifactschemaspy]]
+  - -> contains -> [[4-4-appmodelsnotificationschemaspy]]
+  - -> contains -> [[4-5-appmodelsanalyticsschemaspy]]
+  - -> contains -> [[4-6-appmodelsperformanceschemaspy]]
+  - -> contains -> [[4-7-appmodelsadminschemaspy]]
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **Design: pydantic-schema-refinement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 7 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3-phase-a]]
+  - -> contains -> [[4-phase-b-response]]
+  - -> contains -> [[5-phase-c]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+- **5. Phase C — 라우트 적용 패턴** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 4 connections
+  - -> contains -> [[5-1]]
+  - -> contains -> [[5-2]]
+  - -> contains -> [[5-3-currentuser]]
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **6. 마이그레이션 안전 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 4 connections
+  - -> contains -> [[phase-a]]
+  - -> contains -> [[phase-b]]
+  - -> contains -> [[phase-c]]
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **3-1. `app/models/types.py` (공유 Literal 타입)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-2. `app/models/common.py` (공통 응답 모델)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-3. `app/models/auth_schemas.py` (CurrentUser)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-4. `deps.py` 변경 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-5. `user_schemas.py` 수정 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-7. `bid_schemas.py` 수정 — `RecommendationsResponse` 정형화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **3-8. `phase_schemas.py` / `pricing/models.py` datetime 통일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-a]]
+- **4-1. `app/models/proposal_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-2. `app/models/workflow_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-3. `app/models/artifact_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-4. `app/models/notification_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-5. `app/models/analytics_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-6. `app/models/performance_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **4-7. `app/models/admin_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-b-response]]
+- **5-1. 적용 전략** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-phase-c]]
+- **1. 설계 원칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **2. 파일 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **3-6. `schemas.py` 수정 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[3-phase-a]]
+- **5-2. 라우트별 적용 매핑** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[5-phase-c]]
+- **5-3. `CurrentUser` 전환 대상 파일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[5-phase-c]]
+- **7. 영향 범위 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[design-pydantic-schema-refinement]]
+- **Phase A 완료 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **Phase B 완료 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **Phase C 완료 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\pydantic-schema-refinement\pydantic-schema-refinement.design.md) -- 1 connections
+  - <- contains <- [[6]]
+
+## Internal Relationships
+- 3-1. `app/models/types.py` (공유 Literal 타입) -> has_code_example -> python [EXTRACTED]
+- 3-2. `app/models/common.py` (공통 응답 모델) -> has_code_example -> python [EXTRACTED]
+- 3-3. `app/models/auth_schemas.py` (CurrentUser) -> has_code_example -> python [EXTRACTED]
+- 3-4. `deps.py` 변경 사항 -> has_code_example -> python [EXTRACTED]
+- 3-5. `user_schemas.py` 수정 사항 -> has_code_example -> python [EXTRACTED]
+- 3-7. `bid_schemas.py` 수정 — `RecommendationsResponse` 정형화 -> has_code_example -> python [EXTRACTED]
+- 3-8. `phase_schemas.py` / `pricing/models.py` datetime 통일 -> has_code_example -> python [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-1. `app/models/types.py` (공유 Literal 타입) [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-2. `app/models/common.py` (공통 응답 모델) [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-3. `app/models/auth_schemas.py` (CurrentUser) [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-4. `deps.py` 변경 사항 [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-5. `user_schemas.py` 수정 사항 [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-6. `schemas.py` 수정 사항 [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-7. `bid_schemas.py` 수정 — `RecommendationsResponse` 정형화 [EXTRACTED]
+- 3. Phase A — 기반 인프라 -> contains -> 3-8. `phase_schemas.py` / `pricing/models.py` datetime 통일 [EXTRACTED]
+- 4-1. `app/models/proposal_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-2. `app/models/workflow_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-3. `app/models/artifact_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-4. `app/models/notification_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-5. `app/models/analytics_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-6. `app/models/performance_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4-7. `app/models/admin_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-1. `app/models/proposal_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-2. `app/models/workflow_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-3. `app/models/artifact_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-4. `app/models/notification_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-5. `app/models/analytics_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-6. `app/models/performance_schemas.py` [EXTRACTED]
+- 4. Phase B — 도메인 Response 모델 -> contains -> 4-7. `app/models/admin_schemas.py` [EXTRACTED]
+- 5-1. 적용 전략 -> has_code_example -> python [EXTRACTED]
+- 5. Phase C — 라우트 적용 패턴 -> contains -> 5-1. 적용 전략 [EXTRACTED]
+- 5. Phase C — 라우트 적용 패턴 -> contains -> 5-2. 라우트별 적용 매핑 [EXTRACTED]
+- 5. Phase C — 라우트 적용 패턴 -> contains -> 5-3. `CurrentUser` 전환 대상 파일 [EXTRACTED]
+- 6. 마이그레이션 안전 체크리스트 -> contains -> Phase A 완료 검증 [EXTRACTED]
+- 6. 마이그레이션 안전 체크리스트 -> contains -> Phase B 완료 검증 [EXTRACTED]
+- 6. 마이그레이션 안전 체크리스트 -> contains -> Phase C 완료 검증 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 1. 설계 원칙 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 2. 파일 구조 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 3. Phase A — 기반 인프라 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 4. Phase B — 도메인 Response 모델 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 5. Phase C — 라우트 적용 패턴 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 6. 마이그레이션 안전 체크리스트 [EXTRACTED]
+- Design: pydantic-schema-refinement -> contains -> 7. 영향 범위 요약 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, 3. Phase A — 기반 인프라, 4. Phase B — 도메인 Response 모델를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 pydantic-schema-refinement.design.md이다.
+
+### Key Facts
+- 1. **기존 API 계약 유지**: `return {dict}` 키 구조를 그대로 Pydantic 모델로 옮긴다. 프론트엔드 Breaking change 금지. 2. **점진 적용**: Phase A→B→C 순서, 각 Phase 완료 시 서버 기동 + 빌드 검증. 3. **Generic 재사용**: 반복 패턴은 `Generic[T]` 공통 모델로 흡수. 4. **Supabase dict 호환**: DB에서 반환하는 row dict를 `model_validate(row)` 또는 `**row`로 변환. 5. **Optional 표기…
+- 3-1. `app/models/types.py` (공유 Literal 타입)
+- 4-1. `app/models/proposal_schemas.py`
+- > Plan 참조: `docs/01-plan/features/pydantic-schema-refinement.plan.md`
+- Phase A 완료 검증 - [ ] `uv run python -c "from app.models.common import StatusResponse, ItemsResponse, PaginatedResponse"` 성공 - [ ] `uv run python -c "from app.models.auth_schemas import CurrentUser"` 성공 - [ ] `uv run python -c "from app.models.types import UserRole, ProposalStatus"` 성공 - [ ] `uv run…

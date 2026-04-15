@@ -623,26 +623,32 @@ export default function BidReviewPage() {
 
           // 2) proposal_status 업데이트
           try {
+            console.log(`[review] PUT /bids/${bidNo}/status: status="${status}"`);
             const statusRes = await fetch(`${baseUrl}/bids/${bidNo}/status`, {
               method: "PUT",
               headers,
               body: JSON.stringify({ status }),
             });
+            console.log(`[review] 응답 상태: ${statusRes.status} ${statusRes.statusText}`);
+
             if (!statusRes.ok) {
-              console.warn(
-                "[review] 상태 업데이트 경고 (계속 진행):",
+              const errText = await statusRes.text();
+              console.error(
+                "[review] 상태 업데이트 실패:",
                 statusRes.status,
                 statusRes.statusText,
+                errText,
               );
             } else {
               const statusData = await statusRes.json();
-              console.log("[review] 상태 업데이트 완료:", statusData);
+              console.log("[review] 상태 업데이트 성공:", statusData);
 
-              // DB 동기화 대기 (500ms) 후 페이지 이동
-              await new Promise(resolve => setTimeout(resolve, 500));
+              // DB 동기화 대기 (1000ms로 증가) 후 페이지 이동
+              console.log("[review] 500ms 대기 중...");
+              await new Promise(resolve => setTimeout(resolve, 1000));
             }
           } catch (e) {
-            console.warn("[review] 상태 업데이트 중 오류 (계속 진행):", e);
+            console.error("[review] 상태 업데이트 중 오류 (계속 진행):", e);
           }
         } catch (e) {
           console.error("[review] No-Go 프로세스 실패:", e);

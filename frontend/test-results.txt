@@ -1,0 +1,22 @@
+Error: Cannot find module 'verbose'
+Require stack:
+- C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js
+- C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\program.js
+- C:\project\tenopa proposer\-agent-master\frontend\node_modules\@playwright\test\cli.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at require.resolve (node:internal/modules/helpers:163:19)
+    at resolveReporter (C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js:212:18)
+    at C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js:173:42
+    at Array.map (<anonymous>)
+    at resolveReporterOption (C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js:173:30)
+    at overridesFromOptions (C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js:135:15)
+    at runTests (C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\testActions.js:50:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async i.<anonymous> (C:\project\tenopa proposer\-agent-master\frontend\node_modules\playwright\lib\program.js:56:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\project\\tenopa proposer\\-agent-master\\frontend\\node_modules\\playwright\\lib\\testActions.js',
+    'C:\\project\\tenopa proposer\\-agent-master\\frontend\\node_modules\\playwright\\lib\\program.js',
+    'C:\\project\\tenopa proposer\\-agent-master\\frontend\\node_modules\\@playwright\\test\\cli.js'
+  ]
+}

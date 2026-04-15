@@ -228,6 +228,57 @@ function ProposalsContent() {
     }
   }
 
+  // ── Path A: 제안결정 옵션 — 제안포기 ──
+  async function handleDecisionAbandon(bid: MonitoredBid) {
+    setError("");
+    setStartingBid(bid.bid_no);
+    try {
+      await api.proposals.recordBidDecision(bid.bid_no, 'abandon', '제안 진행을 포기합니다');
+
+      // 목록 새로고침
+      await loadDecidedBids();
+      setError("제안을 포기했습니다");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "제안포기 처리 실패");
+    } finally {
+      setStartingBid(null);
+    }
+  }
+
+  // ── Path A: 제안결정 옵션 — 제안유보 ──
+  async function handleDecisionHold(bid: MonitoredBid) {
+    setError("");
+    setStartingBid(bid.bid_no);
+    try {
+      await api.proposals.recordBidDecision(bid.bid_no, 'hold', '향후 판단을 위해 보류합니다');
+
+      // 목록 새로고침
+      await loadDecidedBids();
+      setError("제안을 유보했습니다");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "제안유보 처리 실패");
+    } finally {
+      setStartingBid(null);
+    }
+  }
+
+  // ── Path A: 제안결정 옵션 — 관련없음 ──
+  async function handleDecisionIrrelevant(bid: MonitoredBid) {
+    setError("");
+    setStartingBid(bid.bid_no);
+    try {
+      await api.proposals.recordBidDecision(bid.bid_no, 'irrelevant', '우리 사업과 무관한 과제입니다');
+
+      // 목록 새로고침
+      await loadDecidedBids();
+      setError("이 과제를 관련없음으로 표시했습니다");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "관련없음 처리 실패");
+    } finally {
+      setStartingBid(null);
+    }
+  }
+
   // ── 담당자 선택 핸들러 ──
   async function handleSelectOwner(ownerId: string) {
     if (!selectedProposal) return;
@@ -403,6 +454,7 @@ function ProposalsContent() {
         <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-0.5 border border-[#262626]">
           {[
             { value: "all", label: "전체" },
+            { value: "task_waiting", label: "제안작업" },
             { value: "processing", label: "진행중" },
             { value: "awaiting_result", label: "결과대기" },
             { value: "completed", label: "완료" },
@@ -525,17 +577,56 @@ function ProposalsContent() {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex flex-col items-end gap-2 shrink-0">
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border text-[#3ecf8e] bg-emerald-950/60 border-emerald-900">
                           {bid.proposal_status}
                         </span>
-                        <button
-                          onClick={() => startFromDecidedBid(bid)}
-                          disabled={isStarting}
-                          className="bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-40 text-black font-semibold rounded-lg px-3 py-1.5 text-xs transition-colors"
-                        >
-                          {isStarting ? "생성 중..." : "제안서 시작"}
-                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => startFromDecidedBid(bid)}
+                            disabled={isStarting}
+                            className="bg-[#3ecf8e] hover:bg-[#49e59e] disabled:opacity-40 text-black font-semibold rounded-lg px-2 py-1 text-[11px] transition-colors"
+                            title="제안결정: 이 과제로 제안을 진행합니다"
+                          >
+                            {isStarting ? "진행 중..." : "제안결정"}
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm("이 과제를 포기하시겠습니까?")) {
+                                handleDecisionAbandon(bid);
+                              }
+                            }}
+                            disabled={isStarting}
+                            className="bg-slate-700 hover:bg-slate-600 disabled:opacity-40 text-[#ededed] font-semibold rounded-lg px-2 py-1 text-[11px] transition-colors"
+                            title="제안포기: 이 과제에 대한 제안을 포기합니다"
+                          >
+                            포기
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm("이 과제를 유보하시겠습니까?")) {
+                                handleDecisionHold(bid);
+                              }
+                            }}
+                            disabled={isStarting}
+                            className="bg-yellow-700 hover:bg-yellow-600 disabled:opacity-40 text-[#ededed] font-semibold rounded-lg px-2 py-1 text-[11px] transition-colors"
+                            title="제안유보: 나중에 판단하기 위해 보류합니다"
+                          >
+                            유보
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm("이 과제를 관련없음으로 표시하시겠습니까?")) {
+                                handleDecisionIrrelevant(bid);
+                              }
+                            }}
+                            disabled={isStarting}
+                            className="bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-[#ededed] font-semibold rounded-lg px-2 py-1 text-[11px] transition-colors"
+                            title="관련없음: 우리 사업과 무관한 과제입니다"
+                          >
+                            제외
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -730,6 +821,13 @@ function ProposalsContent() {
                   onSort={toggleSort}
                 />
                 {[...proposals]
+                  .filter((p) => {
+                    // 제안작업 필터 (go_decision=true인 과제만 표시)
+                    if (statusFilter === "task_waiting") {
+                      return p.go_decision === true;
+                    }
+                    return true;
+                  })
                   .sort(
                     sortKey
                       ? createSortComparator(sortKey, sortAsc ? 1 : -1)

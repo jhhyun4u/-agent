@@ -1,0 +1,164 @@
+# Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) & Gap Summary (v2.0)
+Cohesion: 0.08 | Nodes: 32
+
+## Key Nodes
+- **Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 15 connections
+  - -> contains -> [[analysis-overview]]
+  - -> contains -> [[p1-fix-verification]]
+  - -> contains -> [[p2-fix-verification-v30]]
+  - -> contains -> [[overall-scores-v30]]
+  - -> contains -> [[module-1-tokenmanagerpy-ss21]]
+  - -> contains -> [[module-2-aistatusmanagerpy-ss22]]
+  - -> contains -> [[module-3-sectionlockpy-ss24]]
+  - -> contains -> [[module-4-scheduledmonitorpy-ss25-2]]
+  - -> contains -> [[module-5-trustworthinesspy-ss16-3-1]]
+  - -> contains -> [[module-6-sourcetaggerpy-ss16-3-2]]
+  - -> contains -> [[integration-check-v20]]
+  - -> contains -> [[gap-summary-v20]]
+  - -> contains -> [[match-rate-calculation]]
+  - -> contains -> [[recommended-actions-v30]]
+  - -> contains -> [[version-history]]
+- **Gap Summary (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 5 connections
+  - -> contains -> [[p0-critical-none]]
+  - -> contains -> [[p1-high-0-items]]
+  - -> contains -> [[p2-low-1-item-remaining]]
+  - -> contains -> [[p2-resolved-11-items]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Integration Check (v2.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 5 connections
+  - -> contains -> [[claudeclientpy-trustworthinessrules]]
+  - -> contains -> [[mainpy-scheduler-setup]]
+  - -> contains -> [[routesworkflowpy-section-lock-ai-status-ai-control]]
+  - -> contains -> [[006g2bmonitorlogsql]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Module 2: ai_status_manager.py (SS22)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 5 connections
+  - -> contains -> [[implemented-design-o-implementation-o]]
+  - -> contains -> [[api-endpoints-ss22-3]]
+  - -> contains -> [[remaining-differences-v30]]
+  - -> contains -> [[implementation-quality-notes-a3-endpoints]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Remaining Differences (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 5 connections
+  - <- contains <- [[module-1-tokenmanagerpy-ss21]]
+  - <- contains <- [[module-2-aistatusmanagerpy-ss22]]
+  - <- contains <- [[module-4-scheduledmonitorpy-ss25-2]]
+  - <- contains <- [[module-5-trustworthinesspy-ss16-3-1]]
+  - <- contains <- [[module-6-sourcetaggerpy-ss16-3-2]]
+- **Implemented (Design O, Implementation O)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 4 connections
+  - <- contains <- [[module-1-tokenmanagerpy-ss21]]
+  - <- contains <- [[module-2-aistatusmanagerpy-ss22]]
+  - <- contains <- [[module-5-trustworthinesspy-ss16-3-1]]
+  - <- contains <- [[module-6-sourcetaggerpy-ss16-3-2]]
+- **Module 6: source_tagger.py (SS16-3-2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 4 connections
+  - -> contains -> [[implemented-design-o-implementation-o]]
+  - -> contains -> [[implementation-quality-notes-s1s6-fixes]]
+  - -> contains -> [[remaining-differences-v30]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Match Rate Calculation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 3 connections
+  - -> contains -> [[methodology]]
+  - -> contains -> [[module-scores-v30]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Module 1: token_manager.py (SS21)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 3 connections
+  - -> contains -> [[implemented-design-o-implementation-o]]
+  - -> contains -> [[remaining-differences-v30]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Module 5: trustworthiness.py (SS16-3-1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 3 connections
+  - -> contains -> [[implemented-design-o-implementation-o]]
+  - -> contains -> [[remaining-differences-v30]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Module 4: scheduled_monitor.py (SS25-2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 2 connections
+  - -> contains -> [[remaining-differences-v30]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Recommended Actions (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 2 connections
+  - -> contains -> [[deferred]]
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **006_g2b_monitor_log.sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[integration-check-v20]]
+- **Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **API Endpoints (SS22-3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[module-2-aistatusmanagerpy-ss22]]
+- **claude_client.py -- TRUSTWORTHINESS_RULES** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[integration-check-v20]]
+- **Deferred** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[recommended-actions-v30]]
+- **Implementation Quality Notes (A3 endpoints)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[module-2-aistatusmanagerpy-ss22]]
+- **Implementation Quality Notes (S1/S6 fixes)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[module-6-sourcetaggerpy-ss16-3-2]]
+- **main.py -- Scheduler Setup** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[integration-check-v20]]
+- **Methodology** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[match-rate-calculation]]
+- **Module 3: section_lock.py (SS24)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **Module Scores (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[match-rate-calculation]]
+- **Overall Scores (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **P0 -- Critical (None)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[gap-summary-v20]]
+- **P1 -- High (0 items)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[gap-summary-v20]]
+- **P1 Fix Verification** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **P2 -- Low (1 item remaining)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[gap-summary-v20]]
+- **P2 -- Resolved (11 items)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[gap-summary-v20]]
+- **P2 Fix Verification (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+- **routes_workflow.py -- Section Lock + AI Status + AI Control** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[integration-check-v20]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\remaining-modules\remaining-modules.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-remaining-6-modules-re-analysis-v30]]
+
+## Internal Relationships
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Analysis Overview [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> P1 Fix Verification [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> P2 Fix Verification (v3.0) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Overall Scores (v3.0) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 1: token_manager.py (SS21) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 2: ai_status_manager.py (SS22) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 3: section_lock.py (SS24) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 4: scheduled_monitor.py (SS25-2) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 5: trustworthiness.py (SS16-3-1) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Module 6: source_tagger.py (SS16-3-2) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Integration Check (v2.0) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Gap Summary (v2.0) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Match Rate Calculation [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Recommended Actions (v3.0) [EXTRACTED]
+- Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0) -> contains -> Version History [EXTRACTED]
+- Gap Summary (v2.0) -> contains -> P0 -- Critical (None) [EXTRACTED]
+- Gap Summary (v2.0) -> contains -> P1 -- High (0 items) [EXTRACTED]
+- Gap Summary (v2.0) -> contains -> P2 -- Low (1 item remaining) [EXTRACTED]
+- Gap Summary (v2.0) -> contains -> P2 -- Resolved (11 items) [EXTRACTED]
+- Integration Check (v2.0) -> contains -> claude_client.py -- TRUSTWORTHINESS_RULES [EXTRACTED]
+- Integration Check (v2.0) -> contains -> main.py -- Scheduler Setup [EXTRACTED]
+- Integration Check (v2.0) -> contains -> routes_workflow.py -- Section Lock + AI Status + AI Control [EXTRACTED]
+- Integration Check (v2.0) -> contains -> 006_g2b_monitor_log.sql [EXTRACTED]
+- Match Rate Calculation -> contains -> Methodology [EXTRACTED]
+- Match Rate Calculation -> contains -> Module Scores (v3.0) [EXTRACTED]
+- Module 1: token_manager.py (SS21) -> contains -> Implemented (Design O, Implementation O) [EXTRACTED]
+- Module 1: token_manager.py (SS21) -> contains -> Remaining Differences (v3.0) [EXTRACTED]
+- Module 2: ai_status_manager.py (SS22) -> contains -> Implemented (Design O, Implementation O) [EXTRACTED]
+- Module 2: ai_status_manager.py (SS22) -> contains -> API Endpoints (SS22-3) [EXTRACTED]
+- Module 2: ai_status_manager.py (SS22) -> contains -> Remaining Differences (v3.0) [EXTRACTED]
+- Module 2: ai_status_manager.py (SS22) -> contains -> Implementation Quality Notes (A3 endpoints) [EXTRACTED]
+- Module 4: scheduled_monitor.py (SS25-2) -> contains -> Remaining Differences (v3.0) [EXTRACTED]
+- Module 5: trustworthiness.py (SS16-3-1) -> contains -> Implemented (Design O, Implementation O) [EXTRACTED]
+- Module 5: trustworthiness.py (SS16-3-1) -> contains -> Remaining Differences (v3.0) [EXTRACTED]
+- Module 6: source_tagger.py (SS16-3-2) -> contains -> Implemented (Design O, Implementation O) [EXTRACTED]
+- Module 6: source_tagger.py (SS16-3-2) -> contains -> Implementation Quality Notes (S1/S6 fixes) [EXTRACTED]
+- Module 6: source_tagger.py (SS16-3-2) -> contains -> Remaining Differences (v3.0) [EXTRACTED]
+- Recommended Actions (v3.0) -> contains -> Deferred [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Design-Implementation Gap Analysis: Remaining 6 Modules (Re-analysis v3.0), Gap Summary (v2.0), Integration Check (v2.0)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 remaining-modules.analysis.md이다.
+
+### Key Facts
+- > **Summary**: Phase 5 service module 6종의 설계-구현 정합성 재분석 (P2 12건 수정 후) > > **Author**: gap-detector / pdca-iterator > **Created**: 2026-03-16 > **Last Modified**: 2026-03-16 > **Status**: Approved
+- P0 -- Critical (None)
+- claude_client.py -- TRUSTWORTHINESS_RULES
+- **Design**: `14-services-v3.md` SS22-1 (lines 412-610) **Implementation**: `app/services/ai_status_manager.py` **Match Rate**: 97% (was 92%)
+- | # | Item | Design | Implementation | Impact | Status | |---|------|--------|----------------|--------|--------| | T1 | build_context return type | Full messages (system + user) | Content blocks for system prompt only | Low | RESOLVED (design updated) | | T3 | build_structured_output_schema() |…

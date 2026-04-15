@@ -1,0 +1,161 @@
+# Design: 이메일 알림 + 개인 설정 (email-notification) & 4. 프론트엔드: `/settings` 개인 설정 페이지
+Cohesion: 0.07 | Nodes: 32
+
+## Key Nodes
+- **Design: 이메일 알림 + 개인 설정 (email-notification)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 9 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-db]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-settings]]
+  - -> contains -> [[5-appsidebartsx]]
+  - -> contains -> [[6-monitoringsettings]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-implementation-order]]
+  - -> contains -> [[version-history]]
+- **4. 프론트엔드: `/settings` 개인 설정 페이지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 7 connections
+  - -> contains -> [[41-frontendappappsettingspagetsx]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - -> contains -> [[44]]
+  - -> contains -> [[45]]
+  - -> contains -> [[46-api-api]]
+  - <- contains <- [[design-email-notification]]
+- **3. 백엔드 변경** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 6 connections
+  - -> contains -> [[31-notificationschemaspy]]
+  - -> contains -> [[32-routesnotificationpy]]
+  - -> contains -> [[33-notificationservicepy]]
+  - -> contains -> [[34-feedbacklooppy]]
+  - -> contains -> [[35-scheduledmonitorpy]]
+  - <- contains <- [[design-email-notification]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 4 connections
+  - <- has_code_example <- [[31-notificationschemaspy]]
+  - <- has_code_example <- [[32-routesnotificationpy]]
+  - <- has_code_example <- [[34-feedbacklooppy]]
+  - <- has_code_example <- [[35-scheduledmonitorpy]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 4 connections
+  - <- has_code_example <- [[43]]
+  - <- has_code_example <- [[44]]
+  - <- has_code_example <- [[46-api-api]]
+  - <- has_code_example <- [[63]]
+- **6. `/monitoring/settings` 정리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 4 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63]]
+  - <- contains <- [[design-email-notification]]
+- **2. DB 마이그레이션** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 3 connections
+  - -> contains -> [[21-databasemigrations012emailnotificationsettingssql]]
+  - -> contains -> [[22-jsonb]]
+  - <- contains <- [[design-email-notification]]
+- **2.1 파일: `database/migrations/012_email_notification_settings.sql` (재작성)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[2-db]]
+- **2.2 확장 후 JSONB** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-db]]
+- **3.1 `notification_schemas.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3.2 `routes_notification.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3.4 `feedback_loop.py` — 이메일 연동 추가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3.5 `scheduled_monitor.py` — 키 변경** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **4.3 프로필 탭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-settings]]
+- **4.4 알림 탭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-settings]]
+- **4.6 API 호출 — 기존 `api` 클라이언트 사용** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-settings]]
+- **5.1 하단 이메일 영역 → `/settings` 링크** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[tsx]]
+  - <- contains <- [[5-appsidebartsx]]
+- **5. `AppSidebar.tsx` 수정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> contains -> [[51-settings]]
+  - <- contains <- [[design-email-notification]]
+- **6.3 변경** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6-monitoringsettings]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- has_code_example <- [[22-jsonb]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- has_code_example <- [[21-databasemigrations012emailnotificationsettingssql]]
+- **tsx** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- has_code_example <- [[51-settings]]
+- **1. 아키텍처 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[design-email-notification]]
+- **3.3 `notification_service.py` — 키 매핑 변경** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 라우트: `frontend/app/(app)/settings/page.tsx`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[4-settings]]
+- **4.2 데이터 소스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[4-settings]]
+- **4.5 표시 탭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[4-settings]]
+- **6.1 제거 대상** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[6-monitoringsettings]]
+- **6.2 유지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[6-monitoringsettings]]
+- **7. 에러 처리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[design-email-notification]]
+- **8. 구현 순서 (Implementation Order)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[design-email-notification]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\email-notification\email-notification.design.md) -- 1 connections
+  - <- contains <- [[design-email-notification]]
+
+## Internal Relationships
+- 2.1 파일: `database/migrations/012_email_notification_settings.sql` (재작성) -> has_code_example -> sql [EXTRACTED]
+- 2.2 확장 후 JSONB -> has_code_example -> json [EXTRACTED]
+- 2. DB 마이그레이션 -> contains -> 2.1 파일: `database/migrations/012_email_notification_settings.sql` (재작성) [EXTRACTED]
+- 2. DB 마이그레이션 -> contains -> 2.2 확장 후 JSONB [EXTRACTED]
+- 3. 백엔드 변경 -> contains -> 3.1 `notification_schemas.py` [EXTRACTED]
+- 3. 백엔드 변경 -> contains -> 3.2 `routes_notification.py` [EXTRACTED]
+- 3. 백엔드 변경 -> contains -> 3.3 `notification_service.py` — 키 매핑 변경 [EXTRACTED]
+- 3. 백엔드 변경 -> contains -> 3.4 `feedback_loop.py` — 이메일 연동 추가 [EXTRACTED]
+- 3. 백엔드 변경 -> contains -> 3.5 `scheduled_monitor.py` — 키 변경 [EXTRACTED]
+- 3.1 `notification_schemas.py` -> has_code_example -> python [EXTRACTED]
+- 3.2 `routes_notification.py` -> has_code_example -> python [EXTRACTED]
+- 3.4 `feedback_loop.py` — 이메일 연동 추가 -> has_code_example -> python [EXTRACTED]
+- 3.5 `scheduled_monitor.py` — 키 변경 -> has_code_example -> python [EXTRACTED]
+- 4.3 프로필 탭 -> has_code_example -> typescript [EXTRACTED]
+- 4.4 알림 탭 -> has_code_example -> typescript [EXTRACTED]
+- 4.6 API 호출 — 기존 `api` 클라이언트 사용 -> has_code_example -> typescript [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.1 라우트: `frontend/app/(app)/settings/page.tsx` [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.2 데이터 소스 [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.3 프로필 탭 [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.4 알림 탭 [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.5 표시 탭 [EXTRACTED]
+- 4. 프론트엔드: `/settings` 개인 설정 페이지 -> contains -> 4.6 API 호출 — 기존 `api` 클라이언트 사용 [EXTRACTED]
+- 5.1 하단 이메일 영역 → `/settings` 링크 -> has_code_example -> tsx [EXTRACTED]
+- 5. `AppSidebar.tsx` 수정 -> contains -> 5.1 하단 이메일 영역 → `/settings` 링크 [EXTRACTED]
+- 6.3 변경 -> has_code_example -> typescript [EXTRACTED]
+- 6. `/monitoring/settings` 정리 -> contains -> 6.1 제거 대상 [EXTRACTED]
+- 6. `/monitoring/settings` 정리 -> contains -> 6.2 유지 [EXTRACTED]
+- 6. `/monitoring/settings` 정리 -> contains -> 6.3 변경 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 1. 아키텍처 개요 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 2. DB 마이그레이션 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 3. 백엔드 변경 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 4. 프론트엔드: `/settings` 개인 설정 페이지 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 5. `AppSidebar.tsx` 수정 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 6. `/monitoring/settings` 정리 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 7. 에러 처리 [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> 8. 구현 순서 (Implementation Order) [EXTRACTED]
+- Design: 이메일 알림 + 개인 설정 (email-notification) -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Design: 이메일 알림 + 개인 설정 (email-notification), 4. 프론트엔드: `/settings` 개인 설정 페이지, 3. 백엔드 변경를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 email-notification.design.md이다.
+
+### Key Facts
+- > **Version**: 2.0 > **Date**: 2026-03-26 > **Plan**: `docs/01-plan/features/email-notification.plan.md` v2.0 > **Status**: Design
+- 4.1 라우트: `frontend/app/(app)/settings/page.tsx`
+- 3.1 `notification_schemas.py`
+- ```python class NotificationSettingsResponse(BaseModel): teams: bool = True in_app: bool = True email_monitoring: bool = False email_proposal: bool = False email_bidding: bool = False email_learning: bool = False email_enabled: bool = False  # 서버 설정 (읽기 전용) ```
+- ```typescript interface UserProfile { id: string; name: string; email: string; role: string; team_name?: string; division_name?: string; }

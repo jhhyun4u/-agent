@@ -564,26 +564,42 @@ def _fire_kb_update(proposal_id: str, result: str, state: ProposalState) -> None
     try:
         loop = asyncio.get_running_loop()
         loop.create_task(_update())
-    except RuntimeError:
-        pass
+    except RuntimeError as e:
+        logger.warning(f"KB 업데이트 비동기 태스크 생성 실패 (이벤트 루프 없음, proposal_id={proposal_id}): {e}")
 
 
 def _fire_status_update(proposal_id: str, result: str | None) -> None:
-    """proposals 테이블 상태를 closed/won/lost로 업데이트."""
+    """StateMachine으로 제안서 상태를 closed로 업데이트 (win_result 포함)."""
     async def _update():
         try:
-            from app.utils.supabase_client import get_async_client
-            client = await get_async_client()
-            status = "won" if result == "won" else "lost" if result == "lost" else "completed"
-            await client.table("proposals").update({
-                "status": status,
-                "current_phase": "closed",
-            }).eq("id", proposal_id).execute()
+            from app.state_machine import StateMachine
+
+            # 결과가 없으면 처리하지 않음
+            if not result:
+                logger.warning(f"평가 결과 없음 (proposal_id={proposal_id}), 상태 업데이트 스킵")
+                return
+
+            sm = StateMachine(proposal_id)
+
+            # win_result 결정: won/lost만 유효
+            if result not in ("won", "lost"):
+                logger.warning(f"알 수 없는 평가 결과 (proposal_id={proposal_id}, result={result}), abandoned로 처리")
+                win_result = "abandoned"
+            else:
+                win_result = result
+
+            # StateMachine으로 closed 상태로 전환
+            await sm.close_proposal(
+                user_id=None,
+                win_result=win_result,
+                reason=f"프로젝트 종료: {result}",
+            )
+            logger.info(f"[PROJECT_CLOSED] proposal_id={proposal_id}, win_result={win_result}")
         except Exception as e:
             logger.warning(f"프로젝트 상태 업데이트 실패: {e}")
 
     try:
         loop = asyncio.get_running_loop()
         loop.create_task(_update())
-    except RuntimeError:
-        pass
+    except RuntimeError as e:
+        logger.warning(f"프로젝트 상태 업데이트 비동기 태스크 생성 실패 (이벤트 루프 없음, proposal_id={proposal_id}): {e}")

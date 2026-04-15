@@ -1,0 +1,731 @@
+# frontend-gaps Completion Report & 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report
+Cohesion: 0.01 | Nodes: 176
+
+## Key Nodes
+- **frontend-gaps Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 12 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-completed-items]]
+  - -> contains -> [[4-incompletedeferred-items]]
+  - -> contains -> [[5-quality-metrics]]
+  - -> contains -> [[6-lessons-learned-retrospective]]
+  - -> contains -> [[7-process-improvement-suggestions]]
+  - -> contains -> [[8-next-steps]]
+  - -> contains -> [[9-changelog]]
+  - -> contains -> [[10-gap-analysis-impact-summary]]
+  - -> contains -> [[version-history]]
+  - -> contains -> [[related-documents]]
+- **제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 11 connections
+  - -> references -> [[unresolvedrefindex]]
+  - -> references -> [[unresolvedrefpromptenhancementdesign]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-overall-scores]]
+  - -> contains -> [[3-differences-found]]
+  - -> contains -> [[4-detailed-item-by-item-match-table]]
+  - -> contains -> [[5-match-rate-calculation]]
+  - -> contains -> [[6-gap-impact-analysis]]
+  - -> contains -> [[7-recommended-actions]]
+  - -> contains -> [[8-conclusion]]
+  - -> contains -> [[version-history]]
+- **프론트엔드 v4.0 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 11 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-check]]
+  - -> contains -> [[5-low]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+  - -> contains -> [[11]]
+- **proposal-agent-v1 PDCA 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 10 connections
+  - -> contains -> [[1-executive-summary]]
+  - -> contains -> [[2-plan-summary]]
+  - -> contains -> [[3-design-summary]]
+  - -> contains -> [[4-do-summary]]
+  - -> contains -> [[5-check-results]]
+  - -> contains -> [[6-key-decisions-trade-offs]]
+  - -> contains -> [[7-lessons-learned]]
+  - -> contains -> [[8-next-steps]]
+  - -> contains -> [[9-metrics]]
+  - -> contains -> [[10-conclusion-recommendations]]
+- **4. Detailed Item-by-Item Match Table** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 6 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - -> contains -> [[44-prompt-enhancement]]
+  - -> contains -> [[45]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **6. 주요 발견사항** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 6 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63]]
+  - -> contains -> [[64-v31]]
+  - -> contains -> [[65]]
+  - <- contains <- [[v40]]
+- **4. 실행 단계 요약 (Do Summary)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 6 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42-phase-35-grant-writer-best-practice-completed]]
+  - -> contains -> [[43-phase-4-g2b-completed]]
+  - -> contains -> [[44-phase-45-completed]]
+  - -> contains -> [[45]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **3.2 Missing Design for New Features (Design X, Implementation O)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 5 connections
+  - -> contains -> [[321-sectionpromptspy]]
+  - -> contains -> [[322-syncdynamicsections]]
+  - -> contains -> [[323-plan]]
+  - -> contains -> [[324-reviewsectionnode]]
+  - <- contains <- [[3-differences-found]]
+- **3. Differences Found** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 5 connections
+  - -> contains -> [[31-step-4-graph-topology-major-structural-change-design-60]]
+  - -> contains -> [[32-missing-design-for-new-features-design-x-implementation-o]]
+  - -> contains -> [[33-changed-features-design-implementation]]
+  - -> contains -> [[34-design-features-not-yet-implemented]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **4.2 상세 평가** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 5 connections
+  - -> contains -> [[37-100]]
+  - -> contains -> [[96]]
+  - -> contains -> [[api-96]]
+  - -> contains -> [[ux-91]]
+  - <- contains <- [[4-check]]
+- **10.3 성공의 핵심 요소** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 5 connections
+  - -> references -> [[unresolvedrefproposalagentv1requirements]]
+  - -> references -> [[unresolvedrefindex]]
+  - -> references -> [[unresolvedrefproposalagentv1analysis]]
+  - -> references -> [[unresolvedrefproposalworkflowanalysis]]
+  - <- contains <- [[10-conclusion-recommendations]]
+- **5. 검증 단계 결과 (Check Results)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[51-vs]]
+  - -> contains -> [[52-vs]]
+  - -> contains -> [[53-2]]
+  - -> contains -> [[54]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63-ppt-3-stage-v36]]
+  - -> contains -> [[64-auth-v36]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **9. 성과 지표 (Metrics)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92]]
+  - -> contains -> [[93]]
+  - -> contains -> [[94]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **__unresolved__::ref::_index** () -- 4 connections
+  - <- references <- [[step-34-gap-analysis-report]]
+  - <- references <- [[2-related-documents]]
+  - <- references <- [[related-documents]]
+  - <- references <- [[103]]
+- **3.3 Changed Features (Design != Implementation)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 4 connections
+  - -> contains -> [[331-selfreview-compliance-matrix]]
+  - -> contains -> [[332-routeafterselfreview]]
+  - -> contains -> [[333-planmerge-defaults]]
+  - <- contains <- [[3-differences-found]]
+- **6. Gap Impact Analysis** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 4 connections
+  - -> contains -> [[61-high-impact]]
+  - -> contains -> [[62-medium-impact]]
+  - -> contains -> [[63-low-impact]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **7. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 4 connections
+  - -> contains -> [[71-immediate-actions-v35]]
+  - -> contains -> [[72-implementation-review]]
+  - -> contains -> [[73-prompt-enhancementdesignmd]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **8. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 4 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82-match-rate-summary]]
+  - -> contains -> [[83-next-steps]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **2. 관련 문서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 4 connections
+  - -> references -> [[unresolvedreffrontenduximprovementdesign]]
+  - -> references -> [[unresolvedreffrontendanalysis]]
+  - -> references -> [[unresolvedreffrontendv4analysis]]
+  - <- contains <- [[v40]]
+- **7. 품질 지표** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 4 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72]]
+  - -> contains -> [[73-typescript]]
+  - <- contains <- [[v40]]
+- **8. 교훈 및 회고** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 4 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82]]
+  - -> contains -> [[83]]
+  - <- contains <- [[v40]]
+- **9. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 4 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92-1]]
+  - -> contains -> [[93-pdca]]
+  - <- contains <- [[v40]]
+- **10. Gap Analysis Impact Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[before-this-cycle-v10-85]]
+  - -> contains -> [[after-this-cycle-v20-92]]
+  - -> contains -> [[remaining-gaps-8-items-non-blocking]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **3. Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[31-gaps-resolved-88]]
+  - -> contains -> [[32-code-changes-summary]]
+  - -> contains -> [[33-deliverables]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **4. Incomplete/Deferred Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[41-high-priority-out-of-scope-for-this-gap-resolution]]
+  - -> contains -> [[42-medium-priority-optional-enhancements]]
+  - -> contains -> [[43-low-priority-design-implementation-details]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **5. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[51-match-rate-improvement]]
+  - -> contains -> [[52-code-quality-observations]]
+  - -> contains -> [[53-resolved-implementation-gaps]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **6. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[61-what-went-well-keep]]
+  - -> contains -> [[62-what-needs-improvement-problem]]
+  - -> contains -> [[63-what-to-try-next-try]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **7. Process Improvement Suggestions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[71-pdca-process-refinement]]
+  - -> contains -> [[72-frontend-backend-sync]]
+  - -> contains -> [[73-documentation-sync]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **8. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 4 connections
+  - -> contains -> [[81-immediate-next-1-day]]
+  - -> contains -> [[82-next-pdca-cycle-phase-6-or-v37]]
+  - -> contains -> [[83-design-document-updates]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **10. 결론 및 권고 (Conclusion & Recommendations)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[101-pdca]]
+  - -> contains -> [[102]]
+  - -> contains -> [[103]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **3. 설계 단계 요약 (Design Summary)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **7. 교훈 및 개선 사항 (Lessons Learned)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72]]
+  - -> contains -> [[73]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **8. 다음 단계 (Next Steps)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[81-phase-5]]
+  - -> contains -> [[82]]
+  - -> contains -> [[83]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **__unresolved__::ref::frontend_analysis** () -- 3 connections
+  - <- references <- [[2]]
+  - <- references <- [[2-related-documents]]
+  - <- references <- [[related-documents]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **5. Match Rate Calculation** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 3 connections
+  - -> contains -> [[51-summary-by-category]]
+  - -> contains -> [[52-overall-match-rate]]
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - <- has_code_example <- [[321-gap-1-appsidebar-high]]
+  - <- has_code_example <- [[322-gap-2-artifactsdiff-api-medium]]
+  - <- has_code_example <- [[a1-diff-ui]]
+- **1. 개요** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[v40]]
+- **11. 변경 이력** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> contains -> [[a1-diff-ui]]
+  - -> contains -> [[a2-gap-1]]
+  - <- contains <- [[v40]]
+- **3. 완료 항목** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> contains -> [[31-do]]
+  - -> contains -> [[32-act]]
+  - <- contains <- [[v40]]
+- **3.2.2 GAP-2: artifacts.diff API 메서드 (MEDIUM)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[32-act]]
+- **3.2 갭 해소 (Act)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> contains -> [[321-gap-1-appsidebar-high]]
+  - -> contains -> [[322-gap-2-artifactsdiff-api-medium]]
+  - <- contains <- [[3]]
+- **4. 점검 결과 (Check)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 3 connections
+  - -> contains -> [[41-v40]]
+  - -> contains -> [[42]]
+  - <- contains <- [[v40]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 3 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 3 connections
+  - -> references -> [[unresolvedrefindex]]
+  - -> references -> [[unresolvedreffrontendanalysis]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 3 connections
+  - -> references -> [[unresolvedrefindex]]
+  - -> references -> [[unresolvedreffrontendanalysis]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **1. 실행 개요 (Executive Summary)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **2. 계획 단계 요약 (Plan Summary)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[21]]
+  - -> contains -> [[22]]
+  - <- contains <- [[proposal-agent-v1-pdca]]
+- **4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[7]]
+  - -> contains -> [[criticalhigh-8]]
+  - <- contains <- [[4-do-summary]]
+- **3.4 Design Features Not Yet Implemented** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 2 connections
+  - -> contains -> [[341-proposalmerge]]
+  - <- contains <- [[3-differences-found]]
+- **3.1 빌드 검증 (Do)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 2 connections
+  - -> contains -> [[311-diff-match-patch]]
+  - <- contains <- [[3]]
+- **3.2.1 GAP-1: AppSidebar 모바일 오버레이 (HIGH)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[32-act]]
+- **6.5 빌드 최적화** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[6]]
+- **A1. Diff 렌더링 UI (선택적)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[11]]
+- **3.2 Code Changes Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 2 connections
+  - -> contains -> [[modified-files-7]]
+  - <- contains <- [[3-completed-items]]
+- **9. Changelog** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 2 connections
+  - -> contains -> [[v10-2026-03-18]]
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **__unresolved__::ref::frontend_ux_improvement_design** () -- 1 connections
+  - <- references <- [[2]]
+- **__unresolved__::ref::frontend_v4_analysis** () -- 1 connections
+  - <- references <- [[2]]
+- **__unresolved__::ref::prompt_enhancement_design** () -- 1 connections
+  - <- references <- [[step-34-gap-analysis-report]]
+- **__unresolved__::ref::proposal_agent_v1_analysis** () -- 1 connections
+  - <- references <- [[103]]
+- **__unresolved__::ref::proposal_agent_v1_requirements** () -- 1 connections
+  - <- references <- [[103]]
+- **__unresolved__::ref::proposal_workflow_analysis** () -- 1 connections
+  - <- references <- [[103]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **2. Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **3.1 STEP 4 Graph Topology -- MAJOR STRUCTURAL CHANGE (Design 60%)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[3-differences-found]]
+- **3.2.1 섹션 유형별 전문 프롬프트 (section_prompts.py)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[32-missing-design-for-new-features-design-x-implementation-o]]
+- **3.2.2 스토리라인 기반 목차 동기화 (_sync_dynamic_sections)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[32-missing-design-for-new-features-design-x-implementation-o]]
+- **3.2.3 Plan 리뷰에서 목차+스토리라인 데이터 제공** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[32-missing-design-for-new-features-design-x-implementation-o]]
+- **3.2.4 review_section_node (섹션별 리뷰 게이트)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[32-missing-design-for-new-features-design-x-implementation-o]]
+- **3.3.1 self_review Compliance Matrix 처리** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[33-changed-features-design-implementation]]
+- **3.3.2 route_after_self_review 구현 차이** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[33-changed-features-design-implementation]]
+- **3.3.3 plan_merge defaults 처리** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[33-changed-features-design-implementation]]
+- **3.4.1 proposal_merge (병렬 병합 노드)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[34-design-features-not-yet-implemented]]
+- **4.1 목차-스토리라인-섹션 작성 파이프라인** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[4-detailed-item-by-item-match-table]]
+- **4.2 평가위원 관점 반영** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[4-detailed-item-by-item-match-table]]
+- **4.3 섹션별 순차 작성 + 리뷰** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[4-detailed-item-by-item-match-table]]
+- **4.4 prompt-enhancement 반영** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[4-detailed-item-by-item-match-table]]
+- **4.5 스토리라인 주입 상세** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[4-detailed-item-by-item-match-table]]
+- **5.1 Summary by Category** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[5-match-rate-calculation]]
+- **5.2 Overall Match Rate** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[5-match-rate-calculation]]
+- **6.1 HIGH Impact** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[6-gap-impact-analysis]]
+- **6.2 MEDIUM Impact** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[6-gap-impact-analysis]]
+- **6.3 LOW Impact** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[6-gap-impact-analysis]]
+- **7.1 Immediate Actions (설계 문서 v3.5 업데이트)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[7-recommended-actions]]
+- **7.2 Implementation Review** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[7-recommended-actions]]
+- **7.3 prompt-enhancement.design.md 업데이트** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[7-recommended-actions]]
+- **8.1 주요 발견** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[8-conclusion]]
+- **8.2 Match Rate Summary** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[8-conclusion]]
+- **8.3 Next Steps** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[8-conclusion]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\proposal-workflow.analysis.md) -- 1 connections
+  - <- contains <- [[step-34-gap-analysis-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- has_code_example <- [[65]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- has_code_example <- [[322-gap-2-artifactsdiff-api-medium]]
+- **10. 로그** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[v40]]
+- **1.1 실행 내역** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 결과 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **라우트 (37개, 100%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[42]]
+- **3.1.1 diff-match-patch 설치** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[31-do]]
+- **4.1 분석 v4.0** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[4-check]]
+- **5. 잔여 갭 (의도적 미적용, LOW)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[v40]]
+- **6.1 분석 보고서 오류 발견** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.2 설계 초과 구현 발견** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.3 디자인 시스템 미활용** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.4 v3.1 레거시 완전 제거 확인** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7.1 최종 분석 결과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 해결된 이슈** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.3 TypeScript 검증** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 잘된 점** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 개선 필요 영역** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.3 다음 사이클 적용 방안** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **컴포넌트 (96%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[42]]
+- **9.1 즉시 (본 세션 완료)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 단기 (1주)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.3 중기 (다음 PDCA 사이클)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **A2. Gap-1 구현 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[11]]
+- **API 메서드 (96%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[42]]
+- **UX 설계 일치 (91%)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\frontend-v4.report.md) -- 1 connections
+  - <- contains <- [[42]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **3.1 Gaps Resolved (8/8)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.3 Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **4.1 High Priority (Out of Scope for This Gap Resolution)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[4-incompletedeferred-items]]
+- **4.2 Medium Priority (Optional Enhancements)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[4-incompletedeferred-items]]
+- **4.3 Low Priority (Design Implementation Details)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[4-incompletedeferred-items]]
+- **5.1 Match Rate Improvement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **5.2 Code Quality Observations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **5.3 Resolved Implementation Gaps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **6.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **6.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **6.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **7.1 PDCA Process Refinement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[7-process-improvement-suggestions]]
+- **7.2 Frontend-Backend Sync** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[7-process-improvement-suggestions]]
+- **7.3 Documentation Sync** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[7-process-improvement-suggestions]]
+- **8.1 Immediate (Next 1 Day)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.2 Next PDCA Cycle (Phase 6 or v3.7)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.3 Design Document Updates** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **After This Cycle (v2.0: 92%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[10-gap-analysis-impact-summary]]
+- **Before This Cycle (v1.0: 85%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[10-gap-analysis-impact-summary]]
+- **Modified Files (7)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[32-code-changes-summary]]
+- **Remaining Gaps (8 items, non-blocking)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[10-gap-analysis-impact-summary]]
+- **v1.0 (2026-03-18)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[9-changelog]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-gaps\frontend-gaps.report.md) -- 1 connections
+  - <- contains <- [[frontend-gaps-completion-report]]
+- **10.1 PDCA 사이클 완료 평가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[10-conclusion-recommendations]]
+- **10.2 주요 권고사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[10-conclusion-recommendations]]
+- **1.1 완료 현황** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **1.2 핵심 성과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **2.1 요구사항 문서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[2-plan-summary]]
+- **2.2 기획 핵심 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[2-plan-summary]]
+- **3.1 설계 문서 진화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **3.2 설계 모듈 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **3.3 아키텍처 핵심 결정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **4.1 구현 범위** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.2 Phase 3.5 — Grant-Writer Best Practice 프롬프트 개선 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.3 Phase 4 — G2B 낙찰 + 성과 추적 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.5 구현 통계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **5.1 설계 vs 구현 갭 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.2 설계 vs 요구사항 갭 분석** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.3 설계-구현 차이 잔여 (2건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.4 코드 품질 분석 결과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **6.1 아키텍처 결정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.2 제안서 작성 패턴 진화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.3 PPT 3-stage 파이프라인 (v3.6)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.4 Auth 통합 (v3.6 품질 수정)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **갭 해소 (7건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[44-phase-45-completed]]
+- **7.1 잘 진행된 부분** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.2 개선이 필요한 부분** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.3 다음에 적용할 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **8.1 Phase 5 구현 계획** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.2 잔여 갭 해소** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.3 테스트 강화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **9.1 설계 품질** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9-metrics]]
+- **9.2 구현 규모** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9-metrics]]
+- **9.3 갭 해소 추적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9-metrics]]
+- **9.4 워크플로 성능 (예상)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9-metrics]]
+- **CRITICAL/HIGH 코드 품질 수정 (8건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[44-phase-45-completed]]
+
+## Internal Relationships
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 3.2 Missing Design for New Features (Design X, Implementation O) -> contains -> 3.2.1 섹션 유형별 전문 프롬프트 (section_prompts.py) [EXTRACTED]
+- 3.2 Missing Design for New Features (Design X, Implementation O) -> contains -> 3.2.2 스토리라인 기반 목차 동기화 (_sync_dynamic_sections) [EXTRACTED]
+- 3.2 Missing Design for New Features (Design X, Implementation O) -> contains -> 3.2.3 Plan 리뷰에서 목차+스토리라인 데이터 제공 [EXTRACTED]
+- 3.2 Missing Design for New Features (Design X, Implementation O) -> contains -> 3.2.4 review_section_node (섹션별 리뷰 게이트) [EXTRACTED]
+- 3.3 Changed Features (Design != Implementation) -> contains -> 3.3.1 self_review Compliance Matrix 처리 [EXTRACTED]
+- 3.3 Changed Features (Design != Implementation) -> contains -> 3.3.2 route_after_self_review 구현 차이 [EXTRACTED]
+- 3.3 Changed Features (Design != Implementation) -> contains -> 3.3.3 plan_merge defaults 처리 [EXTRACTED]
+- 3.4 Design Features Not Yet Implemented -> contains -> 3.4.1 proposal_merge (병렬 병합 노드) [EXTRACTED]
+- 3. Differences Found -> contains -> 3.1 STEP 4 Graph Topology -- MAJOR STRUCTURAL CHANGE (Design 60%) [EXTRACTED]
+- 3. Differences Found -> contains -> 3.2 Missing Design for New Features (Design X, Implementation O) [EXTRACTED]
+- 3. Differences Found -> contains -> 3.3 Changed Features (Design != Implementation) [EXTRACTED]
+- 3. Differences Found -> contains -> 3.4 Design Features Not Yet Implemented [EXTRACTED]
+- 4. Detailed Item-by-Item Match Table -> contains -> 4.1 목차-스토리라인-섹션 작성 파이프라인 [EXTRACTED]
+- 4. Detailed Item-by-Item Match Table -> contains -> 4.2 평가위원 관점 반영 [EXTRACTED]
+- 4. Detailed Item-by-Item Match Table -> contains -> 4.3 섹션별 순차 작성 + 리뷰 [EXTRACTED]
+- 4. Detailed Item-by-Item Match Table -> contains -> 4.4 prompt-enhancement 반영 [EXTRACTED]
+- 4. Detailed Item-by-Item Match Table -> contains -> 4.5 스토리라인 주입 상세 [EXTRACTED]
+- 5. Match Rate Calculation -> contains -> 5.1 Summary by Category [EXTRACTED]
+- 5. Match Rate Calculation -> contains -> 5.2 Overall Match Rate [EXTRACTED]
+- 6. Gap Impact Analysis -> contains -> 6.1 HIGH Impact [EXTRACTED]
+- 6. Gap Impact Analysis -> contains -> 6.2 MEDIUM Impact [EXTRACTED]
+- 6. Gap Impact Analysis -> contains -> 6.3 LOW Impact [EXTRACTED]
+- 7. Recommended Actions -> contains -> 7.1 Immediate Actions (설계 문서 v3.5 업데이트) [EXTRACTED]
+- 7. Recommended Actions -> contains -> 7.2 Implementation Review [EXTRACTED]
+- 7. Recommended Actions -> contains -> 7.3 prompt-enhancement.design.md 업데이트 [EXTRACTED]
+- 8. Conclusion -> contains -> 8.1 주요 발견 [EXTRACTED]
+- 8. Conclusion -> contains -> 8.2 Match Rate Summary [EXTRACTED]
+- 8. Conclusion -> contains -> 8.3 Next Steps [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> references -> __unresolved__::ref::_index [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> references -> __unresolved__::ref::prompt_enhancement_design [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 2. Overall Scores [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 3. Differences Found [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 4. Detailed Item-by-Item Match Table [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 5. Match Rate Calculation [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 6. Gap Impact Analysis [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 7. Recommended Actions [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> 8. Conclusion [EXTRACTED]
+- 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report -> contains -> Version History [EXTRACTED]
+- 1. 개요 -> contains -> 1.1 실행 내역 [EXTRACTED]
+- 1. 개요 -> contains -> 1.2 결과 요약 [EXTRACTED]
+- 11. 변경 이력 -> contains -> A1. Diff 렌더링 UI (선택적) [EXTRACTED]
+- 11. 변경 이력 -> contains -> A2. Gap-1 구현 체크리스트 [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::frontend_ux_improvement_design [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::frontend_analysis [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::frontend_v4_analysis [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.1 빌드 검증 (Do) [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.2 갭 해소 (Act) [EXTRACTED]
+- 3.1 빌드 검증 (Do) -> contains -> 3.1.1 diff-match-patch 설치 [EXTRACTED]
+- 3.2.1 GAP-1: AppSidebar 모바일 오버레이 (HIGH) -> has_code_example -> typescript [EXTRACTED]
+- 3.2.2 GAP-2: artifacts.diff API 메서드 (MEDIUM) -> has_code_example -> python [EXTRACTED]
+- 3.2.2 GAP-2: artifacts.diff API 메서드 (MEDIUM) -> has_code_example -> typescript [EXTRACTED]
+- 3.2 갭 해소 (Act) -> contains -> 3.2.1 GAP-1: AppSidebar 모바일 오버레이 (HIGH) [EXTRACTED]
+- 3.2 갭 해소 (Act) -> contains -> 3.2.2 GAP-2: artifacts.diff API 메서드 (MEDIUM) [EXTRACTED]
+- 4.2 상세 평가 -> contains -> 라우트 (37개, 100%) [EXTRACTED]
+- 4.2 상세 평가 -> contains -> 컴포넌트 (96%) [EXTRACTED]
+- 4.2 상세 평가 -> contains -> API 메서드 (96%) [EXTRACTED]
+- 4.2 상세 평가 -> contains -> UX 설계 일치 (91%) [EXTRACTED]
+- 4. 점검 결과 (Check) -> contains -> 4.1 분석 v4.0 [EXTRACTED]
+- 4. 점검 결과 (Check) -> contains -> 4.2 상세 평가 [EXTRACTED]
+- 6. 주요 발견사항 -> contains -> 6.1 분석 보고서 오류 발견 [EXTRACTED]
+- 6. 주요 발견사항 -> contains -> 6.2 설계 초과 구현 발견 [EXTRACTED]
+- 6. 주요 발견사항 -> contains -> 6.3 디자인 시스템 미활용 [EXTRACTED]
+- 6. 주요 발견사항 -> contains -> 6.4 v3.1 레거시 완전 제거 확인 [EXTRACTED]
+- 6. 주요 발견사항 -> contains -> 6.5 빌드 최적화 [EXTRACTED]
+- 6.5 빌드 최적화 -> has_code_example -> bash [EXTRACTED]
+- 7. 품질 지표 -> contains -> 7.1 최종 분석 결과 [EXTRACTED]
+- 7. 품질 지표 -> contains -> 7.2 해결된 이슈 [EXTRACTED]
+- 7. 품질 지표 -> contains -> 7.3 TypeScript 검증 [EXTRACTED]
+- 8. 교훈 및 회고 -> contains -> 8.1 잘된 점 [EXTRACTED]
+- 8. 교훈 및 회고 -> contains -> 8.2 개선 필요 영역 [EXTRACTED]
+- 8. 교훈 및 회고 -> contains -> 8.3 다음 사이클 적용 방안 [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.1 즉시 (본 세션 완료) [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.2 단기 (1주) [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.3 중기 (다음 PDCA 사이클) [EXTRACTED]
+- A1. Diff 렌더링 UI (선택적) -> has_code_example -> typescript [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 1. 개요 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 2. 관련 문서 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 3. 완료 항목 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 4. 점검 결과 (Check) [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 5. 잔여 갭 (의도적 미적용, LOW) [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 6. 주요 발견사항 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 7. 품질 지표 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 8. 교훈 및 회고 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 9. 다음 단계 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 10. 로그 [EXTRACTED]
+- 프론트엔드 v4.0 완료 보고서 -> contains -> 11. 변경 이력 [EXTRACTED]
+- 10. Gap Analysis Impact Summary -> contains -> Before This Cycle (v1.0: 85%) [EXTRACTED]
+- 10. Gap Analysis Impact Summary -> contains -> After This Cycle (v2.0: 92%) [EXTRACTED]
+- 10. Gap Analysis Impact Summary -> contains -> Remaining Gaps (8 items, non-blocking) [EXTRACTED]
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::_index [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::frontend_analysis [EXTRACTED]
+- 3.2 Code Changes Summary -> contains -> Modified Files (7) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.1 Gaps Resolved (8/8) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.2 Code Changes Summary [EXTRACTED]
+- 3. Completed Items -> contains -> 3.3 Deliverables [EXTRACTED]
+- 4. Incomplete/Deferred Items -> contains -> 4.1 High Priority (Out of Scope for This Gap Resolution) [EXTRACTED]
+- 4. Incomplete/Deferred Items -> contains -> 4.2 Medium Priority (Optional Enhancements) [EXTRACTED]
+- 4. Incomplete/Deferred Items -> contains -> 4.3 Low Priority (Design Implementation Details) [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.1 Match Rate Improvement [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.2 Code Quality Observations [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.3 Resolved Implementation Gaps [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.1 What Went Well (Keep) [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.2 What Needs Improvement (Problem) [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.3 What to Try Next (Try) [EXTRACTED]
+- 7. Process Improvement Suggestions -> contains -> 7.1 PDCA Process Refinement [EXTRACTED]
+- 7. Process Improvement Suggestions -> contains -> 7.2 Frontend-Backend Sync [EXTRACTED]
+- 7. Process Improvement Suggestions -> contains -> 7.3 Documentation Sync [EXTRACTED]
+- 8. Next Steps -> contains -> 8.1 Immediate (Next 1 Day) [EXTRACTED]
+- 8. Next Steps -> contains -> 8.2 Next PDCA Cycle (Phase 6 or v3.7) [EXTRACTED]
+- 8. Next Steps -> contains -> 8.3 Design Document Updates [EXTRACTED]
+- 9. Changelog -> contains -> v1.0 (2026-03-18) [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 1. Summary [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 3. Completed Items [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 4. Incomplete/Deferred Items [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 5. Quality Metrics [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 6. Lessons Learned & Retrospective [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 7. Process Improvement Suggestions [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 8. Next Steps [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 9. Changelog [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> 10. Gap Analysis Impact Summary [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> Version History [EXTRACTED]
+- frontend-gaps Completion Report -> contains -> Related Documents [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::_index [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::frontend_analysis [EXTRACTED]
+- 10.3 성공의 핵심 요소 -> references -> __unresolved__::ref::proposal_agent_v1_requirements [EXTRACTED]
+- 10.3 성공의 핵심 요소 -> references -> __unresolved__::ref::_index [EXTRACTED]
+- 10.3 성공의 핵심 요소 -> references -> __unresolved__::ref::proposal_agent_v1_analysis [EXTRACTED]
+- 10.3 성공의 핵심 요소 -> references -> __unresolved__::ref::proposal_workflow_analysis [EXTRACTED]
+- 10. 결론 및 권고 (Conclusion & Recommendations) -> contains -> 10.1 PDCA 사이클 완료 평가 [EXTRACTED]
+- 10. 결론 및 권고 (Conclusion & Recommendations) -> contains -> 10.2 주요 권고사항 [EXTRACTED]
+- 10. 결론 및 권고 (Conclusion & Recommendations) -> contains -> 10.3 성공의 핵심 요소 [EXTRACTED]
+- 1. 실행 개요 (Executive Summary) -> contains -> 1.1 완료 현황 [EXTRACTED]
+- 1. 실행 개요 (Executive Summary) -> contains -> 1.2 핵심 성과 [EXTRACTED]
+- 2. 계획 단계 요약 (Plan Summary) -> contains -> 2.1 요구사항 문서 [EXTRACTED]
+- 2. 계획 단계 요약 (Plan Summary) -> contains -> 2.2 기획 핵심 항목 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.1 설계 문서 진화 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.2 설계 모듈 구조 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.3 아키텍처 핵심 결정 [EXTRACTED]
+- 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED -> contains -> 갭 해소 (7건) [EXTRACTED]
+- 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED -> contains -> CRITICAL/HIGH 코드 품질 수정 (8건) [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.1 구현 범위 [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.2 Phase 3.5 — Grant-Writer Best Practice 프롬프트 개선 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.3 Phase 4 — G2B 낙찰 + 성과 추적 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.5 구현 통계 [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.1 설계 vs 구현 갭 분석 [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.2 설계 vs 요구사항 갭 분석 [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.3 설계-구현 차이 잔여 (2건) [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.4 코드 품질 분석 결과 [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.1 아키텍처 결정 [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.2 제안서 작성 패턴 진화 [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.3 PPT 3-stage 파이프라인 (v3.6) [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.4 Auth 통합 (v3.6 품질 수정) [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.1 잘 진행된 부분 [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.2 개선이 필요한 부분 [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.3 다음에 적용할 사항 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.1 Phase 5 구현 계획 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.2 잔여 갭 해소 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.3 테스트 강화 [EXTRACTED]
+- 9. 성과 지표 (Metrics) -> contains -> 9.1 설계 품질 [EXTRACTED]
+- 9. 성과 지표 (Metrics) -> contains -> 9.2 구현 규모 [EXTRACTED]
+- 9. 성과 지표 (Metrics) -> contains -> 9.3 갭 해소 추적 [EXTRACTED]
+- 9. 성과 지표 (Metrics) -> contains -> 9.4 워크플로 성능 (예상) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 1. 실행 개요 (Executive Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 2. 계획 단계 요약 (Plan Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 3. 설계 단계 요약 (Design Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 4. 실행 단계 요약 (Do Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 5. 검증 단계 결과 (Check Results) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 7. 교훈 및 개선 사항 (Lessons Learned) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 8. 다음 단계 (Next Steps) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 9. 성과 지표 (Metrics) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 -> contains -> 10. 결론 및 권고 (Conclusion & Recommendations) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 frontend-gaps Completion Report, 제안서 작성 워크플로 (STEP 3~4) Gap Analysis Report, 프론트엔드 v4.0 완료 보고서를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 frontend-gaps.report.md, frontend-v4.report.md, proposal-agent-v1.report.md, proposal-workflow.analysis.md이다.
+
+### Key Facts
+- > **Status**: Complete > > **Project**: 용역제안 Coworker > **Version**: v3.6 > **Author**: System > **Completion Date**: 2026-03-18 > **PDCA Cycle**: #5
+- > **Analysis Type**: Design-Implementation Gap Analysis > > **Project**: TENOPA Proposer > **Analyst**: gap-detector > **Date**: 2026-03-13 > **Design Doc**: [proposal-agent-v1/_index.md](../02-design/features/proposal-agent-v1/_index.md) (v3.5, modular) > **Supplementary**:…
+- > **상태**: Complete > > **프로젝트**: 용역제안 Coworker > **대상**: 프론트엔드 (Next.js 15 + React 19) > **작성일**: 2026-03-26 > **PDCA 사이클**: #4 (Do + Act 통합)
+- > **Summary**: TENOPA 용역제안 AI Coworker — LangGraph 기반 제안서 자동 작성 에이전트 완료 보고서 > > **Project**: TENOPA Proposer (내부 용역제안 플랫폼) > **Feature**: proposal-agent-v1 (제안 에이전트 v1) > **Created**: 2026-03-16 > **Last Modified**: 2026-03-16 > **Status**: ✅ Approved > **Design Match Rate**: 99% (설계 vs 구현) >…
+- 4.1 목차-스토리라인-섹션 작성 파이프라인

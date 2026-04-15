@@ -1,0 +1,183 @@
+# Bidding 모듈 리스트럭처링 완료 보고서 & 3. 완료 항목
+Cohesion: 0.05 | Nodes: 42
+
+## Key Nodes
+- **Bidding 모듈 리스트럭처링 완료 보고서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 12 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+- **3. 완료 항목** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 6 connections
+  - -> contains -> [[31-24]]
+  - -> contains -> [[32-import-11]]
+  - -> contains -> [[33-initpy-re-export]]
+  - -> contains -> [[34-27-import]]
+  - -> contains -> [[35]]
+  - <- contains <- [[bidding]]
+- **2. 관련 문서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 4 connections
+  - -> references -> [[unresolvedrefbiddingrestructureplan]]
+  - -> references -> [[unresolvedrefbiddingrestructuredesign]]
+  - -> references -> [[unresolvedrefbiddingrestructureanalysis]]
+  - <- contains <- [[bidding]]
+- **5. 품질 지표** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 4 connections
+  - -> contains -> [[51-gap-analysis-vs]]
+  - -> contains -> [[52]]
+  - -> contains -> [[53]]
+  - <- contains <- [[bidding]]
+- **7. 학습 및 회고** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 4 connections
+  - -> contains -> [[71-keep]]
+  - -> contains -> [[72-problem]]
+  - -> contains -> [[73-try]]
+  - <- contains <- [[bidding]]
+- **9. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 4 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92-12]]
+  - -> contains -> [[93-1]]
+  - <- contains <- [[bidding]]
+- **1. 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[bidding]]
+- **3.1 디렉토리 구조 (24개 파일)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 3 connections
+  - -> contains -> [[311]]
+  - -> contains -> [[312]]
+  - <- contains <- [[3]]
+- **4. 미완료 항목** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 3 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - <- contains <- [[bidding]]
+- **6. 주요 기술 결정 사항** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 3 connections
+  - -> contains -> [[61-sysmodules-redirect]]
+  - -> contains -> [[62-pricing-import]]
+  - <- contains <- [[bidding]]
+- **8. 프로세스 개선 제안** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 3 connections
+  - -> contains -> [[81-pdca]]
+  - -> contains -> [[82]]
+  - <- contains <- [[bidding]]
+- **10. 변경 로그** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 2 connections
+  - -> contains -> [[v100-2026-03-24]]
+  - <- contains <- [[bidding]]
+- **6.1 sys.modules Redirect 방식 채택** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[6]]
+- **__unresolved__::ref::bidding_restructure_analysis** () -- 1 connections
+  - <- references <- [[2]]
+- **__unresolved__::ref::bidding_restructure_design** () -- 1 connections
+  - <- references <- [[2]]
+- **__unresolved__::ref::bidding_restructure_plan** () -- 1 connections
+  - <- references <- [[2]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- has_code_example <- [[61-sysmodules-redirect]]
+- **11. 버전 이력** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[bidding]]
+- **12. 검증 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[bidding]]
+- **1.1 프로젝트 개요** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 결과 요약** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[1]]
+- **3.1.1 새 패키지 생성** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[31-24]]
+- **3.1.2 호환 래퍼 생성 (원본 위치)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[31-24]]
+- **3.2 내부 Import 수정 (11건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 __init__.py Re-export** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.4 외부 참조 호환성 (27개 import)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.5 테스트 결과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 의도적 보류 (설계 범위 외)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 이월 없음** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5.1 Gap Analysis 결과 (설계 vs 구현)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.2 코드 라인 수** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.3 설계 != 구현 (의도적 개선)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[5]]
+- **6.2 pricing/ 내부 import 일괄 수정** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7.1 잘했던 점 (Keep)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 개선할 점 (Problem)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.3 다음에 시도할 점 (Try)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 PDCA 프로세스** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 도구/환경 개선** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9.1 즉시 (배포 관련)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 단기 (1~2주)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.3 중기 (1개월)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **v1.0.0 (2026-03-24)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\bidding-restructure.report.md) -- 1 connections
+  - <- contains <- [[10]]
+
+## Internal Relationships
+- 1. 요약 -> contains -> 1.1 프로젝트 개요 [EXTRACTED]
+- 1. 요약 -> contains -> 1.2 결과 요약 [EXTRACTED]
+- 10. 변경 로그 -> contains -> v1.0.0 (2026-03-24) [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::bidding_restructure_plan [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::bidding_restructure_design [EXTRACTED]
+- 2. 관련 문서 -> references -> __unresolved__::ref::bidding_restructure_analysis [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.1 디렉토리 구조 (24개 파일) [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.2 내부 Import 수정 (11건) [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.3 __init__.py Re-export [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.4 외부 참조 호환성 (27개 import) [EXTRACTED]
+- 3. 완료 항목 -> contains -> 3.5 테스트 결과 [EXTRACTED]
+- 3.1 디렉토리 구조 (24개 파일) -> contains -> 3.1.1 새 패키지 생성 [EXTRACTED]
+- 3.1 디렉토리 구조 (24개 파일) -> contains -> 3.1.2 호환 래퍼 생성 (원본 위치) [EXTRACTED]
+- 4. 미완료 항목 -> contains -> 4.1 의도적 보류 (설계 범위 외) [EXTRACTED]
+- 4. 미완료 항목 -> contains -> 4.2 이월 없음 [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.1 Gap Analysis 결과 (설계 vs 구현) [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.2 코드 라인 수 [EXTRACTED]
+- 5. 품질 지표 -> contains -> 5.3 설계 != 구현 (의도적 개선) [EXTRACTED]
+- 6. 주요 기술 결정 사항 -> contains -> 6.1 sys.modules Redirect 방식 채택 [EXTRACTED]
+- 6. 주요 기술 결정 사항 -> contains -> 6.2 pricing/ 내부 import 일괄 수정 [EXTRACTED]
+- 6.1 sys.modules Redirect 방식 채택 -> has_code_example -> python [EXTRACTED]
+- 7. 학습 및 회고 -> contains -> 7.1 잘했던 점 (Keep) [EXTRACTED]
+- 7. 학습 및 회고 -> contains -> 7.2 개선할 점 (Problem) [EXTRACTED]
+- 7. 학습 및 회고 -> contains -> 7.3 다음에 시도할 점 (Try) [EXTRACTED]
+- 8. 프로세스 개선 제안 -> contains -> 8.1 PDCA 프로세스 [EXTRACTED]
+- 8. 프로세스 개선 제안 -> contains -> 8.2 도구/환경 개선 [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.1 즉시 (배포 관련) [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.2 단기 (1~2주) [EXTRACTED]
+- 9. 다음 단계 -> contains -> 9.3 중기 (1개월) [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 1. 요약 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 2. 관련 문서 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 3. 완료 항목 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 4. 미완료 항목 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 5. 품질 지표 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 6. 주요 기술 결정 사항 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 7. 학습 및 회고 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 8. 프로세스 개선 제안 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 9. 다음 단계 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 10. 변경 로그 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 11. 버전 이력 [EXTRACTED]
+- Bidding 모듈 리스트럭처링 완료 보고서 -> contains -> 12. 검증 체크리스트 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Bidding 모듈 리스트럭처링 완료 보고서, 3. 완료 항목, 2. 관련 문서를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 bidding-restructure.report.md이다.
+
+### Key Facts
+- > **상태**: Complete > > **프로젝트**: 용역제안 Coworker > **완료일**: 2026-03-24 > **PDCA 사이클**: 단일 사이클 (Plan → Design → Do → Check → Report)
+- | Phase | 문서 | 상태 | |-------|------|------| | Plan | [bidding-restructure.plan.md](../01-plan/features/bidding-restructure.plan.md) | ✅ 완료 | | Design | [bidding-restructure.design.md](../02-design/features/bidding-restructure.design.md) | ✅ 완료 | | Check |…
+- 5.1 Gap Analysis 결과 (설계 vs 구현)
+- 6.1 sys.modules Redirect 방식 채택
+- **배경**: 설계 단계에서는 `from ... import *` 방식을 계획했음.

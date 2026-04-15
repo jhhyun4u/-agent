@@ -1,0 +1,320 @@
+# prompt-admin Design Document & json
+Cohesion: 0.04 | Nodes: 65
+
+## Key Nodes
+- **prompt-admin Design Document** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 15 connections
+  - -> references -> [[unresolvedrefpromptadminplan]]
+  - -> contains -> [[1-overview]]
+  - -> contains -> [[2-architecture]]
+  - -> contains -> [[3-data-model]]
+  - -> contains -> [[4-api-specification]]
+  - -> contains -> [[5-backend-services]]
+  - -> contains -> [[6-uiux-design]]
+  - -> contains -> [[7-error-handling]]
+  - -> contains -> [[8-security-considerations]]
+  - -> contains -> [[9-sample-rfp-data]]
+  - -> contains -> [[10-db-migration-sql]]
+  - -> contains -> [[11-frontend-api-client-extensions]]
+  - -> contains -> [[12-implementation-order]]
+  - -> contains -> [[13-file-summary]]
+  - -> contains -> [[version-history]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 10 connections
+  - <- has_code_example <- [[411-get-apipromptscategories]]
+  - <- has_code_example <- [[412-get-apipromptsworst-performerslimit5]]
+  - <- has_code_example <- [[413-post-apipromptspromptidsimulate]]
+  - <- has_code_example <- [[414-get-apipromptspromptidsimulationslimit20]]
+  - <- has_code_example <- [[415-post-apipromptspromptidsimulate-compare]]
+  - <- has_code_example <- [[416-get-apipromptspromptidsuggestions]]
+  - <- has_code_example <- [[417-post-apipromptspromptidsuggestionssuggestionidfeedback]]
+  - <- has_code_example <- [[418-get-apipromptssimulation-quota]]
+  - <- has_code_example <- [[72-error-response-format]]
+  - <- has_code_example <- [[92]]
+- **4.1 신규 API (8개)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 9 connections
+  - -> contains -> [[411-get-apipromptscategories]]
+  - -> contains -> [[412-get-apipromptsworst-performerslimit5]]
+  - -> contains -> [[413-post-apipromptspromptidsimulate]]
+  - -> contains -> [[414-get-apipromptspromptidsimulationslimit20]]
+  - -> contains -> [[415-post-apipromptspromptidsimulate-compare]]
+  - -> contains -> [[416-get-apipromptspromptidsuggestions]]
+  - -> contains -> [[417-post-apipromptspromptidsuggestionssuggestionidfeedback]]
+  - -> contains -> [[418-get-apipromptssimulation-quota]]
+  - <- contains <- [[4-api-specification]]
+- **6. UI/UX Design** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 7 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62-adminprompts]]
+  - -> contains -> [[63-adminpromptspromptid]]
+  - -> contains -> [[64-adminpromptspromptidsimulate]]
+  - -> contains -> [[65-a-vs-b]]
+  - -> contains -> [[66-component-list]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 5 connections
+  - <- has_code_example <- [[promptsimulations]]
+  - <- has_code_example <- [[promptimprovementsuggestions-ai]]
+  - <- has_code_example <- [[simulationtokenusage]]
+  - <- has_code_example <- [[32]]
+  - <- has_code_example <- [[10-db-migration-sql]]
+- **12. Implementation Order** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 5 connections
+  - -> contains -> [[phase-a-db-day-1-2]]
+  - -> contains -> [[phase-b-ai-day-3-4]]
+  - -> contains -> [[phase-c-ui-day-5-6]]
+  - -> contains -> [[phase-d-qa-day-7]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **1. Overview** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 5 connections
+  - -> contains -> [[11-design-goals]]
+  - -> contains -> [[12-design-principles]]
+  - -> contains -> [[13-as-is]]
+  - -> contains -> [[14-to-be]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **13. File Summary** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 4 connections
+  - -> contains -> [[8]]
+  - -> contains -> [[5]]
+  - -> contains -> [[1800-500-2300]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **2. Architecture** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 4 connections
+  - -> contains -> [[21-component-diagram]]
+  - -> contains -> [[22-data-flow]]
+  - -> contains -> [[23-dependencies]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **3.1 신규 테이블** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 4 connections
+  - -> contains -> [[promptsimulations]]
+  - -> contains -> [[promptimprovementsuggestions-ai]]
+  - -> contains -> [[simulationtokenusage]]
+  - <- contains <- [[3-data-model]]
+- **3. Data Model** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 4 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33-entity-relationships]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **11. Frontend API Client Extensions** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 3 connections
+  - -> contains -> [[111]]
+  - -> contains -> [[112-api]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **4. API Specification** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 3 connections
+  - -> contains -> [[41-api-8]]
+  - -> contains -> [[42-api]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **5. Backend Services** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 3 connections
+  - -> contains -> [[51-promptcategoriespy]]
+  - -> contains -> [[52-promptsimulatorpy]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **7. Error Handling** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 3 connections
+  - -> contains -> [[71-error-codes]]
+  - -> contains -> [[72-error-response-format]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **9. Sample RFP Data** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 3 connections
+  - -> contains -> [[91-datasamplerfps]]
+  - -> contains -> [[92]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - <- has_code_example <- [[51-promptcategoriespy]]
+  - <- has_code_example <- [[52-promptsimulatorpy]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - <- has_code_example <- [[111]]
+  - <- has_code_example <- [[112-api]]
+- **10. DB Migration SQL** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[prompt-admin-design-document]]
+- **11.1 신규 타입** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[11-frontend-api-client-extensions]]
+- **11.2 신규 API 메서드** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[11-frontend-api-client-extensions]]
+- **2.2 Data Flow** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> contains -> [[ai]]
+  - <- contains <- [[2-architecture]]
+- **3.2 기존 테이블 확장** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[3-data-model]]
+- **4.1.1 `GET /api/prompts/categories`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.2 `GET /api/prompts/worst-performers?limit=5`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.3 `POST /api/prompts/{prompt_id}/simulate`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.4 `GET /api/prompts/{prompt_id}/simulations?limit=20`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.5 `POST /api/prompts/{prompt_id}/simulate-compare`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.6 `GET /api/prompts/{prompt_id}/suggestions`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.7 `POST /api/prompts/{prompt_id}/suggestions/{suggestion_id}/feedback`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **4.1.8 `GET /api/prompts/simulation-quota`** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[41-api-8]]
+- **5.1 prompt_categories.py (신규)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-backend-services]]
+- **5.2 prompt_simulator.py (신규)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-backend-services]]
+- **7.2 Error Response Format** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[7-error-handling]]
+- **9.2 샘플 데이터 스키마** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[9-sample-rfp-data]]
+- **prompt_improvement_suggestions — AI 개선 제안 이력** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[31]]
+- **prompt_simulations — 시뮬레이션 이력** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[31]]
+- **simulation_token_usage — 일일 시뮬레이션 한도** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[31]]
+- **__unresolved__::ref::prompt_admin_plan** () -- 1 connections
+  - <- references <- [[prompt-admin-design-document]]
+- **1.1 Design Goals** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **1.2 Design Principles** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **1.3 현재 구현 상태 (AS-IS)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **1.4 이번 설계 범위 (TO-BE)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[1-overview]]
+- **총계: ~1,800줄 신규 + ~500줄 수정 = **~2,300줄**** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[13-file-summary]]
+- **2.1 Component Diagram** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[2-architecture]]
+- **2.3 Dependencies** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[2-architecture]]
+- **3.3 Entity Relationships** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[3-data-model]]
+- **4.2 기존 API (변경 없음, 재활용)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[4-api-specification]]
+- **수정 파일 (5개)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[13-file-summary]]
+- **6.1 페이지 구조** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **6.2 /admin/prompts 카탈로그 (기존 개선)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **6.3 /admin/prompts/[promptId] 상세+편집 (기존 개선)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **6.4 /admin/prompts/[promptId]/simulate 시뮬레이션 (신규)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **6.5 A vs B 비교 모드** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **6.6 Component List** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[6-uiux-design]]
+- **7.1 Error Codes** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[7-error-handling]]
+- **신규 파일 (8개)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[13-file-summary]]
+- **8. Security Considerations** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[prompt-admin-design-document]]
+- **9.1 data/sample_rfps/ 디렉토리 구조** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[9-sample-rfp-data]]
+- **AI 개선 제안 플로우** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[22-data-flow]]
+- **Phase A: DB + 카테고리 서비스 + 카탈로그 개선 (Day 1-2)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[12-implementation-order]]
+- **Phase B: 편집기 + AI 제안 개선 (Day 3-4)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[12-implementation-order]]
+- **Phase C: 시뮬레이션 엔진 + UI (Day 5-6)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[12-implementation-order]]
+- **Phase D: 통합 + QA (Day 7)** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[12-implementation-order]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\prompt-admin.design.md) -- 1 connections
+  - <- contains <- [[prompt-admin-design-document]]
+
+## Internal Relationships
+- 10. DB Migration SQL -> has_code_example -> sql [EXTRACTED]
+- 11.1 신규 타입 -> has_code_example -> typescript [EXTRACTED]
+- 11.2 신규 API 메서드 -> has_code_example -> typescript [EXTRACTED]
+- 11. Frontend API Client Extensions -> contains -> 11.1 신규 타입 [EXTRACTED]
+- 11. Frontend API Client Extensions -> contains -> 11.2 신규 API 메서드 [EXTRACTED]
+- 12. Implementation Order -> contains -> Phase A: DB + 카테고리 서비스 + 카탈로그 개선 (Day 1-2) [EXTRACTED]
+- 12. Implementation Order -> contains -> Phase B: 편집기 + AI 제안 개선 (Day 3-4) [EXTRACTED]
+- 12. Implementation Order -> contains -> Phase C: 시뮬레이션 엔진 + UI (Day 5-6) [EXTRACTED]
+- 12. Implementation Order -> contains -> Phase D: 통합 + QA (Day 7) [EXTRACTED]
+- 13. File Summary -> contains -> 신규 파일 (8개) [EXTRACTED]
+- 13. File Summary -> contains -> 수정 파일 (5개) [EXTRACTED]
+- 13. File Summary -> contains -> 총계: ~1,800줄 신규 + ~500줄 수정 = **~2,300줄** [EXTRACTED]
+- 1. Overview -> contains -> 1.1 Design Goals [EXTRACTED]
+- 1. Overview -> contains -> 1.2 Design Principles [EXTRACTED]
+- 1. Overview -> contains -> 1.3 현재 구현 상태 (AS-IS) [EXTRACTED]
+- 1. Overview -> contains -> 1.4 이번 설계 범위 (TO-BE) [EXTRACTED]
+- 2.2 Data Flow -> contains -> AI 개선 제안 플로우 [EXTRACTED]
+- 2. Architecture -> contains -> 2.1 Component Diagram [EXTRACTED]
+- 2. Architecture -> contains -> 2.2 Data Flow [EXTRACTED]
+- 2. Architecture -> contains -> 2.3 Dependencies [EXTRACTED]
+- 3.1 신규 테이블 -> contains -> prompt_simulations — 시뮬레이션 이력 [EXTRACTED]
+- 3.1 신규 테이블 -> contains -> prompt_improvement_suggestions — AI 개선 제안 이력 [EXTRACTED]
+- 3.1 신규 테이블 -> contains -> simulation_token_usage — 일일 시뮬레이션 한도 [EXTRACTED]
+- 3.2 기존 테이블 확장 -> has_code_example -> sql [EXTRACTED]
+- 3. Data Model -> contains -> 3.1 신규 테이블 [EXTRACTED]
+- 3. Data Model -> contains -> 3.2 기존 테이블 확장 [EXTRACTED]
+- 3. Data Model -> contains -> 3.3 Entity Relationships [EXTRACTED]
+- 4.1.1 `GET /api/prompts/categories` -> has_code_example -> json [EXTRACTED]
+- 4.1.2 `GET /api/prompts/worst-performers?limit=5` -> has_code_example -> json [EXTRACTED]
+- 4.1.3 `POST /api/prompts/{prompt_id}/simulate` -> has_code_example -> json [EXTRACTED]
+- 4.1.4 `GET /api/prompts/{prompt_id}/simulations?limit=20` -> has_code_example -> json [EXTRACTED]
+- 4.1.5 `POST /api/prompts/{prompt_id}/simulate-compare` -> has_code_example -> json [EXTRACTED]
+- 4.1.6 `GET /api/prompts/{prompt_id}/suggestions` -> has_code_example -> json [EXTRACTED]
+- 4.1.7 `POST /api/prompts/{prompt_id}/suggestions/{suggestion_id}/feedback` -> has_code_example -> json [EXTRACTED]
+- 4.1.8 `GET /api/prompts/simulation-quota` -> has_code_example -> json [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.1 `GET /api/prompts/categories` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.2 `GET /api/prompts/worst-performers?limit=5` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.3 `POST /api/prompts/{prompt_id}/simulate` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.4 `GET /api/prompts/{prompt_id}/simulations?limit=20` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.5 `POST /api/prompts/{prompt_id}/simulate-compare` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.6 `GET /api/prompts/{prompt_id}/suggestions` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.7 `POST /api/prompts/{prompt_id}/suggestions/{suggestion_id}/feedback` [EXTRACTED]
+- 4.1 신규 API (8개) -> contains -> 4.1.8 `GET /api/prompts/simulation-quota` [EXTRACTED]
+- 4. API Specification -> contains -> 4.1 신규 API (8개) [EXTRACTED]
+- 4. API Specification -> contains -> 4.2 기존 API (변경 없음, 재활용) [EXTRACTED]
+- 5.1 prompt_categories.py (신규) -> has_code_example -> python [EXTRACTED]
+- 5.2 prompt_simulator.py (신규) -> has_code_example -> python [EXTRACTED]
+- 5. Backend Services -> contains -> 5.1 prompt_categories.py (신규) [EXTRACTED]
+- 5. Backend Services -> contains -> 5.2 prompt_simulator.py (신규) [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.1 페이지 구조 [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.2 /admin/prompts 카탈로그 (기존 개선) [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.3 /admin/prompts/[promptId] 상세+편집 (기존 개선) [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.4 /admin/prompts/[promptId]/simulate 시뮬레이션 (신규) [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.5 A vs B 비교 모드 [EXTRACTED]
+- 6. UI/UX Design -> contains -> 6.6 Component List [EXTRACTED]
+- 7.2 Error Response Format -> has_code_example -> json [EXTRACTED]
+- 7. Error Handling -> contains -> 7.1 Error Codes [EXTRACTED]
+- 7. Error Handling -> contains -> 7.2 Error Response Format [EXTRACTED]
+- 9.2 샘플 데이터 스키마 -> has_code_example -> json [EXTRACTED]
+- 9. Sample RFP Data -> contains -> 9.1 data/sample_rfps/ 디렉토리 구조 [EXTRACTED]
+- 9. Sample RFP Data -> contains -> 9.2 샘플 데이터 스키마 [EXTRACTED]
+- prompt-admin Design Document -> references -> __unresolved__::ref::prompt_admin_plan [EXTRACTED]
+- prompt-admin Design Document -> contains -> 1. Overview [EXTRACTED]
+- prompt-admin Design Document -> contains -> 2. Architecture [EXTRACTED]
+- prompt-admin Design Document -> contains -> 3. Data Model [EXTRACTED]
+- prompt-admin Design Document -> contains -> 4. API Specification [EXTRACTED]
+- prompt-admin Design Document -> contains -> 5. Backend Services [EXTRACTED]
+- prompt-admin Design Document -> contains -> 6. UI/UX Design [EXTRACTED]
+- prompt-admin Design Document -> contains -> 7. Error Handling [EXTRACTED]
+- prompt-admin Design Document -> contains -> 8. Security Considerations [EXTRACTED]
+- prompt-admin Design Document -> contains -> 9. Sample RFP Data [EXTRACTED]
+- prompt-admin Design Document -> contains -> 10. DB Migration SQL [EXTRACTED]
+- prompt-admin Design Document -> contains -> 11. Frontend API Client Extensions [EXTRACTED]
+- prompt-admin Design Document -> contains -> 12. Implementation Order [EXTRACTED]
+- prompt-admin Design Document -> contains -> 13. File Summary [EXTRACTED]
+- prompt-admin Design Document -> contains -> Version History [EXTRACTED]
+- prompt_improvement_suggestions — AI 개선 제안 이력 -> has_code_example -> sql [EXTRACTED]
+- prompt_simulations — 시뮬레이션 이력 -> has_code_example -> sql [EXTRACTED]
+- simulation_token_usage — 일일 시뮬레이션 한도 -> has_code_example -> sql [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 prompt-admin Design Document, json, 4.1 신규 API (8개)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 prompt-admin.design.md이다.
+
+### Key Facts
+- > **Summary**: 프롬프트 카테고리 관리 + 인라인 편집 + 시뮬레이션 기반 개선 Admin UI > > **Project**: 용역제안 Coworker > **Version**: v1.0 > **Date**: 2026-03-25 > **Status**: Draft > **Planning Doc**: [prompt-admin.plan.md](../../01-plan/features/prompt-admin.plan.md)
+- ```sql CREATE TABLE IF NOT EXISTS prompt_simulations ( id              UUID PRIMARY KEY DEFAULT gen_random_uuid(), prompt_id       VARCHAR(100) NOT NULL, prompt_version  INTEGER, prompt_text     TEXT NOT NULL, data_source     VARCHAR(20) NOT NULL,     -- 'sample' | 'project' | 'custom'…
+- 4.1.1 `GET /api/prompts/categories`
+- | 계층 | 구현물 | 상태 | |------|-------|------| | DB | 5 테이블 (010_prompt_evolution.sql) | 완료 | | 백엔드 서비스 | prompt_registry, prompt_tracker, prompt_evolution, human_edit_tracker | 완료 | | API | 17개 엔드포인트 (routes_prompt_evolution.py) | 완료 | | 프론트엔드 | 3 페이지 (대시보드, 상세, 실험) | **기본 구현** | | 프론트엔드 API 클라이언트 |…
+- Phase A: DB + 카테고리 서비스 + 카탈로그 개선 (Day 1-2)

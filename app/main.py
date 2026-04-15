@@ -39,6 +39,7 @@ from app.api.routes_analytics import router as analytics_router
 from app.api.routes_qa import router as qa_router
 from app.api.routes_files import router as files_router
 from app.api.routes_project_archive import router as archive_router
+from app.api.routes_master_projects import router as master_projects_router
 from app.api.routes_pricing import router as pricing_router
 from app.api.routes_bid_submission import router as bid_submission_router
 from app.api.routes_prompt_evolution import router as prompt_evolution_router
@@ -56,6 +57,9 @@ from app.api.routes_presentation import router as presentation_router
 from app.api.routes_bids import router as bids_router
 from app.api.routes_step8a import router as step8a_router
 from app.api.routes_step8_review import router as step8_review_router
+from app.api.routes_knowledge import router as knowledge_router
+from app.api.routes_vault_chat import router as vault_chat_router
+from app.api.routes_vault_embeddings import router as vault_embeddings_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -121,6 +125,17 @@ async def lifespan(app: FastAPI):
 
     from app.utils.supabase_client import get_async_client
     client = await get_async_client()
+
+    # 데이터베이스 스키마 초기화 (제안결정 관련 컬럼)
+    async def _init_database_schema():
+        """제안결정 기능을 위한 필수 컬럼 존재 확인"""
+        try:
+            result = await client.table("proposals").select("go_decision, bid_tracked, org_id").limit(1).execute()
+            logger.info("필요한 스키마 컬럼 이미 존재")
+        except Exception as e:
+            logger.warning(f"스키마 초기화 필요 - Supabase SQL 에디터에서 migration 005 적용 필요: {str(e)[:100]}")
+
+    await _safe_startup_task("DB 스키마 확인", _init_database_schema())
 
     # Supabase 초기화 (stale proposals + cache cleanup)
     await _safe_startup_task(
@@ -325,6 +340,9 @@ app.include_router(files_router)
 # 프로젝트 아카이브 (중간 산출물 파일 관리)
 app.include_router(archive_router)
 
+# 마스터 프로젝트 (통합 프로젝트/제안 검색 + 문서 관리)
+app.include_router(master_projects_router)
+
 # 비딩 가격 시뮬레이션
 app.include_router(pricing_router)
 
@@ -373,6 +391,15 @@ app.include_router(step8a_router)
 
 # STEP 8 Review: AI-powered review interface for STEP 8 nodes
 app.include_router(step8_review_router)
+
+# 지식 관리 시스템: /api/knowledge/* (Module-5: 분류, 검색, 추천)
+app.include_router(knowledge_router)
+
+# Vault AI Chat: /api/vault/chat, /api/vault/conversations/*
+app.include_router(vault_chat_router)
+
+# Vault Embeddings: /api/vault/embeddings/*
+app.include_router(vault_embeddings_router)
 
 
 # ── 헬스체크 ──

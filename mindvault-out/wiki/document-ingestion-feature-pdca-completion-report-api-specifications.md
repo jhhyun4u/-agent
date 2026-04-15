@@ -1,0 +1,325 @@
+# Document Ingestion Feature - PDCA Completion Report & API Specifications
+Cohesion: 0.03 | Nodes: 76
+
+## Key Nodes
+- **Document Ingestion Feature - PDCA Completion Report** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 17 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[project-overview]]
+  - -> contains -> [[pdca-cycle-summary]]
+  - -> contains -> [[plan-phase]]
+  - -> contains -> [[design-phase]]
+  - -> contains -> [[do-phase]]
+  - -> contains -> [[check-phase]]
+  - -> contains -> [[act-phase]]
+  - -> contains -> [[key-deliverables]]
+  - -> contains -> [[quality-metrics]]
+  - -> contains -> [[gap-analysis-summary]]
+  - -> contains -> [[lessons-learned]]
+  - -> contains -> [[recommendations]]
+  - -> contains -> [[project-metrics]]
+  - -> contains -> [[deployment-rollout]]
+  - -> contains -> [[conclusion]]
+  - -> contains -> [[appendix-technical-details]]
+- **API Specifications** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 6 connections
+  - -> contains -> [[endpoint-1-upload-document]]
+  - -> contains -> [[endpoint-2-list-documents]]
+  - -> contains -> [[endpoint-3-get-document-detail]]
+  - -> contains -> [[endpoint-4-reprocess-document]]
+  - -> contains -> [[endpoint-5-get-document-chunks]]
+  - <- contains <- [[design-phase]]
+- **Check Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 5 connections
+  - -> contains -> [[analysis-overview]]
+  - -> contains -> [[detailed-findings]]
+  - -> contains -> [[validation-checklist]]
+  - -> contains -> [[design-vs-implementation-mapping]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Design Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 5 connections
+  - -> contains -> [[design-overview]]
+  - -> contains -> [[data-model-design]]
+  - -> contains -> [[api-specifications]]
+  - -> contains -> [[security-design]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Key Deliverables** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 5 connections
+  - -> contains -> [[code-artifacts]]
+  - -> contains -> [[files-modified]]
+  - -> contains -> [[documentation]]
+  - -> contains -> [[commits]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Appendix: Technical Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[file-structure]]
+  - -> contains -> [[api-endpoint-summary]]
+  - -> contains -> [[dependencies]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Conclusion** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[summary]]
+  - -> contains -> [[production-readiness-approved]]
+  - -> contains -> [[sign-off]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Deployment & Rollout** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[prerequisites]]
+  - -> contains -> [[deployment-steps]]
+  - -> contains -> [[rollback-plan]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Detailed Findings** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[critical-high-gaps-0]]
+  - -> contains -> [[medium-priority-gaps-1-fixed]]
+  - -> contains -> [[low-priority-gaps-4-identified-intentional-or-minor]]
+  - <- contains <- [[check-phase]]
+- **Do Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[implementation-artifacts]]
+  - -> contains -> [[implementation-details]]
+  - -> contains -> [[code-quality-metrics]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Implementation Artifacts** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[1-appmodelsdocumentschemaspy-92-lines]]
+  - -> contains -> [[2-appapiroutesdocumentspy-410-lines]]
+  - -> contains -> [[3-appmainpy-router-registration-3-lines]]
+  - <- contains <- [[do-phase]]
+- **Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[areas-for-improvement]]
+  - -> contains -> [[to-apply-next-time]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Project Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[feature-description]]
+  - -> contains -> [[business-objectives]]
+  - -> contains -> [[scope-constraints]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 4 connections
+  - -> contains -> [[code-standards-compliance]]
+  - -> contains -> [[test-coverage]]
+  - -> contains -> [[performance-characteristics]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - <- has_code_example <- [[3-appmainpy-router-registration-3-lines]]
+  - <- has_code_example <- [[implementation-details]]
+  - <- has_code_example <- [[iteration-1-final]]
+- **Act Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - -> contains -> [[iteration-1-final]]
+  - -> contains -> [[iteration-status]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Gap Analysis Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - -> contains -> [[overview]]
+  - -> contains -> [[gap-resolution-summary]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Plan Phase ✅** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - -> contains -> [[objectives]]
+  - -> contains -> [[requirements-delivered]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Project Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - -> contains -> [[development-velocity]]
+  - -> contains -> [[quality-scorecard]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Recommendations** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 3 connections
+  - -> contains -> [[immediate-follow-up-next-sprint]]
+  - -> contains -> [[future-enhancements-backlog]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **3. `app/main.py` — Router Registration (3 lines)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[implementation-artifacts]]
+- **Data Model Design** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[design-phase]]
+- **Deployment Steps** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[deployment-rollout]]
+- **Implementation Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[do-phase]]
+- **Iteration 1 (Final)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[act-phase]]
+- **PDCA Cycle Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 2 connections
+  - -> contains -> [[timeline]]
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- has_code_example <- [[deployment-steps]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- has_code_example <- [[data-model-design]]
+- **1. `app/models/document_schemas.py` (92 lines)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[implementation-artifacts]]
+- **2. `app/api/routes_documents.py` (410 lines)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[implementation-artifacts]]
+- **Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[check-phase]]
+- **API Endpoint Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[appendix-technical-details]]
+- **Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Business Objectives** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[project-overview]]
+- **Code Artifacts** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[key-deliverables]]
+- **Code Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[do-phase]]
+- **Code Standards Compliance** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Commits** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[key-deliverables]]
+- **Critical & High Gaps: 0** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[detailed-findings]]
+- **Dependencies** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[appendix-technical-details]]
+- **Design Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[design-phase]]
+- **Design vs Implementation Mapping** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[check-phase]]
+- **Development Velocity** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[project-metrics]]
+- **Documentation** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[key-deliverables]]
+- **Endpoint 1: Upload Document** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[api-specifications]]
+- **Endpoint 2: List Documents** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[api-specifications]]
+- **Endpoint 3: Get Document Detail** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[api-specifications]]
+- **Endpoint 4: Reprocess Document** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[api-specifications]]
+- **Endpoint 5: Get Document Chunks** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[api-specifications]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-pdca-completion-report]]
+- **Feature Description** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[project-overview]]
+- **File Structure** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[appendix-technical-details]]
+- **Files Modified** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[key-deliverables]]
+- **Future Enhancements (Backlog)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Gap Resolution Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[gap-analysis-summary]]
+- **Immediate Follow-Up (Next Sprint)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[recommendations]]
+- **Iteration Status** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[act-phase]]
+- **Low Priority Gaps: 4 (Identified, intentional or minor)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[detailed-findings]]
+- **Medium Priority Gaps: 1 (FIXED)** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[detailed-findings]]
+- **Objectives** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[plan-phase]]
+- **Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[gap-analysis-summary]]
+- **Performance Characteristics** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Prerequisites** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[deployment-rollout]]
+- **Production Readiness: ✅ APPROVED** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[conclusion]]
+- **Quality Scorecard** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[project-metrics]]
+- **Requirements Delivered** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[plan-phase]]
+- **Rollback Plan** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[deployment-rollout]]
+- **Scope & Constraints** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[project-overview]]
+- **Security Design** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[design-phase]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[conclusion]]
+- **Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[conclusion]]
+- **Test Coverage** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[quality-metrics]]
+- **Timeline** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-summary]]
+- **To Apply Next Time** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Validation Checklist** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[check-phase]]
+- **What Went Well** (C:\project\tenopa proposer\-agent-master\docs\04-report\document_ingestion.completion.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+
+## Internal Relationships
+- 3. `app/main.py` — Router Registration (3 lines) -> has_code_example -> python [EXTRACTED]
+- Act Phase ✅ -> contains -> Iteration 1 (Final) [EXTRACTED]
+- Act Phase ✅ -> contains -> Iteration Status [EXTRACTED]
+- API Specifications -> contains -> Endpoint 1: Upload Document [EXTRACTED]
+- API Specifications -> contains -> Endpoint 2: List Documents [EXTRACTED]
+- API Specifications -> contains -> Endpoint 3: Get Document Detail [EXTRACTED]
+- API Specifications -> contains -> Endpoint 4: Reprocess Document [EXTRACTED]
+- API Specifications -> contains -> Endpoint 5: Get Document Chunks [EXTRACTED]
+- Appendix: Technical Details -> contains -> File Structure [EXTRACTED]
+- Appendix: Technical Details -> contains -> API Endpoint Summary [EXTRACTED]
+- Appendix: Technical Details -> contains -> Dependencies [EXTRACTED]
+- Check Phase ✅ -> contains -> Analysis Overview [EXTRACTED]
+- Check Phase ✅ -> contains -> Detailed Findings [EXTRACTED]
+- Check Phase ✅ -> contains -> Validation Checklist [EXTRACTED]
+- Check Phase ✅ -> contains -> Design vs Implementation Mapping [EXTRACTED]
+- Conclusion -> contains -> Summary [EXTRACTED]
+- Conclusion -> contains -> Production Readiness: ✅ APPROVED [EXTRACTED]
+- Conclusion -> contains -> Sign-Off [EXTRACTED]
+- Data Model Design -> has_code_example -> sql [EXTRACTED]
+- Deployment & Rollout -> contains -> Prerequisites [EXTRACTED]
+- Deployment & Rollout -> contains -> Deployment Steps [EXTRACTED]
+- Deployment & Rollout -> contains -> Rollback Plan [EXTRACTED]
+- Deployment Steps -> has_code_example -> bash [EXTRACTED]
+- Design Phase ✅ -> contains -> Design Overview [EXTRACTED]
+- Design Phase ✅ -> contains -> Data Model Design [EXTRACTED]
+- Design Phase ✅ -> contains -> API Specifications [EXTRACTED]
+- Design Phase ✅ -> contains -> Security Design [EXTRACTED]
+- Detailed Findings -> contains -> Critical & High Gaps: 0 [EXTRACTED]
+- Detailed Findings -> contains -> Medium Priority Gaps: 1 (FIXED) [EXTRACTED]
+- Detailed Findings -> contains -> Low Priority Gaps: 4 (Identified, intentional or minor) [EXTRACTED]
+- Do Phase ✅ -> contains -> Implementation Artifacts [EXTRACTED]
+- Do Phase ✅ -> contains -> Implementation Details [EXTRACTED]
+- Do Phase ✅ -> contains -> Code Quality Metrics [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Executive Summary [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Project Overview [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> PDCA Cycle Summary [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Plan Phase ✅ [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Design Phase ✅ [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Do Phase ✅ [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Check Phase ✅ [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Act Phase ✅ [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Key Deliverables [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Quality Metrics [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Gap Analysis Summary [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Lessons Learned [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Recommendations [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Project Metrics [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Deployment & Rollout [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Conclusion [EXTRACTED]
+- Document Ingestion Feature - PDCA Completion Report -> contains -> Appendix: Technical Details [EXTRACTED]
+- Gap Analysis Summary -> contains -> Overview [EXTRACTED]
+- Gap Analysis Summary -> contains -> Gap Resolution Summary [EXTRACTED]
+- Implementation Artifacts -> contains -> 1. `app/models/document_schemas.py` (92 lines) [EXTRACTED]
+- Implementation Artifacts -> contains -> 2. `app/api/routes_documents.py` (410 lines) [EXTRACTED]
+- Implementation Artifacts -> contains -> 3. `app/main.py` — Router Registration (3 lines) [EXTRACTED]
+- Implementation Details -> has_code_example -> python [EXTRACTED]
+- Iteration 1 (Final) -> has_code_example -> python [EXTRACTED]
+- Key Deliverables -> contains -> Code Artifacts [EXTRACTED]
+- Key Deliverables -> contains -> Files Modified [EXTRACTED]
+- Key Deliverables -> contains -> Documentation [EXTRACTED]
+- Key Deliverables -> contains -> Commits [EXTRACTED]
+- Lessons Learned -> contains -> What Went Well [EXTRACTED]
+- Lessons Learned -> contains -> Areas for Improvement [EXTRACTED]
+- Lessons Learned -> contains -> To Apply Next Time [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Timeline [EXTRACTED]
+- Plan Phase ✅ -> contains -> Objectives [EXTRACTED]
+- Plan Phase ✅ -> contains -> Requirements Delivered [EXTRACTED]
+- Project Metrics -> contains -> Development Velocity [EXTRACTED]
+- Project Metrics -> contains -> Quality Scorecard [EXTRACTED]
+- Project Overview -> contains -> Feature Description [EXTRACTED]
+- Project Overview -> contains -> Business Objectives [EXTRACTED]
+- Project Overview -> contains -> Scope & Constraints [EXTRACTED]
+- Quality Metrics -> contains -> Code Standards Compliance [EXTRACTED]
+- Quality Metrics -> contains -> Test Coverage [EXTRACTED]
+- Quality Metrics -> contains -> Performance Characteristics [EXTRACTED]
+- Recommendations -> contains -> Immediate Follow-Up (Next Sprint) [EXTRACTED]
+- Recommendations -> contains -> Future Enhancements (Backlog) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Document Ingestion Feature - PDCA Completion Report, API Specifications, Check Phase ✅를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 document_ingestion.completion.report.md이다.
+
+### Key Facts
+- > **Summary**: Document Ingestion feature successfully completed with 95% design-implementation match rate. 5 API endpoints, 8 Pydantic schemas, and comprehensive document processing pipeline implemented with zero critical gaps. > > **Feature**: document_ingestion > **Version**: v1.0 > **Report…
+- Endpoint 1: Upload Document
+- **Status**: Gap analysis completed
+- **Status**: Architecture and specifications finalized
+- **Conclusion**: Implementation exceeds specification — all designed features implemented, plus 3 additional schemas to fully support the API contract.

@@ -208,8 +208,12 @@ function BidDetailContent() {
     );
   }
 
-  const score = recommendation?.match_score;
-  const grade = recommendation?.match_grade;
+  // AI 분석 결과의 적합도 점수 (이미 0-100 범위)
+  const suitabilityScore = announcement?.suitability_score;
+  const score = suitabilityScore != null ? Math.round(suitabilityScore) : null;
+
+  // AI 분석 등급은 recommendation에서 조회
+  const grade = recommendation?.match_grade || "D";
   const scorePercent = score != null ? `${score}%` : "0%";
 
   return (

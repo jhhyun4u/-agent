@@ -1,0 +1,143 @@
+# 🧪 테스트 시나리오 3가지 & bash
+Cohesion: 0.12 | Nodes: 23
+
+## Key Nodes
+- **🧪 테스트 시나리오 3가지** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 11 connections
+  - -> contains -> [[1-api]]
+  - -> has_code_example -> [[bash]]
+  - -> contains -> [[2-ui]]
+  - -> contains -> [[3-cicd]]
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - <- contains <- [[manual-test-scenarios]]
+  - <- contains <- [[1-api]]
+  - <- contains <- [[2-ui]]
+  - <- contains <- [[3]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 7 connections
+  - <- has_code_example <- [[1-pdf]]
+  - <- has_code_example <- [[2-api]]
+  - <- has_code_example <- [[3]]
+  - <- has_code_example <- [[4]]
+  - <- has_code_example <- [[1-cicd-github-actions]]
+  - <- has_code_example <- [[3-api]]
+  - <- has_code_example <- [[5-cicd]]
+- **수동 테스트 시나리오 (Manual Test Scenarios)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 7 connections
+  - -> contains -> [[phase-1-document-ingestion]]
+  - -> contains -> [[phase-2-cicd]]
+  - -> contains -> [[phase-3]]
+  - -> contains -> [[phase-4]]
+  - -> contains -> [[phase-5]]
+  - -> contains -> [[3]]
+  - <- contains <- [[manual-test-scenarios]]
+- **시나리오 3: CI/CD 파이프라인 동작 확인** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 6 connections
+  - -> contains -> [[1-cicd-github-actions]]
+  - -> contains -> [[2-railway]]
+  - -> contains -> [[3-api]]
+  - -> contains -> [[4-slack]]
+  - -> contains -> [[5-cicd]]
+  - <- contains <- [[3]]
+- **시나리오 1: 문서 업로드 & API 검증 (백엔드)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 5 connections
+  - -> contains -> [[1-pdf]]
+  - -> contains -> [[2-api]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - <- contains <- [[3]]
+- **시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 5 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - <- contains <- [[3]]
+- **단계 4: 상세 정보 조회** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[1-api]]
+  - <- contains <- [[2-ui]]
+- **단계 5: 프론트엔드 CI/CD 테스트 (선택)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - -> has_code_example -> [[markdown]]
+  - <- contains <- [[3-cicd]]
+- **단계 1: 페이지 접속 및 로드 확인** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - <- contains <- [[2-ui]]
+  - <- contains <- [[3]]
+- **단계 1: 백엔드 CI/CD 테스트 (GitHub Actions)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[3-cicd]]
+- **단계 1: 테스트 PDF 생성** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[1-api]]
+- **단계 2: 파일 업로드 테스트** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - <- contains <- [[2-ui]]
+  - <- contains <- [[3]]
+- **단계 2: API를 통해 파일 업로드** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[1-api]]
+- **단계 3: API 헬스 체크** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[3-cicd]]
+- **markdown** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- has_code_example <- [[5-cicd]]
+- **manual-test-scenarios** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - -> contains -> [[manual-test-scenarios]]
+- **단계 2: 배포 결과 확인 (Railway)** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[3-cicd]]
+- **단계 4: Slack 알림 확인** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[3-cicd]]
+- **Phase 1: 문서 섭취 (Document Ingestion) ✅** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[manual-test-scenarios]]
+- **Phase 2: CI/CD 파이프라인 ✅** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[manual-test-scenarios]]
+- **Phase 3: 모니터링 & 로깅 ✅** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[manual-test-scenarios]]
+- **Phase 4: 백업 & 재해복구 ✅** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[manual-test-scenarios]]
+- **Phase 5: 교육 & 문서 ✅** (C:\project\tenopa proposer\-agent-master\docs\testing\manual-test-scenarios.md) -- 1 connections
+  - <- contains <- [[manual-test-scenarios]]
+
+## Internal Relationships
+- manual-test-scenarios -> contains -> 수동 테스트 시나리오 (Manual Test Scenarios) [EXTRACTED]
+- 시나리오 1: 문서 업로드 & API 검증 (백엔드) -> contains -> 단계 1: 테스트 PDF 생성 [EXTRACTED]
+- 시나리오 1: 문서 업로드 & API 검증 (백엔드) -> contains -> 단계 2: API를 통해 파일 업로드 [EXTRACTED]
+- 시나리오 1: 문서 업로드 & API 검증 (백엔드) -> contains -> 🧪 테스트 시나리오 3가지 [EXTRACTED]
+- 시나리오 1: 문서 업로드 & API 검증 (백엔드) -> contains -> 단계 4: 상세 정보 조회 [EXTRACTED]
+- 단계 1: 백엔드 CI/CD 테스트 (GitHub Actions) -> has_code_example -> bash [EXTRACTED]
+- 단계 1: 테스트 PDF 생성 -> has_code_example -> bash [EXTRACTED]
+- 시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지) -> contains -> 단계 1: 페이지 접속 및 로드 확인 [EXTRACTED]
+- 시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지) -> contains -> 단계 2: 파일 업로드 테스트 [EXTRACTED]
+- 시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지) -> contains -> 🧪 테스트 시나리오 3가지 [EXTRACTED]
+- 시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지) -> contains -> 단계 4: 상세 정보 조회 [EXTRACTED]
+- 단계 2: API를 통해 파일 업로드 -> has_code_example -> bash [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 시나리오 1: 문서 업로드 & API 검증 (백엔드) [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> has_code_example -> bash [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 시나리오 2: 프론트엔드 UI 테스트 (문서 관리 페이지) [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 시나리오 3: CI/CD 파이프라인 동작 확인 [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 단계 1: 페이지 접속 및 로드 확인 [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 단계 2: 파일 업로드 테스트 [EXTRACTED]
+- 🧪 테스트 시나리오 3가지 -> contains -> 🧪 테스트 시나리오 3가지 [EXTRACTED]
+- 단계 3: API 헬스 체크 -> has_code_example -> bash [EXTRACTED]
+- 시나리오 3: CI/CD 파이프라인 동작 확인 -> contains -> 단계 1: 백엔드 CI/CD 테스트 (GitHub Actions) [EXTRACTED]
+- 시나리오 3: CI/CD 파이프라인 동작 확인 -> contains -> 단계 2: 배포 결과 확인 (Railway) [EXTRACTED]
+- 시나리오 3: CI/CD 파이프라인 동작 확인 -> contains -> 단계 3: API 헬스 체크 [EXTRACTED]
+- 시나리오 3: CI/CD 파이프라인 동작 확인 -> contains -> 단계 4: Slack 알림 확인 [EXTRACTED]
+- 시나리오 3: CI/CD 파이프라인 동작 확인 -> contains -> 단계 5: 프론트엔드 CI/CD 테스트 (선택) [EXTRACTED]
+- 단계 4: 상세 정보 조회 -> has_code_example -> bash [EXTRACTED]
+- 단계 5: 프론트엔드 CI/CD 테스트 (선택) -> has_code_example -> bash [EXTRACTED]
+- 단계 5: 프론트엔드 CI/CD 테스트 (선택) -> has_code_example -> markdown [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> Phase 1: 문서 섭취 (Document Ingestion) ✅ [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> Phase 2: CI/CD 파이프라인 ✅ [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> Phase 3: 모니터링 & 로깅 ✅ [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> Phase 4: 백업 & 재해복구 ✅ [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> Phase 5: 교육 & 문서 ✅ [EXTRACTED]
+- 수동 테스트 시나리오 (Manual Test Scenarios) -> contains -> 🧪 테스트 시나리오 3가지 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 🧪 테스트 시나리오 3가지, bash, 수동 테스트 시나리오 (Manual Test Scenarios)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 manual-test-scenarios.md이다.
+
+### Key Facts
+- 시나리오 1: 문서 업로드 & API 검증 (백엔드)
+- 단계 1: 테스트 PDF 생성 ```bash 간단한 PDF 생성 (Python) python3 << 'EOF' from reportlab.lib.pagesizes import letter from reportlab.pdfgen import canvas
+- **목적**: 구현된 핵심 기능의 정상 작동 여부를 사용자가 직접 확인 **대상**: 개발자, PM, QA **작성일**: 2026-04-08
+- **목적**: GitHub Actions 자동 배포 파이프라인의 정상 작동 확인 **예상 시간**: 15~30분 (배포 대기 시간 포함) **준비물**: - GitHub 저장소 접근 권한 - 로컬 코드 변경 가능 - Railway/Vercel 대시보드 접근
+- **목적**: Document Ingestion API의 정상 작동 확인 **예상 시간**: 5분 **준비물**: - Python 3.11+ - curl 또는 Postman - 테스트 PDF 파일 (또는 샘플 생성) - 로컬 백엔드 실행 (또는 Railway URL)

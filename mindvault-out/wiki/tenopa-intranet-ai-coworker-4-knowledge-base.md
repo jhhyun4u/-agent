@@ -1,0 +1,395 @@
+# 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker & 4. Knowledge Base (조직의 제안 지식)
+Cohesion: 0.02 | Nodes: 95
+
+## Key Nodes
+- **요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 14 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-knowledge-base]]
+  - -> contains -> [[5-6-step-0-step-5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7-human]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9-g2b]]
+  - -> contains -> [[10]]
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13-out-of-scope]]
+  - -> contains -> [[14]]
+- **4. Knowledge Base (조직의 제안 지식)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 11 connections
+  - -> contains -> [[cold-start]]
+  - -> contains -> [[kb-export]]
+  - -> contains -> [[part-a]]
+  - -> contains -> [[4-a-1]]
+  - -> contains -> [[4-a-2-db-ai]]
+  - -> contains -> [[part-b-content-library]]
+  - -> contains -> [[part-c-db-client-intelligence]]
+  - -> contains -> [[part-d-db-competitor-intelligence]]
+  - -> contains -> [[part-e-lessons-learned]]
+  - -> contains -> [[part-f-unified-knowledge-search]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **2. 조직 구조 및 역할** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 10 connections
+  - -> contains -> [[2-1]]
+  - -> contains -> [[2-2]]
+  - -> contains -> [[2-3]]
+  - -> contains -> [[2-4]]
+  - -> contains -> [[2-5]]
+  - -> contains -> [[2-6]]
+  - -> contains -> [[2-7]]
+  - -> contains -> [[2-8]]
+  - -> contains -> [[2-9]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **10. 전사 협업** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 7 connections
+  - -> contains -> [[10-1]]
+  - -> contains -> [[10-2]]
+  - -> contains -> [[10-3-performance-tracking]]
+  - -> contains -> [[10-4]]
+  - -> contains -> [[10-5-teams]]
+  - -> contains -> [[10-6-audit-trail]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **12. 비기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 7 connections
+  - -> contains -> [[12-0-ai]]
+  - -> contains -> [[12-1-claude-api]]
+  - -> contains -> [[12-2-ai]]
+  - -> contains -> [[12-3-sla]]
+  - -> contains -> [[12-4]]
+  - -> contains -> [[12-5]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **6. 단계별 상세 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 7 connections
+  - -> contains -> [[step-0-rfp]]
+  - -> contains -> [[step-1-rfp-gono-go]]
+  - -> contains -> [[step-2]]
+  - -> contains -> [[step-3]]
+  - -> contains -> [[step-4]]
+  - -> contains -> [[step-5-ppt]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **STEP 1. RFP 분석 + Go/No-Go 의사결정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 7 connections
+  - -> contains -> [[1-rfp]]
+  - -> contains -> [[rfp]]
+  - -> contains -> [[human-rfp-step-1-1]]
+  - -> contains -> [[2-gono-go]]
+  - -> contains -> [[human-gono-go-step-1-2]]
+  - -> contains -> [[gono-go]]
+  - <- contains <- [[6]]
+- **1. 제품 비전** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 5 connections
+  - -> contains -> [[1-1-tenopa-intranet]]
+  - -> contains -> [[1-2-ai-coworker]]
+  - -> contains -> [[1-3]]
+  - -> contains -> [[1-4]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **12-2. AI 토큰 효율화 정책** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 5 connections
+  - -> contains -> [[12-2-1]]
+  - -> contains -> [[12-2-2]]
+  - -> contains -> [[12-2-3-ai]]
+  - -> contains -> [[12-2-4]]
+  - <- contains <- [[12]]
+- **7. Human 승인 게이트 공통 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 5 connections
+  - -> contains -> [[7-1-review-panel-ui]]
+  - -> contains -> [[7-2]]
+  - -> contains -> [[7-3]]
+  - -> contains -> [[7-4]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **Part B. 콘텐츠 라이브러리 (Content Library)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 5 connections
+  - -> contains -> [[4-b-1]]
+  - -> contains -> [[4-b-2]]
+  - -> contains -> [[4-b-3]]
+  - -> contains -> [[4-b-4-ai]]
+  - <- contains <- [[4-knowledge-base]]
+- **12-0. AI 산출물 신뢰성 정책** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 4 connections
+  - -> contains -> [[12-0-1]]
+  - -> contains -> [[12-0-2]]
+  - -> contains -> [[12-0-3-ai]]
+  - <- contains <- [[12]]
+- **3. 입찰 포지셔닝 전략 개념** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 4 connections
+  - -> contains -> [[3-1]]
+  - -> contains -> [[3-2]]
+  - -> contains -> [[3-3-win-theme]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **5-1. AI Coworker 실행 상태 모니터링** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 3 connections
+  - -> contains -> [[5-1-1]]
+  - -> contains -> [[5-1-2]]
+  - <- contains <- [[5-6-step-0-step-5]]
+- **Part C. 발주기관 DB (Client Intelligence)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 3 connections
+  - -> contains -> [[4-c-1-db]]
+  - -> contains -> [[4-c-2-ai-coworker]]
+  - <- contains <- [[4-knowledge-base]]
+- **Part D. 경쟁사 DB (Competitor Intelligence)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 3 connections
+  - -> contains -> [[4-d-1-db]]
+  - -> contains -> [[4-d-2-ai-coworker]]
+  - <- contains <- [[4-knowledge-base]]
+- **Part E. 전략·교훈 아카이브 (Lessons Learned)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 3 connections
+  - -> contains -> [[4-e-1]]
+  - -> contains -> [[4-e-2]]
+  - <- contains <- [[4-knowledge-base]]
+- **STEP 4. 정성제안서 작성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 3 connections
+  - -> contains -> [[ai]]
+  - -> contains -> [[human-step-4]]
+  - <- contains <- [[6]]
+- **5. 전체 워크플로 (6단계: STEP 0 ~ STEP 5)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 2 connections
+  - -> contains -> [[5-1-ai-coworker]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **8. 단계 간 이동 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 2 connections
+  - -> contains -> [[8-1]]
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **STEP 0. RFP 공고 검색 및 추천** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 2 connections
+  - -> contains -> [[pick-up-step-0]]
+  - <- contains <- [[6]]
+- **STEP 2. 제안전략 기획** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 2 connections
+  - -> contains -> [[human-step-2]]
+  - <- contains <- [[6]]
+- **STEP 3. 제안계획 수립** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 2 connections
+  - -> contains -> [[human-step-3]]
+  - <- contains <- [[6]]
+- **10-1. 팀 협업** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10-2. 컨소시엄 및 협력업체 관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10-3. 성과 추적 (Performance Tracking)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10-4. 전사 대시보드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10-5. 알림 및 Teams 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **10-6. 감사 추적 (Audit Trail)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[10]]
+- **11. 산출물 관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **12-0-1. 할루시네이션 방지 규칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-0-ai]]
+- **12-0-2. 출처 추적 및 검증 지원** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-0-ai]]
+- **12-0-3. AI 작성 행동 규칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-0-ai]]
+- **12-1. Claude API 비용 관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12]]
+- **12-2-1. 컨텍스트 관리 원칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-2-ai]]
+- **12-2-2. 병렬 처리 토큰 최적화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-2-ai]]
+- **12-2-3. AI 호출 최소화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-2-ai]]
+- **12-2-4. 출력 토큰 제어** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12-2-ai]]
+- **12-3. 운영 모니터링 및 SLA** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12]]
+- **12-4. 데이터 보존 및 삭제 정책** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12]]
+- **12-5. 입력 데이터 검증 규칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[12]]
+- **13. 제외 범위 (Out of Scope)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **14. 용어 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **1-1. TENOPA Intranet이란** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1-2. AI Coworker의 역할** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1-3. 핵심 설계 철학** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1-4. 서비스 유형 및 사용 규모** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1단계: RFP 분석 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **2-1. 조직 계층** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-2. 역할 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-3. 역할별 워크플로 참여** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-4. 결재선 규칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-5. 인증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-6. 데이터 접근 제어** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-7. 사용자 라이프사이클 관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-8. 시스템 온보딩 (초기 설정)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2-9. 역할별 권한 경계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[2]]
+- **2단계: Go/No-Go 의사결정 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **3-1. 포지셔닝 유형 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3-2. 포지셔닝별 전략 매트릭스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3-3. Win Theme 방정식 (포지셔닝 적용)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4-A-1. 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **4-A-2. 역량 DB AI 활용 방식** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **4-B-1. 콘텐츠 라이브러리 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-b-content-library]]
+- **4-B-2. 콘텐츠 유형** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-b-content-library]]
+- **4-B-3. 콘텐츠 라이브러리 거버넌스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-b-content-library]]
+- **4-B-4. 콘텐츠 라이브러리 AI 활용 방식** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-b-content-library]]
+- **4-C-1. 발주기관 DB 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-c-db-client-intelligence]]
+- **4-C-2. AI Coworker 활용 방식** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-c-db-client-intelligence]]
+- **4-D-1. 경쟁사 DB 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-d-db-competitor-intelligence]]
+- **4-D-2. AI Coworker 활용 방식** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-d-db-competitor-intelligence]]
+- **4-E-1. 학습 피드백 루프 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-e-lessons-learned]]
+- **4-E-2. 학습 피드백 루프 흐름** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[part-e-lessons-learned]]
+- **5-1-1. 실행 상태 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[5-1-ai-coworker]]
+- **5-1-2. 상태 전이 다이어그램** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[5-1-ai-coworker]]
+- **7-1. 리뷰 패널 (Review Panel) — 핵심 UI 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[7-human]]
+- **7-2. 리뷰 패널 기능 요구사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[7-human]]
+- **7-3. 단계별 리뷰 패널 특이사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[7-human]]
+- **7-4. 단계별 승인 게이트 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[7-human]]
+- **8-1. 프로젝트 상태 머신** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9. G2B 나라장터 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[tenopa-intranet-ai-coworker]]
+- **AI 자가진단 평가 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-4]]
+- **Cold Start 대응 원칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **산출물: Go/No-Go 평가서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **Human 승인 게이트 동작 (STEP 2)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-2]]
+- **Human 승인 게이트 동작 (STEP 3)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-3]]
+- **Human 승인 게이트 동작 (STEP 4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-4]]
+- **Human Go/No-Go 게이트 동작 (STEP 1 - 2단계 게이트)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **Human RFP 분석 확인 (STEP 1 - 1단계 게이트)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **KB 데이터 내보내기 (Export)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **Part A. 자사 역량 데이터베이스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **Part F. 통합 지식 검색 (Unified Knowledge Search)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[4-knowledge-base]]
+- **공고 Pick-up 동작 (STEP 0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-0-rfp]]
+- **RFP 서식 케이스 분류** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[step-1-rfp-gono-go]]
+- **STEP 5. PPT 작성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v1\proposal-agent-v1.requirements.md) -- 1 connections
+  - <- contains <- [[6]]
+
+## Internal Relationships
+- 1. 제품 비전 -> contains -> 1-1. TENOPA Intranet이란 [EXTRACTED]
+- 1. 제품 비전 -> contains -> 1-2. AI Coworker의 역할 [EXTRACTED]
+- 1. 제품 비전 -> contains -> 1-3. 핵심 설계 철학 [EXTRACTED]
+- 1. 제품 비전 -> contains -> 1-4. 서비스 유형 및 사용 규모 [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-1. 팀 협업 [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-2. 컨소시엄 및 협력업체 관리 [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-3. 성과 추적 (Performance Tracking) [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-4. 전사 대시보드 [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-5. 알림 및 Teams 연동 [EXTRACTED]
+- 10. 전사 협업 -> contains -> 10-6. 감사 추적 (Audit Trail) [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-0. AI 산출물 신뢰성 정책 [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-1. Claude API 비용 관리 [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-2. AI 토큰 효율화 정책 [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-3. 운영 모니터링 및 SLA [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-4. 데이터 보존 및 삭제 정책 [EXTRACTED]
+- 12. 비기능 요구사항 -> contains -> 12-5. 입력 데이터 검증 규칙 [EXTRACTED]
+- 12-0. AI 산출물 신뢰성 정책 -> contains -> 12-0-1. 할루시네이션 방지 규칙 [EXTRACTED]
+- 12-0. AI 산출물 신뢰성 정책 -> contains -> 12-0-2. 출처 추적 및 검증 지원 [EXTRACTED]
+- 12-0. AI 산출물 신뢰성 정책 -> contains -> 12-0-3. AI 작성 행동 규칙 [EXTRACTED]
+- 12-2. AI 토큰 효율화 정책 -> contains -> 12-2-1. 컨텍스트 관리 원칙 [EXTRACTED]
+- 12-2. AI 토큰 효율화 정책 -> contains -> 12-2-2. 병렬 처리 토큰 최적화 [EXTRACTED]
+- 12-2. AI 토큰 효율화 정책 -> contains -> 12-2-3. AI 호출 최소화 [EXTRACTED]
+- 12-2. AI 토큰 효율화 정책 -> contains -> 12-2-4. 출력 토큰 제어 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-1. 조직 계층 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-2. 역할 정의 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-3. 역할별 워크플로 참여 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-4. 결재선 규칙 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-5. 인증 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-6. 데이터 접근 제어 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-7. 사용자 라이프사이클 관리 [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-8. 시스템 온보딩 (초기 설정) [EXTRACTED]
+- 2. 조직 구조 및 역할 -> contains -> 2-9. 역할별 권한 경계 [EXTRACTED]
+- 3. 입찰 포지셔닝 전략 개념 -> contains -> 3-1. 포지셔닝 유형 정의 [EXTRACTED]
+- 3. 입찰 포지셔닝 전략 개념 -> contains -> 3-2. 포지셔닝별 전략 매트릭스 [EXTRACTED]
+- 3. 입찰 포지셔닝 전략 개념 -> contains -> 3-3. Win Theme 방정식 (포지셔닝 적용) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Cold Start 대응 원칙 [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> KB 데이터 내보내기 (Export) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part A. 자사 역량 데이터베이스 [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> 4-A-1. 기능 요구사항 [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> 4-A-2. 역량 DB AI 활용 방식 [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part B. 콘텐츠 라이브러리 (Content Library) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part C. 발주기관 DB (Client Intelligence) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part D. 경쟁사 DB (Competitor Intelligence) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part E. 전략·교훈 아카이브 (Lessons Learned) [EXTRACTED]
+- 4. Knowledge Base (조직의 제안 지식) -> contains -> Part F. 통합 지식 검색 (Unified Knowledge Search) [EXTRACTED]
+- 5-1. AI Coworker 실행 상태 모니터링 -> contains -> 5-1-1. 실행 상태 기능 요구사항 [EXTRACTED]
+- 5-1. AI Coworker 실행 상태 모니터링 -> contains -> 5-1-2. 상태 전이 다이어그램 [EXTRACTED]
+- 5. 전체 워크플로 (6단계: STEP 0 ~ STEP 5) -> contains -> 5-1. AI Coworker 실행 상태 모니터링 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 0. RFP 공고 검색 및 추천 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 1. RFP 분석 + Go/No-Go 의사결정 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 2. 제안전략 기획 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 3. 제안계획 수립 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 4. 정성제안서 작성 [EXTRACTED]
+- 6. 단계별 상세 요구사항 -> contains -> STEP 5. PPT 작성 [EXTRACTED]
+- 7. Human 승인 게이트 공통 요구사항 -> contains -> 7-1. 리뷰 패널 (Review Panel) — 핵심 UI 요구사항 [EXTRACTED]
+- 7. Human 승인 게이트 공통 요구사항 -> contains -> 7-2. 리뷰 패널 기능 요구사항 [EXTRACTED]
+- 7. Human 승인 게이트 공통 요구사항 -> contains -> 7-3. 단계별 리뷰 패널 특이사항 [EXTRACTED]
+- 7. Human 승인 게이트 공통 요구사항 -> contains -> 7-4. 단계별 승인 게이트 요약 [EXTRACTED]
+- 8. 단계 간 이동 요구사항 -> contains -> 8-1. 프로젝트 상태 머신 [EXTRACTED]
+- Part B. 콘텐츠 라이브러리 (Content Library) -> contains -> 4-B-1. 콘텐츠 라이브러리 기능 요구사항 [EXTRACTED]
+- Part B. 콘텐츠 라이브러리 (Content Library) -> contains -> 4-B-2. 콘텐츠 유형 [EXTRACTED]
+- Part B. 콘텐츠 라이브러리 (Content Library) -> contains -> 4-B-3. 콘텐츠 라이브러리 거버넌스 [EXTRACTED]
+- Part B. 콘텐츠 라이브러리 (Content Library) -> contains -> 4-B-4. 콘텐츠 라이브러리 AI 활용 방식 [EXTRACTED]
+- Part C. 발주기관 DB (Client Intelligence) -> contains -> 4-C-1. 발주기관 DB 기능 요구사항 [EXTRACTED]
+- Part C. 발주기관 DB (Client Intelligence) -> contains -> 4-C-2. AI Coworker 활용 방식 [EXTRACTED]
+- Part D. 경쟁사 DB (Competitor Intelligence) -> contains -> 4-D-1. 경쟁사 DB 기능 요구사항 [EXTRACTED]
+- Part D. 경쟁사 DB (Competitor Intelligence) -> contains -> 4-D-2. AI Coworker 활용 방식 [EXTRACTED]
+- Part E. 전략·교훈 아카이브 (Lessons Learned) -> contains -> 4-E-1. 학습 피드백 루프 요구사항 [EXTRACTED]
+- Part E. 전략·교훈 아카이브 (Lessons Learned) -> contains -> 4-E-2. 학습 피드백 루프 흐름 [EXTRACTED]
+- STEP 0. RFP 공고 검색 및 추천 -> contains -> 공고 Pick-up 동작 (STEP 0) [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> 1단계: RFP 분석 기능 요구사항 [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> RFP 서식 케이스 분류 [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> Human RFP 분석 확인 (STEP 1 - 1단계 게이트) [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> 2단계: Go/No-Go 의사결정 기능 요구사항 [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> Human Go/No-Go 게이트 동작 (STEP 1 - 2단계 게이트) [EXTRACTED]
+- STEP 1. RFP 분석 + Go/No-Go 의사결정 -> contains -> 산출물: Go/No-Go 평가서 [EXTRACTED]
+- STEP 2. 제안전략 기획 -> contains -> Human 승인 게이트 동작 (STEP 2) [EXTRACTED]
+- STEP 3. 제안계획 수립 -> contains -> Human 승인 게이트 동작 (STEP 3) [EXTRACTED]
+- STEP 4. 정성제안서 작성 -> contains -> AI 자가진단 평가 항목 [EXTRACTED]
+- STEP 4. 정성제안서 작성 -> contains -> Human 승인 게이트 동작 (STEP 4) [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 1. 제품 비전 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 2. 조직 구조 및 역할 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 3. 입찰 포지셔닝 전략 개념 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 4. Knowledge Base (조직의 제안 지식) [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 5. 전체 워크플로 (6단계: STEP 0 ~ STEP 5) [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 6. 단계별 상세 요구사항 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 7. Human 승인 게이트 공통 요구사항 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 8. 단계 간 이동 요구사항 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 9. G2B 나라장터 연동 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 10. 전사 협업 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 11. 산출물 관리 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 12. 비기능 요구사항 [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 13. 제외 범위 (Out of Scope) [EXTRACTED]
+- 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker -> contains -> 14. 용어 정의 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 요구사항 정의서: TENOPA Intranet — 용역제안 AI Coworker, 4. Knowledge Base (조직의 제안 지식), 2. 조직 구조 및 역할를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-agent-v1.requirements.md이다.
+
+### Key Facts
+- | 항목 | 내용 | |------|------| | 문서 버전 | v4.9 | | 작성일 | 2026-03-09 | | 상태 | 확정 대기 | | 기반 지식 | docs/knowledge/proposal-winning-knowledge.md | | 변경 이력 | v1.1 → v2.0: 수주전략 + ICT 엔지니어 2관점 리뷰 반영 | | | v2.0 → v2.1: 입찰 포지셔닝 전략(수성/공격/인접) 반영 | | | v2.1 → v2.2: STEP 0을 RFP 공고 검색/추천으로, Go/No-Go를 STEP 1 이후로 이동 |…
+- > **TENOPA Intranet의 핵심 자산**. 사람과 AI Coworker가 함께 축적하고 활용하는 조직 지식의 총체. > 프로젝트를 거듭할수록 KB가 풍부해지고, KB가 풍부할수록 다음 제안의 품질이 올라가는 **선순환 구조**.
+- | ID | 항목 | 요구사항 | |----|------|----------| | NFR-01 | 데이터베이스 | **Supabase (PostgreSQL)** — 동시 접근, RLS, 확장성 | | NFR-02 | 인증 | **Supabase Auth + Azure AD(Entra ID) OAuth** — MS365 SSO | | NFR-03 | 프론트엔드 배포 | **Vercel** (Next.js) | | NFR-04 | 백엔드 배포 | **Railway / Render / Azure App Service**…
+- STEP 0. RFP 공고 검색 및 추천
+- 진입    │ └───────────────────────────┬─────────────────────────────────────────┘ ▼ (공고 Pick-up 후) ┌─────────────────────────────────────────────────────────────────────┐ │ STEP 1. RFP 분석 + Go/No-Go 의사결정                                 │ │   1단계: RFP 문서 파싱 → 구조화 → 서식 템플릿 추출                  │ │      …

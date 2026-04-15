@@ -1,0 +1,263 @@
+# Verification Criteria Results & ppt-enhancement Analysis Report
+Cohesion: 0.04 | Nodes: 59
+
+## Key Nodes
+- **Verification Criteria Results** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 13 connections
+  - -> contains -> [[1-proposalstate-has-pptstoryboard-field]]
+  - -> contains -> [[2-three-new-nodes-exist-ppttoc-pptvisualbrief-pptstoryboardnode]]
+  - -> contains -> [[3-old-nodes-removed-from-graph-pptfanoutgate-pptslide-pptmerge]]
+  - -> contains -> [[4-graph-edges-correct-presentationstrategy-ppttoc-pptvisualbrief-pptstoryboard-reviewppt]]
+  - -> contains -> [[5-reviewppt-rework-target-is-ppttoc]]
+  - -> contains -> [[6-prompts-extracted-correctly-with-proposalstate-field-mapping]]
+  - -> contains -> [[7-buildpptcontext-correctly-maps-proposalstate-fields]]
+  - -> contains -> [[8-pptstoryboardnode-produces-both-pptstoryboard-and-pptslides]]
+  - -> contains -> [[9-downloadpptx-has-storyboard-first-logic-with-fallback]]
+  - -> contains -> [[10-presentationstrategy-node-preserved-unchanged]]
+  - -> contains -> [[11-claudegenerate-called-with-correct-param-name-systemprompt-not-system]]
+  - -> contains -> [[12-legacy-routes-untouched]]
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **ppt-enhancement Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 11 connections
+  - -> references -> [[unresolvedrefpptenhancementdesign]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-fr-by-fr-gap-analysis]]
+  - -> contains -> [[3-beyond-design-improvements]]
+  - -> contains -> [[4-match-rate-summary]]
+  - -> contains -> [[5-convention-compliance]]
+  - -> contains -> [[6-differences-detail]]
+  - -> contains -> [[7-recommended-actions]]
+  - -> contains -> [[8-previous-analysis-correction]]
+  - -> contains -> [[9-next-steps]]
+  - -> contains -> [[version-history]]
+- **Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 7 connections
+  - -> contains -> [[overall-scores]]
+  - -> contains -> [[verification-criteria-results]]
+  - -> contains -> [[differences-found]]
+  - -> contains -> [[architecture-compliance]]
+  - -> contains -> [[recommended-actions]]
+  - -> contains -> [[version-history]]
+  - -> contains -> [[related-documents]]
+- **2. FR-by-FR Gap Analysis** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 7 connections
+  - -> contains -> [[fr-01-comparison]]
+  - -> contains -> [[fr-02-team]]
+  - -> contains -> [[fr-03-action-title]]
+  - -> contains -> [[fr-04]]
+  - -> contains -> [[fr-05-os]]
+  - -> contains -> [[fr-06-step-2]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 5 connections
+  - <- has_code_example <- [[1-proposalstate-has-pptstoryboard-field]]
+  - <- has_code_example <- [[3-old-nodes-removed-from-graph-pptfanoutgate-pptslide-pptmerge]]
+  - <- has_code_example <- [[4-graph-edges-correct-presentationstrategy-ppttoc-pptvisualbrief-pptstoryboard-reviewppt]]
+  - <- has_code_example <- [[5-reviewppt-rework-target-is-ppttoc]]
+  - <- has_code_example <- [[9-downloadpptx-has-storyboard-first-logic-with-fallback]]
+- **Architecture Compliance** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 4 connections
+  - -> contains -> [[graph-structure]]
+  - -> contains -> [[dependency-direction]]
+  - -> contains -> [[convention-compliance]]
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **Differences Found** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 4 connections
+  - -> contains -> [[missing-features-design-o-implementation-x]]
+  - -> contains -> [[added-features-design-x-implementation-o]]
+  - -> contains -> [[changed-features-design-implementation]]
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 4 connections
+  - -> contains -> [[immediate-actions]]
+  - -> contains -> [[low-priority-cleanup]]
+  - -> contains -> [[documentation-update-needed]]
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 4 connections
+  - -> references -> [[unresolvedrefpptenhancementplan]]
+  - -> references -> [[unresolvedrefpptenhancementdesign]]
+  - -> references -> [[unresolvedrefpptenhancementanalysis]]
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **5. Convention Compliance** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 4 connections
+  - -> contains -> [[51-naming-convention]]
+  - -> contains -> [[52-code-quality]]
+  - -> contains -> [[53-import-order-3-files-checked]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **7. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 3 connections
+  - -> contains -> [[71-design-document-update]]
+  - -> contains -> [[72-immediate-action-required]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **__unresolved__::ref::ppt_enhancement_design** () -- 2 connections
+  - <- references <- [[ppt-enhancement-analysis-report]]
+  - <- references <- [[related-documents]]
+- **1. ProposalState has `ppt_storyboard` field** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[verification-criteria-results]]
+- **3. Old nodes removed from graph: `ppt_fan_out_gate`, `ppt_slide`, `ppt_merge`** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[verification-criteria-results]]
+- **4. Graph edges correct: `presentation_strategy -> ppt_toc -> ppt_visual_brief -> ppt_storyboard -> review_ppt`** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[verification-criteria-results]]
+- **5. `review_ppt` rework target is `ppt_toc`** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[verification-criteria-results]]
+- **9. `download_pptx` has storyboard-first logic with fallback** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[verification-criteria-results]]
+- **4. Match Rate Summary** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 2 connections
+  - -> contains -> [[overall-scores]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **6. Differences Detail** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 2 connections
+  - -> contains -> [[fr-04-style-adjustments-low-impact-4]]
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **__unresolved__::ref::ppt_enhancement_analysis** () -- 1 connections
+  - <- references <- [[related-documents]]
+- **__unresolved__::ref::ppt_enhancement_plan** () -- 1 connections
+  - <- references <- [[related-documents]]
+- **10. `presentation_strategy` node preserved unchanged** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **11. `claude_generate` called with correct param name (`system_prompt`, not `system`)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **12. Legacy routes untouched** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **2. Three new nodes exist: `ppt_toc`, `ppt_visual_brief`, `ppt_storyboard_node`** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **6. Prompts extracted correctly with ProposalState field mapping** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **7. `_build_ppt_context` correctly maps ProposalState fields** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **8. `ppt_storyboard_node` produces both `ppt_storyboard` and `ppt_slides`** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[verification-criteria-results]]
+- **Added Features (Design X, Implementation O)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[differences-found]]
+- **Changed Features (Design != Implementation)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[differences-found]]
+- **Convention Compliance** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Dependency Direction** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Documentation Update Needed** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[recommended-actions]]
+- **Graph Structure** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[architecture-compliance]]
+- **Immediate Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[recommended-actions]]
+- **Low-Priority Cleanup** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[recommended-actions]]
+- **Missing Features (Design O, Implementation X)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[differences-found]]
+- **Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\ppt-pipeline.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-gap-analysis-report-ppt-3-step-pipeline]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **3. Beyond-Design Improvements (설계 외 추가 구현)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **5.1 Naming Convention** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[5-convention-compliance]]
+- **5.2 Code Quality** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[5-convention-compliance]]
+- **5.3 Import Order (3 files checked)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[5-convention-compliance]]
+- **7.1 Design Document Update (선택)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[7-recommended-actions]]
+- **7.2 Immediate Action Required** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[7-recommended-actions]]
+- **8. Previous Analysis Correction** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **9. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+- **FR-01: comparison 레이아웃 프롬프트 추가** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **FR-02: team 레이아웃 프롬프트 추가** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **FR-03: Action Title 규칙 추가** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **FR-04: 슬라이드 번호 추가** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **FR-04 Style Adjustments (Low Impact, 4건)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[6-differences-detail]]
+- **FR-05: 파일 경로 OS 독립화** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **FR-06: Step 2 토큰 증가** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[2-fr-by-fr-gap-analysis]]
+- **Overall Scores** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[4-match-rate-summary]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\ppt-enhancement.analysis.md) -- 1 connections
+  - <- contains <- [[ppt-enhancement-analysis-report]]
+
+## Internal Relationships
+- 1. ProposalState has `ppt_storyboard` field -> has_code_example -> python [EXTRACTED]
+- 3. Old nodes removed from graph: `ppt_fan_out_gate`, `ppt_slide`, `ppt_merge` -> has_code_example -> python [EXTRACTED]
+- 4. Graph edges correct: `presentation_strategy -> ppt_toc -> ppt_visual_brief -> ppt_storyboard -> review_ppt` -> has_code_example -> python [EXTRACTED]
+- 5. `review_ppt` rework target is `ppt_toc` -> has_code_example -> python [EXTRACTED]
+- 9. `download_pptx` has storyboard-first logic with fallback -> has_code_example -> python [EXTRACTED]
+- Architecture Compliance -> contains -> Graph Structure [EXTRACTED]
+- Architecture Compliance -> contains -> Dependency Direction [EXTRACTED]
+- Architecture Compliance -> contains -> Convention Compliance [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Overall Scores [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Verification Criteria Results [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Differences Found [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Architecture Compliance [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Recommended Actions [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Version History [EXTRACTED]
+- Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline -> contains -> Related Documents [EXTRACTED]
+- Differences Found -> contains -> Missing Features (Design O, Implementation X) [EXTRACTED]
+- Differences Found -> contains -> Added Features (Design X, Implementation O) [EXTRACTED]
+- Differences Found -> contains -> Changed Features (Design != Implementation) [EXTRACTED]
+- Recommended Actions -> contains -> Immediate Actions [EXTRACTED]
+- Recommended Actions -> contains -> Low-Priority Cleanup [EXTRACTED]
+- Recommended Actions -> contains -> Documentation Update Needed [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::ppt_enhancement_plan [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::ppt_enhancement_design [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::ppt_enhancement_analysis [EXTRACTED]
+- Verification Criteria Results -> contains -> 1. ProposalState has `ppt_storyboard` field [EXTRACTED]
+- Verification Criteria Results -> contains -> 2. Three new nodes exist: `ppt_toc`, `ppt_visual_brief`, `ppt_storyboard_node` [EXTRACTED]
+- Verification Criteria Results -> contains -> 3. Old nodes removed from graph: `ppt_fan_out_gate`, `ppt_slide`, `ppt_merge` [EXTRACTED]
+- Verification Criteria Results -> contains -> 4. Graph edges correct: `presentation_strategy -> ppt_toc -> ppt_visual_brief -> ppt_storyboard -> review_ppt` [EXTRACTED]
+- Verification Criteria Results -> contains -> 5. `review_ppt` rework target is `ppt_toc` [EXTRACTED]
+- Verification Criteria Results -> contains -> 6. Prompts extracted correctly with ProposalState field mapping [EXTRACTED]
+- Verification Criteria Results -> contains -> 7. `_build_ppt_context` correctly maps ProposalState fields [EXTRACTED]
+- Verification Criteria Results -> contains -> 8. `ppt_storyboard_node` produces both `ppt_storyboard` and `ppt_slides` [EXTRACTED]
+- Verification Criteria Results -> contains -> 9. `download_pptx` has storyboard-first logic with fallback [EXTRACTED]
+- Verification Criteria Results -> contains -> 10. `presentation_strategy` node preserved unchanged [EXTRACTED]
+- Verification Criteria Results -> contains -> 11. `claude_generate` called with correct param name (`system_prompt`, not `system`) [EXTRACTED]
+- Verification Criteria Results -> contains -> 12. Legacy routes untouched [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-01: comparison 레이아웃 프롬프트 추가 [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-02: team 레이아웃 프롬프트 추가 [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-03: Action Title 규칙 추가 [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-04: 슬라이드 번호 추가 [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-05: 파일 경로 OS 독립화 [EXTRACTED]
+- 2. FR-by-FR Gap Analysis -> contains -> FR-06: Step 2 토큰 증가 [EXTRACTED]
+- 4. Match Rate Summary -> contains -> Overall Scores [EXTRACTED]
+- 5. Convention Compliance -> contains -> 5.1 Naming Convention [EXTRACTED]
+- 5. Convention Compliance -> contains -> 5.2 Code Quality [EXTRACTED]
+- 5. Convention Compliance -> contains -> 5.3 Import Order (3 files checked) [EXTRACTED]
+- 6. Differences Detail -> contains -> FR-04 Style Adjustments (Low Impact, 4건) [EXTRACTED]
+- 7. Recommended Actions -> contains -> 7.1 Design Document Update (선택) [EXTRACTED]
+- 7. Recommended Actions -> contains -> 7.2 Immediate Action Required [EXTRACTED]
+- ppt-enhancement Analysis Report -> references -> __unresolved__::ref::ppt_enhancement_design [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 2. FR-by-FR Gap Analysis [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 3. Beyond-Design Improvements (설계 외 추가 구현) [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 4. Match Rate Summary [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 5. Convention Compliance [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 6. Differences Detail [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 7. Recommended Actions [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 8. Previous Analysis Correction [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> 9. Next Steps [EXTRACTED]
+- ppt-enhancement Analysis Report -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Verification Criteria Results, ppt-enhancement Analysis Report, Design-Implementation Gap Analysis Report: PPT 3-Step Pipeline를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 ppt-enhancement.analysis.md, ppt-pipeline.analysis.md이다.
+
+### Key Facts
+- 1. ProposalState has `ppt_storyboard` field
+- > **Analysis Type**: Gap Analysis (Design vs Implementation) > > **Project**: tenopa-proposer > **Analyst**: gap-detector > **Date**: 2026-03-08 > **Design Doc**: [ppt-enhancement.design.md](../02-design/features/ppt-enhancement.design.md)
+- > **Summary**: Phase 4 PPT pipeline -- fan-out replaced with 3-step sequential (TOC -> Visual Brief -> Storyboard) > > **Design Document**: `docs/02-design/features/ppt-enhancement.design.md` + Plan Summary (user-provided spec) > **Implementation Path**: `app/graph/nodes/ppt_nodes.py`,…
+- FR-01: comparison 레이아웃 프롬프트 추가
+- `app/graph/state.py` line 249: ```python Phase 4: 3단계 PPT 파이프라인 최종 결과 ppt_storyboard: Optional[dict] ``` Field is typed as `Optional[dict]`, consistent with the plan.

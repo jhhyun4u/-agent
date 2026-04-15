@@ -82,7 +82,11 @@ async def _get_dev_user() -> CurrentUser:
     if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
         raise AuthTokenExpiredError({"reason": "DEV_MODE 설정 불완전"})
 
-    return CurrentUser(
+    # DEBUG: 실제로 어떤 값이 사용되는지 확인
+    print(f"\n[_get_dev_user] Loading user: id={settings.dev_user_id}, email={settings.dev_user_email}, org={settings.dev_user_org_id}, team={settings.dev_user_team_id}")
+    logger.warning(f"[_get_dev_user] Loading user: id={settings.dev_user_id}")
+
+    user = CurrentUser(
         id=settings.dev_user_id,
         email=settings.dev_user_email,
         name="Dev User",
@@ -92,6 +96,8 @@ async def _get_dev_user() -> CurrentUser:
         division_id=None,
         status="active",
     )
+    print(f"[_get_dev_user] Returning user: id={user.id}")
+    return user
 
 
 async def get_current_user(
@@ -275,6 +281,39 @@ async def require_project_access(
         return proposal
 
     raise AuthProjectAccessError(proposal_id)
+
+
+async def require_knowledge_access(
+    user: CurrentUser = Depends(get_current_user),
+) -> CurrentUser:
+    """지식 관리 시스템 접근 권한 RLS 의존성.
+
+    모든 knowledge API 라우트에서 사용. 다음을 검증:
+    1. 사용자가 인증되어 있을 것 (get_current_user 통해)
+    2. 사용자에게 team_id 또는 org_id가 있을 것 (RLS 필터링 필수)
+    3. 사용자 계정이 활성 상태일 것
+
+    Design Ref: §5 RLS Policies, SC-4 (zero RLS breaches)
+
+    Returns:
+        검증된 CurrentUser 객체
+
+    Raises:
+        AuthInsufficientRoleError: team_id가 없어 RLS 필터링 불가한 경우
+        TenopAPIError: 비활성 계정인 경우
+    """
+    _validate_user_status(user)
+
+    # Knowledge RLS requires team_id to scope queries correctly
+    if not user.team_id and user.role not in ("admin", "executive"):
+        raise TenopAPIError(
+            "KNOWLEDGE_ACCESS_DENIED",
+            "지식 시스템 접근에는 팀 소속이 필요합니다.",
+            403,
+            {"user_id": str(user.id), "role": user.role},
+        )
+
+    return user
 
 
 async def get_db():

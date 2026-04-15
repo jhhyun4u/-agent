@@ -666,6 +666,11 @@ async def get_monitored_bids(
         hidden = {"제안포기", "관련없음", "제안결정"}
         filtered = []
         excluded_count = 0
+        status_excluded = 0
+        days_excluded = 0
+
+        logger.info(f"필터링 시작: show_all={show_all}, 입력 공고={len(data)}건")
+
         for b in data:
             bid_no = b.get("bid_no", "")
 
@@ -673,7 +678,8 @@ async def get_monitored_bids(
             status = b.get("proposal_status", "신규")
             if status in hidden:
                 excluded_count += 1
-                logger.info(f"필터 제외 (상태): {bid_no} - proposal_status={status}")
+                status_excluded += 1
+                logger.info(f"제외(1-상태): {bid_no} - proposal_status={status}")
                 continue
 
             # days_remaining 확인 (None이거나 >= 3이어야 포함)
@@ -685,14 +691,15 @@ async def get_monitored_bids(
 
             if days_int is not None and days_int < 3:
                 excluded_count += 1
-                logger.info(f"필터 제외 (마감): {bid_no} - days_remaining={days_int} (<3), deadline_date={b.get('deadline_date')}")
+                days_excluded += 1
+                logger.info(f"제외(2-마감): {bid_no} - days_remaining={days_int}, deadline_date={b.get('deadline_date')}")
                 continue
 
             filtered.append(b)
 
         data = filtered
         total = len(data)
-        logger.info(f"필터링 결과: 제외 {excluded_count}건, 표시 {len(data)}건")
+        logger.info(f"필터링 완료: 상태 제외 {status_excluded}건, 마감 제외 {days_excluded}건, 최종 표시 {len(data)}건")
 
     return ok_list(data, total=total, offset=offset, limit=per_page)
 
@@ -732,14 +739,19 @@ async def update_bid_status(
         # 제안결정 시 verdict도 "Go"로 업데이트
         if status == "제안결정":
             update_data["verdict"] = "Go"
-        await (
+
+        logger.info(f"[UPDATE] {bid_no}: proposal_status='{status}', decided_by='{decided_by}'")
+
+        result = await (
             client.table("bid_announcements")
             .update(update_data)
             .eq("bid_no", bid_no)
             .execute()
         )
+        logger.info(f"[UPDATE 성공] {bid_no}: {len(result.data) if result.data else 0}개 행 업데이트")
     except Exception as e:
         # DB 컬럼이 아직 마이그레이션되지 않은 경우 — 파일 캐시로 폴백
+        logger.error(f"[UPDATE 실패] {bid_no}: {e}")
         logger.warning(f"bid_announcements DB 업데이트 실패 (파일 캐시로 폴백): {e}")
 
     # 2) 파일 캐시에도 저장 (하위 호환)

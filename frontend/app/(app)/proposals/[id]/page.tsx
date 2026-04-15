@@ -143,9 +143,9 @@ export default function ProposalDetailPage() {
   // SSE + 산출물
   const isRunning =
     !!status &&
-    (status.status === "processing" ||
-      status.status === "initialized" ||
-      status.status === "running");
+    (status.status === "in_progress" ||
+      status.status === "waiting" ||
+      status.status === "initialized");
   const {
     events: streamEvents,
     nodeProgress,
@@ -159,10 +159,8 @@ export default function ProposalDetailPage() {
 
   const isProcessing = isRunning;
   const isCompleted = status?.status === "completed";
-  const isFailed = status?.status === "failed";
-  const isPaused =
-    status?.status === "cancelled" &&
-    workflowState?.has_pending_interrupt === false;
+  const isFailed = !!status?.error || status?.status === "closed";
+  const isPaused = status?.status === "on_hold";
   const elapsed = useElapsedTime(isProcessing);
 
   // HITL 리뷰 대기 감지
@@ -228,9 +226,9 @@ export default function ProposalDetailPage() {
     fetchWorkflowState();
     fetchStreams();
     const running =
-      statusStr === "processing" ||
-      statusStr === "initialized" ||
-      statusStr === "running";
+      statusStr === "in_progress" ||
+      statusStr === "waiting" ||
+      statusStr === "initialized";
     if (running) {
       const t = setInterval(() => {
         fetchWorkflowState();

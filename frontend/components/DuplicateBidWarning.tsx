@@ -47,14 +47,18 @@ export default function DuplicateBidWarning({ bidNo, rfpTitle }: Props) {
 
   if (loading || existing.length === 0) return null;
 
+  // 10개 통합 상태 레이블
   const statusLabel: Record<string, string> = {
     initialized: "시작 전",
-    processing: "진행 중",
-    running: "진행 중",
+    waiting: "대기 중",
+    in_progress: "진행 중",
     completed: "완료",
-    failed: "실패",
-    cancelled: "취소",
-    paused: "일시정지",
+    submitted: "제출됨",
+    presentation: "발표 중",
+    closed: "종료",
+    archived: "보관됨",
+    on_hold: "보류 중",
+    expired: "만료됨",
   };
 
   return (
@@ -77,11 +81,13 @@ export default function DuplicateBidWarning({ bidNo, rfpTitle }: Props) {
           >
             <span
               className={`text-[10px] font-medium px-2 py-0.5 rounded ${
-                p.status === "completed"
-                  ? "bg-[#3ecf8e]/15 text-[#3ecf8e]"
-                  : p.status === "processing" || p.status === "running"
-                    ? "bg-blue-500/15 text-blue-400"
-                    : "bg-[#262626] text-[#8c8c8c]"
+                p.status === "completed" || p.status === "submitted" || p.status === "presentation"
+                  ? "bg-[#3ecf8e]/15 text-[#3ecf8e]"  // green: 완료/제출/발표
+                  : p.status === "in_progress"
+                    ? "bg-blue-500/15 text-blue-400"  // blue: 진행 중
+                    : p.status === "closed" || p.status === "archived" || p.status === "expired"
+                      ? "bg-[#262626] text-[#8c8c8c]"  // gray: 종료/보관/만료
+                      : "bg-amber-500/15 text-amber-400"  // amber: waiting/initialized/on_hold
               }`}
             >
               {statusLabel[p.status] ?? p.status}

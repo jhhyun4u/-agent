@@ -1,0 +1,173 @@
+# Phase 4 Gap Analysis Report: G2B Client + Performance Tracking & 2. Feature-by-Feature Gap Analysis
+Cohesion: 0.07 | Nodes: 35
+
+## Key Nodes
+- **Phase 4 Gap Analysis Report: G2B Client + Performance Tracking** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 11 connections
+  - -> references -> [[unresolvedrefproposalagentphase4plan]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-feature-by-feature-gap-analysis]]
+  - -> contains -> [[3-additional-implementation-plan]]
+  - -> contains -> [[4-match-rate-summary]]
+  - -> contains -> [[5-all-gaps-summary]]
+  - -> contains -> [[6-router-registration-check]]
+  - -> contains -> [[7-remaining-gap-resolution-plan-section-6]]
+  - -> contains -> [[8-recommended-actions]]
+  - -> contains -> [[9-conclusion]]
+  - -> contains -> [[version-history]]
+- **2. Feature-by-Feature Gap Analysis** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 7 connections
+  - -> contains -> [[21-feature-4-1-g2b]]
+  - -> contains -> [[22-feature-4-2-api]]
+  - -> contains -> [[23-feature-4-3-materialized-view]]
+  - -> contains -> [[24-feature-4-4-api]]
+  - -> contains -> [[25-feature-4-5-lessons-learned]]
+  - -> contains -> [[26-feature-4-6-kb]]
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **2.5 Feature 4-5: 교훈(Lessons Learned) 등록** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 5 connections
+  - -> contains -> [[api-endpoints]]
+  - -> contains -> [[schema-lessoncreate]]
+  - -> contains -> [[search-filters]]
+  - -> contains -> [[gap]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **2.1 Feature 4-1: G2B 낙찰정보 클라이언트** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - -> contains -> [[api-endpoints]]
+  - -> contains -> [[core-logic]]
+  - -> contains -> [[gap]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **2.2 Feature 4-2: 제안 결과 등록 API** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - -> contains -> [[api-endpoints]]
+  - -> contains -> [[schema-proposalresultcreate]]
+  - -> contains -> [[post-processing]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **2.3 Feature 4-3: 성과 추적 Materialized View** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - -> contains -> [[sql-objects]]
+  - -> contains -> [[implementation-enhancements-plan]]
+  - -> contains -> [[gap]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **2.4 Feature 4-4: 분석 대시보드 API** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - -> contains -> [[api-endpoints]]
+  - -> contains -> [[additional-endpoints-plan-v34]]
+  - -> contains -> [[gap]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **8. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - -> contains -> [[immediate-none-required]]
+  - -> contains -> [[plan-document-update-low-priority]]
+  - -> contains -> [[design-document-sync]]
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **API Endpoints** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - <- contains <- [[21-feature-4-1-g2b]]
+  - <- contains <- [[22-feature-4-2-api]]
+  - <- contains <- [[24-feature-4-4-api]]
+  - <- contains <- [[25-feature-4-5-lessons-learned]]
+- **Gap** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 4 connections
+  - <- contains <- [[21-feature-4-1-g2b]]
+  - <- contains <- [[23-feature-4-3-materialized-view]]
+  - <- contains <- [[24-feature-4-4-api]]
+  - <- contains <- [[25-feature-4-5-lessons-learned]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **2.6 Feature 4-6: 성과 기반 KB 업데이트** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 3 connections
+  - -> contains -> [[trigger-actions]]
+  - -> contains -> [[integration-points]]
+  - <- contains <- [[2-feature-by-feature-gap-analysis]]
+- **__unresolved__::ref::proposal_agent_phase4_plan** () -- 1 connections
+  - <- references <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **3. Additional Implementation (Plan 범위 초과)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **4. Match Rate Summary** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **5. All Gaps Summary** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **6. Router Registration Check** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **7. Remaining Gap Resolution (Plan Section 6)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **9. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+- **Additional Endpoints (Plan에 없음 -- 이전 v3.4에서 이미 존재)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[24-feature-4-4-api]]
+- **Core Logic** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[21-feature-4-1-g2b]]
+- **Design Document Sync** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[8-recommended-actions]]
+- **Immediate (None Required)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[8-recommended-actions]]
+- **Implementation Enhancements (Plan에 없음)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[23-feature-4-3-materialized-view]]
+- **Integration Points** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[26-feature-4-6-kb]]
+- **Plan Document Update (Low Priority)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[8-recommended-actions]]
+- **Post-Processing** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[22-feature-4-2-api]]
+- **Schema (LessonCreate)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[25-feature-4-5-lessons-learned]]
+- **Schema (ProposalResultCreate)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[22-feature-4-2-api]]
+- **Search Filters** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[25-feature-4-5-lessons-learned]]
+- **SQL Objects** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[23-feature-4-3-materialized-view]]
+- **Trigger Actions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[26-feature-4-6-kb]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\features\proposal-agent-phase4.analysis.md) -- 1 connections
+  - <- contains <- [[phase-4-gap-analysis-report-g2b-client-performance-tracking]]
+
+## Internal Relationships
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 2.1 Feature 4-1: G2B 낙찰정보 클라이언트 -> contains -> API Endpoints [EXTRACTED]
+- 2.1 Feature 4-1: G2B 낙찰정보 클라이언트 -> contains -> Core Logic [EXTRACTED]
+- 2.1 Feature 4-1: G2B 낙찰정보 클라이언트 -> contains -> Gap [EXTRACTED]
+- 2.2 Feature 4-2: 제안 결과 등록 API -> contains -> API Endpoints [EXTRACTED]
+- 2.2 Feature 4-2: 제안 결과 등록 API -> contains -> Schema (ProposalResultCreate) [EXTRACTED]
+- 2.2 Feature 4-2: 제안 결과 등록 API -> contains -> Post-Processing [EXTRACTED]
+- 2.3 Feature 4-3: 성과 추적 Materialized View -> contains -> SQL Objects [EXTRACTED]
+- 2.3 Feature 4-3: 성과 추적 Materialized View -> contains -> Implementation Enhancements (Plan에 없음) [EXTRACTED]
+- 2.3 Feature 4-3: 성과 추적 Materialized View -> contains -> Gap [EXTRACTED]
+- 2.4 Feature 4-4: 분석 대시보드 API -> contains -> API Endpoints [EXTRACTED]
+- 2.4 Feature 4-4: 분석 대시보드 API -> contains -> Additional Endpoints (Plan에 없음 -- 이전 v3.4에서 이미 존재) [EXTRACTED]
+- 2.4 Feature 4-4: 분석 대시보드 API -> contains -> Gap [EXTRACTED]
+- 2.5 Feature 4-5: 교훈(Lessons Learned) 등록 -> contains -> API Endpoints [EXTRACTED]
+- 2.5 Feature 4-5: 교훈(Lessons Learned) 등록 -> contains -> Schema (LessonCreate) [EXTRACTED]
+- 2.5 Feature 4-5: 교훈(Lessons Learned) 등록 -> contains -> Search Filters [EXTRACTED]
+- 2.5 Feature 4-5: 교훈(Lessons Learned) 등록 -> contains -> Gap [EXTRACTED]
+- 2.6 Feature 4-6: 성과 기반 KB 업데이트 -> contains -> Trigger Actions [EXTRACTED]
+- 2.6 Feature 4-6: 성과 기반 KB 업데이트 -> contains -> Integration Points [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.1 Feature 4-1: G2B 낙찰정보 클라이언트 [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.2 Feature 4-2: 제안 결과 등록 API [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.3 Feature 4-3: 성과 추적 Materialized View [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.4 Feature 4-4: 분석 대시보드 API [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.5 Feature 4-5: 교훈(Lessons Learned) 등록 [EXTRACTED]
+- 2. Feature-by-Feature Gap Analysis -> contains -> 2.6 Feature 4-6: 성과 기반 KB 업데이트 [EXTRACTED]
+- 8. Recommended Actions -> contains -> Immediate (None Required) [EXTRACTED]
+- 8. Recommended Actions -> contains -> Plan Document Update (Low Priority) [EXTRACTED]
+- 8. Recommended Actions -> contains -> Design Document Sync [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> references -> __unresolved__::ref::proposal_agent_phase4_plan [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 1. Analysis Overview [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 2. Feature-by-Feature Gap Analysis [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 3. Additional Implementation (Plan 범위 초과) [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 4. Match Rate Summary [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 5. All Gaps Summary [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 6. Router Registration Check [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 7. Remaining Gap Resolution (Plan Section 6) [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 8. Recommended Actions [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> 9. Conclusion [EXTRACTED]
+- Phase 4 Gap Analysis Report: G2B Client + Performance Tracking -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Phase 4 Gap Analysis Report: G2B Client + Performance Tracking, 2. Feature-by-Feature Gap Analysis, 2.5 Feature 4-5: 교훈(Lessons Learned) 등록를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-agent-phase4.analysis.md이다.
+
+### Key Facts
+- > **Analysis Type**: Gap Analysis (Plan vs Implementation) > > **Project**: TENOPA Proposer > **Version**: v3.4 > **Date**: 2026-03-16 > **Plan Doc**: [proposal-agent-phase4.plan.md](../../01-plan/features/proposal-agent-phase4.plan.md)
+- 2.1 Feature 4-1: G2B 낙찰정보 클라이언트
+- Immediate (None Required)
+- | Plan Endpoint | Implementation | Status | Notes | |---------------|---------------|--------|-------| | `POST /api/g2b/bid-results/{bid_notice_id}` | `routes_g2b.py:394` POST `/g2b/bid-results/{bid_notice_id}` | ✅ Match | prefix `/api` via routes.py | | `GET /api/g2b/bid-results` (필터: 도메인, 기간, 금액)…
+- > **Analysis Type**: Gap Analysis (Plan vs Implementation) > > **Project**: TENOPA Proposer > **Version**: v3.4 > **Date**: 2026-03-16 > **Plan Doc**: [proposal-agent-phase4.plan.md](../../01-plan/features/proposal-agent-phase4.plan.md)

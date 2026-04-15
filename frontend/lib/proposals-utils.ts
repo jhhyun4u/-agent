@@ -177,8 +177,8 @@ export function deriveStatus(p: ProposalSummary): {
   textColor: string;
   tooltip: string;
 } {
-  // 결과대기: submitted, presented
-  if (p.status === "submitted" || p.status === "presented") {
+  // 결과대기: submitted, presentation
+  if (p.status === "submitted" || p.status === "presentation") {
     return {
       label: "결과대기",
       dotColor: "bg-purple-500/40",
@@ -187,10 +187,11 @@ export function deriveStatus(p: ProposalSummary): {
     };
   }
 
-  // 작업진행: processing, running, on_hold
+  // 작업진행: in_progress, waiting, initialized, on_hold
   if (
-    p.status === "processing" ||
-    p.status === "running" ||
+    p.status === "in_progress" ||
+    p.status === "waiting" ||
+    p.status === "initialized" ||
     p.status === "on_hold"
   ) {
     return {

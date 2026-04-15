@@ -1,0 +1,267 @@
+# frontend-components Completion Report & frontend-components Analysis Report
+Cohesion: 0.03 | Nodes: 63
+
+## Key Nodes
+- **frontend-components Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 14 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-completed-items]]
+  - -> contains -> [[4-incomplete-items]]
+  - -> contains -> [[5-quality-metrics]]
+  - -> contains -> [[6-key-achievements]]
+  - -> contains -> [[7-lessons-learned-retrospective]]
+  - -> contains -> [[8-technical-notes]]
+  - -> contains -> [[9-process-improvement-suggestions]]
+  - -> contains -> [[10-next-steps]]
+  - -> contains -> [[11-files-changed-summary]]
+  - -> contains -> [[12-changelog]]
+  - -> contains -> [[13-sign-off]]
+  - -> contains -> [[version-history]]
+- **frontend-components Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 7 connections
+  - -> references -> [[unresolvedreffrontendcomponentsdesign]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-gap-analysis-design-vs-implementation]]
+  - -> contains -> [[3-match-rate-summary]]
+  - -> contains -> [[4-recommended-actions]]
+  - -> contains -> [[5-conclusion]]
+  - -> contains -> [[version-history]]
+- **2.3 Difference Detail** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 5 connections
+  - -> contains -> [[d-01-low-impact]]
+  - -> contains -> [[d-02-low-impact]]
+  - -> contains -> [[d-03-negligible]]
+  - -> contains -> [[d-04-realtime-medium-impact]]
+  - <- contains <- [[2-gap-analysis-design-vs-implementation]]
+- **2. Gap Analysis (Design vs Implementation)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 4 connections
+  - -> contains -> [[21-success-criteria-checklist]]
+  - -> contains -> [[22-structural-comparison]]
+  - -> contains -> [[23-difference-detail]]
+  - <- contains <- [[frontend-components-analysis-report]]
+- **11. Files Changed Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> contains -> [[new-files-1]]
+  - -> contains -> [[modified-files-1]]
+  - -> contains -> [[documentation-4]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> references -> [[unresolvedreffrontendcomponentsplan]]
+  - -> references -> [[unresolvedreffrontendcomponentsdesign]]
+  - -> references -> [[unresolvedreffrontendcomponentsanalysis]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **3. Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> contains -> [[31-core-functional-requirements-realtime-migration]]
+  - -> contains -> [[32-design-quality-requirements]]
+  - -> contains -> [[33-deliverables]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **6. Key Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> contains -> [[61-performance-improvements]]
+  - -> contains -> [[62-code-quality]]
+  - -> contains -> [[63-design-vs-implementation-differences]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **7. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> contains -> [[71-what-went-well-keep]]
+  - -> contains -> [[72-what-needs-improvement-problem]]
+  - -> contains -> [[73-what-to-try-next-try]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **8. Technical Notes** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 4 connections
+  - -> contains -> [[81-design-implementation-decisions]]
+  - -> contains -> [[82-dependencies-prerequisites]]
+  - -> contains -> [[83-testing-recommendations]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[frontend-components-analysis-report]]
+- **4. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 3 connections
+  - -> contains -> [[41-p3-short-term-backlog]]
+  - -> contains -> [[42-design-document-update-optional]]
+  - <- contains <- [[frontend-components-analysis-report]]
+- **10. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 3 connections
+  - -> contains -> [[101-immediate-deploy-to-production]]
+  - -> contains -> [[102-next-pdca-cycle]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 3 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **4. Incomplete Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 3 connections
+  - -> contains -> [[41-deferred-to-next-cycle-p3-backlog]]
+  - -> contains -> [[42-cancelled-items]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **5. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 3 connections
+  - -> contains -> [[51-analysis-results]]
+  - -> contains -> [[52-resolved-gap-items]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **9. Process Improvement Suggestions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 3 connections
+  - -> contains -> [[91-pdca-process-improvements]]
+  - -> contains -> [[92-code-organization]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **__unresolved__::ref::frontend_components_design** () -- 2 connections
+  - <- references <- [[frontend-components-analysis-report]]
+  - <- references <- [[2-related-documents]]
+- **3. Match Rate Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 2 connections
+  - -> contains -> [[score-breakdown]]
+  - <- contains <- [[frontend-components-analysis-report]]
+- **12. Changelog** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 2 connections
+  - -> contains -> [[v100-2026-03-07]]
+  - <- contains <- [[frontend-components-completion-report]]
+- **__unresolved__::ref::frontend_components_analysis** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **__unresolved__::ref::frontend_components_plan** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **2.1 Success Criteria Checklist** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[2-gap-analysis-design-vs-implementation]]
+- **2.2 Structural Comparison** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[2-gap-analysis-design-vs-implementation]]
+- **4.1 P3 -- Short-term (backlog)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[4-recommended-actions]]
+- **4.2 Design Document Update (Optional)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[4-recommended-actions]]
+- **5. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[frontend-components-analysis-report]]
+- **D-01: 타입 정의 방식 (Low Impact)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[23-difference-detail]]
+- **D-02: 초기 로드 방식 (Low Impact)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[23-difference-detail]]
+- **D-03: 채널 이름 차이 (Negligible)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[23-difference-detail]]
+- **D-04: Realtime 업데이트 누락 필드 (Medium Impact)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[23-difference-detail]]
+- **Score Breakdown** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[3-match-rate-summary]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.analysis.md) -- 1 connections
+  - <- contains <- [[frontend-components-analysis-report]]
+- **10.1 Immediate (Deploy to Production)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[10-next-steps]]
+- **10.2 Next PDCA Cycle** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[10-next-steps]]
+- **13. Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[frontend-components-completion-report]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **3.1 Core Functional Requirements (Realtime Migration)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.2 Design Quality Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.3 Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **4.1 Deferred to Next Cycle (P3 Backlog)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[4-incomplete-items]]
+- **4.2 Cancelled Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[4-incomplete-items]]
+- **5.1 Analysis Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **5.2 Resolved Gap Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **6.1 Performance Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[6-key-achievements]]
+- **6.2 Code Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[6-key-achievements]]
+- **6.3 Design vs Implementation Differences** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[6-key-achievements]]
+- **7.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **7.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **7.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned-retrospective]]
+- **8.1 Design-Implementation Decisions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[8-technical-notes]]
+- **8.2 Dependencies & Prerequisites** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[8-technical-notes]]
+- **8.3 Testing Recommendations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[8-technical-notes]]
+- **9.1 PDCA Process Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[9-process-improvement-suggestions]]
+- **9.2 Code Organization** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[9-process-improvement-suggestions]]
+- **Documentation (4)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[11-files-changed-summary]]
+- **Modified Files (1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[11-files-changed-summary]]
+- **New Files (1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[11-files-changed-summary]]
+- **v1.0.0 (2026-03-07)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[12-changelog]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-components\frontend-components.report.md) -- 1 connections
+  - <- contains <- [[frontend-components-completion-report]]
+
+## Internal Relationships
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 2.3 Difference Detail -> contains -> D-01: 타입 정의 방식 (Low Impact) [EXTRACTED]
+- 2.3 Difference Detail -> contains -> D-02: 초기 로드 방식 (Low Impact) [EXTRACTED]
+- 2.3 Difference Detail -> contains -> D-03: 채널 이름 차이 (Negligible) [EXTRACTED]
+- 2.3 Difference Detail -> contains -> D-04: Realtime 업데이트 누락 필드 (Medium Impact) [EXTRACTED]
+- 2. Gap Analysis (Design vs Implementation) -> contains -> 2.1 Success Criteria Checklist [EXTRACTED]
+- 2. Gap Analysis (Design vs Implementation) -> contains -> 2.2 Structural Comparison [EXTRACTED]
+- 2. Gap Analysis (Design vs Implementation) -> contains -> 2.3 Difference Detail [EXTRACTED]
+- 3. Match Rate Summary -> contains -> Score Breakdown [EXTRACTED]
+- 4. Recommended Actions -> contains -> 4.1 P3 -- Short-term (backlog) [EXTRACTED]
+- 4. Recommended Actions -> contains -> 4.2 Design Document Update (Optional) [EXTRACTED]
+- frontend-components Analysis Report -> references -> __unresolved__::ref::frontend_components_design [EXTRACTED]
+- frontend-components Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- frontend-components Analysis Report -> contains -> 2. Gap Analysis (Design vs Implementation) [EXTRACTED]
+- frontend-components Analysis Report -> contains -> 3. Match Rate Summary [EXTRACTED]
+- frontend-components Analysis Report -> contains -> 4. Recommended Actions [EXTRACTED]
+- frontend-components Analysis Report -> contains -> 5. Conclusion [EXTRACTED]
+- frontend-components Analysis Report -> contains -> Version History [EXTRACTED]
+- 10. Next Steps -> contains -> 10.1 Immediate (Deploy to Production) [EXTRACTED]
+- 10. Next Steps -> contains -> 10.2 Next PDCA Cycle [EXTRACTED]
+- 11. Files Changed Summary -> contains -> New Files (1) [EXTRACTED]
+- 11. Files Changed Summary -> contains -> Modified Files (1) [EXTRACTED]
+- 11. Files Changed Summary -> contains -> Documentation (4) [EXTRACTED]
+- 12. Changelog -> contains -> v1.0.0 (2026-03-07) [EXTRACTED]
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::frontend_components_plan [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::frontend_components_design [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::frontend_components_analysis [EXTRACTED]
+- 3. Completed Items -> contains -> 3.1 Core Functional Requirements (Realtime Migration) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.2 Design Quality Requirements [EXTRACTED]
+- 3. Completed Items -> contains -> 3.3 Deliverables [EXTRACTED]
+- 4. Incomplete Items -> contains -> 4.1 Deferred to Next Cycle (P3 Backlog) [EXTRACTED]
+- 4. Incomplete Items -> contains -> 4.2 Cancelled Items [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.1 Analysis Results [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.2 Resolved Gap Items [EXTRACTED]
+- 6. Key Achievements -> contains -> 6.1 Performance Improvements [EXTRACTED]
+- 6. Key Achievements -> contains -> 6.2 Code Quality [EXTRACTED]
+- 6. Key Achievements -> contains -> 6.3 Design vs Implementation Differences [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.1 What Went Well (Keep) [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.2 What Needs Improvement (Problem) [EXTRACTED]
+- 7. Lessons Learned & Retrospective -> contains -> 7.3 What to Try Next (Try) [EXTRACTED]
+- 8. Technical Notes -> contains -> 8.1 Design-Implementation Decisions [EXTRACTED]
+- 8. Technical Notes -> contains -> 8.2 Dependencies & Prerequisites [EXTRACTED]
+- 8. Technical Notes -> contains -> 8.3 Testing Recommendations [EXTRACTED]
+- 9. Process Improvement Suggestions -> contains -> 9.1 PDCA Process Improvements [EXTRACTED]
+- 9. Process Improvement Suggestions -> contains -> 9.2 Code Organization [EXTRACTED]
+- frontend-components Completion Report -> contains -> 1. Summary [EXTRACTED]
+- frontend-components Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- frontend-components Completion Report -> contains -> 3. Completed Items [EXTRACTED]
+- frontend-components Completion Report -> contains -> 4. Incomplete Items [EXTRACTED]
+- frontend-components Completion Report -> contains -> 5. Quality Metrics [EXTRACTED]
+- frontend-components Completion Report -> contains -> 6. Key Achievements [EXTRACTED]
+- frontend-components Completion Report -> contains -> 7. Lessons Learned & Retrospective [EXTRACTED]
+- frontend-components Completion Report -> contains -> 8. Technical Notes [EXTRACTED]
+- frontend-components Completion Report -> contains -> 9. Process Improvement Suggestions [EXTRACTED]
+- frontend-components Completion Report -> contains -> 10. Next Steps [EXTRACTED]
+- frontend-components Completion Report -> contains -> 11. Files Changed Summary [EXTRACTED]
+- frontend-components Completion Report -> contains -> 12. Changelog [EXTRACTED]
+- frontend-components Completion Report -> contains -> 13. Sign-Off [EXTRACTED]
+- frontend-components Completion Report -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 frontend-components Completion Report, frontend-components Analysis Report, 2.3 Difference Detail를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 frontend-components.analysis.md, frontend-components.report.md이다.
+
+### Key Facts
+- > **Status**: Complete > > **Project**: tenopa-proposer (RFP Proposal Auto-Generator) > **Version**: 1.5.8 > **Author**: Report Generator Agent > **Completion Date**: 2026-03-07 > **PDCA Cycle**: #1 (passed on first try)
+- > **Analysis Type**: Gap Analysis (PDCA Check Phase) > > **Project**: tenopa-proposer > **Analyst**: gap-detector > **Date**: 2026-03-07 > **Design Doc**: [frontend-components.design.md](../02-design/features/frontend-components.design.md)
+- D-01: 타입 정의 방식 (Low Impact)
+- 2.1 Success Criteria Checklist
+- New Files (1) - `frontend/lib/hooks/usePhaseStatus.ts` (84 lines) — Supabase Realtime subscription hook

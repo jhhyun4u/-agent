@@ -98,7 +98,7 @@ async function mockWorkflowStateGapReview(page: Page, proposalId: string) {
       contentType: "application/json",
       body: JSON.stringify({
         proposal_id: proposalId,
-        status: "paused",
+        status: "in_progress",
         has_pending_interrupt: true,
         next_nodes: ["review_gap_analysis"],
         current_node: "review_gap_analysis",
@@ -588,7 +588,7 @@ test.describe("갭 분석 리뷰 게이트 — WorkflowPanel 재작업 옵션", 
           contentType: "application/json",
           body: JSON.stringify({
             proposal_id: PROPOSAL_ID,
-            status: "paused",
+            status: "in_progress",
             has_pending_interrupt: true,
             next_nodes: ["review_gap_analysis"],
             current_node: "review_gap_analysis",
@@ -854,7 +854,7 @@ test.describe("Workflow v4.0 라우팅 정확성", () => {
           contentType: "application/json",
           body: JSON.stringify({
             proposal_id: PROPOSAL_ID,
-            status: "paused",
+            status: "in_progress",
             has_pending_interrupt: true,
             next_nodes: ["review_gap_analysis"],
             current_node: "review_gap_analysis",
@@ -873,7 +873,7 @@ test.describe("Workflow v4.0 라우팅 정확성", () => {
           contentType: "application/json",
           body: JSON.stringify({
             proposal_id: PROPOSAL_ID,
-            status: "paused",
+            status: "in_progress",
             phase: 4,
           }),
         });

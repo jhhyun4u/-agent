@@ -318,12 +318,12 @@ export default function DashboardPage() {
     registered: calItems.filter((c) => c.status === "open" && !c.proposal_id)
       .length,
     inProgress: proposals.filter(
-      (p) => p.status === "initialized" || p.status === "processing",
+      (p) => p.status === "initialized" || p.status === "waiting" || p.status === "in_progress",
     ).length,
     completed: proposals.filter(
       (p) => p.status === "completed" && p.win_result == null,
     ).length,
-    pending: proposals.filter((p) => p.win_result === "pending").length,
+    pending: proposals.filter((p) => p.status === "submitted" || p.status === "presentation").length,
     won: proposals.filter((p) => p.win_result === "won").length,
     lost: proposals.filter((p) => p.win_result === "lost").length,
   };
@@ -340,7 +340,7 @@ export default function DashboardPage() {
       }))
       .sort((a, b) => a.days - b.days),
     ...proposals
-      .filter((p) => p.status === "initialized" || p.status === "processing")
+      .filter((p) => p.status === "initialized" || p.status === "waiting" || p.status === "in_progress")
       .map((p) => ({ type: "proposal" as const, item: p })),
   ].slice(0, 5);
 
@@ -484,7 +484,7 @@ export default function DashboardPage() {
         {scope === "team" &&
           (() => {
             const pendingReviews = proposals.filter(
-              (p) => p.status === "paused" || p.status === "on_hold",
+              (p) => p.status === "on_hold",
             );
             if (pendingReviews.length === 0) return null;
             return (
@@ -708,7 +708,7 @@ export default function DashboardPage() {
                 }
 
                 const { item } = action;
-                const isProcessing = item.status === "processing";
+                const isProcessing = item.status === "in_progress";
                 return (
                   <div
                     key={`prop-${item.id}`}
@@ -765,7 +765,7 @@ export default function DashboardPage() {
                     label: "작성 중",
                     count: pipeline.inProgress,
                     color: "text-blue-400",
-                    href: "/proposals?status=processing",
+                    href: "/proposals?status=in_progress",
                   },
                   {
                     label: "완료",

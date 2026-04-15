@@ -42,7 +42,7 @@ export function ProposalsTableRow({
   const isAwaitingStart = p.status === "initialized";
   const commonClassName = cn(
     `grid ${GRID_LAYOUT_CLASS} gap-3 px-4 py-3.5 border-b border-[#1a1a1a] last:border-0 hover:bg-[#161616] transition-colors items-center`,
-    (p.status === "completed" || p.status === "failed") && "opacity-60",
+    (p.status === "completed" || p.status === "closed" || p.status === "archived") && "opacity-60",
   );
 
   return (
@@ -147,7 +147,7 @@ export function ProposalsTableRow({
             >
               상세 보기
             </button>
-            {p.status !== "completed" && p.status !== "failed" && (
+            {p.status !== "completed" && p.status !== "closed" && p.status !== "archived" && p.status !== "expired" && (
               <button
                 onClick={(e) => {
                   e.preventDefault();

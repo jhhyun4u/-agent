@@ -1,0 +1,205 @@
+# STEP 8A: New Nodes with Artifact Versioning & python
+Cohesion: 0.05 | Nodes: 43
+
+## Key Nodes
+- **STEP 8A: New Nodes with Artifact Versioning** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 13 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[goals-objectives]]
+  - -> contains -> [[scope-requirements]]
+  - -> contains -> [[implementation-order]]
+  - -> contains -> [[design-specifications]]
+  - -> contains -> [[graph-integration]]
+  - -> contains -> [[testing-strategy]]
+  - -> contains -> [[acceptance-criteria]]
+  - -> contains -> [[risk-assessment]]
+  - -> contains -> [[timeline-estimate]]
+  - -> contains -> [[team-responsibilities]]
+  - -> contains -> [[reference-materials]]
+  - -> contains -> [[sign-off]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 7 connections
+  - <- has_code_example <- [[integration-requirements]]
+  - <- has_code_example <- [[8a-proposalcustomeranalysis]]
+  - <- has_code_example <- [[8b-proposalsectionvalidator]]
+  - <- has_code_example <- [[8c-proposalsectionsconsolidation]]
+  - <- has_code_example <- [[8d-mockevaluationanalysis]]
+  - <- has_code_example <- [[8e-mockevaluationfeedbackprocessor]]
+  - <- has_code_example <- [[new-edges-in-graphpy]]
+- **📝 Design Specifications** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 7 connections
+  - -> contains -> [[8a-proposalcustomeranalysis]]
+  - -> contains -> [[8b-proposalsectionvalidator]]
+  - -> contains -> [[8c-proposalsectionsconsolidation]]
+  - -> contains -> [[8d-mockevaluationanalysis]]
+  - -> contains -> [[8e-mockevaluationfeedbackprocessor]]
+  - -> contains -> [[8f-proposalwritenextv2]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **🔄 Implementation Order** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 7 connections
+  - -> contains -> [[phase-0-planning-design-2-3-days]]
+  - -> contains -> [[phase-1-core-implementation-4-5-days]]
+  - -> contains -> [[phase-2-testing-validation-2-3-days]]
+  - -> contains -> [[phase-3-api-frontend-integration-2-3-days]]
+  - -> contains -> [[phase-4-gap-analysis-improvement-1-2-days]]
+  - -> contains -> [[phase-5-documentation-deployment-1-day]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **📋 Acceptance Criteria** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 6 connections
+  - -> contains -> [[code-quality]]
+  - -> contains -> [[functionality]]
+  - -> contains -> [[testing]]
+  - -> contains -> [[documentation]]
+  - -> contains -> [[deployment]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **🧪 Testing Strategy** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 5 connections
+  - -> contains -> [[unit-tests-80-coverage-per-node]]
+  - -> contains -> [[integration-tests]]
+  - -> contains -> [[e2e-tests]]
+  - -> contains -> [[performance-tests]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **📊 Scope & Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 4 connections
+  - -> contains -> [[6-nodes-to-implement]]
+  - -> contains -> [[integration-requirements]]
+  - -> contains -> [[dependencies]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **🎯 Goals & Objectives** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 3 connections
+  - -> contains -> [[primary-goals]]
+  - -> contains -> [[success-criteria]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **🔀 Graph Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 3 connections
+  - -> contains -> [[new-edges-in-graphpy]]
+  - -> contains -> [[routing-logic]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **8A: proposal_customer_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-specifications]]
+- **8B: proposal_section_validator** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-specifications]]
+- **8C: proposal_sections_consolidation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-specifications]]
+- **8D: mock_evaluation_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-specifications]]
+- **8E: mock_evaluation_feedback_processor** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[design-specifications]]
+- **Integration Requirements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[scope-requirements]]
+- **New Edges in graph.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[graph-integration]]
+- **6 Nodes to Implement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[scope-requirements]]
+- **8F: proposal_write_next_v2** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[design-specifications]]
+- **Code Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[acceptance-criteria]]
+- **Dependencies** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[scope-requirements]]
+- **Deployment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[acceptance-criteria]]
+- **Documentation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[acceptance-criteria]]
+- **E2E Tests** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[testing-strategy]]
+- **📋 Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **Functionality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[acceptance-criteria]]
+- **Integration Tests** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[testing-strategy]]
+- **Performance Tests** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[testing-strategy]]
+- **Phase 0: Planning & Design (2-3 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Phase 1: Core Implementation (4-5 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Phase 2: Testing & Validation (2-3 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Phase 3: API & Frontend Integration (2-3 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Phase 4: Gap Analysis & Improvement (1-2 days)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Phase 5: Documentation & Deployment (1 day)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Primary Goals** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[goals-objectives]]
+- **📚 Reference Materials** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **🚨 Risk Assessment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **Routing Logic** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[graph-integration]]
+- **✅ Sign-Off** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **Success Criteria** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[goals-objectives]]
+- **👥 Team & Responsibilities** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **Testing** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[acceptance-criteria]]
+- **📅 Timeline Estimate** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning]]
+- **Unit Tests (≥80% coverage per node)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.plan.md) -- 1 connections
+  - <- contains <- [[testing-strategy]]
+
+## Internal Relationships
+- 8A: proposal_customer_analysis -> has_code_example -> python [EXTRACTED]
+- 8B: proposal_section_validator -> has_code_example -> python [EXTRACTED]
+- 8C: proposal_sections_consolidation -> has_code_example -> python [EXTRACTED]
+- 8D: mock_evaluation_analysis -> has_code_example -> python [EXTRACTED]
+- 8E: mock_evaluation_feedback_processor -> has_code_example -> python [EXTRACTED]
+- 📋 Acceptance Criteria -> contains -> Code Quality [EXTRACTED]
+- 📋 Acceptance Criteria -> contains -> Functionality [EXTRACTED]
+- 📋 Acceptance Criteria -> contains -> Testing [EXTRACTED]
+- 📋 Acceptance Criteria -> contains -> Documentation [EXTRACTED]
+- 📋 Acceptance Criteria -> contains -> Deployment [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8A: proposal_customer_analysis [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8B: proposal_section_validator [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8C: proposal_sections_consolidation [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8D: mock_evaluation_analysis [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8E: mock_evaluation_feedback_processor [EXTRACTED]
+- 📝 Design Specifications -> contains -> 8F: proposal_write_next_v2 [EXTRACTED]
+- 🎯 Goals & Objectives -> contains -> Primary Goals [EXTRACTED]
+- 🎯 Goals & Objectives -> contains -> Success Criteria [EXTRACTED]
+- 🔀 Graph Integration -> contains -> New Edges in graph.py [EXTRACTED]
+- 🔀 Graph Integration -> contains -> Routing Logic [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 0: Planning & Design (2-3 days) [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 1: Core Implementation (4-5 days) [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 2: Testing & Validation (2-3 days) [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 3: API & Frontend Integration (2-3 days) [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 4: Gap Analysis & Improvement (1-2 days) [EXTRACTED]
+- 🔄 Implementation Order -> contains -> Phase 5: Documentation & Deployment (1 day) [EXTRACTED]
+- Integration Requirements -> has_code_example -> python [EXTRACTED]
+- New Edges in graph.py -> has_code_example -> python [EXTRACTED]
+- 📊 Scope & Requirements -> contains -> 6 Nodes to Implement [EXTRACTED]
+- 📊 Scope & Requirements -> contains -> Integration Requirements [EXTRACTED]
+- 📊 Scope & Requirements -> contains -> Dependencies [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📋 Executive Summary [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 🎯 Goals & Objectives [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📊 Scope & Requirements [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 🔄 Implementation Order [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📝 Design Specifications [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 🔀 Graph Integration [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 🧪 Testing Strategy [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📋 Acceptance Criteria [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 🚨 Risk Assessment [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📅 Timeline Estimate [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 👥 Team & Responsibilities [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> 📚 Reference Materials [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning -> contains -> ✅ Sign-Off [EXTRACTED]
+- 🧪 Testing Strategy -> contains -> Unit Tests (≥80% coverage per node) [EXTRACTED]
+- 🧪 Testing Strategy -> contains -> Integration Tests [EXTRACTED]
+- 🧪 Testing Strategy -> contains -> E2E Tests [EXTRACTED]
+- 🧪 Testing Strategy -> contains -> Performance Tests [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 STEP 8A: New Nodes with Artifact Versioning, python, 📝 Design Specifications를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 step-8a-new-nodes.plan.md이다.
+
+### Key Facts
+- **Feature**: step-8a-new-nodes **Status**: Planning **Date**: 2026-03-30 **Owner**: Proposal Workflow Team
+- **Versioning Pattern** (from `versioning_integration_guide.md`): ```python At end of node execution: version_num, artifact_version = await execute_node_and_create_version( proposal_id=UUID(state.get("project_id")), node_name="node_name_here", output_key="output_key_here",…
+- 8A: proposal_customer_analysis
+- Phase 0: Planning & Design (2-3 days) - [x] Define node specifications (inputs/outputs/logic) - [x] Design Pydantic models for each node - [x] Plan prompt templates for AI-driven nodes - [x] Design state extensions - [ ] **CURRENT**: Create this plan document - [ ] Review with team, refine scope
+- Code Quality - [ ] No type errors (mypy strict) - [ ] No lint issues (ruff) - [ ] All requirements.txt dependencies documented - [ ] Error handling for all failure scenarios - [ ] Logging for debugging (JSON format)

@@ -1,0 +1,213 @@
+# hwpxskill Integration Completion Report & 2. PDCA Cycle Summary
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **hwpxskill Integration Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 11 connections
+  - -> contains -> [[1-executive-summary]]
+  - -> contains -> [[2-pdca-cycle-summary]]
+  - -> contains -> [[3-results]]
+  - -> contains -> [[4-lessons-learned]]
+  - -> contains -> [[5-technical-details]]
+  - -> contains -> [[6-api-specification]]
+  - -> contains -> [[7-design-match-analysis]]
+  - -> contains -> [[8-recommendations]]
+  - -> contains -> [[9-summary]]
+  - -> contains -> [[10-version-history]]
+  - -> contains -> [[related-documents]]
+- **2. PDCA Cycle Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 6 connections
+  - -> contains -> [[21-plan-phase]]
+  - -> contains -> [[22-design-phase]]
+  - -> contains -> [[23-do-phase-implementation]]
+  - -> contains -> [[24-check-phase-gap-analysis]]
+  - -> contains -> [[25-act-phase-improvement]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **2.4 Check Phase (Gap Analysis)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 5 connections
+  - -> contains -> [[241-item-by-item-results]]
+  - -> contains -> [[242-overall-match-rate-97]]
+  - -> contains -> [[243-code-quality-assessment]]
+  - -> contains -> [[244-runtime-test-results]]
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **3. Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 5 connections
+  - -> contains -> [[31-completed-items]]
+  - -> contains -> [[32-code-statistics]]
+  - -> contains -> [[33-dependency-status]]
+  - -> contains -> [[34-performance]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **5. Technical Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 5 connections
+  - -> contains -> [[51-module-responsibilities]]
+  - -> contains -> [[52-data-flow]]
+  - -> contains -> [[53-template-structure]]
+  - -> contains -> [[54-error-handling-strategy]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **2.3 Do Phase (Implementation)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 4 connections
+  - -> contains -> [[231-step-1-hwpxskill-4]]
+  - -> contains -> [[232-step-2-hwpxservicepy-220]]
+  - -> contains -> [[233-step-3-api-routesartifactspy-45]]
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **4. Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 4 connections
+  - -> contains -> [[41-what-went-well]]
+  - -> contains -> [[42-areas-for-improvement]]
+  - -> contains -> [[43-to-apply-next-time]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **8. Recommendations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 4 connections
+  - -> contains -> [[81-short-term]]
+  - -> contains -> [[82-medium-term]]
+  - -> contains -> [[83-long-term]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **9. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 4 connections
+  - -> contains -> [[91-completion-status]]
+  - -> contains -> [[92-key-metrics]]
+  - -> contains -> [[93-impact]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 3 connections
+  - <- has_code_example <- [[233-step-3-api-routesartifactspy-45]]
+  - <- has_code_example <- [[244-runtime-test-results]]
+  - <- has_code_example <- [[43-to-apply-next-time]]
+- **1. Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 3 connections
+  - -> contains -> [[11-feature-overview]]
+  - -> contains -> [[12-key-achievements]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **2.3.3 Step 3: API 엔드포인트 (routes_artifacts.py, +45줄)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[23-do-phase-implementation]]
+- **2.4.4 Runtime Test Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[24-check-phase-gap-analysis]]
+- **2.5 Act Phase (Improvement)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> has_code_example -> [[markdown]]
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **4.3 To Apply Next Time** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-lessons-learned]]
+- **6. API Specification** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> contains -> [[endpoint-get-apiproposalsiddownloadhwpx]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **7. Design Match Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> contains -> [[71-design-document-alignment]]
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **Endpoint: `GET /api/proposals/{id}/download/hwpx`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[6-api-specification]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- has_code_example <- [[endpoint-get-apiproposalsiddownloadhwpx]]
+- **markdown** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- has_code_example <- [[25-act-phase-improvement]]
+- **10. Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+- **1.1 Feature Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **1.2 Key Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **2.1 Plan Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.2 Design Phase** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[2-pdca-cycle-summary]]
+- **2.3.1 Step 1: hwpxskill 4종 스크립트 배치** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[23-do-phase-implementation]]
+- **2.3.2 Step 2: 서비스 래퍼 (hwpx_service.py, ~220줄)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[23-do-phase-implementation]]
+- **2.4.1 Item-by-Item Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[24-check-phase-gap-analysis]]
+- **2.4.2 Overall Match Rate: **97%**** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[24-check-phase-gap-analysis]]
+- **2.4.3 Code Quality Assessment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[24-check-phase-gap-analysis]]
+- **3.1 Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[3-results]]
+- **3.2 Code Statistics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[3-results]]
+- **3.3 Dependency Status** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[3-results]]
+- **3.4 Performance** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[3-results]]
+- **4.1 What Went Well** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[4-lessons-learned]]
+- **4.2 Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[4-lessons-learned]]
+- **5.1 Module Responsibilities** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[5-technical-details]]
+- **5.2 Data Flow** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[5-technical-details]]
+- **5.3 Template Structure** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[5-technical-details]]
+- **5.4 Error Handling Strategy** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[5-technical-details]]
+- **7.1 Design Document Alignment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[7-design-match-analysis]]
+- **8.1 Short-term (완료됨)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[8-recommendations]]
+- **8.2 Medium-term (권장)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[8-recommendations]]
+- **8.3 Long-term (향후 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[8-recommendations]]
+- **9.1 Completion Status** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[9-summary]]
+- **9.2 Key Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[9-summary]]
+- **9.3 Impact** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[9-summary]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\hwpxskill-integration\hwpxskill-integration.report.md) -- 1 connections
+  - <- contains <- [[hwpxskill-integration-completion-report]]
+
+## Internal Relationships
+- 1. Executive Summary -> contains -> 1.1 Feature Overview [EXTRACTED]
+- 1. Executive Summary -> contains -> 1.2 Key Achievements [EXTRACTED]
+- 2.3.3 Step 3: API 엔드포인트 (routes_artifacts.py, +45줄) -> has_code_example -> python [EXTRACTED]
+- 2.3 Do Phase (Implementation) -> contains -> 2.3.1 Step 1: hwpxskill 4종 스크립트 배치 [EXTRACTED]
+- 2.3 Do Phase (Implementation) -> contains -> 2.3.2 Step 2: 서비스 래퍼 (hwpx_service.py, ~220줄) [EXTRACTED]
+- 2.3 Do Phase (Implementation) -> contains -> 2.3.3 Step 3: API 엔드포인트 (routes_artifacts.py, +45줄) [EXTRACTED]
+- 2.4.4 Runtime Test Results -> has_code_example -> python [EXTRACTED]
+- 2.4 Check Phase (Gap Analysis) -> contains -> 2.4.1 Item-by-Item Results [EXTRACTED]
+- 2.4 Check Phase (Gap Analysis) -> contains -> 2.4.2 Overall Match Rate: **97%** [EXTRACTED]
+- 2.4 Check Phase (Gap Analysis) -> contains -> 2.4.3 Code Quality Assessment [EXTRACTED]
+- 2.4 Check Phase (Gap Analysis) -> contains -> 2.4.4 Runtime Test Results [EXTRACTED]
+- 2.5 Act Phase (Improvement) -> has_code_example -> markdown [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.1 Plan Phase [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.2 Design Phase [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.3 Do Phase (Implementation) [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.4 Check Phase (Gap Analysis) [EXTRACTED]
+- 2. PDCA Cycle Summary -> contains -> 2.5 Act Phase (Improvement) [EXTRACTED]
+- 3. Results -> contains -> 3.1 Completed Items [EXTRACTED]
+- 3. Results -> contains -> 3.2 Code Statistics [EXTRACTED]
+- 3. Results -> contains -> 3.3 Dependency Status [EXTRACTED]
+- 3. Results -> contains -> 3.4 Performance [EXTRACTED]
+- 4.3 To Apply Next Time -> has_code_example -> python [EXTRACTED]
+- 4. Lessons Learned -> contains -> 4.1 What Went Well [EXTRACTED]
+- 4. Lessons Learned -> contains -> 4.2 Areas for Improvement [EXTRACTED]
+- 4. Lessons Learned -> contains -> 4.3 To Apply Next Time [EXTRACTED]
+- 5. Technical Details -> contains -> 5.1 Module Responsibilities [EXTRACTED]
+- 5. Technical Details -> contains -> 5.2 Data Flow [EXTRACTED]
+- 5. Technical Details -> contains -> 5.3 Template Structure [EXTRACTED]
+- 5. Technical Details -> contains -> 5.4 Error Handling Strategy [EXTRACTED]
+- 6. API Specification -> contains -> Endpoint: `GET /api/proposals/{id}/download/hwpx` [EXTRACTED]
+- 7. Design Match Analysis -> contains -> 7.1 Design Document Alignment [EXTRACTED]
+- 8. Recommendations -> contains -> 8.1 Short-term (완료됨) [EXTRACTED]
+- 8. Recommendations -> contains -> 8.2 Medium-term (권장) [EXTRACTED]
+- 8. Recommendations -> contains -> 8.3 Long-term (향후 단계) [EXTRACTED]
+- 9. Summary -> contains -> 9.1 Completion Status [EXTRACTED]
+- 9. Summary -> contains -> 9.2 Key Metrics [EXTRACTED]
+- 9. Summary -> contains -> 9.3 Impact [EXTRACTED]
+- Endpoint: `GET /api/proposals/{id}/download/hwpx` -> has_code_example -> json [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 1. Executive Summary [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 2. PDCA Cycle Summary [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 3. Results [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 4. Lessons Learned [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 5. Technical Details [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 6. API Specification [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 7. Design Match Analysis [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 8. Recommendations [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 9. Summary [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> 10. Version History [EXTRACTED]
+- hwpxskill Integration Completion Report -> contains -> Related Documents [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 hwpxskill Integration Completion Report, 2. PDCA Cycle Summary, 2.4 Check Phase (Gap Analysis)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 hwpxskill-integration.report.md이다.
+
+### Key Facts
+- > **Project**: 용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker > > **Feature**: hwpxskill 통합 (XML-first HWPX 서비스) > **Completion Date**: 2026-03-16 > **Status**: ✅ COMPLETED (97% Match Rate)
+- **분석 문서**: `docs/03-analysis/hwpxskill-integration.analysis.md` (2026-03-16)
+- 5.1 Module Responsibilities
+- **구현 경로:** - `app/services/hwpx/__init__.py` (6줄, docstring) - `app/services/hwpx/validate.py` (71줄) - `app/services/hwpx/page_guard.py` (165줄) - `app/services/hwpx/analyze_template.py` (376줄) - `app/services/hwpx/build_hwpx.py` (188줄) - `app/services/hwpx_service.py` (~220줄) -…
+- 9.1 Completion Status

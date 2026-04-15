@@ -1,0 +1,199 @@
+# Landing Page Completion Report & 3. Completed Items
+Cohesion: 0.04 | Nodes: 46
+
+## Key Nodes
+- **Landing Page Completion Report** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 13 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-completed-items]]
+  - -> contains -> [[4-incomplete-items]]
+  - -> contains -> [[5-quality-metrics]]
+  - -> contains -> [[6-lessons-learned-retrospective]]
+  - -> contains -> [[7-process-improvement-suggestions]]
+  - -> contains -> [[8-next-steps]]
+  - -> contains -> [[9-changelog]]
+  - -> contains -> [[10-implementation-details]]
+  - -> contains -> [[11-testing-validation]]
+  - -> contains -> [[12-conclusion]]
+  - -> contains -> [[version-history]]
+- **3. Completed Items** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 6 connections
+  - -> contains -> [[31-core-requirements-req-1-req-10]]
+  - -> contains -> [[32-backend-implementation-routespublicpy]]
+  - -> contains -> [[33-frontend-implementation-pagetsx]]
+  - -> contains -> [[34-backend-router-registration]]
+  - -> contains -> [[35-deliverables]]
+  - <- contains <- [[landing-page-completion-report]]
+- **10. Implementation Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 4 connections
+  - -> contains -> [[101-key-architecture-decisions]]
+  - -> contains -> [[102-error-handling-strategy]]
+  - -> contains -> [[103-data-accuracy-notes]]
+  - <- contains <- [[landing-page-completion-report]]
+- **5.2 Verification Details** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 4 connections
+  - -> contains -> [[backend-code-quality]]
+  - -> contains -> [[frontend-code-quality]]
+  - -> contains -> [[api-response-validation]]
+  - <- contains <- [[5-quality-metrics]]
+- **6. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 4 connections
+  - -> contains -> [[61-what-went-well-keep]]
+  - -> contains -> [[62-what-needs-improvement-problem]]
+  - -> contains -> [[63-what-to-try-next-try]]
+  - <- contains <- [[landing-page-completion-report]]
+- **8. Next Steps** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 4 connections
+  - -> contains -> [[81-immediate-post-deployment]]
+  - -> contains -> [[82-v11-enhancements-future-cycle]]
+  - -> contains -> [[83-related-features-in-development]]
+  - <- contains <- [[landing-page-completion-report]]
+- **10.2 Error Handling Strategy** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[javascript]]
+  - <- contains <- [[10-implementation-details]]
+- **11. Testing & Validation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 3 connections
+  - -> contains -> [[111-manual-testing-checklist]]
+  - -> contains -> [[112-code-quality-checks]]
+  - <- contains <- [[landing-page-completion-report]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 3 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - <- contains <- [[landing-page-completion-report]]
+- **5. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 3 connections
+  - -> contains -> [[51-final-analysis-results]]
+  - -> contains -> [[52-verification-details]]
+  - <- contains <- [[landing-page-completion-report]]
+- **7. Process Improvement Suggestions** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 3 connections
+  - -> contains -> [[71-pdca-process]]
+  - -> contains -> [[72-toolsenvironment]]
+  - <- contains <- [[landing-page-completion-report]]
+- **12. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 2 connections
+  - -> contains -> [[metrics-summary]]
+  - <- contains <- [[landing-page-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 2 connections
+  - -> references -> [[unresolvedreflandinganalysis]]
+  - <- contains <- [[landing-page-completion-report]]
+- **3.2 Backend Implementation (routes_public.py)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 2 connections
+  - -> contains -> [[data-source-verification]]
+  - <- contains <- [[3-completed-items]]
+- **4. Incomplete Items** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 2 connections
+  - -> contains -> [[41-deferred-to-v11-low-priority]]
+  - <- contains <- [[landing-page-completion-report]]
+- **9. Changelog** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 2 connections
+  - -> contains -> [[v100-2026-03-26]]
+  - <- contains <- [[landing-page-completion-report]]
+- **__unresolved__::ref::landing_analysis** () -- 1 connections
+  - <- references <- [[2-related-documents]]
+- **javascript** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- has_code_example <- [[102-error-handling-strategy]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- has_code_example <- [[102-error-handling-strategy]]
+- **10.1 Key Architecture Decisions** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[10-implementation-details]]
+- **10.3 Data Accuracy Notes** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[10-implementation-details]]
+- **11.1 Manual Testing Checklist** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[11-testing-validation]]
+- **11.2 Code Quality Checks** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[11-testing-validation]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **3.1 Core Requirements (REQ-1 ~ REQ-10)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.3 Frontend Implementation (page.tsx)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.4 Backend Router Registration** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **3.5 Deliverables** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[3-completed-items]]
+- **4.1 Deferred to v1.1 (LOW Priority)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[4-incomplete-items]]
+- **5.1 Final Analysis Results** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **6.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **6.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **6.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[6-lessons-learned-retrospective]]
+- **7.1 PDCA Process** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[7-process-improvement-suggestions]]
+- **7.2 Tools/Environment** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[7-process-improvement-suggestions]]
+- **8.1 Immediate (Post-Deployment)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.2 v1.1 Enhancements (Future Cycle)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.3 Related Features in Development** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **API Response Validation** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[52-verification-details]]
+- **Backend Code Quality** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[52-verification-details]]
+- **Data Source Verification** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[32-backend-implementation-routespublicpy]]
+- **Frontend Code Quality** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[52-verification-details]]
+- **Metrics Summary** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[12-conclusion]]
+- **v1.0.0 (2026-03-26)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[9-changelog]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\landing.report.md) -- 1 connections
+  - <- contains <- [[landing-page-completion-report]]
+
+## Internal Relationships
+- 10.2 Error Handling Strategy -> has_code_example -> python [EXTRACTED]
+- 10.2 Error Handling Strategy -> has_code_example -> javascript [EXTRACTED]
+- 10. Implementation Details -> contains -> 10.1 Key Architecture Decisions [EXTRACTED]
+- 10. Implementation Details -> contains -> 10.2 Error Handling Strategy [EXTRACTED]
+- 10. Implementation Details -> contains -> 10.3 Data Accuracy Notes [EXTRACTED]
+- 11. Testing & Validation -> contains -> 11.1 Manual Testing Checklist [EXTRACTED]
+- 11. Testing & Validation -> contains -> 11.2 Code Quality Checks [EXTRACTED]
+- 12. Conclusion -> contains -> Metrics Summary [EXTRACTED]
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::landing_analysis [EXTRACTED]
+- 3.2 Backend Implementation (routes_public.py) -> contains -> Data Source Verification [EXTRACTED]
+- 3. Completed Items -> contains -> 3.1 Core Requirements (REQ-1 ~ REQ-10) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.2 Backend Implementation (routes_public.py) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.3 Frontend Implementation (page.tsx) [EXTRACTED]
+- 3. Completed Items -> contains -> 3.4 Backend Router Registration [EXTRACTED]
+- 3. Completed Items -> contains -> 3.5 Deliverables [EXTRACTED]
+- 4. Incomplete Items -> contains -> 4.1 Deferred to v1.1 (LOW Priority) [EXTRACTED]
+- 5.2 Verification Details -> contains -> Backend Code Quality [EXTRACTED]
+- 5.2 Verification Details -> contains -> Frontend Code Quality [EXTRACTED]
+- 5.2 Verification Details -> contains -> API Response Validation [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.1 Final Analysis Results [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.2 Verification Details [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.1 What Went Well (Keep) [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.2 What Needs Improvement (Problem) [EXTRACTED]
+- 6. Lessons Learned & Retrospective -> contains -> 6.3 What to Try Next (Try) [EXTRACTED]
+- 7. Process Improvement Suggestions -> contains -> 7.1 PDCA Process [EXTRACTED]
+- 7. Process Improvement Suggestions -> contains -> 7.2 Tools/Environment [EXTRACTED]
+- 8. Next Steps -> contains -> 8.1 Immediate (Post-Deployment) [EXTRACTED]
+- 8. Next Steps -> contains -> 8.2 v1.1 Enhancements (Future Cycle) [EXTRACTED]
+- 8. Next Steps -> contains -> 8.3 Related Features in Development [EXTRACTED]
+- 9. Changelog -> contains -> v1.0.0 (2026-03-26) [EXTRACTED]
+- Landing Page Completion Report -> contains -> 1. Summary [EXTRACTED]
+- Landing Page Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- Landing Page Completion Report -> contains -> 3. Completed Items [EXTRACTED]
+- Landing Page Completion Report -> contains -> 4. Incomplete Items [EXTRACTED]
+- Landing Page Completion Report -> contains -> 5. Quality Metrics [EXTRACTED]
+- Landing Page Completion Report -> contains -> 6. Lessons Learned & Retrospective [EXTRACTED]
+- Landing Page Completion Report -> contains -> 7. Process Improvement Suggestions [EXTRACTED]
+- Landing Page Completion Report -> contains -> 8. Next Steps [EXTRACTED]
+- Landing Page Completion Report -> contains -> 9. Changelog [EXTRACTED]
+- Landing Page Completion Report -> contains -> 10. Implementation Details [EXTRACTED]
+- Landing Page Completion Report -> contains -> 11. Testing & Validation [EXTRACTED]
+- Landing Page Completion Report -> contains -> 12. Conclusion [EXTRACTED]
+- Landing Page Completion Report -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Landing Page Completion Report, 3. Completed Items, 10. Implementation Details를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 landing.report.md이다.
+
+### Key Facts
+- > **Status**: Complete > > **Project**: 용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker > **Version**: v1.0 > **Author**: gap-detector (Report Generator) > **Completion Date**: 2026-03-26 > **PDCA Cycle**: #1 (User Review → Do → Check → Report)
+- 3.1 Core Requirements (REQ-1 ~ REQ-10)
+- 10.1 Key Architecture Decisions
+- 6.1 What Went Well (Keep)
+- 8.1 Immediate (Post-Deployment)

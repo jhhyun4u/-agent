@@ -1,0 +1,137 @@
+# PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 & python
+Cohesion: 0.10 | Nodes: 26
+
+## Key Nodes
+- **PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 10 connections
+  - -> contains -> [[1-db]]
+  - -> contains -> [[2-pydantic]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-api]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7-kb]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 6 connections
+  - <- has_code_example <- [[2-pydantic]]
+  - <- has_code_example <- [[3-1-qa]]
+  - <- has_code_example <- [[4-api]]
+  - <- has_code_example <- [[4-1]]
+  - <- has_code_example <- [[5-2-reviewppt]]
+  - <- has_code_example <- [[7-1-knowledgesearchpy]]
+- **6. 프론트엔드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 6 connections
+  - -> contains -> [[6-1-qapanel]]
+  - -> contains -> [[6-2]]
+  - -> contains -> [[6-3-kb-qa]]
+  - -> contains -> [[6-4-api]]
+  - -> contains -> [[6-5-typescript]]
+  - <- contains <- [[psm-16-qa]]
+- **1. DB 마이그레이션** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 3 connections
+  - -> contains -> [[1-1-presentationqa]]
+  - -> contains -> [[1-2]]
+  - <- contains <- [[psm-16-qa]]
+- **4. API 엔드포인트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> contains -> [[4-1]]
+  - <- contains <- [[psm-16-qa]]
+- **5. 워크플로 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 3 connections
+  - -> contains -> [[5-1]]
+  - -> contains -> [[5-2-reviewppt]]
+  - <- contains <- [[psm-16-qa]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - <- has_code_example <- [[6-4-api]]
+  - <- has_code_example <- [[6-5-typescript]]
+- **1-1. presentation_qa 테이블 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[1-db]]
+- **2. Pydantic 스키마** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[psm-16-qa]]
+- **3. 서비스 계층** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> contains -> [[3-1-qa]]
+  - <- contains <- [[psm-16-qa]]
+- **3-1. Q&A 서비스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **4-1. 라우터 등록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-api]]
+- **5-2. review_ppt 안내 메시지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5]]
+- **6-4. API 클라이언트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6]]
+- **6-5. TypeScript 타입** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6]]
+- **7-1. knowledge_search.py 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[7-kb]]
+- **7. 통합 KB 검색 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 2 connections
+  - -> contains -> [[7-1-knowledgesearchpy]]
+  - <- contains <- [[psm-16-qa]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- has_code_example <- [[1-1-presentationqa]]
+- **10. 검증 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[psm-16-qa]]
+- **1-2. 카테고리 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[1-db]]
+- **5-1. 설계 결정: 워크플로 외부 등록 방식** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **6-1. QaPanel 컴포넌트** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6-2. 프로젝트 상세 페이지 통합** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6-3. KB Q&A 검색 페이지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **8. 파일 변경 목록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[psm-16-qa]]
+- **9. 구현 순서 (의존성 기준)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\psm-16-qa-search\psm-16-qa-search.design.md) -- 1 connections
+  - <- contains <- [[psm-16-qa]]
+
+## Internal Relationships
+- 1-1. presentation_qa 테이블 확장 -> has_code_example -> sql [EXTRACTED]
+- 1. DB 마이그레이션 -> contains -> 1-1. presentation_qa 테이블 확장 [EXTRACTED]
+- 1. DB 마이그레이션 -> contains -> 1-2. 카테고리 정의 [EXTRACTED]
+- 2. Pydantic 스키마 -> has_code_example -> python [EXTRACTED]
+- 3. 서비스 계층 -> contains -> 3-1. Q&A 서비스 [EXTRACTED]
+- 3-1. Q&A 서비스 -> has_code_example -> python [EXTRACTED]
+- 4-1. 라우터 등록 -> has_code_example -> python [EXTRACTED]
+- 4. API 엔드포인트 -> has_code_example -> python [EXTRACTED]
+- 4. API 엔드포인트 -> contains -> 4-1. 라우터 등록 [EXTRACTED]
+- 5. 워크플로 연동 -> contains -> 5-1. 설계 결정: 워크플로 외부 등록 방식 [EXTRACTED]
+- 5. 워크플로 연동 -> contains -> 5-2. review_ppt 안내 메시지 [EXTRACTED]
+- 5-2. review_ppt 안내 메시지 -> has_code_example -> python [EXTRACTED]
+- 6. 프론트엔드 -> contains -> 6-1. QaPanel 컴포넌트 [EXTRACTED]
+- 6. 프론트엔드 -> contains -> 6-2. 프로젝트 상세 페이지 통합 [EXTRACTED]
+- 6. 프론트엔드 -> contains -> 6-3. KB Q&A 검색 페이지 [EXTRACTED]
+- 6. 프론트엔드 -> contains -> 6-4. API 클라이언트 [EXTRACTED]
+- 6. 프론트엔드 -> contains -> 6-5. TypeScript 타입 [EXTRACTED]
+- 6-4. API 클라이언트 -> has_code_example -> typescript [EXTRACTED]
+- 6-5. TypeScript 타입 -> has_code_example -> typescript [EXTRACTED]
+- 7-1. knowledge_search.py 확장 -> has_code_example -> python [EXTRACTED]
+- 7. 통합 KB 검색 연동 -> contains -> 7-1. knowledge_search.py 확장 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 1. DB 마이그레이션 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 2. Pydantic 스키마 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 3. 서비스 계층 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 4. API 엔드포인트 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 5. 워크플로 연동 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 6. 프론트엔드 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 7. 통합 KB 검색 연동 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 8. 파일 변경 목록 [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 9. 구현 순서 (의존성 기준) [EXTRACTED]
+- PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서 -> contains -> 10. 검증 체크리스트 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 PSM-16: Q&A 기록 검색 가능 저장 — 설계 문서, python, 6. 프론트엔드를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 psm-16-qa-search.design.md이다.
+
+### Key Facts
+- > **요구사항 ID**: PSM-16 (Must) > **기능명**: psm-16-qa-search > **버전**: v1.0 > **작성일**: 2026-03-18 > **상태**: Design > **Plan 참조**: `docs/01-plan/features/psm-16-qa-search.plan.md`
+- ```python ── PSM-16: Q&A 기록 ──
+- 1-1. presentation_qa 테이블 확장
+- **파일**: `app/api/routes_qa.py`
+- 5-1. 설계 결정: 워크플로 외부 등록 방식

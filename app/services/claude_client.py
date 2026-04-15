@@ -254,3 +254,32 @@ def _parse_json_response(text: str) -> dict:
         # JSON 파싱 실패 시 텍스트 응답 반환
         logger.warning(f"JSON 파싱 실패, 텍스트 응답 반환: {cleaned[:200]}...")
         return {"text": text, "_parse_error": True}
+
+
+class ClaudeClient:
+    """Anthropic Claude API 래퍼 클래스 (master_projects_chat_service 호환)."""
+
+    def __init__(self):
+        self._client = _get_client()
+
+    async def create_message(
+        self,
+        system: str,
+        messages: list[dict],
+        model: str = "claude-opus-4-6",
+        max_tokens: int = 1500,
+        **kwargs
+    ) -> "Message":
+        """Anthropic API를 호출하여 메시지 생성.
+
+        Returns:
+            Message 객체 (content[0].text 형식)
+        """
+        response = await self._client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+            **kwargs
+        )
+        return response

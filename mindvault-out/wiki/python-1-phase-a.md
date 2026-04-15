@@ -1,0 +1,201 @@
+# python & 1. Phase A — 자동 축적 강화
+Cohesion: 0.09 | Nodes: 33
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 18 connections
+  - <- has_code_example <- [[1-1-autoregistersection]]
+  - <- has_code_example <- [[1-2-proposalwritenext]]
+  - <- has_code_example <- [[1-3-saveresearchtokb]]
+  - <- has_code_example <- [[1-4-researchgather]]
+  - <- has_code_example <- [[1-5-savestrategytokb]]
+  - <- has_code_example <- [[1-6-strategygenerate]]
+  - <- has_code_example <- [[2-2-searchcapabilities]]
+  - <- has_code_example <- [[content-l88]]
+  - <- has_code_example <- [[lesson-l171]]
+  - <- has_code_example <- [[2-4]]
+  - <- has_code_example <- [[3-1-findsimilarcases]]
+  - <- has_code_example <- [[3-2-gonogo]]
+  - <- has_code_example <- [[3-3-strategygenerate]]
+  - <- has_code_example <- [[3-4-proposalwritenext]]
+  - <- has_code_example <- [[3-5-planstory-kb]]
+  - <- has_code_example <- [[4-1-get-apikbhealth]]
+  - <- has_code_example <- [[4-2-post-apikbreindex]]
+  - <- has_code_example <- [[4-3-get-apikbcontentduplicates]]
+- **1. Phase A — 자동 축적 강화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 7 connections
+  - -> contains -> [[1-1-autoregistersection]]
+  - -> contains -> [[1-2-proposalwritenext]]
+  - -> contains -> [[1-3-saveresearchtokb]]
+  - -> contains -> [[1-4-researchgather]]
+  - -> contains -> [[1-5-savestrategytokb]]
+  - -> contains -> [[1-6-strategygenerate]]
+  - <- contains <- [[kb-design]]
+- **KB 개선 Design** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 7 connections
+  - -> contains -> [[1-phase-a]]
+  - -> contains -> [[2-phase-b]]
+  - -> contains -> [[3-phase-c]]
+  - -> contains -> [[4-phase-d-ux]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+- **3. Phase C — 활용도 강화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 6 connections
+  - -> contains -> [[3-1-findsimilarcases]]
+  - -> contains -> [[3-2-gonogo]]
+  - -> contains -> [[3-3-strategygenerate]]
+  - -> contains -> [[3-4-proposalwritenext]]
+  - -> contains -> [[3-5-planstory-kb]]
+  - <- contains <- [[kb-design]]
+- **2. Phase B — 검색 품질 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 5 connections
+  - -> contains -> [[2-1-db-capabilities]]
+  - -> contains -> [[2-2-searchcapabilities]]
+  - -> contains -> [[2-3]]
+  - -> contains -> [[2-4]]
+  - <- contains <- [[kb-design]]
+- **4. Phase D — 관리 UX 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 5 connections
+  - -> contains -> [[4-1-get-apikbhealth]]
+  - -> contains -> [[4-2-post-apikbreindex]]
+  - -> contains -> [[4-3-get-apikbcontentduplicates]]
+  - -> contains -> [[4-4-kb]]
+  - <- contains <- [[kb-design]]
+- **2-3. 키워드 폴백 개선** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 4 connections
+  - -> contains -> [[content-l88]]
+  - -> contains -> [[lesson-l171]]
+  - -> contains -> [[matchtype]]
+  - <- contains <- [[2-phase-b]]
+- **4-3. `GET /api/kb/content/duplicates` — 중복 탐지** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[4-phase-d-ux]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - <- has_code_example <- [[2-1-db-capabilities]]
+  - <- has_code_example <- [[4-3-get-apikbcontentduplicates]]
+- **1-1. `auto_register_section()` — 섹션 자동 등록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **1-2. `proposal_write_next` 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **1-3. `save_research_to_kb()` — 리서치 결과 축적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **1-4. `research_gather` 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **1-5. `save_strategy_to_kb()` — 전략 결과 축적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **1-6. `strategy_generate` 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[1-phase-a]]
+- **2-1. DB 마이그레이션 — capabilities 임베딩** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[2-phase-b]]
+- **2-2. `_search_capabilities()` 시맨틱 전환** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-phase-b]]
+- **2-4. 하이브리드 랭킹** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-phase-b]]
+- **3-1. `find_similar_cases()` — 유사 과거 사례 매칭** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-c]]
+- **3-2. `go_no_go` 노드에 유사 사례 주입** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-c]]
+- **3-3. `strategy_generate` 노드에 과거 전략 참조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-c]]
+- **3-4. `proposal_write_next` 유사 콘텐츠 주입** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-c]]
+- **3-5. `plan_story` KB 참조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-c]]
+- **4-1. `GET /api/kb/health` — 건강도 대시보드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-d-ux]]
+- **4-2. `POST /api/kb/reindex` — 일괄 임베딩 생성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4-phase-d-ux]]
+- **4-4. 프론트엔드 KB 건강도 위젯** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-phase-d-ux]]
+- **content 폴백 (L88 부근)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-3]]
+- **lesson 폴백 (L171 부근)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-3]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 1 connections
+  - <- has_code_example <- [[4-4-kb]]
+- **5. 수정 파일 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 1 connections
+  - <- contains <- [[kb-design]]
+- **6. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 1 connections
+  - <- contains <- [[kb-design]]
+- **7. 검증 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 1 connections
+  - <- contains <- [[kb-design]]
+- **match_type 표시 (모든 검색 함수)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\kb-enhancement\kb-enhancement.design.md) -- 1 connections
+  - <- contains <- [[2-3]]
+
+## Internal Relationships
+- 1-1. `auto_register_section()` — 섹션 자동 등록 -> has_code_example -> python [EXTRACTED]
+- 1-2. `proposal_write_next` 연동 -> has_code_example -> python [EXTRACTED]
+- 1-3. `save_research_to_kb()` — 리서치 결과 축적 -> has_code_example -> python [EXTRACTED]
+- 1-4. `research_gather` 연동 -> has_code_example -> python [EXTRACTED]
+- 1-5. `save_strategy_to_kb()` — 전략 결과 축적 -> has_code_example -> python [EXTRACTED]
+- 1-6. `strategy_generate` 연동 -> has_code_example -> python [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-1. `auto_register_section()` — 섹션 자동 등록 [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-2. `proposal_write_next` 연동 [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-3. `save_research_to_kb()` — 리서치 결과 축적 [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-4. `research_gather` 연동 [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-5. `save_strategy_to_kb()` — 전략 결과 축적 [EXTRACTED]
+- 1. Phase A — 자동 축적 강화 -> contains -> 1-6. `strategy_generate` 연동 [EXTRACTED]
+- 2-1. DB 마이그레이션 — capabilities 임베딩 -> has_code_example -> sql [EXTRACTED]
+- 2-2. `_search_capabilities()` 시맨틱 전환 -> has_code_example -> python [EXTRACTED]
+- 2-3. 키워드 폴백 개선 -> contains -> content 폴백 (L88 부근) [EXTRACTED]
+- 2-3. 키워드 폴백 개선 -> contains -> lesson 폴백 (L171 부근) [EXTRACTED]
+- 2-3. 키워드 폴백 개선 -> contains -> match_type 표시 (모든 검색 함수) [EXTRACTED]
+- 2-4. 하이브리드 랭킹 -> has_code_example -> python [EXTRACTED]
+- 2. Phase B — 검색 품질 개선 -> contains -> 2-1. DB 마이그레이션 — capabilities 임베딩 [EXTRACTED]
+- 2. Phase B — 검색 품질 개선 -> contains -> 2-2. `_search_capabilities()` 시맨틱 전환 [EXTRACTED]
+- 2. Phase B — 검색 품질 개선 -> contains -> 2-3. 키워드 폴백 개선 [EXTRACTED]
+- 2. Phase B — 검색 품질 개선 -> contains -> 2-4. 하이브리드 랭킹 [EXTRACTED]
+- 3-1. `find_similar_cases()` — 유사 과거 사례 매칭 -> has_code_example -> python [EXTRACTED]
+- 3-2. `go_no_go` 노드에 유사 사례 주입 -> has_code_example -> python [EXTRACTED]
+- 3-3. `strategy_generate` 노드에 과거 전략 참조 -> has_code_example -> python [EXTRACTED]
+- 3-4. `proposal_write_next` 유사 콘텐츠 주입 -> has_code_example -> python [EXTRACTED]
+- 3-5. `plan_story` KB 참조 -> has_code_example -> python [EXTRACTED]
+- 3. Phase C — 활용도 강화 -> contains -> 3-1. `find_similar_cases()` — 유사 과거 사례 매칭 [EXTRACTED]
+- 3. Phase C — 활용도 강화 -> contains -> 3-2. `go_no_go` 노드에 유사 사례 주입 [EXTRACTED]
+- 3. Phase C — 활용도 강화 -> contains -> 3-3. `strategy_generate` 노드에 과거 전략 참조 [EXTRACTED]
+- 3. Phase C — 활용도 강화 -> contains -> 3-4. `proposal_write_next` 유사 콘텐츠 주입 [EXTRACTED]
+- 3. Phase C — 활용도 강화 -> contains -> 3-5. `plan_story` KB 참조 [EXTRACTED]
+- 4-1. `GET /api/kb/health` — 건강도 대시보드 -> has_code_example -> python [EXTRACTED]
+- 4-2. `POST /api/kb/reindex` — 일괄 임베딩 생성 -> has_code_example -> python [EXTRACTED]
+- 4-3. `GET /api/kb/content/duplicates` — 중복 탐지 -> has_code_example -> python [EXTRACTED]
+- 4-3. `GET /api/kb/content/duplicates` — 중복 탐지 -> has_code_example -> sql [EXTRACTED]
+- 4-4. 프론트엔드 KB 건강도 위젯 -> has_code_example -> typescript [EXTRACTED]
+- 4. Phase D — 관리 UX 개선 -> contains -> 4-1. `GET /api/kb/health` — 건강도 대시보드 [EXTRACTED]
+- 4. Phase D — 관리 UX 개선 -> contains -> 4-2. `POST /api/kb/reindex` — 일괄 임베딩 생성 [EXTRACTED]
+- 4. Phase D — 관리 UX 개선 -> contains -> 4-3. `GET /api/kb/content/duplicates` — 중복 탐지 [EXTRACTED]
+- 4. Phase D — 관리 UX 개선 -> contains -> 4-4. 프론트엔드 KB 건강도 위젯 [EXTRACTED]
+- content 폴백 (L88 부근) -> has_code_example -> python [EXTRACTED]
+- KB 개선 Design -> contains -> 1. Phase A — 자동 축적 강화 [EXTRACTED]
+- KB 개선 Design -> contains -> 2. Phase B — 검색 품질 개선 [EXTRACTED]
+- KB 개선 Design -> contains -> 3. Phase C — 활용도 강화 [EXTRACTED]
+- KB 개선 Design -> contains -> 4. Phase D — 관리 UX 개선 [EXTRACTED]
+- KB 개선 Design -> contains -> 5. 수정 파일 요약 [EXTRACTED]
+- KB 개선 Design -> contains -> 6. 구현 순서 [EXTRACTED]
+- KB 개선 Design -> contains -> 7. 검증 항목 [EXTRACTED]
+- lesson 폴백 (L171 부근) -> has_code_example -> python [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, 1. Phase A — 자동 축적 강화, KB 개선 Design를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 kb-enhancement.design.md이다.
+
+### Key Facts
+- ```python async def auto_register_section( org_id: str, proposal_id: str, section_id: str, title: str, content: str, section_type: str, self_review_score: int | None = None, rfp_keywords: list[str] | None = None, industry: str | None = None, ) -> dict | None: ```
+- 1-1. `auto_register_section()` — 섹션 자동 등록
+- | 항목 | 내용 | |------|------| | Feature | kb-enhancement | | 버전 | v1.0 | | 작성일 | 2026-03-24 | | 상태 | Design | | Plan 참조 | `docs/01-plan/features/kb-enhancement.plan.md` |
+- 3-1. `find_similar_cases()` — 유사 과거 사례 매칭
+- 2-1. DB 마이그레이션 — capabilities 임베딩

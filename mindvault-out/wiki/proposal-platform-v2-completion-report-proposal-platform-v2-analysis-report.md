@@ -1,0 +1,467 @@
+# proposal-platform-v2 Completion Report & proposal-platform-v2 Analysis Report
+Cohesion: 0.02 | Nodes: 110
+
+## Key Nodes
+- **proposal-platform-v2 Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 18 connections
+  - -> contains -> [[1-summary]]
+  - -> contains -> [[2-related-documents]]
+  - -> contains -> [[3-phase-implementation-summary]]
+  - -> contains -> [[4-technology-stack-architecture]]
+  - -> contains -> [[5-quality-metrics]]
+  - -> contains -> [[6-completed-deliverables]]
+  - -> contains -> [[7-incomplete-items]]
+  - -> contains -> [[8-lessons-learned-retrospective]]
+  - -> contains -> [[9-recommendations-for-next-steps]]
+  - -> contains -> [[10-success-criteria-evaluation]]
+  - -> contains -> [[11-technical-architecture-highlights]]
+  - -> contains -> [[12-code-quality-standards]]
+  - -> contains -> [[13-performance-considerations]]
+  - -> contains -> [[14-future-enhancement-ideas]]
+  - -> contains -> [[15-conclusion]]
+  - -> contains -> [[16-version-history]]
+  - -> contains -> [[appendix-gap-list-details]]
+  - -> contains -> [[related-documents]]
+- **proposal-platform-v2 Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 12 connections
+  - -> references -> [[unresolvedrefproposalplatformv2design]]
+  - -> contains -> [[1-analysis-overview]]
+  - -> contains -> [[2-phase-a]]
+  - -> contains -> [[3-phase-b]]
+  - -> contains -> [[4-phase-c]]
+  - -> contains -> [[5-phase-d-rfp]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7-gap]]
+  - -> contains -> [[8-overall-score]]
+  - -> contains -> [[9-recommended-actions]]
+  - -> contains -> [[10-synchronization-recommendation]]
+  - -> contains -> [[version-history]]
+- **2. Phase A: 섹션 라이브러리 + 아카이브** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 5 connections
+  - -> contains -> [[21-db-schema]]
+  - -> contains -> [[22-backend-api]]
+  - -> contains -> [[23-phaseexecutor]]
+  - -> contains -> [[24-frontend]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **4. Phase C: 공통서식 라이브러리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 5 connections
+  - -> contains -> [[41-db-schema]]
+  - -> contains -> [[42-backend-api]]
+  - -> contains -> [[43-phaseexecutor]]
+  - -> contains -> [[44-frontend]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **15. Conclusion** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 5 connections
+  - -> contains -> [[summary]]
+  - -> contains -> [[key-achievements]]
+  - -> contains -> [[remaining-work]]
+  - -> contains -> [[recommendation]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **3. Phase Implementation Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 5 connections
+  - -> contains -> [[31-phase-a]]
+  - -> contains -> [[32-phase-b]]
+  - -> contains -> [[33-phase-c]]
+  - -> contains -> [[34-phase-d-rfp]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **8.1 What Went Well (Keep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 5 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3-rls]]
+  - -> contains -> [[4]]
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **8.3 What to Try Next (Try)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 5 connections
+  - -> contains -> [[1-api-prototype]]
+  - -> contains -> [[2-pdca-check]]
+  - -> contains -> [[3-ui-iteration]]
+  - -> contains -> [[4-asset-extractor]]
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **3. Phase B: 작업 단계 + 버전관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 4 connections
+  - -> contains -> [[31-db-schema]]
+  - -> contains -> [[32-backend-api]]
+  - -> contains -> [[33-frontend]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **5. Phase D: 수주율 대시보드 + RFP 캘린더** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 4 connections
+  - -> contains -> [[51-db-schema]]
+  - -> contains -> [[52-backend-api]]
+  - -> contains -> [[53-frontend]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **6. 공통 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 4 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62-vs]]
+  - -> contains -> [[63-frontend-api-client-libapits]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **8. Overall Score** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 4 connections
+  - -> contains -> [[81-phase-match-rate]]
+  - -> contains -> [[82-match-rate]]
+  - -> contains -> [[83-category-scores]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **11. Technical Architecture Highlights** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[111]]
+  - -> contains -> [[112-rls]]
+  - -> contains -> [[113-d-day]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **1. Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[11-project-overview]]
+  - -> contains -> [[12-results-summary]]
+  - -> contains -> [[13-feature-context]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **2. Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> references -> [[unresolvedrefproposalplatformv2plan]]
+  - -> references -> [[unresolvedrefproposalplatformv2design]]
+  - -> references -> [[unresolvedrefproposalplatformv2analysis]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **4. Technology Stack & Architecture** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[41-database-changes]]
+  - -> contains -> [[42-backend-api-endpoints]]
+  - -> contains -> [[43-frontend-components]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **5. Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[51-design-match-analysis]]
+  - -> contains -> [[52-compliance-scores]]
+  - -> contains -> [[53-issues-resolved-during-implementation]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **8.2 What Needs Improvement (Problem)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[1-scope]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3-p3]]
+  - <- contains <- [[8-lessons-learned-retrospective]]
+- **8. Lessons Learned & Retrospective** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[81-what-went-well-keep]]
+  - -> contains -> [[82-what-needs-improvement-problem]]
+  - -> contains -> [[83-what-to-try-next-try]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **9. Recommendations for Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> contains -> [[91-immediate-actions-this-week]]
+  - -> contains -> [[92-short-term-next-2-weeks]]
+  - -> contains -> [[93-next-pdca-cycle-v21]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **Related Documents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 4 connections
+  - -> references -> [[unresolvedrefproposalplatformv2plan]]
+  - -> references -> [[unresolvedrefproposalplatformv2design]]
+  - -> references -> [[unresolvedrefproposalplatformv2analysis]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **__unresolved__::ref::proposal_platform_v2_design** () -- 3 connections
+  - <- references <- [[proposal-platform-v2-analysis-report]]
+  - <- references <- [[2-related-documents]]
+  - <- references <- [[related-documents]]
+- **1. Analysis Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 3 connections
+  - -> contains -> [[11-analysis-purpose]]
+  - -> contains -> [[12-analysis-scope]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **9. Recommended Actions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 3 connections
+  - -> contains -> [[91-p2-short-term]]
+  - -> contains -> [[92-p3-documentationminor]]
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **12. Code Quality & Standards** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[121]]
+  - -> contains -> [[122]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **13. Performance Considerations** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[131-db]]
+  - -> contains -> [[132-api]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **14. Future Enhancement Ideas** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[141-v21]]
+  - -> contains -> [[142-v30]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **6. Completed Deliverables** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[61-backend-services]]
+  - -> contains -> [[62-frontend-components]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **7. Incomplete Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[71-remaining-p2-issues-short-term-priority]]
+  - -> contains -> [[72-remaining-p3-issues-documentationminor]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **Appendix: Gap List Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 3 connections
+  - -> contains -> [[a1-p2-issues-short-term]]
+  - -> contains -> [[a2-p3-issues-documentationminor]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **__unresolved__::ref::proposal_platform_v2_analysis** () -- 2 connections
+  - <- references <- [[2-related-documents]]
+  - <- references <- [[related-documents]]
+- **__unresolved__::ref::proposal_platform_v2_plan** () -- 2 connections
+  - <- references <- [[2-related-documents]]
+  - <- references <- [[related-documents]]
+- **10. Success Criteria Evaluation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 2 connections
+  - -> contains -> [[101-plan]]
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **11.1 컨텍스트 주입 아키텍처 (혁신 패턴)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[11-technical-architecture-highlights]]
+- **11.2 RLS 정책 강화 (보안 우수 사례)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[11-technical-architecture-highlights]]
+- **11.3 캘린더 D-day 계산 로직** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[11-technical-architecture-highlights]]
+- **2. 단계별 구현으로 인한 점진적 학습** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 2 connections
+  - <- contains <- [[81-what-went-well-keep]]
+  - <- contains <- [[82-what-needs-improvement-problem]]
+- **10. Synchronization Recommendation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **1.1 Analysis Purpose** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **1.2 Analysis Scope** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[1-analysis-overview]]
+- **2.1 DB Schema** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[2-phase-a]]
+- **2.2 Backend API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[2-phase-a]]
+- **2.3 섹션 컨텍스트 주입 (phase_executor)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[2-phase-a]]
+- **2.4 Frontend** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[2-phase-a]]
+- **3.1 DB Schema** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[3-phase-b]]
+- **3.2 Backend API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[3-phase-b]]
+- **3.3 Frontend** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[3-phase-b]]
+- **4.1 DB Schema** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[4-phase-c]]
+- **4.2 Backend API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[4-phase-c]]
+- **4.3 서식 적용 (phase_executor)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[4-phase-c]]
+- **4.4 Frontend** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[4-phase-c]]
+- **5.1 DB Schema** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[5-phase-d-rfp]]
+- **5.2 Backend API** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[5-phase-d-rfp]]
+- **5.3 Frontend** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[5-phase-d-rfp]]
+- **6.1 사이드바 최종 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.2 설계 파일 vs 구현 파일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.3 Frontend API Client (lib/api.ts)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7. Gap 목록** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **8.1 Phase별 Match Rate** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[8-overall-score]]
+- **8.2 전체 Match Rate** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[8-overall-score]]
+- **8.3 Category Scores** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[8-overall-score]]
+- **9.1 P2 (Short-term)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[9-recommended-actions]]
+- **9.2 P3 (Documentation/Minor)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[9-recommended-actions]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.analysis.md) -- 1 connections
+  - <- contains <- [[proposal-platform-v2-analysis-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- has_code_example <- [[111]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- has_code_example <- [[112-rls]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- has_code_example <- [[113-d-day]]
+- **1. 설계 문서의 명확성과 구조화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[81-what-went-well-keep]]
+- **10.1 Plan에서 정의한 성공 기준** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[10-success-criteria-evaluation]]
+- **12.1 준수한 코드 컨벤션** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[12-code-quality-standards]]
+- **12.2 테스트 및 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[12-code-quality-standards]]
+- **13.1 DB 쿼리 최적화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[13-performance-considerations]]
+- **13.2 API 응답 시간** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[13-performance-considerations]]
+- **14.1 즉시 가능한 개선 (v2.1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[14-future-enhancement-ideas]]
+- **14.2 중장기 개선 (v3.0)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[14-future-enhancement-ideas]]
+- **16. Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[proposal-platform-v2-completion-report]]
+- **1.1 Project Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.2 Results Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1.3 Feature Context** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[1-summary]]
+- **1. 초기 scope 추정 부정확** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[82-what-needs-improvement-problem]]
+- **1. API 설계 단계에 Prototype 추가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[83-what-to-try-next-try]]
+- **2. PDCA Check 단계 강화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[83-what-to-try-next-try]]
+- **3.1 Phase A: 섹션 라이브러리 + 아카이브** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[3-phase-implementation-summary]]
+- **3.2 Phase B: 작업 단계 + 버전관리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[3-phase-implementation-summary]]
+- **3.3 Phase C: 공통서식 라이브러리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[3-phase-implementation-summary]]
+- **3.4 Phase D: 수주율 대시보드 + RFP 캘린더** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[3-phase-implementation-summary]]
+- **3. 섹션 선택 & 버전 비교 UI를 iteration으로 분리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[83-what-to-try-next-try]]
+- **3. 보조 기능(P3 이슈) 누적** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[82-what-needs-improvement-problem]]
+- **3. RLS 정책 강화로 보안 향상** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[81-what-went-well-keep]]
+- **4. 컨텍스트 주입 아키텍처의 유연성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[81-what-went-well-keep]]
+- **4.1 Database Changes** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[4-technology-stack-architecture]]
+- **4.2 Backend API Endpoints** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[4-technology-stack-architecture]]
+- **4.3 Frontend Components** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[4-technology-stack-architecture]]
+- **4. Asset Extractor를 별도 독립 기능으로 개발** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[83-what-to-try-next-try]]
+- **5.1 Design Match Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **5.2 Compliance Scores** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **5.3 Issues Resolved During Implementation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[5-quality-metrics]]
+- **6.1 Backend Services** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[6-completed-deliverables]]
+- **6.2 Frontend Components** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[6-completed-deliverables]]
+- **7.1 Remaining P2 Issues (Short-term Priority)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[7-incomplete-items]]
+- **7.2 Remaining P3 Issues (Documentation/Minor)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[7-incomplete-items]]
+- **9.1 Immediate Actions (This Week)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[9-recommendations-for-next-steps]]
+- **9.2 Short-term (Next 2 weeks)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[9-recommendations-for-next-steps]]
+- **9.3 Next PDCA Cycle (v2.1)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[9-recommendations-for-next-steps]]
+- **A.1 P2 Issues (Short-term)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[appendix-gap-list-details]]
+- **A.2 P3 Issues (Documentation/Minor)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[appendix-gap-list-details]]
+- **Key Achievements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[15-conclusion]]
+- **Recommendation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[15-conclusion]]
+- **Remaining Work** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[15-conclusion]]
+- **Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-platform-v2\proposal-platform-v2.report.md) -- 1 connections
+  - <- contains <- [[15-conclusion]]
+
+## Internal Relationships
+- 1. Analysis Overview -> contains -> 1.1 Analysis Purpose [EXTRACTED]
+- 1. Analysis Overview -> contains -> 1.2 Analysis Scope [EXTRACTED]
+- 2. Phase A: 섹션 라이브러리 + 아카이브 -> contains -> 2.1 DB Schema [EXTRACTED]
+- 2. Phase A: 섹션 라이브러리 + 아카이브 -> contains -> 2.2 Backend API [EXTRACTED]
+- 2. Phase A: 섹션 라이브러리 + 아카이브 -> contains -> 2.3 섹션 컨텍스트 주입 (phase_executor) [EXTRACTED]
+- 2. Phase A: 섹션 라이브러리 + 아카이브 -> contains -> 2.4 Frontend [EXTRACTED]
+- 3. Phase B: 작업 단계 + 버전관리 -> contains -> 3.1 DB Schema [EXTRACTED]
+- 3. Phase B: 작업 단계 + 버전관리 -> contains -> 3.2 Backend API [EXTRACTED]
+- 3. Phase B: 작업 단계 + 버전관리 -> contains -> 3.3 Frontend [EXTRACTED]
+- 4. Phase C: 공통서식 라이브러리 -> contains -> 4.1 DB Schema [EXTRACTED]
+- 4. Phase C: 공통서식 라이브러리 -> contains -> 4.2 Backend API [EXTRACTED]
+- 4. Phase C: 공통서식 라이브러리 -> contains -> 4.3 서식 적용 (phase_executor) [EXTRACTED]
+- 4. Phase C: 공통서식 라이브러리 -> contains -> 4.4 Frontend [EXTRACTED]
+- 5. Phase D: 수주율 대시보드 + RFP 캘린더 -> contains -> 5.1 DB Schema [EXTRACTED]
+- 5. Phase D: 수주율 대시보드 + RFP 캘린더 -> contains -> 5.2 Backend API [EXTRACTED]
+- 5. Phase D: 수주율 대시보드 + RFP 캘린더 -> contains -> 5.3 Frontend [EXTRACTED]
+- 6. 공통 사항 -> contains -> 6.1 사이드바 최종 구조 [EXTRACTED]
+- 6. 공통 사항 -> contains -> 6.2 설계 파일 vs 구현 파일 [EXTRACTED]
+- 6. 공통 사항 -> contains -> 6.3 Frontend API Client (lib/api.ts) [EXTRACTED]
+- 8. Overall Score -> contains -> 8.1 Phase별 Match Rate [EXTRACTED]
+- 8. Overall Score -> contains -> 8.2 전체 Match Rate [EXTRACTED]
+- 8. Overall Score -> contains -> 8.3 Category Scores [EXTRACTED]
+- 9. Recommended Actions -> contains -> 9.1 P2 (Short-term) [EXTRACTED]
+- 9. Recommended Actions -> contains -> 9.2 P3 (Documentation/Minor) [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> references -> __unresolved__::ref::proposal_platform_v2_design [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 1. Analysis Overview [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 2. Phase A: 섹션 라이브러리 + 아카이브 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 3. Phase B: 작업 단계 + 버전관리 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 4. Phase C: 공통서식 라이브러리 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 5. Phase D: 수주율 대시보드 + RFP 캘린더 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 6. 공통 사항 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 7. Gap 목록 [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 8. Overall Score [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 9. Recommended Actions [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> 10. Synchronization Recommendation [EXTRACTED]
+- proposal-platform-v2 Analysis Report -> contains -> Version History [EXTRACTED]
+- 10. Success Criteria Evaluation -> contains -> 10.1 Plan에서 정의한 성공 기준 [EXTRACTED]
+- 11.1 컨텍스트 주입 아키텍처 (혁신 패턴) -> has_code_example -> python [EXTRACTED]
+- 11.2 RLS 정책 강화 (보안 우수 사례) -> has_code_example -> sql [EXTRACTED]
+- 11.3 캘린더 D-day 계산 로직 -> has_code_example -> typescript [EXTRACTED]
+- 11. Technical Architecture Highlights -> contains -> 11.1 컨텍스트 주입 아키텍처 (혁신 패턴) [EXTRACTED]
+- 11. Technical Architecture Highlights -> contains -> 11.2 RLS 정책 강화 (보안 우수 사례) [EXTRACTED]
+- 11. Technical Architecture Highlights -> contains -> 11.3 캘린더 D-day 계산 로직 [EXTRACTED]
+- 12. Code Quality & Standards -> contains -> 12.1 준수한 코드 컨벤션 [EXTRACTED]
+- 12. Code Quality & Standards -> contains -> 12.2 테스트 및 검증 [EXTRACTED]
+- 13. Performance Considerations -> contains -> 13.1 DB 쿼리 최적화 [EXTRACTED]
+- 13. Performance Considerations -> contains -> 13.2 API 응답 시간 [EXTRACTED]
+- 14. Future Enhancement Ideas -> contains -> 14.1 즉시 가능한 개선 (v2.1) [EXTRACTED]
+- 14. Future Enhancement Ideas -> contains -> 14.2 중장기 개선 (v3.0) [EXTRACTED]
+- 15. Conclusion -> contains -> Summary [EXTRACTED]
+- 15. Conclusion -> contains -> Key Achievements [EXTRACTED]
+- 15. Conclusion -> contains -> Remaining Work [EXTRACTED]
+- 15. Conclusion -> contains -> Recommendation [EXTRACTED]
+- 1. Summary -> contains -> 1.1 Project Overview [EXTRACTED]
+- 1. Summary -> contains -> 1.2 Results Summary [EXTRACTED]
+- 1. Summary -> contains -> 1.3 Feature Context [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_plan [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_design [EXTRACTED]
+- 2. Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_analysis [EXTRACTED]
+- 3. Phase Implementation Summary -> contains -> 3.1 Phase A: 섹션 라이브러리 + 아카이브 [EXTRACTED]
+- 3. Phase Implementation Summary -> contains -> 3.2 Phase B: 작업 단계 + 버전관리 [EXTRACTED]
+- 3. Phase Implementation Summary -> contains -> 3.3 Phase C: 공통서식 라이브러리 [EXTRACTED]
+- 3. Phase Implementation Summary -> contains -> 3.4 Phase D: 수주율 대시보드 + RFP 캘린더 [EXTRACTED]
+- 4. Technology Stack & Architecture -> contains -> 4.1 Database Changes [EXTRACTED]
+- 4. Technology Stack & Architecture -> contains -> 4.2 Backend API Endpoints [EXTRACTED]
+- 4. Technology Stack & Architecture -> contains -> 4.3 Frontend Components [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.1 Design Match Analysis [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.2 Compliance Scores [EXTRACTED]
+- 5. Quality Metrics -> contains -> 5.3 Issues Resolved During Implementation [EXTRACTED]
+- 6. Completed Deliverables -> contains -> 6.1 Backend Services [EXTRACTED]
+- 6. Completed Deliverables -> contains -> 6.2 Frontend Components [EXTRACTED]
+- 7. Incomplete Items -> contains -> 7.1 Remaining P2 Issues (Short-term Priority) [EXTRACTED]
+- 7. Incomplete Items -> contains -> 7.2 Remaining P3 Issues (Documentation/Minor) [EXTRACTED]
+- 8.1 What Went Well (Keep) -> contains -> 1. 설계 문서의 명확성과 구조화 [EXTRACTED]
+- 8.1 What Went Well (Keep) -> contains -> 2. 단계별 구현으로 인한 점진적 학습 [EXTRACTED]
+- 8.1 What Went Well (Keep) -> contains -> 3. RLS 정책 강화로 보안 향상 [EXTRACTED]
+- 8.1 What Went Well (Keep) -> contains -> 4. 컨텍스트 주입 아키텍처의 유연성 [EXTRACTED]
+- 8.2 What Needs Improvement (Problem) -> contains -> 1. 초기 scope 추정 부정확 [EXTRACTED]
+- 8.2 What Needs Improvement (Problem) -> contains -> 2. 단계별 구현으로 인한 점진적 학습 [EXTRACTED]
+- 8.2 What Needs Improvement (Problem) -> contains -> 3. 보조 기능(P3 이슈) 누적 [EXTRACTED]
+- 8.3 What to Try Next (Try) -> contains -> 1. API 설계 단계에 Prototype 추가 [EXTRACTED]
+- 8.3 What to Try Next (Try) -> contains -> 2. PDCA Check 단계 강화 [EXTRACTED]
+- 8.3 What to Try Next (Try) -> contains -> 3. 섹션 선택 & 버전 비교 UI를 iteration으로 분리 [EXTRACTED]
+- 8.3 What to Try Next (Try) -> contains -> 4. Asset Extractor를 별도 독립 기능으로 개발 [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.1 What Went Well (Keep) [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.2 What Needs Improvement (Problem) [EXTRACTED]
+- 8. Lessons Learned & Retrospective -> contains -> 8.3 What to Try Next (Try) [EXTRACTED]
+- 9. Recommendations for Next Steps -> contains -> 9.1 Immediate Actions (This Week) [EXTRACTED]
+- 9. Recommendations for Next Steps -> contains -> 9.2 Short-term (Next 2 weeks) [EXTRACTED]
+- 9. Recommendations for Next Steps -> contains -> 9.3 Next PDCA Cycle (v2.1) [EXTRACTED]
+- Appendix: Gap List Details -> contains -> A.1 P2 Issues (Short-term) [EXTRACTED]
+- Appendix: Gap List Details -> contains -> A.2 P3 Issues (Documentation/Minor) [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 1. Summary [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 2. Related Documents [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 3. Phase Implementation Summary [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 4. Technology Stack & Architecture [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 5. Quality Metrics [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 6. Completed Deliverables [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 7. Incomplete Items [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 8. Lessons Learned & Retrospective [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 9. Recommendations for Next Steps [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 10. Success Criteria Evaluation [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 11. Technical Architecture Highlights [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 12. Code Quality & Standards [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 13. Performance Considerations [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 14. Future Enhancement Ideas [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 15. Conclusion [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> 16. Version History [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> Appendix: Gap List Details [EXTRACTED]
+- proposal-platform-v2 Completion Report -> contains -> Related Documents [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_plan [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_design [EXTRACTED]
+- Related Documents -> references -> __unresolved__::ref::proposal_platform_v2_analysis [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 proposal-platform-v2 Completion Report, proposal-platform-v2 Analysis Report, 2. Phase A: 섹션 라이브러리 + 아카이브를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-platform-v2.analysis.md, proposal-platform-v2.report.md이다.
+
+### Key Facts
+- > **Status**: Completed (91% Design Match) > > **Project**: Tenopa Proposer - RFP 기반 용역제안서 자동생성 플랫폼 > **Feature**: proposal-platform-v2 (팀 단위 제안서 관리 플랫폼) > **Author**: Report Generator Agent > **Completion Date**: 2026-03-08 > **PDCA Cycle**: #1
+- > **Analysis Type**: Gap Analysis (Design vs Implementation) > > **Project**: Tenopa Proposer > **Analyst**: gap-detector > **Date**: 2026-03-08 > **Design Doc**: [proposal-platform-v2.design.md](../02-design/features/proposal-platform-v2.design.md)
+- 3.1 Phase A: 섹션 라이브러리 + 아카이브
+- 1. API 설계 단계에 Prototype 추가
+- 8.1 Phase별 Match Rate

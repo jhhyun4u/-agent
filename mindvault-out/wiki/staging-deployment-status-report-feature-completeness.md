@@ -1,0 +1,201 @@
+# Staging Deployment Status Report & Feature Completeness
+Cohesion: 0.05 | Nodes: 45
+
+## Key Nodes
+- **Staging Deployment Status Report** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 14 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[deployment-timeline]]
+  - -> contains -> [[feature-completeness]]
+  - -> contains -> [[test-results-summary]]
+  - -> contains -> [[code-quality-assessment]]
+  - -> contains -> [[staging-deployment-readiness]]
+  - -> contains -> [[known-issues-workarounds]]
+  - -> contains -> [[performance-characteristics]]
+  - -> contains -> [[monitoring-setup-required]]
+  - -> contains -> [[rollback-plan]]
+  - -> contains -> [[success-criteria-for-staging]]
+  - -> contains -> [[next-steps]]
+  - -> contains -> [[sign-off]]
+  - -> contains -> [[deployment-information]]
+- **Feature Completeness** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 6 connections
+  - -> contains -> [[api-endpoints-66-implemented]]
+  - -> contains -> [[processing-pipeline-44-stages]]
+  - -> contains -> [[security-features-44-implemented]]
+  - -> contains -> [[database-22-tables-indexes]]
+  - -> contains -> [[file-support-5-formats]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Code Quality Assessment** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 5 connections
+  - -> contains -> [[security-review]]
+  - -> contains -> [[code-structure]]
+  - -> contains -> [[database-design]]
+  - -> contains -> [[api-design]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Next Steps** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 5 connections
+  - -> contains -> [[immediate-next-2-hours]]
+  - -> contains -> [[short-term-next-24-hours]]
+  - -> contains -> [[medium-term-next-2-7-days]]
+  - -> contains -> [[production-promotion-2026-04-08]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Known Issues & Workarounds** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 4 connections
+  - -> contains -> [[issue-1-small-files-may-fail-processing]]
+  - -> contains -> [[issue-2-embedding-api-rate-limits]]
+  - -> contains -> [[issue-3-test-timing]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Monitoring Setup Required** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 4 connections
+  - -> contains -> [[application-logs-to-watch]]
+  - -> contains -> [[metrics-to-track]]
+  - -> contains -> [[alert-thresholds]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Rollback Plan** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 4 connections
+  - -> contains -> [[scenario-1-critical-bug-in-staging]]
+  - -> contains -> [[scenario-2-database-migration-issue]]
+  - -> contains -> [[scenario-3-storage-issues]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Test Results Summary** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 4 connections
+  - -> contains -> [[end-to-end-integration-tests]]
+  - -> contains -> [[unit-tests]]
+  - -> contains -> [[manual-smoke-tests-previous-session]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 3 connections
+  - <- has_code_example <- [[scenario-1-critical-bug-in-staging]]
+  - <- has_code_example <- [[scenario-2-database-migration-issue]]
+  - <- has_code_example <- [[scenario-3-storage-issues]]
+- **Performance Characteristics** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 3 connections
+  - -> contains -> [[benchmarks-verified-in-testing]]
+  - -> contains -> [[resource-usage-expected]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Staging Deployment Readiness** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 3 connections
+  - -> contains -> [[pre-deployment-checklist-all-complete]]
+  - -> contains -> [[staging-deployment-steps-to-execute]]
+  - <- contains <- [[staging-deployment-status-report]]
+- **Scenario 1: Critical Bug in Staging** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[rollback-plan]]
+- **Scenario 2: Database Migration Issue** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[rollback-plan]]
+- **Scenario 3: Storage Issues** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[rollback-plan]]
+- **Alert Thresholds** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[monitoring-setup-required]]
+- **API Design** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **API Endpoints (6/6 Implemented)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[feature-completeness]]
+- **Application Logs to Watch** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[monitoring-setup-required]]
+- **Benchmarks (Verified in Testing)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[performance-characteristics]]
+- **Code Structure** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Database (2/2 Tables + Indexes)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[feature-completeness]]
+- **Database Design** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Deployment Information** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-status-report]]
+- **Deployment Timeline** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-status-report]]
+- **End-to-End Integration Tests** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-status-report]]
+- **File Support (5 Formats)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[feature-completeness]]
+- **Immediate (Next 2 Hours)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Issue 1: Small Files May Fail Processing** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Issue 2: Embedding API Rate Limits** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Issue 3: Test Timing** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[known-issues-workarounds]]
+- **Manual Smoke Tests (Previous Session)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+- **Medium Term (Next 2-7 Days)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Metrics to Track** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[monitoring-setup-required]]
+- **Pre-Deployment Checklist (✅ All Complete)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-readiness]]
+- **Processing Pipeline (4/4 Stages)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[feature-completeness]]
+- **Production Promotion (2026-04-08+)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Resource Usage (Expected)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[performance-characteristics]]
+- **Security Features (4/4 Implemented)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[feature-completeness]]
+- **Security Review** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Short Term (Next 24 Hours)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[next-steps]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-status-report]]
+- **Staging Deployment Steps (To Execute)** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-readiness]]
+- **Success Criteria for Staging** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[staging-deployment-status-report]]
+- **Unit Tests** (C:\project\tenopa proposer\-agent-master\STAGING_DEPLOYMENT_STATUS_REPORT.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+
+## Internal Relationships
+- Code Quality Assessment -> contains -> Security Review [EXTRACTED]
+- Code Quality Assessment -> contains -> Code Structure [EXTRACTED]
+- Code Quality Assessment -> contains -> Database Design [EXTRACTED]
+- Code Quality Assessment -> contains -> API Design [EXTRACTED]
+- Feature Completeness -> contains -> API Endpoints (6/6 Implemented) [EXTRACTED]
+- Feature Completeness -> contains -> Processing Pipeline (4/4 Stages) [EXTRACTED]
+- Feature Completeness -> contains -> Security Features (4/4 Implemented) [EXTRACTED]
+- Feature Completeness -> contains -> Database (2/2 Tables + Indexes) [EXTRACTED]
+- Feature Completeness -> contains -> File Support (5 Formats) [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 1: Small Files May Fail Processing [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 2: Embedding API Rate Limits [EXTRACTED]
+- Known Issues & Workarounds -> contains -> Issue 3: Test Timing [EXTRACTED]
+- Monitoring Setup Required -> contains -> Application Logs to Watch [EXTRACTED]
+- Monitoring Setup Required -> contains -> Metrics to Track [EXTRACTED]
+- Monitoring Setup Required -> contains -> Alert Thresholds [EXTRACTED]
+- Next Steps -> contains -> Immediate (Next 2 Hours) [EXTRACTED]
+- Next Steps -> contains -> Short Term (Next 24 Hours) [EXTRACTED]
+- Next Steps -> contains -> Medium Term (Next 2-7 Days) [EXTRACTED]
+- Next Steps -> contains -> Production Promotion (2026-04-08+) [EXTRACTED]
+- Performance Characteristics -> contains -> Benchmarks (Verified in Testing) [EXTRACTED]
+- Performance Characteristics -> contains -> Resource Usage (Expected) [EXTRACTED]
+- Rollback Plan -> contains -> Scenario 1: Critical Bug in Staging [EXTRACTED]
+- Rollback Plan -> contains -> Scenario 2: Database Migration Issue [EXTRACTED]
+- Rollback Plan -> contains -> Scenario 3: Storage Issues [EXTRACTED]
+- Scenario 1: Critical Bug in Staging -> has_code_example -> bash [EXTRACTED]
+- Scenario 2: Database Migration Issue -> has_code_example -> bash [EXTRACTED]
+- Scenario 3: Storage Issues -> has_code_example -> bash [EXTRACTED]
+- Staging Deployment Readiness -> contains -> Pre-Deployment Checklist (✅ All Complete) [EXTRACTED]
+- Staging Deployment Readiness -> contains -> Staging Deployment Steps (To Execute) [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Executive Summary [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Deployment Timeline [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Feature Completeness [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Test Results Summary [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Code Quality Assessment [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Staging Deployment Readiness [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Known Issues & Workarounds [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Performance Characteristics [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Monitoring Setup Required [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Rollback Plan [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Success Criteria for Staging [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Next Steps [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Sign-Off [EXTRACTED]
+- Staging Deployment Status Report -> contains -> Deployment Information [EXTRACTED]
+- Test Results Summary -> contains -> End-to-End Integration Tests [EXTRACTED]
+- Test Results Summary -> contains -> Unit Tests [EXTRACTED]
+- Test Results Summary -> contains -> Manual Smoke Tests (Previous Session) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Staging Deployment Status Report, Feature Completeness, Code Quality Assessment를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 STAGING_DEPLOYMENT_STATUS_REPORT.md이다.
+
+### Key Facts
+- API Endpoints (6/6 Implemented) ✅ POST /api/documents/upload ✅ GET /api/documents ✅ GET /api/documents/{id} ✅ POST /api/documents/{id}/process ✅ GET /api/documents/{id}/chunks ✅ DELETE /api/documents/{id}
+- Security Review - ✅ No hardcoded secrets - ✅ Input validation on all endpoints - ✅ Magic byte validation (file signatures) - ✅ Parameterized queries (Supabase SDK) - ✅ Org_id enforcement on all DB operations - ✅ Error messages don't expose sensitive paths - ✅ Rate limiting framework-ready
+- Immediate (Next 2 Hours) 1. [ ] Deploy staging branch to staging environment 2. [ ] Verify application starts without errors 3. [ ] Run smoke tests from STAGING_DEPLOYMENT_VERIFICATION.md 4. [ ] Monitor logs for errors
+- Issue 1: Small Files May Fail Processing **Severity:** Low (expected behavior) **Symptom:** Document with <50 chars text marked as failed **Root Cause:** Insufficient text for chunking algorithm **Workaround:** Test with files >1KB or files with substantial text **Status:** ✅ Validated in tests,…
+- Application Logs to Watch ``` app.api.routes_documents ├─ POST /api/documents/upload ├─ GET /api/documents ├─ GET /api/documents/{id} ├─ POST /api/documents/{id}/process ├─ GET /api/documents/{id}/chunks └─ DELETE /api/documents/{id}

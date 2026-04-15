@@ -1,0 +1,133 @@
+# Frontend Design Preview Guide & 🎯 Design System Components
+Cohesion: 0.08 | Nodes: 28
+
+## Key Nodes
+- **Frontend Design Preview Guide** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 10 connections
+  - -> contains -> [[overview]]
+  - -> contains -> [[preview-pages]]
+  - -> contains -> [[design-system-components]]
+  - -> contains -> [[responsive-behavior]]
+  - -> contains -> [[interactive-elements]]
+  - -> contains -> [[how-to-view]]
+  - -> contains -> [[design-validation-checklist]]
+  - -> contains -> [[component-usage-pattern]]
+  - -> contains -> [[implementation-notes]]
+  - -> contains -> [[next-steps]]
+- **🎯 Design System Components** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 5 connections
+  - -> contains -> [[color-palette]]
+  - -> contains -> [[typography]]
+  - -> contains -> [[spacing-system]]
+  - -> contains -> [[interactive-elements]]
+  - <- contains <- [[frontend-design-preview-guide]]
+- **Interactive Elements** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 5 connections
+  - -> contains -> [[sidebar-interactions]]
+  - -> contains -> [[editor-interactions]]
+  - -> contains -> [[search-interactions]]
+  - <- contains <- [[design-system-components]]
+  - <- contains <- [[frontend-design-preview-guide]]
+- **🎨 Preview Pages** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 5 connections
+  - -> contains -> [[1-dashboard-previewdashboardhtml]]
+  - -> contains -> [[2-proposals-list-previewproposalslisthtml]]
+  - -> contains -> [[3-proposal-editor-previewproposaleditorhtml]]
+  - -> contains -> [[4-knowledge-base-search-previewkbsearchhtml]]
+  - <- contains <- [[frontend-design-preview-guide]]
+- **🚀 How to View** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 4 connections
+  - -> contains -> [[option-1-direct-file-open]]
+  - -> contains -> [[option-2-local-web-server]]
+  - -> contains -> [[option-3-vs-code-live-server]]
+  - <- contains <- [[frontend-design-preview-guide]]
+- **📱 Responsive Behavior** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 4 connections
+  - -> contains -> [[desktop-lg-1024px]]
+  - -> contains -> [[tablet-640px-1023px]]
+  - -> contains -> [[mobile-640px]]
+  - <- contains <- [[frontend-design-preview-guide]]
+- **bash** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 2 connections
+  - <- has_code_example <- [[option-1-direct-file-open]]
+  - <- has_code_example <- [[option-2-local-web-server]]
+- **Option 1: Direct File Open** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[how-to-view]]
+- **Option 2: Local Web Server** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[how-to-view]]
+- **1. **Dashboard** — PREVIEW_DASHBOARD.html** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[preview-pages]]
+- **2. **Proposals List** — PREVIEW_PROPOSALS_LIST.html** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[preview-pages]]
+- **3. **Proposal Editor** — PREVIEW_PROPOSAL_EDITOR.html** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[preview-pages]]
+- **4. **Knowledge Base Search** — PREVIEW_KB_SEARCH.html** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[preview-pages]]
+- **Color Palette** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[design-system-components]]
+- **🔄 Component Usage Pattern** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[frontend-design-preview-guide]]
+- **📊 Design Validation Checklist** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[frontend-design-preview-guide]]
+- **Desktop (lg ≥ 1024px)** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[responsive-behavior]]
+- **Editor Interactions** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[interactive-elements]]
+- **📝 Implementation Notes** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[frontend-design-preview-guide]]
+- **Mobile (< 640px)** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[responsive-behavior]]
+- **🎓 Next Steps** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[frontend-design-preview-guide]]
+- **Option 3: VS Code Live Server** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[how-to-view]]
+- **📋 Overview** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[frontend-design-preview-guide]]
+- **Search Interactions** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[interactive-elements]]
+- **Sidebar Interactions** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[interactive-elements]]
+- **Spacing System** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[design-system-components]]
+- **Tablet (640px - 1023px)** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[responsive-behavior]]
+- **Typography** (C:\project\tenopa proposer\-agent-master\frontend\PREVIEW_GUIDE.md) -- 1 connections
+  - <- contains <- [[design-system-components]]
+
+## Internal Relationships
+- 🎯 Design System Components -> contains -> Color Palette [EXTRACTED]
+- 🎯 Design System Components -> contains -> Typography [EXTRACTED]
+- 🎯 Design System Components -> contains -> Spacing System [EXTRACTED]
+- 🎯 Design System Components -> contains -> Interactive Elements [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 📋 Overview [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 🎨 Preview Pages [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 🎯 Design System Components [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 📱 Responsive Behavior [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> Interactive Elements [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 🚀 How to View [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 📊 Design Validation Checklist [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 🔄 Component Usage Pattern [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 📝 Implementation Notes [EXTRACTED]
+- Frontend Design Preview Guide -> contains -> 🎓 Next Steps [EXTRACTED]
+- 🚀 How to View -> contains -> Option 1: Direct File Open [EXTRACTED]
+- 🚀 How to View -> contains -> Option 2: Local Web Server [EXTRACTED]
+- 🚀 How to View -> contains -> Option 3: VS Code Live Server [EXTRACTED]
+- Interactive Elements -> contains -> Sidebar Interactions [EXTRACTED]
+- Interactive Elements -> contains -> Editor Interactions [EXTRACTED]
+- Interactive Elements -> contains -> Search Interactions [EXTRACTED]
+- Option 1: Direct File Open -> has_code_example -> bash [EXTRACTED]
+- Option 2: Local Web Server -> has_code_example -> bash [EXTRACTED]
+- 🎨 Preview Pages -> contains -> 1. **Dashboard** — PREVIEW_DASHBOARD.html [EXTRACTED]
+- 🎨 Preview Pages -> contains -> 2. **Proposals List** — PREVIEW_PROPOSALS_LIST.html [EXTRACTED]
+- 🎨 Preview Pages -> contains -> 3. **Proposal Editor** — PREVIEW_PROPOSAL_EDITOR.html [EXTRACTED]
+- 🎨 Preview Pages -> contains -> 4. **Knowledge Base Search** — PREVIEW_KB_SEARCH.html [EXTRACTED]
+- 📱 Responsive Behavior -> contains -> Desktop (lg ≥ 1024px) [EXTRACTED]
+- 📱 Responsive Behavior -> contains -> Tablet (640px - 1023px) [EXTRACTED]
+- 📱 Responsive Behavior -> contains -> Mobile (< 640px) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Frontend Design Preview Guide, 🎯 Design System Components, Interactive Elements를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 PREVIEW_GUIDE.md이다.
+
+### Key Facts
+- This guide shows you all the available HTML preview pages demonstrating the **Proposal Coworker** frontend design system. These are static HTML mockups that showcase the design, layout, responsive behavior, and interactive elements across the entire application.
+- 1. **Dashboard** — PREVIEW_DASHBOARD.html
+- Option 1: Direct File Open
+- Desktop (lg ≥ 1024px)
+- ```bash Navigate to project root cd c:\project\tenopa proposer\-agent-master\frontend

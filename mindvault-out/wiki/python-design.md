@@ -1,0 +1,158 @@
+# python & 사전규격 + 발주계획 통합 Design
+Cohesion: 0.09 | Nodes: 29
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 9 connections
+  - <- has_code_example <- [[2-1-fetchallprespecs]]
+  - <- has_code_example <- [[2-2-fetchallprocurementplans]]
+  - <- has_code_example <- [[2-3-serviceprefix]]
+  - <- has_code_example <- [[3-1]]
+  - <- has_code_example <- [[3-2]]
+  - <- has_code_example <- [[3-3-bidscore-bidstage]]
+  - <- has_code_example <- [[3-4-normalizetitle]]
+  - <- has_code_example <- [[4-1-fetchbidsscored]]
+  - <- has_code_example <- [[5-2-routesbidspy]]
+- **사전규격 + 발주계획 통합 Design** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 9 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-g2b-api]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5-api]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+- **3. 스코어러 정규화 어댑터** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 5 connections
+  - -> contains -> [[3-1]]
+  - -> contains -> [[3-2]]
+  - -> contains -> [[3-3-bidscore-bidstage]]
+  - -> contains -> [[3-4-normalizetitle]]
+  - <- contains <- [[design]]
+- **6. 프론트엔드 변경** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 5 connections
+  - -> contains -> [[6-1]]
+  - -> contains -> [[6-2]]
+  - -> contains -> [[6-3]]
+  - -> contains -> [[6-4]]
+  - <- contains <- [[design]]
+- **2. G2B API 신규 메서드** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 4 connections
+  - -> contains -> [[2-1-fetchallprespecs]]
+  - -> contains -> [[2-2-fetchallprocurementplans]]
+  - -> contains -> [[2-3-serviceprefix]]
+  - <- contains <- [[design]]
+- **4. 파이프라인 통합** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 3 connections
+  - -> contains -> [[4-1-fetchbidsscored]]
+  - -> contains -> [[4-2-asyncio-import]]
+  - <- contains <- [[design]]
+- **5. API 응답 변경** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 3 connections
+  - -> contains -> [[5-1-routesbidspy]]
+  - -> contains -> [[5-2-routesbidspy]]
+  - <- contains <- [[design]]
+- **tsx** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - <- has_code_example <- [[6-3]]
+  - <- has_code_example <- [[6-4]]
+- **2-1. `fetch_all_pre_specs()` — 사전규격 전수 수집** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-g2b-api]]
+- **2-2. `fetch_all_procurement_plans()` — 발주계획 전수 수집** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-g2b-api]]
+- **2-3. SERVICE_PREFIX 변경** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-g2b-api]]
+- **3-1. 정규화 함수** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3-2. 입찰공고 기본 태그** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3-3. BidScore에 `bid_stage` 필드 추가** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3-4. `_normalize_title()` 접두사 확장** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **4-1. `fetch_bids_scored()` 수정** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4]]
+- **5-1. `routes_bids.py` 응답 구조** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[5-api]]
+- **5-2. `routes_bids.py` 코드 변경** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-api]]
+- **6-1. 타입 확장** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[6]]
+- **6-3. 단계 뱃지 컬럼** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[tsx]]
+  - <- contains <- [[6]]
+- **6-4. 단계 필터** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 2 connections
+  - -> has_code_example -> [[tsx]]
+  - <- contains <- [[6]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- has_code_example <- [[5-1-routesbidspy]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- has_code_example <- [[6-1]]
+- **1. 데이터 흐름** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[design]]
+- **4-2. `asyncio` import 추가** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **6-2. 결과 헤더 개선** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7. 수정 파일 요약** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[design]]
+- **8. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[design]]
+- **9. 검증 항목** (C:\project\tenopa proposer\-agent-master\docs\02-design\features\pre-bid-integration.design.md) -- 1 connections
+  - <- contains <- [[design]]
+
+## Internal Relationships
+- 2-1. `fetch_all_pre_specs()` — 사전규격 전수 수집 -> has_code_example -> python [EXTRACTED]
+- 2-2. `fetch_all_procurement_plans()` — 발주계획 전수 수집 -> has_code_example -> python [EXTRACTED]
+- 2-3. SERVICE_PREFIX 변경 -> has_code_example -> python [EXTRACTED]
+- 2. G2B API 신규 메서드 -> contains -> 2-1. `fetch_all_pre_specs()` — 사전규격 전수 수집 [EXTRACTED]
+- 2. G2B API 신규 메서드 -> contains -> 2-2. `fetch_all_procurement_plans()` — 발주계획 전수 수집 [EXTRACTED]
+- 2. G2B API 신규 메서드 -> contains -> 2-3. SERVICE_PREFIX 변경 [EXTRACTED]
+- 3. 스코어러 정규화 어댑터 -> contains -> 3-1. 정규화 함수 [EXTRACTED]
+- 3. 스코어러 정규화 어댑터 -> contains -> 3-2. 입찰공고 기본 태그 [EXTRACTED]
+- 3. 스코어러 정규화 어댑터 -> contains -> 3-3. BidScore에 `bid_stage` 필드 추가 [EXTRACTED]
+- 3. 스코어러 정규화 어댑터 -> contains -> 3-4. `_normalize_title()` 접두사 확장 [EXTRACTED]
+- 3-1. 정규화 함수 -> has_code_example -> python [EXTRACTED]
+- 3-2. 입찰공고 기본 태그 -> has_code_example -> python [EXTRACTED]
+- 3-3. BidScore에 `bid_stage` 필드 추가 -> has_code_example -> python [EXTRACTED]
+- 3-4. `_normalize_title()` 접두사 확장 -> has_code_example -> python [EXTRACTED]
+- 4. 파이프라인 통합 -> contains -> 4-1. `fetch_bids_scored()` 수정 [EXTRACTED]
+- 4. 파이프라인 통합 -> contains -> 4-2. `asyncio` import 추가 [EXTRACTED]
+- 4-1. `fetch_bids_scored()` 수정 -> has_code_example -> python [EXTRACTED]
+- 5-1. `routes_bids.py` 응답 구조 -> has_code_example -> json [EXTRACTED]
+- 5-2. `routes_bids.py` 코드 변경 -> has_code_example -> python [EXTRACTED]
+- 5. API 응답 변경 -> contains -> 5-1. `routes_bids.py` 응답 구조 [EXTRACTED]
+- 5. API 응답 변경 -> contains -> 5-2. `routes_bids.py` 코드 변경 [EXTRACTED]
+- 6. 프론트엔드 변경 -> contains -> 6-1. 타입 확장 [EXTRACTED]
+- 6. 프론트엔드 변경 -> contains -> 6-2. 결과 헤더 개선 [EXTRACTED]
+- 6. 프론트엔드 변경 -> contains -> 6-3. 단계 뱃지 컬럼 [EXTRACTED]
+- 6. 프론트엔드 변경 -> contains -> 6-4. 단계 필터 [EXTRACTED]
+- 6-1. 타입 확장 -> has_code_example -> typescript [EXTRACTED]
+- 6-3. 단계 뱃지 컬럼 -> has_code_example -> tsx [EXTRACTED]
+- 6-4. 단계 필터 -> has_code_example -> tsx [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 1. 데이터 흐름 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 2. G2B API 신규 메서드 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 3. 스코어러 정규화 어댑터 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 4. 파이프라인 통합 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 5. API 응답 변경 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 6. 프론트엔드 변경 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 7. 수정 파일 요약 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 8. 구현 순서 [EXTRACTED]
+- 사전규격 + 발주계획 통합 Design -> contains -> 9. 검증 항목 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, 사전규격 + 발주계획 통합 Design, 3. 스코어러 정규화 어댑터를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 pre-bid-integration.design.md이다.
+
+### Key Facts
+- ```python async def fetch_all_pre_specs( self, date_from: str,   # YYYYMMDDHHMM date_to: str,     # YYYYMMDDHHMM max_pages: int = 20, ) -> List[Dict]: ```
+- | 항목 | 내용 | |------|------| | Feature | pre-bid-integration | | 버전 | v1.0 | | 작성일 | 2026-03-21 | | 상태 | Design | | Plan 참조 | `docs/01-plan/features/pre-bid-integration.plan.md` |
+- 2-1. `fetch_all_pre_specs()` — 사전규격 전수 수집
+- 4-1. `fetch_bids_scored()` 수정
+- 5-1. `routes_bids.py` 응답 구조

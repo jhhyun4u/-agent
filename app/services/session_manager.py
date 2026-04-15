@@ -211,26 +211,68 @@ class ProposalSessionManager:
         return session
 
     async def mark_expired_proposals(self) -> int:
-        """PSM-05: 마감일이 지난 진행중 제안서를 expired로 자동 전환."""
+        """PSM-05: 마감일이 지난 진행중 제안서를 expired로 자동 전환 (StateMachine 사용)."""
         try:
             from app.utils.supabase_client import get_async_client
+            from app.state_machine import StateMachine
+            from app.services.state_validator import ProposalStatus
+
             client = await get_async_client()
+
             # deadline 컬럼 존재 확인
             try:
                 await client.table("proposals").select("deadline").limit(0).execute()
             except Exception:
                 logger.info("mark_expired_proposals: deadline 컬럼 미존재 — 스킵")
                 return 0
-            result = await (
-                client.table("proposals")
-                .update({"status": "expired", "updated_at": datetime.now(timezone.utc).isoformat()})
-                .in_("status", ["initialized", "processing", "draft"])
-                .lt("deadline", datetime.now(timezone.utc).isoformat())
-                .execute()
-            )
-            count = len(result.data or [])
-            if count:
-                logger.info(f"PSM-05: 마감 초과 제안서 {count}건 expired 전환")
+
+            # 만료 가능 상태: initialized, waiting, in_progress
+            expirable_statuses = [
+                ProposalStatus.INITIALIZED.value,
+                ProposalStatus.WAITING.value,
+                ProposalStatus.IN_PROGRESS.value,
+            ]
+
+            now = datetime.now(timezone.utc).isoformat()
+
+            # 만료된 제안서 조회
+            result = await client.table("proposals").select("id").in_(
+                "status", expirable_statuses
+            ).lt("deadline", now).execute()
+
+            expired_proposals = result.data or []
+            count = 0
+
+            if not expired_proposals:
+                return 0
+
+            # 각 제안서에 StateMachine.expire_proposal() 호출 (병렬 처리, 동시성 제한 Semaphore(10))
+            async def _expire_single(proposal_id: str, semaphore: asyncio.Semaphore) -> bool:
+                """단일 제안서 만료 처리"""
+                async with semaphore:
+                    try:
+                        sm = StateMachine(proposal_id)
+                        await sm.expire_proposal()
+                        logger.info(f"[EXPIRED] proposal_id={proposal_id} 만료 처리 완료")
+                        return True
+                    except Exception as e:
+                        logger.warning(f"[EXPIRED] proposal_id={proposal_id} 만료 처리 실패: {e}")
+                        return False
+
+            # Semaphore(10): 최대 10개 동시 작업 제한
+            semaphore = asyncio.Semaphore(10)
+            tasks = [
+                _expire_single(row["id"], semaphore)
+                for row in expired_proposals
+                if row.get("id")
+            ]
+
+            if tasks:
+                results = await asyncio.gather(*tasks, return_exceptions=False)
+                count = sum(1 for r in results if r)
+                if count:
+                    logger.info(f"PSM-05: 마감 초과 제안서 {count}건 expired 전환 완료")
+
             return count
         except Exception as e:
             logger.warning(f"mark_expired_proposals 실패 (무시): {e}")

@@ -1,0 +1,238 @@
+# python & STEP 8A: New Nodes with Artifact Versioning — Design Document
+Cohesion: 0.07 | Nodes: 43
+
+## Key Nodes
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 18 connections
+  - <- has_code_example <- [[1-customerprofile-8a-output]]
+  - <- has_code_example <- [[2-validationreport-8b-output]]
+  - <- has_code_example <- [[3-consolidatedproposal-8c-output]]
+  - <- has_code_example <- [[4-mockevalresult-8d-output]]
+  - <- has_code_example <- [[5-feedbacksummary-8e-output]]
+  - <- has_code_example <- [[state-schema-update]]
+  - <- has_code_example <- [[node-8a-proposalcustomeranalysis]]
+  - <- has_code_example <- [[node-8b-proposalsectionvalidator]]
+  - <- has_code_example <- [[node-8c-proposalsectionsconsolidation]]
+  - <- has_code_example <- [[node-8d-mockevaluationanalysis]]
+  - <- has_code_example <- [[node-8e-mockevaluationfeedbackprocessor]]
+  - <- has_code_example <- [[node-8f-proposalwritenextv2]]
+  - <- has_code_example <- [[graph-construction-updates]]
+  - <- has_code_example <- [[routing-functions]]
+  - <- has_code_example <- [[new-routes-file]]
+  - <- has_code_example <- [[endpoint-integration]]
+  - <- has_code_example <- [[automatic-versioning-pattern]]
+  - <- has_code_example <- [[implementation-details]]
+- **STEP 8A: New Nodes with Artifact Versioning — Design Document** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 11 connections
+  - -> contains -> [[table-of-contents]]
+  - -> contains -> [[architecture-overview]]
+  - -> contains -> [[state-schema-extensions]]
+  - -> contains -> [[node-specifications]]
+  - -> contains -> [[graph-integration]]
+  - -> contains -> [[api-endpoint-design]]
+  - -> contains -> [[versioning-integration]]
+  - -> contains -> [[error-handling-edge-cases]]
+  - -> contains -> [[implementation-checklist]]
+  - -> contains -> [[reference-files-structure]]
+  - -> contains -> [[design-goals-met]]
+- **✅ Implementation Checklist** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 7 connections
+  - -> contains -> [[phase-0-setup-prep]]
+  - -> contains -> [[phase-1-implementation-do]]
+  - -> contains -> [[phase-2-testing]]
+  - -> contains -> [[phase-3-gap-analysis]]
+  - -> contains -> [[phase-4-code-quality]]
+  - -> contains -> [[pre-deployment]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **🔧 Node Specifications** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 7 connections
+  - -> contains -> [[node-8a-proposalcustomeranalysis]]
+  - -> contains -> [[node-8b-proposalsectionvalidator]]
+  - -> contains -> [[node-8c-proposalsectionsconsolidation]]
+  - -> contains -> [[node-8d-mockevaluationanalysis]]
+  - -> contains -> [[node-8e-mockevaluationfeedbackprocessor]]
+  - -> contains -> [[node-8f-proposalwritenextv2]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **New Pydantic Models** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 6 connections
+  - -> contains -> [[1-customerprofile-8a-output]]
+  - -> contains -> [[2-validationreport-8b-output]]
+  - -> contains -> [[3-consolidatedproposal-8c-output]]
+  - -> contains -> [[4-mockevalresult-8d-output]]
+  - -> contains -> [[5-feedbacksummary-8e-output]]
+  - <- contains <- [[state-schema-extensions]]
+- **🚨 Error Handling & Edge Cases** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 4 connections
+  - -> contains -> [[error-scenarios]]
+  - -> contains -> [[implementation-details]]
+  - -> contains -> [[edge-case-handling]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **📡 API Endpoint Design** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 3 connections
+  - -> contains -> [[new-routes-file]]
+  - -> contains -> [[endpoint-integration]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **🏗️ Architecture Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 3 connections
+  - -> contains -> [[6-node-pipeline-architecture]]
+  - -> contains -> [[data-flow-with-versioning]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **🔀 Graph Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 3 connections
+  - -> contains -> [[graph-construction-updates]]
+  - -> contains -> [[routing-functions]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **📊 State Schema Extensions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 3 connections
+  - -> contains -> [[new-pydantic-models]]
+  - -> contains -> [[state-schema-update]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **🔄 Versioning Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 3 connections
+  - -> contains -> [[automatic-versioning-pattern]]
+  - -> contains -> [[version-selection-during-move]]
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **1. CustomerProfile (8A Output)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[new-pydantic-models]]
+- **2. ValidationReport (8B Output)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[new-pydantic-models]]
+- **3. ConsolidatedProposal (8C Output)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[new-pydantic-models]]
+- **4. MockEvalResult (8D Output)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[new-pydantic-models]]
+- **5. FeedbackSummary (8E Output)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[new-pydantic-models]]
+- **Automatic Versioning Pattern** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[versioning-integration]]
+- **Endpoint Integration** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[api-endpoint-design]]
+- **Graph Construction Updates** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[graph-integration]]
+- **Implementation Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[error-handling-edge-cases]]
+- **New Routes File** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[api-endpoint-design]]
+- **Node 8A: proposal_customer_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Node 8B: proposal_section_validator** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Node 8C: proposal_sections_consolidation** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Node 8D: mock_evaluation_analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Node 8E: mock_evaluation_feedback_processor** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Node 8F: proposal_write_next_v2** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[node-specifications]]
+- **Routing Functions** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[graph-integration]]
+- **State Schema Update** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[state-schema-extensions]]
+- **6-Node Pipeline Architecture** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[architecture-overview]]
+- **Data Flow with Versioning** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[architecture-overview]]
+- **🎯 Design Goals Met** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **Edge Case Handling** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[error-handling-edge-cases]]
+- **Error Scenarios** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[error-handling-edge-cases]]
+- **Phase 0: Setup (Prep)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **Phase 1: Implementation (Do)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **Phase 2: Testing** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **Phase 3: Gap Analysis** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **Phase 4: Code Quality** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **Pre-Deployment** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[implementation-checklist]]
+- **📚 Reference Files Structure** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **📋 Table of Contents** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[step-8a-new-nodes-with-artifact-versioning-design-document]]
+- **Version Selection During Move** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\step-8a-new-nodes\step-8a-new-nodes.design.md) -- 1 connections
+  - <- contains <- [[versioning-integration]]
+
+## Internal Relationships
+- 1. CustomerProfile (8A Output) -> has_code_example -> python [EXTRACTED]
+- 2. ValidationReport (8B Output) -> has_code_example -> python [EXTRACTED]
+- 3. ConsolidatedProposal (8C Output) -> has_code_example -> python [EXTRACTED]
+- 4. MockEvalResult (8D Output) -> has_code_example -> python [EXTRACTED]
+- 5. FeedbackSummary (8E Output) -> has_code_example -> python [EXTRACTED]
+- 📡 API Endpoint Design -> contains -> New Routes File [EXTRACTED]
+- 📡 API Endpoint Design -> contains -> Endpoint Integration [EXTRACTED]
+- 🏗️ Architecture Overview -> contains -> 6-Node Pipeline Architecture [EXTRACTED]
+- 🏗️ Architecture Overview -> contains -> Data Flow with Versioning [EXTRACTED]
+- Automatic Versioning Pattern -> has_code_example -> python [EXTRACTED]
+- Endpoint Integration -> has_code_example -> python [EXTRACTED]
+- 🚨 Error Handling & Edge Cases -> contains -> Error Scenarios [EXTRACTED]
+- 🚨 Error Handling & Edge Cases -> contains -> Implementation Details [EXTRACTED]
+- 🚨 Error Handling & Edge Cases -> contains -> Edge Case Handling [EXTRACTED]
+- Graph Construction Updates -> has_code_example -> python [EXTRACTED]
+- 🔀 Graph Integration -> contains -> Graph Construction Updates [EXTRACTED]
+- 🔀 Graph Integration -> contains -> Routing Functions [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Phase 0: Setup (Prep) [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Phase 1: Implementation (Do) [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Phase 2: Testing [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Phase 3: Gap Analysis [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Phase 4: Code Quality [EXTRACTED]
+- ✅ Implementation Checklist -> contains -> Pre-Deployment [EXTRACTED]
+- Implementation Details -> has_code_example -> python [EXTRACTED]
+- New Pydantic Models -> contains -> 1. CustomerProfile (8A Output) [EXTRACTED]
+- New Pydantic Models -> contains -> 2. ValidationReport (8B Output) [EXTRACTED]
+- New Pydantic Models -> contains -> 3. ConsolidatedProposal (8C Output) [EXTRACTED]
+- New Pydantic Models -> contains -> 4. MockEvalResult (8D Output) [EXTRACTED]
+- New Pydantic Models -> contains -> 5. FeedbackSummary (8E Output) [EXTRACTED]
+- New Routes File -> has_code_example -> python [EXTRACTED]
+- Node 8A: proposal_customer_analysis -> has_code_example -> python [EXTRACTED]
+- Node 8B: proposal_section_validator -> has_code_example -> python [EXTRACTED]
+- Node 8C: proposal_sections_consolidation -> has_code_example -> python [EXTRACTED]
+- Node 8D: mock_evaluation_analysis -> has_code_example -> python [EXTRACTED]
+- Node 8E: mock_evaluation_feedback_processor -> has_code_example -> python [EXTRACTED]
+- Node 8F: proposal_write_next_v2 -> has_code_example -> python [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8A: proposal_customer_analysis [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8B: proposal_section_validator [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8C: proposal_sections_consolidation [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8D: mock_evaluation_analysis [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8E: mock_evaluation_feedback_processor [EXTRACTED]
+- 🔧 Node Specifications -> contains -> Node 8F: proposal_write_next_v2 [EXTRACTED]
+- Routing Functions -> has_code_example -> python [EXTRACTED]
+- 📊 State Schema Extensions -> contains -> New Pydantic Models [EXTRACTED]
+- 📊 State Schema Extensions -> contains -> State Schema Update [EXTRACTED]
+- State Schema Update -> has_code_example -> python [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 📋 Table of Contents [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🏗️ Architecture Overview [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 📊 State Schema Extensions [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🔧 Node Specifications [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🔀 Graph Integration [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 📡 API Endpoint Design [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🔄 Versioning Integration [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🚨 Error Handling & Edge Cases [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> ✅ Implementation Checklist [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 📚 Reference Files Structure [EXTRACTED]
+- STEP 8A: New Nodes with Artifact Versioning — Design Document -> contains -> 🎯 Design Goals Met [EXTRACTED]
+- 🔄 Versioning Integration -> contains -> Automatic Versioning Pattern [EXTRACTED]
+- 🔄 Versioning Integration -> contains -> Version Selection During Move [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 python, STEP 8A: New Nodes with Artifact Versioning — Design Document, ✅ Implementation Checklist를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 step-8a-new-nodes.design.md이다.
+
+### Key Facts
+- All models inherit from `BaseModel` and use Python 3.11 type hints.
+- **Feature**: step-8a-new-nodes **Version**: 1.0 Design **Date**: 2026-03-30 **Status**: Ready for Implementation **Reference Plan**: `docs/01-plan/features/step-8a-new-nodes.plan.md`
+- Phase 0: Setup (Prep) - [ ] Create `app/graph/nodes/step8a_customer_analysis.py` - [ ] Create `app/graph/nodes/step8b_section_validator.py` - [ ] Create `app/graph/nodes/step8c_consolidation.py` - [ ] Create `app/graph/nodes/step8d_mock_evaluation.py` - [ ] Create…
+- Node 8A: proposal_customer_analysis
+- All models inherit from `BaseModel` and use Python 3.11 type hints.

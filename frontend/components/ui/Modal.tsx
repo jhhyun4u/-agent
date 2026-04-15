@@ -12,6 +12,7 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "full";
+  id?: string;
 }
 
 const SIZES = {
@@ -28,6 +29,7 @@ export default function Modal({
   title,
   children,
   size = "md",
+  id,
 }: ModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -47,12 +49,18 @@ export default function Modal({
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? `modal-title-${id || 'default'}` : undefined}
         className={`bg-[var(--card,#1c1c1c)] border border-[var(--border,#262626)] rounded-xl ${SIZES[size]} w-full max-h-[85vh] overflow-auto`}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
           <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border,#262626)]">
-            <h2 className="text-sm font-semibold text-[var(--text,#ededed)]">
+            <h2
+              id={`modal-title-${id || 'default'}`}
+              className="text-sm font-semibold text-[var(--text,#ededed)]"
+            >
               {title}
             </h2>
             <button

@@ -1,0 +1,215 @@
+# 3.1 그룹 1 — 핵심 CRUD (8파일) & Design: API 응답 구조 표준화
+Cohesion: 0.05 | Nodes: 44
+
+## Key Nodes
+- **3.1 그룹 1 — 핵심 CRUD (8파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 9 connections
+  - -> contains -> [[routesproposalpy]]
+  - -> contains -> [[routesworkflowpy]]
+  - -> contains -> [[routesartifactspy]]
+  - -> contains -> [[routesbidspy]]
+  - -> contains -> [[routeskbpy]]
+  - -> contains -> [[routesnotificationpy]]
+  - -> contains -> [[routesauthpy]]
+  - -> contains -> [[routesuserspy]]
+  - <- contains <- [[3]]
+- **Design: API 응답 구조 표준화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 8 connections
+  - -> references -> [[unresolvedrefapiresponsestandardizationplan]]
+  - -> contains -> [[1]]
+  - -> contains -> [[2-backend]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-frontend]]
+  - -> contains -> [[5-implementation-order]]
+  - -> contains -> [[6-file-summary]]
+  - -> contains -> [[version-history]]
+- **1. 표준 응답 스키마** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 7 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - -> contains -> [[14]]
+  - -> contains -> [[15]]
+  - <- contains <- [[design-api]]
+  - <- contains <- [[6-file-summary]]
+- **4. Frontend 변환 명세** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 6 connections
+  - -> contains -> [[41-frontendlibapits]]
+  - -> contains -> [[42-request]]
+  - -> contains -> [[43]]
+  - -> contains -> [[44-15]]
+  - -> contains -> [[45-apits]]
+  - <- contains <- [[design-api]]
+- **5. Implementation Order** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 6 connections
+  - -> contains -> [[phase-a-1]]
+  - -> contains -> [[phase-b-1-crud-8]]
+  - -> contains -> [[phase-b-2-10]]
+  - -> contains -> [[phase-b-3-6-g2bv31]]
+  - -> contains -> [[phase-c]]
+  - <- contains <- [[design-api]]
+- **3. 라우트별 변환 명세** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 5 connections
+  - -> contains -> [[31-1-crud-8]]
+  - -> contains -> [[32-2-10]]
+  - -> contains -> [[33-3-8]]
+  - -> contains -> [[34]]
+  - <- contains <- [[design-api]]
+- **6. File Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 5 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[24]]
+  - -> contains -> [[16]]
+  - -> contains -> [[4]]
+  - <- contains <- [[design-api]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 4 connections
+  - <- has_code_example <- [[11]]
+  - <- has_code_example <- [[12]]
+  - <- has_code_example <- [[13]]
+  - <- has_code_example <- [[14]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 4 connections
+  - <- has_code_example <- [[41-frontendlibapits]]
+  - <- has_code_example <- [[42-request]]
+  - <- has_code_example <- [[43]]
+  - <- has_code_example <- [[45-apits]]
+- **2. Backend — 표준 래퍼 모듈** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 3 connections
+  - -> contains -> [[21-appapiresponsepy]]
+  - -> contains -> [[22-responsemodel]]
+  - <- contains <- [[design-api]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - <- has_code_example <- [[21-appapiresponsepy]]
+  - <- has_code_example <- [[22-responsemodel]]
+- **1.1 성공 응답 (단건)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[1]]
+- **1.2 성공 응답 (리스트 + 페이지네이션)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[1]]
+- **1.3 성공 응답 (작업 완료, 데이터 없음)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[1]]
+- **1.4 에러 응답 (변경 없음)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[1]]
+- **2.1 `app/api/response.py` (신규)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-backend]]
+- **2.2 기존 `response_model` 처리 전략** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-backend]]
+- **4.1 `frontend/lib/api.ts` — 표준 타입 추가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-frontend]]
+- **4.2 `request()` 함수 수정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-frontend]]
+- **4.3 호출부 변환 패턴** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-frontend]]
+- **4.5 api.ts 메서드 반환 타입 변환** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4-frontend]]
+- **__unresolved__::ref::api_response_standardization_plan** () -- 1 connections
+  - <- references <- [[design-api]]
+- **수정 — 프론트엔드 (~16파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[6-file-summary]]
+- **1.5 설계 원칙** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[1]]
+- **수정 — 백엔드 (24파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[6-file-summary]]
+- **3.2 그룹 2 — 도메인 서비스 (10파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.3 그룹 3 — 보조 (8파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.4 예외 목록 (변환 안 함)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **예외 (4파일 — 변경 안 함)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[6-file-summary]]
+- **4.4 변환 대상 페이지 (15개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[4-frontend]]
+- **Phase A — 기반 (신규 1파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[5-implementation-order]]
+- **Phase B-1 — 핵심 CRUD (8파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[5-implementation-order]]
+- **Phase B-2 — 도메인 (10파일)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[5-implementation-order]]
+- **Phase B-3 — 보조 (6파일, G2B/v31 제외)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[5-implementation-order]]
+- **Phase C — 프론트엔드 동기화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[5-implementation-order]]
+- **routes_artifacts.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_auth.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_bids.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_kb.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_notification.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_proposal.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_users.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **routes_workflow.py** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[31-1-crud-8]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.design.md) -- 1 connections
+  - <- contains <- [[design-api]]
+
+## Internal Relationships
+- 1. 표준 응답 스키마 -> contains -> 1.1 성공 응답 (단건) [EXTRACTED]
+- 1. 표준 응답 스키마 -> contains -> 1.2 성공 응답 (리스트 + 페이지네이션) [EXTRACTED]
+- 1. 표준 응답 스키마 -> contains -> 1.3 성공 응답 (작업 완료, 데이터 없음) [EXTRACTED]
+- 1. 표준 응답 스키마 -> contains -> 1.4 에러 응답 (변경 없음) [EXTRACTED]
+- 1. 표준 응답 스키마 -> contains -> 1.5 설계 원칙 [EXTRACTED]
+- 1.1 성공 응답 (단건) -> has_code_example -> json [EXTRACTED]
+- 1.2 성공 응답 (리스트 + 페이지네이션) -> has_code_example -> json [EXTRACTED]
+- 1.3 성공 응답 (작업 완료, 데이터 없음) -> has_code_example -> json [EXTRACTED]
+- 1.4 에러 응답 (변경 없음) -> has_code_example -> json [EXTRACTED]
+- 2.1 `app/api/response.py` (신규) -> has_code_example -> python [EXTRACTED]
+- 2.2 기존 `response_model` 처리 전략 -> has_code_example -> python [EXTRACTED]
+- 2. Backend — 표준 래퍼 모듈 -> contains -> 2.1 `app/api/response.py` (신규) [EXTRACTED]
+- 2. Backend — 표준 래퍼 모듈 -> contains -> 2.2 기존 `response_model` 처리 전략 [EXTRACTED]
+- 3. 라우트별 변환 명세 -> contains -> 3.1 그룹 1 — 핵심 CRUD (8파일) [EXTRACTED]
+- 3. 라우트별 변환 명세 -> contains -> 3.2 그룹 2 — 도메인 서비스 (10파일) [EXTRACTED]
+- 3. 라우트별 변환 명세 -> contains -> 3.3 그룹 3 — 보조 (8파일) [EXTRACTED]
+- 3. 라우트별 변환 명세 -> contains -> 3.4 예외 목록 (변환 안 함) [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_proposal.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_workflow.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_artifacts.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_bids.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_kb.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_notification.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_auth.py [EXTRACTED]
+- 3.1 그룹 1 — 핵심 CRUD (8파일) -> contains -> routes_users.py [EXTRACTED]
+- 4.1 `frontend/lib/api.ts` — 표준 타입 추가 -> has_code_example -> typescript [EXTRACTED]
+- 4.2 `request()` 함수 수정 -> has_code_example -> typescript [EXTRACTED]
+- 4.3 호출부 변환 패턴 -> has_code_example -> typescript [EXTRACTED]
+- 4.5 api.ts 메서드 반환 타입 변환 -> has_code_example -> typescript [EXTRACTED]
+- 4. Frontend 변환 명세 -> contains -> 4.1 `frontend/lib/api.ts` — 표준 타입 추가 [EXTRACTED]
+- 4. Frontend 변환 명세 -> contains -> 4.2 `request()` 함수 수정 [EXTRACTED]
+- 4. Frontend 변환 명세 -> contains -> 4.3 호출부 변환 패턴 [EXTRACTED]
+- 4. Frontend 변환 명세 -> contains -> 4.4 변환 대상 페이지 (15개) [EXTRACTED]
+- 4. Frontend 변환 명세 -> contains -> 4.5 api.ts 메서드 반환 타입 변환 [EXTRACTED]
+- 5. Implementation Order -> contains -> Phase A — 기반 (신규 1파일) [EXTRACTED]
+- 5. Implementation Order -> contains -> Phase B-1 — 핵심 CRUD (8파일) [EXTRACTED]
+- 5. Implementation Order -> contains -> Phase B-2 — 도메인 (10파일) [EXTRACTED]
+- 5. Implementation Order -> contains -> Phase B-3 — 보조 (6파일, G2B/v31 제외) [EXTRACTED]
+- 5. Implementation Order -> contains -> Phase C — 프론트엔드 동기화 [EXTRACTED]
+- 6. File Summary -> contains -> 1. 표준 응답 스키마 [EXTRACTED]
+- 6. File Summary -> contains -> 수정 — 백엔드 (24파일) [EXTRACTED]
+- 6. File Summary -> contains -> 수정 — 프론트엔드 (~16파일) [EXTRACTED]
+- 6. File Summary -> contains -> 예외 (4파일 — 변경 안 함) [EXTRACTED]
+- Design: API 응답 구조 표준화 -> references -> __unresolved__::ref::api_response_standardization_plan [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 1. 표준 응답 스키마 [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 2. Backend — 표준 래퍼 모듈 [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 3. 라우트별 변환 명세 [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 4. Frontend 변환 명세 [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 5. Implementation Order [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> 6. File Summary [EXTRACTED]
+- Design: API 응답 구조 표준화 -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 3.1 그룹 1 — 핵심 CRUD (8파일), Design: API 응답 구조 표준화, 1. 표준 응답 스키마를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 api-response-standardization.design.md이다.
+
+### Key Facts
+- > **Feature**: api-response-standardization > **Version**: 1.0 > **Date**: 2026-03-26 > **Status**: Design > **Plan**: [api-response-standardization.plan.md](../../01-plan/features/api-response-standardization.plan.md)
+- 4.1 `frontend/lib/api.ts` — 표준 타입 추가
+- Phase A — 기반 (신규 1파일)
+- 3.1 그룹 1 — 핵심 CRUD (8파일)
+- ```json { "data": { "id": "abc", "title": "..." }, "meta": { "timestamp": "2026-03-26T12:00:00Z" } } ```

@@ -1,0 +1,132 @@
+# 3. 표준 응답 형식 정의 & Plan: API 응답 구조 표준화
+Cohesion: 0.08 | Nodes: 27
+
+## Key Nodes
+- **3. 표준 응답 형식 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 8 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - -> contains -> [[34]]
+  - -> contains -> [[35-status]]
+  - -> contains -> [[36-data]]
+  - -> contains -> [[37-meta]]
+  - <- contains <- [[plan-api]]
+- **Plan: API 응답 구조 표준화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 7 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+- **4. 구현 범위** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 5 connections
+  - -> contains -> [[41-phase-a-pydantic]]
+  - -> contains -> [[42-phase-b]]
+  - -> contains -> [[43-phase-c]]
+  - -> contains -> [[44]]
+  - <- contains <- [[plan-api]]
+- **json** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 4 connections
+  - <- has_code_example <- [[31]]
+  - <- has_code_example <- [[32]]
+  - <- has_code_example <- [[33]]
+  - <- has_code_example <- [[34]]
+- **1. 배경 및 문제 정의** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 4 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - <- contains <- [[plan-api]]
+- **2. 목표** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> contains -> [[21-non-goals]]
+  - <- contains <- [[plan-api]]
+- **3.1 단건 응답** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[3]]
+- **3.2 리스트 응답** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[3]]
+- **3.3 빈 응답 (작업 완료)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[3]]
+- **3.4 에러 응답 (기존 유지)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[3]]
+- **4.1 Phase A — 표준 래퍼 유틸리티 + Pydantic 모델 (기반)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[4]]
+- **4.3 Phase C — 프론트엔드 동기화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[4]]
+- **6. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 2 connections
+  - -> contains -> [[61]]
+  - <- contains <- [[plan-api]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- has_code_example <- [[41-phase-a-pydantic]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- has_code_example <- [[43-phase-c]]
+- **1.1 현황 진단** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 구체적 문제점** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.3 프론트엔드 영향도** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[1]]
+- **2.1 비목표 (Non-Goals)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[2]]
+- **3.5 설계 결정: `status` 필드 제외** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.6 설계 결정: `data` 키 통일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.7 설계 결정: `meta` 분리** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.2 Phase B — 라우트 마이그레이션 (핵심)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.4 예외 항목** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5. 위험 및 완화** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[plan-api]]
+- **6.1 예상 규모** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7. 성공 기준** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api-response-standardization\api-response-standardization.plan.md) -- 1 connections
+  - <- contains <- [[plan-api]]
+
+## Internal Relationships
+- 1. 배경 및 문제 정의 -> contains -> 1.1 현황 진단 [EXTRACTED]
+- 1. 배경 및 문제 정의 -> contains -> 1.2 구체적 문제점 [EXTRACTED]
+- 1. 배경 및 문제 정의 -> contains -> 1.3 프론트엔드 영향도 [EXTRACTED]
+- 2. 목표 -> contains -> 2.1 비목표 (Non-Goals) [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.1 단건 응답 [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.2 리스트 응답 [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.3 빈 응답 (작업 완료) [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.4 에러 응답 (기존 유지) [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.5 설계 결정: `status` 필드 제외 [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.6 설계 결정: `data` 키 통일 [EXTRACTED]
+- 3. 표준 응답 형식 정의 -> contains -> 3.7 설계 결정: `meta` 분리 [EXTRACTED]
+- 3.1 단건 응답 -> has_code_example -> json [EXTRACTED]
+- 3.2 리스트 응답 -> has_code_example -> json [EXTRACTED]
+- 3.3 빈 응답 (작업 완료) -> has_code_example -> json [EXTRACTED]
+- 3.4 에러 응답 (기존 유지) -> has_code_example -> json [EXTRACTED]
+- 4. 구현 범위 -> contains -> 4.1 Phase A — 표준 래퍼 유틸리티 + Pydantic 모델 (기반) [EXTRACTED]
+- 4. 구현 범위 -> contains -> 4.2 Phase B — 라우트 마이그레이션 (핵심) [EXTRACTED]
+- 4. 구현 범위 -> contains -> 4.3 Phase C — 프론트엔드 동기화 [EXTRACTED]
+- 4. 구현 범위 -> contains -> 4.4 예외 항목 [EXTRACTED]
+- 4.1 Phase A — 표준 래퍼 유틸리티 + Pydantic 모델 (기반) -> has_code_example -> python [EXTRACTED]
+- 4.3 Phase C — 프론트엔드 동기화 -> has_code_example -> typescript [EXTRACTED]
+- 6. 구현 순서 -> contains -> 6.1 예상 규모 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 1. 배경 및 문제 정의 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 2. 목표 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 3. 표준 응답 형식 정의 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 4. 구현 범위 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 5. 위험 및 완화 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 6. 구현 순서 [EXTRACTED]
+- Plan: API 응답 구조 표준화 -> contains -> 7. 성공 기준 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 3. 표준 응답 형식 정의, Plan: API 응답 구조 표준화, 4. 구현 범위를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 api-response-standardization.plan.md이다.
+
+### Key Facts
+- > **Feature**: api-response-standardization > **Version**: 1.0 > **Date**: 2026-03-26 > **Status**: Plan
+- 4.1 Phase A — 표준 래퍼 유틸리티 + Pydantic 모델 (기반)
+- ```json { "data": { ... }, "meta": { "timestamp": "2026-03-26T12:00:00Z" } } ```
+- | # | 목표 | 측정 기준 | |---|------|----------| | G-1 | 모든 API 엔드포인트에 통일된 응답 래퍼 적용 | 래핑 패턴 1종으로 수렴 | | G-2 | 모든 리스트 엔드포인트에 페이지네이션 메타 포함 | `total`, `offset`, `limit` 필드 100% | | G-3 | response_model 적용률 100% | OpenAPI 스키마 자동 생성 확인 | | G-4 | 프론트엔드 api.ts 동기화 | 빌드 에러 0, 통일된 파싱 패턴 |
+- ```json { "data": { ... }, "meta": { "timestamp": "2026-03-26T12:00:00Z" } } ```

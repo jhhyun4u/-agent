@@ -1,0 +1,223 @@
+# proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) & 4. 실행 단계 요약 (Do Summary)
+Cohesion: 0.04 | Nodes: 52
+
+## Key Nodes
+- **proposal-agent-v1 PDCA 완료 보고서 (v3.6.2)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 10 connections
+  - -> contains -> [[1-executive-summary]]
+  - -> contains -> [[2-plan-summary]]
+  - -> contains -> [[3-design-summary]]
+  - -> contains -> [[4-do-summary]]
+  - -> contains -> [[5-check-results]]
+  - -> contains -> [[6-key-decisions-trade-offs]]
+  - -> contains -> [[7-lessons-learned]]
+  - -> contains -> [[8-next-steps]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **4. 실행 단계 요약 (Do Summary)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 8 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42-phase-35-grant-writer-best-practice-completed]]
+  - -> contains -> [[43-phase-4-g2b-completed]]
+  - -> contains -> [[44-phase-45-completed]]
+  - -> contains -> [[45-phase-5-db-2026-03-18-completed]]
+  - -> contains -> [[46-v362-2026-03-25-completed]]
+  - -> contains -> [[47]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **5. 검증 단계 결과 (Check Results)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 7 connections
+  - -> contains -> [[51-vs]]
+  - -> contains -> [[52-vs]]
+  - -> contains -> [[53-v361]]
+  - -> contains -> [[54-2]]
+  - -> contains -> [[55-low-2]]
+  - -> contains -> [[56-v362]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[451-4]]
+  - -> contains -> [[452-7]]
+  - -> contains -> [[453-ddl]]
+  - -> contains -> [[454]]
+  - <- contains <- [[4-do-summary]]
+- **6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[61]]
+  - -> contains -> [[62]]
+  - -> contains -> [[63-ppt-3-stage-v36]]
+  - -> contains -> [[64-db-v361]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **8. 다음 단계 (Next Steps)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 5 connections
+  - -> contains -> [[81-phase-5]]
+  - -> contains -> [[82]]
+  - -> contains -> [[83]]
+  - -> contains -> [[84]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **3. 설계 단계 요약 (Design Summary)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[31]]
+  - -> contains -> [[32]]
+  - -> contains -> [[33]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **7. 교훈 및 개선 사항 (Lessons Learned)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72]]
+  - -> contains -> [[73]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **9. 부록: 문서 참조** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 4 connections
+  - -> contains -> [[91-pdca]]
+  - -> contains -> [[92]]
+  - -> contains -> [[93]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **1. 실행 개요 (Executive Summary)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **2. 계획 단계 요약 (Plan Summary)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[21]]
+  - -> contains -> [[22]]
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 3 connections
+  - -> contains -> [[7]]
+  - -> contains -> [[criticalhigh-8]]
+  - <- contains <- [[4-do-summary]]
+- **4.5.1 누락 테이블 4개 생성 완료** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[45-phase-5-db-2026-03-18-completed]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- has_code_example <- [[451-4]]
+- **10. 서명 및 승인** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[proposal-agent-v1-pdca-v362]]
+- **1.1 완료 현황** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **1.2 핵심 성과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[1-executive-summary]]
+- **2.1 요구사항 문서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[2-plan-summary]]
+- **2.2 기획 핵심 항목** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[2-plan-summary]]
+- **3.1 설계 문서 진화** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **3.2 설계 모듈 구조** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **3.3 아키텍처 핵심 결정** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[3-design-summary]]
+- **4.1 구현 범위** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.2 Phase 3.5 — Grant-Writer Best Practice 프롬프트 개선 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.3 Phase 4 — G2B 낙찰 + 성과 추적 ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.5.2 컬럼 참조 정합성 수정 (7파일)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[45-phase-5-db-2026-03-18-completed]]
+- **4.5.3 DDL 동기화** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[45-phase-5-db-2026-03-18-completed]]
+- **4.5.4 통합 테스트 결과** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[45-phase-5-db-2026-03-18-completed]]
+- **4.6 v3.6.2 — 워크플로 다이어그램 개선 (2026-03-25) ✅ COMPLETED** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **4.7 구현 통계** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[4-do-summary]]
+- **5.1 설계 vs 구현 갭 분석 (스키마 정합성 포함)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.2 설계 vs 요구사항 갭 분석** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.3 스키마 정합성 분석 (v3.6.1)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.4 설계-구현 차이 잔여 (2건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.5 LOW 잔여 갭 (2건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **5.6 워크플로 다이어그램 갭 분석 (v3.6.2)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[5-check-results]]
+- **6.1 아키텍처 결정** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.2 제안서 작성 패턴 진화** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.3 PPT 3-stage 파이프라인 (v3.6)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **6.4 DB 스키마-코드 정합성 (v3.6.1)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[6-key-decisions-trade-offs]]
+- **갭 해소 (7건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[44-phase-45-completed]]
+- **7.1 잘 진행된 부분** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.2 개선이 필요한 부분** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **7.3 다음에 적용할 사항** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[7-lessons-learned]]
+- **8.1 Phase 5 구현 계획** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.2 잔여 갭 해소 일정** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.3 품질 보증 계획** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **8.4 배포 준비 체크리스트** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[8-next-steps]]
+- **9.1 PDCA 문서 구조** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 관련 설계 문서** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.3 코드 저장소** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **CRITICAL/HIGH 코드 품질 수정 (8건)** (C:\project\tenopa proposer\-agent-master\docs\04-report\features\proposal-agent-v1.report.md) -- 1 connections
+  - <- contains <- [[44-phase-45-completed]]
+
+## Internal Relationships
+- 1. 실행 개요 (Executive Summary) -> contains -> 1.1 완료 현황 [EXTRACTED]
+- 1. 실행 개요 (Executive Summary) -> contains -> 1.2 핵심 성과 [EXTRACTED]
+- 2. 계획 단계 요약 (Plan Summary) -> contains -> 2.1 요구사항 문서 [EXTRACTED]
+- 2. 계획 단계 요약 (Plan Summary) -> contains -> 2.2 기획 핵심 항목 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.1 설계 문서 진화 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.2 설계 모듈 구조 [EXTRACTED]
+- 3. 설계 단계 요약 (Design Summary) -> contains -> 3.3 아키텍처 핵심 결정 [EXTRACTED]
+- 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED -> contains -> 갭 해소 (7건) [EXTRACTED]
+- 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED -> contains -> CRITICAL/HIGH 코드 품질 수정 (8건) [EXTRACTED]
+- 4.5.1 누락 테이블 4개 생성 완료 -> has_code_example -> sql [EXTRACTED]
+- 4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED -> contains -> 4.5.1 누락 테이블 4개 생성 완료 [EXTRACTED]
+- 4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED -> contains -> 4.5.2 컬럼 참조 정합성 수정 (7파일) [EXTRACTED]
+- 4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED -> contains -> 4.5.3 DDL 동기화 [EXTRACTED]
+- 4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED -> contains -> 4.5.4 통합 테스트 결과 [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.1 구현 범위 [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.2 Phase 3.5 — Grant-Writer Best Practice 프롬프트 개선 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.3 Phase 4 — G2B 낙찰 + 성과 추적 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.4 Phase 4.5 — 갭 해소 + 코드 품질 수정 ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.5 Phase 5 — DB 스키마 정합성 (2026-03-18) ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.6 v3.6.2 — 워크플로 다이어그램 개선 (2026-03-25) ✅ COMPLETED [EXTRACTED]
+- 4. 실행 단계 요약 (Do Summary) -> contains -> 4.7 구현 통계 [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.1 설계 vs 구현 갭 분석 (스키마 정합성 포함) [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.2 설계 vs 요구사항 갭 분석 [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.3 스키마 정합성 분석 (v3.6.1) [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.4 설계-구현 차이 잔여 (2건) [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.5 LOW 잔여 갭 (2건) [EXTRACTED]
+- 5. 검증 단계 결과 (Check Results) -> contains -> 5.6 워크플로 다이어그램 갭 분석 (v3.6.2) [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.1 아키텍처 결정 [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.2 제안서 작성 패턴 진화 [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.3 PPT 3-stage 파이프라인 (v3.6) [EXTRACTED]
+- 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) -> contains -> 6.4 DB 스키마-코드 정합성 (v3.6.1) [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.1 잘 진행된 부분 [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.2 개선이 필요한 부분 [EXTRACTED]
+- 7. 교훈 및 개선 사항 (Lessons Learned) -> contains -> 7.3 다음에 적용할 사항 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.1 Phase 5 구현 계획 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.2 잔여 갭 해소 일정 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.3 품질 보증 계획 [EXTRACTED]
+- 8. 다음 단계 (Next Steps) -> contains -> 8.4 배포 준비 체크리스트 [EXTRACTED]
+- 9. 부록: 문서 참조 -> contains -> 9.1 PDCA 문서 구조 [EXTRACTED]
+- 9. 부록: 문서 참조 -> contains -> 9.2 관련 설계 문서 [EXTRACTED]
+- 9. 부록: 문서 참조 -> contains -> 9.3 코드 저장소 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 1. 실행 개요 (Executive Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 2. 계획 단계 요약 (Plan Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 3. 설계 단계 요약 (Design Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 4. 실행 단계 요약 (Do Summary) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 5. 검증 단계 결과 (Check Results) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 6. 주요 결정과 트레이드오프 (Key Decisions & Trade-offs) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 7. 교훈 및 개선 사항 (Lessons Learned) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 8. 다음 단계 (Next Steps) [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 9. 부록: 문서 참조 [EXTRACTED]
+- proposal-agent-v1 PDCA 완료 보고서 (v3.6.2) -> contains -> 10. 서명 및 승인 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 proposal-agent-v1 PDCA 완료 보고서 (v3.6.2), 4. 실행 단계 요약 (Do Summary), 5. 검증 단계 결과 (Check Results)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-agent-v1.report.md이다.
+
+### Key Facts
+- > **Summary**: TENOPA 용역제안 AI Coworker — LangGraph 기반 제안서 자동 작성 에이전트 완료 보고서 (워크플로 다이어그램 개선) > > **Project**: TENOPA Proposer (내부 용역제안 플랫폼) > **Feature**: proposal-agent-v1 (제안 에이전트 v1) > **Created**: 2026-03-16 > **Last Modified**: 2026-03-25 > **Status**: ✅ Approved > **Design Match Rate**: 99%…
+- 5.1 설계 vs 구현 갭 분석 (스키마 정합성 포함)
+- 4.5.1 누락 테이블 4개 생성 완료
+- ```sql CREATE TABLE notifications (...) CREATE TABLE section_locks (...) CREATE TABLE ai_task_logs (...) CREATE TABLE compliance_matrix (...) ```
+- | Conditional Edge 라우팅 | | 08 | 08-api-endpoints.md | §12 | API 설계 | | 09 | 09-frontend.md | §13, §31 | 프론트엔드 컴포넌트 | | 10 | 10-lite-mode.md | §14 | 간이 모드 | | 11 | 11-database-schema.md | §15 | PostgreSQL 스키마 (30+ 테이블) | | 12 | 12-prompts.md | §16, §29, §32 | 프롬프트 설계 | | 13 |…

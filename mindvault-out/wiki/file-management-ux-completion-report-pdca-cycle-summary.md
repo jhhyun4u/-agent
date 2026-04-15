@@ -1,0 +1,139 @@
+# File Management UX Completion Report & PDCA Cycle Summary
+Cohesion: 0.06 | Nodes: 31
+
+## Key Nodes
+- **File Management UX Completion Report** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 7 connections
+  - -> contains -> [[overview]]
+  - -> contains -> [[pdca-cycle-summary]]
+  - -> contains -> [[results]]
+  - -> contains -> [[lessons-learned]]
+  - -> contains -> [[technical-details]]
+  - -> contains -> [[next-steps]]
+  - -> contains -> [[appendix-implementation-statistics]]
+- **PDCA Cycle Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 6 connections
+  - -> contains -> [[plan]]
+  - -> contains -> [[design]]
+  - -> contains -> [[do]]
+  - -> contains -> [[check]]
+  - -> contains -> [[act]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **Appendix: Implementation Statistics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 4 connections
+  - -> contains -> [[code-changes-summary]]
+  - -> contains -> [[browser-framework-support]]
+  - -> contains -> [[database-schema-existing]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **Do** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 4 connections
+  - -> contains -> [[1-frontend-ui-component-frontendcomponentsdetailrightpaneltsx]]
+  - -> contains -> [[2-api-client-frontendlibapits]]
+  - -> contains -> [[3-backend-api-appapiroutesfilespy]]
+  - <- contains <- [[pdca-cycle-summary]]
+- **Lessons Learned** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 4 connections
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[areas-for-improvement]]
+  - -> contains -> [[to-apply-next-time]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **Results** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 4 connections
+  - -> contains -> [[completed-items]]
+  - -> contains -> [[accessibility-improvements]]
+  - -> contains -> [[quality-metrics]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **Technical Details** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 4 connections
+  - -> contains -> [[validation-chain]]
+  - -> contains -> [[upload-flow]]
+  - -> contains -> [[file-preview-modal]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **3. Backend API: `app/api/routes_files.py`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[do]]
+- **Database Schema (Existing)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[appendix-implementation-statistics]]
+- **Overview** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 2 connections
+  - -> contains -> [[diagnostic-trigger]]
+  - <- contains <- [[file-management-ux-completion-report]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- has_code_example <- [[3-backend-api-appapiroutesfilespy]]
+- **sql** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- has_code_example <- [[database-schema-existing]]
+- **1. Frontend UI Component: `frontend/components/DetailRightPanel.tsx`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[do]]
+- **2. API Client: `frontend/lib/api.ts`** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[do]]
+- **Accessibility Improvements** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[results]]
+- **Act** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-summary]]
+- **Areas for Improvement** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Browser & Framework Support** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[appendix-implementation-statistics]]
+- **Check** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-summary]]
+- **Code Changes Summary** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[appendix-implementation-statistics]]
+- **Completed Items** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[results]]
+- **Design** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-summary]]
+- **Diagnostic Trigger** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[overview]]
+- **File Preview Modal** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[technical-details]]
+- **Next Steps** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[file-management-ux-completion-report]]
+- **Plan** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[pdca-cycle-summary]]
+- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[results]]
+- **To Apply Next Time** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Upload Flow** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[technical-details]]
+- **Validation Chain** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[technical-details]]
+- **What Went Well** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\file-management-ux\file-management-ux.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+
+## Internal Relationships
+- 3. Backend API: `app/api/routes_files.py` -> has_code_example -> python [EXTRACTED]
+- Appendix: Implementation Statistics -> contains -> Code Changes Summary [EXTRACTED]
+- Appendix: Implementation Statistics -> contains -> Browser & Framework Support [EXTRACTED]
+- Appendix: Implementation Statistics -> contains -> Database Schema (Existing) [EXTRACTED]
+- Database Schema (Existing) -> has_code_example -> sql [EXTRACTED]
+- Do -> contains -> 1. Frontend UI Component: `frontend/components/DetailRightPanel.tsx` [EXTRACTED]
+- Do -> contains -> 2. API Client: `frontend/lib/api.ts` [EXTRACTED]
+- Do -> contains -> 3. Backend API: `app/api/routes_files.py` [EXTRACTED]
+- File Management UX Completion Report -> contains -> Overview [EXTRACTED]
+- File Management UX Completion Report -> contains -> PDCA Cycle Summary [EXTRACTED]
+- File Management UX Completion Report -> contains -> Results [EXTRACTED]
+- File Management UX Completion Report -> contains -> Lessons Learned [EXTRACTED]
+- File Management UX Completion Report -> contains -> Technical Details [EXTRACTED]
+- File Management UX Completion Report -> contains -> Next Steps [EXTRACTED]
+- File Management UX Completion Report -> contains -> Appendix: Implementation Statistics [EXTRACTED]
+- Lessons Learned -> contains -> What Went Well [EXTRACTED]
+- Lessons Learned -> contains -> Areas for Improvement [EXTRACTED]
+- Lessons Learned -> contains -> To Apply Next Time [EXTRACTED]
+- Overview -> contains -> Diagnostic Trigger [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Plan [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Design [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Do [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Check [EXTRACTED]
+- PDCA Cycle Summary -> contains -> Act [EXTRACTED]
+- Results -> contains -> Completed Items [EXTRACTED]
+- Results -> contains -> Accessibility Improvements [EXTRACTED]
+- Results -> contains -> Quality Metrics [EXTRACTED]
+- Technical Details -> contains -> Validation Chain [EXTRACTED]
+- Technical Details -> contains -> Upload Flow [EXTRACTED]
+- Technical Details -> contains -> File Preview Modal [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 File Management UX Completion Report, PDCA Cycle Summary, Appendix: Implementation Statistics를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 file-management-ux.report.md이다.
+
+### Key Facts
+- > **Summary**: Diagnostic-driven UX optimization for file management. 10 improvement items implemented with 96% match rate across frontend and backend. > > **Analysis Date**: 2026-03-21 > **Status**: Completed (Match Rate: 96%)
+- Plan No formal Plan document — diagnostic-driven implementation. User identified 10 UX improvement items from usage experience.
+- Plan No formal Plan document — diagnostic-driven implementation. User identified 10 UX improvement items from usage experience.
+- **Changes** (lines 1–226): - File upload validation strengthened (lines 43–60): - Path traversal prevention via `re.sub()` filename sanitization - Format whitelist (pdf, docx, hwp, hwpx, xlsx, pptx, png, jpg, jpeg) - File size check via `settings.max_file_size_mb` - ZIP bundle endpoint (lines…
+- ```sql proposal_files ( id UUID PRIMARY KEY, proposal_id UUID → proposals(id), category VARCHAR (rfp | reference | attachment), filename VARCHAR, storage_path VARCHAR, file_type VARCHAR (extension), file_size BIGINT, uploaded_by UUID → users(id), description TEXT, created_at TIMESTAMP, updated_at…

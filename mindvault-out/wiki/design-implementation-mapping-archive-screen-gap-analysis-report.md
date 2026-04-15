@@ -1,0 +1,167 @@
+# Design-Implementation Mapping & Archive Screen — Gap Analysis Report
+Cohesion: 0.05 | Nodes: 38
+
+## Key Nodes
+- **Design-Implementation Mapping** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 20 connections
+  - -> contains -> [[s1-header]]
+  - -> contains -> [[s2-filter-bar-scope-tabs]]
+  - -> contains -> [[s3-filter-bar-win-result-filters]]
+  - -> contains -> [[s4-error-banner]]
+  - -> contains -> [[s5-table-structure]]
+  - -> contains -> [[s6-table-columns-11-total]]
+  - -> contains -> [[s7-sorting]]
+  - -> contains -> [[s8-row-click-handler]]
+  - -> contains -> [[s9-loading-state]]
+  - -> contains -> [[s10-empty-state]]
+  - -> contains -> [[s11-pagination]]
+  - -> contains -> [[s12-detail-modal]]
+  - -> contains -> [[s13-modal-overview-section]]
+  - -> contains -> [[s14-modal-divider]]
+  - -> contains -> [[s15-modal-artifacts-section]]
+  - -> contains -> [[f1-formatting-functions]]
+  - -> contains -> [[f2-api-integration]]
+  - -> contains -> [[f3-state-management]]
+  - -> contains -> [[f4-data-binding]]
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **Archive Screen — Gap Analysis Report** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 10 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[design-implementation-mapping]]
+  - -> contains -> [[success-criteria]]
+  - -> contains -> [[structural-alignment]]
+  - -> contains -> [[functional-completeness]]
+  - -> contains -> [[api-contract-verification]]
+  - -> contains -> [[deviations-from-design]]
+  - -> contains -> [[quality-metrics]]
+  - -> contains -> [[conclusion]]
+  - <- contains <- [[archive-screenanalysis]]
+- **Functional Completeness** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 4 connections
+  - -> contains -> [[data-flow]]
+  - -> contains -> [[user-interactions]]
+  - -> contains -> [[styling-precision]]
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **Structural Alignment** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 4 connections
+  - -> contains -> [[components-present]]
+  - -> contains -> [[imports-correct]]
+  - -> contains -> [[page-layout]]
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **API Contract Verification** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 2 connections
+  - -> contains -> [[get-apiarchivelist]]
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **GET /api/archive/list** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[api-contract-verification]]
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- has_code_example <- [[get-apiarchivelist]]
+- **archive-screen.analysis** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - -> contains -> [[archive-screen-gap-analysis-report]]
+- **Components Present** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[structural-alignment]]
+- **Conclusion** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **Data Flow** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[functional-completeness]]
+- **Deviations from Design** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **✅ F1: Formatting Functions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ F2: API Integration** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ F3: State Management** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ F4: Data Binding** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **Imports Correct** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[structural-alignment]]
+- **Page Layout** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[structural-alignment]]
+- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **✅ S10: Empty State** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S11: Pagination** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S12: Detail Modal** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S13: Modal Overview Section** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S14: Modal Divider** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S15: Modal Artifacts Section** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S1: Header** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S2: Filter Bar — Scope Tabs** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S3: Filter Bar — Win Result Filters** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S4: Error Banner** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S5: Table Structure** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S6: Table Columns (11 total)** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S7: Sorting** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S8: Row Click Handler** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **✅ S9: Loading State** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[design-implementation-mapping]]
+- **Styling Precision** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[functional-completeness]]
+- **Success Criteria** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[archive-screen-gap-analysis-report]]
+- **User Interactions** (C:\project\tenopa proposer\-agent-master\docs\03-analysis\archive-screen.analysis.md) -- 1 connections
+  - <- contains <- [[functional-completeness]]
+
+## Internal Relationships
+- archive-screen.analysis -> contains -> Archive Screen — Gap Analysis Report [EXTRACTED]
+- API Contract Verification -> contains -> GET /api/archive/list [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Executive Summary [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Design-Implementation Mapping [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Success Criteria [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Structural Alignment [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Functional Completeness [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> API Contract Verification [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Deviations from Design [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Quality Metrics [EXTRACTED]
+- Archive Screen — Gap Analysis Report -> contains -> Conclusion [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S1: Header [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S2: Filter Bar — Scope Tabs [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S3: Filter Bar — Win Result Filters [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S4: Error Banner [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S5: Table Structure [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S6: Table Columns (11 total) [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S7: Sorting [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S8: Row Click Handler [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S9: Loading State [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S10: Empty State [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S11: Pagination [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S12: Detail Modal [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S13: Modal Overview Section [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S14: Modal Divider [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ S15: Modal Artifacts Section [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ F1: Formatting Functions [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ F2: API Integration [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ F3: State Management [EXTRACTED]
+- Design-Implementation Mapping -> contains -> ✅ F4: Data Binding [EXTRACTED]
+- Functional Completeness -> contains -> Data Flow [EXTRACTED]
+- Functional Completeness -> contains -> User Interactions [EXTRACTED]
+- Functional Completeness -> contains -> Styling Precision [EXTRACTED]
+- GET /api/archive/list -> has_code_example -> typescript [EXTRACTED]
+- Structural Alignment -> contains -> Components Present [EXTRACTED]
+- Structural Alignment -> contains -> Imports Correct [EXTRACTED]
+- Structural Alignment -> contains -> Page Layout [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Design-Implementation Mapping, Archive Screen — Gap Analysis Report, Functional Completeness를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 archive-screen.analysis.md이다.
+
+### Key Facts
+- ✅ S1: Header **Design:** "종료 프로젝트" header with border **Implementation:** - Location: `archive/page.tsx` line 167 - Code: `<header className="border-b border-[#262626] px-6 py-4 bg-[#111111]">` - ✅ Matches exactly
+- Data Flow - ✅ Load items on mount + filter change - ✅ Parse API response (data + meta) - ✅ Update pagination state - ✅ Sort client-side (useMemo) - ✅ Filter state → API params - ✅ Error state display - ✅ Empty state display - ✅ Loading skeleton display
+- Components Present - ✅ ArchivePage (main) - ✅ Modal (from components/ui) - ✅ ProjectArchivePanel (from components) - ✅ WinResultBadge (inline) - ✅ All formatting functions
+- GET /api/archive/list **Request:** ```typescript { scope: "company", win_result: "", page: 1 } ```
+- ✅ F2: API Integration **Design:** GET /api/archive/list with filters **Implementation:** - Line 125-129: `api.archive.list({ scope, win_result, page })` - Response unpacking: `res.data`, `res.meta` - Error handling: try-catch - ✅ Matches design

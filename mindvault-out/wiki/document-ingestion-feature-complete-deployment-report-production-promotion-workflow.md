@@ -1,0 +1,207 @@
+# 📊 Document Ingestion Feature - Complete Deployment Report & Production Promotion Workflow
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **📊 Document Ingestion Feature - Complete Deployment Report** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 18 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[deployment-timeline]]
+  - -> contains -> [[what-was-delivered]]
+  - -> contains -> [[test-results-summary]]
+  - -> contains -> [[code-quality-assessment]]
+  - -> contains -> [[documentation-provided]]
+  - -> contains -> [[current-state-branches-commits]]
+  - -> contains -> [[success-criteria-all-met]]
+  - -> contains -> [[production-promotion-workflow]]
+  - -> contains -> [[key-contacts-responsibilities]]
+  - -> contains -> [[known-issues-mitigations]]
+  - -> contains -> [[confidence-assessment]]
+  - -> contains -> [[next-actions-priority-order]]
+  - -> contains -> [[production-deployment-readiness-matrix]]
+  - -> contains -> [[final-checklist]]
+  - -> contains -> [[sign-off]]
+  - -> contains -> [[document-information]]
+  - -> contains -> [[recommendation]]
+- **Production Promotion Workflow** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 7 connections
+  - -> contains -> [[step-1-code-review-approval-now]]
+  - -> contains -> [[step-2-merge-to-main]]
+  - -> contains -> [[step-3-production-deployment]]
+  - -> contains -> [[step-4-production-validation-first-hour]]
+  - -> contains -> [[step-5-extended-monitoring-24-48-hours]]
+  - -> contains -> [[step-6-production-sign-off-day-2]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Code Quality Assessment** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 5 connections
+  - -> contains -> [[security-review]]
+  - -> contains -> [[code-structure]]
+  - -> contains -> [[database-design]]
+  - -> contains -> [[api-design]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Next Actions (Priority Order)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 5 connections
+  - -> contains -> [[immediate-next-1-hour]]
+  - -> contains -> [[short-term-next-1-2-hours]]
+  - -> contains -> [[medium-term-next-24-hours]]
+  - -> contains -> [[post-launch-day-2]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Current State (Branches & Commits)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 4 connections
+  - -> contains -> [[staging-branch-ready-for-merge]]
+  - -> contains -> [[pull-requests]]
+  - -> contains -> [[database]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Documentation Provided** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 4 connections
+  - -> contains -> [[for-developers]]
+  - -> contains -> [[for-qa-operations]]
+  - -> contains -> [[status-readiness]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Known Issues & Mitigations** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 4 connections
+  - -> contains -> [[issue-1-small-files-may-fail-processing-known-managed]]
+  - -> contains -> [[issue-2-embedding-api-rate-limits-known-configurable]]
+  - -> contains -> [[issue-3-hanword-format-limited-testing-known-monitored]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Test Results Summary** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 4 connections
+  - -> contains -> [[e2e-integration-tests-staging-validation]]
+  - -> contains -> [[performance-benchmarks-all-targets-met]]
+  - -> contains -> [[manual-smoke-tests-previous-session]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Executive Summary** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 2 connections
+  - -> contains -> [[key-metrics]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Step 2: Merge to Main** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[production-promotion-workflow]]
+- **What Was Delivered** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 2 connections
+  - -> contains -> [[feature-completeness-100]]
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **bash** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- has_code_example <- [[step-2-merge-to-main]]
+- **API Design** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Code Structure** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Confidence Assessment** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Database** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[current-state-branches-commits]]
+- **Database Design** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Deployment Timeline** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Document Information** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **E2E Integration Tests (Staging Validation)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+- **Feature Completeness (100%)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[what-was-delivered]]
+- **Final Checklist** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **For Developers** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[documentation-provided]]
+- **For QA & Operations** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[documentation-provided]]
+- **Immediate (Next 1 Hour)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[next-actions-priority-order]]
+- **Issue 1: Small Files May Fail Processing ✅ Known & Managed** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[known-issues-mitigations]]
+- **Issue 2: Embedding API Rate Limits ✅ Known & Configurable** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[known-issues-mitigations]]
+- **Issue 3: Hanword Format Limited Testing ✅ Known & Monitored** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[known-issues-mitigations]]
+- **Key Contacts & Responsibilities** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Key Metrics** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **Manual Smoke Tests (Previous Session)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+- **Medium Term (Next 24 Hours)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[next-actions-priority-order]]
+- **Performance Benchmarks (All Targets Met)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[test-results-summary]]
+- **Post-Launch (Day 2+)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[next-actions-priority-order]]
+- **Production Deployment Readiness Matrix** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Pull Requests** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[current-state-branches-commits]]
+- **Recommendation** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Security Review** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[code-quality-assessment]]
+- **Short Term (Next 1-2 Hours)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[next-actions-priority-order]]
+- **Sign-Off** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+- **Staging Branch (Ready for Merge)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[current-state-branches-commits]]
+- **Status & Readiness** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[documentation-provided]]
+- **Step 1: Code Review & Approval (Now)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[production-promotion-workflow]]
+- **Step 3: Production Deployment** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[production-promotion-workflow]]
+- **Step 4: Production Validation (First Hour)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[production-promotion-workflow]]
+- **Step 5: Extended Monitoring (24-48 Hours)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[production-promotion-workflow]]
+- **Step 6: Production Sign-Off (Day 2+)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[production-promotion-workflow]]
+- **Success Criteria (All Met)** (C:\project\tenopa proposer\-agent-master\DEPLOYMENT_COMPLETE.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-complete-deployment-report]]
+
+## Internal Relationships
+- Code Quality Assessment -> contains -> Security Review [EXTRACTED]
+- Code Quality Assessment -> contains -> Code Structure [EXTRACTED]
+- Code Quality Assessment -> contains -> Database Design [EXTRACTED]
+- Code Quality Assessment -> contains -> API Design [EXTRACTED]
+- Current State (Branches & Commits) -> contains -> Staging Branch (Ready for Merge) [EXTRACTED]
+- Current State (Branches & Commits) -> contains -> Pull Requests [EXTRACTED]
+- Current State (Branches & Commits) -> contains -> Database [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Executive Summary [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Deployment Timeline [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> What Was Delivered [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Test Results Summary [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Code Quality Assessment [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Documentation Provided [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Current State (Branches & Commits) [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Success Criteria (All Met) [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Production Promotion Workflow [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Key Contacts & Responsibilities [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Known Issues & Mitigations [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Confidence Assessment [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Next Actions (Priority Order) [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Production Deployment Readiness Matrix [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Final Checklist [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Sign-Off [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Document Information [EXTRACTED]
+- 📊 Document Ingestion Feature - Complete Deployment Report -> contains -> Recommendation [EXTRACTED]
+- Documentation Provided -> contains -> For Developers [EXTRACTED]
+- Documentation Provided -> contains -> For QA & Operations [EXTRACTED]
+- Documentation Provided -> contains -> Status & Readiness [EXTRACTED]
+- Executive Summary -> contains -> Key Metrics [EXTRACTED]
+- Known Issues & Mitigations -> contains -> Issue 1: Small Files May Fail Processing ✅ Known & Managed [EXTRACTED]
+- Known Issues & Mitigations -> contains -> Issue 2: Embedding API Rate Limits ✅ Known & Configurable [EXTRACTED]
+- Known Issues & Mitigations -> contains -> Issue 3: Hanword Format Limited Testing ✅ Known & Monitored [EXTRACTED]
+- Next Actions (Priority Order) -> contains -> Immediate (Next 1 Hour) [EXTRACTED]
+- Next Actions (Priority Order) -> contains -> Short Term (Next 1-2 Hours) [EXTRACTED]
+- Next Actions (Priority Order) -> contains -> Medium Term (Next 24 Hours) [EXTRACTED]
+- Next Actions (Priority Order) -> contains -> Post-Launch (Day 2+) [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 1: Code Review & Approval (Now) [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 2: Merge to Main [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 3: Production Deployment [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 4: Production Validation (First Hour) [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 5: Extended Monitoring (24-48 Hours) [EXTRACTED]
+- Production Promotion Workflow -> contains -> Step 6: Production Sign-Off (Day 2+) [EXTRACTED]
+- Step 2: Merge to Main -> has_code_example -> bash [EXTRACTED]
+- Test Results Summary -> contains -> E2E Integration Tests (Staging Validation) [EXTRACTED]
+- Test Results Summary -> contains -> Performance Benchmarks (All Targets Met) [EXTRACTED]
+- Test Results Summary -> contains -> Manual Smoke Tests (Previous Session) [EXTRACTED]
+- What Was Delivered -> contains -> Feature Completeness (100%) [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 📊 Document Ingestion Feature - Complete Deployment Report, Production Promotion Workflow, Code Quality Assessment를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 DEPLOYMENT_COMPLETE.md이다.
+
+### Key Facts
+- Step 1: Code Review & Approval (Now) ``` PR #3: staging → main Status: Ready for review Action: Review code changes, approve if ready ```
+- Security Review - ✅ No hardcoded secrets or credentials - ✅ Input validation on all endpoints - ✅ Magic byte validation (file signature checking) - ✅ Parameterized queries (Supabase SDK) - ✅ Org_id enforcement on all database operations - ✅ Error messages don't expose sensitive paths - ✅ Rate…
+- Immediate (Next 1 Hour) 1. **Review PR #3** (code review) 2. **Merge to main** (production promotion) 3. **Deploy to production** (CI/CD) 4. **Verify startup** (health checks)
+- Staging Branch (Ready for Merge) ``` 45abe0f docs: Add production deployment checklist 883c73d docs: Mark staging deployment as ready aacdc92 docs: Add staging deployment verification checklist f6bf20b Merge pull request #2 (feat/intranet-kb-api → staging) c16972c docs: Add staging deployment…
+- For Developers 1. **DEPLOYMENT_SUMMARY.md** (227 lines) - Complete feature overview - Database changes and schema - Test results and status - Performance characteristics

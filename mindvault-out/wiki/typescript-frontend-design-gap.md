@@ -1,0 +1,150 @@
+# typescript & Frontend Design Gap 설계서
+Cohesion: 0.10 | Nodes: 27
+
+## Key Nodes
+- **typescript** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 9 connections
+  - <- has_code_example <- [[b-1]]
+  - <- has_code_example <- [[b-2]]
+  - <- has_code_example <- [[b-3]]
+  - <- has_code_example <- [[13]]
+  - <- has_code_example <- [[22-positioningimpactmodal]]
+  - <- has_code_example <- [[ui]]
+  - <- has_code_example <- [[gonogopanel]]
+  - <- has_code_example <- [[31-cn]]
+  - <- has_code_example <- [[32-tiptap]]
+- **Frontend Design Gap 설계서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 9 connections
+  - -> contains -> [[0-plan]]
+  - -> contains -> [[1-phase-b]]
+  - -> contains -> [[2-phase-c]]
+  - -> contains -> [[3-phase-d-ui]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-not-scope]]
+- **1.2 추가 위젯 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 4 connections
+  - -> contains -> [[b-1]]
+  - -> contains -> [[b-2]]
+  - -> contains -> [[b-3]]
+  - <- contains <- [[1-phase-b]]
+- **1. Phase B — 대시보드 역할별 위젯** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 4 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - <- contains <- [[frontend-design-gap]]
+- **2.2 PositioningImpactModal 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 4 connections
+  - -> has_code_example -> [[typescript]]
+  - -> contains -> [[ui]]
+  - -> contains -> [[gonogopanel]]
+  - <- contains <- [[2-phase-c]]
+- **4. 파일 변경 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 4 connections
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[packagejson]]
+  - <- contains <- [[frontend-design-gap]]
+- **2. Phase C — 포지셔닝 변경 영향 미리보기 모달** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 3 connections
+  - -> contains -> [[21]]
+  - -> contains -> [[22-positioningimpactmodal]]
+  - <- contains <- [[frontend-design-gap]]
+- **3.1 cn() 유틸 함수** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 3 connections
+  - -> has_code_example -> [[typescript]]
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[3-phase-d-ui]]
+- **3.2 Tiptap 확장** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 3 connections
+  - -> has_code_example -> [[bash]]
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[3-phase-d-ui]]
+- **3. Phase D — UI 인프라 보강** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 3 connections
+  - -> contains -> [[31-cn]]
+  - -> contains -> [[32-tiptap]]
+  - <- contains <- [[frontend-design-gap]]
+- **bash** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - <- has_code_example <- [[31-cn]]
+  - <- has_code_example <- [[32-tiptap]]
+- **1.3 위젯 조건부 렌더링 로직** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[1-phase-b]]
+- **B-1. 결재 대기 위젯 (팀장용)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[12]]
+- **B-2. 마감 임박 경고 위젯 (팀장용)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[12]]
+- **B-3. 본부별 비교 테이블 (경영진용)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[12]]
+- **GoNoGoPanel 연동** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[22-positioningimpactmodal]]
+- **UI 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[22-positioningimpactmodal]]
+- **0. Plan 대비 현황 재평가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[frontend-design-gap]]
+- **1.1 현재 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[1-phase-b]]
+- **신규 파일 (2개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **2.1 현재 구현** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[2-phase-c]]
+- **수정 파일 (3개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[frontend-design-gap]]
+- **6. 스타일 가이드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[frontend-design-gap]]
+- **7. 성공 기준** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[frontend-design-gap]]
+- **8. 범위 외 (NOT Scope)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[frontend-design-gap]]
+- **패키지 추가 (package.json)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\frontend-design-gap\frontend-design-gap.design.md) -- 1 connections
+  - <- contains <- [[4]]
+
+## Internal Relationships
+- 1.2 추가 위젯 설계 -> contains -> B-1. 결재 대기 위젯 (팀장용) [EXTRACTED]
+- 1.2 추가 위젯 설계 -> contains -> B-2. 마감 임박 경고 위젯 (팀장용) [EXTRACTED]
+- 1.2 추가 위젯 설계 -> contains -> B-3. 본부별 비교 테이블 (경영진용) [EXTRACTED]
+- 1.3 위젯 조건부 렌더링 로직 -> has_code_example -> typescript [EXTRACTED]
+- 1. Phase B — 대시보드 역할별 위젯 -> contains -> 1.1 현재 구조 [EXTRACTED]
+- 1. Phase B — 대시보드 역할별 위젯 -> contains -> 1.2 추가 위젯 설계 [EXTRACTED]
+- 1. Phase B — 대시보드 역할별 위젯 -> contains -> 1.3 위젯 조건부 렌더링 로직 [EXTRACTED]
+- 2.2 PositioningImpactModal 설계 -> has_code_example -> typescript [EXTRACTED]
+- 2.2 PositioningImpactModal 설계 -> contains -> UI 구조 [EXTRACTED]
+- 2.2 PositioningImpactModal 설계 -> contains -> GoNoGoPanel 연동 [EXTRACTED]
+- 2. Phase C — 포지셔닝 변경 영향 미리보기 모달 -> contains -> 2.1 현재 구현 [EXTRACTED]
+- 2. Phase C — 포지셔닝 변경 영향 미리보기 모달 -> contains -> 2.2 PositioningImpactModal 설계 [EXTRACTED]
+- 3.1 cn() 유틸 함수 -> has_code_example -> typescript [EXTRACTED]
+- 3.1 cn() 유틸 함수 -> has_code_example -> bash [EXTRACTED]
+- 3.2 Tiptap 확장 -> has_code_example -> bash [EXTRACTED]
+- 3.2 Tiptap 확장 -> has_code_example -> typescript [EXTRACTED]
+- 3. Phase D — UI 인프라 보강 -> contains -> 3.1 cn() 유틸 함수 [EXTRACTED]
+- 3. Phase D — UI 인프라 보강 -> contains -> 3.2 Tiptap 확장 [EXTRACTED]
+- 4. 파일 변경 요약 -> contains -> 신규 파일 (2개) [EXTRACTED]
+- 4. 파일 변경 요약 -> contains -> 수정 파일 (3개) [EXTRACTED]
+- 4. 파일 변경 요약 -> contains -> 패키지 추가 (package.json) [EXTRACTED]
+- B-1. 결재 대기 위젯 (팀장용) -> has_code_example -> typescript [EXTRACTED]
+- B-2. 마감 임박 경고 위젯 (팀장용) -> has_code_example -> typescript [EXTRACTED]
+- B-3. 본부별 비교 테이블 (경영진용) -> has_code_example -> typescript [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 0. Plan 대비 현황 재평가 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 1. Phase B — 대시보드 역할별 위젯 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 2. Phase C — 포지셔닝 변경 영향 미리보기 모달 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 3. Phase D — UI 인프라 보강 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 4. 파일 변경 요약 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 5. 구현 순서 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 6. 스타일 가이드 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 7. 성공 기준 [EXTRACTED]
+- Frontend Design Gap 설계서 -> contains -> 8. 범위 외 (NOT Scope) [EXTRACTED]
+- GoNoGoPanel 연동 -> has_code_example -> typescript [EXTRACTED]
+- UI 구조 -> has_code_example -> typescript [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 typescript, Frontend Design Gap 설계서, 1.2 추가 위젯 설계를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 frontend-design-gap.design.md이다.
+
+### Key Facts
+- ```typescript // 데이터 소스: 기존 api.proposals.list 활용 const pendingReviews = proposals.filter( p => p.status === "review_pending" || p.has_pending_interrupt ); ```
+- > **Feature**: frontend-design-gap > **Plan**: `docs/01-plan/features/frontend-design-gap.plan.md` > **Version**: v1.0 (2026-03-29) > **목표**: 설계 문서(§13) 대비 프론트엔드 갭 해소 → 충실도 94% → 98%+
+- **트리거**: GoNoGoPanel에서 포지셔닝 드롭다운 변경 시
+- **목적**: 조건부 Tailwind 클래스 결합 표준화
+- **목적**: 편집기 테이블 편집 + 빈 에디터 가이드 텍스트

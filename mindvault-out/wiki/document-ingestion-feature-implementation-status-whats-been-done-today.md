@@ -1,0 +1,155 @@
+# Document Ingestion Feature - Implementation Status & What's Been Done Today
+Cohesion: 0.06 | Nodes: 35
+
+## Key Nodes
+- **Document Ingestion Feature - Implementation Status** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 11 connections
+  - -> contains -> [[whats-been-done-today]]
+  - -> contains -> [[current-implementation-status]]
+  - -> contains -> [[blocking-issue-schema-api-mismatch]]
+  - -> contains -> [[next-steps-priority-order]]
+  - -> contains -> [[files-changed-this-session]]
+  - -> contains -> [[code-quality-metrics]]
+  - -> contains -> [[risk-assessment]]
+  - -> contains -> [[deployment-checklist]]
+  - -> contains -> [[success-criteria-from-plan]]
+  - -> contains -> [[recommendations-for-handoff]]
+  - -> contains -> [[summary]]
+- **What's Been Done Today** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 8 connections
+  - -> contains -> [[1-fixed-import-errors]]
+  - -> contains -> [[2-fixed-authorization-issues]]
+  - -> contains -> [[3-identified-critical-schema-mismatches]]
+  - -> contains -> [[4-created-schema-migration]]
+  - -> contains -> [[5-improved-security]]
+  - -> contains -> [[6-enhanced-type-safety]]
+  - -> contains -> [[7-code-review-vs-design]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Current Implementation Status** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 4 connections
+  - -> contains -> [[api-endpoints-66-implemented]]
+  - -> contains -> [[service-layer-95-complete]]
+  - -> contains -> [[schema-needs-migration]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **NEXT STEPS (Priority Order)** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 4 connections
+  - -> contains -> [[immediate-before-testing]]
+  - -> contains -> [[short-term-this-sprint]]
+  - -> contains -> [[medium-term-pre-production]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Recommendations for Handoff** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 4 connections
+  - -> contains -> [[to-qatesting-team]]
+  - -> contains -> [[to-devopsplatform]]
+  - -> contains -> [[to-product]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **BLOCKING ISSUE: Schema-API Mismatch** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 3 connections
+  - -> contains -> [[current-state-before-migration]]
+  - -> contains -> [[error]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Files Changed This Session** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 3 connections
+  - -> contains -> [[new-files-created]]
+  - -> contains -> [[modified-files]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Risk Assessment** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 3 connections
+  - -> contains -> [[critical-risks]]
+  - -> contains -> [[high-risks]]
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Current State (Before Migration):** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[blocking-issue-schema-api-mismatch]]
+- **sql** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- has_code_example <- [[current-state-before-migration]]
+- **1. ✅ Fixed Import Errors** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **2. ✅ Fixed Authorization Issues** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **3. ✅ Identified Critical Schema Mismatches** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **4. ✅ Created Schema Migration** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **5. ✅ Improved Security** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **6. ✅ Enhanced Type Safety** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **7. ✅ Code Review vs Design** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[whats-been-done-today]]
+- **API Endpoints: ✅ 6/6 Implemented** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[current-implementation-status]]
+- **Code Quality Metrics** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **CRITICAL RISKS** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[risk-assessment]]
+- **Deployment Checklist** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Error:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[blocking-issue-schema-api-mismatch]]
+- **HIGH RISKS** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[risk-assessment]]
+- **IMMEDIATE (Before Testing) ⚠️** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[next-steps-priority-order]]
+- **MEDIUM TERM (Pre-Production)** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[next-steps-priority-order]]
+- **Modified Files:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[files-changed-this-session]]
+- **New Files Created:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[files-changed-this-session]]
+- **Schema: ⚠️ Needs Migration** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[current-implementation-status]]
+- **Service Layer: ✅ ~95% Complete** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[current-implementation-status]]
+- **SHORT TERM (This Sprint)** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[next-steps-priority-order]]
+- **Success Criteria (From Plan)** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **Summary** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[document-ingestion-feature-implementation-status]]
+- **To DevOps/Platform:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[recommendations-for-handoff]]
+- **To Product:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[recommendations-for-handoff]]
+- **To QA/Testing Team:** (C:\project\tenopa proposer\-agent-master\DOCUMENT_INGESTION_STATUS.md) -- 1 connections
+  - <- contains <- [[recommendations-for-handoff]]
+
+## Internal Relationships
+- BLOCKING ISSUE: Schema-API Mismatch -> contains -> Current State (Before Migration): [EXTRACTED]
+- BLOCKING ISSUE: Schema-API Mismatch -> contains -> Error: [EXTRACTED]
+- Current Implementation Status -> contains -> API Endpoints: ✅ 6/6 Implemented [EXTRACTED]
+- Current Implementation Status -> contains -> Service Layer: ✅ ~95% Complete [EXTRACTED]
+- Current Implementation Status -> contains -> Schema: ⚠️ Needs Migration [EXTRACTED]
+- Current State (Before Migration): -> has_code_example -> sql [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> What's Been Done Today [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Current Implementation Status [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> BLOCKING ISSUE: Schema-API Mismatch [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> NEXT STEPS (Priority Order) [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Files Changed This Session [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Code Quality Metrics [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Risk Assessment [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Deployment Checklist [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Success Criteria (From Plan) [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Recommendations for Handoff [EXTRACTED]
+- Document Ingestion Feature - Implementation Status -> contains -> Summary [EXTRACTED]
+- Files Changed This Session -> contains -> New Files Created: [EXTRACTED]
+- Files Changed This Session -> contains -> Modified Files: [EXTRACTED]
+- NEXT STEPS (Priority Order) -> contains -> IMMEDIATE (Before Testing) ⚠️ [EXTRACTED]
+- NEXT STEPS (Priority Order) -> contains -> SHORT TERM (This Sprint) [EXTRACTED]
+- NEXT STEPS (Priority Order) -> contains -> MEDIUM TERM (Pre-Production) [EXTRACTED]
+- Recommendations for Handoff -> contains -> To QA/Testing Team: [EXTRACTED]
+- Recommendations for Handoff -> contains -> To DevOps/Platform: [EXTRACTED]
+- Recommendations for Handoff -> contains -> To Product: [EXTRACTED]
+- Risk Assessment -> contains -> CRITICAL RISKS [EXTRACTED]
+- Risk Assessment -> contains -> HIGH RISKS [EXTRACTED]
+- What's Been Done Today -> contains -> 1. ✅ Fixed Import Errors [EXTRACTED]
+- What's Been Done Today -> contains -> 2. ✅ Fixed Authorization Issues [EXTRACTED]
+- What's Been Done Today -> contains -> 3. ✅ Identified Critical Schema Mismatches [EXTRACTED]
+- What's Been Done Today -> contains -> 4. ✅ Created Schema Migration [EXTRACTED]
+- What's Been Done Today -> contains -> 5. ✅ Improved Security [EXTRACTED]
+- What's Been Done Today -> contains -> 6. ✅ Enhanced Type Safety [EXTRACTED]
+- What's Been Done Today -> contains -> 7. ✅ Code Review vs Design [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Document Ingestion Feature - Implementation Status, What's Been Done Today, Current Implementation Status를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 DOCUMENT_INGESTION_STATUS.md이다.
+
+### Key Facts
+- **Last Updated**: 2026-04-07 **Phase**: DO (In Implementation) **Completion**: ~75% (code level) → 40% (production-ready)
+- 1. ✅ Fixed Import Errors - **Issue**: `BackgroundTasks` missing from `routes_g2b.py` - **Fix**: Added to FastAPI imports - **Status**: RESOLVED
+- API Endpoints: ✅ 6/6 Implemented
+- IMMEDIATE (Before Testing) ⚠️ 1. **Apply Schema Migration 018** - Location: `database/migrations/018_document_ingestion_fixes.sql` - How: Supabase Dashboard → SQL Editor → Run migration - Time: 5 minutes - **WITHOUT THIS: Feature is blocked**
+- To QA/Testing Team: 1. **First**: Wait for schema migration 018 application 2. **Test Plan**: See `GAP_ANALYSIS_DOCUMENT_INGESTION.md` for test scenarios 3. **Known Issues**: Magic bytes may reject valid files (false positives) - needs tuning 4. **Acceptance**: All 6 endpoints responding + document…

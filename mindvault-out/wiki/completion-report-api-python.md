@@ -1,0 +1,206 @@
+# Completion Report: api & python
+Cohesion: 0.05 | Nodes: 44
+
+## Key Nodes
+- **Completion Report: api** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 17 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-pdca]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4-gap-analysis-check]]
+  - -> contains -> [[5-act-iteration-1-3]]
+  - -> contains -> [[6-act]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-jwt]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10-long-term-issues]]
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - -> contains -> [[13]]
+  - -> contains -> [[14]]
+  - -> contains -> [[15]]
+  - -> contains -> [[16]]
+  - -> contains -> [[version-history]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 5 connections
+  - <- has_code_example <- [[5-1-fix-1-double-router-registration]]
+  - <- has_code_example <- [[5-2-fix-2-routesteam-path-conflict]]
+  - <- has_code_example <- [[5-3-fix-3-jwt]]
+  - <- has_code_example <- [[8-1-auth-pattern]]
+  - <- has_code_example <- [[10-1-response-format-inconsistency-55]]
+- **16. 결론** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 4 connections
+  - -> contains -> [[16-1]]
+  - -> contains -> [[16-2]]
+  - -> contains -> [[16-3]]
+  - <- contains <- [[completion-report-api]]
+- **3-2. 주요 엔드포인트 그룹** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 4 connections
+  - -> contains -> [[v31-14]]
+  - -> contains -> [[22]]
+  - -> contains -> [[12]]
+  - <- contains <- [[3]]
+- **5. Act (Iteration 1) — 3개 이슈 수정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 4 connections
+  - -> contains -> [[5-1-fix-1-double-router-registration]]
+  - -> contains -> [[5-2-fix-2-routesteam-path-conflict]]
+  - -> contains -> [[5-3-fix-3-jwt]]
+  - <- contains <- [[completion-report-api]]
+- **13. 토큰 & 비용 영향** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[13-1]]
+  - -> contains -> [[13-2]]
+  - <- contains <- [[completion-report-api]]
+- **14. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[14-1-immediate-optional]]
+  - -> contains -> [[14-2-next-cycle]]
+  - <- contains <- [[completion-report-api]]
+- **15. 학습 사항** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[15-1-fastapi-router-best-practice]]
+  - -> contains -> [[15-2-design-first-vs-code-first]]
+  - <- contains <- [[completion-report-api]]
+- **3. 구현 내용** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[3-1]]
+  - -> contains -> [[3-2]]
+  - <- contains <- [[completion-report-api]]
+- **8. 인증 (JWT) 일관성** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[8-1-auth-pattern]]
+  - -> contains -> [[8-2-auth-gap]]
+  - <- contains <- [[completion-report-api]]
+- **9. 엔드포인트 분포** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 3 connections
+  - -> contains -> [[9-1-method]]
+  - -> contains -> [[9-2]]
+  - <- contains <- [[completion-report-api]]
+- **10-1 Response Format Inconsistency (55%)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[10-long-term-issues]]
+- **10. 남은 Long-term Issues** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> contains -> [[10-1-response-format-inconsistency-55]]
+  - <- contains <- [[completion-report-api]]
+- **입찰 추천 (12개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - <- contains <- [[3-2]]
+  - <- contains <- [[completion-report-api]]
+- **2. PDCA 흐름 요약** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[text]]
+  - <- contains <- [[completion-report-api]]
+- **4. Gap Analysis 결과 (Check 단계)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> contains -> [[4-1-initial-score-72-match-rate]]
+  - <- contains <- [[completion-report-api]]
+- **5-1. Fix #1: Double Router Registration 제거** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-act-iteration-1-3]]
+- **5-2. Fix #2: routes_team Path Conflict 제거** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-act-iteration-1-3]]
+- **5-3. Fix #3: JWT 인증 누락 추가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-act-iteration-1-3]]
+- **6. 재분석 결과 (Act 후)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> contains -> [[6-1-final-score-90-match-rate-estimated]]
+  - <- contains <- [[completion-report-api]]
+- **7. 서비스 의존성 검증** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> contains -> [[7-1-import]]
+  - <- contains <- [[completion-report-api]]
+- **8-1 Auth Pattern 통일** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[8-jwt]]
+- **text** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- has_code_example <- [[2-pdca]]
+- **1. 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[completion-report-api]]
+- **11. 구현 완전도 평가** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[completion-report-api]]
+- **13-1 라우터 등록 오버헤드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[13]]
+- **13-2 엔드포인트 호출 토큰** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[13]]
+- **14-1 Immediate (Optional)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[14]]
+- **14-2 Next Cycle** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[14]]
+- **15-1 FastAPI Router 통합 Best Practice** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[15]]
+- **15-2 Design-first vs Code-first 비교** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[15]]
+- **16-1 완료 현황** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[16]]
+- **16-2 핵심 성과** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[16]]
+- **16-3 구현 준비도** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[16]]
+- **팀 협업 (22개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[3-2]]
+- **3-1. 라우터 통합 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4-1. Initial Score: 72% Match Rate** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[4-gap-analysis-check]]
+- **6-1. Final Score: 90% Match Rate (Estimated)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[6-act]]
+- **7-1 모든 Import 경로 정상** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8-2 Auth Gap 해결** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[8-jwt]]
+- **9-1 Method 분포** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9-2 네임스페이스 분포** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[9]]
+- **v3.1 제안서 파이프라인 (14개)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[3-2]]
+- **Version History** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\api\api.report.md) -- 1 connections
+  - <- contains <- [[completion-report-api]]
+
+## Internal Relationships
+- 10-1 Response Format Inconsistency (55%) -> has_code_example -> python [EXTRACTED]
+- 10. 남은 Long-term Issues -> contains -> 10-1 Response Format Inconsistency (55%) [EXTRACTED]
+- 13. 토큰 & 비용 영향 -> contains -> 13-1 라우터 등록 오버헤드 [EXTRACTED]
+- 13. 토큰 & 비용 영향 -> contains -> 13-2 엔드포인트 호출 토큰 [EXTRACTED]
+- 14. 다음 단계 -> contains -> 14-1 Immediate (Optional) [EXTRACTED]
+- 14. 다음 단계 -> contains -> 14-2 Next Cycle [EXTRACTED]
+- 15. 학습 사항 -> contains -> 15-1 FastAPI Router 통합 Best Practice [EXTRACTED]
+- 15. 학습 사항 -> contains -> 15-2 Design-first vs Code-first 비교 [EXTRACTED]
+- 16. 결론 -> contains -> 16-1 완료 현황 [EXTRACTED]
+- 16. 결론 -> contains -> 16-2 핵심 성과 [EXTRACTED]
+- 16. 결론 -> contains -> 16-3 구현 준비도 [EXTRACTED]
+- 2. PDCA 흐름 요약 -> has_code_example -> text [EXTRACTED]
+- 3. 구현 내용 -> contains -> 3-1. 라우터 통합 구조 [EXTRACTED]
+- 3. 구현 내용 -> contains -> 3-2. 주요 엔드포인트 그룹 [EXTRACTED]
+- 3-2. 주요 엔드포인트 그룹 -> contains -> v3.1 제안서 파이프라인 (14개) [EXTRACTED]
+- 3-2. 주요 엔드포인트 그룹 -> contains -> 팀 협업 (22개) [EXTRACTED]
+- 3-2. 주요 엔드포인트 그룹 -> contains -> 입찰 추천 (12개) [EXTRACTED]
+- 4. Gap Analysis 결과 (Check 단계) -> contains -> 4-1. Initial Score: 72% Match Rate [EXTRACTED]
+- 5-1. Fix #1: Double Router Registration 제거 -> has_code_example -> python [EXTRACTED]
+- 5-2. Fix #2: routes_team Path Conflict 제거 -> has_code_example -> python [EXTRACTED]
+- 5-3. Fix #3: JWT 인증 누락 추가 -> has_code_example -> python [EXTRACTED]
+- 5. Act (Iteration 1) — 3개 이슈 수정 -> contains -> 5-1. Fix #1: Double Router Registration 제거 [EXTRACTED]
+- 5. Act (Iteration 1) — 3개 이슈 수정 -> contains -> 5-2. Fix #2: routes_team Path Conflict 제거 [EXTRACTED]
+- 5. Act (Iteration 1) — 3개 이슈 수정 -> contains -> 5-3. Fix #3: JWT 인증 누락 추가 [EXTRACTED]
+- 6. 재분석 결과 (Act 후) -> contains -> 6-1. Final Score: 90% Match Rate (Estimated) [EXTRACTED]
+- 7. 서비스 의존성 검증 -> contains -> 7-1 모든 Import 경로 정상 [EXTRACTED]
+- 8-1 Auth Pattern 통일 -> has_code_example -> python [EXTRACTED]
+- 8. 인증 (JWT) 일관성 -> contains -> 8-1 Auth Pattern 통일 [EXTRACTED]
+- 8. 인증 (JWT) 일관성 -> contains -> 8-2 Auth Gap 해결 [EXTRACTED]
+- 9. 엔드포인트 분포 -> contains -> 9-1 Method 분포 [EXTRACTED]
+- 9. 엔드포인트 분포 -> contains -> 9-2 네임스페이스 분포 [EXTRACTED]
+- Completion Report: api -> contains -> 1. 개요 [EXTRACTED]
+- Completion Report: api -> contains -> 2. PDCA 흐름 요약 [EXTRACTED]
+- Completion Report: api -> contains -> 3. 구현 내용 [EXTRACTED]
+- Completion Report: api -> contains -> 4. Gap Analysis 결과 (Check 단계) [EXTRACTED]
+- Completion Report: api -> contains -> 5. Act (Iteration 1) — 3개 이슈 수정 [EXTRACTED]
+- Completion Report: api -> contains -> 6. 재분석 결과 (Act 후) [EXTRACTED]
+- Completion Report: api -> contains -> 7. 서비스 의존성 검증 [EXTRACTED]
+- Completion Report: api -> contains -> 8. 인증 (JWT) 일관성 [EXTRACTED]
+- Completion Report: api -> contains -> 9. 엔드포인트 분포 [EXTRACTED]
+- Completion Report: api -> contains -> 10. 남은 Long-term Issues [EXTRACTED]
+- Completion Report: api -> contains -> 11. 구현 완전도 평가 [EXTRACTED]
+- Completion Report: api -> contains -> 입찰 추천 (12개) [EXTRACTED]
+- Completion Report: api -> contains -> 13. 토큰 & 비용 영향 [EXTRACTED]
+- Completion Report: api -> contains -> 14. 다음 단계 [EXTRACTED]
+- Completion Report: api -> contains -> 15. 학습 사항 [EXTRACTED]
+- Completion Report: api -> contains -> 16. 결론 [EXTRACTED]
+- Completion Report: api -> contains -> Version History [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Completion Report: api, python, 16. 결론를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 api.report.md이다.
+
+### Key Facts
+- ```python BEFORE (app/main.py lines 77-86) app.include_router(v31_router, prefix="/api") app.include_router(bids_router)  # 이미 routes.py에 포함됨 app.include_router(calendar_router, prefix="/api") ...  # 9개 라우터 모두 중복 등록
+- 5-1. Fix #1: Double Router Registration 제거
+- 14-1 Immediate (Optional)
+- 15-1 FastAPI Router 통합 Best Practice
+- **현황:** 4가지 이상의 response envelope 패턴 혼용:

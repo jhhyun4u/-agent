@@ -12,7 +12,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, ArchiveItem } from "@/lib/api";
 import Modal from "@/components/ui/Modal";
 import ProjectArchivePanel from "@/components/ProjectArchivePanel";
-import { MasterProjectsChat } from "@/components/MasterProjectsChat";
 
 // ── 상수 ──────────────────────────────────────────────────────────────
 
@@ -105,11 +104,6 @@ function WinResultBadge({ value }: { value: string | null | undefined }) {
 
 // ── 페이지 컴포넌트 ────────────────────────────────────────────────────
 
-const VIEW_MODES = [
-  { value: "list", label: "목록" },
-  { value: "search", label: "검색" },
-];
-
 export default function ArchivePage() {
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -119,7 +113,6 @@ export default function ArchivePage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
-  const [viewMode, setViewMode] = useState("list");
 
   // Detail modal
   const [selectedItem, setSelectedItem] = useState<ArchiveItem | null>(null);
@@ -177,70 +170,43 @@ export default function ArchivePage() {
 
       {/* 필터 바 */}
       <div className="border-b border-[#262626] px-6 py-3 bg-[#111111] shrink-0 flex items-center gap-4 flex-wrap">
-        {/* 뷰 모드 탭 */}
+        {/* 스코프 탭 */}
         <div className="flex border border-[#262626] rounded-md overflow-hidden">
-          {VIEW_MODES.map((m) => (
+          {SCOPE_TABS.map((t) => (
             <button
-              key={m.value}
-              onClick={() => setViewMode(m.value)}
+              key={t.value}
+              onClick={() => changeScope(t.value)}
               className={`px-3 py-1.5 text-xs transition-colors ${
-                viewMode === m.value
+                scope === t.value
                   ? "bg-[#1c1c1c] text-[#ededed]"
                   : "text-[#8c8c8c] hover:text-[#ededed]"
               }`}
             >
-              {m.label}
+              {t.label}
             </button>
           ))}
         </div>
 
-        {/* 목록 뷰 필터들 (검색 모드일 때는 숨김) */}
-        {viewMode === "list" && (
-          <>
-            {/* 스코프 탭 */}
-            <div className="flex border border-[#262626] rounded-md overflow-hidden">
-              {SCOPE_TABS.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => changeScope(t.value)}
-                  className={`px-3 py-1.5 text-xs transition-colors ${
-                    scope === t.value
-                      ? "bg-[#1c1c1c] text-[#ededed]"
-                      : "text-[#8c8c8c] hover:text-[#ededed]"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-
-            {/* 수주결과 필터 */}
-            <div className="flex gap-1.5">
-              {WIN_RESULT_FILTERS.map((f) => (
-                <button
-                  key={f.value}
-                  onClick={() => changeWinResult(f.value)}
-                  className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                    winResult === f.value
-                      ? "bg-[#1c1c1c] border-[#3c3c3c] text-[#ededed]"
-                      : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+        {/* 수주결과 필터 */}
+        <div className="flex gap-1.5">
+          {WIN_RESULT_FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => changeWinResult(f.value)}
+              className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
+                winResult === f.value
+                  ? "bg-[#1c1c1c] border-[#3c3c3c] text-[#ededed]"
+                  : "border-[#262626] text-[#8c8c8c] hover:border-[#3c3c3c] hover:text-[#ededed]"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 콘텐츠 영역 */}
       <div className="flex-1 overflow-y-auto">
-        {viewMode === "search" ? (
-          // 검색 모드: Chat 컴포넌트
-          <MasterProjectsChat />
-        ) : (
-          // 목록 모드: 테이블
         <div className="px-6 py-4">
           {error && (
             <div className="mb-4 bg-red-400/10 border border-red-400/20 rounded-md px-4 py-3">
@@ -383,11 +349,9 @@ export default function ArchivePage() {
             </div>
           )}
         </div>
-        )}
       </div>
 
-      {/* 상세 모달 (목록 모드에서만 표시) */}
-      {viewMode === "list" && (
+      {/* 상세 모달 */}
       <Modal
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
@@ -477,7 +441,6 @@ export default function ArchivePage() {
           </div>
         )}
       </Modal>
-      )}
     </>
   );
 }

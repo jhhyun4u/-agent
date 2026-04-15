@@ -1,0 +1,133 @@
+# Design: 용역 제안서 자동 생성 에이전트 v3.3 & python
+Cohesion: 0.10 | Nodes: 25
+
+## Key Nodes
+- **Design: 용역 제안서 자동 생성 에이전트 v3.3** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 9 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-mainpy]]
+  - -> contains -> [[3-phase-phaseexecutorpy]]
+  - -> contains -> [[4-phase-phasepromptspy]]
+  - -> contains -> [[5-api]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8-design]]
+  - -> contains -> [[9]]
+- **python** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 7 connections
+  - <- has_code_example <- [[21]]
+  - <- has_code_example <- [[22]]
+  - <- has_code_example <- [[31-phaseartifact]]
+  - <- has_code_example <- [[32-phaseexecutor]]
+  - <- has_code_example <- [[33-phase-claude-api]]
+  - <- has_code_example <- [[51-routesv31py-execute]]
+  - <- has_code_example <- [[52]]
+- **4. Phase별 프롬프트 설계 (신규: phase_prompts.py)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 6 connections
+  - -> contains -> [[phase-1-research-claude]]
+  - -> contains -> [[phase-2-analysis-claude-sonnet]]
+  - -> contains -> [[phase-3-plan-claude-sonnet-extended-thinking]]
+  - -> contains -> [[phase-4-implement-claude-sonnet]]
+  - -> contains -> [[phase-5-test-claude-haiku]]
+  - <- contains <- [[design-v33]]
+- **3. Phase 실행 엔진 설계 (신규: phase_executor.py)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 4 connections
+  - -> contains -> [[31-phaseartifact]]
+  - -> contains -> [[32-phaseexecutor]]
+  - -> contains -> [[33-phase-claude-api]]
+  - <- contains <- [[design-v33]]
+- **1. 아키텍처 개요** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 3 connections
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+  - <- contains <- [[design-v33]]
+- **2. main.py 안정화 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 3 connections
+  - -> contains -> [[21]]
+  - -> contains -> [[22]]
+  - <- contains <- [[design-v33]]
+- **5. API 엔드포인트 수정 설계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 3 connections
+  - -> contains -> [[51-routesv31py-execute]]
+  - -> contains -> [[52]]
+  - <- contains <- [[design-v33]]
+- **2.1 문제** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-mainpy]]
+- **2.2 해결 방향** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[2-mainpy]]
+- **3.1 PhaseArtifact 스키마** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-phaseexecutorpy]]
+- **3.2 PhaseExecutor 클래스** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-phaseexecutorpy]]
+- **3.3 Phase별 Claude API 호출 패턴** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3-phase-phaseexecutorpy]]
+- **5.1 routes_v31.py `/execute` 수정** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-api]]
+- **5.2 신규 엔드포인트: 문서 다운로드** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[5-api]]
+- **1.1 전체 흐름** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[1]]
+- **1.2 컴포넌트 구조** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[1]]
+- **6. 데이터 흐름 (토큰 예산)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[design-v33]]
+- **7. 구현 순서** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[design-v33]]
+- **8. 성공 기준 (Design 레벨)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[design-v33]]
+- **9. 다음 단계** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[design-v33]]
+- **Phase 1 (Research) — Claude 미사용, 파싱만** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[4-phase-phasepromptspy]]
+- **Phase 2 (Analysis) — Claude Sonnet** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[4-phase-phasepromptspy]]
+- **Phase 3 (Plan) — Claude Sonnet + Extended Thinking** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[4-phase-phasepromptspy]]
+- **Phase 4 (Implement) — Claude Sonnet, 섹션별 순차 호출** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[4-phase-phasepromptspy]]
+- **Phase 5 (Test) — Claude Haiku (품질 검증, 저비용)** (C:\project\tenopa proposer\-agent-master\docs\archive\2026-03\proposal-agent-v33\proposal-agent-v33.design.md) -- 1 connections
+  - <- contains <- [[4-phase-phasepromptspy]]
+
+## Internal Relationships
+- 1. 아키텍처 개요 -> contains -> 1.1 전체 흐름 [EXTRACTED]
+- 1. 아키텍처 개요 -> contains -> 1.2 컴포넌트 구조 [EXTRACTED]
+- 2.1 문제 -> has_code_example -> python [EXTRACTED]
+- 2.2 해결 방향 -> has_code_example -> python [EXTRACTED]
+- 2. main.py 안정화 설계 -> contains -> 2.1 문제 [EXTRACTED]
+- 2. main.py 안정화 설계 -> contains -> 2.2 해결 방향 [EXTRACTED]
+- 3.1 PhaseArtifact 스키마 -> has_code_example -> python [EXTRACTED]
+- 3.2 PhaseExecutor 클래스 -> has_code_example -> python [EXTRACTED]
+- 3.3 Phase별 Claude API 호출 패턴 -> has_code_example -> python [EXTRACTED]
+- 3. Phase 실행 엔진 설계 (신규: phase_executor.py) -> contains -> 3.1 PhaseArtifact 스키마 [EXTRACTED]
+- 3. Phase 실행 엔진 설계 (신규: phase_executor.py) -> contains -> 3.2 PhaseExecutor 클래스 [EXTRACTED]
+- 3. Phase 실행 엔진 설계 (신규: phase_executor.py) -> contains -> 3.3 Phase별 Claude API 호출 패턴 [EXTRACTED]
+- 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) -> contains -> Phase 1 (Research) — Claude 미사용, 파싱만 [EXTRACTED]
+- 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) -> contains -> Phase 2 (Analysis) — Claude Sonnet [EXTRACTED]
+- 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) -> contains -> Phase 3 (Plan) — Claude Sonnet + Extended Thinking [EXTRACTED]
+- 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) -> contains -> Phase 4 (Implement) — Claude Sonnet, 섹션별 순차 호출 [EXTRACTED]
+- 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) -> contains -> Phase 5 (Test) — Claude Haiku (품질 검증, 저비용) [EXTRACTED]
+- 5.1 routes_v31.py `/execute` 수정 -> has_code_example -> python [EXTRACTED]
+- 5.2 신규 엔드포인트: 문서 다운로드 -> has_code_example -> python [EXTRACTED]
+- 5. API 엔드포인트 수정 설계 -> contains -> 5.1 routes_v31.py `/execute` 수정 [EXTRACTED]
+- 5. API 엔드포인트 수정 설계 -> contains -> 5.2 신규 엔드포인트: 문서 다운로드 [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 1. 아키텍처 개요 [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 2. main.py 안정화 설계 [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 3. Phase 실행 엔진 설계 (신규: phase_executor.py) [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 4. Phase별 프롬프트 설계 (신규: phase_prompts.py) [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 5. API 엔드포인트 수정 설계 [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 6. 데이터 흐름 (토큰 예산) [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 7. 구현 순서 [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 8. 성공 기준 (Design 레벨) [EXTRACTED]
+- Design: 용역 제안서 자동 생성 에이전트 v3.3 -> contains -> 9. 다음 단계 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Design: 용역 제안서 자동 생성 에이전트 v3.3, python, 4. Phase별 프롬프트 설계 (신규: phase_prompts.py)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 proposal-agent-v33.design.md이다.
+
+### Key Facts
+- 2.1 문제 현재 `main.py`가 존재하지 않는 모듈을 import: ```python from graph import build_supervisor_graph        # 존재 X from tools import create_default_registry       # 존재 X from config.claude_optimizer import TokenUsageTracker  # 존재 X ```
+- Phase 1 (Research) — Claude 미사용, 파싱만 ``` 입력: RFP 원문 처리: rfp_parser.py (기존 RFP_ANALYSIS_PROMPT 활용) 출력: Phase1Artifact (RFPData + 이력 요약) ```
+- 3.1 PhaseArtifact 스키마
+- 2.1 문제 현재 `main.py`가 존재하지 않는 모듈을 import: ```python from graph import build_supervisor_graph        # 존재 X from tools import create_default_registry       # 존재 X from config.claude_optimizer import TokenUsageTracker  # 존재 X ```
+- 5.1 routes_v31.py `/execute` 수정
