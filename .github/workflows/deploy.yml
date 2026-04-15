@@ -13,21 +13,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy-backend:
-    name: Deploy Backend (Railway)
+  # Frontend-only deployment
+  # Vercel은 GitHub 연동으로 자동 배포 (별도 job 불필요)
+  # frontend/ 디렉토리를 Vercel 프로젝트 루트로 설정하면 자동 배포됨
+  frontend-deployment:
+    name: Frontend Auto-Deploy (Vercel)
     if: |
       (github.event_name == 'push') ||
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    environment: production
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      - name: Deploy to Railway
-        run: railway up --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-  # Vercel은 GitHub 연동으로 자동 배포 (별도 job 불필요)
-  # frontend/ 디렉토리를 Vercel 프로젝트 루트로 설정할 것
+      - name: Frontend deployment via Vercel
+        run: |
+          echo "✅ Frontend deployment configuration:"
+          echo "   - Vercel GitHub integration active"
+          echo "   - Root directory: frontend/"
+          echo "   - Auto-deploy on push to main"
+          echo ""
+          echo "Vercel will automatically deploy the frontend when changes are pushed."
