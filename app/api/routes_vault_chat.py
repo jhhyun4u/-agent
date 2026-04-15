@@ -548,6 +548,33 @@ async def get_conversation(
 ) -> ConversationDetail:
     """
     Get conversation detail with full message history
+    """
+    try:
+        client = await get_async_client()
+
+        # Verify conversation ownership
+        conv_result = await client.table("vault_conversations").select(
+            "*"
+        ).eq("id", conversation_id).eq("user_id", current_user.id).single().execute()
+
+        if not conv_result.data:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+
+        # Get messages
+        messages_result = await client.table("vault_messages").select(
+            "*"
+        ).eq("conversation_id", conversation_id).order("created_at", desc=False).execute()
+
+        return ConversationDetail(
+            id=conv_result.data["id"],
+            title=conv_result.data["title"],
+            created_at=conv_result.data["created_at"],
+            updated_at=conv_result.data["updated_at"],
+            messages=[ChatMessage(**msg) for msg in messages_result.data or []]
+        )
+    except Exception as e:
+        logger.error(f"Error retrieving conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve conversation")
 
 
 @router.get("/conversations/{conversation_id}/messages", response_model=List[ChatMessage])
