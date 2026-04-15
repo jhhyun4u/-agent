@@ -5,7 +5,6 @@ Tests for Vault AI Chat API routes
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
-from unittest.mock import AsyncMock, MagicMock, patch
 
 
 @pytest.fixture

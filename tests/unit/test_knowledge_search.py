@@ -12,7 +12,7 @@ Tests cover:
 import pytest
 from datetime import datetime
 from decimal import Decimal
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 from app.models.knowledge_schemas import (

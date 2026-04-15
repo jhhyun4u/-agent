@@ -9,10 +9,8 @@
 """
 
 import pytest
-from datetime import datetime
-from unittest.mock import AsyncMock, patch
 
-from app.services.state_validator import StateValidator, ProposalStatus, WinResult
+from app.services.state_validator import StateValidator, ProposalStatus
 
 
 class TestProposalStatusEnum:

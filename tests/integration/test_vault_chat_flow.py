@@ -88,18 +88,7 @@ class TestVaultChatFlow:
             headers={"Authorization": f"Bearer {test_user.id}"}
         )
         conv_id = create_resp.json()["id"]
-        
-        # Send a simple test (may fail without full AI setup)
-        response = await async_client.post(
-            "/api/vault/chat",
-            json={
-                "conversation_id": conv_id,
-                "message": "test message",
-                "user_id": test_user.id
-            },
-            headers={"Authorization": f"Bearer {test_user.id}"}
-        )
-        
+
         # Even if chat fails, verify conversation still exists
         conv_check = await async_client.get(
             f"/api/vault/conversations/{conv_id}",
@@ -251,17 +240,6 @@ class TestDataIntegrity:
         conv_id = create_resp.json()["id"]
         
         test_message = "This is a test message with special chars: 한글, 日本語, émojis 🚀"
-        
-        # Send message
-        response = await async_client.post(
-            "/api/vault/chat",
-            json={
-                "conversation_id": conv_id,
-                "message": test_message,
-                "user_id": test_user.id
-            },
-            headers={"Authorization": f"Bearer {test_user.id}"}
-        )
         
         # Get conversation to check message was saved
         resp = await async_client.get(

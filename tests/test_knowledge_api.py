@@ -13,9 +13,7 @@ Tests cover:
 
 import pytest
 from httpx import AsyncClient
-from unittest.mock import patch, AsyncMock
 from app.main import app
-from app.models.schemas import SearchFiltersType
 
 
 @pytest.fixture

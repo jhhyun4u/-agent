@@ -12,7 +12,7 @@ to auto-classification using KnowledgeManager, verifying that:
 
 import pytest
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, patch, call
+from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 from app.models.knowledge_schemas import (

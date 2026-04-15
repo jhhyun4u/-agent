@@ -10,9 +10,6 @@ from datetime import datetime
 from fastapi.testclient import TestClient
 from app.main import app
 from app.models.vault_schemas import (
-    VaultChatRequest,
-    ConversationCreate,
-    ChatMessage,
     VaultSection,
 )
 
@@ -110,15 +107,6 @@ class TestVaultChatCompleteFlow:
                     "confidence": 0.85
                 }):
                     with patch('app.utils.supabase_client.get_async_client', return_value=mock_client):
-                        # Step 1: Create conversation
-                        conv_request = ConversationCreate(title="Test Conversation")
-
-                        # Step 2: Send message
-                        chat_request = VaultChatRequest(
-                            message="We need to build a mobile app",
-                            conversation_id="conv-1"
-                        )
-
                         # Verify mocks were called appropriately
                         assert mock_search_results[0].relevance_score == 0.85
                         assert mock_llm_response["text"].startswith("Based on")
@@ -298,12 +286,6 @@ class TestVaultChatCompleteFlow:
     async def test_different_vault_sections_routed_correctly(self):
         """Test that queries are routed to correct vault sections"""
 
-        # Test routing for completed projects query
-        projects_query = "We built mobile apps in the past"
-
-        # Test routing for government guidelines query
-        guidelines_query = "정부 급여 기준이 뭐야?"
-
         # Mock routing decisions
         mock_routing = {
             "projects_query": {
@@ -347,11 +329,6 @@ Available context:
 {chr(10).join(f'- {s["title"]}: {s["content"]}' for s in sources)}
 
 Respond based on provided sources."""
-
-        # Mock LLM call
-        mock_response = {
-            "text": "Based on your experience with mobile app projects like RetailCorp..."
-        }
 
         # Verify context is passed
         assert "Mobile App Project" in system_prompt
@@ -475,7 +452,7 @@ class TestVaultConversationManagement:
         }
 
         # Last activity should be recent
-        from datetime import datetime, timedelta
+        from datetime import datetime
 
         last_activity = datetime.fromisoformat(mock_conversation["updated_at"])
         now = datetime.now()

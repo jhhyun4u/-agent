@@ -4,7 +4,6 @@
 실제 API 엔드포인트 호출 전에 필터링 로직 검증
 """
 
-import asyncio
 from pathlib import Path
 
 # ── 파일 캐시 상태 확인 ────────────────
@@ -23,7 +22,7 @@ def check_cache_status():
         payload = cache.get("payload", {})
         bids = payload.get("data", [])
 
-        print(f"\n[CACHE] 파일 캐시 상태: 존재함")
+        print("\n[CACHE] 파일 캐시 상태: 존재함")
         print(f"  - 전체 공고 수: {len(bids)}건")
 
         if bids:
@@ -46,7 +45,7 @@ def check_cache_status():
         else:
             print("  - 캐시에 공고 데이터 없음")
     else:
-        print(f"\n[CACHE] 파일 캐시 상태: 없음")
+        print("\n[CACHE] 파일 캐시 상태: 없음")
         print(f"  경로: {cache_file}")
         print("  -> /api/bids/crawl 또는 새로고침으로 데이터 수집 필요")
 
@@ -70,7 +69,7 @@ def simulate_budget_filtering():
     payload = cache.get("payload", {})
     bids = payload.get("data", [])
 
-    print(f"\n[Simulation] 필터링 시뮬레이션")
+    print("\n[Simulation] 필터링 시뮬레이션")
     print(f"원본 공고 수: {len(bids)}건\n")
 
     # 테스트할 min_budget 값들

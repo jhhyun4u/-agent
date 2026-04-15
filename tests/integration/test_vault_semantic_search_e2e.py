@@ -4,7 +4,7 @@ Tests complete pipeline from user query to search results
 """
 
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import patch
 from datetime import datetime
 from app.services.vault_handlers.completed_projects import CompletedProjectsHandler
 from app.services.vault_handlers.government_guidelines import GovernmentGuidelinesHandler
@@ -111,7 +111,6 @@ class TestVaultSemanticSearchE2E:
         Expected: Returns mobile apps filtered by budget using hybrid search
         """
 
-        query = "mobile application development"
         filters = {
             "budget_min": 0,
             "budget_max": 50000

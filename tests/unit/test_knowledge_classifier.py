@@ -194,17 +194,6 @@ class TestKnowledgeManager:
         manager = KnowledgeManager()
         chunk_id = uuid4()
 
-        # Mock Claude API response
-        mock_response = {
-            "primary_type": "capability",
-            "confidence": 0.92,
-            "reasoning": "Detected technical expertise in IoT platform implementation",
-            "secondary_types": [],
-            "tags": ["IoT", "AWS", "real-time-systems"],
-            "should_deprecate": False,
-            "deprecation_reason": None
-        }
-
         with patch.object(
             manager.__class__, "classify_chunk",
             new_callable=AsyncMock,

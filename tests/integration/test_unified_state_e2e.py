@@ -17,7 +17,7 @@ End-to-End Integration Test: Unified State System
 """
 
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
 from datetime import datetime, timezone
 
 from app.services.state_validator import StateValidator, ProposalStatus
@@ -146,8 +146,6 @@ class TestUnifiedStateE2E:
         - triggered_by (user or system)
         - created_at 타임스탬프
         """
-        proposal_id = "prop_timeline_001"
-
         # 예상되는 timeline 레코드들
         expected_timeline_events = [
             {

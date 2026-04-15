@@ -4,14 +4,11 @@ Tests conversation management and message operations
 """
 
 import pytest
-import asyncio
-from datetime import datetime
 from typing import AsyncGenerator
 from httpx import AsyncClient
 
 from app.main import app
 from app.models.auth_schemas import CurrentUser
-from tests.conftest import get_test_db
 
 
 pytestmark = pytest.mark.asyncio

@@ -7,39 +7,12 @@
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
-from datetime import datetime, timezone
 
 # ── Unit Test: BidFetcher 필터링 로직 ────────────────
 
 
 def test_bid_fetcher_budget_filter():
     """BidFetcher의 budget 필터링 로직 검증"""
-
-    # Mock 데이터: 여러 예산 레벨의 공고
-    mock_bids = [
-        {
-            "bidNtceNo": "001",
-            "bidNtceNm": "공고1",
-            "bidAmt": 50_000_000,  # 5천만원
-            "bidDdln": "20260415235959",
-            "bider": "기관A",
-        },
-        {
-            "bidNtceNo": "002",
-            "bidNtceNm": "공고2",
-            "bidAmt": 150_000_000,  # 1억5천만원
-            "bidDdln": "20260420235959",
-            "bider": "기관B",
-        },
-        {
-            "bidNtceNo": "003",
-            "bidNtceNm": "공고3",
-            "bidAmt": 300_000_000,  # 3억원
-            "bidDdln": "20260425235959",
-            "bider": "기관C",
-        },
-    ]
 
     # BidScorer의 output 형식으로 변환 (budget, bid_no 포함)
     class MockBidScore:
