@@ -1,333 +1,357 @@
 """
-제안서 상태 머신 (Phase 2: Unified State System)
+Proposal state machine with business-level methods.
 
-StateMachine: StateValidator를 래핑한 비즈니스 친화적 상태 관리
-- start_workflow()     → waiting → in_progress
-- complete_proposal()  → in_progress → completed
-- submit_proposal()    → completed → submitted
-- mark_presentation()  → submitted → presentation
-- close_proposal()     → * → closed  (win_result 필수)
-- hold_proposal()      → * → on_hold
-- resume_proposal()    → on_hold → waiting / in_progress
-- archive_proposal()   → closed / expired → archived
+Wraps StateValidator to provide convenient methods for common transitions:
+- start_workflow() → in_progress
+- decide_go() → in_progress (from analyzing)
+- decide_no_go() → on_hold or closed
+- submit() → submitted
+- present() → presentation
+- record_win() → closed (won)
+- record_loss() → closed (lost)
 
-각 메서드는 StateValidator.transition()을 호출하여 상태 전환을 실행합니다.
+This separates business logic (Layer 1: status) from workflow execution (Layer 2: phase)
+and AI runtime state (Layer 3: ai_task_status).
 """
 
 from typing import Optional
 from app.services.state_validator import StateValidator, ProposalStatus, WinResult
-import logging
-
-logger = logging.getLogger(__name__)
+from app.exceptions import TenopAPIError
 
 
 class StateMachine:
     """
-    제안서 상태 머신 (비즈니스 레벨 상태 관리)
+    Business-level state machine for proposals.
 
-    BusinessStatus (Layer 1): proposals.status — 10개 통합 상태
-    └─ waiting → in_progress → completed → submitted → presentation → closed
-       on_hold ↔ waiting/in_progress/closed
-       expired → archived
-       closed → archived
-
-    WorkflowPhase (Layer 2): proposals.current_phase
-    └─ start, rfp_fetch, rfp_analyze, research_gather, go_no_go, ...
-
-    AIRuntime (Layer 3): ai_task_status 테이블 (독립 관리)
-    └─ running, complete, error, paused, no_response
+    Usage:
+        sm = ProposalStateMachine(proposal_id)
+        await sm.start_workflow(user_id="user-123")
+        await sm.decide_go(user_id="user-123", notes="Strong fit")
+        await sm.submit(user_id="user-123")
+        await sm.record_win(user_id="user-123", contract_value=1000000)
     """
 
     def __init__(self, proposal_id: str):
-        """Initialize state machine for a proposal
-
-        Args:
-            proposal_id: UUID of the proposal
-        """
         self.proposal_id = proposal_id
-
-    @staticmethod
-    def _build_metadata(**kwargs) -> dict:
-        """Build metadata dict filtering out None values"""
-        return {k: v for k, v in kwargs.items() if v is not None}
 
     async def start_workflow(
         self,
         user_id: str,
-        initial_phase: str = "rfp_analyze",
+        phase: str = "rfp_analyze",
     ) -> dict:
-        """워크플로우 착수: waiting → in_progress
+        """
+        Start proposal workflow (initialized → in_progress).
 
         Args:
-            user_id: 사용자 ID (착수자)
-            initial_phase: 시작 phase (기본값: rfp_analyze)
+            user_id: User starting the workflow
+            phase: Initial workflow phase (default: rfp_analyze)
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.IN_PROGRESS.value,
-            current_phase=initial_phase,
+            ProposalStatus.IN_PROGRESS,
+            current_phase=phase,
             user_id=user_id,
             actor_type="user",
-            reason="사용자가 제안서 작업 착수",
+            reason="Workflow started by user",
         )
 
-    async def complete_proposal(
+    async def decide_go(
         self,
-        user_id: Optional[str] = None,
+        user_id: str,
+        phase: str = "strategy_generate",
         notes: str = "",
     ) -> dict:
-        """내부 완성: in_progress → completed
+        """
+        Go/No-Go decision: Go (in_progress → in_progress with phase change).
+
+        Actually marks as ready for strategy generation.
 
         Args:
-            user_id: 완성 처리자 ID
-            notes: 코멘트
+            user_id: User making the decision
+            phase: Next workflow phase (default: strategy_generate)
+            notes: Decision notes
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
-        metadata = self._build_metadata(notes=notes or None)
+        metadata = {}
+        if notes:
+            metadata["decision"] = "go"
+            metadata["notes"] = notes
 
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.COMPLETED.value,
-            current_phase="completed",
-            user_id=user_id,
-            actor_type="workflow" if not user_id else "user",
-            reason="제안서 내부 완성",
-            metadata=metadata,
-        )
-
-    async def submit_proposal(
-        self,
-        user_id: str,
-        submission_type: str = "email",
-    ) -> dict:
-        """제안서 제출: completed → submitted
-
-        Args:
-            user_id: 제출자 ID
-            submission_type: 제출 방식 (email, portal, hand_delivery 등)
-
-        Returns:
-            timeline entry dict
-        """
-        metadata = self._build_metadata(submission_type=submission_type)
-
-        return await StateValidator.transition(
-            self.proposal_id,
-            ProposalStatus.SUBMITTED.value,
-            current_phase="submitted",
+            ProposalStatus.IN_PROGRESS,
+            current_phase=phase,
             user_id=user_id,
             actor_type="user",
-            reason="제안서 제출",
+            reason="Go decision",
             metadata=metadata,
         )
 
-    async def mark_presentation(
+    async def decide_no_go(
         self,
         user_id: str,
-        presentation_date: Optional[str] = None,
+        reason: str = "",
     ) -> dict:
-        """프레젠테이션/입찰 진행: submitted → presentation
+        """
+        Go/No-Go decision: No-Go (in_progress → on_hold).
+
+        Can be resumed later if conditions change.
 
         Args:
-            user_id: 기록자 ID
-            presentation_date: 프레젠테이션 날짜 (ISO format)
+            user_id: User making the decision
+            reason: Reason for no-go
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
-        metadata = self._build_metadata(presentation_date=presentation_date)
+        metadata = {
+            "decision": "no_go",
+        }
+        if reason:
+            metadata["reason"] = reason
 
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.PRESENTATION.value,
+            ProposalStatus.ON_HOLD,
+            user_id=user_id,
+            actor_type="user",
+            reason="No-Go decision",
+            metadata=metadata,
+        )
+
+    async def submit(
+        self,
+        user_id: str,
+    ) -> dict:
+        """
+        Submit proposal to client/issuing authority (completed → submitted).
+
+        Args:
+            user_id: User submitting
+
+        Returns:
+            Timeline entry
+        """
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.SUBMITTED,
+            current_phase="submit",
+            user_id=user_id,
+            actor_type="user",
+            reason="Proposal submitted to client",
+        )
+
+    async def present(
+        self,
+        user_id: str,
+    ) -> dict:
+        """
+        Mark proposal presentation/bidding as active (submitted → presentation).
+
+        Args:
+            user_id: User marking as presented
+
+        Returns:
+            Timeline entry
+        """
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.PRESENTATION,
             current_phase="presentation",
             user_id=user_id,
             actor_type="user",
-            reason="프레젠테이션/입찰 진행 기록",
+            reason="Proposal presented to client",
+        )
+
+    async def record_win(
+        self,
+        user_id: str,
+        contract_value: Optional[float] = None,
+        metadata: Optional[dict] = None,
+    ) -> dict:
+        """
+        Record winning contract (presentation → closed with win_result='won').
+
+        Args:
+            user_id: User recording the win
+            contract_value: Contract value in currency
+            metadata: Additional data (contract_id, award_date, etc.)
+
+        Returns:
+            Timeline entry
+        """
+        record_metadata = metadata or {}
+        if contract_value is not None:
+            record_metadata["contract_value"] = contract_value
+
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.CLOSED,
+            user_id=user_id,
+            actor_type="user",
+            reason="Contract won",
+            metadata=record_metadata,
+            win_result=WinResult.WON.value,
+        )
+
+    async def record_loss(
+        self,
+        user_id: str,
+        loss_reason: str = "",
+        metadata: Optional[dict] = None,
+    ) -> dict:
+        """
+        Record lost bid (presentation → closed with win_result='lost').
+
+        Args:
+            user_id: User recording the loss
+            loss_reason: Why was it lost
+            metadata: Additional data (competitor_name, score, etc.)
+
+        Returns:
+            Timeline entry
+        """
+        record_metadata = metadata or {}
+        if loss_reason:
+            record_metadata["loss_reason"] = loss_reason
+
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.CLOSED,
+            user_id=user_id,
+            actor_type="user",
+            reason=loss_reason or "Contract lost",
+            metadata=record_metadata,
+            win_result=WinResult.LOST.value,
+        )
+
+    async def abandon(
+        self,
+        user_id: str,
+        reason: str = "",
+    ) -> dict:
+        """
+        Abandon proposal (any state → closed with win_result='abandoned').
+
+        Used when internal decision is made not to pursue.
+
+        Args:
+            user_id: User abandoning
+            reason: Why abandoned
+
+        Returns:
+            Timeline entry
+        """
+        metadata = {}
+        if reason:
+            metadata["reason"] = reason
+
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.CLOSED,
+            user_id=user_id,
+            actor_type="user",
+            reason=reason or "Proposal abandoned",
+            metadata=metadata,
+            win_result=WinResult.ABANDONED.value,
+        )
+
+    async def hold(
+        self,
+        user_id: str,
+        reason: str = "",
+    ) -> dict:
+        """
+        Pause proposal (any active state → on_hold).
+
+        Can be resumed with resume().
+
+        Args:
+            user_id: User holding
+            reason: Why held
+
+        Returns:
+            Timeline entry
+        """
+        metadata = {}
+        if reason:
+            metadata["reason"] = reason
+
+        return await StateValidator.transition(
+            self.proposal_id,
+            ProposalStatus.ON_HOLD,
+            user_id=user_id,
+            actor_type="user",
+            reason=reason or "Proposal held",
             metadata=metadata,
         )
 
-    async def close_proposal(
+    async def resume(
         self,
         user_id: str,
-        win_result: str,
-        reason: str = "",
-        notes: str = "",
-        contract_amount: Optional[float] = None,
-        contract_date: Optional[str] = None,
+        phase: Optional[str] = None,
     ) -> dict:
-        """최종 종료: * → closed  (win_result 필수)
-
-        Args:
-            user_id: 기록자 ID
-            win_result: 종료 세부 결과 (WinResult enum 값: won/lost/no_go/abandoned/cancelled)
-            reason: 종료 이유
-            notes: 상세 정보 및 교훈
-            contract_amount: 계약금액 (수주 시)
-            contract_date: 계약일 (수주 시, ISO format)
-
-        Returns:
-            timeline entry dict
         """
-        # win_result 사전 검증
-        try:
-            wr = WinResult(win_result)
-        except ValueError as e:
-            raise ValueError(
-                f"알 수 없는 win_result: {win_result}. 허용: {[w.value for w in WinResult]}"
-            ) from e
-
-        metadata = self._build_metadata(
-            win_result=win_result,
-            notes=notes or None,
-            contract_amount=contract_amount,
-            contract_date=contract_date,
-        )
-
-        log_label = {
-            WinResult.WON: "CONTRACT_WON",
-            WinResult.LOST: "CONTRACT_LOST",
-            WinResult.NO_GO: "NO_GO_DECISION",
-            WinResult.ABANDONED: "ABANDONED",
-            WinResult.CANCELLED: "CANCELLED",
-        }.get(wr, "CLOSED")
-
-        logger.info(f"[{log_label}] proposal_id={self.proposal_id}, win_result={win_result}")
-
-        return await StateValidator.transition(
-            self.proposal_id,
-            ProposalStatus.CLOSED.value,
-            user_id=user_id,
-            actor_type="user",
-            reason=reason or f"종료: {win_result}",
-            metadata=metadata,
-            win_result=win_result,
-        )
-
-    async def hold_proposal(
-        self,
-        user_id: str,
-        reason: str = "",
-    ) -> dict:
-        """일시 보류: * → on_hold
+        Resume held proposal (on_hold → waiting or in_progress).
 
         Args:
-            user_id: 보류 처리자 ID
-            reason: 보류 사유
+            user_id: User resuming
+            phase: Resume to this phase (if any)
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.ON_HOLD.value,
+            ProposalStatus.WAITING,
+            current_phase=phase,
             user_id=user_id,
             actor_type="user",
-            reason=reason or "일시 보류",
+            reason="Proposal resumed",
         )
 
-    async def resume_proposal(
-        self,
-        user_id: str,
-        to_status: str = "waiting",
-    ) -> dict:
-        """보류 해제: on_hold → waiting / in_progress
-
-        Args:
-            user_id: 재개 처리자 ID
-            to_status: 재개 후 상태 ('waiting' 또는 'in_progress')
-
-        Returns:
-            timeline entry dict
-        """
-        if to_status not in (ProposalStatus.WAITING.value, ProposalStatus.IN_PROGRESS.value):
-            raise ValueError(f"보류 해제 후 상태는 'waiting' 또는 'in_progress'만 가능합니다. (요청: {to_status})")
-
-        return await StateValidator.transition(
-            self.proposal_id,
-            to_status,
-            user_id=user_id,
-            actor_type="user",
-            reason="보류 해제 및 재개",
-        )
-
-    async def archive_proposal(
+    async def archive(
         self,
         user_id: Optional[str] = None,
-        reason: str = "",
     ) -> dict:
-        """보관: closed / expired → archived
+        """
+        Archive closed proposal (closed → archived).
+
+        Typically done 30 days after closure for record keeping.
 
         Args:
-            user_id: 처리자 ID (없으면 시스템 자동 처리)
-            reason: 보관 사유
+            user_id: User archiving (optional, defaults to 'system')
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.ARCHIVED.value,
+            ProposalStatus.ARCHIVED,
             user_id=user_id,
             actor_type="system" if not user_id else "user",
-            reason=reason or "보관 처리 (30일 경과 자동)",
+            reason="Proposal archived",
         )
 
-    async def expire_proposal(
+    async def mark_expired(
         self,
-        reason: str = "마감일 초과",
     ) -> dict:
-        """만료: waiting / in_progress → expired (시스템 자동)
+        """
+        Mark proposal as expired (any open state → expired).
 
-        Args:
-            reason: 만료 사유
+        Automatically triggered when RFP deadline passes.
 
         Returns:
-            timeline entry dict
+            Timeline entry
         """
         return await StateValidator.transition(
             self.proposal_id,
-            ProposalStatus.EXPIRED.value,
-            actor_type="system",
-            reason=reason,
-        )
-
-    async def transition(
-        self,
-        to_status: str,
-        current_phase: Optional[str] = None,
-        user_id: Optional[str] = None,
-        reason: Optional[str] = None,
-        metadata: Optional[dict] = None,
-        win_result: Optional[str] = None,
-    ) -> dict:
-        """직접 상태 전환 (고급 사용)
-
-        이 메서드는 위의 편의 메서드들로 처리되지 않는 경우에만 사용하세요.
-
-        Args:
-            to_status: 전환할 상태 (ProposalStatus 값)
-            current_phase: 현재 phase
-            user_id: 사용자 ID
-            reason: 전환 이유
-            metadata: 추가 메타데이터
-            win_result: 종료 세부 결과 (closed 전환 시 사용)
-
-        Returns:
-            timeline entry dict
-        """
-        return await StateValidator.transition(
-            self.proposal_id,
-            to_status,
-            current_phase=current_phase,
-            user_id=user_id,
-            actor_type="user" if user_id else "workflow",
-            reason=reason or f"상태 전환: {to_status}",
-            metadata=metadata,
-            win_result=win_result,
+            ProposalStatus.EXPIRED,
+            actor_type="cron",
+            reason="RFP deadline passed",
         )

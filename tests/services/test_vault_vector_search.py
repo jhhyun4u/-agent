@@ -17,7 +17,8 @@ class TestCompletedProjectsVectorSearch:
     @pytest.mark.asyncio
     async def test_vector_search_returns_semantic_results(self):
         """Test that vector search returns results with similarity scores"""
-        
+        from tests.conftest import make_supabase_mock
+
         # Mock embedding service
         mock_embedding_service = AsyncMock()
         mock_embedding_service.search_similar = AsyncMock(return_value=[
@@ -36,30 +37,31 @@ class TestCompletedProjectsVectorSearch:
                 "similarity": 0.72
             }
         ])
-        
-        # Mock database
-        mock_client = AsyncMock()
-        mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute = AsyncMock()
-        
-        async def mock_execute():
-            return MagicMock(data={
-                "id": "proj-1",
-                "title": "Mobile App Development",
-                "content": "Built iOS and Android apps...",
-                "metadata": {
-                    "client": "TechCorp",
-                    "budget": 50000,
-                    "start_date": "2023-01-01",
-                    "end_date": "2023-12-31"
-                },
-                "created_at": "2023-01-01T00:00:00"
-            })
-        
+
+        # Use proper mock client from conftest
+        vault_doc_data = {
+            "id": "proj-1",
+            "section": "completed_projects",
+            "title": "Mobile App Development",
+            "content": "Built iOS and Android apps...",
+            "metadata": {
+                "client": "TechCorp",
+                "budget": 50000,
+                "start_date": "2023-01-01",
+                "end_date": "2023-12-31"
+            },
+            "created_at": "2023-01-01T00:00:00"
+        }
+
+        mock_client = make_supabase_mock(table_data={
+            "vault_documents": [vault_doc_data]
+        })
+
         # Test search
         with patch('app.services.vault_embedding_service.EmbeddingService', return_value=mock_embedding_service):
             with patch('app.services.vault_handlers.completed_projects.get_async_client', return_value=mock_client):
                 results = await CompletedProjectsHandler._vector_search("app development", limit=10)
-        
+
         # Verify results
         assert len(results) > 0
         assert all(isinstance(r, SearchResult) for r in results)
@@ -113,6 +115,7 @@ class TestCompletedProjectsVectorSearch:
         """Test that deduplication merges results from both sources"""
         
         # Create duplicate results (same document from SQL and vector)
+        now = datetime.now()
         result1 = SearchResult(
             document=VaultDocument(
                 id="proj-1",
@@ -120,7 +123,7 @@ class TestCompletedProjectsVectorSearch:
                 title="Project A",
                 content="",
                 metadata={},
-                created_at=datetime.now()
+                created_at=now
             ),
             relevance_score=0.95,
             match_type="exact",
@@ -134,7 +137,7 @@ class TestCompletedProjectsVectorSearch:
                 title="Project A",
                 content="",
                 metadata={},
-                created_at=datetime.now()
+                created_at=now
             ),
             relevance_score=0.80,
             match_type="semantic",
@@ -153,13 +156,14 @@ class TestCompletedProjectsVectorSearch:
     @pytest.mark.asyncio
     async def test_metadata_filters_on_vector_results(self):
         """Test that metadata filters work on vector search results"""
-        
+        from tests.conftest import make_supabase_mock
+
         filters = {
             "client": "TechCorp",
             "budget_min": 40000,
             "budget_max": 60000
         }
-        
+
         # Mock embedding service
         mock_embedding_service = AsyncMock()
         mock_embedding_service.search_similar = AsyncMock(return_value=[
@@ -178,42 +182,41 @@ class TestCompletedProjectsVectorSearch:
                 "similarity": 0.75
             }
         ])
-        
-        # Mock database to return different metadata
-        call_count = [0]
-        
-        async def mock_execute():
-            call_count[0] += 1
-            if call_count[0] == 1:
-                return MagicMock(data={
-                    "id": "proj-1",
-                    "title": "Project A",
-                    "content": "...",
-                    "metadata": {
-                        "client": "TechCorp",
-                        "budget": 50000
-                    },
-                    "created_at": "2023-01-01T00:00:00"
-                })
-            else:
-                return MagicMock(data={
-                    "id": "proj-2",
-                    "title": "Project B",
-                    "content": "...",
-                    "metadata": {
-                        "client": "OtherCorp",
-                        "budget": 70000
-                    },
-                    "created_at": "2023-01-01T00:00:00"
-                })
-        
-        mock_client = AsyncMock()
-        mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute = mock_execute
-        
+
+        # Use proper mock with both documents
+        vault_docs = [
+            {
+                "id": "proj-1",
+                "section": "completed_projects",
+                "title": "Project A",
+                "content": "...",
+                "metadata": {
+                    "client": "TechCorp",
+                    "budget": 50000
+                },
+                "created_at": "2023-01-01T00:00:00"
+            },
+            {
+                "id": "proj-2",
+                "section": "completed_projects",
+                "title": "Project B",
+                "content": "...",
+                "metadata": {
+                    "client": "OtherCorp",
+                    "budget": 70000
+                },
+                "created_at": "2023-01-01T00:00:00"
+            }
+        ]
+
+        mock_client = make_supabase_mock(table_data={
+            "vault_documents": vault_docs
+        })
+
         with patch('app.services.vault_embedding_service.EmbeddingService', return_value=mock_embedding_service):
             with patch('app.services.vault_handlers.completed_projects.get_async_client', return_value=mock_client):
                 results = await CompletedProjectsHandler._vector_search("query", filters=filters)
-        
+
         # Should only include proj-1 (matches client and budget range)
         assert len(results) == 1
         assert results[0].document.id == "proj-1"
@@ -225,7 +228,8 @@ class TestGovernmentGuidelinesVectorSearch:
     @pytest.mark.asyncio
     async def test_government_guidelines_vector_search(self):
         """Test vector search for government guidelines"""
-        
+        from tests.conftest import make_supabase_mock
+
         mock_embedding_service = AsyncMock()
         mock_embedding_service.search_similar = AsyncMock(return_value=[
             {
@@ -236,19 +240,19 @@ class TestGovernmentGuidelinesVectorSearch:
                 "similarity": 0.82
             }
         ])
-        
-        mock_client = AsyncMock()
-        
-        async def mock_execute():
-            return MagicMock(data={
-                "id": "guide-1",
-                "title": "정부 급여 기준",
-                "content": "정부에서 정한 급여 기준...",
-                "metadata": {"category": "salary"},
-                "created_at": "2023-01-01T00:00:00"
-            })
-        
-        mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute = mock_execute
+
+        guide_doc_data = {
+            "id": "guide-1",
+            "section": "government_guidelines",
+            "title": "정부 급여 기준",
+            "content": "정부에서 정한 급여 기준...",
+            "metadata": {"category": "salary"},
+            "created_at": "2023-01-01T00:00:00"
+        }
+
+        mock_client = make_supabase_mock(table_data={
+            "vault_documents": [guide_doc_data]
+        })
         
         with patch('app.services.vault_embedding_service.EmbeddingService', return_value=mock_embedding_service):
             with patch('app.services.vault_handlers.government_guidelines.get_async_client', return_value=mock_client):

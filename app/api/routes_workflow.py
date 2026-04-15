@@ -161,13 +161,13 @@ async def start_workflow(
     # StateMachine: 상태 전환 (initialized/waiting → in_progress)
     try:
         sm = StateMachine(proposal_id)
-        await sm.start_workflow(user_id=user.id, initial_phase="start")
+        await sm.start_workflow(user_id=user.id, phase="rfp_analyze")
     except ValueError as e:
         logger.warning(f"상태 전환 실패 (proposal_id={proposal_id}): {e}")
         # 오류 발생 시 on_hold 상태로 전환 (재개 가능)
         try:
             sm_hold = StateMachine(proposal_id)
-            await sm_hold.hold_proposal(user_id=None, reason=f"워크플로우 시작 오류: {str(e)}")
+            await sm_hold.hold(user_id=user.id, reason=f"워크플로우 시작 오류: {str(e)}")
         except Exception as hold_error:
             logger.error(f"on_hold 전환 실패: {hold_error}")
         raise
@@ -206,7 +206,7 @@ async def start_workflow(
         # 그래프 실행 오류 시 on_hold로 전환 (수동 재개 가능)
         try:
             sm_hold = StateMachine(proposal_id)
-            await sm_hold.hold_proposal(user_id=None, reason=f"워크플로우 실행 오류: {type(e).__name__}: {str(e)}")
+            await sm_hold.hold(user_id="workflow", reason=f"워크플로우 실행 오류: {type(e).__name__}: {str(e)}")
         except Exception as hold_error:
             logger.error(f"on_hold 전환 실패: {hold_error}")
         raise
@@ -361,12 +361,13 @@ async def resume_workflow(
             try:
                 sm = StateMachine(proposal_id)
                 win_result = "no_go" if current_step == "go_no_go_no_go" else "abandoned"
-                await sm.close_proposal(
-                    user_id=user.id,
-                    win_result=win_result,
-                    reason=f"워크플로우 미진행: {current_step}",
-                    actor_type="workflow",
-                )
+                reason = f"워크플로우 미진행: {current_step}"
+                
+                if win_result == "no_go":
+                    await sm.decide_no_go(user_id=user.id, reason=reason)
+                else:  # abandoned
+                    await sm.abandon(user_id=user.id, reason=reason)
+                
                 logger.info(f"[WF_CLOSED] proposal={proposal_id}, reason={current_step}, win_result={win_result}", extra={
                     "request_id": rid,
                     "data": {"event": "workflow_closed", "proposal_id": proposal_id, "final_step": current_step, "win_result": win_result},

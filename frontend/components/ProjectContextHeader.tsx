@@ -16,41 +16,20 @@ const STATUS_BADGE_MAP: Record<
   string,
   { label: string; bg: string; text: string; border: string; pulse?: boolean }
 > = {
-  processing: {
-    label: "진행중",
-    bg: "bg-blue-500/15",
-    text: "text-blue-400",
-    border: "border-blue-500/30",
-    pulse: true,
-  },
+
   initialized: {
     label: "대기중",
     bg: "bg-blue-500/15",
     text: "text-blue-400",
     border: "border-blue-500/30",
   },
-  running: {
-    label: "진행중",
+  waiting: {
+    label: "대기중",
     bg: "bg-blue-500/15",
     text: "text-blue-400",
     border: "border-blue-500/30",
-    pulse: true,
   },
-  searching: {
-    label: "진행중",
-    bg: "bg-blue-500/15",
-    text: "text-blue-400",
-    border: "border-blue-500/30",
-    pulse: true,
-  },
-  analyzing: {
-    label: "진행중",
-    bg: "bg-blue-500/15",
-    text: "text-blue-400",
-    border: "border-blue-500/30",
-    pulse: true,
-  },
-  strategizing: {
+  in_progress: {
     label: "진행중",
     bg: "bg-blue-500/15",
     text: "text-blue-400",
@@ -63,29 +42,32 @@ const STATUS_BADGE_MAP: Record<
     text: "text-[#3ecf8e]",
     border: "border-[#3ecf8e]/30",
   },
-  won: {
-    label: "수주",
-    bg: "bg-[#3ecf8e]/15",
-    text: "text-[#3ecf8e]",
-    border: "border-[#3ecf8e]/30",
-  },
-  lost: {
-    label: "패찰",
-    bg: "bg-red-500/15",
-    text: "text-red-400",
-    border: "border-red-500/30",
-  },
+
+
   submitted: {
     label: "결과대기",
     bg: "bg-purple-500/15",
     text: "text-purple-400",
     border: "border-purple-500/30",
   },
-  presented: {
-    label: "결과대기",
-    bg: "bg-purple-500/15",
-    text: "text-purple-400",
-    border: "border-purple-500/30",
+  presentation: {
+    label: "발표진행",
+    bg: "bg-amber-500/15",
+    text: "text-amber-400",
+    border: "border-amber-500/30",
+    pulse: true,
+  },
+  closed: {
+    label: "종료",
+    bg: "bg-[#3ecf8e]/15",
+    text: "text-[#3ecf8e]",
+    border: "border-[#3ecf8e]/30",
+  },
+  archived: {
+    label: "보관",
+    bg: "bg-slate-500/15",
+    text: "text-slate-400",
+    border: "border-slate-500/30",
   },
   on_hold: {
     label: "중단",
@@ -93,16 +75,10 @@ const STATUS_BADGE_MAP: Record<
     text: "text-orange-400",
     border: "border-orange-500/30",
   },
-  abandoned: {
-    label: "포기",
+  expired: {
+    label: "만료",
     bg: "bg-red-500/15",
     text: "text-red-400",
-    border: "border-red-500/30",
-  },
-  no_go: {
-    label: "No-Go",
-    bg: "bg-red-500/15",
-    text: "text-red-300",
     border: "border-red-500/30",
   },
 };

@@ -111,6 +111,13 @@ class VaultChatResponse(BaseModel):
 # Conversation Models
 # ============================================================================
 
+class VaultRegenerateRequest(BaseModel):
+    """Request to regenerate an assistant response"""
+
+    conversation_id: str = Field(..., description="Conversation containing the message")
+    variation: Optional[float] = Field(0.1, ge=0, le=0.5, description="Temperature offset for variation (0-0.5)")
+
+
 class ConversationCreate(BaseModel):
     """Create new conversation"""
     title: Optional[str] = None
@@ -219,7 +226,7 @@ class SearchResult(BaseModel):
     
     document: VaultDocument
     relevance_score: float = Field(..., ge=0, le=1)
-    match_type: Literal["exact", "semantic", "metadata"]
+    match_type: str  # Can be "exact", "semantic", "metadata", or combined like "exact+semantic"
     preview: Optional[str] = None
 
 

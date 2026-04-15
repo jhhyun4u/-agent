@@ -700,10 +700,22 @@ export default function DetailRightPanel({
                         "bg-red-500/15 text-red-400 border-red-500/50",
                     },
                     {
-                      value: "pending",
-                      label: "대기",
+                      value: "no_go",
+                      label: "No-Go",
                       activeClass:
-                        "bg-[#262626] text-[#8c8c8c] border-[#8c8c8c]/30",
+                        "bg-orange-500/15 text-orange-400 border-orange-500/50",
+                    },
+                    {
+                      value: "abandoned",
+                      label: "포기 (Abandoned)",
+                      activeClass:
+                        "bg-slate-500/15 text-slate-400 border-slate-500/50",
+                    },
+                    {
+                      value: "cancelled",
+                      label: "취소 (Cancelled)",
+                      activeClass:
+                        "bg-slate-500/15 text-slate-400 border-slate-500/50",
                     },
                   ] as const
                 ).map(({ value, label, activeClass }) => (
@@ -713,7 +725,7 @@ export default function DetailRightPanel({
                       setWinForm((f) => ({ ...f, win_result: value }));
                       setWinSaved(false);
                     }}
-                    className={`flex-1 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
+                    className={`w-full py-1.5 text-xs font-medium rounded-lg border transition-colors ${
                       winForm.win_result === value
                         ? activeClass
                         : "border-[#262626] text-[#8c8c8c] hover:text-[#ededed]"

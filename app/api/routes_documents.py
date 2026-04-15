@@ -28,7 +28,7 @@ from app.models.document_schemas import (
     ChunkListResponse,
     DocumentProcessResponse,
 )
-from app.services.document_ingestion import process_document
+from app.services.document_ingestion import process_document, process_document_bounded
 from app.utils.supabase_client import get_async_client
 
 # 지원하는 파일 형식
@@ -196,9 +196,9 @@ async def upload_document(
         doc = doc_result.data[0]
         logger.info(f"[{current_user.org_id}] 문서 레코드 생성 완료: {doc['id']}")
 
-        # 백그라운드: 비동기 처리 시작
-        logger.debug(f"[{current_user.org_id}] 비동기 처리 태스크 생성")
-        asyncio.create_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작 (동시성 제한 적용)
+        logger.debug(f"[{current_user.org_id}] 비동기 처리 태스크 생성 (동시성 제한: 최대 5개)")
+        asyncio.create_task(process_document_bounded(document_id, current_user.org_id))
 
         return DocumentResponse(
             id=doc["id"],
@@ -430,8 +430,8 @@ async def reprocess_document(
         if not update_result.data:
             raise Exception("상태 업데이트 실패")
 
-        # 백그라운드: 비동기 처리 시작
-        asyncio.create_task(process_document(document_id, current_user.org_id))
+        # 백그라운드: 비동기 처리 시작 (동시성 제한 적용)
+        asyncio.create_task(process_document_bounded(document_id, current_user.org_id))
 
         return DocumentProcessResponse(
             id=document_id,

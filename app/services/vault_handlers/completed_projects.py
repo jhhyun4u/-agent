@@ -363,38 +363,94 @@ class CompletedProjectsHandler:
 
     @staticmethod
     def _format_document(project: Dict[str, Any]):
-        """Convert proposal row to VaultDocument format"""
+        """Convert document row to VaultDocument format
+        
+        Handles both vault_documents and proposal table formats
+        """
         
         from app.models.vault_schemas import VaultDocument
+        from datetime import datetime as dt
         
-        return VaultDocument(
-            id=project.get("id"),
-            section=VaultSection.COMPLETED_PROJECTS,
-            title=project.get("title", ""),
-            content=project.get("description"),
-            metadata={
-                "proposal_id": project.get("id"),
-                "client": project.get("client_name"),
-                "budget": project.get("budget"),
-                "currency": project.get("currency", "KRW"),
-                "start_date": project.get("start_date"),
-                "end_date": project.get("end_date"),
-                "team_members": project.get("team_members", []),
-                "key_outcomes": project.get("key_outcomes", []),
-                "win_result": project.get("win_result"),
-            },
-            created_at=datetime.now()
-        )
+        # Check if this is a vault_documents row (has 'section' field)
+        if "section" in project:
+            # Direct vault_documents format
+            created_at = project.get("created_at")
+            if isinstance(created_at, str):
+                created_at = dt.fromisoformat(created_at.replace('Z', '+00:00'))
+            elif created_at is None:
+                created_at = dt.now()
+            
+            return VaultDocument(
+                id=project.get("id"),
+                section=project.get("section", VaultSection.COMPLETED_PROJECTS),
+                title=project.get("title", ""),
+                content=project.get("content"),
+                metadata=project.get("metadata", {}),
+                created_at=created_at,
+                embedding_id=project.get("embedding_id")
+            )
+        else:
+            # Proposal table format (legacy)
+            return VaultDocument(
+                id=project.get("id"),
+                section=VaultSection.COMPLETED_PROJECTS,
+                title=project.get("title", ""),
+                content=project.get("description"),
+                metadata={
+                    "proposal_id": project.get("id"),
+                    "client": project.get("client_name"),
+                    "budget": project.get("budget"),
+                    "currency": project.get("currency", "KRW"),
+                    "start_date": project.get("start_date"),
+                    "end_date": project.get("end_date"),
+                    "team_members": project.get("team_members", []),
+                    "key_outcomes": project.get("key_outcomes", []),
+                    "win_result": project.get("win_result"),
+                },
+                created_at=datetime.now()
+            )
     
     @staticmethod
     def _create_preview(project: Dict[str, Any]) -> str:
-        """Create human-readable preview of project"""
+        """Create human-readable preview of project
         
-        return f"""
-**{project.get('title')}** ({project.get('win_result', 'unknown')})
-- Client: {project.get('client_name')}
-- Budget: {project.get('budget'):,} {project.get('currency', 'KRW')}
-- Period: {project.get('start_date')} ~ {project.get('end_date')}
+        Handles both vault_documents and proposal table formats
+        """
+        
+        title = project.get('title', 'Untitled')
+        
+        # Check if this is a vault_documents row
+        if "section" in project:
+            # vault_documents format
+            content = project.get('content', '')[:100]
+            metadata = project.get('metadata', {})
+            client = metadata.get('client', 'Unknown')
+            budget = metadata.get('budget')
+            currency = metadata.get('currency', 'KRW')
+            start_date = metadata.get('start_date', 'N/A')
+            end_date = metadata.get('end_date', 'N/A')
+            team_count = len(metadata.get('team_members', []))
+            
+            budget_str = f"{budget:,}" if budget is not None else "N/A"
+            return f"""
+**{title}**
+- Client: {client}
+- Budget: {budget_str} {currency}
+- Period: {start_date} ~ {end_date}
+- Team: {team_count} people
+- Preview: {content}
+""".strip()
+        else:
+            # Proposal table format (legacy)
+            budget = project.get('budget')
+            currency = project.get('currency', 'KRW')
+            budget_str = f"{budget:,}" if budget is not None else "N/A"
+            
+            return f"""
+**{title}** ({project.get('win_result', 'unknown')})
+- Client: {project.get('client_name', 'Unknown')}
+- Budget: {budget_str} {currency}
+- Period: {project.get('start_date', 'N/A')} ~ {project.get('end_date', 'N/A')}
 - Team: {len(project.get('team_members', []))} people
 """.strip()
 

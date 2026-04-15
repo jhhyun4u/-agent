@@ -143,19 +143,19 @@ export default function WorkflowResumeBanner({
 
   // 2) 중단/포기
   const isOnHold = proposalStatus === "on_hold";
-  const isAbandoned = proposalStatus === "abandoned";
+  // Note: In unified state system, "abandoned" is a win_result value for status="closed", not a status itself
+  const isAbandoned = proposalStatus === "closed" && (workflowState as any)?.win_result === "abandoned";
   const isStopped = isOnHold || isAbandoned;
 
   // 3) 워크플로 미시작/완료는 표시 안 함
+  // Terminal statuses in unified state system (status="closed", "archived", "expired" are terminal)
   const terminalStatuses = [
     "completed",
-    "won",
-    "lost",
     "submitted",
-    "presented",
-    "no_go",
+    "presentation",
+    "closed",
+    "archived",
     "expired",
-    "retrospect",
   ];
   if (terminalStatuses.includes(proposalStatus)) return null;
   if (proposalStatus === "initialized" && !workflowState?.current_step)

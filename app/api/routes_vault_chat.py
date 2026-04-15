@@ -6,7 +6,7 @@ Phase 1 implementation
 import logging
 import time
 import json
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException
 from starlette.responses import StreamingResponse
 from datetime import datetime, timedelta
@@ -18,6 +18,7 @@ from app.models.auth_schemas import CurrentUser
 from app.models.vault_schemas import (
     VaultChatRequest,
     VaultChatResponse,
+    VaultRegenerateRequest,
     ConversationCreate,
     ConversationSummary,
     ConversationDetail,
@@ -28,6 +29,9 @@ from app.models.vault_schemas import (
 from app.utils.supabase_client import get_async_client
 from app.services.vault_query_router import vault_router
 from app.services.vault_validation import HallucinationValidator
+from app.services.vault_cache_service import VaultCacheService
+from app.services.vault_context_manager import VaultContextManager
+from app.services.vault_citation_service import VaultCitationService
 from app.services.vault_handlers.completed_projects import CompletedProjectsHandler
 from app.services.vault_handlers.government_guidelines import GovernmentGuidelinesHandler
 from app.services.claude_client import claude_generate, claude_generate_streaming
@@ -79,9 +83,26 @@ chat_rate_limiter = RateLimiter(max_requests=30, window_seconds=60)  # 30 reques
 # Helper Functions
 # ============================================================================
 
-def _build_system_prompt(sources_context: str) -> str:
-    """Build system prompt with context from sources"""
-    return f"""You are TENOPA Vault AI Assistant - an expert knowledge management assistant.
+def _format_numbered_sources(source_texts: List[str]) -> str:
+    """Format sources with numbering for citation purposes"""
+    if not source_texts:
+        return "No sources found"
+
+    numbered_sources = []
+    for i, text in enumerate(source_texts, 1):
+        # Limit each source to 500 chars to avoid token bloat
+        limited_text = text[:500] if len(text) > 500 else text
+        numbered_sources.append(f"[출처 {i}]\n{limited_text}")
+
+    return "\n\n---\n\n".join(numbered_sources)
+
+
+def _build_system_prompt(sources_context: str, source_count: int = 0) -> str:
+    """Build system prompt with context from sources and citation instructions
+
+    Design Ref: §A.3 — Citation-enhanced system prompt
+    """
+    base_prompt = f"""You are TENOPA Vault AI Assistant - an expert knowledge management assistant.
 
 Available context from knowledge base:
 {sources_context}
@@ -91,24 +112,102 @@ Guidelines:
 - If information is not in sources, clearly state that
 - For Korean queries, respond in Korean
 - For government data, ensure absolute accuracy
-- Cite sources when possible using [source] format
+
 - Be concise but thorough"""
+
+    # Add citation instructions using VaultCitationService
+    if source_count > 0:
+        enhanced_prompt = VaultCitationService.inject_citation_instructions(
+            base_prompt,
+            source_count=source_count
+        )
+        return enhanced_prompt
+
+    return base_prompt
+
+
+async def _search_sections_parallel(
+    sections: List[VaultSection],
+    query: str,
+    filters: Dict[str, Any],
+    limit: int = 5,
+) -> tuple[List[DocumentSource], List[str]]:
+    """
+    Search multiple sections in parallel using asyncio.gather.
+    Returns (sources, source_texts).
+    """
+    async def search_section(section: VaultSection) -> tuple[List[DocumentSource], List[str]]:
+        """Search a single section and return results."""
+        section_sources = []
+        section_texts = []
+
+        try:
+            if section == VaultSection.COMPLETED_PROJECTS:
+                handler_results = await CompletedProjectsHandler.search(
+                    query=query,
+                    filters=filters,
+                    limit=limit
+                )
+            elif section == VaultSection.GOVERNMENT_GUIDELINES:
+                handler_results = await GovernmentGuidelinesHandler.search(
+                    query=query,
+                    filters=filters,
+                    limit=limit
+                )
+            else:
+                # Unknown section - return empty
+                return ([], [])
+
+            for result in handler_results:
+                if result.document:
+                    doc = result.document
+                    doc_source = DocumentSource(
+                        document_id=doc.id,
+                        section=doc.section,
+                        title=doc.title,
+                        snippet=(doc.content or "")[:300] if doc.content else None,
+                        confidence=result.relevance_score,
+                        metadata=doc.metadata,
+                    )
+                    section_sources.append(doc_source)
+                    if doc.content:
+                        section_texts.append(doc.content)
+        except Exception as e:
+            logger.warning(f"Error searching section {section}: {str(e)}")
+
+        return (section_sources, section_texts)
+
+    # Run all searches in parallel
+    results = await asyncio.gather(
+        *[search_section(section) for section in sections],
+        return_exceptions=False
+    )
+
+    # Flatten results
+    all_sources = []
+    all_texts = []
+    for section_sources, section_texts in results:
+        all_sources.extend(section_sources)
+        all_texts.extend(section_texts)
+
+    return (all_sources, all_texts)
 
 
 def _build_user_message(message: str, context: List[ChatMessage]) -> str:
-    """Build user message with conversation context"""
-    context_str = (
-        chr(10).join(f'{msg.role}: {msg.content}' for msg in context[-3:])
-        if context
-        else 'No previous messages'
+    """Build user message with conversation context
+
+    Design Ref: §A.1 — Context-enhanced message for routing
+    """
+    # Extract recent context (last 6 turns)
+    recent_context = VaultContextManager.extract_context(context)
+
+    # Build enhanced message with context and topic hint
+    enhanced_message = VaultContextManager.build_user_message_with_context(
+        message=message,
+        context=recent_context
     )
 
-    return f"""User question: {message}
-
-Previous context (if any):
-{context_str}
-
-Please provide a helpful response based on available sources."""
+    return enhanced_message
 
 
 async def _log_analytics(
@@ -117,20 +216,19 @@ async def _log_analytics(
     sections: List[str],
     result_count: int,
     response_time_ms: float,
-    conversation_id: Optional[str] = None,
 ) -> None:
     """Log search analytics to vault_audit_logs table (fire-and-forget)"""
     try:
         client = await get_async_client()
+        # Combine multiple sections into a single string (comma-separated)
+        section_str = ",".join(sections) if sections else None
         await client.table("vault_audit_logs").insert({
             "user_id": user_id,
             "action": "search",
             "query": query,
-            "sections": sections,
+            "section": section_str,
             "result_count": result_count,
-            "response_time_ms": response_time_ms,
-            "conversation_id": conversation_id,
-            "created_at": datetime.utcnow().isoformat(),
+            "response_time_ms": int(response_time_ms),
         }).execute()
     except Exception as e:
         logger.warning(f"Failed to log analytics: {str(e)}")
@@ -183,56 +281,45 @@ async def vault_chat(
             conversation_context=conversation_context
         )
         
-        # Step 3: Retrieve sources based on routed sections
-        sources = []
-        source_texts = []
-        
-        for section in routing_decision.sections:
-            if section == VaultSection.COMPLETED_PROJECTS:
-                handler_results = await CompletedProjectsHandler.search(
-                    query=request.message,
-                    filters=routing_decision.filters,
-                    limit=5
-                )
-                for result in handler_results:
-                    if result.document:
-                        doc = result.document
-                        doc_source = DocumentSource(
-                            document_id=doc.id,
-                            section=doc.section,
-                            title=doc.title,
-                            snippet=(doc.content or "")[:300] if doc.content else None,
-                            confidence=result.relevance_score,
-                            metadata=doc.metadata,
-                        )
-                        sources.append(doc_source)
-                        if doc.content:
-                            source_texts.append(doc.content)
+        # Step 3: Retrieve sources from all sections (with caching)
+        # Generate cache key for this search
+        section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
+        search_cache_key = VaultCacheService._make_cache_key(
+            query=request.message,
+            sections=section_names,
+            filters=routing_decision.filters
+        )
 
-            elif section == VaultSection.GOVERNMENT_GUIDELINES:
-                handler_results = await GovernmentGuidelinesHandler.search(
-                    query=request.message,
-                    filters=routing_decision.filters,
-                    limit=5
-                )
-                for result in handler_results:
-                    if result.document:
-                        doc = result.document
-                        doc_source = DocumentSource(
-                            document_id=doc.id,
-                            section=doc.section,
-                            title=doc.title,
-                            snippet=(doc.content or "")[:300] if doc.content else None,
-                            confidence=result.relevance_score,
-                            metadata=doc.metadata,
-                        )
-                        sources.append(doc_source)
-                        if doc.content:
-                            source_texts.append(doc.content)
-        
+        # Try cache first
+        cached_sources = await VaultCacheService.get_search(
+            cache_key=search_cache_key,
+            sections=section_names
+        )
+
+        if cached_sources:
+            sources = cached_sources
+            source_texts = [s.snippet or "" for s in sources if s.snippet]
+            logger.info(f"Cache hit for search: {search_cache_key[:8]}...")
+        else:
+            # Cache miss - perform actual search
+            sources, source_texts = await _search_sections_parallel(
+                sections=routing_decision.sections,
+                query=request.message,
+                filters=routing_decision.filters,
+                limit=5
+            )
+
+            # Cache the results
+            await VaultCacheService.set_search(
+                cache_key=search_cache_key,
+                results=sources,
+                sections=section_names,
+                ttl=VaultCacheService.SEARCH_TTL
+            )
+
         # Step 4: Generate response using Claude Sonnet
-        sources_context = "\n".join(source_texts) if source_texts else "No sources found"
-        system_prompt = _build_system_prompt(sources_context)
+        sources_context = _format_numbered_sources(source_texts)
+        system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
         user_message = _build_user_message(request.message, conversation_context)
         
         llm_response = await claude_generate(
@@ -287,7 +374,6 @@ async def vault_chat(
             sections=section_names,
             result_count=len(sources),
             response_time_ms=response_time_ms,
-            conversation_id=conversation_id,
         ))
 
         # Step 8: Return response
@@ -345,51 +431,40 @@ async def vault_chat_stream(
                 conversation_context=conversation_context
             )
 
-            sources = []
-            source_texts = []
+            # Retrieve sources from all sections (with caching)
+            section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
+            search_cache_key = VaultCacheService._make_cache_key(
+                query=request.message,
+                sections=section_names,
+                filters=routing_decision.filters
+            )
 
-            for section in routing_decision.sections:
-                if section == VaultSection.COMPLETED_PROJECTS:
-                    handler_results = await CompletedProjectsHandler.search(
-                        query=request.message,
-                        filters=routing_decision.filters,
-                        limit=5
-                    )
-                    for result in handler_results:
-                        if result.document:
-                            doc = result.document
-                            doc_source = DocumentSource(
-                                document_id=doc.id,
-                                section=doc.section,
-                                title=doc.title,
-                                snippet=(doc.content or "")[:300] if doc.content else None,
-                                confidence=result.relevance_score,
-                                metadata=doc.metadata,
-                            )
-                            sources.append(doc_source)
-                            if doc.content:
-                                source_texts.append(doc.content)
+            # Try cache first
+            cached_sources = await VaultCacheService.get_search(
+                cache_key=search_cache_key,
+                sections=section_names
+            )
 
-                elif section == VaultSection.GOVERNMENT_GUIDELINES:
-                    handler_results = await GovernmentGuidelinesHandler.search(
-                        query=request.message,
-                        filters=routing_decision.filters,
-                        limit=5
-                    )
-                    for result in handler_results:
-                        if result.document:
-                            doc = result.document
-                            doc_source = DocumentSource(
-                                document_id=doc.id,
-                                section=doc.section,
-                                title=doc.title,
-                                snippet=(doc.content or "")[:300] if doc.content else None,
-                                confidence=result.relevance_score,
-                                metadata=doc.metadata,
-                            )
-                            sources.append(doc_source)
-                            if doc.content:
-                                source_texts.append(doc.content)
+            if cached_sources:
+                sources = cached_sources
+                source_texts = [s.snippet or "" for s in sources if s.snippet]
+                logger.info(f"Cache hit for stream: {search_cache_key[:8]}...")
+            else:
+                # Cache miss - perform actual search
+                sources, source_texts = await _search_sections_parallel(
+                    sections=routing_decision.sections,
+                    query=request.message,
+                    filters=routing_decision.filters,
+                    limit=5
+                )
+
+                # Cache the results
+                await VaultCacheService.set_search(
+                    cache_key=search_cache_key,
+                    results=sources,
+                    sections=section_names,
+                    ttl=VaultCacheService.SEARCH_TTL
+                )
 
             # Emit sources event
             sources_event = json.dumps({
@@ -399,8 +474,8 @@ async def vault_chat_stream(
             yield f"data: {sources_event}\n\n"
 
             # Build prompts
-            sources_context = "\n".join(source_texts) if source_texts else "No sources found"
-            system_prompt = _build_system_prompt(sources_context)
+            sources_context = _format_numbered_sources(source_texts)
+            system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
             user_message = _build_user_message(request.message, conversation_context)
 
             # Stream response tokens
@@ -468,7 +543,6 @@ async def vault_chat_stream(
                 sections=section_names,
                 result_count=len(sources),
                 response_time_ms=response_time_ms,
-                conversation_id=conversation_id,
             ))
 
         except Exception as e:
@@ -485,6 +559,185 @@ async def vault_chat_stream(
             "Connection": "keep-alive",
         }
     )
+
+
+# ============================================================================
+# Message Management
+# ============================================================================
+
+@router.post("/messages/{message_id}/regenerate")
+async def regenerate_message(
+    message_id: str,
+    request: VaultRegenerateRequest,
+    current_user: CurrentUser = Depends(get_current_user)
+) -> VaultChatResponse:
+    """
+    Regenerate an assistant message response.
+
+    Takes the original user message and conversation context,
+    re-runs search and LLM generation with adjusted temperature.
+    Updates the message content in the database.
+    """
+    start_time = time.monotonic()
+
+    try:
+        client = await get_async_client()
+
+        # Load the message to regenerate
+        message_result = await client.table("vault_messages").select("*").eq(
+            "id", message_id
+        ).single().execute()
+
+        if not message_result.data:
+            raise HTTPException(status_code=404, detail="Message not found")
+
+        original_message = message_result.data
+
+        # Verify user owns this message's conversation
+        conv_result = await client.table("vault_conversations").select("user_id").eq(
+            "id", request.conversation_id
+        ).single().execute()
+
+        if not conv_result.data or conv_result.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Access denied")
+
+        # Find the user message that prompted this assistant response
+        # Get all messages and find the pair
+        messages_result = await client.table("vault_messages").select("*").eq(
+            "conversation_id", request.conversation_id
+        ).order("created_at").execute()
+
+        messages = messages_result.data or []
+
+        # Find the assistant message and its preceding user message
+        user_message_text = None
+        for i, msg in enumerate(messages):
+            if msg["id"] == message_id and msg["role"] == "assistant":
+                if i > 0:
+                    user_message_text = messages[i - 1]["content"]
+                break
+
+        if not user_message_text:
+            raise HTTPException(status_code=400, detail="Could not find user message context")
+
+        # Load conversation context (messages before this exchange)
+        conversation_context: List[ChatMessage] = []
+        for msg in messages:
+            if msg["id"] == message_id:
+                break
+            if msg["role"] in ["user", "assistant"]:
+                conversation_context.append(
+                    ChatMessage(
+                        id=msg.get("id"),
+                        role=msg["role"],
+                        content=msg["content"],
+                        sources=msg.get("sources", []),
+                        confidence=msg.get("confidence"),
+                        created_at=msg.get("created_at"),
+                    )
+                )
+
+        # Route and search again
+        routing_decision = await vault_router.route(
+            query=user_message_text,
+            conversation_context=conversation_context
+        )
+
+        # Get sources (with caching)
+        section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
+        search_cache_key = VaultCacheService._make_cache_key(
+            query=user_message_text,
+            sections=section_names,
+            filters=routing_decision.filters
+        )
+
+        cached_sources = await VaultCacheService.get_search(
+            cache_key=search_cache_key,
+            sections=section_names
+        )
+
+        if cached_sources:
+            sources = cached_sources
+            source_texts = [s.snippet or "" for s in sources if s.snippet]
+        else:
+            sources, source_texts = await _search_sections_parallel(
+                sections=routing_decision.sections,
+                query=user_message_text,
+                filters=routing_decision.filters,
+                limit=5
+            )
+
+            await VaultCacheService.set_search(
+                cache_key=search_cache_key,
+                results=sources,
+                sections=section_names,
+                ttl=VaultCacheService.SEARCH_TTL
+            )
+
+        # Generate new response with adjusted temperature for variation
+        sources_context = _format_numbered_sources(source_texts)
+        system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
+        user_message = _build_user_message(user_message_text, conversation_context)
+
+        # Adjust temperature based on variation parameter
+        base_temperature = 0.7
+        adjusted_temperature = base_temperature + (request.variation or 0.1)
+        adjusted_temperature = min(adjusted_temperature, 1.0)  # Cap at 1.0
+
+        llm_response = await claude_generate(
+            prompt=user_message,
+            system_prompt=system_prompt,
+            model="claude-sonnet-4-20250514",
+            max_tokens=1500,
+            temperature=adjusted_temperature,
+            response_format="text"
+        )
+
+        response_text = llm_response.get("text", "")
+
+        # Validate response
+        initial_confidence = routing_decision.confidence if routing_decision else 0.5
+        validation_result = await HallucinationValidator.validate(
+            response=response_text,
+            sources=sources,
+            confidence=initial_confidence,
+            source_texts=source_texts
+        )
+
+        validation_passed = validation_result.get("passed", False)
+        final_confidence = validation_result.get("confidence", initial_confidence)
+
+        # Update message in database
+        await client.table("vault_messages").update({
+            "content": response_text,
+            "sources": [s.model_dump(mode="json") for s in sources],
+            "confidence": final_confidence,
+            "updated_at": datetime.utcnow().isoformat(),
+        }).eq("id", message_id).execute()
+
+        # Log regeneration
+        response_time_ms = (time.monotonic() - start_time) * 1000
+        asyncio.create_task(_log_analytics(
+            user_id=current_user.id,
+            query=f"regenerate: {user_message_text}",
+            sections=section_names,
+            result_count=len(sources),
+            response_time_ms=response_time_ms,
+        ))
+
+        return VaultChatResponse(
+            response=response_text,
+            confidence=final_confidence,
+            sources=sources,
+            validation_passed=validation_passed,
+            message_id=message_id
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in regenerate_message: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Regeneration failed: {str(e)}")
 
 
 # ============================================================================
@@ -706,7 +959,7 @@ async def delete_conversation(
 async def _load_conversation_context(
     conversation_id: str,
     user_id: str,
-    limit: int = 10
+    limit: int = 20
 ) -> List[ChatMessage]:
     """Load recent messages from conversation for context"""
     try:
