@@ -14,7 +14,7 @@ import logging
 import tempfile
 from pathlib import Path
 
-from lxml import etree
+from lxml import etree  # type: ignore
 
 logger = logging.getLogger(__name__)
 

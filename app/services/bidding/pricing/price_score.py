@@ -179,7 +179,7 @@ class PriceScoreCalculator:
             # 적격심사: 가격점수 개념 없음, pass/fail + 최저가 순위
             # 시뮬레이션에서는 "순위 점수"로 근사: 최저가에 가까울수록 높은 점수
             if is_disq:
-                score = 0
+                score: float = 0.0
             elif bid_price <= estimated_min_bid:
                 score = price_weight  # 최저가이면 만점
             else:
@@ -188,18 +188,18 @@ class PriceScoreCalculator:
 
         elif "최저" in method:
             # 최저가: 가격점수 = 배점 × (최저입찰가 / 입찰가)
-            score = price_weight * (estimated_min_bid / bid_price) if bid_price > 0 else 0
+            score = price_weight * (estimated_min_bid / bid_price) if bid_price > 0 else 0.0
             formula_desc = "최저가 표준: 가격배점 × (최저입찰가/입찰가)"
 
         elif "수의" in method or "협상" in method:
             # 수의계약/협상: 가격점수 = 배점 × (예정가격 / 입찰가)
-            score = price_weight * (budget / bid_price) if bid_price > 0 else 0
+            score = price_weight * (budget / bid_price) if bid_price > 0 else 0.0
             score = min(score, price_weight)
             formula_desc = "협상/수의 표준: 가격배점 × (예정가격/입찰가), 만점 상한"
 
         else:
             # 종합심사 (기본): 가격점수 = 배점 × (최저입찰가 / 입찰가)
-            score = price_weight * (estimated_min_bid / bid_price) if bid_price > 0 else 0
+            score = price_weight * (estimated_min_bid / bid_price) if bid_price > 0 else 0.0
             formula_desc = "종합심사 표준: 가격배점 × (최저입찰가/입찰가)"
 
         score = round(min(score, price_weight), 2)

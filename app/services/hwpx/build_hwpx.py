@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZIP_STORED, ZipFile
 
-from lxml import etree
+from lxml import etree  # type: ignore
 
 # 템플릿 경로: 이 모듈과 같은 디렉토리의 templates/
 _MODULE_DIR = Path(__file__).resolve().parent

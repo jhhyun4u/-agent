@@ -7,7 +7,7 @@
 from pathlib import Path
 from zipfile import ZIP_STORED, BadZipFile, ZipFile
 
-from lxml import etree
+from lxml import etree  # type: ignore
 
 REQUIRED_FILES = [
     "mimetype",

@@ -16,8 +16,8 @@ from copy import deepcopy
 from pathlib import Path
 
 from hwpx import HwpxDocument
-from lxml import etree as _LET
-from lxml.etree import _Element as _LxmlElement
+from lxml import etree as _LET  # type: ignore
+from lxml.etree import _Element as _LxmlElement  # type: ignore
 
 logger = logging.getLogger(__name__)
 

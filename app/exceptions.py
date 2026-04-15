@@ -40,7 +40,7 @@ class TenopAPIError(Exception):
         self.error_code = error_code
         self.message = message
         self.status_code = status_code
-        self.detail = detail or {}
+        self.detail: dict[str, Any] = detail or {}
         super().__init__(self.message)
 
     def to_dict(self) -> dict:

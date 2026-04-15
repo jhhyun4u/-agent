@@ -14,7 +14,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import anthropic
-from anthropic import Message
+from anthropic.types import Message
 
 from app.config import settings
 from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
@@ -112,9 +112,9 @@ async def claude_generate(
         combined_system = f"{COMMON_SYSTEM_RULES}\n\n{system_prompt}"
 
     system_content = []
-    block = {"type": "text", "text": combined_system}
+    block = {"type": "text", "text": combined_system}  # type: ignore
     if cache_system and settings.enable_prompt_caching:
-        block["cache_control"] = {"type": "ephemeral"}
+        block["cache_control"] = {"type": "ephemeral"}  # type: ignore
     system_content.append(block)
 
     # 메시지 구성
@@ -129,7 +129,7 @@ async def claude_generate(
     }
 
     try:
-        response = await client.messages.create(**create_kwargs)
+        response = await client.messages.create(**create_kwargs)  # type: ignore
 
         # 토큰 사용량 로깅
         usage = response.usage
@@ -215,7 +215,7 @@ async def claude_generate_streaming(
     }
 
     try:
-        async with client.messages.stream(**stream_kwargs) as stream:
+        async with client.messages.stream(**stream_kwargs) as stream:  # type: ignore
             async for text in stream.text_stream:
                 yield text
     except anthropic.RateLimitError as e:

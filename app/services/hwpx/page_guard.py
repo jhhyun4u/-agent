@@ -17,7 +17,7 @@ from dataclasses import dataclass, asdict
 from io import BytesIO
 from pathlib import Path
 
-from lxml import etree
+from lxml import etree  # type: ignore
 
 NS = {
     "hp": "http://www.hancom.co.kr/hwpml/2011/paragraph",
