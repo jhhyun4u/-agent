@@ -161,26 +161,35 @@ async function request<T>(
 
 // ── 제안서 ────────────────────────────────────────────────────────────
 
+/**
+ * 10개 통합 비즈니스 상태 (Layer 1: proposals.status)
+ * - 초기: initialized, waiting
+ * - 진행: in_progress
+ * - 완료: completed, submitted, presentation
+ * - 종료: closed (with win_result), archived
+ * - 특수: on_hold, expired
+ */
 export type ProposalStatus =
-  | "initialized"
-  | "processing"
-  | "running"
-  | "searching"
-  | "analyzing"
-  | "strategizing"
+  | "initialized"  // 호환성: 기존 데이터
+  | "waiting"
+  | "in_progress"
   | "completed"
+  | "submitted"
+  | "presentation"
+  | "closed"
+  | "archived"
+  | "on_hold"
+  | "expired";
+
+/**
+ * 종료 결과 (Layer 1: proposals.win_result, only when status="closed")
+ */
+export type WinResult =
   | "won"
   | "lost"
-  | "submitted"
-  | "presented"
-  | "on_hold"
-  | "abandoned"
   | "no_go"
-  | "expired"
-  | "retrospect"
-  | "failed"
-  | "cancelled"
-  | "paused";
+  | "abandoned"
+  | "cancelled";
 
 export interface ProposalVersion {
   id: string;
@@ -199,7 +208,7 @@ export interface ProposalSummary {
   current_phase: string | null;
   phases_completed: number;
   positioning: string | null;
-  win_result: string | null;
+  win_result?: WinResult | null;  // Layer 1: only when status="closed"
   bid_amount: number | null;
   budget: number | null;
   deadline: string | null;
@@ -211,6 +220,24 @@ export interface ProposalSummary {
   fit_score?: number | null;
   team_name?: string | null;
   owner_name?: string | null;
+  go_decision?: boolean;
+  bid_tracked?: boolean;
+  decision_date?: string | null;
+  // Layer 1: 3-레이어 아키텍처 타임스탐프
+  started_at?: string | null;  // 워크플로우 시작 시간
+  completed_at?: string | null;  // 완료 시간
+  submitted_at?: string | null;  // 제출 시간
+  presentation_started_at?: string | null;  // 발표 시작 시간
+  closed_at?: string | null;  // 종료 시간
+  archived_at?: string | null;  // 보관 시간
+  expired_at?: string | null;  // 만료 시간
+  project_manager_id?: string | null;  // PM ID
+  project_leader_id?: string | null;  // PL ID
+  // 공고 연동 정보
+  source_bid_no?: string | null;  // 원본 공고번호
+  md_rfp_analysis_path?: string | null;  // RFP 분석 마크다운 경로
+  md_notice_path?: string | null;  // 공고문 요약 마크다운 경로
+  md_instruction_path?: string | null;  // 과업지시서 마크다운 경로
 }
 
 export interface ProposalResult {
@@ -265,14 +292,33 @@ export interface SectionLock {
   expires_at: string;
 }
 
+/**
+ * 3-레이어 워크플로우 상태 응답
+ * Layer 1 (Business Status): status, win_result
+ * Layer 2 (Workflow Phase): current_phase
+ * Layer 3 (AI Status): ai_status
+ */
 export interface ProposalStatus_ {
   proposal_id: string;
   rfp_title: string;
   client_name: string;
+  // Layer 1: Business Status
   status: ProposalStatus;
+  win_result?: WinResult | null;
+  // Layer 2: Workflow Phase
   current_phase: string;
   phases_completed: number;
+  // Layer 3: AI Status (from ai_task_status table)
+  ai_status?: {
+    status: "running" | "paused" | "error" | "no_response" | "complete";
+    current_node?: string;
+    error_message?: string | null;
+    last_updated_at?: string;
+  };
+  // Timestamps
   created_at: string;
+  started_at?: string | null;
+  last_activity_at?: string | null;
   error: string;
   // 프로젝트 컨텍스트 헤더용 (백엔드 SELECT * 반환)
   title?: string;
@@ -455,6 +501,63 @@ export interface FormTemplate {
   is_public: boolean;
   use_count: number;
   created_at: string;
+}
+
+// ── Vault AI Chat 타입 ─────────────────────────────────────────────────
+
+export interface DocumentSource {
+  document_id: string;
+  section: string;
+  title: string;
+  snippet?: string;
+  confidence?: number;
+  url_path?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ChatMessage {
+  id?: string;
+  role: "user" | "assistant";
+  content: string;
+  sources?: DocumentSource[];
+  confidence?: number;
+  created_at?: string;
+}
+
+export interface VaultChatRequest {
+  message: string;
+  conversation_id?: string;
+  scope?: string[];
+  filters?: Record<string, unknown>;
+}
+
+export interface VaultChatResponse {
+  response: string;
+  confidence: number;
+  sources: DocumentSource[];
+  validation_passed: boolean;
+  warnings: string[];
+  message_id?: string;
+}
+
+export interface ConversationSummary {
+  id: string;
+  user_id: string;
+  title?: string;
+  created_at: string;
+  updated_at: string;
+  last_message?: string;
+  message_count: number;
+}
+
+export interface ConversationDetail {
+  id: string;
+  user_id: string;
+  title?: string;
+  created_at: string;
+  updated_at: string;
+  message_count: number;
+  messages: ChatMessage[];
 }
 
 // ── AUTH 요청 (/api/auth/*) ─────────────────────────────────────────
@@ -678,6 +781,21 @@ export const api = {
         entry_point: string;
         bid_no: string;
       }>("POST", "/proposals/from-bid", { bid_no: bidNo });
+    },
+
+    /** 공고 결정: 제안포기/유보/관련없음 기록 (제안 생성 없음) */
+    recordBidDecision(bidNo: string, decisionType: 'abandon' | 'hold' | 'irrelevant', comment?: string) {
+      return request<{
+        bid_no: string;
+        bid_title: string;
+        decision_type: string;
+        decision_type_ko: string;
+        timestamp: string;
+      }>("POST", `/proposals/bids/decision`, {
+        bid_no: bidNo,
+        decision_type: decisionType,
+        comment,
+      });
     },
 
     get(id: string) {
@@ -2509,6 +2627,7 @@ export interface BidAnnouncement {
   content_text: string | null;
   qualification_available: boolean;
   raw_data: Record<string, unknown> | null;
+  suitability_score?: number | null;
 }
 
 export interface BidRecommendation {
