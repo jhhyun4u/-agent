@@ -120,7 +120,7 @@ class StateMachine:
         if reason:
             metadata["reason"] = reason
 
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.ON_HOLD,
             user_id=user_id,
@@ -128,6 +128,10 @@ class StateMachine:
             reason="No-Go decision",
             metadata=metadata,
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.ON_HOLD.value))
+        return result
 
     async def submit(
         self,
@@ -142,7 +146,7 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.SUBMITTED,
             current_phase="submit",
@@ -150,6 +154,10 @@ class StateMachine:
             actor_type="user",
             reason="Proposal submitted to client",
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.SUBMITTED.value))
+        return result
 
     async def present(
         self,
@@ -164,7 +172,7 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.PRESENTATION,
             current_phase="presentation",
@@ -172,6 +180,10 @@ class StateMachine:
             actor_type="user",
             reason="Proposal presented to client",
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.SUBMITTED.value, ProposalStatus.PRESENTATION.value))
+        return result
 
     async def record_win(
         self,
@@ -194,7 +206,7 @@ class StateMachine:
         if contract_value is not None:
             record_metadata["contract_value"] = contract_value
 
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.CLOSED,
             user_id=user_id,
@@ -203,6 +215,10 @@ class StateMachine:
             metadata=record_metadata,
             win_result=WinResult.WON.value,
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.PRESENTATION.value, ProposalStatus.CLOSED.value))
+        return result
 
     async def record_loss(
         self,
@@ -225,7 +241,7 @@ class StateMachine:
         if loss_reason:
             record_metadata["loss_reason"] = loss_reason
 
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.CLOSED,
             user_id=user_id,
@@ -234,6 +250,10 @@ class StateMachine:
             metadata=record_metadata,
             win_result=WinResult.LOST.value,
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.PRESENTATION.value, ProposalStatus.CLOSED.value))
+        return result
 
     async def abandon(
         self,
@@ -256,7 +276,7 @@ class StateMachine:
         if reason:
             metadata["reason"] = reason
 
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.CLOSED,
             user_id=user_id,
@@ -265,6 +285,10 @@ class StateMachine:
             metadata=metadata,
             win_result=WinResult.ABANDONED.value,
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.CLOSED.value))
+        return result
 
     async def hold(
         self,
@@ -287,7 +311,7 @@ class StateMachine:
         if reason:
             metadata["reason"] = reason
 
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.ON_HOLD,
             user_id=user_id,
@@ -295,6 +319,10 @@ class StateMachine:
             reason=reason or "Proposal held",
             metadata=metadata,
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.ON_HOLD.value))
+        return result
 
     async def resume(
         self,
@@ -311,7 +339,7 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.WAITING,
             current_phase=phase,
@@ -319,6 +347,10 @@ class StateMachine:
             actor_type="user",
             reason="Proposal resumed",
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.ON_HOLD.value, ProposalStatus.WAITING.value))
+        return result
 
     async def archive(
         self,
@@ -335,13 +367,17 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.ARCHIVED,
             user_id=user_id,
             actor_type="system" if not user_id else "user",
             reason="Proposal archived",
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.CLOSED.value, ProposalStatus.ARCHIVED.value))
+        return result
 
     async def mark_expired(
         self,
@@ -354,9 +390,44 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.EXPIRED,
             actor_type="cron",
             reason="RFP deadline passed",
         )
+        
+        # WebSocket 브로드캐스트
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.EXPIRED.value))
+        return result
+
+    async def _broadcast_status_change(self, old_status: str, new_status: str):
+        """Helper: Broadcast proposal status change to WebSocket channels.
+        
+        Args:
+            old_status: Previous status value
+            new_status: New status value
+        """
+        try:
+            from app.utils.supabase_client import get_async_client
+            client = await get_async_client()
+            proposal = await client.table("proposals").select(
+                "id, title, team_id, division_id, org_id"
+            ).eq("id", self.proposal_id).single().execute()
+            
+            if proposal.data:
+                data = proposal.data
+                await broadcast_proposal_status(
+                    proposal_id=self.proposal_id,
+                    old_status=old_status,
+                    new_status=new_status,
+                    title=data.get("title", ""),
+                    team_id=data.get("team_id", ""),
+                    division_id=data.get("division_id", ""),
+                    org_id=data.get("org_id", ""),
+                )
+        except Exception as e:
+            # Fire-and-forget: don't let broadcast failures affect state changes
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.debug(f"[WS] 상태 변경 브로드캐스트 실패: {e}")

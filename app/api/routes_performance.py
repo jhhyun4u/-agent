@@ -19,6 +19,7 @@ GET  /api/dashboard/team/performance         — 팀 성과 요약
 
 import logging
 from datetime import datetime, timezone
+import asyncio
 
 from fastapi import APIRouter, Depends, Query
 
@@ -33,6 +34,7 @@ from app.models.performance_schemas import (
     CompanyPerformance, PerformanceTrends, MyProjectsDashboard, TeamDashboard,
 )
 from app.models.schemas import ProposalResultCreate, ProposalResultUpdate, LessonCreate
+from app.services.ws_events import broadcast_result_update, broadcast_team_performance
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -152,6 +154,24 @@ async def register_proposal_result(
     except Exception:
         logger.warning("가격 예측 해소 실패 (무시)")
 
+    # WebSocket 브로드캐스트 (fire-and-forget)
+    try:
+        proposal = await client.table("proposals").select(
+            "title, team_id, division_id, org_id"
+        ).eq("id", proposal_id).single().execute()
+        
+        if proposal.data:
+            data = proposal.data
+            asyncio.create_task(
+                broadcast_result_update(
+                    team_id=data.get("team_id", ""),
+                    division_id=data.get("division_id", ""),
+                    org_id=data.get("org_id", ""),
+                )
+            )
+    except Exception:
+        logger.debug("[WS] 결과 등록 브로드캐스트 실패 (무시)")
+
     return ok({"result": body.result, "proposal_id": proposal_id})
 
 
@@ -198,11 +218,28 @@ async def update_proposal_result(
 
     await _refresh_views(client)
 
+    # WebSocket 브로드캐스트 (fire-and-forget)
+    try:
+        proposal = await client.table("proposals").select(
+            "title, team_id, division_id, org_id"
+        ).eq("id", proposal_id).single().execute()
+        
+        if proposal.data:
+            data = proposal.data
+            asyncio.create_task(
+                broadcast_result_update(
+                    team_id=data.get("team_id", ""),
+                    division_id=data.get("division_id", ""),
+                    org_id=data.get("org_id", ""),
+                )
+            )
+    except Exception:
+        logger.debug("[WS] 결과 수정 브로드캐스트 실패 (무시)")
+
     return ok({"proposal_id": proposal_id})
 
-
-# ════════════════════════════════════════
-# 4-5. 교훈(Lessons Learned) 등록/조회
+    # ════════════════════════════════════════
+    # 4-5. 교훈(Lessons Learned) 등록/조회
 # ════════════════════════════════════════
 
 @router.post("/api/proposals/{proposal_id}/lessons", status_code=201, response_model=StatusResponse)

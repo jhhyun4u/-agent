@@ -43,10 +43,20 @@ class RFPData(BaseModel):
 
 
 class ProposalSection(BaseModel):
-    """제안서 개별 섹션"""
+    """제안서 개별 섹션 (v4.0: 하네스 엔지니어링 지원)"""
 
     title: str
     content: str
+    section_id: str | None = None  # 섹션 ID (section_type)
+    version: int = 1
+    case_type: str | None = None  # "A" | "B" (케이스 분류)
+    template_structure: dict | None = None  # 케이스 B용 서식 구조
+    self_review_score: dict | None = None  # 자가진단 점수
+    
+    # ── v4.0: 하네스 엔지니어링 메타데이터 ──
+    harness_score: float | None = None  # 종합 평가 점수 (0~1)
+    harness_variant: str | None = None  # "conservative" | "balanced" | "creative"
+    harness_improved: bool = False  # 피드백 루프로 개선됨 여부
 
 
 class ProposalContent(BaseModel):
