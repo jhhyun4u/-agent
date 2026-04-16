@@ -101,6 +101,7 @@ export default function DashboardPage() {
 
   // 통계
   const [stats, setStats] = useState<WinRateStats | null>(null);
+  const [scopeError, setScopeError] = useState<{ scope: Scope; message: string } | null>(null);
 
   // 캘린더
   const [calItems, setCalItems] = useState<CalendarItem[]>([]);
@@ -198,8 +199,21 @@ export default function DashboardPage() {
     try {
       const data = await api.stats.winRate(s);
       setStats(data);
-    } catch {
+      setScopeError(null);
+    } catch (err) {
       setStats(null);
+      // 권한 부족 오류 처리
+      const statusCode = (err as { status?: number }).status || (err instanceof Error && err.message.includes("403") ? 403 : null);
+      if (statusCode === 403) {
+        setScopeError({
+          scope: s,
+          message: s === "division" ? "본부 권한이 없습니다. 본부장 이상이 필요합니다." : "전사 권한이 없습니다. 경영진 이상이 필요합니다.",
+        });
+        // 3초 후 팀 스코프로 자동 전환
+        setTimeout(() => setScope("team"), 3000);
+      } else {
+        setScopeError(null);
+      }
     }
   }, []);
 
@@ -480,6 +494,27 @@ export default function DashboardPage() {
 
       {/* 스크롤 본문 */}
       <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        {/* ── 권한 오류 메시지 ── */}
+        {scopeError && scopeError.scope === scope && (
+          <div className="bg-[#1c1c1c] border border-red-500/20 rounded-2xl p-4 flex items-start gap-3">
+            <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
+              <span className="text-red-500 text-xs">⚠</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-red-400">{scopeError.message}</p>
+              <p className="text-xs text-[#8c8c8c] mt-1">팀 스코프로 돌아갑니다.</p>
+            </div>
+            <button
+              onClick={() => {
+                setScope("team");
+                setScopeError(null);
+              }}
+              className="shrink-0 px-3 py-1 text-xs rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+            >
+              팀으로 변경
+            </button>
+          </div>
+        )}
         {/* ── 결재 대기 (팀장용) ── */}
         {scope === "team" &&
           (() => {

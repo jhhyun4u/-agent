@@ -568,3 +568,163 @@ async def team_performance_summary(user: CurrentUser = Depends(get_current_user)
     """팀 성과 요약 (수주율·건수)."""
     team_id = user.team_id or ""
     return await get_team_performance(team_id, user)
+
+
+# ════════════════════════════════════════
+# 통합 대시보드 엔드포인트 (스코프별)
+# ════════════════════════════════════════
+
+@router.get("/api/dashboard/team")
+async def dashboard_team(user: CurrentUser = Depends(get_current_user)):
+    """팀 스코프 대시보드 — 팀 데이터 통합.
+    
+    반환 데이터:
+    - stats: win_rate 통계
+    - performance: 팀 성과 요약
+    - pipeline: 제안 파이프라인
+    """
+    client = await get_async_client()
+    team_id = user.team_id or ""
+    
+    if not team_id:
+        return ok({
+            "scope": "team",
+            "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
+            "performance": None,
+            "pipeline": {"registered": 0, "inProgress": 0, "completed": 0, "pending": 0, "won": 0, "lost": 0},
+        })
+    
+    # 팀 성과
+    performance = await get_team_performance(team_id, user)
+    
+    # 팀의 제안서 통계
+    proposals = await client.table("proposals").select(
+        "id, status, win_result, created_at"
+    ).eq("team_id", team_id).execute()
+    
+    data = proposals.data or []
+    pipeline = {
+        "registered": len([p for p in data if p["status"] == "initialized"]),
+        "inProgress": len([p for p in data if p["status"] in ("waiting", "in_progress")]),
+        "completed": len([p for p in data if p["status"] == "completed" and p["win_result"] is None]),
+        "pending": len([p for p in data if p["status"] in ("submitted", "presentation")]),
+        "won": len([p for p in data if p["win_result"] == "won"]),
+        "lost": len([p for p in data if p["win_result"] == "lost"]),
+    }
+    
+    return ok({
+        "scope": "team",
+        "performance": performance.model_dump() if performance else None,
+        "pipeline": pipeline,
+    })
+
+
+@router.get("/api/dashboard/division")
+async def dashboard_division(user: CurrentUser = Depends(require_role("director", "executive", "admin"))):
+    """본부 스코프 대시보드 — 본부 데이터 통합.
+    
+    권한: 본부장(director) 이상
+    """
+    if not user.division_id:
+        return ok({
+            "scope": "division",
+            "teams": [],
+            "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
+        })
+    
+    client = await get_async_client()
+    
+    # 본부 내 팀 목록
+    teams_res = await client.table("teams").select("id, name").eq("division_id", user.division_id).execute()
+    teams_data = teams_res.data or []
+    team_ids = [t["id"] for t in teams_data]
+    
+    if not team_ids:
+        return ok({
+            "scope": "division",
+            "teams": [],
+            "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
+        })
+    
+    # 팀별 성과
+    proposals = await client.table("proposals").select(
+        "team_id, win_result, created_at"
+    ).in_("team_id", team_ids).execute()
+    
+    data = proposals.data or []
+    teams_perf = []
+    for team in teams_data:
+        tid = team["id"]
+        team_data = [p for p in data if p["team_id"] == tid and p["win_result"] in ("won", "lost")]
+        if team_data:
+            won = len([p for p in team_data if p["win_result"] == "won"])
+            total = len(team_data)
+            teams_perf.append({
+                "team_id": tid,
+                "team_name": team["name"],
+                "total": total,
+                "won": won,
+                "win_rate": round(won / total * 100, 1) if total else 0,
+            })
+    
+    return ok({
+        "scope": "division",
+        "teams": teams_perf,
+    })
+
+
+@router.get("/api/dashboard/company")
+async def dashboard_company(user: CurrentUser = Depends(require_role("executive", "admin"))):
+    """전사 스코프 대시보드 — 경영진 전체 데이터.
+    
+    권한: 경영진(executive) 이상
+    """
+    client = await get_async_client()
+    
+    # 전사 제안서 통계
+    proposals = await client.table("proposals").select(
+        "id, team_id, win_result, created_at"
+    ).in_("win_result", ["won", "lost"]).execute()
+    
+    data = proposals.data or []
+    if not data:
+        return ok({
+            "scope": "company",
+            "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
+        })
+    
+    won = len([p for p in data if p["win_result"] == "won"])
+    total = len(data)
+    
+    # 월별 통계
+    by_month = {}
+    for p in data:
+        month = p["created_at"][:7] if p["created_at"] else "unknown"
+        if month not in by_month:
+            by_month[month] = {"total": 0, "won": 0}
+        by_month[month]["total"] += 1
+        if p["win_result"] == "won":
+            by_month[month]["won"] += 1
+    
+    by_month_data = [
+        {
+            "month": k,
+            "total": v["total"],
+            "won": v["won"],
+            "rate": round(v["won"] / v["total"] * 100, 1) if v["total"] else 0,
+        }
+        for k, v in sorted(by_month.items())
+    ]
+    
+    return ok({
+        "scope": "company",
+        "stats": {
+            "overall": {
+                "total": total,
+                "won": won,
+                "lost": total - won,
+                "rate": round(won / total * 100, 1) if total else 0,
+            },
+            "by_month": by_month_data,
+        },
+    })

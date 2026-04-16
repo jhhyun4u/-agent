@@ -1,8 +1,8 @@
 # __unresolved__::ref::get & __unresolved__::ref::execute
-Cohesion: 0.01 | Nodes: 1210
+Cohesion: 0.01 | Nodes: 1213
 
 ## Key Nodes
-- **__unresolved__::ref::get** () -- 534 connections
+- **__unresolved__::ref::get** () -- 531 connections
   - <- calls <- [[addcorsheaders]]
   - <- calls <- [[hasaccessbyrole]]
   - <- calls <- [[requireprojectaccess]]
@@ -26,10 +26,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[formatnoticemarkdown]]
   - <- calls <- [[saverecommendations]]
   - <- calls <- [[normalizebiddetail]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[runpresentation]]
   - <- calls <- [[runworkflowbackground]]
-  - <- calls <- [[aggregate]]
   - <- calls <- [[buildnodestatus]]
   - <- calls <- [[isinterrupted]]
   - <- calls <- [[getstreamsstatussafe]]
@@ -45,19 +43,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[scoresimilarperformance]]
   - <- calls <- [[scorequalification]]
   - <- calls <- [[scorecompetition]]
-  - <- calls <- [[approvalrouter]]
-  - <- calls <- [[routeaftermockevalreview]]
-  - <- calls <- [[routeaftergngreview]]
-  - <- calls <- [[routeafterstrategyreview]]
-  - <- calls <- [[routeafterbidplanreview]]
-  - <- calls <- [[routeafterplanreview]]
-  - <- calls <- [[routeafterselfreview]]
-  - <- calls <- [[routeaftersectionreview]]
-  - <- calls <- [[routeafterpresentationstrategy]]
-  - <- calls <- [[routeaftersectionvalidatorreview]]
-  - <- calls <- [[routeafterfeedbackprocessorreview]]
-  - <- calls <- [[routeafterrewritereview]]
-  - <- calls <- [[routeaftergapanalysisreview]]
   - <- calls <- [[tracktokens]]
   - <- calls <- [[persistaitasklog]]
   - <- calls <- [[persistaitasklogerror]]
@@ -496,8 +481,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[checkpricealignment]]
   - <- calls <- [[extractbusinesscase]]
   - <- calls <- [[extractqualifications]]
-  - <- calls <- [[createstrategysummary]]
   - <- calls <- [[execute]]
+  - <- calls <- [[createstrategysummary]]
   - <- calls <- [[validatechecklist]]
   - <- calls <- [[handleiteration]]
   - <- calls <- [[executeworkflow]]
@@ -537,7 +522,19 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[findsimilarprojects]]
   - <- calls <- [[calculatesuccessrate]]
   - <- calls <- [[proposalsection]]
-- **__unresolved__::ref::execute** () -- 289 connections
+  - <- calls <- [[approvalrouter]]
+  - <- calls <- [[routeaftermockevalreview]]
+  - <- calls <- [[routeaftergngreview]]
+  - <- calls <- [[routeafterstrategyreview]]
+  - <- calls <- [[routeafterbidplanreview]]
+  - <- calls <- [[routeafterplanreview]]
+  - <- calls <- [[routeafterselfreview]]
+  - <- calls <- [[routeaftersectionreview]]
+  - <- calls <- [[routeafterpresentationstrategy]]
+  - <- calls <- [[routeaftergapanalysisreview]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[aggregate]]
+- **__unresolved__::ref::execute** () -- 290 connections
   - <- calls <- [[initsupabaserpc]]
   - <- calls <- [[initdevuser]]
   - <- calls <- [[getcurrentuser]]
@@ -561,9 +558,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[saverecommendations]]
-  - <- calls <- [[getproposalor404]]
-  - <- calls <- [[refreshviews]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[runextraction]]
   - <- calls <- [[getproposalartifacts]]
   - <- calls <- [[loganalytics]]
@@ -827,6 +821,10 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[executeworkflow]]
   - <- calls <- [[handleiteration]]
   - <- calls <- [[executeworkflow]]
+  - <- calls <- [[getproposalor404]]
+  - <- calls <- [[refreshviews]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::len** () -- 284 connections
   - <- calls <- [[monitormy]]
   - <- calls <- [[monitorteamordivision]]
@@ -836,10 +834,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[formatnoticemarkdown]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[init]]
   - <- calls <- [[runextraction]]
-  - <- calls <- [[aggregate]]
   - <- calls <- [[isallowed]]
   - <- calls <- [[formatnumberedsources]]
   - <- calls <- [[extractoutputsummary]]
@@ -1112,7 +1108,9 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[calculatesuccessrate]]
   - <- calls <- [[testmodulararchitecture]]
   - <- calls <- [[testfullworkflow]]
-- **__unresolved__::ref::table** () -- 268 connections
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[aggregate]]
+- **__unresolved__::ref::table** () -- 269 connections
   - <- calls <- [[initdevuser]]
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[requireprojectaccess]]
@@ -1135,8 +1133,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[saverecommendations]]
-  - <- calls <- [[getproposalor404]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[runextraction]]
   - <- calls <- [[getproposalartifacts]]
   - <- calls <- [[loganalytics]]
@@ -1381,6 +1377,9 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[provision]]
   - <- calls <- [[seed]]
   - <- calls <- [[seed]]
+  - <- calls <- [[getproposalor404]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::append** () -- 244 connections
   - <- calls <- [[validaterequiredkeys]]
   - <- calls <- [[monitormy]]
@@ -1626,7 +1625,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[identifycompetitiveadvantages]]
   - <- calls <- [[developriskmitigationplan]]
   - <- calls <- [[createactionitems]]
-- **__unresolved__::ref::get_async_client** () -- 241 connections
+- **__unresolved__::ref::get_async_client** () -- 242 connections
   - <- calls <- [[initdevuser]]
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[getrlsclient]]
@@ -1868,6 +1867,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runmigration]]
   - <- calls <- [[seed]]
   - <- calls <- [[seed]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::warning** () -- 205 connections
   - <- calls <- [[safestartuptask]]
   - <- calls <- [[initdevuser]]
@@ -1882,7 +1882,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[savemarkdowntostorage]]
-  - <- calls <- [[refreshviews]]
   - <- calls <- [[resolvetemplatepath]]
   - <- calls <- [[downloadsampletemplate]]
   - <- calls <- [[uploadpresentation]]
@@ -2074,7 +2073,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[testvectorsearch]]
   - <- calls <- [[createembedding]]
   - <- calls <- [[testvectorsearch]]
-- **__unresolved__::ref::eq** () -- 197 connections
+  - <- calls <- [[refreshviews]]
+- **__unresolved__::ref::eq** () -- 198 connections
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[requireprojectaccess]]
   - <- calls <- [[getteammemberrole]]
@@ -2094,8 +2094,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[buildrecommendationsresponse]]
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
-  - <- calls <- [[getproposalor404]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[runextraction]]
   - <- calls <- [[getproposalartifacts]]
   - <- calls <- [[loadconversationcontext]]
@@ -2272,6 +2270,9 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[createembedding]]
   - <- calls <- [[provision]]
   - <- calls <- [[seed]]
+  - <- calls <- [[getproposalor404]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::info** () -- 192 connections
   - <- calls <- [[safestartuptask]]
   - <- calls <- [[initscheduler]]
@@ -2286,7 +2287,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[queuebidanalysis]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[savemarkdowntostorage]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[downloadsampletemplate]]
   - <- calls <- [[uploadpresentation]]
   - <- calls <- [[runpresentation]]
@@ -2465,7 +2465,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[selfreviewwithautoimprove]]
   - <- calls <- [[presentationstrategy]]
   - <- calls <- [[pptslide]]
-- **__unresolved__::ref::select** () -- 188 connections
+  - <- calls <- [[resolvepricingpredictions]]
+- **__unresolved__::ref::select** () -- 189 connections
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[requireprojectaccess]]
   - <- calls <- [[getteammemberrole]]
@@ -2483,8 +2484,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[getcachedrecommendations]]
   - <- calls <- [[buildrecommendationsresponse]]
   - <- calls <- [[analyzebidbackground]]
-  - <- calls <- [[getproposalor404]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[getproposalartifacts]]
   - <- calls <- [[loadconversationcontext]]
   - <- calls <- [[getstreamsstatussafe]]
@@ -2654,6 +2653,9 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[main]]
   - <- calls <- [[provision]]
   - <- calls <- [[seed]]
+  - <- calls <- [[getproposalor404]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::str** () -- 187 connections
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[requireknowledgeaccess]]
@@ -2673,7 +2675,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[savemessage]]
   - <- calls <- [[serializeapproval]]
   - <- calls <- [[extractcredibleresearch]]
-  - <- calls <- [[routeafterpresentationstrategy]]
   - <- calls <- [[tracktokens]]
   - <- calls <- [[mockevaluation]]
   - <- calls <- [[scoreevaluationitem]]
@@ -2842,6 +2843,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[executeworkflow]]
   - <- calls <- [[evaluateinnovationwinningpoint]]
   - <- calls <- [[testmodulararchitecture]]
+  - <- calls <- [[routeafterpresentationstrategy]]
 - **__unresolved__::ref::join** () -- 134 connections
   - <- calls <- [[init]]
   - <- calls <- [[monitormy]]
@@ -2977,7 +2979,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[preparepromptdata]]
   - <- calls <- [[generatereasoning]]
   - <- calls <- [[analyzecompetition]]
-- **__unresolved__::ref::error** () -- 109 connections
+- **__unresolved__::ref::error** () -- 110 connections
   - <- calls <- [[safestartuptask]]
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
@@ -3087,6 +3089,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[testvectorsearch]]
   - <- calls <- [[runmigration]]
   - <- calls <- [[executeworkflow]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::now** () -- 108 connections
   - <- calls <- [[now]]
   - <- calls <- [[formatdownloadfilename]]
@@ -3097,7 +3100,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[buildrecommendationsresponse]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[saverecommendations]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[isallowed]]
   - <- calls <- [[createconversation]]
   - <- calls <- [[savemessage]]
@@ -3196,6 +3198,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[executeworkflow]]
   - <- calls <- [[evaluatebyrole]]
   - <- calls <- [[testfullworkflow]]
+  - <- calls <- [[resolvepricingpredictions]]
 - **__unresolved__::ref::strip** () -- 97 connections
   - <- calls <- [[enrichmonitordata]]
   - <- calls <- [[loadbidcontent]]
@@ -3308,7 +3311,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[buildprevsectionscontext]]
   - <- calls <- [[scoresimilarperformance]]
   - <- calls <- [[scorequalification]]
-  - <- calls <- [[routeafterpresentationstrategy]]
   - <- calls <- [[tracktokens]]
   - <- calls <- [[bidplan]]
   - <- calls <- [[mockevaluation]]
@@ -3388,6 +3390,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[main]]
   - <- calls <- [[preparepromptdata]]
   - <- calls <- [[searchg2bcompetitors]]
+  - <- calls <- [[routeafterpresentationstrategy]]
 - **__unresolved__::ref::isoformat** () -- 81 connections
   - <- calls <- [[initdevuser]]
   - <- calls <- [[now]]
@@ -3398,7 +3401,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[buildrecommendationsresponse]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[saverecommendations]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[buildnodestatus]]
   - <- calls <- [[createconversation]]
   - <- calls <- [[savemessage]]
@@ -3470,6 +3472,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runmigration]]
   - <- calls <- [[insertproject]]
   - <- calls <- [[insertproject]]
+  - <- calls <- [[resolvepricingpredictions]]
 - **__unresolved__::ref::int** () -- 79 connections
   - <- calls <- [[periodtodaterange]]
   - <- calls <- [[loadbidcontent]]
@@ -3712,7 +3715,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[runfetchandanalyze]]
   - <- calls <- [[analyzebidbackground]]
   - <- calls <- [[saverecommendations]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[runextraction]]
   - <- calls <- [[planmerge]]
   - <- calls <- [[selfreviewwithautoimprove]]
@@ -3782,6 +3784,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[createembedding]]
   - <- calls <- [[seed]]
   - <- calls <- [[executeworkflow]]
+  - <- calls <- [[resolvepricingpredictions]]
 - **__unresolved__::ref::insert** () -- 71 connections
   - <- calls <- [[loganalytics]]
   - <- calls <- [[createconversation]]
@@ -3926,8 +3929,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[crawlbidresults]]
   - <- calls <- [[call]]
 - **__unresolved__::ref::round** () -- 69 connections
-  - <- calls <- [[resolvepricingpredictions]]
-  - <- calls <- [[calcrate]]
   - <- calls <- [[querykbcontext]]
   - <- calls <- [[scoresimilarperformance]]
   - <- calls <- [[scorequalification]]
@@ -3995,8 +3996,9 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[checkaiquality]]
   - <- calls <- [[checke2epipeline]]
   - <- calls <- [[recommend]]
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[calcrate]]
 - **__unresolved__::ref::items** () -- 66 connections
-  - <- calls <- [[aggregate]]
   - <- calls <- [[serializeapproval]]
   - <- calls <- [[querykbcontext]]
   - <- calls <- [[scorecompetition]]
@@ -4062,6 +4064,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[evaluatetechnicalwinningpoint]]
   - <- calls <- [[determinestrategypriorities]]
   - <- calls <- [[testperformancesummary]]
+  - <- calls <- [[aggregate]]
 - **__unresolved__::ref::min** () -- 66 connections
   - <- calls <- [[rununifiedanalysis]]
   - <- calls <- [[scoresimilarperformance]]
@@ -4132,7 +4135,6 @@ Cohesion: 0.01 | Nodes: 1210
 - **__unresolved__::ref::sum** () -- 64 connections
   - <- calls <- [[enrichmonitordata]]
   - <- calls <- [[checkanalysiscache]]
-  - <- calls <- [[aggregate]]
   - <- calls <- [[scoresimilarperformance]]
   - <- calls <- [[scorequalification]]
   - <- calls <- [[scorecompetition]]
@@ -4194,6 +4196,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[evaluatepricewinningpoint]]
   - <- calls <- [[developpricingstrategy]]
   - <- calls <- [[calculatesuccessrate]]
+  - <- calls <- [[aggregate]]
 - **__unresolved__::ref::max** () -- 61 connections
   - <- calls <- [[enrichmonitordata]]
   - <- calls <- [[rununifiedanalysis]]
@@ -4315,7 +4318,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[rfptodict]]
   - <- calls <- [[getstrategydict]]
   - <- calls <- [[buildprevsectionscontext]]
-  - <- calls <- [[routeafterpresentationstrategy]]
   - <- calls <- [[bidplan]]
   - <- calls <- [[mockevaluation]]
   - <- calls <- [[planmerge]]
@@ -4355,6 +4357,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[extracttextfromhwp]]
   - <- calls <- [[testmodulararchitecture]]
   - <- calls <- [[testgarbagecollectionimported]]
+  - <- calls <- [[routeafterpresentationstrategy]]
 - **__unresolved__::ref::set** () -- 46 connections
   - <- calls <- [[monitormy]]
   - <- calls <- [[monitorteamordivision]]
@@ -4402,6 +4405,52 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[calculatecategorysimilarity]]
   - <- calls <- [[evaluatetechnicalwinningpoint]]
   - <- calls <- [[evaluatecompliancewinningpoint]]
+- **__unresolved__::ref::model_dump** () -- 45 connections
+  - <- calls <- [[saverecommendations]]
+  - <- calls <- [[serializeapproval]]
+  - <- calls <- [[extractoutputsummary]]
+  - <- calls <- [[rfptodict]]
+  - <- calls <- [[getstrategydict]]
+  - <- calls <- [[buildprevsectionscontext]]
+  - <- calls <- [[bidplan]]
+  - <- calls <- [[mockevaluation]]
+  - <- calls <- [[planmerge]]
+  - <- calls <- [[proposalcustomeranalysis]]
+  - <- calls <- [[presentationstrategy]]
+  - <- calls <- [[buildpptcontext]]
+  - <- calls <- [[buildcontext]]
+  - <- calls <- [[proposalwritenext]]
+  - <- calls <- [[selfreviewwithautoimprove]]
+  - <- calls <- [[sectionqualitycheck]]
+  - <- calls <- [[storylinegapanalysis]]
+  - <- calls <- [[researchgather]]
+  - <- calls <- [[reviewsectionnode]]
+  - <- calls <- [[buildplanreviewcontext]]
+  - <- calls <- [[autoregistertocontentlibrary]]
+  - <- calls <- [[handlebidplanreview]]
+  - <- calls <- [[firebidconfirmation]]
+  - <- calls <- [[firestreaminitialization]]
+  - <- calls <- [[rfpfetch]]
+  - <- calls <- [[proposalcustomeranalysis]]
+  - <- calls <- [[proposalsectionvalidator]]
+  - <- calls <- [[proposalsectionsconsolidation]]
+  - <- calls <- [[mockevaluationanalysis]]
+  - <- calls <- [[mockevaluationfeedbackprocessor]]
+  - <- calls <- [[proposalwritenextv2]]
+  - <- calls <- [[strategygenerate]]
+  - <- calls <- [[submissionplan]]
+  - <- calls <- [[costsheetgenerate]]
+  - <- calls <- [[normalizeproposalsection]]
+  - <- calls <- [[builddocx]]
+  - <- calls <- [[buildfreeform]]
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[generatesectionxml]]
+  - <- calls <- [[saveartifact]]
+  - <- calls <- [[dbsaveartifact]]
+  - <- calls <- [[phase1research]]
+  - <- calls <- [[todict]]
+  - <- calls <- [[runcomparison]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::order** () -- 45 connections
   - <- calls <- [[monitormy]]
   - <- calls <- [[monitorteamordivision]]
@@ -4448,56 +4497,10 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[getmarkettrackingsummary]]
   - <- calls <- [[getbidplanscenarios]]
   - <- calls <- [[checkcolumns]]
-- **__unresolved__::ref::model_dump** () -- 44 connections
-  - <- calls <- [[saverecommendations]]
-  - <- calls <- [[serializeapproval]]
-  - <- calls <- [[extractoutputsummary]]
-  - <- calls <- [[rfptodict]]
-  - <- calls <- [[getstrategydict]]
-  - <- calls <- [[buildprevsectionscontext]]
-  - <- calls <- [[bidplan]]
-  - <- calls <- [[mockevaluation]]
-  - <- calls <- [[planmerge]]
-  - <- calls <- [[proposalcustomeranalysis]]
-  - <- calls <- [[presentationstrategy]]
-  - <- calls <- [[buildpptcontext]]
-  - <- calls <- [[buildcontext]]
-  - <- calls <- [[proposalwritenext]]
-  - <- calls <- [[selfreviewwithautoimprove]]
-  - <- calls <- [[sectionqualitycheck]]
-  - <- calls <- [[storylinegapanalysis]]
-  - <- calls <- [[researchgather]]
-  - <- calls <- [[reviewsectionnode]]
-  - <- calls <- [[buildplanreviewcontext]]
-  - <- calls <- [[autoregistertocontentlibrary]]
-  - <- calls <- [[handlebidplanreview]]
-  - <- calls <- [[firebidconfirmation]]
-  - <- calls <- [[firestreaminitialization]]
-  - <- calls <- [[rfpfetch]]
-  - <- calls <- [[proposalcustomeranalysis]]
-  - <- calls <- [[proposalsectionvalidator]]
-  - <- calls <- [[proposalsectionsconsolidation]]
-  - <- calls <- [[mockevaluationanalysis]]
-  - <- calls <- [[mockevaluationfeedbackprocessor]]
-  - <- calls <- [[proposalwritenextv2]]
-  - <- calls <- [[strategygenerate]]
-  - <- calls <- [[submissionplan]]
-  - <- calls <- [[costsheetgenerate]]
-  - <- calls <- [[normalizeproposalsection]]
-  - <- calls <- [[builddocx]]
-  - <- calls <- [[buildfreeform]]
-  - <- calls <- [[buildfromtemplate]]
-  - <- calls <- [[generatesectionxml]]
-  - <- calls <- [[saveartifact]]
-  - <- calls <- [[dbsaveartifact]]
-  - <- calls <- [[phase1research]]
-  - <- calls <- [[todict]]
-  - <- calls <- [[runcomparison]]
 - **__unresolved__::ref::lower** () -- 42 connections
   - <- calls <- [[enrichmonitordata]]
   - <- calls <- [[matchqualification]]
   - <- calls <- [[scoresimilarperformance]]
-  - <- calls <- [[routeafterpresentationstrategy]]
   - <- calls <- [[presentationstrategy]]
   - <- calls <- [[convertprioritytoint]]
   - <- calls <- [[classifysectiontype]]
@@ -4536,6 +4539,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[calculatecategorysimilarity]]
   - <- calls <- [[calculateexpertisematch]]
   - <- calls <- [[evaluateinnovationwinningpoint]]
+  - <- calls <- [[routeafterpresentationstrategy]]
 - **__unresolved__::ref::list** () -- 41 connections
   - <- calls <- [[requirerole]]
   - <- calls <- [[monitormy]]
@@ -4658,7 +4662,6 @@ Cohesion: 0.01 | Nodes: 1210
   - -> calls -> [[unresolvedrefwarning]]
   - <- contains <- [[strategygenerate]]
 - **__unresolved__::ref::sorted** () -- 37 connections
-  - <- calls <- [[aggregate]]
   - <- calls <- [[querykbcontext]]
   - <- calls <- [[scorecompetition]]
   - <- calls <- [[mockevaluation]]
@@ -4695,11 +4698,10 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[testairecommendation]]
   - <- calls <- [[generateslidecontent]]
   - <- calls <- [[determinestrategypriorities]]
+  - <- calls <- [[aggregate]]
 - **__unresolved__::ref::single** () -- 36 connections
   - <- calls <- [[getcurrentuser]]
   - <- calls <- [[analyzebidbackground]]
-  - <- calls <- [[getproposalor404]]
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[getproposalartifacts]]
   - <- calls <- [[getstreamsstatussafe]]
   - <- calls <- [[buildapprovalchain]]
@@ -4732,6 +4734,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[verifybidsubmission]]
   - <- calls <- [[getbidsubmissionstatus]]
   - <- calls <- [[updatebidpricepostworkflow]]
+  - <- calls <- [[getproposalor404]]
+  - <- calls <- [[resolvepricingpredictions]]
 - **__unresolved__::ref::dumps** () -- 35 connections
   - <- calls <- [[savefilecache]]
   - <- calls <- [[buildpptcontext]]
@@ -5141,7 +5145,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[createactionitems]]
 - **__unresolved__::ref::rpc** () -- 24 connections
   - <- calls <- [[initsupabaserpc]]
-  - <- calls <- [[refreshviews]]
   - <- calls <- [[scorebid]]
   - <- calls <- [[checkmvfreshness]]
   - <- calls <- [[semanticsearch]]
@@ -5164,6 +5167,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[testvectorsearch]]
   - <- calls <- [[testvectorsearch]]
   - <- calls <- [[runmigration]]
+  - <- calls <- [[refreshviews]]
 - **score_similar_performance** (C:\project\tenopa proposer\app\graph\context_helpers.py) -- 24 connections
   - -> calls -> [[unresolvedrefget]]
   - -> calls -> [[unresolvedrefgetasyncclient]]
@@ -6443,6 +6447,25 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[fetchsampleprojects]]
   - <- calls <- [[close]]
   - <- calls <- [[main]]
+- **__unresolved__::ref::in_** () -- 18 connections
+  - <- calls <- [[fetchproposals]]
+  - <- calls <- [[monitormy]]
+  - <- calls <- [[monitorteamordivision]]
+  - <- calls <- [[monitorcompany]]
+  - <- calls <- [[scorequalification]]
+  - <- calls <- [[selfreviewwithautoimprove]]
+  - <- calls <- [[bulksyncbidresults]]
+  - <- calls <- [[loadsectioncontext]]
+  - <- calls <- [[comparewinloss]]
+  - <- calls <- [[getreviewfeedbackforprompt]]
+  - <- calls <- [[computeeffectiveness]]
+  - <- calls <- [[searchqa]]
+  - <- calls <- [[filternewbids]]
+  - <- calls <- [[senddailysummaryemail]]
+  - <- calls <- [[markexpiredproposals]]
+  - <- calls <- [[startupload]]
+  - <- calls <- [[rundailybatch]]
+  - <- calls <- [[getwinrate]]
 - **_monitor_team_or_division** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 18 connections
   - -> calls -> [[unresolvedrefexecute]]
   - -> calls -> [[unresolvedrefmaybesingle]]
@@ -6803,24 +6826,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[archiveartifact]]
   - <- calls <- [[archivebinaryartifact]]
   - <- calls <- [[buildcopybundle]]
-- **__unresolved__::ref::in_** () -- 17 connections
-  - <- calls <- [[fetchproposals]]
-  - <- calls <- [[monitormy]]
-  - <- calls <- [[monitorteamordivision]]
-  - <- calls <- [[monitorcompany]]
-  - <- calls <- [[scorequalification]]
-  - <- calls <- [[selfreviewwithautoimprove]]
-  - <- calls <- [[bulksyncbidresults]]
-  - <- calls <- [[loadsectioncontext]]
-  - <- calls <- [[comparewinloss]]
-  - <- calls <- [[getreviewfeedbackforprompt]]
-  - <- calls <- [[computeeffectiveness]]
-  - <- calls <- [[searchqa]]
-  - <- calls <- [[filternewbids]]
-  - <- calls <- [[senddailysummaryemail]]
-  - <- calls <- [[markexpiredproposals]]
-  - <- calls <- [[startupload]]
-  - <- calls <- [[rundailybatch]]
 - **proposal_write_next_v2** (C:\project\tenopa proposer\app\graph\nodes\step8f_rewrite.py) -- 17 connections
   - -> calls -> [[unresolvedrefget]]
   - -> calls -> [[unresolvedrefwarning]]
@@ -7249,6 +7254,22 @@ Cohesion: 0.01 | Nodes: 1210
   - -> calls -> [[unresolvedrefinfo]]
   - -> calls -> [[unresolvedreflen]]
   - <- contains <- [[routesperformance]]
+- **get_win_rate** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 15 connections
+  - -> calls -> [[unresolvedrefdepends]]
+  - -> calls -> [[unresolvedrefquery]]
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedrefin]]
+  - -> calls -> [[unresolvedrefselect]]
+  - -> calls -> [[unresolvedreftable]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefeq]]
+  - -> calls -> [[unresolvedrefok]]
+  - -> calls -> [[unresolvedrefhttpexception]]
+  - -> calls -> [[unresolvedrefaggregate]]
+  - -> calls -> [[unresolvedrefmodeldump]]
+  - -> calls -> [[unresolvedreferror]]
+  - -> calls -> [[unresolvedrefinternalserviceerror]]
+  - <- contains <- [[routesstats]]
 - **context_helpers** (C:\project\tenopa proposer\app\graph\context_helpers.py) -- 15 connections
   - -> contains -> [[rfptodict]]
   - -> contains -> [[getrfpsummary]]
@@ -7618,7 +7639,6 @@ Cohesion: 0.01 | Nodes: 1210
   - -> calls -> [[unresolvedreferror]]
   - <- contains <- [[pilotmigrationdemo]]
 - **__unresolved__::ref::is_** () -- 14 connections
-  - <- calls <- [[resolvepricingpredictions]]
   - <- calls <- [[scorecompetition]]
   - <- calls <- [[scoredepartment]]
   - <- calls <- [[batchreindex]]
@@ -7632,6 +7652,7 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[getmarketcontext]]
   - <- calls <- [[querycomparable]]
   - <- calls <- [[countcomparable]]
+  - <- calls <- [[resolvepricingpredictions]]
 - **_load_conversation_context** (C:\project\tenopa proposer\app\api\routes_vault_chat.py) -- 14 connections
   - -> calls -> [[unresolvedrefgetasyncclient]]
   - -> calls -> [[unresolvedrefexecute]]
@@ -12283,6 +12304,12 @@ Cohesion: 0.01 | Nodes: 1210
   - -> calls -> [[unresolvedrefupdate]]
   - -> calls -> [[unresolvedreftable]]
   - <- contains <- [[documentingestion]]
+- **generate_embedding** (C:\project\tenopa proposer\app\services\embedding_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefgetopenai]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[embeddingservice]]
 - **get_bid_detail** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 5 connections
   - -> calls -> [[unresolvedrefcallapi]]
   - -> calls -> [[unresolvedrefstrftime]]
@@ -13179,6 +13206,9 @@ Cohesion: 0.01 | Nodes: 1210
 - **__unresolved__::ref::initialize_streams** () -- 2 connections
   - <- calls <- [[getstreamsstatussafe]]
   - <- calls <- [[firestreaminitialization]]
+- **__unresolved__::ref::internalserviceerror** () -- 2 connections
+  - <- calls <- [[getproposalartifacts]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::intranetdocument** () -- 2 connections
   - <- calls <- [[detectchangeddocuments]]
   - <- calls <- [[getfaileddocuments]]
@@ -13188,6 +13218,9 @@ Cohesion: 0.01 | Nodes: 1210
 - **__unresolved__::ref::most_common** () -- 2 connections
   - <- calls <- [[searchcompetitors]]
   - <- calls <- [[buildkeywordindex]]
+- **__unresolved__::ref::ok** () -- 2 connections
+  - <- calls <- [[buildrecommendationsresponse]]
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::parse_attachments_from_raw** () -- 2 connections
   - <- calls <- [[downloadbidattachments]]
   - <- calls <- [[copybidattachmentstoproposal]]
@@ -13277,6 +13310,8 @@ Cohesion: 0.01 | Nodes: 1210
   - <- contains <- [[supabasemigrator]]
 - **__unresolved__::ref::_add_slide_number** () -- 1 connections
   - <- calls <- [[renderslide]]
+- **__unresolved__::ref::_aggregate** () -- 1 connections
+  - <- calls <- [[getwinrate]]
 - **__unresolved__::ref::_analyze_bid_background** () -- 1 connections
   - <- calls <- [[runfetchandanalyze]]
 - **__unresolved__::ref::_assess_consensus** () -- 1 connections
@@ -13741,8 +13776,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[extracttextfromhwp]]
 - **__unresolved__::ref::hwpxdocument** () -- 1 connections
   - <- calls <- [[extracttextfromhwp]]
-- **__unresolved__::ref::internalserviceerror** () -- 1 connections
-  - <- calls <- [[getproposalartifacts]]
 - **__unresolved__::ref::iter_chunked** () -- 1 connections
   - <- calls <- [[fetchdocumentcontent]]
 - **__unresolved__::ref::kde** () -- 1 connections
@@ -13789,8 +13822,6 @@ Cohesion: 0.01 | Nodes: 1210
   - <- calls <- [[main]]
 - **__unresolved__::ref::notify_agent_error** () -- 1 connections
   - <- calls <- [[tracktokens]]
-- **__unresolved__::ref::ok** () -- 1 connections
-  - <- calls <- [[buildrecommendationsresponse]]
 - **__unresolved__::ref::olefileio** () -- 1 connections
   - <- calls <- [[extracttextfromhwp]]
 - **__unresolved__::ref::openstream** () -- 1 connections
@@ -14283,6 +14314,17 @@ Cohesion: 0.01 | Nodes: 1210
 - _run_extraction -> calls -> __unresolved__::ref::info [EXTRACTED]
 - _run_extraction -> calls -> __unresolved__::ref::len [EXTRACTED]
 - _run_extraction -> calls -> __unresolved__::ref::error [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::get_async_client [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::in_ [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::select [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::table [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::execute [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::eq [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::ok [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::_aggregate [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::model_dump [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::error [EXTRACTED]
+- get_win_rate -> calls -> __unresolved__::ref::internalserviceerror [EXTRACTED]
 - build_node_status -> calls -> __unresolved__::ref::nodestatusmodel [EXTRACTED]
 - build_node_status -> calls -> __unresolved__::ref::get [EXTRACTED]
 - build_node_status -> calls -> __unresolved__::ref::isoformat [EXTRACTED]
@@ -16208,6 +16250,9 @@ Cohesion: 0.01 | Nodes: 1210
 - batch_reindex -> calls -> __unresolved__::ref::cfg__text_fn__ [EXTRACTED]
 - batch_reindex -> calls -> __unresolved__::ref::generate_embeddings_batch [EXTRACTED]
 - batch_reindex -> calls -> __unresolved__::ref::update [EXTRACTED]
+- generate_embedding -> calls -> __unresolved__::ref::strip [EXTRACTED]
+- generate_embedding -> calls -> __unresolved__::ref::create [EXTRACTED]
+- generate_embedding -> calls -> __unresolved__::ref::error [EXTRACTED]
 - _update_client_history -> calls -> __unresolved__::ref::execute [EXTRACTED]
 - _update_client_history -> calls -> __unresolved__::ref::limit [EXTRACTED]
 - _update_client_history -> calls -> __unresolved__::ref::ilike [EXTRACTED]
@@ -19393,7 +19438,7 @@ Cohesion: 0.01 | Nodes: 1210
 - main -> calls -> __unresolved__::ref::join [EXTRACTED]
 
 ## Cross-Community Connections
-- _init_dev_user -> calls -> __unresolved__::ref::runtimeerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- _init_dev_user -> calls -> __unresolved__::ref::runtimeerror (-> [[reviewnode-injectcharstyles]])
 - get_current_user -> calls -> __unresolved__::ref::depends (-> [[unresolvedreftenopapierror-init]])
 - get_current_user -> calls -> __unresolved__::ref::authtokenexpirederror (-> [[unresolvedreftenopapierror-init]])
 - get_current_user -> calls -> __unresolved__::ref::get_user (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -19426,7 +19471,10 @@ Cohesion: 0.01 | Nodes: 1210
 - _upload_presentation -> calls -> __unresolved__::ref::to_thread (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _upload_presentation -> calls -> __unresolved__::ref::read (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _upload_presentation -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
-- _load_conversation_context -> calls -> __unresolved__::ref::reversed (-> [[edges-claudegenerate]])
+- get_win_rate -> calls -> __unresolved__::ref::depends (-> [[unresolvedreftenopapierror-init]])
+- get_win_rate -> calls -> __unresolved__::ref::query (-> [[pageparams-unresolvedrefquery]])
+- get_win_rate -> calls -> __unresolved__::ref::httpexception (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _load_conversation_context -> calls -> __unresolved__::ref::reversed (-> [[edges-routeafterbidplanreview]])
 - _get_streams_status_safe -> calls -> __unresolved__::ref::get_streams_status (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - context_helpers -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - context_helpers -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
@@ -19439,14 +19487,14 @@ Cohesion: 0.01 | Nodes: 1210
 - _auto_register_to_content_library -> calls -> __unresolved__::ref::create_task (-> [[dailyg2bmonitor-healthcheckrunner]])
 - _fire_stream_initialization -> calls -> __unresolved__::ref::get_running_loop (-> [[dailyg2bmonitor-healthcheckrunner]])
 - _fire_stream_initialization -> calls -> __unresolved__::ref::create_task (-> [[dailyg2bmonitor-healthcheckrunner]])
-- _handle_bid_plan_review -> calls -> __unresolved__::ref::_check_approval_chain (-> [[parallelworkengine-reviewnode]])
-- _handle_bid_plan_review -> calls -> __unresolved__::ref::approvalstatus (-> [[parallelworkengine-reviewnode]])
-- _handle_plan_review -> calls -> __unresolved__::ref::approvalstatus (-> [[parallelworkengine-reviewnode]])
-- review_section_node -> calls -> __unresolved__::ref::interrupt (-> [[parallelworkengine-reviewnode]])
+- _handle_bid_plan_review -> calls -> __unresolved__::ref::_check_approval_chain (-> [[reviewnode-injectcharstyles]])
+- _handle_bid_plan_review -> calls -> __unresolved__::ref::approvalstatus (-> [[reviewnode-injectcharstyles]])
+- _handle_plan_review -> calls -> __unresolved__::ref::approvalstatus (-> [[reviewnode-injectcharstyles]])
+- review_section_node -> calls -> __unresolved__::ref::interrupt (-> [[reviewnode-injectcharstyles]])
 - rfp_analyze -> calls -> __unresolved__::ref::keys (-> [[dailyg2bmonitor-healthcheckrunner]])
 - rfp_analyze -> calls -> __unresolved__::ref::create_task (-> [[dailyg2bmonitor-healthcheckrunner]])
 - rfp_analyze -> calls -> __unresolved__::ref::get_running_loop (-> [[dailyg2bmonitor-healthcheckrunner]])
-- rfp_fetch -> calls -> __unresolved__::ref::interrupt (-> [[parallelworkengine-reviewnode]])
+- rfp_fetch -> calls -> __unresolved__::ref::interrupt (-> [[reviewnode-injectcharstyles]])
 - rfp_search -> calls -> __unresolved__::ref::search_bids (-> [[dailyg2bmonitor-healthcheckrunner]])
 - proposal_customer_analysis -> calls -> __unresolved__::ref::uuid (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - proposal_section_validator -> calls -> __unresolved__::ref::uuid (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
@@ -19461,10 +19509,10 @@ Cohesion: 0.01 | Nodes: 1210
 - dispatch -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - dispatch -> calls -> __unresolved__::ref::call_next (-> [[requestidmiddleware-securityheadersmiddleware]])
 - get_approval_status -> calls -> __unresolved__::ref::build_approval_chain (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- get_approval_status -> calls -> __unresolved__::ref::next (-> [[parallelworkengine-reviewnode]])
+- get_approval_status -> calls -> __unresolved__::ref::next (-> [[reviewnode-injectcharstyles]])
 - _extract_text_from_pdf_bytes -> calls -> __unresolved__::ref::bytesio (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _parse_sections_from_response -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- extract_sections_from_asset -> calls -> __unresolved__::ref::create_anthropic_client (-> [[unresolvedrefvalueerror-executefromphase]])
+- extract_sections_from_asset -> calls -> __unresolved__::ref::create_anthropic_client (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _resolve_org_by_email -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - BetaMetricsTracker -> contains -> export_beta_report (-> [[exportbetareport-unresolvedrefgetaccuracyreport]])
 - get_go_live_readiness -> calls -> __unresolved__::ref::get_nps_score (-> [[exportbetareport-unresolvedrefgetaccuracyreport]])
@@ -19476,23 +19524,23 @@ Cohesion: 0.01 | Nodes: 1210
 - copy_bid_attachments_to_proposal -> calls -> __unresolved__::ref::read (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - download_bid_attachments -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
 - download_bid_attachments -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
-- download_bid_attachments -> calls -> __unresolved__::ref::_upload_to_storage (-> [[unresolvedrefvalueerror-executefromphase]])
-- _ensure_bid_in_db -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- download_bid_attachments -> calls -> __unresolved__::ref::_upload_to_storage (-> [[reviewnode-injectcharstyles]])
+- _ensure_bid_in_db -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::bidpreprocessor (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::preprocess (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _run_analysis_if_needed -> calls -> __unresolved__::ref::write_text (-> [[unresolvedrefprint-unresolvedrefpath]])
-- build_profile_from_db -> calls -> __unresolved__::ref::dict (-> [[planmerge-unresolvedrefdict]])
+- build_profile_from_db -> calls -> __unresolved__::ref::dict (-> [[claudegenerate-embeddingservice]])
 - cleanup_expired_bids -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
 - cleanup_expired_bids -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
 - cleanup_expired_bids -> calls -> __unresolved__::ref::glob (-> [[unresolvedrefprint-unresolvedrefpath]])
 - cleanup_expired_bids -> calls -> __unresolved__::ref::add (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - cleanup_expired_bids -> calls -> __unresolved__::ref::stat (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _extract_and_classify_filename -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- _extract_and_classify_filename -> calls -> __unresolved__::ref::unquote (-> [[unresolvedrefvalueerror-executefromphase]])
-- _fetch_document_content -> calls -> __unresolved__::ref::urlparse (-> [[unresolvedrefvalueerror-executefromphase]])
+- _extract_and_classify_filename -> calls -> __unresolved__::ref::unquote (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- _fetch_document_content -> calls -> __unresolved__::ref::urlparse (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _fetch_document_content -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _fetch_document_content -> calls -> __unresolved__::ref::clientsession (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _fetch_document_content -> calls -> __unresolved__::ref::bytesio (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -19514,7 +19562,7 @@ Cohesion: 0.01 | Nodes: 1210
 - score_bids -> calls -> __unresolved__::ref::_call_tenopa_review (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
 - score_and_rank_bids -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - score_and_rank_bids -> calls -> __unresolved__::ref::add (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- score_bid -> calls -> __unresolved__::ref::issubset (-> [[parallelworkengine-reviewnode]])
+- score_bid -> calls -> __unresolved__::ref::issubset (-> [[reviewnode-injectcharstyles]])
 - PricingEngine -> contains -> __init__ (-> [[engine-init]])
 - PricingEngine -> contains -> quick_estimate (-> [[quickestimate-ensuremarketdata]])
 - simulate -> calls -> __unresolved__::ref::_compute_budget_tier (-> [[quickestimate-ensuremarketdata]])
@@ -19522,12 +19570,12 @@ Cohesion: 0.01 | Nodes: 1210
 - simulate -> calls -> __unresolved__::ref::_get_market_context (-> [[quickestimate-ensuremarketdata]])
 - simulate_score_table -> calls -> __unresolved__::ref::_estimate_min_bid (-> [[pricescorecalculator-calculaterfpformula]])
 - _statistical_model -> calls -> __unresolved__::ref::_rule_based_model (-> [[rulebasedmodel-winprobabilitymodel]])
-- verify_bid_submission -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- verify_bid_submission -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _build_search_keywords -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _crawl_bid_results -> calls -> __unresolved__::ref::_compute_budget_tier (-> [[quickestimate-ensuremarketdata]])
 - _parse_json_response -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _parse_json_response -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- _chunk_by_headings -> calls -> __unresolved__::ref::finditer (-> [[unresolvedrefvalueerror-executefromphase]])
+- _chunk_by_headings -> calls -> __unresolved__::ref::finditer (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _chunk_by_headings -> calls -> __unresolved__::ref::_chunk_by_window (-> [[chunkdocument-documentchunker]])
 - _chunk_by_headings -> calls -> __unresolved__::ref::start (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _chunk_by_headings -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
@@ -19544,9 +19592,10 @@ Cohesion: 0.01 | Nodes: 1210
 - _get_graph_token -> calls -> __unresolved__::ref::asyncclient (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _get_graph_token -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - batch_reindex -> calls -> __unresolved__::ref::zip (-> [[dailyg2bmonitor-healthcheckrunner]])
+- generate_embedding -> calls -> __unresolved__::ref::_get_openai (-> [[claudegenerate-embeddingservice]])
 - G2BService -> contains -> __aenter__ (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- G2BService -> contains -> _extract_main_keyword (-> [[collectmetrics-unresolvedreffindall]])
-- _call_api -> calls -> __unresolved__::ref::runtimeerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- G2BService -> contains -> _extract_main_keyword (-> [[reviewnode-injectcharstyles]])
+- _call_api -> calls -> __unresolved__::ref::runtimeerror (-> [[reviewnode-injectcharstyles]])
 - _call_api -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _call_api -> calls -> __unresolved__::ref::clienttimeout (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _call_api -> calls -> __unresolved__::ref::text (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
@@ -19567,10 +19616,10 @@ Cohesion: 0.01 | Nodes: 1210
 - _add_evaluation_table -> calls -> __unresolved__::ref::add_table (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _add_evaluation_table -> calls -> __unresolved__::ref::add_run (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _add_evaluation_table -> calls -> __unresolved__::ref::isdigit (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- _inject_fonts -> calls -> __unresolved__::ref::iter (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _inject_fonts -> calls -> __unresolved__::ref::iter (-> [[reviewnode-injectcharstyles]])
 - _inject_fonts -> calls -> __unresolved__::ref::isdigit (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- _inject_fonts -> calls -> __unresolved__::ref::subelement (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- generate_lesson_embedding -> calls -> __unresolved__::ref::asyncopenai (-> [[edges-claudegenerate]])
+- _inject_fonts -> calls -> __unresolved__::ref::subelement (-> [[claudegenerate-embeddingservice]])
+- generate_lesson_embedding -> calls -> __unresolved__::ref::asyncopenai (-> [[claudegenerate-embeddingservice]])
 - kb_updater -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - kb_updater -> imports -> __unresolved__::ref::supabase_client (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _format_search_result -> calls -> __unresolved__::ref::decimal (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
@@ -19597,33 +19646,33 @@ Cohesion: 0.01 | Nodes: 1210
 - send_teams_notification -> calls -> __unresolved__::ref::asyncclient (-> [[unresolvedrefprint-unresolvedrefpath]])
 - PhaseExecutor -> contains -> __init__ (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
 - PhaseExecutor -> contains -> _bg_task (-> [[dailyg2bmonitor-healthcheckrunner]])
-- PhaseExecutor -> contains -> _update_status (-> [[unresolvedrefvalueerror-executefromphase]])
-- PhaseExecutor -> contains -> _save_artifact (-> [[unresolvedrefvalueerror-executefromphase]])
-- PhaseExecutor -> contains -> _parse (-> [[unresolvedrefvalueerror-executefromphase]])
-- PhaseExecutor -> contains -> execute_from_phase (-> [[unresolvedrefvalueerror-executefromphase]])
+- PhaseExecutor -> contains -> _update_status (-> [[reviewnode-injectcharstyles]])
+- PhaseExecutor -> contains -> _save_artifact (-> [[reviewnode-injectcharstyles]])
+- PhaseExecutor -> contains -> _parse (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- PhaseExecutor -> contains -> execute_from_phase (-> [[reviewnode-injectcharstyles]])
 - _upload_to_storage -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _upload_to_storage -> calls -> __unresolved__::ref::to_thread (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _upload_to_storage -> calls -> __unresolved__::ref::read (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _upload_to_storage -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
-- execute_all -> calls -> __unresolved__::ref::phase1_research (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::phase2_analysis (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::phase3_plan (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::phase4_implement (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::phase5_test (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::update_session (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::_upload_to_storage (-> [[unresolvedrefvalueerror-executefromphase]])
-- execute_all -> calls -> __unresolved__::ref::notify_proposal_complete (-> [[unresolvedrefvalueerror-executefromphase]])
-- phase1_research -> calls -> __unresolved__::ref::parse_rfp_text (-> [[edges-claudegenerate]])
+- execute_all -> calls -> __unresolved__::ref::phase1_research (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::phase2_analysis (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::phase3_plan (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::phase4_implement (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::phase5_test (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::update_session (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::_upload_to_storage (-> [[reviewnode-injectcharstyles]])
+- execute_all -> calls -> __unresolved__::ref::notify_proposal_complete (-> [[reviewnode-injectcharstyles]])
+- phase1_research -> calls -> __unresolved__::ref::parse_rfp_text (-> [[claudegenerate-embeddingservice]])
 - phase2_analysis -> calls -> __unresolved__::ref::phase2artifact (-> [[unresolvedrefprint-unresolvedrefpath]])
 - phase3_plan -> calls -> __unresolved__::ref::phase3artifact (-> [[unresolvedrefprint-unresolvedrefpath]])
 - phase3_plan -> calls -> __unresolved__::ref::bidcalculator (-> [[estimate-optimizebid]])
 - phase4_implement -> calls -> __unresolved__::ref::phase4artifact (-> [[unresolvedrefprint-unresolvedrefpath]])
 - phase5_test -> calls -> __unresolved__::ref::to_thread (-> [[unresolvedrefprint-unresolvedrefpath]])
 - phase5_test -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
-- check_prompt -> calls -> __unresolved__::ref::findall (-> [[collectmetrics-unresolvedreffindall]])
+- check_prompt -> calls -> __unresolved__::ref::findall (-> [[reviewnode-injectcharstyles]])
 - check_prompt -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - generate_presentation_slides -> calls -> __unresolved__::ref::asyncanthropic (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
-- generate_presentation_slides -> calls -> __unresolved__::ref::extract_json_from_response (-> [[unresolvedrefvalueerror-executefromphase]])
+- generate_presentation_slides -> calls -> __unresolved__::ref::extract_json_from_response (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - generate_presentation_slides -> calls -> __unresolved__::ref::keys (-> [[dailyg2bmonitor-healthcheckrunner]])
 - _init_presentation -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _init_presentation -> calls -> __unresolved__::ref::presentation (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -19631,38 +19680,38 @@ Cohesion: 0.01 | Nodes: 1210
 - _render_slide -> calls -> __unresolved__::ref::add_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - build_presentation_pptx -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
 - build_presentation_pptx -> calls -> __unresolved__::ref::save (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- archive_artifact -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- archive_artifact -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _prompt_id_to_label -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - prompt_analyzer -> contains -> analyze_prompt (-> [[analyzeprompt-unresolvedrefcomputemetrics]])
 - prompt_analyzer -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_analyzer -> imports -> __unresolved__::ref::datetime (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- get_categories_with_prompts -> calls -> __unresolved__::ref::getattr (-> [[edges-claudegenerate]])
+- get_categories_with_prompts -> calls -> __unresolved__::ref::getattr (-> [[claudegenerate-embeddingservice]])
 - prompt_categories -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_evolution -> contains -> create_candidate (-> [[createcandidate-unresolvedrefregistercandidate]])
 - prompt_evolution -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_evolution -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- _extract_variables -> calls -> __unresolved__::ref::findall (-> [[collectmetrics-unresolvedreffindall]])
+- _extract_variables -> calls -> __unresolved__::ref::findall (-> [[reviewnode-injectcharstyles]])
 - _fallback_from_python -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _fallback_from_python -> calls -> __unresolved__::ref::endswith (-> [[unresolvedrefprint-unresolvedrefpath]])
-- _fallback_from_python -> calls -> __unresolved__::ref::getattr (-> [[edges-claudegenerate]])
-- sync_all_prompts -> calls -> __unresolved__::ref::getattr (-> [[edges-claudegenerate]])
+- _fallback_from_python -> calls -> __unresolved__::ref::getattr (-> [[claudegenerate-embeddingservice]])
+- sync_all_prompts -> calls -> __unresolved__::ref::getattr (-> [[claudegenerate-embeddingservice]])
 - prompt_registry -> contains -> _make_prompt_id (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - prompt_registry -> imports -> __unresolved__::ref::hashlib (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_registry -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_registry -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _load_project_state -> calls -> __unresolved__::ref::_default_sample_state (-> [[unresolvedrefprint-unresolvedrefpath]])
-- _substitute_variables -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-executefromphase]])
-- _substitute_variables -> calls -> __unresolved__::ref::findall (-> [[collectmetrics-unresolvedreffindall]])
+- _substitute_variables -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- _substitute_variables -> calls -> __unresolved__::ref::findall (-> [[reviewnode-injectcharstyles]])
 - periodic_maintenance -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - prompt_tracker -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - prompt_tracker -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - _keyword_search_qa -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- delete_qa_record -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
-- save_qa_records -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
-- update_qa_record -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
-- parse_rfp -> calls -> __unresolved__::ref::create_anthropic_client (-> [[unresolvedrefvalueerror-executefromphase]])
-- parse_rfp -> calls -> __unresolved__::ref::extract_json_from_response (-> [[unresolvedrefvalueerror-executefromphase]])
-- parse_rfp -> calls -> __unresolved__::ref::rfpdata (-> [[unresolvedrefvalueerror-executefromphase]])
+- delete_qa_record -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- save_qa_records -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- update_qa_record -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- parse_rfp -> calls -> __unresolved__::ref::create_anthropic_client (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- parse_rfp -> calls -> __unresolved__::ref::extract_json_from_response (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- parse_rfp -> calls -> __unresolved__::ref::rfpdata (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - send_daily_summary_email -> calls -> __unresolved__::ref::build_email_html (-> [[dailyg2bmonitor-healthcheckrunner]])
 - setup_scheduler -> calls -> __unresolved__::ref::zoneinfo (-> [[dailyg2bmonitor-healthcheckrunner]])
 - setup_scheduler -> calls -> __unresolved__::ref::asyncioscheduler (-> [[scheduler-initscheduler]])
@@ -19672,19 +19721,19 @@ Cohesion: 0.01 | Nodes: 1210
 - start_scheduler -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - mark_expired_proposals -> calls -> __unresolved__::ref::statemachine (-> [[dailyg2bmonitor-healthcheckrunner]])
 - check_number_consistency -> calls -> __unresolved__::ref::compile (-> [[buildgraph-graph]])
-- check_number_consistency -> calls -> __unresolved__::ref::finditer (-> [[unresolvedrefvalueerror-executefromphase]])
-- check_number_consistency -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-executefromphase]])
+- check_number_consistency -> calls -> __unresolved__::ref::finditer (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- check_number_consistency -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - check_number_consistency -> calls -> __unresolved__::ref::start (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- check_number_consistency -> calls -> __unresolved__::ref::end (-> [[unresolvedrefvalueerror-executefromphase]])
+- check_number_consistency -> calls -> __unresolved__::ref::end (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - find_ungrounded_claims -> calls -> __unresolved__::ref::find (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- confirm_original_document -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- confirm_original_document -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - extract_checklist_from_rfp -> calls -> __unresolved__::ref::add (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - recalculate_documents_progress -> calls -> __unresolved__::ref::get_checklist (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - _extract_toc_with_claude -> calls -> __unresolved__::ref::asyncanthropic (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
-- _extract_toc_with_claude -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-executefromphase]])
+- _extract_toc_with_claude -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - _read_pdf_text -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _summarize_feedbacks -> calls -> __unresolved__::ref::rstrip (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- truncate_kb_results -> calls -> __unresolved__::ref::dict (-> [[planmerge-unresolvedrefdict]])
+- truncate_kb_results -> calls -> __unresolved__::ref::dict (-> [[claudegenerate-embeddingservice]])
 - create_auth_user -> calls -> __unresolved__::ref::tenopapierror (-> [[unresolvedreftenopapierror-init]])
 - parse_xlsx_users -> calls -> __unresolved__::ref::tenopapierror (-> [[unresolvedreftenopapierror-init]])
 - parse_xlsx_users -> calls -> __unresolved__::ref::bytesio (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -19701,12 +19750,12 @@ Cohesion: 0.01 | Nodes: 1210
 - apply_all_migrations -> calls -> __unresolved__::ref::get_db_connection (-> [[unresolvedrefprint-unresolvedrefpath]])
 - apply_all_migrations -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
 - apply_all_migrations -> calls -> __unresolved__::ref::get_migration_files (-> [[unresolvedrefprint-unresolvedrefpath]])
-- apply_all_migrations -> calls -> __unresolved__::ref::next (-> [[parallelworkengine-reviewnode]])
+- apply_all_migrations -> calls -> __unresolved__::ref::next (-> [[reviewnode-injectcharstyles]])
 - apply_all_migrations -> calls -> __unresolved__::ref::get_applied_migrations (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _review_technical_completeness -> calls -> __unresolved__::ref::reviewcomment (-> [[finalreviewengine-conductfinalreview]])
-- execute_workflow -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- execute_workflow -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - execute_workflow -> calls -> __unresolved__::ref::total_seconds (-> [[unresolvedreftenopapierror-init]])
-- proposal_generator -> contains -> _call_claude (-> [[unresolvedrefvalueerror-executefromphase]])
+- proposal_generator -> contains -> _call_claude (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - proposal_generator -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - proposal_generator -> imports -> __unresolved__::ref::config (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - proposal_generator -> imports -> __unresolved__::ref::schemas (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
@@ -19719,7 +19768,7 @@ Cohesion: 0.01 | Nodes: 1210
 - StrategyPlanningEngine -> contains -> _identify_winning_points (-> [[identifywinningpoints-unresolvedrefevaluatecompliancewinningpoint]])
 - StrategyPlanningEngine -> contains -> _create_default_competitor_analysis (-> [[analyzecompetition-analyzedefenceoffencestrategy]])
 - _calculate_category_similarity -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- _determine_strategy_priorities -> calls -> __unresolved__::ref::next (-> [[parallelworkengine-reviewnode]])
+- _determine_strategy_priorities -> calls -> __unresolved__::ref::next (-> [[reviewnode-injectcharstyles]])
 - _search_g2b_competitors -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
 - load_profile -> calls -> __unresolved__::ref::run (-> [[unresolvedrefprint-unresolvedrefpath]])
 - load_profile -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -19745,7 +19794,7 @@ Cohesion: 0.01 | Nodes: 1210
 - run_migration -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
 - run_migration -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
 - run_migration -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- build_keyword_index -> calls -> __unresolved__::ref::dict (-> [[planmerge-unresolvedrefdict]])
+- build_keyword_index -> calls -> __unresolved__::ref::dict (-> [[claudegenerate-embeddingservice]])
 - parse_excel -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _cell -> calls -> __unresolved__::ref::endswith (-> [[unresolvedrefprint-unresolvedrefpath]])
 - import_from_excel -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])

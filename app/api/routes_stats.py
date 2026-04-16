@@ -108,19 +108,19 @@ def _aggregate(records: list) -> WinRateResponse:
 
 # ── 엔드포인트 ────────────────────────────────────────────────────────
 
-@router.get("/stats/win-rate")
 async def get_win_rate(
     user=Depends(get_current_user),
-    scope: str = Query("personal", description="personal | team | company"),
+    scope: str = Query("team", description="team | division | company"),
 ):
-    """낙찰률 통계 조회
+    """낙찰률 통계 조회 (3개 스코프만 지원)
 
-    - personal: 본인 소유 proposals
     - team: 본인이 속한 팀의 proposals
-    - company: 접근 가능한 모든 proposals
+    - division: 본인이 속한 본부의 proposals  
+    - company: 전사 proposals (경영진만 접근 가능)
     win_result IN ('won', 'lost') 인 레코드만 집계.
     """
     try:
+        from fastapi import HTTPException
         client = await get_async_client()
 
         # proposals 기본 쿼리: win_result 확정된 건만
@@ -128,9 +128,8 @@ async def get_win_rate(
             "id, win_result, owner_id, team_id, created_at"
         ).in_("win_result", ["won", "lost"])
 
-        if scope == "personal":
-            query = query.eq("owner_id", user.id)
-        elif scope == "team":
+        if scope == "team":
+            # 팀원: 자신의 팀 데이터만
             team_res = (
                 await client.table("team_members")
                 .select("team_id")
@@ -139,24 +138,42 @@ async def get_win_rate(
             )
             my_team_ids = [r["team_id"] for r in (team_res.data or [])]
             if my_team_ids:
-                team_ids_csv = ",".join(my_team_ids)
-                query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
+                # team_id가 내 팀 중 하나인 proposals
+                query = query.in_("team_id", my_team_ids)
             else:
-                query = query.eq("owner_id", user.id)
+                # 팀 미할당: 빈 결과
+                return ok({
+                    "overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0},
+                    "by_month": [],
+                    "by_agency": [],
+                })
+        elif scope == "division":
+            # 본부장/경영진: 자신의 본부 데이터
+            if not user.division_id:
+                return ok({
+                    "overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0},
+                    "by_month": [],
+                    "by_agency": [],
+                })
+            # division_id가 같은 팀의 proposals
+            teams = await client.table("teams").select("id").eq("division_id", user.division_id).execute()
+            div_team_ids = [t["id"] for t in (teams.data or [])]
+            if div_team_ids:
+                query = query.in_("team_id", div_team_ids)
+            else:
+                return ok({
+                    "overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0},
+                    "by_month": [],
+                    "by_agency": [],
+                })
+        elif scope == "company":
+            # 경영진: 전사 데이터
+            # 권한 체크: 경영진만 접근 가능
+            if user.role not in ("executive", "admin"):
+                raise HTTPException(status_code=403, detail="경영진만 접근 가능")
+            # 모든 proposals 포함 (필터 없음)
         else:
-            # company: 본인 소유 + 팀 소속
-            team_res = (
-                await client.table("team_members")
-                .select("team_id")
-                .eq("user_id", user.id)
-                .execute()
-            )
-            my_team_ids = [r["team_id"] for r in (team_res.data or [])]
-            if my_team_ids:
-                team_ids_csv = ",".join(my_team_ids)
-                query = query.or_(f"owner_id.eq.{user.id},team_id.in.({team_ids_csv})")
-            else:
-                query = query.eq("owner_id", user.id)
+            raise HTTPException(status_code=400, detail="유효한 scope: team, division, company")
 
         res = await query.execute()
         records = res.data or []

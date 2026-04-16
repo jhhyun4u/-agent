@@ -1,5 +1,5 @@
 # __unresolved__::ref::basemodel & __unresolved__::ref::logging
-Cohesion: 0.00 | Nodes: 1017
+Cohesion: 0.00 | Nodes: 1027
 
 ## Key Nodes
 - **__unresolved__::ref::basemodel** () -- 407 connections
@@ -40,12 +40,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- extends <- [[migrationsummaryresponse]]
   - <- extends <- [[notificationsettingsupdate]]
   - <- extends <- [[sensitivityrequest]]
-  - <- extends <- [[editactionrequest]]
-  - <- extends <- [[experimentrequest]]
-  - <- extends <- [[candidaterequest]]
-  - <- extends <- [[simulaterequest]]
-  - <- extends <- [[comparerequest]]
-  - <- extends <- [[suggestionfeedbackrequest]]
   - <- extends <- [[proposalfrombid]]
   - <- extends <- [[proposalupdate]]
   - <- extends <- [[proposallistresponse]]
@@ -58,10 +52,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- extends <- [[landingstats]]
   - <- extends <- [[sectioncreate]]
   - <- extends <- [[sectionupdate]]
-  - <- extends <- [[overallstat]]
-  - <- extends <- [[agencystat]]
-  - <- extends <- [[monthstat]]
-  - <- extends <- [[winrateresponse]]
   - <- extends <- [[nodestatusresponse]]
   - <- extends <- [[nodevalidaterequest]]
   - <- extends <- [[nodestatusresponse]]
@@ -410,6 +400,16 @@ Cohesion: 0.00 | Nodes: 1017
   - <- extends <- [[clientpricingpreference]]
   - <- extends <- [[pricingsimulationresult]]
   - <- extends <- [[quickestimateresult]]
+  - <- extends <- [[editactionrequest]]
+  - <- extends <- [[experimentrequest]]
+  - <- extends <- [[candidaterequest]]
+  - <- extends <- [[simulaterequest]]
+  - <- extends <- [[comparerequest]]
+  - <- extends <- [[suggestionfeedbackrequest]]
+  - <- extends <- [[overallstat]]
+  - <- extends <- [[agencystat]]
+  - <- extends <- [[monthstat]]
+  - <- extends <- [[winrateresponse]]
 - **__unresolved__::ref::logging** () -- 171 connections
   - <- imports <- [[main]]
   - <- imports <- [[scheduler]]
@@ -429,15 +429,12 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesknowledge]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesqa]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
@@ -582,6 +579,9 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[runmasterprojectsmigration]]
   - <- imports <- [[modulararchitecturesimple]]
   - <- imports <- [[stubnodes]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::typing** () -- 114 connections
   - <- imports <- [[config]]
   - <- imports <- [[exceptions]]
@@ -599,10 +599,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routespresentation]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
   - <- imports <- [[routesteam]]
@@ -618,7 +616,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
   - <- imports <- [[contexthelpers]]
-  - <- imports <- [[edges]]
   - <- imports <- [[state]]
   - <- imports <- [[constants]]
   - <- imports <- [[auth]]
@@ -697,6 +694,9 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[proposalgenerator]]
   - <- imports <- [[rfpreviewengine]]
   - <- imports <- [[strategyplanningengine]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[edges]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::datetime** () -- 88 connections
   - <- imports <- [[response]]
   - <- imports <- [[routesadmin]]
@@ -707,7 +707,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routeskb]]
   - <- imports <- [[routesknowledge]]
   - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesstep8review]]
@@ -786,6 +785,7 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[modulararchitecturesimple]]
   - <- imports <- [[parallelworkengine]]
   - <- imports <- [[testworkflow]]
+  - <- imports <- [[routesperformance]]
 - **__unresolved__::ref::supabase_client** () -- 84 connections
   - <- imports <- [[deps]]
   - <- imports <- [[routesadmin]]
@@ -802,13 +802,11 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesteam]]
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
@@ -871,6 +869,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[runmigration]]
   - <- imports <- [[seeddata]]
   - <- imports <- [[seedorgstructure]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::asyncio** () -- 67 connections
   - <- imports <- [[scheduler]]
   - <- imports <- [[routesbids]]
@@ -958,24 +958,24 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultcredentials]]
   - <- imports <- [[routesvaultpersonnel]]
   - <- imports <- [[routesvaultstepsearch]]
-  - <- calls <- [[proposalcustomeranalysis]]
   - <- imports <- [[plannodes]]
-  - <- calls <- [[proposalwritenext]]
-  - <- imports <- [[proposalnodes]]
   - <- calls <- [[proposalcustomeranalysis]]
+  - <- imports <- [[proposalnodes]]
+  - <- calls <- [[proposalwritenext]]
   - <- imports <- [[step8acustomeranalysis]]
-  - <- calls <- [[proposalsectionvalidator]]
+  - <- calls <- [[proposalcustomeranalysis]]
   - <- imports <- [[step8bsectionvalidator]]
-  - <- calls <- [[proposalsectionsconsolidation]]
+  - <- calls <- [[proposalsectionvalidator]]
   - <- imports <- [[step8cconsolidation]]
-  - <- calls <- [[mockevaluationanalysis]]
+  - <- calls <- [[proposalsectionsconsolidation]]
   - <- imports <- [[step8dmockevaluation]]
-  - <- calls <- [[mockevaluationfeedbackprocessor]]
+  - <- calls <- [[mockevaluationanalysis]]
   - <- imports <- [[step8efeedbackprocessor]]
-  - <- calls <- [[proposalwritenextv2]]
+  - <- calls <- [[mockevaluationfeedbackprocessor]]
   - <- imports <- [[step8frewrite]]
-  - <- calls <- [[strategygenerate]]
+  - <- calls <- [[proposalwritenextv2]]
   - <- imports <- [[strategygenerate]]
+  - <- calls <- [[strategygenerate]]
   - <- imports <- [[requestid]]
   - <- imports <- [[knowledgeschemas]]
   - <- imports <- [[masterprojects]]
@@ -983,14 +983,14 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[assetextractor]]
   - <- imports <- [[betametricstracker]]
   - <- imports <- [[g2bbiddingcollector]]
+  - <- imports <- [[knowledgemanager]]
   - <- calls <- [[storeclassification]]
   - <- calls <- [[sharetoorg]]
-  - <- imports <- [[knowledgemanager]]
   - <- imports <- [[masterprojectschatservice]]
+  - <- imports <- [[migrationservice]]
   - <- calls <- [[detectchangeddocuments]]
   - <- calls <- [[createbatchrecord]]
   - <- calls <- [[getfaileddocuments]]
-  - <- imports <- [[migrationservice]]
   - <- imports <- [[useraccountservice]]
   - <- imports <- [[vaultbiddingservice]]
   - <- imports <- [[vaultchatsearch]]
@@ -999,8 +999,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[vaultpersonnelservice]]
   - <- imports <- [[vaultstepsearch]]
   - <- imports <- [[versionmanager]]
-  - <- calls <- [[rundailybatch]]
   - <- imports <- [[vaultbiddingbatch]]
+  - <- calls <- [[rundailybatch]]
   - <- imports <- [[pilotmigration10projects]]
   - <- imports <- [[pilotmigrationdemo]]
 - **__unresolved__::ref::pydantic** () -- 55 connections
@@ -1015,11 +1015,9 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
   - <- imports <- [[routespricing]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
@@ -1059,6 +1057,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[vaultcredentialservice]]
   - <- imports <- [[versionmanager]]
   - <- imports <- [[models]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::fastapi** () -- 51 connections
   - <- imports <- [[main]]
   - <- imports <- [[deps]]
@@ -1080,16 +1080,13 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesqa]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
@@ -1111,6 +1108,9 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[auth]]
   - <- imports <- [[ratelimit]]
   - <- imports <- [[pagination]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **routes_bids** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 49 connections
   - -> contains -> [[loadfilecache]]
   - -> contains -> [[savefilecache]]
@@ -1226,15 +1226,12 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routesqa]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
   - <- imports <- [[routesstreams]]
@@ -1252,6 +1249,9 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultpersonnel]]
   - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::pathlib** () -- 43 connections
   - <- imports <- [[restructuredirs]]
   - <- imports <- [[routesbids]]
@@ -1388,12 +1388,10 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routeskb]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
   - <- imports <- [[routessubmissiondocs]]
@@ -1408,6 +1406,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[useraccountservice]]
   - <- imports <- [[claudeutils]]
   - <- imports <- [[fileutils]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **state** (C:\project\tenopa proposer\app\graph\state.py) -- 34 connections
   - -> contains -> [[approvalchainentry]]
   - -> contains -> [[approvalstatus]]
@@ -1543,61 +1543,61 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedrefgovernmentguidelines]]
   - -> imports -> [[unresolvedrefclaudeclient]]
 - **__unresolved__::ref::enum** () -- 28 connections
-  - <- extends <- [[knowledgetype]]
   - <- imports <- [[knowledgeschemas]]
+  - <- extends <- [[knowledgetype]]
+  - <- imports <- [[vaultschemas]]
   - <- extends <- [[vaultsection]]
   - <- extends <- [[querytype]]
   - <- extends <- [[messagerole]]
-  - <- imports <- [[vaultschemas]]
+  - <- imports <- [[statevalidator]]
   - <- extends <- [[proposalstatus]]
   - <- extends <- [[winresult]]
   - <- extends <- [[aitaskstatus]]
-  - <- imports <- [[statevalidator]]
-  - <- extends <- [[dependencylevel]]
   - <- imports <- [[versionmanager]]
-  - <- extends <- [[procurementmethod]]
+  - <- extends <- [[dependencylevel]]
   - <- imports <- [[calculator]]
+  - <- extends <- [[procurementmethod]]
+  - <- imports <- [[finalreviewengine]]
   - <- extends <- [[reviewstatus]]
   - <- extends <- [[pptsection]]
   - <- extends <- [[reviewpriority]]
-  - <- imports <- [[finalreviewengine]]
+  - <- imports <- [[parallelworkengine]]
   - <- extends <- [[agentrole]]
   - <- extends <- [[taskstatus]]
   - <- extends <- [[checklistcategory]]
-  - <- imports <- [[parallelworkengine]]
+  - <- imports <- [[rfpreviewengine]]
   - <- extends <- [[feasibilitylevel]]
   - <- extends <- [[decisiontype]]
-  - <- imports <- [[rfpreviewengine]]
+  - <- imports <- [[strategyplanningengine]]
   - <- extends <- [[winningstrategy]]
   - <- extends <- [[pricestrategy]]
-  - <- imports <- [[strategyplanningengine]]
 - **__unresolved__::ref::time** () -- 28 connections
   - <- imports <- [[routesbids]]
   - <- imports <- [[routesvaultchat]]
-  - <- calls <- [[tracktokens]]
   - <- imports <- [[tokentracking]]
-  - <- calls <- [[dispatch]]
+  - <- calls <- [[tracktokens]]
   - <- imports <- [[requestid]]
+  - <- calls <- [[dispatch]]
+  - <- imports <- [[aistatusmanager]]
   - <- calls <- [[starttask]]
   - <- calls <- [[updatesubtask]]
   - <- calls <- [[heartbeat]]
   - <- calls <- [[checkheartbeat]]
   - <- calls <- [[failtask]]
   - <- calls <- [[getcompositestatus]]
-  - <- imports <- [[aistatusmanager]]
-  - <- calls <- [[getgraphtoken]]
   - <- imports <- [[emailservice]]
+  - <- calls <- [[getgraphtoken]]
   - <- imports <- [[healthchecker]]
-  - <- calls <- [[runsimulation]]
   - <- imports <- [[promptsimulator]]
+  - <- calls <- [[runsimulation]]
   - <- calls <- [[init]]
   - <- calls <- [[startscheduler]]
-  - <- calls <- [[applymigration]]
   - <- imports <- [[applymigrations]]
-  - <- calls <- [[main]]
+  - <- calls <- [[applymigration]]
   - <- imports <- [[e2einterrupttest]]
   - <- calls <- [[main]]
   - <- imports <- [[e2eworkflowtest]]
+  - <- calls <- [[main]]
   - <- imports <- [[monitorg2bpipeline]]
   - <- imports <- [[testperformanceoptimization]]
 - **__unresolved__::ref::auth_schemas** () -- 27 connections
@@ -1616,7 +1616,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesprojectarchive]]
   - <- imports <- [[routesproposal]]
@@ -1628,8 +1627,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultchat]]
   - <- imports <- [[routesvaultembeddings]]
   - <- imports <- [[routesworkflow]]
+  - <- imports <- [[routesperformance]]
 - **__unresolved__::ref::state** () -- 27 connections
-  - <- imports <- [[edges]]
   - <- imports <- [[graph]]
   - <- imports <- [[bidplan]]
   - <- imports <- [[evaluationnodes]]
@@ -1656,6 +1655,7 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[compliancetracker]]
   - <- imports <- [[versionmanager]]
   - <- imports <- [[stubnodes]]
+  - <- imports <- [[edges]]
 - **__unresolved__::ref::claude_client** () -- 26 connections
   - <- imports <- [[routesbids]]
   - <- imports <- [[routesvaultchat]]
@@ -2096,19 +2096,19 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesfiles]]
   - <- imports <- [[routeskb]]
   - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
   - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
   - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routessubmissiondocs]]
   - <- imports <- [[routesteam]]
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesstats]]
 - **deps** (C:\project\tenopa proposer\app\api\deps.py) -- 20 connections
   - -> contains -> [[initdevuser]]
   - -> contains -> [[shouldbypassauth]]
@@ -2271,6 +2271,26 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedrefembeddingservice]]
   - -> imports -> [[unresolvedrefknowledgemanager]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
+- **hwpx_builder** (C:\project\tenopa proposer\app\services\hwpx_builder.py) -- 19 connections
+  - -> contains -> [[patchhwpxlibrary]]
+  - -> contains -> [[injectfonts]]
+  - -> contains -> [[injectcharstyles]]
+  - -> contains -> [[setupstyles]]
+  - -> contains -> [[addempty]]
+  - -> contains -> [[addcontentparagraph]]
+  - -> contains -> [[addcover]]
+  - -> contains -> [[addevaluationtable]]
+  - -> contains -> [[addtoc]]
+  - -> contains -> [[addbody]]
+  - -> contains -> [[buildhwpx]]
+  - -> contains -> [[buildhwpxasync]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefcopy]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedrefhwpx]]
+  - -> imports -> [[unresolvedreflxml]]
+  - -> imports -> [[unresolvedrefetree]]
 - **file_utils** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 19 connections
   - -> contains -> [[validatefiletype]]
   - -> contains -> [[extracttextfrompdf]]
@@ -2351,22 +2371,22 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedrefuuid]]
 - **__unresolved__::ref::zipfile** () -- 17 connections
   - <- imports <- [[routesprojectarchive]]
-  - <- calls <- [[buildcopybundle]]
   - <- imports <- [[submissiondocsservice]]
-  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[buildcopybundle]]
   - <- imports <- [[templateservice]]
+  - <- calls <- [[readhwpxtext]]
+  - <- imports <- [[analyzetemplate]]
   - <- calls <- [[analyzetemplate]]
   - <- calls <- [[extractheaderxml]]
   - <- calls <- [[extractsectionxml]]
-  - <- imports <- [[analyzetemplate]]
-  - <- calls <- [[packhwpx]]
   - <- imports <- [[buildhwpx]]
-  - <- calls <- [[readsectionxmlbytes]]
+  - <- calls <- [[packhwpx]]
   - <- imports <- [[pageguard]]
-  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[readsectionxmlbytes]]
   - <- imports <- [[validate]]
-  - <- calls <- [[extracthwpxtext]]
+  - <- calls <- [[validatehwpx]]
   - <- imports <- [[hwpxtopptx]]
+  - <- calls <- [[extracthwpxtext]]
 - **routes_resources** (C:\project\tenopa proposer\app\api\routes_resources.py) -- 17 connections
   - -> contains -> [[sectioncreate]]
   - -> contains -> [[sectionupdate]]
@@ -2528,6 +2548,23 @@ Cohesion: 0.00 | Nodes: 1017
   - <- calls <- [[readmigrationfile]]
   - <- calls <- [[checkschema]]
   - <- calls <- [[extracthwpxtext]]
+- **routes_stats** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 16 connections
+  - -> contains -> [[overallstat]]
+  - -> contains -> [[agencystat]]
+  - -> contains -> [[monthstat]]
+  - -> contains -> [[winrateresponse]]
+  - -> contains -> [[calcrate]]
+  - -> contains -> [[aggregate]]
+  - -> contains -> [[getwinrate]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefcollections]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefresponse]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
 - **admin_schemas** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 16 connections
   - -> contains -> [[userstats]]
   - -> contains -> [[proposalstats]]
@@ -2645,22 +2682,6 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedrefcommon]]
   - -> imports -> [[unresolvedrefperformanceschemas]]
   - -> imports -> [[unresolvedrefschemas]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_stats** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 15 connections
-  - -> contains -> [[overallstat]]
-  - -> contains -> [[agencystat]]
-  - -> contains -> [[monthstat]]
-  - -> contains -> [[winrateresponse]]
-  - -> contains -> [[calcrate]]
-  - -> contains -> [[aggregate]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefcollections]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefpydantic]]
-  - -> imports -> [[unresolvedrefdeps]]
-  - -> imports -> [[unresolvedrefresponse]]
-  - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
 - **analytics_schemas** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 15 connections
   - -> contains -> [[failurereasonitem]]
@@ -3038,12 +3059,12 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultbidding]]
   - <- imports <- [[routesvaultclients]]
   - <- imports <- [[knowledgeschemas]]
+  - <- imports <- [[knowledgemanager]]
   - <- calls <- [[classifychunk]]
   - <- calls <- [[semanticsearch]]
   - <- calls <- [[keywordsearch]]
   - <- calls <- [[formatsearchresult]]
   - <- calls <- [[gethealthmetrics]]
-  - <- imports <- [[knowledgemanager]]
   - <- imports <- [[vaultbiddingservice]]
   - <- imports <- [[vaultclientservice]]
 - **__unresolved__::ref::dotenv** () -- 12 connections
@@ -3386,10 +3407,10 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[templateservice]]
   - <- imports <- [[preprocessor]]
   - <- imports <- [[recommender]]
-  - <- calls <- [[createanthropicclient]]
   - <- imports <- [[claudeutils]]
-  - <- calls <- [[callclaude]]
+  - <- calls <- [[createanthropicclient]]
   - <- imports <- [[hwpxtopptx]]
+  - <- calls <- [[callclaude]]
 - **__unresolved__::ref::io** () -- 10 connections
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routeskb]]
@@ -3434,6 +3455,17 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedreffileutils]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefstreamschemas]]
+- **gate_nodes** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 10 connections
+  - -> contains -> [[passthrough]]
+  - -> contains -> [[proposalstartgate]]
+  - -> contains -> [[convergencegate]]
+  - -> contains -> [[forktobranches]]
+  - -> contains -> [[planselectivefanout]]
+  - -> contains -> [[stream1completehook]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftypes]]
+  - -> imports -> [[unresolvedrefstate]]
 - **strategy_generate** (C:\project\tenopa proposer\app\graph\nodes\strategy_generate.py) -- 10 connections
   - -> contains -> [[strategygenerate]]
   - -> contains -> [[formatpositioningguide]]
@@ -3782,7 +3814,6 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[searchmatchingbids]]
   - <- imports <- [[testg2bsearch]]
 - **__unresolved__::ref::schemas** () -- 8 connections
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routesqa]]
   - <- imports <- [[phaseschemas]]
@@ -3790,6 +3821,7 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[rfpparser]]
   - <- imports <- [[proposalgenerator]]
   - <- imports <- [[testworkflow]]
+  - <- imports <- [[routesperformance]]
 - **__unresolved__::ref::text** () -- 8 connections
   - <- imports <- [[docxbuilder]]
   - <- calls <- [[callapi]]
@@ -4439,16 +4471,16 @@ Cohesion: 0.00 | Nodes: 1017
   - -> imports -> [[unresolvedrefconfig]]
 - **__unresolved__::ref::abc** () -- 5 connections
   - <- imports <- [[routesprojectarchive]]
-  - <- extends <- [[proposalmodule]]
   - <- imports <- [[modulararchitecture]]
   - <- extends <- [[proposalmodule]]
   - <- imports <- [[modulararchitecturesimple]]
+  - <- extends <- [[proposalmodule]]
 - **__unresolved__::ref::collections** () -- 5 connections
-  - <- imports <- [[routesstats]]
   - <- imports <- [[routesvaultchat]]
   - <- imports <- [[g2bservice]]
   - <- imports <- [[importprojecthistory]]
   - <- imports <- [[importteamstructure]]
+  - <- imports <- [[routesstats]]
 - **__unresolved__::ref::embedding_service** () -- 5 connections
   - <- imports <- [[bidscoringservice]]
   - <- imports <- [[contentlibrary]]
@@ -4796,8 +4828,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[buildhwpx]]
 - **__unresolved__::ref::strategy** () -- 3 connections
   - <- imports <- [[proposalnodes]]
-  - <- calls <- [[strategygenerate]]
   - <- imports <- [[strategygenerate]]
+  - <- calls <- [[strategygenerate]]
 - **__unresolved__::ref::utils** () -- 3 connections
   - <- imports <- [[assetextractor]]
   - <- imports <- [[createexceltemplate]]
@@ -4826,6 +4858,10 @@ Cohesion: 0.00 | Nodes: 1017
   - -> calls -> [[unresolvedrefhasattr]]
   - -> calls -> [[unresolvedrefmodeldump]]
   - <- contains <- [[constants]]
+- **plan_selective_fan_out** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefsend]]
+  - <- contains <- [[gatenodes]]
 - **rate_limit_exceeded_handler** (C:\project\tenopa proposer\app\middleware\rate_limit.py) -- 3 connections
   - -> calls -> [[unresolvedrefjsonresponse]]
   - -> calls -> [[unresolvedrefstr]]
@@ -5037,8 +5073,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[pptnodes]]
   - <- imports <- [[proposalnodes]]
 - **__unresolved__::ref::proposal_schemas** () -- 2 connections
-  - <- imports <- [[routesperformance]]
   - <- imports <- [[routesproposal]]
+  - <- imports <- [[routesperformance]]
 - **__unresolved__::ref::pypdf2** () -- 2 connections
   - <- imports <- [[vaultcredentialservice]]
   - <- imports <- [[fileutils]]
@@ -5051,6 +5087,9 @@ Cohesion: 0.00 | Nodes: 1017
 - **__unresolved__::ref::section_prompts** () -- 2 connections
   - <- imports <- [[mergenodes]]
   - <- imports <- [[proposalnodes]]
+- **__unresolved__::ref::send** () -- 2 connections
+  - <- calls <- [[forktobranches]]
+  - <- calls <- [[planselectivefanout]]
 - **__unresolved__::ref::session_manager** () -- 2 connections
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routesv31]]
@@ -5510,6 +5549,9 @@ Cohesion: 0.00 | Nodes: 1017
 - **eval_result_node** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[evaluationnodes]]
+- **fork_to_branches** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 2 connections
+  - -> calls -> [[unresolvedrefsend]]
+  - <- contains <- [[gatenodes]]
 - **_get_sections_to_write** (C:\project\tenopa proposer\app\graph\nodes\proposal_nodes.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[proposalnodes]]
@@ -6560,6 +6602,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- extends <- [[documentdetailresponse]]
 - **__unresolved__::ref::email_service** () -- 1 connections
   - <- imports <- [[notificationservice]]
+- **__unresolved__::ref::etree** () -- 1 connections
+  - <- imports <- [[hwpxbuilder]]
 - **__unresolved__::ref::extract_context** () -- 1 connections
   - <- calls <- [[buildusermessage]]
 - **__unresolved__::ref::filesizeexceedederror** () -- 1 connections
@@ -6580,6 +6624,8 @@ Cohesion: 0.00 | Nodes: 1017
   - <- imports <- [[routesvaultchat]]
 - **__unresolved__::ref::health_checker** () -- 1 connections
   - <- imports <- [[alertmanager]]
+- **__unresolved__::ref::hwpx** () -- 1 connections
+  - <- imports <- [[hwpxbuilder]]
 - **__unresolved__::ref::inject_citation_instructions** () -- 1 connections
   - <- calls <- [[buildsystemprompt]]
 - **__unresolved__::ref::ipaddress** () -- 1 connections
@@ -6708,6 +6754,12 @@ Cohesion: 0.00 | Nodes: 1017
   - <- contains <- [[evaluationnodes]]
 - **_create_evaluator_profiles** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 1 connections
   - <- contains <- [[evaluationnodes]]
+- **convergence_gate** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
+- **passthrough** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
+- **proposal_start_gate** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
 - **_append_list** (C:\project\tenopa proposer\app\graph\state.py) -- 1 connections
   - <- contains <- [[state]]
 - **_merge_dict** (C:\project\tenopa proposer\app\graph\state.py) -- 1 connections
@@ -7567,6 +7619,17 @@ Cohesion: 0.00 | Nodes: 1017
 - evaluation_nodes -> imports -> __unresolved__::ref::statistics [EXTRACTED]
 - evaluation_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
 - evaluation_nodes -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- fork_to_branches -> calls -> __unresolved__::ref::send [EXTRACTED]
+- plan_selective_fan_out -> calls -> __unresolved__::ref::send [EXTRACTED]
+- gate_nodes -> contains -> passthrough [EXTRACTED]
+- gate_nodes -> contains -> proposal_start_gate [EXTRACTED]
+- gate_nodes -> contains -> convergence_gate [EXTRACTED]
+- gate_nodes -> contains -> fork_to_branches [EXTRACTED]
+- gate_nodes -> contains -> plan_selective_fan_out [EXTRACTED]
+- gate_nodes -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- gate_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- gate_nodes -> imports -> __unresolved__::ref::types [EXTRACTED]
+- gate_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::state [EXTRACTED]
@@ -8575,6 +8638,12 @@ Cohesion: 0.00 | Nodes: 1017
 - validate -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - validate -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - validate -> imports -> __unresolved__::ref::lxml [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::hwpx [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::lxml [EXTRACTED]
+- hwpx_builder -> imports -> __unresolved__::ref::etree [EXTRACTED]
 - analyze_reference -> calls -> __unresolved__::ref::analyze_template [EXTRACTED]
 - validate -> calls -> __unresolved__::ref::validate_hwpx [EXTRACTED]
 - hwpx_service -> contains -> analyze_reference [EXTRACTED]
@@ -9318,10 +9387,11 @@ Cohesion: 0.00 | Nodes: 1017
 - routes_resources -> contains -> _run_extraction (-> [[unresolvedrefget-unresolvedrefexecute]])
 - _calc_rate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
 - routes_stats -> contains -> _aggregate (-> [[aggregate-isallowed]])
+- routes_stats -> contains -> get_win_rate (-> [[unresolvedrefget-unresolvedrefexecute]])
 - routes_step8_review -> contains -> get_proposal_artifacts (-> [[unresolvedrefget-unresolvedrefexecute]])
 - routes_step8_review -> contains -> build_node_status (-> [[unresolvedrefget-unresolvedrefexecute]])
-- routes_v31 -> contains -> _run_phases (-> [[unresolvedrefvalueerror-executefromphase]])
-- routes_v31 -> contains -> _run_phases_from (-> [[unresolvedrefvalueerror-executefromphase]])
+- routes_v31 -> contains -> _run_phases (-> [[reviewnode-injectcharstyles]])
+- routes_v31 -> contains -> _run_phases_from (-> [[reviewnode-injectcharstyles]])
 - routes_vault_chat -> contains -> RateLimiter (-> [[aggregate-isallowed]])
 - routes_vault_chat -> contains -> _format_numbered_sources (-> [[unresolvedrefget-unresolvedrefexecute]])
 - routes_vault_chat -> contains -> _search_sections_parallel (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9353,10 +9423,12 @@ Cohesion: 0.00 | Nodes: 1017
 - evaluation_nodes -> contains -> project_closing (-> [[projectclosing-unresolvedreffirekbupdate]])
 - evaluation_nodes -> contains -> _fire_kb_update (-> [[dailyg2bmonitor-healthcheckrunner]])
 - evaluation_nodes -> contains -> _fire_status_update (-> [[dailyg2bmonitor-healthcheckrunner]])
+- plan_selective_fan_out -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- gate_nodes -> contains -> stream1_complete_hook (-> [[dailyg2bmonitor-healthcheckrunner]])
 - go_no_go -> contains -> go_no_go (-> [[gonogo-unresolvedrefaistrategicassessment]])
 - go_no_go -> contains -> _ai_strategic_assessment (-> [[unresolvedrefget-unresolvedrefexecute]])
 - merge_nodes -> contains -> _sync_dynamic_sections (-> [[unresolvedrefget-unresolvedrefexecute]])
-- merge_nodes -> contains -> plan_merge (-> [[planmerge-unresolvedrefdict]])
+- merge_nodes -> contains -> plan_merge (-> [[claudegenerate-embeddingservice]])
 - merge_nodes -> contains -> proposal_merge (-> [[unresolvedrefget-unresolvedrefexecute]])
 - _get_rfp_summary -> calls -> __unresolved__::ref::rfp_to_dict (-> [[unresolvedrefget-unresolvedrefexecute]])
 - _get_rfp_summary -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9442,7 +9514,7 @@ Cohesion: 0.00 | Nodes: 1017
 - bid_analysis_service -> contains -> _generate_notice_md (-> [[unresolvedrefget-unresolvedrefexecute]])
 - bid_analysis_service -> contains -> _generate_instruction_md (-> [[unresolvedrefget-unresolvedrefexecute]])
 - _download_file -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
-- _download_file -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- _download_file -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - classify_attachment -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
 - bid_attachment_store -> contains -> _classify_priority (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - bid_attachment_store -> contains -> parse_attachments_from_raw (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -9454,7 +9526,7 @@ Cohesion: 0.00 | Nodes: 1017
 - bid_pipeline -> contains -> run_pipeline (-> [[unresolvedrefget-unresolvedrefexecute]])
 - bid_pipeline -> contains -> _process_single (-> [[unresolvedrefprint-unresolvedrefpath]])
 - bid_pipeline -> contains -> _run_all_steps (-> [[runallsteps-unresolvedrefdownloadandextract]])
-- bid_pipeline -> contains -> get_all_pipeline_status (-> [[planmerge-unresolvedrefdict]])
+- bid_pipeline -> contains -> get_all_pipeline_status (-> [[claudegenerate-embeddingservice]])
 - bid_pipeline -> contains -> _ensure_bid_in_db (-> [[unresolvedrefget-unresolvedrefexecute]])
 - bid_pipeline -> contains -> _safe_int (-> [[unresolvedrefget-unresolvedrefexecute]])
 - bid_pipeline -> contains -> _download_and_extract (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9467,7 +9539,7 @@ Cohesion: 0.00 | Nodes: 1017
 - cost_sheet_builder -> contains -> build_cost_sheet (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - cost_sheet_builder -> imports -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedrefexecute]])
 - ProcurementMethod -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
-- calculator -> contains -> parse_budget_string (-> [[unresolvedrefvalueerror-executefromphase]])
+- calculator -> contains -> parse_budget_string (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - calculator -> contains -> BidCalculator (-> [[estimate-optimizebid]])
 - _clean_cache -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _clean_cache -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9509,10 +9581,10 @@ Cohesion: 0.00 | Nodes: 1017
 - get_accumulated_usage -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
 - reset_usage_context -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
 - claude_client -> contains -> _get_client (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
-- claude_client -> contains -> claude_generate (-> [[edges-claudegenerate]])
-- claude_client -> contains -> claude_generate_streaming (-> [[edges-claudegenerate]])
+- claude_client -> contains -> claude_generate (-> [[claudegenerate-embeddingservice]])
+- claude_client -> contains -> claude_generate_streaming (-> [[claudegenerate-embeddingservice]])
 - claude_client -> contains -> _parse_json_response (-> [[unresolvedrefget-unresolvedrefexecute]])
-- claude_client -> contains -> ClaudeClient (-> [[edges-claudegenerate]])
+- claude_client -> contains -> ClaudeClient (-> [[claudegenerate-embeddingservice]])
 - claude_client -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - content_library -> contains -> create_content (-> [[unresolvedrefget-unresolvedrefexecute]])
 - content_library -> contains -> update_content (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9520,7 +9592,7 @@ Cohesion: 0.00 | Nodes: 1017
 - content_library -> contains -> calculate_quality_score (-> [[unresolvedrefget-unresolvedrefexecute]])
 - content_library -> contains -> auto_register_section (-> [[unresolvedrefget-unresolvedrefexecute]])
 - content_library -> contains -> suggest_content_for_section (-> [[unresolvedrefget-unresolvedrefexecute]])
-- _extract_from_storage -> calls -> __unresolved__::ref::getattr (-> [[edges-claudegenerate]])
+- _extract_from_storage -> calls -> __unresolved__::ref::getattr (-> [[claudegenerate-embeddingservice]])
 - _extract_from_storage -> calls -> __unresolved__::ref::download (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _extract_from_storage -> calls -> __unresolved__::ref::from_ (-> [[unresolvedrefget-unresolvedrefexecute]])
 - _extract_from_storage -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9559,7 +9631,7 @@ Cohesion: 0.00 | Nodes: 1017
 - g2b_service -> contains -> fetch_and_store_bid_result (-> [[unresolvedrefget-unresolvedrefexecute]])
 - g2b_service -> contains -> bulk_sync_bid_results (-> [[unresolvedrefget-unresolvedrefexecute]])
 - g2b_service -> contains -> _extract_attachments (-> [[unresolvedrefget-unresolvedrefexecute]])
-- g2b_service -> contains -> _extract_filename (-> [[unresolvedrefvalueerror-executefromphase]])
+- g2b_service -> contains -> _extract_filename (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - g2b_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - health_checker -> contains -> HealthCheckRunner (-> [[dailyg2bmonitor-healthcheckrunner]])
 - health_checker -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
@@ -9569,12 +9641,12 @@ Cohesion: 0.00 | Nodes: 1017
 - extract_header_xml -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
 - extract_section_xml -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
 - extract_section_xml -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
-- analyze_template -> contains -> _get_text (-> [[collectmetrics-unresolvedreffindall]])
-- analyze_template -> contains -> _analyze_fonts (-> [[collectmetrics-unresolvedreffindall]])
-- analyze_template -> contains -> _analyze_char_styles (-> [[collectmetrics-unresolvedreffindall]])
-- analyze_template -> contains -> _analyze_para_styles (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _get_text (-> [[reviewnode-injectcharstyles]])
+- analyze_template -> contains -> _analyze_fonts (-> [[reviewnode-injectcharstyles]])
+- analyze_template -> contains -> _analyze_char_styles (-> [[reviewnode-injectcharstyles]])
+- analyze_template -> contains -> _analyze_para_styles (-> [[reviewnode-injectcharstyles]])
 - analyze_template -> contains -> _analyze_page_setup (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- analyze_template -> contains -> _analyze_tables (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _analyze_tables (-> [[reviewnode-injectcharstyles]])
 - analyze_template -> contains -> analyze_template (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _pack_hwpx -> calls -> __unresolved__::ref::is_file (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _pack_hwpx -> calls -> __unresolved__::ref::filenotfounderror (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9582,14 +9654,27 @@ Cohesion: 0.00 | Nodes: 1017
 - _pack_hwpx -> calls -> __unresolved__::ref::rglob (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _pack_hwpx -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
 - _validate_xml -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
-- _validate_xml -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
-- build_hwpx -> contains -> _update_metadata (-> [[collectmetrics-unresolvedreffindall]])
+- _validate_xml -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-extractsourcetags]])
+- build_hwpx -> contains -> _update_metadata (-> [[reviewnode-injectcharstyles]])
 - build_hwpx -> contains -> build_from_template (-> [[unresolvedrefprint-unresolvedrefpath]])
 - page_guard -> contains -> _text_of_t_node (-> [[unresolvedrefprint-unresolvedrefpath]])
-- page_guard -> contains -> collect_metrics (-> [[collectmetrics-unresolvedreffindall]])
+- page_guard -> contains -> collect_metrics (-> [[reviewnode-injectcharstyles]])
 - page_guard -> contains -> _ratio_delta (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - page_guard -> contains -> check_page_drift (-> [[dailyg2bmonitor-healthcheckrunner]])
 - validate -> contains -> validate_hwpx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_builder -> contains -> _patch_hwpx_library (-> [[claudegenerate-embeddingservice]])
+- hwpx_builder -> contains -> _inject_fonts (-> [[unresolvedrefget-unresolvedrefexecute]])
+- hwpx_builder -> contains -> _inject_char_styles (-> [[reviewnode-injectcharstyles]])
+- hwpx_builder -> contains -> _setup_styles (-> [[setupstyles-unresolvedrefinjectcharstyles]])
+- hwpx_builder -> contains -> _add_empty (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_builder -> contains -> _add_content_paragraph (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_builder -> contains -> _add_cover (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_builder -> contains -> _add_evaluation_table (-> [[unresolvedrefget-unresolvedrefexecute]])
+- hwpx_builder -> contains -> _add_toc (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_builder -> contains -> _add_body (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_builder -> contains -> build_hwpx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_builder -> contains -> build_hwpx_async (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_builder -> imports -> __unresolved__::ref::copy (-> [[parallelworkengine-createagenttasks]])
 - analyze_reference -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
 - hwpx_service -> contains -> _generate_section_xml (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - hwpx_service -> contains -> build_proposal_hwpx (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9608,7 +9693,7 @@ Cohesion: 0.00 | Nodes: 1017
 - knowledge_search -> contains -> _search_qa (-> [[unresolvedrefget-unresolvedrefexecute]])
 - knowledge_search -> contains -> _search_intranet_docs (-> [[unresolvedrefget-unresolvedrefexecute]])
 - knowledge_search -> contains -> _search_intranet_projects (-> [[unresolvedrefget-unresolvedrefexecute]])
-- master_projects_chat_service -> contains -> MasterProjectsChatService (-> [[edges-claudegenerate]])
+- master_projects_chat_service -> contains -> MasterProjectsChatService (-> [[claudegenerate-embeddingservice]])
 - master_projects_chat_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - _now_utc -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
 - migration_service -> contains -> MigrationService (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9685,9 +9770,9 @@ Cohesion: 0.00 | Nodes: 1017
 - parse_rfp_from_url -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
 - parse_rfp_from_url -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - parse_rfp_from_url -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
-- rfp_parser -> contains -> _validate_url (-> [[unresolvedrefvalueerror-executefromphase]])
+- rfp_parser -> contains -> _validate_url (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - rfp_parser -> contains -> parse_rfp (-> [[unresolvedrefget-unresolvedrefexecute]])
-- rfp_parser -> contains -> parse_rfp_text (-> [[unresolvedrefvalueerror-executefromphase]])
+- rfp_parser -> contains -> parse_rfp_text (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - scheduled_monitor -> contains -> daily_g2b_monitor (-> [[dailyg2bmonitor-healthcheckrunner]])
 - scheduled_monitor -> contains -> _filter_new_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
 - scheduled_monitor -> contains -> _record_notified_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9708,7 +9793,7 @@ Cohesion: 0.00 | Nodes: 1017
 - session_manager -> contains -> _to_db_payload (-> [[unresolvedrefget-unresolvedrefexecute]])
 - session_manager -> contains -> _from_db_row (-> [[unresolvedrefget-unresolvedrefexecute]])
 - session_manager -> contains -> ProposalSessionManager (-> [[dailyg2bmonitor-healthcheckrunner]])
-- source_tagger -> contains -> extract_source_tags (-> [[unresolvedrefvalueerror-executefromphase]])
+- source_tagger -> contains -> extract_source_tags (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - source_tagger -> contains -> calculate_grounding_ratio (-> [[unresolvedrefget-unresolvedrefexecute]])
 - source_tagger -> contains -> find_ungrounded_claims (-> [[unresolvedrefget-unresolvedrefexecute]])
 - source_tagger -> contains -> evaluate_trustworthiness (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -9745,8 +9830,8 @@ Cohesion: 0.00 | Nodes: 1017
 - template_service -> contains -> _read_hwpx_text (-> [[unresolvedrefprint-unresolvedrefpath]])
 - template_service -> contains -> _get_template_files (-> [[unresolvedrefprint-unresolvedrefpath]])
 - template_service -> contains -> _extract_toc_with_claude (-> [[unresolvedrefget-unresolvedrefexecute]])
-- template_service -> contains -> get_template_toc (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- template_service -> contains -> get_available_templates (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- template_service -> contains -> get_template_toc (-> [[reviewnode-injectcharstyles]])
+- template_service -> contains -> get_available_templates (-> [[reviewnode-injectcharstyles]])
 - template_service -> contains -> clear_toc_cache (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - template_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - build_structured_output_schema -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9766,7 +9851,7 @@ Cohesion: 0.00 | Nodes: 1017
 - user_account_service -> contains -> parse_xlsx_all (-> [[unresolvedreftenopapierror-init]])
 - user_account_service -> contains -> bulk_setup_org (-> [[unresolvedrefget-unresolvedrefexecute]])
 - vault_cache_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- vault_embedding_service -> contains -> EmbeddingService (-> [[unresolvedrefvalueerror-executefromphase]])
+- vault_embedding_service -> contains -> EmbeddingService (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - vault_embedding_service -> imports -> __unresolved__::ref::openai (-> [[unresolvedrefget-unresolvedrefexecute]])
 - vault_query_router -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - DependencyLevel -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9777,7 +9862,7 @@ Cohesion: 0.00 | Nodes: 1017
 - _get_node_dependencies -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
 - version_manager -> contains -> execute_node_and_create_version (-> [[unresolvedrefget-unresolvedrefexecute]])
 - version_manager -> contains -> validate_move_and_resolve_versions (-> [[validatemoveandresolveversions-unresolvedrefclassifydependencylevel]])
-- version_manager -> contains -> check_node_move_feasibility (-> [[planmerge-unresolvedrefdict]])
+- version_manager -> contains -> check_node_move_feasibility (-> [[claudegenerate-embeddingservice]])
 - version_manager -> contains -> _recommend_version (-> [[unresolvedrefget-unresolvedrefexecute]])
 - version_manager -> contains -> _calculate_checksum (-> [[unresolvedrefget-unresolvedrefexecute]])
 - version_manager -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
@@ -9799,12 +9884,12 @@ Cohesion: 0.00 | Nodes: 1017
 - file_utils -> contains -> extract_text_from_file (-> [[unresolvedrefprint-unresolvedrefpath]])
 - file_utils -> contains -> sanitize_filename (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - file_utils -> contains -> get_extension (-> [[unresolvedrefinches-presentationpptxbuilder]])
-- file_utils -> contains -> validate_extension (-> [[unresolvedrefvalueerror-executefromphase]])
+- file_utils -> contains -> validate_extension (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - file_utils -> contains -> validate_upload (-> [[validateupload-unresolvedrefsanitizefilename]])
 - add_missing_columns -> contains -> print_migration_sql (-> [[unresolvedrefprint-unresolvedrefpath]])
 - apply_document_ingestion_migration -> contains -> apply_migration (-> [[unresolvedrefget-unresolvedrefexecute]])
 - read_migration_file -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
-- apply_migrations -> contains -> get_db_connection (-> [[unresolvedrefvalueerror-executefromphase]])
+- apply_migrations -> contains -> get_db_connection (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - apply_migrations -> contains -> get_applied_migrations (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - apply_migrations -> contains -> get_migration_files (-> [[unresolvedrefprint-unresolvedrefpath]])
 - apply_migrations -> contains -> apply_migration (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9818,14 +9903,14 @@ Cohesion: 0.00 | Nodes: 1017
 - modular_architecture -> contains -> StrategyPlanningModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture -> contains -> ParallelWorkModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture -> contains -> FinalReviewModule (-> [[unresolvedreftenopapierror-init]])
-- modular_architecture -> contains -> ModularProposalWorkflow (-> [[unresolvedrefvalueerror-executefromphase]])
+- modular_architecture -> contains -> ModularProposalWorkflow (-> [[unresolvedrefvalueerror-extractsourcetags]])
 - ProposalModule -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture_simple -> contains -> RFPReviewModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture_simple -> contains -> StrategyPlanningModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture_simple -> contains -> ParallelWorkModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture_simple -> contains -> FinalReviewModule (-> [[unresolvedreftenopapierror-init]])
 - modular_architecture_simple -> contains -> ModularProposalWorkflow (-> [[unresolvedreftenopapierror-init]])
-- parallel_work_engine -> contains -> ParallelWorkEngine (-> [[parallelworkengine-reviewnode]])
+- parallel_work_engine -> contains -> ParallelWorkEngine (-> [[parallelworkengine-createagenttasks]])
 - parallel_work_engine -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - rfp_review_engine -> contains -> RFPReviewEngine (-> [[rfpreviewengine-reviewrfp]])
 - strategy_planning_engine -> contains -> StrategyPlanningEngine (-> [[unresolvedrefget-unresolvedrefexecute]])
@@ -9875,7 +9960,7 @@ Cohesion: 0.00 | Nodes: 1017
 - call_claude -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
 - call_claude -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - extract_hwpx_text -> calls -> __unresolved__::ref::fromstring (-> [[unresolvedrefprint-unresolvedrefpath]])
-- extract_hwpx_text -> calls -> __unresolved__::ref::iter (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- extract_hwpx_text -> calls -> __unresolved__::ref::iter (-> [[reviewnode-injectcharstyles]])
 - extract_hwpx_text -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
 - hwpx_to_pptx -> contains -> generate_storyboard (-> [[unresolvedrefprint-unresolvedrefpath]])
 - hwpx_to_pptx -> contains -> add_bg (-> [[unresolvedrefinches-presentationpptxbuilder]])
@@ -9900,7 +9985,7 @@ Cohesion: 0.00 | Nodes: 1017
 - hwpx_to_pptx -> imports -> __unresolved__::ref::color (-> [[unresolvedrefinches-presentationpptxbuilder]])
 - build_search_keywords -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
 - import_project_history -> contains -> parse_excel (-> [[unresolvedrefget-unresolvedrefexecute]])
-- import_project_history -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- import_project_history -> contains -> extract_keywords (-> [[reviewnode-injectcharstyles]])
 - import_project_history -> contains -> build_keyword_index (-> [[unresolvedrefget-unresolvedrefexecute]])
 - import_project_history -> contains -> build_profile (-> [[unresolvedrefget-unresolvedrefexecute]])
 - import_project_history -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9913,7 +9998,7 @@ Cohesion: 0.00 | Nodes: 1017
 - init_storage_buckets -> contains -> init_buckets (-> [[unresolvedrefprint-unresolvedrefpath]])
 - insert_test_bid -> contains -> insert_test_bid (-> [[unresolvedrefget-unresolvedrefexecute]])
 - migrate_intranet -> contains -> MigrateConfig (-> [[unresolvedrefprint-unresolvedrefpath]])
-- migrate_intranet -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- migrate_intranet -> contains -> extract_keywords (-> [[reviewnode-injectcharstyles]])
 - migrate_intranet -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
 - migrate_intranet -> contains -> IntranetMigrator (-> [[unresolvedrefget-unresolvedrefexecute]])
 - migrate_intranet -> contains -> load_dept_mapping (-> [[unresolvedrefprint-unresolvedrefpath]])
@@ -9934,7 +10019,7 @@ Cohesion: 0.00 | Nodes: 1017
 - monitor_g2b_pipeline -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
 - monitor_g2b_pipeline -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - parse_date -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
-- pilot_migration_10projects -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- pilot_migration_10projects -> contains -> extract_keywords (-> [[reviewnode-injectcharstyles]])
 - pilot_migration_10projects -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
 - pilot_migration_10projects -> contains -> MSSQLMigrator (-> [[unresolvedrefget-unresolvedrefexecute]])
 - pilot_migration_10projects -> contains -> SupabaseMigrator (-> [[unresolvedrefprint-unresolvedrefpath]])

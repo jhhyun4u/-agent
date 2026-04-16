@@ -2,6 +2,9 @@
   "__unresolved__::ref::_add_slide_number": [
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
+  "__unresolved__::ref::_aggregate": [
+    "unresolvedrefget-unresolvedrefexecute.md"
+  ],
   "__unresolved__::ref::_analyze_bid_background": [
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
@@ -1773,6 +1776,9 @@
   "_run_extraction": [
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
+  "get_win_rate": [
+    "unresolvedrefget-unresolvedrefexecute.md"
+  ],
   "build_node_status": [
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
@@ -2125,10 +2131,10 @@
     "unresolvedreftenopapierror-init.md",
     "dailyg2bmonitor-healthcheckrunner.md",
     "rfpreviewengine-reviewrfp.md",
-    "parallelworkengine-reviewnode.md",
-    "unresolvedrefvalueerror-executefromphase.md",
     "finalreviewengine-conductfinalreview.md",
-    "edges-claudegenerate.md",
+    "unresolvedrefvalueerror-extractsourcetags.md",
+    "claudegenerate-embeddingservice.md",
+    "parallelworkengine-createagenttasks.md",
     "engine-init.md",
     "aistatusmanager-failtask.md",
     "estimate-optimizebid.md",
@@ -2137,7 +2143,7 @@
     "recommend-teamrecommender.md",
     "aggregate-isallowed.md",
     "init-unresolvedrefpreprocessor.md",
-    "pageparams-init.md",
+    "pageparams-unresolvedrefquery.md",
     "g2bbiddingcollector-init.md",
     "init-unresolvedrefcompletedprojectshandler.md",
     "unresolvedrefrouter-init.md",
@@ -2449,6 +2455,9 @@
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
   "batch_reindex": [
+    "unresolvedrefget-unresolvedrefexecute.md"
+  ],
+  "generate_embedding": [
     "unresolvedrefget-unresolvedrefexecute.md"
   ],
   "_update_client_history": [
@@ -3310,7 +3319,7 @@
   ],
   "execute_workflow": [
     "unresolvedrefget-unresolvedrefexecute.md",
-    "unresolvedrefvalueerror-executefromphase.md"
+    "unresolvedrefvalueerror-extractsourcetags.md"
   ],
   "_calculate_overall_progress": [
     "unresolvedrefget-unresolvedrefexecute.md"
@@ -3813,6 +3822,9 @@
   "__unresolved__::ref::enum": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
+  "__unresolved__::ref::etree": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
   "__unresolved__::ref::exceptions": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
@@ -3865,6 +3877,9 @@
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "__unresolved__::ref::httpx": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "__unresolved__::ref::hwpx": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "__unresolved__::ref::hwpx_builder": [
@@ -4075,6 +4090,9 @@
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "__unresolved__::ref::security": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "__unresolved__::ref::send": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "__unresolved__::ref::services": [
@@ -4858,6 +4876,24 @@
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "evaluation_nodes": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "convergence_gate": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "fork_to_branches": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "passthrough": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "plan_selective_fan_out": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "proposal_start_gate": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "gate_nodes": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "go_no_go": [
@@ -5825,7 +5861,7 @@
   ],
   "_update_status": [
     "unresolvedrefbasemodel-unresolvedreflogging.md",
-    "unresolvedrefvalueerror-executefromphase.md"
+    "reviewnode-injectcharstyles.md"
   ],
   "get_pipeline_status": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
@@ -6043,6 +6079,9 @@
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "validate": [
+    "unresolvedrefbasemodel-unresolvedreflogging.md"
+  ],
+  "hwpx_builder": [
     "unresolvedrefbasemodel-unresolvedreflogging.md"
   ],
   "analyze_reference": [
@@ -9097,6 +9136,7 @@
     "python-design.md",
     "unified-state-system-design-phases-1-4-python.md",
     "document-ingestion-design-2-api.md",
+    "dashboard-permission-validation-tests-backend-permission-validation.md",
     "json-localstorage.md"
   ],
   "index": [
@@ -9833,28 +9873,7 @@
   "__unresolved__::ref::_classify_priority": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
-  "__unresolved__::ref::_etproxy": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_extract_toc_with_claude": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
   "__unresolved__::ref::_fmt_won": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_get_template_files": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_inject_char_styles": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_inject_fonts": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_read_hwpx_text": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::_read_pdf_text": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::_render_body": [
@@ -9953,16 +9972,10 @@
   "__unresolved__::ref::data": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
-  "__unresolved__::ref::deepcopy": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
   "__unresolved__::ref::document": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::escape": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::etree": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::find_ungrounded_claims": [
@@ -9992,9 +10005,6 @@
   "__unresolved__::ref::httpexception": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
-  "__unresolved__::ref::hwpx": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
   "__unresolved__::ref::inches": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
@@ -10004,16 +10014,7 @@
   "__unresolved__::ref::isdigit": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
-  "__unresolved__::ref::iter": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
   "__unresolved__::ref::key_msg_bar": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::lstrip": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::mark_dirty": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::pdfmerger": [
@@ -10047,9 +10048,6 @@
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::startswith": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "__unresolved__::ref::subelement": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "__unresolved__::ref::tuple": [
@@ -10110,18 +10108,6 @@
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "_add_toc": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "_inject_char_styles": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "_patch_hwpx_library": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "_setup_styles": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "hwpx_builder": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "_add_closing_slide": [
@@ -10227,12 +10213,6 @@
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "clear_toc_cache": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "get_available_templates": [
-    "unresolvedrefinches-presentationpptxbuilder.md"
-  ],
-  "get_template_toc": [
     "unresolvedrefinches-presentationpptxbuilder.md"
   ],
   "_repair_truncated_json": [
@@ -10663,7 +10643,7 @@
   ],
   "modularproposalworkflow": [
     "unresolvedreftenopapierror-init.md",
-    "unresolvedrefvalueerror-executefromphase.md"
+    "unresolvedrefvalueerror-extractsourcetags.md"
   ],
   "develop_strategy": [
     "unresolvedreftenopapierror-init.md"
@@ -10815,9 +10795,6 @@
   "__unresolved__::ref::search_bids": [
     "dailyg2bmonitor-healthcheckrunner.md"
   ],
-  "__unresolved__::ref::send": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
   "__unresolved__::ref::send_email": [
     "dailyg2bmonitor-healthcheckrunner.md"
   ],
@@ -10848,25 +10825,7 @@
   "_fire_status_update": [
     "dailyg2bmonitor-healthcheckrunner.md"
   ],
-  "convergence_gate": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
-  "fork_to_branches": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
-  "passthrough": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
-  "plan_selective_fan_out": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
-  "proposal_start_gate": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
   "stream1_complete_hook": [
-    "dailyg2bmonitor-healthcheckrunner.md"
-  ],
-  "gate_nodes": [
     "dailyg2bmonitor-healthcheckrunner.md"
   ],
   "_fire_bid_confirmation": [
@@ -11214,6 +11173,249 @@
   "review_rfp": [
     "rfpreviewengine-reviewrfp.md"
   ],
+  "__unresolved__::ref::_apply_selected_alternative": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_build_plan_review_context": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_check_approval_chain": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_classify_project_category": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_db_save_artifact": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_db_update_status": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_extract_budget": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_extract_duration": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_extract_pattern": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_extract_toc_with_claude": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_fire_stream_initialization": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_get_artifact": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_get_required_roles": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_get_template_files": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_get_text": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_handle_bid_plan_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_handle_gng_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_handle_plan_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_handle_search_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_handle_strategy_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_load": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_read_hwpx_text": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_read_pdf_text": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_read_section_xml_bytes": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_text_of_t_node": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::_upload_to_storage": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::approvalchainentry": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::approvalstatus": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::artifact_cls": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::charstyle": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::deepcopy": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::execute_all": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::execute_from_phase": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::findall": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::fontinfo": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::getroot": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::indent": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::interrupt": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::issubset": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::iter": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::lstrip": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::next": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::notify_proposal_complete": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::pagemetrics": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::parastyle": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phase1_research": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phase2_analysis": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phase3_plan": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phase4_implement": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phase5_test": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::phaseexecutor": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::runtimeerror": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::tableinfo": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::update_session": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "__unresolved__::ref::xpath": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_run_phases": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_run_phases_from": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_apply_selected_alternative": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_check_approval_chain": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_get_artifact": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_get_required_roles": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_handle_gng_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_handle_search_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_handle_strategy_review": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "review_node": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_extract_main_keyword": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_analyze_char_styles": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_analyze_fonts": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_analyze_para_styles": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_analyze_tables": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_get_text": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_update_metadata": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "collect_metrics": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_inject_char_styles": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_save_artifact": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "execute_from_phase": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "get_available_templates": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "get_template_toc": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_check_dependency_issues": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "_extract_basic_info": [
+    "reviewnode-injectcharstyles.md"
+  ],
+  "extract_keywords": [
+    "reviewnode-injectcharstyles.md"
+  ],
   "__unresolved__::ref::document_ingestion_analysis": [
     "document-ingestion-completion-report-document-ingestion-completion-report.md"
   ],
@@ -11352,417 +11554,6 @@
   ],
   "v1.0 (2026-03-29)": [
     "document-ingestion-completion-report-document-ingestion-completion-report.md"
-  ],
-  "__unresolved__::ref::_adjust_checklist_item": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_adjust_tasks_for_rfp": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_apply_selected_alternative": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_build_plan_review_context": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_calculate_overall_progress": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_check_approval_chain": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_check_dependency_issues": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_classify_project_category": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_conduct_mock_evaluations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_create_agent_tasks": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_evaluate_by_role": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_extract_budget": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_extract_duration": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_extract_pattern": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_fire_stream_initialization": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_generate_checklist": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_generate_evaluation_feedback": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_generate_evaluation_recommendations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_generate_recommendations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_get_artifact": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_get_required_roles": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_handle_bid_plan_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_handle_gng_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_handle_plan_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_handle_search_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_handle_strategy_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_identify_bottlenecks": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_load_checklist_templates": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_load_evaluation_criteria": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_load_task_templates": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_optimize_task_priorities": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_resolve_task_dependencies": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_simulate_evaluation": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::agentrole": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::agenttask": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::approvalchainentry": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::approvalstatus": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::checklistcategory": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::checklistitem": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::copy": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::interrupt": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::issubset": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::mockevaluation": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::next": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::parallelworkresult": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_apply_selected_alternative": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_check_approval_chain": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_get_artifact": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_get_required_roles": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_handle_gng_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_handle_search_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_handle_strategy_review": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "review_node": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "list_sessions": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "parallelworkengine": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_adjust_checklist_item": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_adjust_tasks_for_rfp": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_check_dependency_issues": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_conduct_mock_evaluations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_create_agent_tasks": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_evaluate_by_role": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_generate_checklist": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_generate_evaluation_feedback": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_generate_evaluation_recommendations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_generate_recommendations": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_identify_bottlenecks": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_load_checklist_templates": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_load_evaluation_criteria": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_load_task_templates": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_optimize_task_priorities": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_simulate_evaluation": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "execute_parallel_work": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "_extract_basic_info": [
-    "parallelworkengine-reviewnode.md"
-  ],
-  "__unresolved__::ref::_db_save_artifact": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::_db_update_status": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::_handle_iteration": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::_init_openai": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::_load": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::_upload_to_storage": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::artifact_cls": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::calc_dday": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::create_anthropic_client": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::end": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::execute_all": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::execute_from_phase": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::extract_json_from_response": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::fileformaterror": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::finditer": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::get_extension": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::getaddrinfo": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::group": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::ip_address": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::notify_proposal_complete": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::openaiclient": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phase1_research": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phase2_analysis": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phase3_plan": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phase4_implement": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phase5_test": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::phaseexecutor": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::proposalcontent": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::rfpdata": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::runtimeerror": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::sourcetag": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::step_1_rfp_analysis_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::step_2_strategy_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::step_3_plan_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::step_4_section_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::step_5_presentation_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::unquote": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::update_session": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::urlparse": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::validate_file_type": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::validate_input": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "__unresolved__::ref::valueerror": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_run_phases": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_run_phases_from": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "vaultstepprompts": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "get_step_prompt": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "vault_step_prompts": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "parse_budget_string": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_extract_filename": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_parse": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_save_artifact": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "execute_from_phase": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_validate_url": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "parse_rfp_text": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "extract_source_tags": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "embeddingservice": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_init_openai": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "embed_text": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "validate_extension": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "get_db_connection": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_handle_iteration": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "get_workflow_status": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_call_claude": [
-    "unresolvedrefvalueerror-executefromphase.md"
-  ],
-  "_extract_pattern": [
-    "unresolvedrefvalueerror-executefromphase.md"
   ],
   "1.1 five-step discovery chain": [
     "llm-wiki-prd-organizational-knowledge-management-discovery-system-part-5-prd-product-requirements-document.md"
@@ -12303,6 +12094,7 @@
     "step-8-frontend-phase-4-completion-summary-phase-4-deliverables.md",
     "step-8-frontend-integration-guide-typescript.md",
     "unified-state-system-do-phase-implementation-guide-bash.md",
+    "dashboard-permission-validation-tests-backend-permission-validation.md",
     "migration-plan-unified-state-system-plan.md",
     "artifact-versioning-integration-guide-python.md"
   ],
@@ -12346,6 +12138,7 @@
   ],
   "test execution": [
     "step-8-frontend-phase-4-completion-summary-phase-4-deliverables.md",
+    "dashboard-permission-validation-tests-backend-permission-validation.md",
     "load-testing-and-performance-verification-complete-expected-performance-improvements.md"
   ],
   "test quality": [
@@ -12675,147 +12468,6 @@
   "conduct_final_review": [
     "finalreviewengine-conductfinalreview.md"
   ],
-  "__unresolved__::ref::_format_projects_for_prompt": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::_get_client": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::_get_openai": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::_get_system_prompt": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::_parse_json_response": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::aiserviceerror": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::aitimeouterror": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::asyncopenai": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::check_prompt": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::claudeclient": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::create_message": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::getattr": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::handoff": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::market_research": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::parse_rfp_text": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::ratelimiterror": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::reversed": [
-    "edges-claudegenerate.md"
-  ],
-  "__unresolved__::ref::stream": [
-    "edges-claudegenerate.md"
-  ],
-  "_approval_router": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_bid_plan_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_feedback_processor_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_gap_analysis_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_gng_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_mock_eval_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_plan_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_rewrite_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_section_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_section_validator_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_self_review": [
-    "edges-claudegenerate.md"
-  ],
-  "route_after_strategy_review": [
-    "edges-claudegenerate.md"
-  ],
-  "edges": [
-    "edges-claudegenerate.md"
-  ],
-  "claudeclient": [
-    "edges-claudegenerate.md"
-  ],
-  "claude_generate": [
-    "edges-claudegenerate.md"
-  ],
-  "claude_generate_streaming": [
-    "edges-claudegenerate.md"
-  ],
-  "create_message": [
-    "edges-claudegenerate.md"
-  ],
-  "_get_openai": [
-    "edges-claudegenerate.md"
-  ],
-  "embedding_text_for_client": [
-    "edges-claudegenerate.md"
-  ],
-  "embedding_text_for_competitor": [
-    "edges-claudegenerate.md"
-  ],
-  "embedding_text_for_content": [
-    "edges-claudegenerate.md"
-  ],
-  "embedding_text_for_lesson": [
-    "edges-claudegenerate.md"
-  ],
-  "generate_embedding": [
-    "edges-claudegenerate.md"
-  ],
-  "generate_embeddings_batch": [
-    "edges-claudegenerate.md"
-  ],
-  "embedding_service": [
-    "edges-claudegenerate.md"
-  ],
-  "masterprojectschatservice": [
-    "edges-claudegenerate.md"
-  ],
-  "_embed_text": [
-    "edges-claudegenerate.md"
-  ],
-  "_generate_answer": [
-    "edges-claudegenerate.md"
-  ],
-  "_analyze_rfp": [
-    "edges-claudegenerate.md"
-  ],
   "__unresolved__::ref::add_conditional_edges": [
     "buildgraph-graph.md"
   ],
@@ -12959,6 +12611,138 @@
   ],
   "graph": [
     "buildgraph-graph.md"
+  ],
+  "__unresolved__::ref::_handle_iteration": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::_init_openai": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::calc_dday": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::create_anthropic_client": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::end": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::extract_json_from_response": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::fileformaterror": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::finditer": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::get_extension": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::getaddrinfo": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::group": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::ip_address": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::openaiclient": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::proposalcontent": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::rfpdata": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::sourcetag": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::step_1_rfp_analysis_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::step_2_strategy_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::step_3_plan_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::step_4_section_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::step_5_presentation_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::unquote": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::urlparse": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::validate_file_type": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::validate_input": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "__unresolved__::ref::valueerror": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "vaultstepprompts": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "get_step_prompt": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "vault_step_prompts": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "parse_budget_string": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_extract_filename": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_parse": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_validate_url": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "parse_rfp_text": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "extract_source_tags": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "embeddingservice": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_init_openai": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "embed_text": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "validate_extension": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "get_db_connection": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_handle_iteration": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "get_workflow_status": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_call_claude": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
+  ],
+  "_extract_pattern": [
+    "unresolvedrefvalueerror-extractsourcetags.md"
   ],
   "1.1 problem solved (strategic intent)": [
     "unified-state-system-pdca-completion-report-22-plan-requirements-verification.md"
@@ -13223,7 +13007,8 @@
     "step-8-frontend-integration-guide-typescript.md"
   ],
   "troubleshooting": [
-    "step-8-frontend-integration-guide-typescript.md"
+    "step-8-frontend-integration-guide-typescript.md",
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
   ],
   "version endpoints": [
     "step-8-frontend-integration-guide-typescript.md"
@@ -13365,6 +13150,261 @@
   ],
   "_init_supabase_rpc": [
     "main-initsupabaserpc.md"
+  ],
+  "__unresolved__::ref::_etproxy": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_format_projects_for_prompt": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_get_client": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_get_openai": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_get_system_prompt": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_parse_json_response": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_sync_dynamic_sections": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::aiserviceerror": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::aitimeouterror": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::asyncopenai": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::check_prompt": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::claudeclient": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::create_message": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::dict": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::getattr": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::handoff": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::market_research": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::parse_rfp_text": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::proposalplan": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::ratelimiterror": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::stream": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::subelement": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::validate_move_and_resolve_versions": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "plan_merge": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "get_all_pipeline_status": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "claudeclient": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "claude_generate": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "claude_generate_streaming": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "create_message": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "_get_openai": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "embedding_text_for_client": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "embedding_text_for_competitor": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "embedding_text_for_content": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "embedding_text_for_lesson": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "generate_embeddings_batch": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "embedding_service": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "_patch_hwpx_library": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "masterprojectschatservice": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "_embed_text": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "_generate_answer": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "check_node_move_feasibility": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "_analyze_rfp": [
+    "claudegenerate-embeddingservice.md"
+  ],
+  "__unresolved__::ref::_adjust_checklist_item": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_adjust_tasks_for_rfp": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_calculate_overall_progress": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_check_dependency_issues": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_conduct_mock_evaluations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_create_agent_tasks": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_evaluate_by_role": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_generate_checklist": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_generate_evaluation_feedback": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_generate_evaluation_recommendations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_generate_recommendations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_identify_bottlenecks": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_load_checklist_templates": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_load_evaluation_criteria": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_load_task_templates": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_optimize_task_priorities": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_resolve_task_dependencies": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::_simulate_evaluation": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::agentrole": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::agenttask": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::checklistcategory": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::checklistitem": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::copy": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::mockevaluation": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "__unresolved__::ref::parallelworkresult": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "list_sessions": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "parallelworkengine": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_adjust_checklist_item": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_adjust_tasks_for_rfp": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_conduct_mock_evaluations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_create_agent_tasks": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_evaluate_by_role": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_generate_checklist": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_generate_evaluation_feedback": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_generate_evaluation_recommendations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_generate_recommendations": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_identify_bottlenecks": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_load_checklist_templates": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_load_evaluation_criteria": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_load_task_templates": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_optimize_task_priorities": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "_simulate_evaluation": [
+    "parallelworkengine-createagenttasks.md"
+  ],
+  "execute_parallel_work": [
+    "parallelworkengine-createagenttasks.md"
   ],
   "1.1 create migration sql file": [
     "unified-state-system-do-phase-implementation-guide-bash.md"
@@ -13678,7 +13718,8 @@
     "unified-state-system-design-phases-1-4-python.md"
   ],
   "success criteria": [
-    "unified-state-system-design-phases-1-4-python.md"
+    "unified-state-system-design-phases-1-4-python.md",
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
   ],
   "target state (after phase 4)": [
     "unified-state-system-design-phases-1-4-python.md"
@@ -14420,69 +14461,6 @@
   "scheduler-integration 구현 가이드 (do)": [
     "python-scheduler-integration-do.md"
   ],
-  "__unresolved__::ref::_get_text": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::_read_section_xml_bytes": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::_text_of_t_node": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::charstyle": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::findall": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::fontinfo": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::getroot": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::indent": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::pagemetrics": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::parastyle": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::tableinfo": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "__unresolved__::ref::xpath": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_extract_main_keyword": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_analyze_char_styles": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_analyze_fonts": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_analyze_para_styles": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_analyze_tables": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_get_text": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "_update_metadata": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "collect_metrics": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
-  "extract_keywords": [
-    "collectmetrics-unresolvedreffindall.md"
-  ],
   "10. 참고 사항": [
     "document-ingestion-plan-4.md"
   ],
@@ -14521,6 +14499,57 @@
   ],
   "document ingestion 기능 계획 (plan)": [
     "document-ingestion-plan-4.md"
+  ],
+  "backend changes": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "backend permission validation": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "browser console": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "component: dashboardpage (`frontend/app/(app)/dashboard/page.tsx`)": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "dashboard permission validation tests": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "endpoint: get /api/dashboard/company": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "endpoint: get /api/dashboard/division": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "endpoint: get /api/dashboard/team": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "frontend changes": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "frontend permission validation": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "implementation details": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "issue: 403 error persists after \"팀으로 변경\" click": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "issue: error message not appearing": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "issue: scope not auto-downgrading after 3 seconds": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "manual testing checklist": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "prerequisites": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
+  ],
+  "role hierarchy": [
+    "dashboard-permission-validation-tests-backend-permission-validation.md"
   ],
   "1. 제안 프로젝트 목록 (테이블 형식)": [
     "ui-work-content-hitl.md"
@@ -15364,6 +15393,39 @@
   "v2.0 - batch processing & migration": [
     "2026-03-29-document-ingestion-feature-complete-future-enhancements.md"
   ],
+  "__unresolved__::ref::reversed": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "_approval_router": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_bid_plan_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_gap_analysis_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_gng_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_mock_eval_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_plan_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_section_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_self_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "route_after_strategy_review": [
+    "edges-routeafterbidplanreview.md"
+  ],
+  "edges": [
+    "edges-routeafterbidplanreview.md"
+  ],
   "__unresolved__::ref::_calculate_rfp_formula": [
     "pricescorecalculator-calculaterfpformula.md"
   ],
@@ -15668,27 +15730,6 @@
   "validate_move_and_resolve_versions": [
     "validatemoveandresolveversions-unresolvedrefclassifydependencylevel.md"
   ],
-  "__unresolved__::ref::_sync_dynamic_sections": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "__unresolved__::ref::dict": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "__unresolved__::ref::proposalplan": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "__unresolved__::ref::validate_move_and_resolve_versions": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "plan_merge": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "get_all_pipeline_status": [
-    "planmerge-unresolvedrefdict.md"
-  ],
-  "check_node_move_feasibility": [
-    "planmerge-unresolvedrefdict.md"
-  ],
   "__unresolved__::ref::_query_comparable": [
     "rulebasedmodel-winprobabilitymodel.md"
   ],
@@ -15990,16 +16031,16 @@
     "getbiddingworkspace-unresolvedrefgetbidplanscenarios.md"
   ],
   "__unresolved__::ref::query": [
-    "pageparams-init.md"
+    "pageparams-unresolvedrefquery.md"
   ],
   "pageparams": [
-    "pageparams-init.md"
+    "pageparams-unresolvedrefquery.md"
   ],
   "apply": [
-    "pageparams-init.md"
+    "pageparams-unresolvedrefquery.md"
   ],
   "pagination": [
-    "pageparams-init.md"
+    "pageparams-unresolvedrefquery.md"
   ],
   "cardbodyprops": [
     "card-cardbodyprops.md"
@@ -16081,6 +16122,18 @@
   ],
   "_run_all_steps": [
     "runallsteps-unresolvedrefdownloadandextract.md"
+  ],
+  "__unresolved__::ref::_inject_char_styles": [
+    "setupstyles-unresolvedrefinjectcharstyles.md"
+  ],
+  "__unresolved__::ref::_inject_fonts": [
+    "setupstyles-unresolvedrefinjectcharstyles.md"
+  ],
+  "__unresolved__::ref::mark_dirty": [
+    "setupstyles-unresolvedrefinjectcharstyles.md"
+  ],
+  "_setup_styles": [
+    "setupstyles-unresolvedrefinjectcharstyles.md"
   ],
   "__unresolved__::ref::_get_prompt_by_version": [
     "runcomparison-unresolvedrefgetpromptbyversion.md"

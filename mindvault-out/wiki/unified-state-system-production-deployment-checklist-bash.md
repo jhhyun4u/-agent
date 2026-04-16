@@ -2,7 +2,7 @@
 Cohesion: 0.09 | Nodes: 27
 
 ## Key Nodes
-- **Unified State System — Production Deployment Checklist** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 9 connections
+- **Unified State System — Production Deployment Checklist** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 9 connections
   - -> contains -> [[pre-deployment-1-hour]]
   - -> contains -> [[deployment-phase-30-minutes]]
   - -> contains -> [[post-deployment-30-minutes]]
@@ -12,84 +12,84 @@ Cohesion: 0.09 | Nodes: 27
   - -> contains -> [[contacts-escalation]]
   - -> contains -> [[approval-sign-off]]
   - -> contains -> [[quick-reference]]
-- **bash** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 6 connections
+- **bash** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 6 connections
   - <- has_code_example <- [[step-1-database-migration-5-min]]
   - <- has_code_example <- [[step-2-backend-deployment-10-min]]
   - <- has_code_example <- [[step-3-frontend-deployment-10-min]]
   - <- has_code_example <- [[step-4-health-checks-5-min]]
   - <- has_code_example <- [[rollback-steps-15-minutes]]
   - <- has_code_example <- [[quick-reference]]
-- **Deployment Phase (30 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 5 connections
+- **Deployment Phase (30 minutes)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 5 connections
   - -> contains -> [[step-1-database-migration-5-min]]
   - -> contains -> [[step-2-backend-deployment-10-min]]
   - -> contains -> [[step-3-frontend-deployment-10-min]]
   - -> contains -> [[step-4-health-checks-5-min]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Post-Deployment (30 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
+- **Post-Deployment (30 minutes)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
   - -> contains -> [[validation]]
   - -> contains -> [[monitoring]]
   - -> contains -> [[team-communication]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Pre-Deployment (1 hour)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
+- **Pre-Deployment (1 hour)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
   - -> contains -> [[environment-verification]]
   - -> contains -> [[code-verification]]
   - -> contains -> [[backup-rollback-preparation]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Contacts & Escalation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+- **Contacts & Escalation** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
   - -> contains -> [[on-call-during-deployment]]
   - -> contains -> [[escalation-path]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Documentation Updates** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+- **Documentation Updates** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
   - -> contains -> [[code-changes-summary]]
   - -> contains -> [[knowledge-base-updates]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Rollback Procedure (If Issues Found)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+- **Rollback Procedure (If Issues Found)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
   - -> contains -> [[trigger-rollback-if]]
   - -> contains -> [[rollback-steps-15-minutes]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Quick Reference** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Quick Reference** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Rollback Steps (15 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Rollback Steps (15 minutes)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[rollback-procedure-if-issues-found]]
-- **Step 1: Database Migration (5 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Step 1: Database Migration (5 min)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[deployment-phase-30-minutes]]
-- **Step 2: Backend Deployment (10 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Step 2: Backend Deployment (10 min)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[deployment-phase-30-minutes]]
-- **Step 3: Frontend Deployment (10 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Step 3: Frontend Deployment (10 min)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[deployment-phase-30-minutes]]
-- **Step 4: Health Checks (5 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+- **Step 4: Health Checks (5 min)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[deployment-phase-30-minutes]]
-- **Approval Sign-off** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Approval Sign-off** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Backup & Rollback Preparation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Backup & Rollback Preparation** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[pre-deployment-1-hour]]
-- **Code Changes Summary** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Code Changes Summary** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[documentation-updates]]
-- **Code Verification** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Code Verification** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[pre-deployment-1-hour]]
-- **Environment Verification** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Environment Verification** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[pre-deployment-1-hour]]
-- **Escalation Path** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Escalation Path** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[contacts-escalation]]
-- **Knowledge Base Updates** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Knowledge Base Updates** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[documentation-updates]]
-- **Monitoring** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Monitoring** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[post-deployment-30-minutes]]
-- **On-Call During Deployment** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **On-Call During Deployment** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[contacts-escalation]]
-- **Success Metrics (Track for 48 hours)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Success Metrics (Track for 48 hours)** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[unified-state-system-production-deployment-checklist]]
-- **Team Communication** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Team Communication** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[post-deployment-30-minutes]]
-- **Trigger Rollback If:** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Trigger Rollback If:** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[rollback-procedure-if-issues-found]]
-- **Validation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+- **Validation** (C:\project\tenopa proposer\docs\archive\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
   - <- contains <- [[post-deployment-30-minutes]]
 
 ## Internal Relationships
