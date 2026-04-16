@@ -353,7 +353,7 @@ async def get_workflow_map(user=Depends(require_role("admin"))):
         n["prompts"] = node_prompts.get(n["id"], [])
         n["prompt_count"] = len(n["prompts"])
 
-    edges = [
+    workflow_edges = [
         {"from": "rfp_search", "to": "rfp_analyze"},
         {"from": "rfp_analyze", "to": "go_no_go"},
         {"from": "go_no_go", "to": "strategy_generate"},
@@ -364,7 +364,7 @@ async def get_workflow_map(user=Depends(require_role("admin"))):
         {"from": "ppt_toc", "to": "ppt_storyboard"},
     ]
 
-    return ok({"nodes": nodes, "edges": edges})
+    return ok({"nodes": nodes, "edges": workflow_edges})
 
 
 # ── Phase C: 사람 수정 기록 (POST 고정 경로) ──
