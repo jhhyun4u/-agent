@@ -295,4 +295,111 @@ async def claude_generate_multiple_variants(
     variant_configs: dict[str, dict] | None = None,
     step_name: str = "",
 ) -> list[dict[str, Any]]:
-    """Claude API로 프롬프트 변형 3개 병렬 생성 (Harness Engineering).\n\n    전략: Conservative(보수적), Balanced(균형), Creative(창의적)\n    각 변형은 다른 온도와 지시문으로 생성되어 다양성 확보.\n\n    Args:\n        base_prompt: 기본 프롬프트 (template 형식, {variant_hint} 치환 가능)\n        system_prompt: 시스템 프롬프트\n        section_type: 섹션 타입 (harness_evaluator에서 평가용)\n        model: 모델 override\n        max_tokens: 최대 출력 토큰\n        variant_configs: 변형별 설정 override\n            {\"conservative\": {\"temperature\": 0.1, \"hint\": \"...\"},\n             \"balanced\": {\"temperature\": 0.3, \"hint\": \"...\"},\n             \"creative\": {\"temperature\": 0.7, \"hint\": \"...\"}}\n        step_name: 노드 이름 (로깅용)\n\n    Returns:\n        [{\"variant\": str, \"content\": str, \"temperature\": float, \"tokens\": dict}] × 3\n    \"\"\"\n    import asyncio\n\n    # 기본 variant 설정\n    default_configs = {\n        \"conservative\": {\n            \"temperature\": 0.1,\n            \"hint\": \"명확하고 검증된 논거만 사용하여 신뢰성을 최우선으로. 추상적 표현 최소화.\",\n        },\n        \"balanced\": {\n            \"temperature\": 0.3,\n            \"hint\": \"신뢰성과 설득력의 균형. 적절한 수사와 함께 근거 제시.\",\n        },\n        \"creative\": {\n            \"temperature\": 0.7,\n            \"hint\": \"창의적 표현과 스토리텔링으로 임팩트 강화. 여전히 사실 기반 유지.\",\n        },\n    }\n\n    # 사용자 설정이 있으면 병합\n    if variant_configs:\n        for key, config in variant_configs.items():\n            if key in default_configs:\n                default_configs[key].update(config)\n\n    # 프롬프트 생성 태스크\n    async def generate_variant(variant_name: str, config: dict) -> dict[str, Any]:\n        try:\n            # 템플릿 변수 치환\n            prompt = base_prompt\n            if \"{variant_hint}\" in prompt:\n                prompt = prompt.replace(\"{variant_hint}\", config[\"hint\"])\n\n            result = await claude_generate(\n                prompt=prompt,\n                system_prompt=system_prompt,\n                model=model,\n                max_tokens=max_tokens,\n                temperature=config[\"temperature\"],\n                response_format=\"json\",\n                step_name=f\"{step_name}_{variant_name}\" if step_name else variant_name,\n            )\n\n            # 결과 추출 (JSON 또는 텍스트)\n            content = \"\"\n            if isinstance(result, dict):\n                if \"content\" in result:\n                    content = result[\"content\"]\n                elif \"text\" in result:\n                    content = result[\"text\"]\n                else:\n                    content = json.dumps(result, ensure_ascii=False)\n            else:\n                content = str(result)\n\n            tokens_info = {}\n            if isinstance(result, dict) and \"token_usage\" in result:\n                tokens_info = result[\"token_usage\"]\n\n            return {\n                \"variant\": variant_name,\n                \"content\": content,\n                \"temperature\": config[\"temperature\"],\n                \"tokens\": tokens_info,\n                \"section_type\": section_type,\n            }\n\n        except Exception as e:\n            logger.error(f\"Variant 생성 실패 [{variant_name}]: {e}\")\n            return {\n                \"variant\": variant_name,\n                \"content\": \"\",\n                \"temperature\": config[\"temperature\"],\n                \"tokens\": {},\n                \"section_type\": section_type,\n                \"error\": str(e),\n            }\n\n    # 3개 변형 병렬 실행\n    tasks = [\n        generate_variant(name, config) for name, config in default_configs.items()\n    ]\n\n    results = await asyncio.gather(*tasks)\n\n    # 순서 보장: conservative → balanced → creative\n    variant_order = [\"conservative\", \"balanced\", \"creative\"]\n    results_ordered = sorted(\n        results, key=lambda x: variant_order.index(x[\"variant\"])\n    )\n\n    return results_ordered
+    """Claude API로 프롬프트 변형 3개 병렬 생성 (Harness Engineering).
+    
+    전략: Conservative(보수적), Balanced(균형), Creative(창의적)
+    각 변형은 다른 온도와 지시문으로 생성되어 다양성 확보.
+    
+    Args:
+        base_prompt: 기본 프롬프트 (template 형식, {variant_hint} 치환 가능)
+        system_prompt: 시스템 프롬프트
+        section_type: 섹션 타입 (harness_evaluator에서 평가용)
+        model: 모델 override
+        max_tokens: 최대 출력 토큰
+        variant_configs: 변형별 설정 override
+        step_name: 노드 이름 (로깅용)
+    
+    Returns:
+        [{"variant": str, "content": str, "temperature": float, "tokens": dict}] × 3
+    """
+    import asyncio
+
+    # 기본 variant 설정
+    default_configs = {
+        "conservative": {
+            "temperature": 0.1,
+            "hint": "명확하고 검증된 논거만 사용하여 신뢰성을 최우선으로. 추상적 표현 최소화.",
+        },
+        "balanced": {
+            "temperature": 0.3,
+            "hint": "신뢰성과 설득력의 균형. 적절한 수사와 함께 근거 제시.",
+        },
+        "creative": {
+            "temperature": 0.7,
+            "hint": "창의적 표현과 스토리텔링으로 임팩트 강화. 여전히 사실 기반 유지.",
+        },
+    }
+
+    # 사용자 설정이 있으면 병합
+    if variant_configs:
+        for key, config in variant_configs.items():
+            if key in default_configs:
+                default_configs[key].update(config)
+
+    # 프롬프트 생성 태스크
+    async def generate_variant(variant_name: str, config: dict) -> dict[str, Any]:
+        try:
+            # 템플릿 변수 치환
+            prompt = base_prompt
+            if "{variant_hint}" in prompt:
+                prompt = prompt.replace("{variant_hint}", config["hint"])
+
+            result = await claude_generate(
+                prompt=prompt,
+                system_prompt=system_prompt,
+                model=model,
+                max_tokens=max_tokens,
+                temperature=config["temperature"],
+                response_format="json",
+                step_name=f"{step_name}_{variant_name}" if step_name else variant_name,
+            )
+
+            # 결과 추출
+            content = ""
+            if isinstance(result, dict):
+                if "content" in result:
+                    content = result["content"]
+                elif "text" in result:
+                    content = result["text"]
+                else:
+                    content = json.dumps(result, ensure_ascii=False)
+            else:
+                content = str(result)
+
+            tokens_info = {}
+            if isinstance(result, dict) and "token_usage" in result:
+                tokens_info = result["token_usage"]
+
+            return {
+                "variant": variant_name,
+                "content": content,
+                "temperature": config["temperature"],
+                "tokens": tokens_info,
+                "section_type": section_type,
+            }
+
+        except Exception as e:
+            logger.error(f"Variant 생성 실패 [{variant_name}]: {e}")
+            return {
+                "variant": variant_name,
+                "content": "",
+                "temperature": config["temperature"],
+                "tokens": {},
+                "section_type": section_type,
+                "error": str(e),
+            }
+
+    # 3개 변형 병렬 실행
+    tasks = [
+        generate_variant(name, config) for name, config in default_configs.items()
+    ]
+
+    results = await asyncio.gather(*tasks)
+
+    # 순서 보장: conservative → balanced → creative
+    variant_order = ["conservative", "balanced", "creative"]
+    results_ordered = sorted(
+        results, key=lambda x: variant_order.index(x["variant"])
+    )
+
+    return results_ordered

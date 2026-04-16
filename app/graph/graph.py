@@ -62,9 +62,10 @@ from app.graph.nodes.plan_nodes import (
     plan_assign, plan_schedule, plan_story, plan_team, proposal_customer_analysis,
 )
 from app.graph.nodes.proposal_nodes import (
-    proposal_write_next, self_review_with_auto_improve, 
+    self_review_with_auto_improve, 
     section_quality_check, storyline_gap_analysis,
 )
+from app.graph.nodes.harness_proposal_write import harness_proposal_write_next
 from app.graph.nodes.ppt_nodes import (
     presentation_strategy, ppt_toc, ppt_visual_brief, ppt_storyboard_node,
 )
@@ -123,9 +124,9 @@ def build_graph(checkpointer=None):
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 
-    # 4A: 제안서 작성 (v4.0: 섹션별 완결 루프 + 갭 분석)
+    # 4A: 제안서 작성 (v4.0: 섹션별 완결 루프 + 갭 분석 + Harness Engineering)
     g.add_node("proposal_start_gate", proposal_start_gate)
-    g.add_node("proposal_write_next", track_tokens("proposal_write_next")(proposal_write_next))
+    g.add_node("proposal_write_next", track_tokens("proposal_write_next")(harness_proposal_write_next))
     g.add_node("section_quality_check", track_tokens("section_quality_check")(section_quality_check))
     g.add_node("review_section", review_section_node)
     g.add_node("self_review", track_tokens("self_review")(self_review_with_auto_improve))
