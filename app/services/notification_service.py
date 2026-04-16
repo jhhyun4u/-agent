@@ -11,6 +11,7 @@ import httpx
 
 from app.config import settings
 from app.services.email_service import build_email_html, send_email
+from app.services.ws_events import broadcast_notification
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -122,7 +123,7 @@ async def create_notification(
     """인앱 알림 생성 (notifications 테이블)."""
     try:
         client = await get_async_client()
-        await client.table("notifications").insert({
+        result = await client.table("notifications").insert({
             "user_id": user_id,
             "proposal_id": proposal_id,
             "type": type,
@@ -132,6 +133,21 @@ async def create_notification(
             "is_read": False,
             "teams_sent": False,
         }).execute()
+        
+        # WebSocket 브로드캐스트 (fire-and-forget)
+        if result.data and len(result.data) > 0:
+            notification_id = result.data[0].get("id")
+            import asyncio
+            asyncio.create_task(
+                broadcast_notification(
+                    user_id=user_id,
+                    notification_id=notification_id,
+                    type=type,
+                    title=title,
+                    message=body,
+                    link=link,
+                )
+            )
     except Exception as e:
         logger.warning(f"인앱 알림 생성 실패: {e}")
 

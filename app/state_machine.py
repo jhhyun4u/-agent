@@ -15,7 +15,9 @@ and AI runtime state (Layer 3: ai_task_status).
 """
 
 from typing import Optional
+import asyncio
 from app.services.state_validator import StateValidator, ProposalStatus, WinResult
+from app.services.ws_events import broadcast_proposal_status
 
 
 class StateMachine:
@@ -48,7 +50,7 @@ class StateMachine:
         Returns:
             Timeline entry
         """
-        return await StateValidator.transition(
+        result = await StateValidator.transition(
             self.proposal_id,
             ProposalStatus.IN_PROGRESS,
             current_phase=phase,
@@ -56,6 +58,10 @@ class StateMachine:
             actor_type="user",
             reason="Workflow started by user",
         )
+        
+        # WebSocket 브로드캐스트 (fire-and-forget)
+        asyncio.create_task(self._broadcast_status_change(ProposalStatus.INITIALIZED.value, ProposalStatus.IN_PROGRESS.value))
+        return result
 
     async def decide_go(
         self,

@@ -108,6 +108,13 @@ class Settings(BaseSettings):
     bid_pipeline_timeout_seconds: int = 120
     heartbeat_timeout_seconds: int = 60
 
+    # WebSocket (실시간 업데이트) — §26
+    ws_heartbeat_interval_seconds: int = 30  # 클라이언트 keep-alive ping 간격
+    ws_max_connections_per_user: int = 3  # 사용자당 최대 동시 연결
+    ws_max_reconnect_attempts: int = 20  # 최대 재연결 시도 횟수
+    ws_initial_reconnect_delay_seconds: int = 1  # 초기 재연결 지연
+    ws_max_reconnect_delay_seconds: int = 30  # 최대 재연결 지연
+
     # Signed URL / 캐시 TTL
     signed_url_expiry_seconds: int = 3600
     g2b_cache_ttl_hours: int = 24

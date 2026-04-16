@@ -60,6 +60,7 @@ from app.api.routes_step8_review import router as step8_review_router
 from app.api.routes_knowledge import router as knowledge_router
 from app.api.routes_vault_chat import router as vault_chat_router
 from app.api.routes_vault_embeddings import router as vault_embeddings_router
+from app.api.routes_ws import router as ws_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -227,7 +228,28 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"DB 마이그레이션 초기화 경고 (무시): {e}")
 
+    # §26: WebSocket 실시간 업데이트 - 하트비트 루프 시작
+    from app.services.ws_manager import ws_manager
+    import asyncio
+    
+    heartbeat_task = None
+    try:
+        heartbeat_task = asyncio.create_task(ws_manager.heartbeat_loop())
+        logger.info("[WS] WebSocket 하트비트 루프 시작")
+    except Exception as e:
+        logger.error(f"[WS] 하트비트 루프 시작 실패: {e}")
+
     yield
+    
+    # Shutdown: 하트비트 태스크 취소
+    if heartbeat_task:
+        heartbeat_task.cancel()
+        try:
+            await heartbeat_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("[WS] WebSocket 하트비트 루프 종료")
+    
     logger.info("시스템 종료")
 
 
@@ -400,6 +422,9 @@ app.include_router(vault_chat_router)
 
 # Vault Embeddings: /api/vault/embeddings/*
 app.include_router(vault_embeddings_router)
+
+# Phase 3.1: WebSocket 실시간 업데이트: /api/ws/dashboard
+app.include_router(ws_router)
 
 
 # ── 헬스체크 ──
