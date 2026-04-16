@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **postcss.config** (C:\project\tenopa proposer\-agent-master\frontend\postcss.config.mjs) -- 0 connections
+- **postcss.config** (C:\project\tenopa proposer\frontend\postcss.config.mjs) -- 0 connections
 
 ## Internal Relationships
 

@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **phase_prompts** (C:\project\tenopa proposer\-agent-master\app\services\phase_prompts.py) -- 0 connections
+- **phase_prompts** (C:\project\tenopa proposer\app\services\phase_prompts.py) -- 0 connections
 
 ## Internal Relationships
 

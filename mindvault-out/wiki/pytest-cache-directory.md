@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **pytest cache directory #** (C:\project\tenopa proposer\-agent-master\.pytest_cache\README.md) -- 0 connections
+- **pytest cache directory #** (C:\project\tenopa proposer\.pytest_cache\README.md) -- 0 connections
 
 ## Internal Relationships
 

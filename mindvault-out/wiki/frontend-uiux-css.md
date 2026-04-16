@@ -2,7 +2,7 @@
 Cohesion: 0.24 | Nodes: 14
 
 ## Key Nodes
-- **Frontend UI/UX 디자인 점검 보고서** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 10 connections
+- **Frontend UI/UX 디자인 점검 보고서** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 10 connections
   - -> contains -> [[1-color-system]]
   - -> contains -> [[2]]
   - -> contains -> [[3-accessibility]]
@@ -13,52 +13,52 @@ Cohesion: 0.24 | Nodes: 14
   - -> contains -> [[5-spacing]]
   - -> contains -> [[6-shadow]]
   - -> contains -> [[1]]
-- **css** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 5 connections
+- **css** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 5 connections
   - <- has_code_example <- [[1-color-system]]
   - <- has_code_example <- [[4-z-index]]
   - <- has_code_example <- [[2]]
   - <- has_code_example <- [[3]]
   - <- has_code_example <- [[4]]
-- **bash** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 4 connections
+- **bash** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 4 connections
   - <- has_code_example <- [[1]]
   - <- has_code_example <- [[2]]
   - <- has_code_example <- [[3]]
   - <- has_code_example <- [[4]]
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
+- **typescript** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
   - <- has_code_example <- [[1-typography-consistency]]
   - <- has_code_example <- [[5-spacing]]
   - <- has_code_example <- [[6-shadow]]
-- **2. **반응형 디자인**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
+- **2. **반응형 디자인**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
   - -> has_code_example -> [[css]]
   - -> has_code_example -> [[bash]]
   - <- contains <- [[frontend-uiux]]
-- **3. **입력 필드 일관성 부족**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
+- **3. **입력 필드 일관성 부족**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
   - -> has_code_example -> [[css]]
   - -> has_code_example -> [[bash]]
   - <- contains <- [[frontend-uiux]]
-- **4. **카드 컴포넌트 표준화**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
+- **4. **카드 컴포넌트 표준화**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 3 connections
   - -> has_code_example -> [[css]]
   - -> has_code_example -> [[bash]]
   - <- contains <- [[frontend-uiux]]
-- **작업 1: 통합 타이포그래피 모듈 생성** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **작업 1: 통합 타이포그래피 모듈 생성** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[frontend-uiux]]
-- **1. **타이포그래피 일관성 (Typography Consistency)**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **1. **타이포그래피 일관성 (Typography Consistency)**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[frontend-uiux]]
-- **1. **색상 시스템 (Color System)**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **1. **색상 시스템 (Color System)**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[css]]
   - <- contains <- [[frontend-uiux]]
-- **4. **Z-Index 체계**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **4. **Z-Index 체계**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[css]]
   - <- contains <- [[frontend-uiux]]
-- **5. **간격(Spacing) 체계 부재**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **5. **간격(Spacing) 체계 부재**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[frontend-uiux]]
-- **6. **그림자(Shadow) 체계 부족**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
+- **6. **그림자(Shadow) 체계 부족**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[frontend-uiux]]
-- **3. **접근성 (Accessibility)**** (C:\project\tenopa proposer\-agent-master\frontend\UI_UX_DESIGN_REVIEW.md) -- 1 connections
+- **3. **접근성 (Accessibility)**** (C:\project\tenopa proposer\frontend\UI_UX_DESIGN_REVIEW.md) -- 1 connections
   - <- contains <- [[frontend-uiux]]
 
 ## Internal Relationships

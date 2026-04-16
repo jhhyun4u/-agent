@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **sensitivity** (C:\project\tenopa proposer\-agent-master\app\services\pricing\sensitivity.py) -- 0 connections
+- **sensitivity** (C:\project\tenopa proposer\app\services\pricing\sensitivity.py) -- 0 connections
 
 ## Internal Relationships
 

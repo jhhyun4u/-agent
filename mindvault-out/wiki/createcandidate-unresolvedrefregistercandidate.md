@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **create_candidate** (C:\project\tenopa proposer\-agent-master\app\services\prompt_evolution.py) -- 2 connections
+- **create_candidate** (C:\project\tenopa proposer\app\services\prompt_evolution.py) -- 2 connections
   - -> calls -> [[unresolvedrefregistercandidate]]
   - <- contains <- [[promptevolution]]
 - **__unresolved__::ref::register_candidate** () -- 1 connections

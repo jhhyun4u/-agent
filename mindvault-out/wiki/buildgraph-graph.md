@@ -1,8 +1,8 @@
 # build_graph & graph
-Cohesion: 0.04 | Nodes: 47
+Cohesion: 0.04 | Nodes: 48
 
 ## Key Nodes
-- **build_graph** (C:\project\tenopa proposer\-agent-master\app\graph\graph.py) -- 32 connections
+- **build_graph** (C:\project\tenopa proposer\app\graph\graph.py) -- 32 connections
   - -> calls -> [[unresolvedrefstategraph]]
   - -> calls -> [[unresolvedrefaddnode]]
   - -> calls -> [[unresolvedreftracktokensrfpanalyze]]
@@ -35,7 +35,7 @@ Cohesion: 0.04 | Nodes: 47
   - -> calls -> [[unresolvedrefaddconditionaledges]]
   - -> calls -> [[unresolvedrefcompile]]
   - <- contains <- [[graph]]
-- **graph** (C:\project\tenopa proposer\-agent-master\app\graph\graph.py) -- 19 connections
+- **graph** (C:\project\tenopa proposer\app\graph\graph.py) -- 19 connections
   - -> contains -> [[buildgraph]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefgraph]]
@@ -55,8 +55,7 @@ Cohesion: 0.04 | Nodes: 47
   - -> imports -> [[unresolvedrefsubmissionnodes]]
   - -> imports -> [[unresolvedrefevaluationnodes]]
   - -> imports -> [[unresolvedreftokentracking]]
-- **__unresolved__::ref::compile** () -- 3 connections
-  - <- calls <- [[main]]
+- **__unresolved__::ref::compile** () -- 2 connections
   - <- calls <- [[buildgraph]]
   - <- calls <- [[checknumberconsistency]]
 - **__unresolved__::ref::review_node** () -- 2 connections
@@ -69,6 +68,8 @@ Cohesion: 0.04 | Nodes: 47
 - **__unresolved__::ref::add_node** () -- 1 connections
   - <- calls <- [[buildgraph]]
 - **__unresolved__::ref::bid_plan** () -- 1 connections
+  - <- imports <- [[graph]]
+- **__unresolved__::ref::edges** () -- 1 connections
   - <- imports <- [[graph]]
 - **__unresolved__::ref::evaluation_nodes** () -- 1 connections
   - <- imports <- [[graph]]
@@ -183,6 +184,7 @@ Cohesion: 0.04 | Nodes: 47
 - build_graph -> calls -> __unresolved__::ref::compile [EXTRACTED]
 - graph -> contains -> build_graph [EXTRACTED]
 - graph -> imports -> __unresolved__::ref::graph [EXTRACTED]
+- graph -> imports -> __unresolved__::ref::edges [EXTRACTED]
 - graph -> imports -> __unresolved__::ref::gate_nodes [EXTRACTED]
 - graph -> imports -> __unresolved__::ref::go_no_go [EXTRACTED]
 - graph -> imports -> __unresolved__::ref::merge_nodes [EXTRACTED]
@@ -201,7 +203,6 @@ Cohesion: 0.04 | Nodes: 47
 ## Cross-Community Connections
 - graph -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - graph -> imports -> __unresolved__::ref::state (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- graph -> imports -> __unresolved__::ref::edges (-> [[unresolvedrefbasestate-testchecklistcore]])
 
 ## Context
 이 커뮤니티는 build_graph, graph, __unresolved__::ref::compile를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 graph.py이다.

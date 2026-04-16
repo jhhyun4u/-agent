@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\WinProbabilityGauge.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\WinProbabilityGauge.tsx) -- 1 connections
   - <- contains <- [[winprobabilitygauge]]
-- **WinProbabilityGauge** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\WinProbabilityGauge.tsx) -- 1 connections
+- **WinProbabilityGauge** (C:\project\tenopa proposer\frontend\components\pricing\WinProbabilityGauge.tsx) -- 1 connections
   - -> contains -> [[props]]
 
 ## Internal Relationships

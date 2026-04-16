@@ -9,7 +9,7 @@ import logging
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
 
-from app.models.vault_schemas import SearchResult, VaultSection
+from app.models.vault_schemas import SearchResult
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

@@ -1,0 +1,192 @@
+- generic [ref=e1]:
+  - dialog "쿠키 동의 배너" [ref=e2]:
+    - button "이 대화 상자 닫기" [active] [ref=e3] [cursor=pointer]:
+      - img "이 대화 상자 닫기" [ref=e4]
+    - generic [ref=e5]:
+      - generic [ref=e6]: 이 웹사이트는 분석, 개인화 및 표적 광고뿐만 아니라 필수 사이트 기능을 활성화하기 위해 쿠키와 같은 기술을 활용합니다. 언제든지 설정을 변경하거나 기본 설정을 그대로 사용할 수 있습니다. 필수 쿠키만 계속 사용하려면 이 배너를 닫을 수 있습니다.
+      - link "개인정보 보호정책" [ref=e7] [cursor=pointer]:
+        - /url: https://railway.com/legal/privacy
+    - generic [ref=e8]:
+      - button "환경 설정 관리" [ref=e9] [cursor=pointer]
+      - button "모두 동의" [ref=e10] [cursor=pointer]
+      - button "필수적이지 않은 항목 거부" [ref=e11] [cursor=pointer]
+  - generic [ref=e13]:
+    - generic [ref=e16]:
+      - link "Railway" [ref=e17] [cursor=pointer]:
+        - /url: /
+        - img [ref=e19]
+        - generic [ref=e39]: Railway
+      - navigation "Main" [ref=e41]:
+        - list [ref=e43]:
+          - listitem [ref=e44]:
+            - button "Product" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: Product
+              - img [ref=e48]
+          - listitem [ref=e50]:
+            - button "Developers" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: Developers
+              - img [ref=e54]
+          - listitem [ref=e56]:
+            - button "Enterprise" [ref=e57] [cursor=pointer]:
+              - generic [ref=e58]: Enterprise
+              - img [ref=e60]
+          - listitem [ref=e62]:
+            - button "Company" [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: Company
+              - img [ref=e66]
+          - listitem [ref=e68]:
+            - link "Pricing" [ref=e69] [cursor=pointer]:
+              - /url: /pricing
+      - generic [ref=e70]:
+        - button "Sign in" [ref=e71] [cursor=pointer]
+        - link "Book a demo" [ref=e72] [cursor=pointer]:
+          - /url: /#enterprise-calendar-embed
+    - generic [ref=e74]:
+      - generic [ref=e76]:
+        - heading "Ship software peacefully" [level=1] [ref=e77]
+        - paragraph [ref=e78]:
+          - text: With the all-in-one
+          - link "intelligent" [ref=e79] [cursor=pointer]:
+            - /url: /agents
+          - text: cloud provider
+        - generic [ref=e80]:
+          - link "Deploy →" [ref=e81] [cursor=pointer]:
+            - /url: /new
+          - link "Demo" [ref=e82] [cursor=pointer]:
+            - /url: /#enterprise-calendar-embed
+      - generic [ref=e86]:
+        - tabpanel "100% Deploy" [ref=e87]:
+          - img [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e95]:
+                - generic [ref=e100]: Sync
+                - generic [ref=e105]: Create
+              - generic [ref=e138]: Activity
+              - generic [ref=e145]:
+                - generic [ref=e151]:
+                  - generic [ref=e153]: Nov 12 00:00:00Nov 12 00:00:10Nov 12 00:00:20Nov 12 00:00:30Nov 12 00:00:40Nov 12 00:00:50Nov 12 00:01:00Nov 12 00:01:10Nov 12 00:01:20Nov 12 00:01:30Nov 12 00:01:40Nov 12 00:01:50Nov 12 00:02:00Nov 12 00:02:10Nov 12 00:02:20Nov 12 00:02:30Nov 12 00:02:40Nov 12 00:02:50Nov 12 00:03:00Nov 12 00:03:10Nov 12 00:03:20Nov 12 00:03:30Nov 12 00:03:40Nov 12 00:03:50Nov 12 00:04:00Nov 12 00:04:10Nov 12 00:04:20Nov 12 00:04:30Nov 12 00:04:40Nov 12 00:04:50Nov 12 00:05:00Nov 12 00:05:10Nov 12 00:05:20Nov 12 00:05:30Nov 12 00:05:40Nov 12 00:05:50Nov 12 00:06:00Nov 12 00:06:10Nov 12 00:06:20Nov 12 00:06:30Nov 12 00:06:40Nov 12 00:06:50Nov 12 00:07:00Nov 12 00:07:10Nov 12 00:07:20Nov 12 00:07:30Nov 12 00:07:40Nov 12 00:07:50Nov 12 00:08:00Nov 12 00:08:10Nov 12 00:08:20Nov 12 00:08:30Nov 12 00:08:40Nov 12 00:08:50Nov 12 00:09:00Nov 12 00:09:10Nov 12 00:09:20Nov 12 00:09:30Nov 12 00:09:40Nov 12 00:09:50Nov 12 00:10:00Nov 12 00:10:10Nov 12 00:10:20Nov 12 00:10:30Nov 12 00:10:40Nov 12 00:10:50Nov 12 00:11:00Nov 12 00:11:10Nov 12 00:11:20Nov 12 00:11:30Nov 12 00:11:40Nov 12 00:11:50Nov 12 00:12:00Nov 12 00:12:10Nov 12 00:12:20Nov 12 00:12:30Nov 12 00:12:40Nov 12 00:12:50Nov 12 00:13:00Nov 12 00:13:10Nov 12 00:13:20Nov 12 00:13:30Nov 12 00:13:40Nov 12 00:13:50Nov 12 00:14:00Nov 12 00:14:10
+                  - generic [ref=e154]:
+                    - text: ============================Starting Build with Railpack============================
+                    - text: ╭─────────────────╮│ Railpack 0.15.1 │╰─────────────────╯
+                    - text: ↳ Detected Node 0ms↳ Using bun package manager 0ms Packages ────────── bun │ 1.3.4 │ railpack default (latest) 0msnode │ 25.2.1 │ railpack default (latest) 0ms Steps ────────── ▸ install 0ms $ bun install --frozen-lockfile 1ms Deploy ────────── $ bun run start 2ms
+                    - text: load build definition from ./railpack-plan.json 0ms
+                    - text: "install mise packages: bun, node 2smise node@25.2.1 ✓ installed 2.3scopy bun.lock 636msscheduling build on Metal builder \"builder-tecqxj\" 0mscopy /usr/local/bin/mise, /mise/installs, /mise/shims, 0ms /etc/mise/config.toml, /root/.local/state/mise cachedcopy package.json 395msbun install --frozen-lockfile 772ms5 packages installed [239.00ms] 773msbun run build 8s$ astro build06:46:29 [content] Syncing content06:46:29 [content] Synced content06:46:29 [types] Generated 1.24s06:46:29 [build] output: \"static\"06:46:29 [build] directory: /app/dist/06:46:29 [build] Collecting build info...06:46:29 [build] ✓ Completed in 1.39s.06:46:29 [build] Building static entrypoints...06:46:32 [vite] ✓ built in 2.19s06:46:32 [build] ✓ Completed in 2.23s."
+                    - text: building client (vite) 06:46:32 [vite] transforming...06:46:32 [vite] ✓ 17 modules transformed.06:46:32 [vite] rendering chunks...06:46:32 [vite] computing gzip size...06:46:32 [vite] ✓ built in 208ms
+                    - text: "generating static routes06:46:33 λ starlight-llms-txt/llms.txt.ts → /llms.txt (+1ms)06:46:33 ▶ static site generation: /contributing, /getting-started, /index, /architecture/buildkit, /architecture/caching, /architecture/overview, /architecture/package-resolution, /architecture/user-config, /installation, /reference/cli, /architecture/secrets, /reference/frontend, /guides/installing-packages, /guides/developing-locally06:46:33 ✓ Completed in 1.44s."
+                    - text: "generating optimized images 06:46:33 ▶ /_astro/railpack-prepare.DBEnWCxw_ZVIMai.webp (before: 206kB, after: 32kB) (+154ms) (1/1)06:46:33 ✓ Completed in 154ms."
+                    - text: Finished in 0.222 seconds06:46:34 [build] 34 page(s) built in 6.14s06:46:34 [build] Complete!copy / /app 309mscopy /app/node_modules, /root/.cache, /app cached 95ms
+                    - text: "====================Starting Healthcheck====================Path: /healthRetry window: 5m0s1/1 replicas never became healthy!Healthcheck successful!"
+                    - text: 1/1 replicas never became healthy!Healthcheck successful!
+                - generic [ref=e155]:
+                  - generic [ref=e158]:
+                    - generic [ref=e159]: Date
+                    - generic [ref=e160]: (GMT-6)
+                  - generic [ref=e161]: Message
+                - generic [ref=e170]:
+                  - generic [ref=e171]:
+                    - generic [ref=e174]:
+                      - generic [ref=e176]: Details
+                      - generic [ref=e179]: Build Logs
+                      - generic [ref=e181]: Deploy Logs
+                      - generic [ref=e183]: HTTP Logs
+                    - generic [ref=e189]: Filter logs using "", (), AND, OR, -
+                  - generic [ref=e191]:
+                    - generic [ref=e192]: Successful deployment (2:06)
+                    - generic [ref=e196]: ONLINE
+                    - generic [ref=e197]: Deploying › Creating Containers
+                    - generic [ref=e201]: DEPLOYING
+                  - generic [ref=e209]:
+                    - generic [ref=e211]:
+                      - generic [ref=e215]: backend
+                      - generic [ref=e217]: 23rr2v9
+                    - generic [ref=e219]: Nov 12, 2024 - 9:11 AM
+              - generic [ref=e224]:
+                - generic [ref=e232]:
+                  - generic [ref=e234]: Deployment Successful!
+                  - generic [ref=e238]: backend was deployed successfu...
+                - generic [ref=e246]:
+                  - generic [ref=e248]: Starting deployment...
+                  - generic [ref=e252]: backend deployment started!
+              - generic [ref=e254]:
+                - generic [ref=e257]:
+                  - generic [ref=e262]: Just deployed via GitHub
+                  - generic [ref=e263]: Building...
+                  - generic [ref=e264]: Deploying...
+                - generic [ref=e268]: backend
+              - generic [ref=e270]:
+                - generic [ref=e274]: What are we going to deploy today?
+                - generic [ref=e278]:
+                  - generic [ref=e283]: Deploy from GitHub Repo
+                  - generic [ref=e289]: Deploy a Template
+                  - generic [ref=e296]: Deploy PostgreSQL
+                  - generic [ref=e309]: Deploy Redis
+                  - generic [ref=e313]: Deploy MongoDB
+                  - generic [ref=e317]: Deploy MySQL
+                  - generic [ref=e321]: Empty Project
+                - generic [ref=e322]:
+                  - generic [ref=e328]: railwayapp / cli
+                  - generic [ref=e332]: railwayapp / nixpacks
+                  - generic [ref=e336]: railwayapp / docs
+                  - generic [ref=e340]: railwayapp / manifests
+                  - generic [ref=e344]: railwayapp / forums
+                  - generic [ref=e348]: railwayapp / mono
+                  - generic [ref=e353]: railwayapp / backend
+                  - generic [ref=e358]: Configure GitHub App
+              - generic [ref=e360]:
+                - generic [ref=e361]: Select a repository to deploy
+                - generic [ref=e362]: Deploy GitHub Repo
+              - generic [ref=e365]:
+                - generic [ref=e366]: Deploy your app to production effortlessly
+                - generic [ref=e367]: New Project
+              - generic [ref=e372]:
+                - generic [ref=e374]:
+                  - generic [ref=e377]: Architecture
+                  - generic [ref=e379]: Observability
+                  - generic [ref=e381]: Logs
+                  - generic [ref=e383]: Settings
+                  - generic [ref=e386]: Share
+                - generic [ref=e389]:
+                  - generic [ref=e394]: gravy-truck
+                  - generic [ref=e400]: production
+              - generic [ref=e404]:
+                - generic [ref=e408]: Dashboard
+                - generic [ref=e417]: New Project
+        - tablist [ref=e418]:
+          - tab "100% Deploy" [selected] [ref=e419] [cursor=pointer]:
+            - progressbar "deploy animation progress" [ref=e420]
+            - generic [ref=e423]:
+              - img [ref=e425]
+              - paragraph [ref=e427]: Deploy
+          - tab "0% Network" [ref=e429] [cursor=pointer]:
+            - progressbar "network animation progress" [ref=e430]
+            - generic [ref=e431]:
+              - img [ref=e433]
+              - paragraph [ref=e438]: Network
+          - tab "0% Scale" [ref=e440] [cursor=pointer]:
+            - progressbar "scale animation progress" [ref=e441]
+            - generic [ref=e442]:
+              - img [ref=e444]
+              - paragraph [ref=e445]: Scale
+          - tab "0% Monitor" [ref=e447] [cursor=pointer]:
+            - progressbar "monitor animation progress" [ref=e448]
+            - generic [ref=e449]:
+              - img [ref=e451]
+              - paragraph [ref=e454]: Monitor
+          - tab "0% Evolve" [ref=e456] [cursor=pointer]:
+            - progressbar "evolve animation progress" [ref=e457]
+            - generic [ref=e458]:
+              - img [ref=e460]
+              - paragraph [ref=e465]: Evolve
+      - generic [ref=e469]:
+        - img "TripAdvisor" [ref=e471]
+        - img "Cognizant" [ref=e473]
+        - img "Mercado Libre" [ref=e475]
+        - img "G2X" [ref=e477]
+        - img "Reducto" [ref=e479]
+        - img "Automattic" [ref=e481]
+        - img "hud" [ref=e483]
+        - img "Bilt" [ref=e485]
+        - img "MGM Resorts" [ref=e487]
+        - img "Chatbase" [ref=e489]
+        - img "Switzerland Tourism" [ref=e491]
+        - img "Numeral" [ref=e493]

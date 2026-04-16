@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **bidding_stream** (C:\project\tenopa proposer\-agent-master\app\services\bidding_stream.py) -- 0 connections
+- **bidding_stream** (C:\project\tenopa proposer\app\services\bidding_stream.py) -- 0 connections
 
 ## Internal Relationships
 

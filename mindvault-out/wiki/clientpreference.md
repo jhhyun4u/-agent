@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **client_preference** (C:\project\tenopa proposer\-agent-master\app\services\pricing\client_preference.py) -- 0 connections
+- **client_preference** (C:\project\tenopa proposer\app\services\pricing\client_preference.py) -- 0 connections
 
 ## Internal Relationships
 

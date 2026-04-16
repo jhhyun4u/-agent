@@ -1,7 +1,0 @@
-{
-  "team": [
-    {"role": "PM", "grade": "기술사", "mm": 6.0, "requirements": ["PMP 자격", "ERP 구축 10년+"], "responsibilities": ["프로젝트 총괄"]},
-    {"role": "설계 리더", "grade": "선임", "mm": 5.0, "requirements": ["클라우드 아키텍처 경험"], "responsibilities": ["시스템 설계"]},
-    {"role": "개발자", "grade": "중급", "mm": 4.0, "requirements": ["Java/Spring 경험"], "responsibilities": ["모듈 개발"]}
-  ]
-}

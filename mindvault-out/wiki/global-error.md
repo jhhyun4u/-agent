@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **global-error** (C:\project\tenopa proposer\-agent-master\frontend\app\global-error.tsx) -- 0 connections
+- **global-error** (C:\project\tenopa proposer\frontend\app\global-error.tsx) -- 0 connections
 
 ## Internal Relationships
 

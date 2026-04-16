@@ -2,7 +2,7 @@
 Cohesion: 0.14 | Nodes: 18
 
 ## Key Nodes
-- **Artifact Versioning Integration Guide** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 8 connections
+- **Artifact Versioning Integration Guide** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 8 connections
   - -> contains -> [[overview]]
   - -> contains -> [[integration-pattern]]
   - -> contains -> [[node-integration-checklist]]
@@ -11,58 +11,58 @@ Cohesion: 0.14 | Nodes: 18
   - -> contains -> [[testing-pattern]]
   - -> contains -> [[important-notes]]
   - -> contains -> [[phase-roadmap]]
-- **python** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 6 connections
+- **python** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 6 connections
   - <- has_code_example <- [[step-1-add-import]]
   - <- has_code_example <- [[step-2-add-versioning-call-after-artifact-generation]]
   - <- has_code_example <- [[step-3-update-return-statement]]
   - <- has_code_example <- [[before]]
   - <- has_code_example <- [[after]]
   - <- has_code_example <- [[testing-pattern]]
-- **Integration Pattern** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 4 connections
+- **Integration Pattern** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 4 connections
   - -> contains -> [[step-1-add-import]]
   - -> contains -> [[step-2-add-versioning-call-after-artifact-generation]]
   - -> contains -> [[step-3-update-return-statement]]
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Example: strategy_generate Node** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 3 connections
+- **Example: strategy_generate Node** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 3 connections
   - -> contains -> [[before]]
   - -> contains -> [[after]]
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Nodes Requiring Versioning (Phase 1 Focus)** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 3 connections
+- **Nodes Requiring Versioning (Phase 1 Focus)** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 3 connections
   - -> contains -> [[already-exist-can-update-now]]
   - -> contains -> [[step-8a-nodes-create-with-versioning]]
   - <- contains <- [[node-integration-checklist]]
-- **After** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **After** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[example-strategygenerate-node]]
-- **Before** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Before** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[example-strategygenerate-node]]
-- **Node Integration Checklist** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Node Integration Checklist** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> contains -> [[nodes-requiring-versioning-phase-1-focus]]
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Step 1: Add Import** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Step 1: Add Import** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[integration-pattern]]
-- **Step 2: Add Versioning Call After Artifact Generation** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Step 2: Add Versioning Call After Artifact Generation** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[integration-pattern]]
-- **Step 3: Update Return Statement** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Step 3: Update Return Statement** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[integration-pattern]]
-- **Testing Pattern** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
+- **Testing Pattern** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 2 connections
   - -> has_code_example -> [[python]]
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Already Exist (Can Update Now)** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **Already Exist (Can Update Now)** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[nodes-requiring-versioning-phase-1-focus]]
-- **Important Notes** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **Important Notes** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Overview** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **Overview** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **Phase Roadmap** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **Phase Roadmap** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **State Key Mapping** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **State Key Mapping** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[artifact-versioning-integration-guide]]
-- **STEP 8A Nodes (Create With Versioning)** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
+- **STEP 8A Nodes (Create With Versioning)** (C:\project\tenopa proposer\app\graph\nodes\versioning_integration_guide.md) -- 1 connections
   - <- contains <- [[nodes-requiring-versioning-phase-1-focus]]
 
 ## Internal Relationships

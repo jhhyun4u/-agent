@@ -1,0 +1,455 @@
+# ParallelWorkEngine & review_node
+Cohesion: 0.03 | Nodes: 75
+
+## Key Nodes
+- **ParallelWorkEngine** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 21 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[executeparallelwork]]
+  - -> contains -> [[createagenttasks]]
+  - -> contains -> [[generatechecklist]]
+  - -> contains -> [[conductmockevaluations]]
+  - -> contains -> [[evaluatebyrole]]
+  - -> contains -> [[simulateevaluation]]
+  - -> contains -> [[calculateoverallprogress]]
+  - -> contains -> [[identifybottlenecks]]
+  - -> contains -> [[generaterecommendations]]
+  - -> contains -> [[loadtasktemplates]]
+  - -> contains -> [[loadchecklisttemplates]]
+  - -> contains -> [[loadevaluationcriteria]]
+  - -> contains -> [[adjusttasksforrfp]]
+  - -> contains -> [[adjustchecklistitem]]
+  - -> contains -> [[resolvetaskdependencies]]
+  - -> contains -> [[optimizetaskpriorities]]
+  - -> contains -> [[checkdependencyissues]]
+  - -> contains -> [[generateevaluationfeedback]]
+  - -> contains -> [[generateevaluationrecommendations]]
+  - <- contains <- [[parallelworkengine]]
+- **review_node** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 20 connections
+  - -> contains -> [[reviewnode]]
+  - -> contains -> [[handlesearchreview]]
+  - -> contains -> [[handlegngreview]]
+  - -> contains -> [[handlestrategyreview]]
+  - -> contains -> [[applyselectedalternative]]
+  - -> contains -> [[checkapprovalchain]]
+  - -> contains -> [[getrequiredroles]]
+  - -> contains -> [[extractbudget]]
+  - -> contains -> [[reviewsectionnode]]
+  - -> contains -> [[buildplanreviewcontext]]
+  - -> contains -> [[handleplanreview]]
+  - -> contains -> [[autoregistertocontentlibrary]]
+  - -> contains -> [[handlebidplanreview]]
+  - -> contains -> [[firebidconfirmation]]
+  - -> contains -> [[firestreaminitialization]]
+  - -> contains -> [[getartifact]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftypes]]
+  - -> imports -> [[unresolvedrefstate]]
+- **review_node** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 13 connections
+  - -> calls -> [[unresolvedrefgetartifact]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefupdate]]
+  - -> calls -> [[unresolvedrefbuildplanreviewcontext]]
+  - -> calls -> [[unresolvedrefinterrupt]]
+  - -> calls -> [[unresolvedrefhandlesearchreview]]
+  - -> calls -> [[unresolvedrefhandlegngreview]]
+  - -> calls -> [[unresolvedrefhandlestrategyreview]]
+  - -> calls -> [[unresolvedrefhandlebidplanreview]]
+  - -> calls -> [[unresolvedrefhandleplanreview]]
+  - -> calls -> [[unresolvedrefapprovalstatus]]
+  - -> calls -> [[unresolvedrefcheckapprovalchain]]
+  - <- contains <- [[reviewnode]]
+- **_check_approval_chain** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 10 connections
+  - -> calls -> [[unresolvedrefextractbudget]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefapprovalstatus]]
+  - -> calls -> [[unresolvedreflist]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefapprovalchainentry]]
+  - -> calls -> [[unresolvedrefgetrequiredroles]]
+  - -> calls -> [[unresolvedrefissubset]]
+  - -> calls -> [[unresolvedrefnext]]
+  - <- contains <- [[reviewnode]]
+- **_create_agent_tasks** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 9 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefadjusttasksforrfp]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefagenttask]]
+  - -> calls -> [[unresolvedrefagentrole]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefresolvetaskdependencies]]
+  - -> calls -> [[unresolvedrefoptimizetaskpriorities]]
+  - <- contains <- [[parallelworkengine]]
+- **_generate_checklist** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefchecklistcategory]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefadjustchecklistitem]]
+  - -> calls -> [[unresolvedrefchecklistitem]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefsort]]
+  - <- contains <- [[parallelworkengine]]
+- **execute_parallel_work** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefcreateagenttasks]]
+  - -> calls -> [[unresolvedrefgeneratechecklist]]
+  - -> calls -> [[unresolvedrefconductmockevaluations]]
+  - -> calls -> [[unresolvedrefcalculateoverallprogress]]
+  - -> calls -> [[unresolvedrefidentifybottlenecks]]
+  - -> calls -> [[unresolvedrefgeneraterecommendations]]
+  - -> calls -> [[unresolvedrefparallelworkresult]]
+  - <- contains <- [[parallelworkengine]]
+- **_evaluate_by_role** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefsimulateevaluation]]
+  - -> calls -> [[unresolvedrefmockevaluation]]
+  - -> calls -> [[unresolvedrefreplace]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[parallelworkengine]]
+- **_simulate_evaluation** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefsum]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefmin]]
+  - -> calls -> [[unresolvedrefmax]]
+  - -> calls -> [[unresolvedrefgenerateevaluationfeedback]]
+  - -> calls -> [[unresolvedrefgenerateevaluationrecommendations]]
+  - <- contains <- [[parallelworkengine]]
+- **__unresolved__::ref::approvalstatus** () -- 6 connections
+  - <- calls <- [[reviewnode]]
+  - <- calls <- [[handlegngreview]]
+  - <- calls <- [[handlestrategyreview]]
+  - <- calls <- [[checkapprovalchain]]
+  - <- calls <- [[handleplanreview]]
+  - <- calls <- [[handlebidplanreview]]
+- **__unresolved__::ref::next** () -- 6 connections
+  - <- calls <- [[checkapprovalchain]]
+  - <- calls <- [[getapprovalstatus]]
+  - <- calls <- [[injectcharstyles]]
+  - <- calls <- [[applyallmigrations]]
+  - <- calls <- [[checkdependencyissues]]
+  - <- calls <- [[determinestrategypriorities]]
+- **__unresolved__::ref::copy** () -- 5 connections
+  - <- imports <- [[hwpxbuilder]]
+  - <- calls <- [[listsessions]]
+  - <- calls <- [[adjusttasksforrfp]]
+  - <- calls <- [[adjustchecklistitem]]
+  - <- calls <- [[resolvetaskdependencies]]
+- **_handle_gng_review** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefapprovalstatus]]
+  - -> calls -> [[unresolvedrefcheckapprovalchain]]
+  - -> calls -> [[unresolvedreffirestreaminitialization]]
+  - <- contains <- [[reviewnode]]
+- **_adjust_tasks_for_rfp** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefcopy]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[parallelworkengine]]
+- **_extract_basic_info** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefextractpattern]]
+  - -> calls -> [[unresolvedrefextractbudget]]
+  - -> calls -> [[unresolvedrefextractduration]]
+  - -> calls -> [[unresolvedrefclassifyprojectcategory]]
+  - <- contains <- [[rfpreviewengine]]
+- **_handle_strategy_review** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 4 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefapprovalstatus]]
+  - -> calls -> [[unresolvedrefapplyselectedalternative]]
+  - <- contains <- [[reviewnode]]
+- **list_sessions** (C:\project\tenopa proposer\app\services\session_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefcopy]]
+  - <- contains <- [[proposalsessionmanager]]
+- **__init__** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefloadtasktemplates]]
+  - -> calls -> [[unresolvedrefloadchecklisttemplates]]
+  - -> calls -> [[unresolvedrefloadevaluationcriteria]]
+  - <- contains <- [[parallelworkengine]]
+- **_adjust_checklist_item** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefcopy]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefmin]]
+  - <- contains <- [[parallelworkengine]]
+- **_check_dependency_issues** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefnext]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - <- contains <- [[parallelworkengine]]
+- **_identify_bottlenecks** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefcheckdependencyissues]]
+  - <- contains <- [[parallelworkengine]]
+- **__unresolved__::ref::_check_approval_chain** () -- 3 connections
+  - <- calls <- [[reviewnode]]
+  - <- calls <- [[handlegngreview]]
+  - <- calls <- [[handlebidplanreview]]
+- **__unresolved__::ref::interrupt** () -- 3 connections
+  - <- calls <- [[reviewnode]]
+  - <- calls <- [[reviewsectionnode]]
+  - <- calls <- [[rfpfetch]]
+- **_conduct_mock_evaluations** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefevaluatebyrole]]
+  - -> calls -> [[unresolvedrefextend]]
+  - <- contains <- [[parallelworkengine]]
+- **_generate_recommendations** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[parallelworkengine]]
+- **_optimize_task_priorities** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefmin]]
+  - <- contains <- [[parallelworkengine]]
+- **__unresolved__::ref::_extract_budget** () -- 2 connections
+  - <- calls <- [[checkapprovalchain]]
+  - <- calls <- [[extractbasicinfo]]
+- **__unresolved__::ref::issubset** () -- 2 connections
+  - <- calls <- [[checkapprovalchain]]
+  - <- calls <- [[scorebid]]
+- **_get_artifact** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[reviewnode]]
+- **_handle_search_review** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[reviewnode]]
+- **_generate_evaluation_recommendations** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[parallelworkengine]]
+- **__unresolved__::ref::_adjust_checklist_item** () -- 1 connections
+  - <- calls <- [[generatechecklist]]
+- **__unresolved__::ref::_adjust_tasks_for_rfp** () -- 1 connections
+  - <- calls <- [[createagenttasks]]
+- **__unresolved__::ref::_apply_selected_alternative** () -- 1 connections
+  - <- calls <- [[handlestrategyreview]]
+- **__unresolved__::ref::_build_plan_review_context** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_calculate_overall_progress** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_check_dependency_issues** () -- 1 connections
+  - <- calls <- [[identifybottlenecks]]
+- **__unresolved__::ref::_classify_project_category** () -- 1 connections
+  - <- calls <- [[extractbasicinfo]]
+- **__unresolved__::ref::_conduct_mock_evaluations** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_create_agent_tasks** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_evaluate_by_role** () -- 1 connections
+  - <- calls <- [[conductmockevaluations]]
+- **__unresolved__::ref::_extract_duration** () -- 1 connections
+  - <- calls <- [[extractbasicinfo]]
+- **__unresolved__::ref::_extract_pattern** () -- 1 connections
+  - <- calls <- [[extractbasicinfo]]
+- **__unresolved__::ref::_fire_stream_initialization** () -- 1 connections
+  - <- calls <- [[handlegngreview]]
+- **__unresolved__::ref::_generate_checklist** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_generate_evaluation_feedback** () -- 1 connections
+  - <- calls <- [[simulateevaluation]]
+- **__unresolved__::ref::_generate_evaluation_recommendations** () -- 1 connections
+  - <- calls <- [[simulateevaluation]]
+- **__unresolved__::ref::_generate_recommendations** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_get_artifact** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_get_required_roles** () -- 1 connections
+  - <- calls <- [[checkapprovalchain]]
+- **__unresolved__::ref::_handle_bid_plan_review** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_handle_gng_review** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_handle_plan_review** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_handle_search_review** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_handle_strategy_review** () -- 1 connections
+  - <- calls <- [[reviewnode]]
+- **__unresolved__::ref::_identify_bottlenecks** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **__unresolved__::ref::_load_checklist_templates** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_load_evaluation_criteria** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_load_task_templates** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_optimize_task_priorities** () -- 1 connections
+  - <- calls <- [[createagenttasks]]
+- **__unresolved__::ref::_resolve_task_dependencies** () -- 1 connections
+  - <- calls <- [[createagenttasks]]
+- **__unresolved__::ref::_simulate_evaluation** () -- 1 connections
+  - <- calls <- [[evaluatebyrole]]
+- **__unresolved__::ref::agentrole** () -- 1 connections
+  - <- calls <- [[createagenttasks]]
+- **__unresolved__::ref::agenttask** () -- 1 connections
+  - <- calls <- [[createagenttasks]]
+- **__unresolved__::ref::approvalchainentry** () -- 1 connections
+  - <- calls <- [[checkapprovalchain]]
+- **__unresolved__::ref::checklistcategory** () -- 1 connections
+  - <- calls <- [[generatechecklist]]
+- **__unresolved__::ref::checklistitem** () -- 1 connections
+  - <- calls <- [[generatechecklist]]
+- **__unresolved__::ref::mockevaluation** () -- 1 connections
+  - <- calls <- [[evaluatebyrole]]
+- **__unresolved__::ref::parallelworkresult** () -- 1 connections
+  - <- calls <- [[executeparallelwork]]
+- **_apply_selected_alternative** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 1 connections
+  - <- contains <- [[reviewnode]]
+- **_get_required_roles** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 1 connections
+  - <- contains <- [[reviewnode]]
+- **_generate_evaluation_feedback** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 1 connections
+  - <- contains <- [[parallelworkengine]]
+- **_load_checklist_templates** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 1 connections
+  - <- contains <- [[parallelworkengine]]
+- **_load_evaluation_criteria** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 1 connections
+  - <- contains <- [[parallelworkengine]]
+- **_load_task_templates** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 1 connections
+  - <- contains <- [[parallelworkengine]]
+
+## Internal Relationships
+- _check_approval_chain -> calls -> __unresolved__::ref::_extract_budget [EXTRACTED]
+- _check_approval_chain -> calls -> __unresolved__::ref::approvalstatus [EXTRACTED]
+- _check_approval_chain -> calls -> __unresolved__::ref::approvalchainentry [EXTRACTED]
+- _check_approval_chain -> calls -> __unresolved__::ref::_get_required_roles [EXTRACTED]
+- _check_approval_chain -> calls -> __unresolved__::ref::issubset [EXTRACTED]
+- _check_approval_chain -> calls -> __unresolved__::ref::next [EXTRACTED]
+- _handle_gng_review -> calls -> __unresolved__::ref::approvalstatus [EXTRACTED]
+- _handle_gng_review -> calls -> __unresolved__::ref::_check_approval_chain [EXTRACTED]
+- _handle_gng_review -> calls -> __unresolved__::ref::_fire_stream_initialization [EXTRACTED]
+- _handle_strategy_review -> calls -> __unresolved__::ref::approvalstatus [EXTRACTED]
+- _handle_strategy_review -> calls -> __unresolved__::ref::_apply_selected_alternative [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_get_artifact [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_build_plan_review_context [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::interrupt [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_handle_search_review [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_handle_gng_review [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_handle_strategy_review [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_handle_bid_plan_review [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_handle_plan_review [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::approvalstatus [EXTRACTED]
+- review_node -> calls -> __unresolved__::ref::_check_approval_chain [EXTRACTED]
+- review_node -> contains -> review_node [EXTRACTED]
+- review_node -> contains -> _handle_search_review [EXTRACTED]
+- review_node -> contains -> _handle_gng_review [EXTRACTED]
+- review_node -> contains -> _handle_strategy_review [EXTRACTED]
+- review_node -> contains -> _apply_selected_alternative [EXTRACTED]
+- review_node -> contains -> _check_approval_chain [EXTRACTED]
+- review_node -> contains -> _get_required_roles [EXTRACTED]
+- review_node -> contains -> _get_artifact [EXTRACTED]
+- list_sessions -> calls -> __unresolved__::ref::copy [EXTRACTED]
+- ParallelWorkEngine -> contains -> __init__ [EXTRACTED]
+- ParallelWorkEngine -> contains -> execute_parallel_work [EXTRACTED]
+- ParallelWorkEngine -> contains -> _create_agent_tasks [EXTRACTED]
+- ParallelWorkEngine -> contains -> _generate_checklist [EXTRACTED]
+- ParallelWorkEngine -> contains -> _conduct_mock_evaluations [EXTRACTED]
+- ParallelWorkEngine -> contains -> _evaluate_by_role [EXTRACTED]
+- ParallelWorkEngine -> contains -> _simulate_evaluation [EXTRACTED]
+- ParallelWorkEngine -> contains -> _identify_bottlenecks [EXTRACTED]
+- ParallelWorkEngine -> contains -> _generate_recommendations [EXTRACTED]
+- ParallelWorkEngine -> contains -> _load_task_templates [EXTRACTED]
+- ParallelWorkEngine -> contains -> _load_checklist_templates [EXTRACTED]
+- ParallelWorkEngine -> contains -> _load_evaluation_criteria [EXTRACTED]
+- ParallelWorkEngine -> contains -> _adjust_tasks_for_rfp [EXTRACTED]
+- ParallelWorkEngine -> contains -> _adjust_checklist_item [EXTRACTED]
+- ParallelWorkEngine -> contains -> _optimize_task_priorities [EXTRACTED]
+- ParallelWorkEngine -> contains -> _check_dependency_issues [EXTRACTED]
+- ParallelWorkEngine -> contains -> _generate_evaluation_feedback [EXTRACTED]
+- ParallelWorkEngine -> contains -> _generate_evaluation_recommendations [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_load_task_templates [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_load_checklist_templates [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_load_evaluation_criteria [EXTRACTED]
+- _adjust_checklist_item -> calls -> __unresolved__::ref::copy [EXTRACTED]
+- _adjust_tasks_for_rfp -> calls -> __unresolved__::ref::copy [EXTRACTED]
+- _check_dependency_issues -> calls -> __unresolved__::ref::next [EXTRACTED]
+- _conduct_mock_evaluations -> calls -> __unresolved__::ref::_evaluate_by_role [EXTRACTED]
+- _create_agent_tasks -> calls -> __unresolved__::ref::_adjust_tasks_for_rfp [EXTRACTED]
+- _create_agent_tasks -> calls -> __unresolved__::ref::agenttask [EXTRACTED]
+- _create_agent_tasks -> calls -> __unresolved__::ref::agentrole [EXTRACTED]
+- _create_agent_tasks -> calls -> __unresolved__::ref::_resolve_task_dependencies [EXTRACTED]
+- _create_agent_tasks -> calls -> __unresolved__::ref::_optimize_task_priorities [EXTRACTED]
+- _evaluate_by_role -> calls -> __unresolved__::ref::_simulate_evaluation [EXTRACTED]
+- _evaluate_by_role -> calls -> __unresolved__::ref::mockevaluation [EXTRACTED]
+- _generate_checklist -> calls -> __unresolved__::ref::checklistcategory [EXTRACTED]
+- _generate_checklist -> calls -> __unresolved__::ref::_adjust_checklist_item [EXTRACTED]
+- _generate_checklist -> calls -> __unresolved__::ref::checklistitem [EXTRACTED]
+- _identify_bottlenecks -> calls -> __unresolved__::ref::_check_dependency_issues [EXTRACTED]
+- _simulate_evaluation -> calls -> __unresolved__::ref::_generate_evaluation_feedback [EXTRACTED]
+- _simulate_evaluation -> calls -> __unresolved__::ref::_generate_evaluation_recommendations [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_create_agent_tasks [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_generate_checklist [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_conduct_mock_evaluations [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_calculate_overall_progress [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_identify_bottlenecks [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::_generate_recommendations [EXTRACTED]
+- execute_parallel_work -> calls -> __unresolved__::ref::parallelworkresult [EXTRACTED]
+- _extract_basic_info -> calls -> __unresolved__::ref::_extract_pattern [EXTRACTED]
+- _extract_basic_info -> calls -> __unresolved__::ref::_extract_budget [EXTRACTED]
+- _extract_basic_info -> calls -> __unresolved__::ref::_extract_duration [EXTRACTED]
+- _extract_basic_info -> calls -> __unresolved__::ref::_classify_project_category [EXTRACTED]
+
+## Cross-Community Connections
+- _check_approval_chain -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_approval_chain -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_approval_chain -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_artifact -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _handle_gng_review -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _handle_search_review -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _handle_strategy_review -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _extract_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> review_section_node (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _build_plan_review_context (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _handle_plan_review (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _auto_register_to_content_library (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _handle_bid_plan_review (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> contains -> _fire_bid_confirmation (-> [[dailyg2bmonitor-healthcheckrunner]])
+- review_node -> contains -> _fire_stream_initialization (-> [[unresolvedrefget-unresolvedrefexecute]])
+- review_node -> imports -> __unresolved__::ref::asyncio (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- review_node -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- review_node -> imports -> __unresolved__::ref::types (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- review_node -> imports -> __unresolved__::ref::state (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- list_sessions -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- list_sessions -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ParallelWorkEngine -> contains -> _calculate_overall_progress (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ParallelWorkEngine -> contains -> _resolve_task_dependencies (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _adjust_checklist_item -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _adjust_checklist_item -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _adjust_tasks_for_rfp -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _adjust_tasks_for_rfp -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _adjust_tasks_for_rfp -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_dependency_issues -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_dependency_issues -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _conduct_mock_evaluations -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _create_agent_tasks -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _create_agent_tasks -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _create_agent_tasks -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_by_role -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_by_role -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_by_role -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_by_role -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_checklist -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_checklist -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_checklist -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_checklist -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _generate_evaluation_recommendations -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_recommendations -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_recommendations -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _identify_bottlenecks -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _identify_bottlenecks -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _optimize_task_priorities -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _optimize_task_priorities -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _simulate_evaluation -> calls -> __unresolved__::ref::sum (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _simulate_evaluation -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _simulate_evaluation -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _simulate_evaluation -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+
+## Context
+이 커뮤니티는 ParallelWorkEngine, review_node, review_node를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 parallel_work_engine.py, review_node.py, rfp_review_engine.py, session_manager.py이다.
+
+### Key Facts
+- class ParallelWorkEngine: """병렬 작업 엔진"""
+- def review_node(step_name: str): """모든 단계에서 공통 리뷰 게이트. 단계별 관점 차별화 + 빠른 승인 지원."""
+- 빠른 승인 (U-2) if human_input.get("quick_approve") or human_input.get("approved"): approval = ApprovalStatus( status="approved", approved_by=human_input.get("approved_by", "user"), approved_at=human_input.get("approved_at", ""), ) # 결재선 단계 확인 (Go/No-Go, 제안서 최종만 해당) if step_name in ("go_no_go",…
+- 1. 에이전트 팀 구성 및 작업 할당 tasks = await self._create_agent_tasks(strategy, rfp_analysis)
+- 2. 체크리스트 생성 checklist = await self._generate_checklist(strategy, rfp_analysis, company_profile)

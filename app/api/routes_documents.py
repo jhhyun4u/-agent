@@ -28,7 +28,7 @@ from app.models.document_schemas import (
     ChunkListResponse,
     DocumentProcessResponse,
 )
-from app.services.document_ingestion import process_document, process_document_bounded
+from app.services.document_ingestion import process_document_bounded
 from app.utils.supabase_client import get_async_client
 
 # 지원하는 파일 형식

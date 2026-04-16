@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **layout** (C:\project\tenopa proposer\-agent-master\frontend\app\editor\layout.tsx) -- 0 connections
+- **layout** (C:\project\tenopa proposer\frontend\app\editor\layout.tsx) -- 0 connections
 
 ## Internal Relationships
 

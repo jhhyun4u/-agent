@@ -2,20 +2,20 @@
 Cohesion: 0.50 | Nodes: 5
 
 ## Key Nodes
-- **그림자 체계 (Shadow System)** (C:\project\tenopa proposer\-agent-master\frontend\SPACING_AND_SHADOWS.md) -- 3 connections
+- **그림자 체계 (Shadow System)** (C:\project\tenopa proposer\frontend\SPACING_AND_SHADOWS.md) -- 3 connections
   - -> has_code_example -> [[tsx]]
   - -> has_code_example -> [[css]]
   - <- contains <- [[spacing-shadow]]
-- **tsx** (C:\project\tenopa proposer\-agent-master\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
+- **tsx** (C:\project\tenopa proposer\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
   - <- has_code_example <- [[spacing-system]]
   - <- has_code_example <- [[shadow-system]]
-- **간격(Spacing) 및 그림자(Shadow) 시스템** (C:\project\tenopa proposer\-agent-master\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
+- **간격(Spacing) 및 그림자(Shadow) 시스템** (C:\project\tenopa proposer\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
   - -> contains -> [[spacing-system]]
   - -> contains -> [[shadow-system]]
-- **간격 체계 (Spacing System)** (C:\project\tenopa proposer\-agent-master\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
+- **간격 체계 (Spacing System)** (C:\project\tenopa proposer\frontend\SPACING_AND_SHADOWS.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[spacing-shadow]]
-- **css** (C:\project\tenopa proposer\-agent-master\frontend\SPACING_AND_SHADOWS.md) -- 1 connections
+- **css** (C:\project\tenopa proposer\frontend\SPACING_AND_SHADOWS.md) -- 1 connections
   - <- has_code_example <- [[shadow-system]]
 
 ## Internal Relationships

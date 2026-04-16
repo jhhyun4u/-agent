@@ -2,7 +2,7 @@
 Cohesion: 0.28 | Nodes: 9
 
 ## Key Nodes
-- **용역제안 Coworker** (C:\project\tenopa proposer\-agent-master\README.md) -- 8 connections
+- **용역제안 Coworker** (C:\project\tenopa proposer\README.md) -- 8 connections
   - -> has_code_example -> [[bash]]
   - -> contains -> [[docker-compose]]
   - -> contains -> [[1-supabase]]
@@ -11,25 +11,25 @@ Cohesion: 0.28 | Nodes: 9
   - -> contains -> [[4-cicd]]
   - -> contains -> [[5-db]]
   - -> contains -> [[api]]
-- **bash** (C:\project\tenopa proposer\-agent-master\README.md) -- 3 connections
+- **bash** (C:\project\tenopa proposer\README.md) -- 3 connections
   - <- has_code_example <- [[coworker]]
   - <- has_code_example <- [[docker-compose]]
   - <- has_code_example <- [[5-db]]
-- **5. DB 마이그레이션** (C:\project\tenopa proposer\-agent-master\README.md) -- 2 connections
+- **5. DB 마이그레이션** (C:\project\tenopa proposer\README.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[coworker]]
-- **Docker Compose (통합 환경)** (C:\project\tenopa proposer\-agent-master\README.md) -- 2 connections
+- **Docker Compose (통합 환경)** (C:\project\tenopa proposer\README.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[coworker]]
-- **1. Supabase 설정** (C:\project\tenopa proposer\-agent-master\README.md) -- 1 connections
+- **1. Supabase 설정** (C:\project\tenopa proposer\README.md) -- 1 connections
   - <- contains <- [[coworker]]
-- **2. 백엔드 배포 (Railway)** (C:\project\tenopa proposer\-agent-master\README.md) -- 1 connections
+- **2. 백엔드 배포 (Railway)** (C:\project\tenopa proposer\README.md) -- 1 connections
   - <- contains <- [[coworker]]
-- **3. 프론트엔드 배포 (Vercel)** (C:\project\tenopa proposer\-agent-master\README.md) -- 1 connections
+- **3. 프론트엔드 배포 (Vercel)** (C:\project\tenopa proposer\README.md) -- 1 connections
   - <- contains <- [[coworker]]
-- **4. CI/CD** (C:\project\tenopa proposer\-agent-master\README.md) -- 1 connections
+- **4. CI/CD** (C:\project\tenopa proposer\README.md) -- 1 connections
   - <- contains <- [[coworker]]
-- **API 엔드포인트** (C:\project\tenopa proposer\-agent-master\README.md) -- 1 connections
+- **API 엔드포인트** (C:\project\tenopa proposer\README.md) -- 1 connections
   - <- contains <- [[coworker]]
 
 ## Internal Relationships

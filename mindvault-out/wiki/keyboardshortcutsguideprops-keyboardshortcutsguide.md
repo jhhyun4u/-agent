@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **KeyboardShortcutsGuideProps** (C:\project\tenopa proposer\-agent-master\frontend\components\KeyboardShortcutsGuide.tsx) -- 1 connections
+- **KeyboardShortcutsGuideProps** (C:\project\tenopa proposer\frontend\components\KeyboardShortcutsGuide.tsx) -- 1 connections
   - <- contains <- [[keyboardshortcutsguide]]
-- **KeyboardShortcutsGuide** (C:\project\tenopa proposer\-agent-master\frontend\components\KeyboardShortcutsGuide.tsx) -- 1 connections
+- **KeyboardShortcutsGuide** (C:\project\tenopa proposer\frontend\components\KeyboardShortcutsGuide.tsx) -- 1 connections
   - -> contains -> [[keyboardshortcutsguideprops]]
 
 ## Internal Relationships

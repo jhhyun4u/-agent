@@ -2,7 +2,7 @@
 Cohesion: 0.00 | Nodes: 932
 
 ## Key Nodes
-- **__unresolved__::ref::_react_** () -- 107 connections
+- **__unresolved__::ref::_react_** () -- 121 connections
   - <- imports <- [[page]]
   - <- imports <- [[page]]
   - <- imports <- [[page]]
@@ -62,6 +62,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[guidedtour]]
   - <- imports <- [[hitlreviewmodal]]
   - <- imports <- [[kbusagehistory]]
+  - <- imports <- [[knowledgehealthdashboard]]
+  - <- imports <- [[knowledgerecommendations]]
+  - <- imports <- [[knowledgesearchbar]]
+  - <- imports <- [[masterprojectschat]]
   - <- imports <- [[notificationbell]]
   - <- imports <- [[phasegraph]]
   - <- imports <- [[positioningimpactmodal]]
@@ -78,6 +82,12 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[streamdashboard]]
   - <- imports <- [[submissiondocspanel]]
   - <- imports <- [[themetoggle]]
+  - <- imports <- [[vaultchat]]
+  - <- imports <- [[vaultlayout]]
+  - <- imports <- [[vaultresponsecard]]
+  - <- imports <- [[vaultsearchbar]]
+  - <- imports <- [[vaultsidebar]]
+  - <- imports <- [[vaultstepselector]]
   - <- imports <- [[versioncomparemodal]]
   - <- imports <- [[versionselectionmodal]]
   - <- imports <- [[workflowlogpanel]]
@@ -105,12 +115,16 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[formfield]]
   - <- imports <- [[modal]]
   - <- imports <- [[toast]]
+  - <- imports <- [[feedbackform]]
+  - <- imports <- [[stepspecificviews]]
+  - <- imports <- [[usevaultstep]]
   - <- imports <- [[usephasestatus]]
   - <- imports <- [[useproposals]]
   - <- imports <- [[usestep8]]
   - <- imports <- [[usestep8data]]
+  - <- imports <- [[usevaultchatstream]]
   - <- imports <- [[useworkflowstream]]
-- **__unresolved__::ref::___lib_api_** () -- 81 connections
+- **__unresolved__::ref::___lib_api_** () -- 87 connections
   - <- imports <- [[page]]
   - <- imports <- [[page]]
   - <- imports <- [[page]]
@@ -159,6 +173,9 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[gonogopanel]]
   - <- imports <- [[hitlreviewmodal]]
   - <- imports <- [[kbusagehistory]]
+  - <- imports <- [[knowledgehealthdashboard]]
+  - <- imports <- [[knowledgerecommendations]]
+  - <- imports <- [[knowledgesearchbar]]
   - <- imports <- [[notificationbell]]
   - <- imports <- [[phasegraph]]
   - <- imports <- [[positioningimpactmodal]]
@@ -174,6 +191,8 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[streamdashboard]]
   - <- imports <- [[streamdependencygraph]]
   - <- imports <- [[submissiondocspanel]]
+  - <- imports <- [[vaultchat]]
+  - <- imports <- [[vaultlayout]]
   - <- imports <- [[versioncomparemodal]]
   - <- imports <- [[workflowpanel]]
   - <- imports <- [[workflowresumebanner]]
@@ -192,7 +211,8 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[usephasestatus]]
   - <- imports <- [[useproposals]]
   - <- imports <- [[usestep8data]]
-- **ProposalsContent** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\page.tsx) -- 81 connections
+  - <- imports <- [[usevaultchatstream]]
+- **ProposalsContent** (C:\project\tenopa proposer\frontend\app\(app)\proposals\page.tsx) -- 80 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
@@ -230,7 +250,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefcreatefrombid]]
   - -> calls -> [[unresolvedrefpush]]
   - -> calls -> [[unresolvedrefrecordbiddecision]]
-  - -> calls -> [[unresolvedreffetchdecidedbids]]
+  - -> calls -> [[unresolvedrefloaddecidedbids]]
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedrefcatch]]
   - -> calls -> [[unresolvedrefsetselectedproposal]]
@@ -247,7 +267,6 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefsetrfpuploadtitle]]
   - -> calls -> [[unresolvedrefsetrfpclientname]]
   - -> calls -> [[unresolvedrefresetinline]]
-  - -> calls -> [[unresolvedrefloaddecidedbids]]
   - -> calls -> [[unresolvedrefsetscope]]
   - -> calls -> [[unresolvedrefopeninline]]
   - -> calls -> [[unresolvedrefsetsearchinput]]
@@ -274,7 +293,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedref5textxsborderborder262626roundedlgtext8c8c8cdisabledopacity40hoverbg1c1c1chovertextedededtransitioncolorsbuttondivdiv]]
   - -> calls -> [[unresolvedrefmin]]
   - <- contains <- [[page]]
-- **ScoredBidsView** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 60 connections
+- **ScoredBidsView** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 60 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusesearchparams]]
   - -> calls -> [[unresolvedrefusestate]]
@@ -335,6 +354,62 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefextractdomain]]
   - -> calls -> [[unresolvedrefguessteam]]
   - <- contains <- [[page]]
+- **__unresolved__::ref::json** () -- 55 connections
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesworkflow]]
+  - <- imports <- [[pptnodes]]
+  - <- imports <- [[assetextractor]]
+  - <- imports <- [[claudeclient]]
+  - <- calls <- [[getgraphtoken]]
+  - <- calls <- [[callapi]]
+  - <- imports <- [[g2bservice]]
+  - <- imports <- [[healthchecker]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[masterprojectschatservice]]
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[presentationgenerator]]
+  - <- imports <- [[projectarchiveservice]]
+  - <- imports <- [[promptsimulator]]
+  - <- imports <- [[submissiondocsservice]]
+  - <- imports <- [[templateservice]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultqueryrouter]]
+  - <- imports <- [[versionmanager]]
+  - <- imports <- [[cleanup]]
+  - <- imports <- [[preprocessor]]
+  - <- imports <- [[recommender]]
+  - <- imports <- [[handoff]]
+  - <- imports <- [[stream]]
+  - <- imports <- [[claudeutils]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[logincontent]]
+  - <- calls <- [[request]]
+  - <- calls <- [[authrequest]]
+  - <- imports <- [[bidscoring]]
+  - <- imports <- [[dailybidscan]]
+  - <- calls <- [[createproposal]]
+  - <- calls <- [[startworkflow]]
+  - <- calls <- [[scenario1nogo]]
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+  - <- imports <- [[e2einterrupttest]]
+  - <- calls <- [[main]]
+  - <- imports <- [[hwpxtopptx]]
+  - <- imports <- [[importprojecthistory]]
+  - <- imports <- [[importteamstructure]]
+  - <- calls <- [[initbuckets]]
+  - <- calls <- [[run]]
+  - <- calls <- [[syncstart]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[provisionusers]]
+  - <- imports <- [[teamrecommender]]
+  - <- imports <- [[testpresentationsample]]
+  - <- imports <- [[finalreviewengine]]
+  - <- imports <- [[parallelworkengine]]
 - **__unresolved__::ref::map** () -- 54 connections
   - <- calls <- [[memberrow]]
   - <- calls <- [[bulkresultview]]
@@ -374,6 +449,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[simplemarkdown]]
   - <- calls <- [[renderinline]]
   - <- calls <- [[evaluatorcard]]
+  - <- calls <- [[projectsourcecard]]
   - <- calls <- [[row]]
   - <- calls <- [[sub]]
   - <- calls <- [[mobiletabbar]]
@@ -389,8 +465,61 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[parallelprogress]]
   - <- calls <- [[toastcontainer]]
   - <- calls <- [[request]]
-  - <- calls <- [[run]]
-- **MonitorBidsView** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 46 connections
+- **__unresolved__::ref::split** () -- 53 connections
+  - <- calls <- [[periodtodaterange]]
+  - <- calls <- [[enrichmonitordata]]
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[mockevaluation]]
+  - <- calls <- [[parsesectionsfromresponse]]
+  - <- calls <- [[resolveorgbyemail]]
+  - <- calls <- [[parsejsonresponse]]
+  - <- calls <- [[chunkbyheadings]]
+  - <- calls <- [[chunkslides]]
+  - <- calls <- [[chunkarticles]]
+  - <- calls <- [[builddocxlegacy]]
+  - <- calls <- [[rendermarkdowncontent]]
+  - <- calls <- [[callapi]]
+  - <- calls <- [[addbody]]
+  - <- calls <- [[generatesectionxml]]
+  - <- calls <- [[getfaileddocuments]]
+  - <- calls <- [[renderbody]]
+  - <- calls <- [[buildpptxlegacy]]
+  - <- calls <- [[checkprompt]]
+  - <- calls <- [[promptidtolabel]]
+  - <- calls <- [[fallbackfrompython]]
+  - <- calls <- [[splitsentences]]
+  - <- calls <- [[parsexlsxall]]
+  - <- calls <- [[extractandclassifyfilename]]
+  - <- calls <- [[buildsearchkeywords]]
+  - <- calls <- [[collectmetrics]]
+  - <- calls <- [[extractjsonfromresponse]]
+  - <- calls <- [[matchesscoredsearch]]
+  - <- calls <- [[matchesmonitorsearch]]
+  - <- calls <- [[attachmentlink]]
+  - <- calls <- [[fileicon]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[companytab]]
+  - <- calls <- [[computesimplediff]]
+  - <- calls <- [[simplemarkdown]]
+  - <- calls <- [[renderinline]]
+  - <- calls <- [[highlightjson]]
+  - <- calls <- [[linediff]]
+  - <- calls <- [[getdbconnection]]
+  - <- calls <- [[getmigrationfiles]]
+  - <- calls <- [[applymigration]]
+  - <- calls <- [[diagnose]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[callclaude]]
+  - <- calls <- [[parseexcel]]
+  - <- calls <- [[importfromexcel]]
+  - <- calls <- [[rowtoprojectdata]]
+  - <- calls <- [[main]]
+  - <- calls <- [[insertproject]]
+  - <- calls <- [[insertproject]]
+  - <- calls <- [[scorespecialization]]
+  - <- calls <- [[scoretrackrecord]]
+  - <- calls <- [[calculatecategorysimilarity]]
+- **MonitorBidsView** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 46 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusesearchparams]]
   - -> calls -> [[unresolvedrefusestate]]
@@ -437,54 +566,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[page]]
-- **run** (C:\project\tenopa proposer\-agent-master\tests\e2e_auth_integration.mjs) -- 46 connections
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewcontext]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefjson]]
-  - -> calls -> [[unresolvedrefawait]]
-  - -> calls -> [[unresolvedreffetch]]
-  - -> calls -> [[unresolvedrefok]]
-  - -> calls -> [[unresolvedreffail]]
-  - -> calls -> [[unresolvedrefsafegoto]]
-  - -> calls -> [[unresolvedreffill]]
-  - -> calls -> [[unresolvedrefclick]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefincludes]]
-  - -> calls -> [[unresolvedrefurl]]
-  - -> calls -> [[unresolvedrefevaluate]]
-  - -> calls -> [[unresolvedrefimport]]
-  - -> calls -> [[unresolvedrefqueryselector]]
-  - -> calls -> [[unresolvedrefkeys]]
-  - -> calls -> [[unresolvedrefparse]]
-  - -> calls -> [[unresolvedrefgetitem]]
-  - -> calls -> [[unresolvedrefkey]]
-  - -> calls -> [[unresolvedrefvalues]]
-  - -> calls -> [[unresolvedrefwalk]]
-  - -> calls -> [[unresolvedrefsubstring]]
-  - -> calls -> [[unresolvedrefisarray]]
-  - -> calls -> [[unresolvedrefcheck]]
-  - -> calls -> [[unresolvedrefstringify]]
-  - -> calls -> [[unresolvedrefcatch]]
-  - -> calls -> [[unresolvedreftext]]
-  - -> calls -> [[unresolvedrefon]]
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedrefreplace]]
-  - -> calls -> [[unresolvedrefstatus]]
-  - -> calls -> [[unresolvedref]]
-  - -> calls -> [[unresolvedreffilter]]
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedrefmap]]
-  - -> calls -> [[unresolvedrefsplit]]
-  - -> calls -> [[unresolvedreffind]]
-  - -> calls -> [[unresolvedrefclose]]
-  - -> calls -> [[unresolvedrefrepeat]]
-  - -> calls -> [[unresolvedrefsome]]
-  - -> calls -> [[unresolvedrefentries]]
-  - -> calls -> [[unresolvedrefexit]]
-  - <- contains <- [[e2eauthintegration]]
-- **ReviewPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 43 connections
+- **ReviewPanel** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 43 connections
   - -> calls -> [[unresolvedrefusetoast]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefusestate]]
@@ -528,7 +610,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreftogglerework]]
   - -> calls -> [[unresolvedrefhandleresume]]
   - <- contains <- [[workflowpanel]]
-- **BidDetailContent** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 36 connections
+- **BidDetailContent** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 36 connections
   - -> calls -> [[unresolvedrefuseparams]]
   - -> calls -> [[unresolvedrefusesearchparams]]
   - -> calls -> [[unresolvedrefuserouter]]
@@ -565,7 +647,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefhandledownloadattachment]]
   - -> calls -> [[unresolvedreffilter]]
   - <- contains <- [[page]]
-- **CompanyTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 31 connections
+- **CompanyTab** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 31 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefusecallback]]
@@ -597,38 +679,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreftolocaledatestring]]
   - -> calls -> [[unresolvedrefhandledelete]]
   - <- contains <- [[page]]
-- **__unresolved__::ref::filter** () -- 30 connections
-  - <- calls <- [[importproject]]
-  - <- calls <- [[seedcapability]]
-  - <- calls <- [[embeddingtextforclient]]
-  - <- calls <- [[embeddingtextforcompetitor]]
-  - <- calls <- [[embeddingtextforlesson]]
-  - <- calls <- [[sel]]
-  - <- calls <- [[kbhealthwidget]]
-  - <- calls <- [[kbsearchview]]
-  - <- calls <- [[matchesscoredsearch]]
-  - <- calls <- [[matchesmonitorsearch]]
-  - <- calls <- [[agencytypeahead]]
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[monitorbidsview]]
-  - <- calls <- [[taginput]]
-  - <- calls <- [[presetstab]]
-  - <- calls <- [[biddetailcontent]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[companytab]]
-  - <- calls <- [[profiletab]]
-  - <- calls <- [[proposalcontent]]
-  - <- calls <- [[genericcontent]]
-  - <- calls <- [[rstep]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[parallelprogress]]
-  - <- calls <- [[reporterror]]
-  - <- calls <- [[calculateprogress]]
-  - <- calls <- [[buildcover]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-- **PresetsTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\settings\page.tsx) -- 30 connections
+- **PresetsTab** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\settings\page.tsx) -- 30 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedreflistpresets]]
   - -> calls -> [[unresolvedrefsetpresets]]
@@ -659,7 +710,65 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefsome]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 28 connections
+- **__unresolved__::ref::_next_navigation_** () -- 28 connections
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[appsidebar]]
+  - <- imports <- [[notificationbell]]
+  - <- imports <- [[projectcontextheader]]
+  - <- imports <- [[proposaleditview]]
+- **__unresolved__::ref::filter** () -- 28 connections
+  - <- calls <- [[importproject]]
+  - <- calls <- [[seedcapability]]
+  - <- calls <- [[embeddingtextforclient]]
+  - <- calls <- [[embeddingtextforcompetitor]]
+  - <- calls <- [[embeddingtextforlesson]]
+  - <- calls <- [[keywordsearch]]
+  - <- calls <- [[sel]]
+  - <- calls <- [[kbhealthwidget]]
+  - <- calls <- [[kbsearchview]]
+  - <- calls <- [[matchesscoredsearch]]
+  - <- calls <- [[matchesmonitorsearch]]
+  - <- calls <- [[agencytypeahead]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[taginput]]
+  - <- calls <- [[presetstab]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[companytab]]
+  - <- calls <- [[profiletab]]
+  - <- calls <- [[proposalcontent]]
+  - <- calls <- [[genericcontent]]
+  - <- calls <- [[rstep]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[parallelprogress]]
+  - <- calls <- [[reporterror]]
+  - <- calls <- [[calculateprogress]]
+  - <- calls <- [[buildcover]]
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 28 connections
   - -> contains -> [[formatbudget]]
   - -> contains -> [[calcdday]]
   - -> contains -> [[extractdomain]]
@@ -688,13 +797,8 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **__unresolved__::ref::_next_navigation_** () -- 27 connections
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
+- **__unresolved__::ref::_next_link_** () -- 26 connections
+  - <- imports <- [[not-found]]
   - <- imports <- [[page]]
   - <- imports <- [[page]]
   - <- imports <- [[page]]
@@ -713,9 +817,13 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[page]]
   - <- imports <- [[page]]
   - <- imports <- [[appsidebar]]
-  - <- imports <- [[notificationbell]]
+  - <- imports <- [[breadcrumb]]
+  - <- imports <- [[duplicatebidwarning]]
+  - <- imports <- [[evaluationview]]
+  - <- imports <- [[kbusagehistory]]
   - <- imports <- [[projectcontextheader]]
-  - <- imports <- [[proposaleditview]]
+  - <- imports <- [[proposalstablerow]]
+  - <- imports <- [[workflowmap]]
 - **__unresolved__::ref::usestate** () -- 26 connections
   - <- calls <- [[artifactsview]]
   - <- calls <- [[kbhealthwidget]]
@@ -743,82 +851,31 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[genericartifact]]
   - <- calls <- [[reviewpanel]]
   - <- calls <- [[movetonodeaction]]
-- **__unresolved__::ref::_next_link_** () -- 25 connections
-  - <- imports <- [[not-found]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[appsidebar]]
-  - <- imports <- [[breadcrumb]]
-  - <- imports <- [[duplicatebidwarning]]
-  - <- imports <- [[evaluationview]]
-  - <- imports <- [[kbusagehistory]]
-  - <- imports <- [[projectcontextheader]]
-  - <- imports <- [[proposalstablerow]]
-  - <- imports <- [[workflowmap]]
-- **run** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend_v2.mjs) -- 24 connections
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefsafegoto]]
-  - -> calls -> [[unresolvedref]]
-  - -> calls -> [[unresolvedrefok]]
-  - -> calls -> [[unresolvedreffail]]
-  - -> calls -> [[unresolvedreffill]]
-  - -> calls -> [[unresolvedrefclick]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefincludes]]
-  - -> calls -> [[unresolvedrefurl]]
-  - -> calls -> [[unresolvedref]]
-  - -> calls -> [[unresolvedreftextcontent]]
-  - -> calls -> [[unresolvedrefevaluate]]
-  - -> calls -> [[unresolvedrefgetcomputedstyle]]
-  - -> calls -> [[unresolvedreffetch]]
-  - -> calls -> [[unresolvedrefjson]]
-  - -> calls -> [[unresolvedrefstringify]]
-  - -> calls -> [[unresolvedrefclose]]
-  - -> calls -> [[unresolvedrefrepeat]]
-  - -> calls -> [[unresolvedreffilter]]
-  - -> calls -> [[unresolvedrefexit]]
-  - <- contains <- [[e2efrontendv2]]
-- **__unresolved__::ref::includes** () -- 23 connections
-  - <- calls <- [[run]]
+- **__unresolved__::ref::find** () -- 23 connections
+  - <- calls <- [[rununifiedanalysis]]
+  - <- calls <- [[injectcharstyles]]
+  - <- calls <- [[generatesectionxml]]
+  - <- calls <- [[findungroundedclaims]]
+  - <- calls <- [[parsesummary]]
+  - <- calls <- [[parsequalificationresponse]]
+  - <- calls <- [[parsereviewresponse]]
+  - <- calls <- [[analyzecharstyles]]
+  - <- calls <- [[analyzeparastyles]]
+  - <- calls <- [[analyzepagesetup]]
+  - <- calls <- [[analyzetables]]
+  - <- calls <- [[updatemetadata]]
+  - <- calls <- [[collectmetrics]]
+  - <- calls <- [[extractjsonfromresponse]]
+  - <- calls <- [[memberrow]]
+  - <- calls <- [[categorylabel]]
   - <- calls <- [[kbsearchview]]
-  - <- calls <- [[extractdomain]]
-  - <- calls <- [[matchesscoredsearch]]
-  - <- calls <- [[matchesmonitorsearch]]
-  - <- calls <- [[agencytypeahead]]
-  - <- calls <- [[monitorbidsview]]
-  - <- calls <- [[classifyattachment]]
-  - <- calls <- [[taginput]]
+  - <- calls <- [[attachmentlink]]
   - <- calls <- [[presetstab]]
-  - <- calls <- [[biddetailcontent]]
-  - <- calls <- [[classifyattachment]]
-  - <- calls <- [[filecolor]]
-  - <- calls <- [[rstep]]
-  - <- calls <- [[rgate]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[parallelprogress]]
-  - <- calls <- [[estimatestepfromphase]]
-  - <- calls <- [[request]]
-  - <- calls <- [[reporterror]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 23 connections
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[artifactversiongroup]]
+  - <- calls <- [[categorylabel]]
+  - <- calls <- [[conflictcard]]
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 23 connections
   - -> contains -> [[division]]
   - -> contains -> [[adminteam]]
   - -> contains -> [[user]]
@@ -842,31 +899,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsadminorgchart]]
   - -> imports -> [[unresolvedrefcomponentsuibutton]]
   - -> imports -> [[unresolvedrefcomponentsuiformfield]]
-- **run** (C:\project\tenopa proposer\-agent-master\tmp_e2e_bids.mjs) -- 23 connections
-  - -> calls -> [[unresolvedrefexistssync]]
-  - -> calls -> [[unresolvedrefmkdirsync]]
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedrefawait]]
-  - -> calls -> [[unresolvedrefnewcontext]]
-  - -> calls -> [[unresolvedrefsetdefaulttimeout]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefscreenshot]]
-  - -> calls -> [[unresolvedreffill]]
-  - -> calls -> [[unresolvedreffirst]]
-  - -> calls -> [[unresolvedreflocator]]
-  - -> calls -> [[unresolvedrefclick]]
-  - -> calls -> [[unresolvedrefurl]]
-  - -> calls -> [[unresolvedreftextcontent]]
-  - -> calls -> [[unresolvedrefincludes]]
-  - -> calls -> [[unresolvedrefcount]]
-  - -> calls -> [[unresolvedrefcatch]]
-  - -> calls -> [[unresolvedreferror]]
-  - -> calls -> [[unresolvedrefclose]]
-  - <- contains <- [[tmpe2ebids]]
-- **ArtifactsView** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 22 connections
+- **ArtifactsView** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 22 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
@@ -889,29 +922,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmax]]
   - -> calls -> [[unresolvedrefmin]]
   - <- contains <- [[page]]
-- **__unresolved__::ref::push** () -- 21 connections
-  - <- calls <- [[artifactsview]]
-  - <- calls <- [[kbsearchview]]
-  - <- calls <- [[extractdomain]]
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[monitorbidsview]]
-  - <- calls <- [[biddetailcontent]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[profiletab]]
-  - <- calls <- [[acceptinvitationcontent]]
-  - <- calls <- [[logincontent]]
-  - <- calls <- [[computesimplediff]]
-  - <- calls <- [[linediff]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[reporterror]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-  - <- calls <- [[run]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\[id]\page.tsx) -- 21 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\[id]\page.tsx) -- 21 connections
   - -> contains -> [[useelapsedtime]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextdynamic]]
@@ -933,7 +944,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsprojectcontextheader]]
   - -> imports -> [[unresolvedrefcomponentsfilehubpanel]]
   - -> imports -> [[unresolvedrefcomponentsprojectdocumentspanel]]
-- **VersionDetailsPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactVersionPanel.tsx) -- 21 connections
+- **VersionDetailsPanel** (C:\project\tenopa proposer\frontend\components\ArtifactVersionPanel.tsx) -- 21 connections
   - -> calls -> [[unresolvedrefusetoast]]
   - -> calls -> [[unresolvedrefusecallback]]
   - -> calls -> [[unresolvedrefwarning]]
@@ -976,26 +987,46 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[fmtshort]]
   - <- calls <- [[fmtwon]]
   - <- calls <- [[fmtwon]]
-- **__unresolved__::ref::stringify** () -- 19 connections
-  - <- calls <- [[scoredbidsview]]
+- **__unresolved__::ref::_lucide_react_** () -- 19 connections
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[artifactversionpanel]]
+  - <- imports <- [[diagnosticscorecard]]
+  - <- imports <- [[gapanalysisresultlist]]
+  - <- imports <- [[knowledgehealthdashboard]]
+  - <- imports <- [[knowledgerecommendations]]
+  - <- imports <- [[knowledgesearchbar]]
+  - <- imports <- [[masterprojectschat]]
+  - <- imports <- [[vaultchat]]
+  - <- imports <- [[vaultresponsecard]]
+  - <- imports <- [[vaultsearchbar]]
+  - <- imports <- [[vaultsidebar]]
+  - <- imports <- [[vaultstepselector]]
+  - <- imports <- [[versionselectionmodal]]
+  - <- imports <- [[completedprojectsview]]
+  - <- imports <- [[feedbackform]]
+  - <- imports <- [[governmentguidelinesview]]
+  - <- imports <- [[stepspecificviews]]
+- **__unresolved__::ref::includes** () -- 19 connections
+  - <- calls <- [[kbsearchview]]
+  - <- calls <- [[extractdomain]]
+  - <- calls <- [[matchesscoredsearch]]
+  - <- calls <- [[matchesmonitorsearch]]
+  - <- calls <- [[agencytypeahead]]
   - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[classifyattachment]]
+  - <- calls <- [[taginput]]
+  - <- calls <- [[presetstab]]
   - <- calls <- [[biddetailcontent]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[genericcontent]]
-  - <- calls <- [[genericartifact]]
+  - <- calls <- [[classifyattachment]]
+  - <- calls <- [[filecolor]]
+  - <- calls <- [[rstep]]
+  - <- calls <- [[rgate]]
   - <- calls <- [[reviewpanel]]
-  - <- calls <- [[mockgapanalysisapi]]
-  - <- calls <- [[mockworkflowstategapreview]]
-  - <- calls <- [[mockproposalstatus]]
-  - <- calls <- [[mockreviewitems]]
-  - <- calls <- [[mockreviewitemdetail]]
+  - <- calls <- [[parallelprogress]]
+  - <- calls <- [[estimatestepfromphase]]
   - <- calls <- [[request]]
-  - <- calls <- [[authrequest]]
   - <- calls <- [[reporterror]]
-  - <- calls <- [[json]]
-  - <- calls <- [[json]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::useeffect** () -- 19 connections
   - <- calls <- [[artifactsview]]
   - <- calls <- [[kbhealthwidget]]
@@ -1016,7 +1047,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalcontent]]
   - <- calls <- [[useprog]]
   - <- calls <- [[reviewpanel]]
-- **KbSearchView** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 19 connections
+- **KbSearchView** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 19 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefsetareas]]
@@ -1036,7 +1067,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefpush]]
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **ArtifactReviewPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 19 connections
+- **ArtifactReviewPanel** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 19 connections
   - -> contains -> [[artifactconfig]]
   - -> contains -> [[artifactreviewpanelprops]]
   - -> contains -> [[artifactcontent]]
@@ -1056,27 +1087,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> contains -> [[genericcontent]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **run** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend.mjs) -- 19 connections
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedref]]
-  - -> calls -> [[unresolvedrefok]]
-  - -> calls -> [[unresolvedreffail]]
-  - -> calls -> [[unresolvedreftextcontent]]
-  - -> calls -> [[unresolvedrefincludes]]
-  - -> calls -> [[unresolvedreffill]]
-  - -> calls -> [[unresolvedrefclick]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefurl]]
-  - -> calls -> [[unresolvedref]]
-  - -> calls -> [[unresolvedrefclose]]
-  - -> calls -> [[unresolvedrefrepeat]]
-  - -> calls -> [[unresolvedreffilter]]
-  - -> calls -> [[unresolvedrefexit]]
-  - <- contains <- [[e2efrontend]]
-- **PhaseGraph** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 18 connections
+- **PhaseGraph** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 18 connections
   - -> contains -> [[gdef]]
   - -> contains -> [[rstep]]
   - -> contains -> [[rgate]]
@@ -1095,7 +1106,61 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibhooksuseworkflowstream]]
-- **LoginContent** (C:\project\tenopa proposer\-agent-master\frontend\app\login\page.tsx) -- 17 connections
+- **__unresolved__::ref::sort** () -- 17 connections
+  - <- calls <- [[monitormy]]
+  - <- calls <- [[enrichmonitordata]]
+  - <- calls <- [[parseattachmentsfromraw]]
+  - <- calls <- [[recommend]]
+  - <- calls <- [[extractsourcetags]]
+  - <- calls <- [[analyzebids]]
+  - <- calls <- [[scoreandrankbids]]
+  - <- calls <- [[sortbids]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[scan]]
+  - <- calls <- [[searchandscore]]
+  - <- calls <- [[recommend]]
+  - <- calls <- [[generatechecklist]]
+  - <- calls <- [[resolvetaskdependencies]]
+  - <- calls <- [[identifypriorityimprovements]]
+- **__unresolved__::ref::stringify** () -- 17 connections
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[genericcontent]]
+  - <- calls <- [[genericartifact]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[mockgapanalysisapi]]
+  - <- calls <- [[mockworkflowstategapreview]]
+  - <- calls <- [[mockproposalstatus]]
+  - <- calls <- [[mockreviewitems]]
+  - <- calls <- [[mockreviewitemdetail]]
+  - <- calls <- [[request]]
+  - <- calls <- [[authrequest]]
+  - <- calls <- [[reporterror]]
+  - <- calls <- [[json]]
+  - <- calls <- [[json]]
+- **_generate_section_xml** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 17 connections
+  - -> calls -> [[unresolvedrefelement]]
+  - -> calls -> [[unresolvedrefsubelement]]
+  - -> calls -> [[unresolvedrefset]]
+  - -> calls -> [[unresolvedrefrange]]
+  - -> calls -> [[unresolvedrefaddparagraph]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefaddempty]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefmodeldump]]
+  - -> calls -> [[unresolvedrefhasattr]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedreffind]]
+  - -> calls -> [[unresolvedrefindent]]
+  - -> calls -> [[unresolvedreftostring]]
+  - <- contains <- [[hwpxservice]]
+- **LoginContent** (C:\project\tenopa proposer\frontend\app\login\page.tsx) -- 17 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusesearchparams]]
   - -> calls -> [[unresolvedrefget]]
@@ -1113,7 +1178,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefsetemail]]
   - -> calls -> [[unresolvedrefsetpassword]]
   - <- contains <- [[page]]
-- **request** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 17 connections
+- **request** (C:\project\tenopa proposer\frontend\lib\api.ts) -- 17 connections
   - -> calls -> [[unresolvedrefgettoken]]
   - -> calls -> [[unresolvedrefincludes]]
   - -> calls -> [[unresolvedrefsettimeout]]
@@ -1131,22 +1196,22 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefrequest]]
   - -> calls -> [[unresolvedrefcleartimeout]]
   - <- contains <- [[api]]
-- **__unresolved__::ref::__playwright_test_** () -- 15 connections
-  - <- imports <- [[playwrightconfig]]
-  - <- imports <- [[authsetup]]
-  - <- imports <- [[authenticatedspec]]
-  - <- imports <- [[bids-kb-analyticsspec]]
-  - <- imports <- [[login-flowspec]]
-  - <- imports <- [[pagesspec]]
-  - <- imports <- [[proposal-decision-workflowspec]]
-  - <- imports <- [[proposalsspec]]
-  - <- imports <- [[screenshot-monitoringspec]]
-  - <- imports <- [[screenshots-auth]]
-  - <- imports <- [[screenshots-full]]
-  - <- imports <- [[screenshots]]
-  - <- imports <- [[smokespec]]
-  - <- imports <- [[workflow-v4-diagnosticsspec]]
-  - <- imports <- [[testdocumentse2espec]]
+- **__unresolved__::ref::push** () -- 15 connections
+  - <- calls <- [[artifactsview]]
+  - <- calls <- [[kbsearchview]]
+  - <- calls <- [[extractdomain]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[profiletab]]
+  - <- calls <- [[acceptinvitationcontent]]
+  - <- calls <- [[logincontent]]
+  - <- calls <- [[computesimplediff]]
+  - <- calls <- [[parsecitations]]
+  - <- calls <- [[linediff]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[reporterror]]
 - **__unresolved__::ref::tolocalestring** () -- 15 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[formatbudget]]
@@ -1163,7 +1228,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[fmtshort]]
   - <- calls <- [[fmtwon]]
   - <- calls <- [[fmtwon]]
-- **AgencyTypeahead** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 15 connections
+- **AgencyTypeahead** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 15 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefuseeffect]]
@@ -1194,22 +1259,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[step8-integrationtest]]
   - <- imports <- [[step8-page-integrationtest]]
   - <- imports <- [[step8-phase1test]]
-- **__unresolved__::ref::log** () -- 14 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-  - <- calls <- [[run]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-  - <- calls <- [[run]]
-  - <- calls <- [[ok]]
-  - <- calls <- [[fail]]
-  - <- calls <- [[run]]
-- **KbHealthWidget** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 14 connections
+- **KbHealthWidget** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 14 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
   - -> calls -> [[unresolvedrefcatch]]
@@ -1224,7 +1274,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefhandlereindex]]
   - -> calls -> [[unresolvedrefmin]]
   - <- contains <- [[page]]
-- **ProfileTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\settings\page.tsx) -- 14 connections
+- **ProfileTab** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\settings\page.tsx) -- 14 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
   - -> calls -> [[unresolvedreffoundedyearundefinedcatchfinallysetloadingfalse]]
@@ -1239,7 +1289,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefonsaved]]
   - -> calls -> [[unresolvedrefnumber]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 14 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 14 connections
   - -> contains -> [[sectionform]]
   - -> contains -> [[templateuploadform]]
   - -> contains -> [[sectionstabprops]]
@@ -1254,7 +1304,35 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 13 connections
+- **__unresolved__::ref::add** () -- 13 connections
+  - <- calls <- [[monitormy]]
+  - <- calls <- [[monitorteamordivision]]
+  - <- calls <- [[loadteamsinfo]]
+  - <- calls <- [[bgtask]]
+  - <- calls <- [[extractchecklistfromrfp]]
+  - <- calls <- [[cleanupexpiredbids]]
+  - <- calls <- [[parsequalificationresponse]]
+  - <- calls <- [[scoreandrankbids]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[displaytab]]
+  - <- calls <- [[scrolltosource]]
+  - <- calls <- [[provision]]
+  - <- calls <- [[seed]]
+- **__unresolved__::ref::slice** () -- 13 connections
+  - <- calls <- [[formatdate]]
+  - <- calls <- [[agencytypeahead]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[bidrow]]
+  - <- calls <- [[presetstab]]
+  - <- calls <- [[sectioncard]]
+  - <- calls <- [[orgchartview]]
+  - <- calls <- [[renderinline]]
+  - <- calls <- [[projectsourcecard]]
+  - <- calls <- [[highlightjson]]
+  - <- calls <- [[genericartifact]]
+  - <- calls <- [[parsecitations]]
+  - <- calls <- [[reviewpanel]]
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 13 connections
   - -> contains -> [[calcdday]]
   - -> contains -> [[ddaycolor]]
   - -> contains -> [[ddaylabel]]
@@ -1268,7 +1346,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsguidedtour]]
   - -> imports -> [[unresolvedrefcomponentsuicard]]
   - -> imports -> [[unresolvedrefcomponentsuibutton]]
-- **AcceptInvitationContent** (C:\project\tenopa proposer\-agent-master\frontend\app\invitations\accept\page.tsx) -- 13 connections
+- **AcceptInvitationContent** (C:\project\tenopa proposer\frontend\app\invitations\accept\page.tsx) -- 13 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusesearchparams]]
   - -> calls -> [[unresolvedrefget]]
@@ -1282,7 +1360,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefsettimeout]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[page]]
-- **GoNoGoPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 13 connections
+- **GoNoGoPanel** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 13 connections
   - -> contains -> [[performancedetail]]
   - -> contains -> [[qualificationdetail]]
   - -> contains -> [[competitiondetail]]
@@ -1296,7 +1374,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsuitoast]]
   - -> imports -> [[unresolvedrefcomponentspositioningimpactmodal]]
-- **MoveToNodeAction** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 13 connections
+- **MoveToNodeAction** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 13 connections
   - -> calls -> [[unresolvedrefusetoast]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedreftrim]]
@@ -1310,73 +1388,6 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefonstatechange]]
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[workflowpanel]]
-- **main** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots-auth.ts) -- 13 connections
-  - -> calls -> [[unresolvedrefexistssync]]
-  - -> calls -> [[unresolvedrefmkdirsync]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewcontext]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefcatch]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefscreenshot]]
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedrefclose]]
-  - <- contains <- [[screenshots-auth]]
-- **main** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots.ts) -- 13 connections
-  - -> calls -> [[unresolvedrefexistssync]]
-  - -> calls -> [[unresolvedrefmkdirsync]]
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewcontext]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefcatch]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefscreenshot]]
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefclose]]
-  - <- contains <- [[screenshots]]
-- **__unresolved__::ref::abs** () -- 12 connections
-  - <- calls <- [[resolvepricingpredictions]]
-  - <- calls <- [[runcomparison]]
-  - <- calls <- [[rulebasedmodel]]
-  - <- calls <- [[ratiodelta]]
-  - <- calls <- [[ddaylabel]]
-  - <- calls <- [[formatdday]]
-  - <- calls <- [[daysuntil]]
-  - <- calls <- [[fmtwon]]
-  - <- calls <- [[fmtshort]]
-  - <- calls <- [[fmtwon]]
-  - <- calls <- [[fmtwon]]
-  - <- calls <- [[testfloatprecision]]
-- **__unresolved__::ref::catch** () -- 12 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[kbhealthwidget]]
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[acceptinvitationcontent]]
-  - <- calls <- [[proposalcontent]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[request]]
-  - <- calls <- [[authrequest]]
-  - <- calls <- [[run]]
-- **__unresolved__::ref::fetch** () -- 12 connections
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[monitorbidsview]]
-  - <- calls <- [[biddetailcontent]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[logincontent]]
-  - <- calls <- [[versiondetailspanel]]
-  - <- calls <- [[request]]
-  - <- calls <- [[authrequest]]
-  - <- calls <- [[reporterror]]
-  - <- calls <- [[getappliedmigrations]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::setloading** () -- 12 connections
   - <- calls <- [[artifactsview]]
   - <- calls <- [[kbsearchview]]
@@ -1390,7 +1401,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[profiletab]]
   - <- calls <- [[notificationstab]]
   - <- calls <- [[logincontent]]
-- **DisplayTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 12 connections
+- **DisplayTab** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 12 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
   - -> calls -> [[unresolvedrefgetitem]]
@@ -1403,7 +1414,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefapplytheme]]
   - <- contains <- [[page]]
-- **NotificationsTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 12 connections
+- **NotificationsTab** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 12 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
   - -> calls -> [[unresolvedrefgetsettingssetsettingsdatacatchseterrorfinallysetloadingfalse]]
@@ -1416,7 +1427,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefhandletoggle]]
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[page]]
-- **DetailRightPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\DetailRightPanel.tsx) -- 12 connections
+- **DetailRightPanel** (C:\project\tenopa proposer\frontend\components\DetailRightPanel.tsx) -- 12 connections
   - -> contains -> [[detailrightpanelprops]]
   - -> contains -> [[simplemarkdown]]
   - -> contains -> [[renderinline]]
@@ -1429,44 +1440,44 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsqapanel]]
   - -> imports -> [[unresolvedrefcomponentsversioncomparemodal]]
   - -> imports -> [[unresolvedrefcomponentsartifactversionpanel]]
-- **main** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots-full.ts) -- 12 connections
-  - -> calls -> [[unresolvedrefexistssync]]
-  - -> calls -> [[unresolvedrefmkdirsync]]
-  - -> calls -> [[unresolvedreflaunch]]
-  - -> calls -> [[unresolvedrefnewcontext]]
-  - -> calls -> [[unresolvedrefnewpage]]
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - -> calls -> [[unresolvedrefscreenshot]]
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedreflog]]
-  - -> calls -> [[unresolvedrefclose]]
-  - <- contains <- [[screenshots-full]]
-- **__unresolved__::ref::slice** () -- 11 connections
-  - <- calls <- [[formatdate]]
-  - <- calls <- [[agencytypeahead]]
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[bidrow]]
-  - <- calls <- [[presetstab]]
-  - <- calls <- [[sectioncard]]
-  - <- calls <- [[orgchartview]]
-  - <- calls <- [[renderinline]]
-  - <- calls <- [[highlightjson]]
-  - <- calls <- [[genericartifact]]
-  - <- calls <- [[reviewpanel]]
-- **__unresolved__::ref::string** () -- 11 connections
-  - <- calls <- [[getcurrentmonth]]
-  - <- calls <- [[getprevmonth]]
-  - <- calls <- [[formatcrawledat]]
+- **StepSpecificViews** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 12 connections
+  - -> contains -> [[clientinfo]]
+  - -> contains -> [[competitiveanalysis]]
+  - -> contains -> [[strategypoint]]
+  - -> contains -> [[pricingstrategy]]
+  - -> contains -> [[personnelrecommendation]]
+  - -> contains -> [[bidpricedata]]
+  - -> contains -> [[predictedqa]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedrefrecharts]]
+  - -> imports -> [[unresolvedrefcomponentsuicard]]
+  - -> imports -> [[unresolvedrefcomponentsuibadge]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **__unresolved__::ref::abs** () -- 11 connections
+  - <- calls <- [[resolvepricingpredictions]]
+  - <- calls <- [[runcomparison]]
+  - <- calls <- [[rulebasedmodel]]
+  - <- calls <- [[ratiodelta]]
+  - <- calls <- [[ddaylabel]]
+  - <- calls <- [[formatdday]]
+  - <- calls <- [[daysuntil]]
+  - <- calls <- [[fmtwon]]
+  - <- calls <- [[fmtshort]]
+  - <- calls <- [[fmtwon]]
+  - <- calls <- [[fmtwon]]
+- **__unresolved__::ref::pop** () -- 11 connections
+  - <- calls <- [[enrichmonitordata]]
+  - <- calls <- [[maybealert]]
+  - <- calls <- [[processsingle]]
+  - <- calls <- [[importproject]]
+  - <- calls <- [[searchcontent]]
+  - <- calls <- [[searchqa]]
+  - <- calls <- [[keywordsearchqa]]
+  - <- calls <- [[attachmentlink]]
+  - <- calls <- [[fileicon]]
   - <- calls <- [[proposalscontent]]
-  - <- calls <- [[useelapsedtime]]
-  - <- calls <- [[genericcontent]]
-  - <- calls <- [[formatdate]]
-  - <- calls <- [[cellinput]]
-  - <- calls <- [[formatdateshort]]
-  - <- calls <- [[qs]]
-  - <- calls <- [[fail]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\[promptId]\improve\page.tsx) -- 11 connections
+  - <- calls <- [[companytab]]
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\[promptId]\improve\page.tsx) -- 11 connections
   - -> contains -> [[metriccard]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
@@ -1478,7 +1489,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsprompttrendchart]]
   - -> imports -> [[unresolvedrefcomponentspromptsimulationrunner]]
   - -> imports -> [[unresolvedrefcomponentspromptcompareview]]
-- **FilterableSortableHeader** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 11 connections
+- **FilterableSortableHeader** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 11 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefuseeffect]]
@@ -1490,7 +1501,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefonfilterchange]]
   - -> calls -> [[unresolvedrefonsort]]
   - <- contains <- [[page]]
-- **useElapsedTime** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\[id]\page.tsx) -- 11 connections
+- **useElapsedTime** (C:\project\tenopa proposer\frontend\app\(app)\proposals\[id]\page.tsx) -- 11 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefnow]]
@@ -1502,7 +1513,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefpadstart]]
   - -> calls -> [[unresolvedrefstring]]
   - <- contains <- [[page]]
-- **ProfileTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 11 connections
+- **ProfileTab** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 11 connections
   - -> calls -> [[unresolvedrefuserouter]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
@@ -1514,7 +1525,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[page]]
-- **AppSidebar** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 11 connections
+- **AppSidebar** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 11 connections
   - -> contains -> [[svgicon]]
   - -> contains -> [[navitem]]
   - -> contains -> [[navgroup]]
@@ -1526,7 +1537,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ProposalContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 11 connections
+- **ProposalContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 11 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseeffect]]
   - -> calls -> [[unresolvedrefcatch]]
@@ -1538,7 +1549,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefsetexpandedidx]]
   - <- contains <- [[artifactreviewpanel]]
-- **StepArtifactViewer** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 11 connections
+- **StepArtifactViewer** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 11 connections
   - -> contains -> [[stepartifactviewerprops]]
   - -> contains -> [[artifactrenderer]]
   - -> contains -> [[gonogoartifact]]
@@ -1561,6 +1572,39 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[appsidebar]]
   - <- imports <- [[api]]
   - <- imports <- [[usephasestatus]]
+- **__unresolved__::ref::catch** () -- 10 connections
+  - <- calls <- [[kbhealthwidget]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[acceptinvitationcontent]]
+  - <- calls <- [[proposalcontent]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[request]]
+  - <- calls <- [[authrequest]]
+- **__unresolved__::ref::fetch** () -- 10 connections
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[logincontent]]
+  - <- calls <- [[versiondetailspanel]]
+  - <- calls <- [[request]]
+  - <- calls <- [[authrequest]]
+  - <- calls <- [[reporterror]]
+  - <- calls <- [[getappliedmigrations]]
+- **__unresolved__::ref::string** () -- 10 connections
+  - <- calls <- [[getcurrentmonth]]
+  - <- calls <- [[getprevmonth]]
+  - <- calls <- [[formatcrawledat]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[useelapsedtime]]
+  - <- calls <- [[genericcontent]]
+  - <- calls <- [[formatdate]]
+  - <- calls <- [[cellinput]]
+  - <- calls <- [[formatdateshort]]
+  - <- calls <- [[qs]]
 - **__unresolved__::ref::tolowercase** () -- 10 connections
   - <- calls <- [[matchesscoredsearch]]
   - <- calls <- [[matchesmonitorsearch]]
@@ -1572,7 +1616,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[companytab]]
   - <- calls <- [[filecolor]]
   - <- calls <- [[filecolor]]
-- **MemberRow** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 10 connections
+- **MemberRow** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 10 connections
   - -> calls -> [[unresolvedrefsetdata]]
   - -> calls -> [[unresolvedrefcellid]]
   - -> calls -> [[unresolvedrefonpatch]]
@@ -1583,7 +1627,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefondeactivate]]
   - -> calls -> [[unresolvedrefondelete]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 10 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 10 connections
   - -> contains -> [[extractyear]]
   - -> contains -> [[formatcurrency]]
   - -> contains -> [[formatelapsedtime]]
@@ -1594,7 +1638,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsuimodal]]
   - -> imports -> [[unresolvedrefcomponentsprojectarchivepanel]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 10 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 10 connections
   - -> contains -> [[gettoken]]
   - -> contains -> [[bidinfo]]
   - -> contains -> [[formatbudget]]
@@ -1605,7 +1649,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefmarkdowntojsx]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
-- **TagInput** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\settings\page.tsx) -- 10 connections
+- **TagInput** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\settings\page.tsx) -- 10 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedreftrim]]
   - -> calls -> [[unresolvedrefincludes]]
@@ -1616,7 +1660,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefpreventdefault]]
   - -> calls -> [[unresolvedrefaddtag]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\page.tsx) -- 10 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\page.tsx) -- 10 connections
   - -> contains -> [[proposalscontent]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
@@ -1627,7 +1671,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsproposalstablerow]]
   - -> imports -> [[unresolvedrefcomponentsproposalstableskeleton]]
   - -> imports -> [[unresolvedrefcomponentsproposaldetailmodal]]
-- **ProposalDetailWithHITLReview** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailWithHITLReview.tsx) -- 10 connections
+- **ProposalDetailWithHITLReview** (C:\project\tenopa proposer\frontend\components\ProposalDetailWithHITLReview.tsx) -- 10 connections
   - -> contains -> [[reviewitemstatus]]
   - -> contains -> [[reviewitem]]
   - -> contains -> [[proposaldetailwithhitlreviewprops]]
@@ -1638,7 +1682,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreffeedbackloopworkflow]]
   - -> imports -> [[unresolvedrefgapanalysisresultlist]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ProposalEditView** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalEditView.tsx) -- 10 connections
+- **ProposalEditView** (C:\project\tenopa proposer\frontend\components\ProposalEditView.tsx) -- 10 connections
   - -> contains -> [[proposaleditviewprops]]
   - -> contains -> [[mobiletabbar]]
   - -> imports -> [[unresolvedrefreact]]
@@ -1649,7 +1693,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentseditortocpanel]]
   - -> imports -> [[unresolvedrefcomponentseditoraipanel]]
-- **WorkflowPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 10 connections
+- **WorkflowPanel** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 10 connections
   - -> contains -> [[workflowpanelprops]]
   - -> contains -> [[aiissue]]
   - -> contains -> [[reviewpanel]]
@@ -1660,6 +1704,16 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsuitoast]]
   - -> imports -> [[unresolvedrefcomponentsgonogopanel]]
   - -> imports -> [[unresolvedrefcomponentsguidedtour]]
+- **__unresolved__::ref::___components_ui_card_** () -- 9 connections
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[artifactversionpanel]]
+  - <- imports <- [[projectdocumentspanel]]
+  - <- imports <- [[vaultresponsecard]]
+  - <- imports <- [[versionselectionmodal]]
+  - <- imports <- [[feedbackform]]
+  - <- imports <- [[stepspecificviews]]
 - **__unresolved__::ref::gettime** () -- 9 connections
   - <- calls <- [[calcdday]]
   - <- calls <- [[calcdday]]
@@ -1680,6 +1734,16 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[togglerow]]
   - <- calls <- [[cellinput]]
   - <- calls <- [[laborrow]]
+- **__unresolved__::ref::settimeout** () -- 9 connections
+  - <- calls <- [[artifactsview]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[monitorbidsview]]
+  - <- calls <- [[profiletab]]
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[acceptinvitationcontent]]
+  - <- calls <- [[scrolltosource]]
+  - <- calls <- [[request]]
+  - <- calls <- [[reporterror]]
 - **__unresolved__::ref::stoppropagation** () -- 9 connections
   - <- calls <- [[grouprow]]
   - <- calls <- [[inlineinput]]
@@ -1700,17 +1764,17 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[profiletab]]
   - <- calls <- [[acceptinvitationcontent]]
   - <- calls <- [[logincontent]]
-- **__unresolved__::ref::waitfortimeout** () -- 9 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[safegoto]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[safegoto]]
-  - <- calls <- [[run]]
-- **formatCrawledAt** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 9 connections
+- **_chunk_articles** (C:\project\tenopa proposer\app\services\document_chunker.py) -- 9 connections
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefchunkbywindow]]
+  - -> calls -> [[unresolvedrefmatch]]
+  - -> calls -> [[unresolvedrefgroup]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefchunk]]
+  - <- contains <- [[documentchunker]]
+- **formatCrawledAt** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 9 connections
   - -> calls -> [[unresolvedrefgetfullyear]]
   - -> calls -> [[unresolvedrefpadstart]]
   - -> calls -> [[unresolvedrefstring]]
@@ -1720,7 +1784,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefgetminutes]]
   - -> calls -> [[unresolvedrefgetseconds]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\new\page.tsx) -- 9 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\new\page.tsx) -- 9 connections
   - -> contains -> [[bidprefill]]
   - -> contains -> [[formatbudget]]
   - -> contains -> [[getauthtoken]]
@@ -1730,7 +1794,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
   - -> imports -> [[unresolvedrefcomponentsduplicatebidwarning]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 9 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 9 connections
   - -> contains -> [[userprofile]]
   - -> contains -> [[profiletab]]
   - -> contains -> [[inforow]]
@@ -1740,7 +1804,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **GenericContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 9 connections
+- **GenericContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 9 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefentries]]
   - -> calls -> [[unresolvedreffilter]]
@@ -1750,7 +1814,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedreffromentries]]
   - <- contains <- [[artifactreviewpanel]]
-- **ArtifactVersionPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactVersionPanel.tsx) -- 9 connections
+- **ArtifactVersionPanel** (C:\project\tenopa proposer\frontend\components\ArtifactVersionPanel.tsx) -- 9 connections
   - -> contains -> [[artifactversiongroup]]
   - -> contains -> [[versiondetailspanel]]
   - -> imports -> [[unresolvedrefreact]]
@@ -1760,7 +1824,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsuialert]]
   - -> imports -> [[unresolvedreflucidereact]]
   - -> imports -> [[unresolvedrefcomponentsuitoast]]
-- **DetailCenterPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\DetailCenterPanel.tsx) -- 9 connections
+- **DetailCenterPanel** (C:\project\tenopa proposer\frontend\components\DetailCenterPanel.tsx) -- 9 connections
   - -> contains -> [[detailcenterpanelprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefcomponentsuitoast]]
@@ -1770,7 +1834,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsversionselectionmodal]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibhooksuseworkflowstream]]
-- **useProg** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 9 connections
+- **useProg** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 9 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefuseref]]
   - -> calls -> [[unresolvedrefnow]]
@@ -1780,7 +1844,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmin]]
   - -> calls -> [[unresolvedrefclearinterval]]
   - <- contains <- [[phasegraph]]
-- **BidPlanReviewPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 9 connections
+- **BidPlanReviewPanel** (C:\project\tenopa proposer\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 9 connections
   - -> contains -> [[bidplandata]]
   - -> contains -> [[props]]
   - -> contains -> [[fmtwon]]
@@ -1790,7 +1854,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefsensitivitychart]]
   - -> imports -> [[unresolvedrefwinprobabilitygauge]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ProjectContextHeader** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 9 connections
+- **ProjectContextHeader** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 9 connections
   - -> contains -> [[statusbadge]]
   - -> contains -> [[formatdday]]
   - -> contains -> [[formatbudget]]
@@ -1800,7 +1864,17 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **Toast** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 9 connections
+- **highlightJson** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 9 connections
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefmap]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefendswith]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefslice]]
+  - -> calls -> [[unresolvedreftest]]
+  - -> calls -> [[unresolvedrefreplace]]
+  - <- contains <- [[stepartifactviewer]]
+- **Toast** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 9 connections
   - -> contains -> [[cn]]
   - -> contains -> [[toastcontexttype]]
   - -> contains -> [[toastcontainerprops]]
@@ -1810,15 +1884,24 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefclsx]]
   - -> imports -> [[unresolvedreftailwindmerge]]
-- **__unresolved__::ref::entries** () -- 8 connections
-  - <- calls <- [[kbhealthwidget]]
-  - <- calls <- [[kbsearchview]]
-  - <- calls <- [[genericcontent]]
-  - <- calls <- [[selfreviewartifact]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[estimatestepfromphase]]
-  - <- calls <- [[qs]]
-  - <- calls <- [[run]]
+- **__unresolved__::ref::___components_ui_badge_** () -- 8 connections
+  - <- imports <- [[page]]
+  - <- imports <- [[artifactversionpanel]]
+  - <- imports <- [[projectdocumentspanel]]
+  - <- imports <- [[vaultresponsecard]]
+  - <- imports <- [[vaultstepselector]]
+  - <- imports <- [[versionselectionmodal]]
+  - <- imports <- [[feedbackform]]
+  - <- imports <- [[stepspecificviews]]
+- **__unresolved__::ref::load** () -- 8 connections
+  - <- calls <- [[loadsampledata]]
+  - <- calls <- [[artifactsview]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[presetstab]]
+  - <- calls <- [[loadprofile]]
+  - <- calls <- [[loadpipeline]]
+  - <- calls <- [[main]]
+  - <- calls <- [[provision]]
 - **__unresolved__::ref::seterror** () -- 8 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[monitorbidsview]]
@@ -1828,16 +1911,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
   - <- calls <- [[companytab]]
   - <- calls <- [[notificationstab]]
-- **__unresolved__::ref::settimeout** () -- 8 connections
-  - <- calls <- [[artifactsview]]
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[monitorbidsview]]
-  - <- calls <- [[profiletab]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[acceptinvitationcontent]]
-  - <- calls <- [[request]]
-  - <- calls <- [[reporterror]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 8 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 8 connections
   - -> contains -> [[formatdate]]
   - -> contains -> [[artifactsview]]
   - -> contains -> [[downloadlink]]
@@ -1846,7 +1920,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 8 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 8 connections
   - -> contains -> [[fileicon]]
   - -> contains -> [[formatfilesize]]
   - -> contains -> [[formatbudget]]
@@ -1855,7 +1929,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\settings\page.tsx) -- 8 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\settings\page.tsx) -- 8 connections
   - -> contains -> [[taginput]]
   - -> contains -> [[profiletab]]
   - -> contains -> [[presetstab]]
@@ -1864,7 +1938,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
   - -> imports -> [[unresolvedreflibapi]]
-- **SectionsTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 8 connections
+- **SectionsTab** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 8 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefsetcategory]]
   - -> calls -> [[unresolvedrefsetq]]
@@ -1873,7 +1947,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefonedit]]
   - -> calls -> [[unresolvedrefondelete]]
   - <- contains <- [[page]]
-- **AdminOrgChart** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 8 connections
+- **AdminOrgChart** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 8 connections
   - -> contains -> [[treedivision]]
   - -> contains -> [[treeteam]]
   - -> contains -> [[treemember]]
@@ -1882,7 +1956,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> contains -> [[personcard]]
   - -> contains -> [[rolematrixview]]
   - -> imports -> [[unresolvedrefreact]]
-- **EvaluationView** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationView.tsx) -- 8 connections
+- **EvaluationView** (C:\project\tenopa proposer\frontend\components\EvaluationView.tsx) -- 8 connections
   - -> contains -> [[scorecolor]]
   - -> contains -> [[scorebg]]
   - -> contains -> [[evaluationviewprops]]
@@ -1891,7 +1965,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedrefevaluationradar]]
   - -> imports -> [[unresolvedreflibapi]]
-- **Dot** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 8 connections
+- **Dot** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 8 connections
   - -> calls -> [[unresolvedrefuseprog]]
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefsethovered]]
@@ -1900,7 +1974,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmove]]
   - -> calls -> [[unresolvedrefstart]]
   - <- contains <- [[phasegraph]]
-- **GenericArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 8 connections
+- **GenericArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 8 connections
   - -> calls -> [[unresolvedrefusestate]]
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedrefslice]]
@@ -1909,7 +1983,25 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefsetfullscreen]]
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[stepartifactviewer]]
-- **VersionSelectionModal** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionSelectionModal.tsx) -- 8 connections
+- **FeedbackForm** (C:\project\tenopa proposer\frontend\components\vault\FeedbackForm.tsx) -- 8 connections
+  - -> contains -> [[feedbackformprops]]
+  - -> contains -> [[feedbackdata]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedrefcomponentsuicard]]
+  - -> imports -> [[unresolvedrefcomponentsuibutton]]
+  - -> imports -> [[unresolvedrefcomponentsuibadge]]
+  - -> imports -> [[unresolvedrefcomponentsuitextarea]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **VaultChat** (C:\project\tenopa proposer\frontend\components\VaultChat.tsx) -- 8 connections
+  - -> contains -> [[vaultchatprops]]
+  - -> contains -> [[message]]
+  - -> contains -> [[parsecitations]]
+  - -> contains -> [[scrolltosource]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedreflibapi]]
+  - -> imports -> [[unresolvedreflibhooksusevaultchatstream]]
+- **VersionSelectionModal** (C:\project\tenopa proposer\frontend\components\VersionSelectionModal.tsx) -- 8 connections
   - -> contains -> [[conflictcard]]
   - -> contains -> [[versiondetails]]
   - -> imports -> [[unresolvedrefreact]]
@@ -1918,14 +2010,31 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentsuibadge]]
   - -> imports -> [[unresolvedrefcomponentsuialert]]
   - -> imports -> [[unresolvedreflucidereact]]
-- **__unresolved__::ref::click** () -- 7 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[proposalscontent]]
-  - <- calls <- [[companytab]]
-  - <- calls <- [[versiondetailspanel]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
+- **_resolve_task_dependencies** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefcopy]]
+  - -> calls -> [[unresolvedrefall]]
+  - -> calls -> [[unresolvedrefany]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefsort]]
+  - -> calls -> [[unresolvedrefextend]]
+  - -> calls -> [[unresolvedrefremove]]
+  - <- contains <- [[parallelworkengine]]
+- **__unresolved__::ref::___components_ui_button_** () -- 7 connections
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[artifactversionpanel]]
+  - <- imports <- [[projectdocumentspanel]]
+  - <- imports <- [[versionselectionmodal]]
+  - <- imports <- [[feedbackform]]
+- **__unresolved__::ref::entries** () -- 7 connections
+  - <- calls <- [[kbhealthwidget]]
+  - <- calls <- [[kbsearchview]]
+  - <- calls <- [[genericcontent]]
+  - <- calls <- [[selfreviewartifact]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[estimatestepfromphase]]
+  - <- calls <- [[qs]]
 - **__unresolved__::ref::getmonth** () -- 7 connections
   - <- calls <- [[getcurrentmonth]]
   - <- calls <- [[getprevmonth]]
@@ -1934,30 +2043,14 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[formatdate]]
   - <- calls <- [[formatdateshort]]
   - <- calls <- [[formatdate]]
-- **__unresolved__::ref::goto** () -- 7 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[safegoto]]
-  - <- calls <- [[run]]
-  - <- calls <- [[safegoto]]
-- **__unresolved__::ref::launch** () -- 7 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-- **__unresolved__::ref::newpage** () -- 7 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
+- **__unresolved__::ref::match** () -- 7 connections
+  - <- calls <- [[chunkarticles]]
+  - <- calls <- [[rendermarkdowncontent]]
+  - <- calls <- [[executenodeandcreateversion]]
+  - <- calls <- [[parsebudgetstring]]
+  - <- calls <- [[guessteam]]
+  - <- calls <- [[versiondetailspanel]]
+  - <- calls <- [[parsedeadline]]
 - **__unresolved__::ref::number** () -- 7 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[monitorbidsview]]
@@ -1974,14 +2067,14 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[useelapsedtime]]
   - <- calls <- [[formatdate]]
   - <- calls <- [[formatdateshort]]
-- **__unresolved__::ref::some** () -- 7 connections
-  - <- calls <- [[presetstab]]
-  - <- calls <- [[companytab]]
-  - <- calls <- [[rstep]]
-  - <- calls <- [[rgate]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[parallelprogress]]
-  - <- calls <- [[run]]
+- **__unresolved__::ref::start** () -- 7 connections
+  - <- calls <- [[initscheduler]]
+  - <- calls <- [[chunkbyheadings]]
+  - <- calls <- [[setupscheduler]]
+  - <- calls <- [[extractsourcetags]]
+  - <- calls <- [[checknumberconsistency]]
+  - <- calls <- [[row]]
+  - <- calls <- [[dot]]
 - **__unresolved__::ref::useref** () -- 7 connections
   - <- calls <- [[filterablesortableheader]]
   - <- calls <- [[agencytypeahead]]
@@ -1990,15 +2083,7 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[companytab]]
   - <- calls <- [[useprog]]
   - <- calls <- [[reviewpanel]]
-- **run_comparison** (C:\project\tenopa proposer\-agent-master\app\services\prompt_simulator.py) -- 7 connections
-  - -> calls -> [[unresolvedrefgetpromptbyversion]]
-  - -> calls -> [[unresolvedrefsimulationrequest]]
-  - -> calls -> [[unresolvedrefrunsimulation]]
-  - -> calls -> [[unresolvedrefabs]]
-  - -> calls -> [[unresolvedrefmodeldump]]
-  - -> calls -> [[unresolvedrefround]]
-  - <- contains <- [[promptsimulator]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\[promptId]\page.tsx) -- 7 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\[promptId]\page.tsx) -- 7 connections
   - -> contains -> [[metriccard]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
@@ -2006,7 +2091,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentspromptprompteditor]]
   - -> imports -> [[unresolvedrefcomponentspromptpreviewpanel]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\catalog\page.tsx) -- 7 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\catalog\page.tsx) -- 7 connections
   - -> contains -> [[heatcolor]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
@@ -2014,7 +2099,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedrefcomponentspromptcategorytabs]]
   - -> imports -> [[unresolvedrefcomponentspromptworkflowmap]]
   - -> imports -> [[unresolvedrefcomponentspromptpromptlabels]]
-- **AttachmentLink** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
+- **AttachmentLink** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
   - -> calls -> [[unresolvedreffind]]
   - -> calls -> [[unresolvedrefclassifyattachment]]
   - -> calls -> [[unresolvedreftouppercase]]
@@ -2022,7 +2107,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[page]]
-- **BidRow** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
+- **BidRow** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefformatdeadline]]
   - -> calls -> [[unresolvedrefstoppropagation]]
   - -> calls -> [[unresolvedrefonbookmark]]
@@ -2030,7 +2115,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefformatbudget]]
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[page]]
-- **matchesMonitorSearch** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
+- **matchesMonitorSearch** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedreftolowercase]]
@@ -2038,7 +2123,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefevery]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[page]]
-- **matchesScoredSearch** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
+- **matchesScoredSearch** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 7 connections
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedreftolowercase]]
@@ -2046,7 +2131,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefevery]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[page]]
-- **TemplatesTab** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 7 connections
+- **TemplatesTab** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefsetagency]]
   - -> calls -> [[unresolvedrefonsearch]]
   - -> calls -> [[unresolvedrefsetcategory]]
@@ -2054,7 +2139,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefarray]]
   - -> calls -> [[unresolvedrefondelete]]
   - <- contains <- [[page]]
-- **formatDate** (C:\project\tenopa proposer\-agent-master\frontend\components\BiddingWorkspace.tsx) -- 7 connections
+- **formatDate** (C:\project\tenopa proposer\frontend\components\BiddingWorkspace.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefgetmonth]]
   - -> calls -> [[unresolvedrefgetdate]]
   - -> calls -> [[unresolvedrefpadstart]]
@@ -2062,7 +2147,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefgethours]]
   - -> calls -> [[unresolvedrefgetminutes]]
   - <- contains <- [[biddingworkspace]]
-- **SimpleMarkdown** (C:\project\tenopa proposer\-agent-master\frontend\components\DetailRightPanel.tsx) -- 7 connections
+- **SimpleMarkdown** (C:\project\tenopa proposer\frontend\components\DetailRightPanel.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefstartswith]]
@@ -2070,7 +2155,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefreplace]]
   - -> calls -> [[unresolvedrefrenderinline]]
   - <- contains <- [[detailrightpanel]]
-- **formatDateShort** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 7 connections
+- **formatDateShort** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefisnan]]
   - -> calls -> [[unresolvedrefgettime]]
   - -> calls -> [[unresolvedrefpadstart]]
@@ -2078,7 +2163,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefgetmonth]]
   - -> calls -> [[unresolvedrefgetdate]]
   - <- contains <- [[filehubpanel]]
-- **FileHubPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 7 connections
+- **FileHubPanel** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 7 connections
   - -> contains -> [[filecolor]]
   - -> contains -> [[formatbytes]]
   - -> contains -> [[formatdateshort]]
@@ -2086,7 +2171,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> contains -> [[section]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **HITLReviewModal** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewModal.tsx) -- 7 connections
+- **HITLReviewModal** (C:\project\tenopa proposer\frontend\components\HITLReviewModal.tsx) -- 7 connections
   - -> contains -> [[reviewfeedback]]
   - -> contains -> [[reviewitem]]
   - -> contains -> [[hitlreviewmodalprops]]
@@ -2094,7 +2179,15 @@ Cohesion: 0.00 | Nodes: 932
   - -> imports -> [[unresolvedreflibutils]]
   - -> imports -> [[unresolvedrefdiagnosticscorecard]]
   - -> imports -> [[unresolvedreflibapi]]
-- **Row** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 7 connections
+- **MasterProjectsChat** (C:\project\tenopa proposer\frontend\components\MasterProjectsChat.tsx) -- 7 connections
+  - -> contains -> [[chatmessage]]
+  - -> contains -> [[projectcard]]
+  - -> contains -> [[chatresponse]]
+  - -> contains -> [[projectsourcecard]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedreflibutils]]
+- **Row** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefindexof]]
   - -> calls -> [[unresolvedrefclk]]
@@ -2102,7 +2195,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmove]]
   - -> calls -> [[unresolvedrefgate]]
   - <- contains <- [[phasegraph]]
-- **CostSheetEditor** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 7 connections
+- **CostSheetEditor** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 7 connections
   - -> contains -> [[props]]
   - -> contains -> [[expensegroup]]
   - -> contains -> [[fmtwon]]
@@ -2110,7 +2203,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> contains -> [[laborrow]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ParallelProgress** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 7 connections
+- **ParallelProgress** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 7 connections
   - -> calls -> [[unresolvedrefincludes]]
   - -> calls -> [[unresolvedreffindindex]]
   - -> calls -> [[unresolvedreffilter]]
@@ -2118,7 +2211,7 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefsome]]
   - <- contains <- [[workflowpanel]]
-- **reportError** (C:\project\tenopa proposer\-agent-master\frontend\lib\error-reporter.ts) -- 7 connections
+- **reportError** (C:\project\tenopa proposer\frontend\lib\error-reporter.ts) -- 7 connections
   - -> calls -> [[unresolvedrefincludes]]
   - -> calls -> [[unresolvedrefpush]]
   - -> calls -> [[unresolvedrefsettimeout]]
@@ -2126,20 +2219,6 @@ Cohesion: 0.00 | Nodes: 932
   - -> calls -> [[unresolvedreffetch]]
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[error-reporter]]
-- **__unresolved__::ref::___components_ui_button_** () -- 6 connections
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[artifactversionpanel]]
-  - <- imports <- [[projectdocumentspanel]]
-  - <- imports <- [[versionselectionmodal]]
-- **__unresolved__::ref::___components_ui_card_** () -- 6 connections
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[page]]
-  - <- imports <- [[artifactversionpanel]]
-  - <- imports <- [[projectdocumentspanel]]
-  - <- imports <- [[versionselectionmodal]]
 - **__unresolved__::ref::___components_ui_toast_** () -- 6 connections
   - <- imports <- [[layout]]
   - <- imports <- [[artifactversionpanel]]
@@ -2147,6 +2226,20 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[detailrightpanel]]
   - <- imports <- [[gonogopanel]]
   - <- imports <- [[workflowpanel]]
+- **__unresolved__::ref::___lib_utils_** () -- 6 connections
+  - <- imports <- [[feedbackloopworkflow]]
+  - <- imports <- [[hitlreviewmodal]]
+  - <- imports <- [[hitlreviewstatuslist]]
+  - <- imports <- [[masterprojectschat]]
+  - <- imports <- [[proposalstablerow]]
+  - <- imports <- [[reviewprogressbanner]]
+- **__unresolved__::ref::_recharts_** () -- 6 connections
+  - <- imports <- [[analyticscharts]]
+  - <- imports <- [[diagnosticscorecard]]
+  - <- imports <- [[evaluationradar]]
+  - <- imports <- [[knowledgehealthdashboard]]
+  - <- imports <- [[mockevalcard]]
+  - <- imports <- [[stepspecificviews]]
 - **__unresolved__::ref::ceil** () -- 6 connections
   - <- calls <- [[calcdday]]
   - <- calls <- [[calcdday]]
@@ -2154,13 +2247,13 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
   - <- calls <- [[formatdday]]
   - <- calls <- [[daysuntil]]
-- **__unresolved__::ref::fail** () -- 6 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[testuploadstoresfileinstorage]]
-  - <- calls <- [[testtriggerendpointispost]]
-  - <- calls <- [[testupdatescheduleendpointisput]]
+- **__unresolved__::ref::some** () -- 6 connections
+  - <- calls <- [[presetstab]]
+  - <- calls <- [[companytab]]
+  - <- calls <- [[rstep]]
+  - <- calls <- [[rgate]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[parallelprogress]]
 - **__unresolved__::ref::tolocaledatestring** () -- 6 connections
   - <- calls <- [[formatdeadline]]
   - <- calls <- [[templatecard]]
@@ -2182,77 +2275,112 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
   - <- calls <- [[companytab]]
   - <- calls <- [[versiondetailspanel]]
-- **step8-page-integration.test** (C:\project\tenopa proposer\-agent-master\frontend\__tests__\step8-page-integration.test.tsx) -- 6 connections
+- **step8-page-integration.test** (C:\project\tenopa proposer\frontend\__tests__\step8-page-integration.test.tsx) -- 6 connections
   - -> imports -> [[unresolvedrefvitest]]
   - -> imports -> [[unresolvedreftestinglibraryreact]]
   - -> imports -> [[unresolvedreftestinglibraryuserevent]]
   - -> imports -> [[unresolvedrefmswnode]]
   - -> imports -> [[unresolvedrefmsw]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\page.tsx) -- 6 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\page.tsx) -- 6 connections
   - -> contains -> [[healthcard]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsprompttrendchart]]
   - -> imports -> [[unresolvedrefcomponentsuicard]]
-- **getPrevMonth** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 6 connections
+- **getPrevMonth** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 6 connections
   - -> calls -> [[unresolvedrefsetmonth]]
   - -> calls -> [[unresolvedrefgetmonth]]
   - -> calls -> [[unresolvedrefgetfullyear]]
   - -> calls -> [[unresolvedrefpadstart]]
   - -> calls -> [[unresolvedrefstring]]
   - <- contains <- [[page]]
-- **BiddingWorkspace** (C:\project\tenopa proposer\-agent-master\frontend\components\BiddingWorkspace.tsx) -- 6 connections
+- **BiddingWorkspace** (C:\project\tenopa proposer\frontend\components\BiddingWorkspace.tsx) -- 6 connections
   - -> contains -> [[props]]
   - -> contains -> [[formatwon]]
   - -> contains -> [[formatdate]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefpricingcostsheeteditor]]
-- **EvaluatorCard** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationView.tsx) -- 6 connections
+- **renderInline** (C:\project\tenopa proposer\frontend\components\DetailRightPanel.tsx) -- 6 connections
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefmap]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefendswith]]
+  - -> calls -> [[unresolvedrefslice]]
+  - <- contains <- [[detailrightpanel]]
+- **EvaluatorCard** (C:\project\tenopa proposer\frontend\components\EvaluationView.tsx) -- 6 connections
   - -> calls -> [[unresolvedreffromcharcode]]
   - -> calls -> [[unresolvedrefscorecolor]]
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefkeys]]
   - -> calls -> [[unresolvedrefscorebg]]
   - <- contains <- [[evaluationview]]
-- **rStep** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 6 connections
+- **KnowledgeHealthDashboard** (C:\project\tenopa proposer\frontend\components\KnowledgeHealthDashboard.tsx) -- 6 connections
+  - -> contains -> [[healthmetrics]]
+  - -> contains -> [[knowledgehealthdashboardprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedrefrecharts]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedreflibapi]]
+- **KnowledgeSearchBar** (C:\project\tenopa proposer\frontend\components\KnowledgeSearchBar.tsx) -- 6 connections
+  - -> contains -> [[searchresultitem]]
+  - -> contains -> [[searchfilterstype]]
+  - -> contains -> [[knowledgesearchbarprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedreflibapi]]
+- **rStep** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 6 connections
   - -> calls -> [[unresolvedrefsome]]
   - -> calls -> [[unresolvedrefincludes]]
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedreffindindex]]
   - -> calls -> [[unresolvedrefindexof]]
   - <- contains <- [[phasegraph]]
-- **LaborRow** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 6 connections
+- **LaborRow** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 6 connections
   - -> calls -> [[unresolvedrefonchange]]
   - -> calls -> [[unresolvedrefparseint]]
   - -> calls -> [[unresolvedrefparsefloat]]
   - -> calls -> [[unresolvedreffmtwon]]
   - -> calls -> [[unresolvedrefonremove]]
   - <- contains <- [[costsheeteditor]]
-- **formatDday** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 6 connections
+- **formatDday** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 6 connections
   - -> calls -> [[unresolvedrefisnan]]
   - -> calls -> [[unresolvedrefgettime]]
   - -> calls -> [[unresolvedrefceil]]
   - -> calls -> [[unresolvedrefnow]]
   - -> calls -> [[unresolvedrefabs]]
   - <- contains <- [[projectcontextheader]]
-- **workflow-v4-diagnostics.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 6 connections
+- **scrollToSource** (C:\project\tenopa proposer\frontend\components\VaultChat.tsx) -- 6 connections
+  - -> calls -> [[unresolvedrefgetelementbyid]]
+  - -> calls -> [[unresolvedrefscrollintoview]]
+  - -> calls -> [[unresolvedrefadd]]
+  - -> calls -> [[unresolvedrefsettimeout]]
+  - -> calls -> [[unresolvedrefremove]]
+  - <- contains <- [[vaultchat]]
+- **VaultResponseCard** (C:\project\tenopa proposer\frontend\components\VaultResponseCard.tsx) -- 6 connections
+  - -> contains -> [[source]]
+  - -> contains -> [[vaultresponsecardprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedrefcomponentsuicard]]
+  - -> imports -> [[unresolvedrefcomponentsuibadge]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **workflow-v4-diagnostics.spec** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 6 connections
   - -> contains -> [[mockgapanalysisapi]]
   - -> contains -> [[mockworkflowstategapreview]]
   - -> contains -> [[mockproposalstatus]]
   - -> contains -> [[mockreviewitems]]
   - -> contains -> [[mockreviewitemdetail]]
   - -> imports -> [[unresolvedrefplaywrighttest]]
-- **authRequest** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 6 connections
+- **authRequest** (C:\project\tenopa proposer\frontend\lib\api.ts) -- 6 connections
   - -> calls -> [[unresolvedrefgettoken]]
   - -> calls -> [[unresolvedreffetch]]
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedrefcatch]]
   - -> calls -> [[unresolvedrefjson]]
   - <- contains <- [[api]]
-- **api** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 6 connections
+- **api** (C:\project\tenopa proposer\frontend\lib\api.ts) -- 6 connections
   - -> contains -> [[ttlcache]]
   - -> contains -> [[gettoken]]
   - -> contains -> [[request]]
@@ -2265,18 +2393,12 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[proposalstableheader]]
   - <- imports <- [[proposalstablerow]]
   - <- imports <- [[proposalstableskeleton]]
-- **__unresolved__::ref::___lib_utils_** () -- 5 connections
-  - <- imports <- [[feedbackloopworkflow]]
-  - <- imports <- [[hitlreviewmodal]]
-  - <- imports <- [[hitlreviewstatuslist]]
-  - <- imports <- [[proposalstablerow]]
-  - <- imports <- [[reviewprogressbanner]]
-- **__unresolved__::ref::_path_** () -- 5 connections
-  - <- imports <- [[playwrightconfig]]
-  - <- imports <- [[authsetup]]
-  - <- imports <- [[screenshots-auth]]
-  - <- imports <- [[screenshots-full]]
-  - <- imports <- [[screenshots]]
+- **__unresolved__::ref::_next_** () -- 5 connections
+  - <- imports <- [[nextconfig]]
+  - <- imports <- [[layout]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
+  - <- imports <- [[page]]
 - **__unresolved__::ref::cleartimeout** () -- 5 connections
   - <- calls <- [[artifactsview]]
   - <- calls <- [[scoredbidsview]]
@@ -2301,24 +2423,18 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[formatdate]]
   - <- calls <- [[formatdateshort]]
   - <- calls <- [[formatdate]]
-- **__unresolved__::ref::isarray** () -- 5 connections
-  - <- calls <- [[scoredbidsview]]
-  - <- calls <- [[proposalcontent]]
-  - <- calls <- [[reviewpanel]]
-  - <- calls <- [[request]]
-  - <- calls <- [[run]]
-- **__unresolved__::ref::newcontext** () -- 5 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::preventdefault** () -- 5 connections
   - <- calls <- [[kbsearchview]]
   - <- calls <- [[taginput]]
   - <- calls <- [[proposalscontent]]
   - <- calls <- [[companytab]]
   - <- calls <- [[logincontent]]
+- **__unresolved__::ref::remove** () -- 5 connections
+  - <- calls <- [[removelistener]]
+  - <- calls <- [[injectcharstyles]]
+  - <- calls <- [[displaytab]]
+  - <- calls <- [[scrolltosource]]
+  - <- calls <- [[resolvetaskdependencies]]
 - **__unresolved__::ref::route** () -- 5 connections
   - <- calls <- [[mockgapanalysisapi]]
   - <- calls <- [[mockworkflowstategapreview]]
@@ -2337,226 +2453,185 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[biddetailcontent]]
   - <- calls <- [[acceptinvitationcontent]]
   - <- calls <- [[logincontent]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\[promptId]\simulate\page.tsx) -- 5 connections
+- **_analyze_page_setup** (C:\project\tenopa proposer\app\services\hwpx\analyze_template.py) -- 5 connections
+  - -> calls -> [[unresolvedreffind]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefpagesetup]]
+  - -> calls -> [[unresolvedrefint]]
+  - <- contains <- [[analyzetemplate]]
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\[promptId]\simulate\page.tsx) -- 5 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedrefcomponentspromptsimulationrunner]]
   - -> imports -> [[unresolvedrefcomponentspromptcompareview]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\analytics\page.tsx) -- 5 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\analytics\page.tsx) -- 5 connections
   - -> contains -> [[chartpanel]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsanalyticscharts]]
-- **formatCurrency** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 5 connections
+- **formatCurrency** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefround]]
   - -> calls -> [[unresolvedrefisinteger]]
   - -> calls -> [[unresolvedreffloor]]
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **getCurrentMonth** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 5 connections
+- **getCurrentMonth** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefgetfullyear]]
   - -> calls -> [[unresolvedrefpadstart]]
   - -> calls -> [[unresolvedrefstring]]
   - -> calls -> [[unresolvedrefgetmonth]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\documents\page.tsx) -- 5 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\documents\page.tsx) -- 5 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsuibutton]]
   - -> imports -> [[unresolvedrefcomponentsuibadge]]
   - -> imports -> [[unresolvedrefcomponentsuicard]]
-- **calcDday** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
+- **calcDday** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefisnan]]
   - -> calls -> [[unresolvedrefgettime]]
   - -> calls -> [[unresolvedrefsethours]]
   - -> calls -> [[unresolvedrefceil]]
   - <- contains <- [[page]]
-- **formatDeadline** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
+- **formatDeadline** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
   - -> calls -> [[unresolvedreftolocaledatestring]]
   - -> calls -> [[unresolvedrefsethours]]
   - -> calls -> [[unresolvedrefceil]]
   - -> calls -> [[unresolvedrefgettime]]
   - <- contains <- [[page]]
-- **formatFetchedAt** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
+- **formatFetchedAt** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefpadstart]]
   - -> calls -> [[unresolvedreftostring]]
   - -> calls -> [[unresolvedrefgethours]]
   - -> calls -> [[unresolvedrefgetminutes]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\[id]\evaluation\page.tsx) -- 5 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\[id]\evaluation\page.tsx) -- 5 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsevaluationview]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\[id]\step8-review\page.tsx) -- 5 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\[id]\step8-review\page.tsx) -- 5 connections
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibhooksusestep8data]]
   - -> imports -> [[unresolvedrefcomponentsstep8]]
-- **CellInput** (C:\project\tenopa proposer\-agent-master\frontend\components\DataTable.tsx) -- 5 connections
+- **CellInput** (C:\project\tenopa proposer\frontend\components\DataTable.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefstring]]
   - -> calls -> [[unresolvedrefonchange]]
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefnumber]]
   - <- contains <- [[datatable]]
-- **DiagnosticScoreCard** (C:\project\tenopa proposer\-agent-master\frontend\components\DiagnosticScoreCard.tsx) -- 5 connections
+- **DiagnosticScoreCard** (C:\project\tenopa proposer\frontend\components\DiagnosticScoreCard.tsx) -- 5 connections
   - -> contains -> [[diagnosticscorecardprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefrecharts]]
   - -> imports -> [[unresolvedreflucidereact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **KbUsageHistory** (C:\project\tenopa proposer\-agent-master\frontend\components\KbUsageHistory.tsx) -- 5 connections
+- **KbUsageHistory** (C:\project\tenopa proposer\frontend\components\KbUsageHistory.tsx) -- 5 connections
   - -> contains -> [[usagerecord]]
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **formatDate** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 5 connections
+- **KnowledgeRecommendations** (C:\project\tenopa proposer\frontend\components\KnowledgeRecommendations.tsx) -- 5 connections
+  - -> contains -> [[knowledgerecommendation]]
+  - -> contains -> [[knowledgerecommendationsprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedreflibapi]]
+- **ProjectSourceCard** (C:\project\tenopa proposer\frontend\components\MasterProjectsChat.tsx) -- 5 connections
+  - -> calls -> [[unresolvedrefcn]]
+  - -> calls -> [[unresolvedrefround]]
+  - -> calls -> [[unresolvedrefmap]]
+  - -> calls -> [[unresolvedrefslice]]
+  - <- contains <- [[masterprojectschat]]
+- **formatDate** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefisnan]]
   - -> calls -> [[unresolvedrefgettime]]
   - -> calls -> [[unresolvedrefgetmonth]]
   - -> calls -> [[unresolvedrefgetdate]]
   - <- contains <- [[projectcontextheader]]
-- **ProjectDocumentsPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectDocumentsPanel.tsx) -- 5 connections
+- **ProjectDocumentsPanel** (C:\project\tenopa proposer\frontend\components\ProjectDocumentsPanel.tsx) -- 5 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsuibutton]]
   - -> imports -> [[unresolvedrefcomponentsuibadge]]
   - -> imports -> [[unresolvedrefcomponentsuicard]]
-- **ProposalDetailModal** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailModal.tsx) -- 5 connections
+- **ProposalDetailModal** (C:\project\tenopa proposer\frontend\components\ProposalDetailModal.tsx) -- 5 connections
   - -> contains -> [[teammember]]
   - -> contains -> [[proposaldetailmodalprops]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibproposalsutils]]
   - -> imports -> [[unresolvedrefreact]]
-- **ProposalsTableRow** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableRow.tsx) -- 5 connections
+- **ProposalsTableRow** (C:\project\tenopa proposer\frontend\components\ProposalsTableRow.tsx) -- 5 connections
   - -> contains -> [[proposalstablerowprops]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibproposalsutils]]
   - -> imports -> [[unresolvedreflibutils]]
-- **PlanArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 5 connections
+- **PlanArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefjoin]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - -> calls -> [[unresolvedrefnumber]]
   - <- contains <- [[stepartifactviewer]]
-- **StreamDashboard** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamDashboard.tsx) -- 5 connections
+- **StreamDashboard** (C:\project\tenopa proposer\frontend\components\StreamDashboard.tsx) -- 5 connections
   - -> contains -> [[props]]
   - -> contains -> [[daysuntil]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsstreamdependencygraph]]
-- **Card** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Card.tsx) -- 5 connections
-  - -> contains -> [[cardprops]]
-  - -> contains -> [[cardheaderprops]]
-  - -> contains -> [[cardbodyprops]]
-  - -> contains -> [[cardfooterprops]]
+- **parseCitations** (C:\project\tenopa proposer\frontend\components\VaultChat.tsx) -- 5 connections
+  - -> calls -> [[unresolvedrefexec]]
+  - -> calls -> [[unresolvedrefpush]]
+  - -> calls -> [[unresolvedrefslice]]
+  - -> calls -> [[unresolvedrefscrolltosource]]
+  - <- contains <- [[vaultchat]]
+- **VaultStepSelector** (C:\project\tenopa proposer\frontend\components\VaultStepSelector.tsx) -- 5 connections
+  - -> contains -> [[vaultstepselectorprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **FormField** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\FormField.tsx) -- 5 connections
-  - -> contains -> [[formfieldprops]]
-  - -> contains -> [[textinputprops]]
-  - -> contains -> [[textareaprops]]
-  - -> contains -> [[selectprops]]
-  - -> imports -> [[unresolvedrefreact]]
-- **VersionCompareModal** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionCompareModal.tsx) -- 5 connections
+  - -> imports -> [[unresolvedrefcomponentsuiselect]]
+  - -> imports -> [[unresolvedrefcomponentsuibadge]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **VersionCompareModal** (C:\project\tenopa proposer\frontend\components\VersionCompareModal.tsx) -- 5 connections
   - -> contains -> [[versioncomparemodalprops]]
   - -> contains -> [[striphtml]]
   - -> contains -> [[linediff]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ConflictCard** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionSelectionModal.tsx) -- 5 connections
+- **ConflictCard** (C:\project\tenopa proposer\frontend\components\VersionSelectionModal.tsx) -- 5 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefonselect]]
   - -> calls -> [[unresolvedreftolocaledatestring]]
   - -> calls -> [[unresolvedreffind]]
   - <- contains <- [[versionselectionmodal]]
-- **mockReviewItems** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 5 connections
+- **mockReviewItems** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 5 connections
   - -> calls -> [[unresolvedrefroute]]
   - -> calls -> [[unresolvedreffulfill]]
   - -> calls -> [[unresolvedrefstringify]]
   - -> calls -> [[unresolvedreftoisostring]]
   - <- contains <- [[workflow-v4-diagnosticsspec]]
-- **TTLCache** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 5 connections
-  - -> contains -> [[constructor]]
-  - -> contains -> [[get]]
-  - -> contains -> [[set]]
-  - -> contains -> [[clear]]
-  - <- contains <- [[api]]
-- **_qs** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 5 connections
+- **_qs** (C:\project\tenopa proposer\frontend\lib\api.ts) -- 5 connections
   - -> calls -> [[unresolvedrefentries]]
   - -> calls -> [[unresolvedrefset]]
   - -> calls -> [[unresolvedrefstring]]
   - -> calls -> [[unresolvedreftostring]]
   - <- contains <- [[api]]
-- **getToken** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 5 connections
+- **getToken** (C:\project\tenopa proposer\frontend\lib\api.ts) -- 5 connections
   - -> calls -> [[unresolvedrefget]]
   - -> calls -> [[unresolvedrefcreateclient]]
   - -> calls -> [[unresolvedrefgetsession]]
   - -> calls -> [[unresolvedrefset]]
   - <- contains <- [[api]]
-- **fail** (C:\project\tenopa proposer\-agent-master\tests\e2e_auth_integration.mjs) -- 5 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedrefsubstring]]
-  - -> calls -> [[unresolvedrefstring]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2eauthintegration]]
-- **e2e_auth_integration** (C:\project\tenopa proposer\-agent-master\tests\e2e_auth_integration.mjs) -- 5 connections
-  - -> contains -> [[ok]]
-  - -> contains -> [[fail]]
-  - -> contains -> [[safegoto]]
-  - -> contains -> [[run]]
-  - -> imports -> [[unresolvedrefplaywright]]
-- **e2e_frontend_v2** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend_v2.mjs) -- 5 connections
-  - -> contains -> [[ok]]
-  - -> contains -> [[fail]]
-  - -> contains -> [[safegoto]]
-  - -> contains -> [[run]]
-  - -> imports -> [[unresolvedrefplaywright]]
-- **__unresolved__::ref::___components_ui_badge_** () -- 4 connections
-  - <- imports <- [[page]]
-  - <- imports <- [[artifactversionpanel]]
-  - <- imports <- [[projectdocumentspanel]]
-  - <- imports <- [[versionselectionmodal]]
 - **__unresolved__::ref::___lib_hooks_useworkflowstream_** () -- 4 connections
   - <- imports <- [[page]]
   - <- imports <- [[detailcenterpanel]]
   - <- imports <- [[phasegraph]]
   - <- imports <- [[workflowlogpanel]]
-- **__unresolved__::ref::_fs_** () -- 4 connections
-  - <- imports <- [[tmpe2ebids]]
-  - <- imports <- [[screenshots-auth]]
-  - <- imports <- [[screenshots-full]]
-  - <- imports <- [[screenshots]]
-- **__unresolved__::ref::_lucide_react_** () -- 4 connections
-  - <- imports <- [[artifactversionpanel]]
-  - <- imports <- [[diagnosticscorecard]]
-  - <- imports <- [[gapanalysisresultlist]]
-  - <- imports <- [[versionselectionmodal]]
-- **__unresolved__::ref::_playwright_** () -- 4 connections
-  - <- imports <- [[tmpe2ebids]]
-  - <- imports <- [[e2eauthintegration]]
-  - <- imports <- [[e2efrontend]]
-  - <- imports <- [[e2efrontendv2]]
-- **__unresolved__::ref::_recharts_** () -- 4 connections
-  - <- imports <- [[analyticscharts]]
-  - <- imports <- [[diagnosticscorecard]]
-  - <- imports <- [[evaluationradar]]
-  - <- imports <- [[mockevalcard]]
-- **__unresolved__::ref::existssync** () -- 4 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-- **__unresolved__::ref::fill** () -- 4 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::floor** () -- 4 connections
   - <- calls <- [[formatcurrency]]
   - <- calls <- [[formatelapsedtime]]
@@ -2572,36 +2647,21 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[getcurrentmonth]]
   - <- calls <- [[getprevmonth]]
   - <- calls <- [[formatcrawledat]]
-- **__unresolved__::ref::getitem** () -- 4 connections
-  - <- calls <- [[displaytab]]
-  - <- calls <- [[safegetitem]]
-  - <- calls <- [[getauthtoken]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::getsession** () -- 4 connections
   - <- calls <- [[gettoken]]
   - <- calls <- [[getauthtoken]]
   - <- calls <- [[logincontent]]
   - <- calls <- [[gettoken]]
+- **__unresolved__::ref::isarray** () -- 4 connections
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[proposalcontent]]
+  - <- calls <- [[reviewpanel]]
+  - <- calls <- [[request]]
 - **__unresolved__::ref::isnan** () -- 4 connections
   - <- calls <- [[calcdday]]
   - <- calls <- [[formatdateshort]]
   - <- calls <- [[formatdday]]
   - <- calls <- [[formatdate]]
-- **__unresolved__::ref::mkdirsync** () -- 4 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-- **__unresolved__::ref::ok** () -- 4 connections
-  - <- calls <- [[buildrecommendationsresponse]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-- **__unresolved__::ref::screenshot** () -- 4 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
-  - <- calls <- [[main]]
 - **__unresolved__::ref::setquery** () -- 4 connections
   - <- calls <- [[artifactsview]]
   - <- calls <- [[kbsearchview]]
@@ -2622,235 +2682,236 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
   - <- calls <- [[gonogocontent]]
   - <- calls <- [[gonogoartifact]]
-- **__unresolved__::ref::url** () -- 4 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-- **step8-integration.test** (C:\project\tenopa proposer\-agent-master\frontend\__tests__\step8-integration.test.ts) -- 4 connections
+- **_split_sentences** (C:\project\tenopa proposer\app\services\source_tagger.py) -- 4 connections
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefextend]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - <- contains <- [[sourcetagger]]
+- **step8-integration.test** (C:\project\tenopa proposer\frontend\__tests__\step8-integration.test.ts) -- 4 connections
   - -> imports -> [[unresolvedrefvitest]]
   - -> imports -> [[unresolvedrefmswnode]]
   - -> imports -> [[unresolvedrefmsw]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **calcDDay** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 4 connections
+- **calcDDay** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefsethours]]
   - -> calls -> [[unresolvedrefceil]]
   - -> calls -> [[unresolvedrefgettime]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\labor-rates\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\labor-rates\page.tsx) -- 4 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsdatatable]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\market-prices\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\market-prices\page.tsx) -- 4 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsdatatable]]
-- **fileIcon** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\knowledge\health\page.tsx) -- 4 connections
+  - -> imports -> [[unresolvedrefnext]]
+  - -> imports -> [[unresolvedrefcomponentsknowledgehealthdashboard]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedrefnextlink]]
+- **fileIcon** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 4 connections
   - -> calls -> [[unresolvedreftolowercase]]
   - -> calls -> [[unresolvedrefpop]]
   - -> calls -> [[unresolvedrefsplit]]
   - <- contains <- [[page]]
-- **extractDomain** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 4 connections
+- **extractDomain** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 4 connections
   - -> calls -> [[unresolvedreftest]]
   - -> calls -> [[unresolvedrefincludes]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\invitations\accept\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\vault\page.tsx) -- 4 connections
+  - -> imports -> [[unresolvedrefnext]]
+  - -> imports -> [[unresolvedreflibsupabaseserver]]
+  - -> imports -> [[unresolvedrefcomponentsvaultlayout]]
+  - -> imports -> [[unresolvedrefnextnavigation]]
+- **page** (C:\project\tenopa proposer\frontend\app\invitations\accept\page.tsx) -- 4 connections
   - -> contains -> [[acceptinvitationcontent]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **layout** (C:\project\tenopa proposer\-agent-master\frontend\app\layout.tsx) -- 4 connections
+- **layout** (C:\project\tenopa proposer\frontend\app\layout.tsx) -- 4 connections
   - -> imports -> [[unresolvedrefnext]]
   - -> imports -> [[unresolvedrefcomponentserrorreporterinit]]
   - -> imports -> [[unresolvedrefcomponentsuitoast]]
   - -> imports -> [[unresolvedrefcss]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\login\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\login\page.tsx) -- 4 connections
   - -> contains -> [[logincontent]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\page.tsx) -- 4 connections
+- **page** (C:\project\tenopa proposer\frontend\app\page.tsx) -- 4 connections
   - -> contains -> [[landingstats]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
-- **OrgChartView** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 4 connections
+- **OrgChartView** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefmax]]
   - -> calls -> [[unresolvedrefslice]]
   - <- contains <- [[adminorgchart]]
-- **computeSimpleDiff** (C:\project\tenopa proposer\-agent-master\frontend\components\AiSuggestionDiff.tsx) -- 4 connections
+- **computeSimpleDiff** (C:\project\tenopa proposer\frontend\components\AiSuggestionDiff.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedrefmax]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[aisuggestiondiff]]
-- **AiSuggestionDiff** (C:\project\tenopa proposer\-agent-master\frontend\components\AiSuggestionDiff.tsx) -- 4 connections
+- **AiSuggestionDiff** (C:\project\tenopa proposer\frontend\components\AiSuggestionDiff.tsx) -- 4 connections
   - -> contains -> [[aisuggestiondiffprops]]
   - -> contains -> [[computesimplediff]]
   - -> contains -> [[striphtml]]
   - -> imports -> [[unresolvedrefreact]]
-- **PlanContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 4 connections
+- **PlanContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - -> calls -> [[unresolvedrefnumber]]
   - <- contains <- [[artifactreviewpanel]]
-- **ArtifactVersionGroup** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactVersionPanel.tsx) -- 4 connections
+- **ArtifactVersionGroup** (C:\project\tenopa proposer\frontend\components\ArtifactVersionPanel.tsx) -- 4 connections
   - -> calls -> [[unresolvedreffind]]
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefonversionselect]]
   - <- contains <- [[artifactversionpanel]]
-- **DuplicateBidWarning** (C:\project\tenopa proposer\-agent-master\frontend\components\DuplicateBidWarning.tsx) -- 4 connections
+- **DuplicateBidWarning** (C:\project\tenopa proposer\frontend\components\DuplicateBidWarning.tsx) -- 4 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **EditorAiPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\EditorAiPanel.tsx) -- 4 connections
+- **EditorAiPanel** (C:\project\tenopa proposer\frontend\components\EditorAiPanel.tsx) -- 4 connections
   - -> contains -> [[editoraipanelprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentsaisuggestiondiff]]
-- **FileBar** (C:\project\tenopa proposer\-agent-master\frontend\components\FileBar.tsx) -- 4 connections
+- **FileBar** (C:\project\tenopa proposer\frontend\components\FileBar.tsx) -- 4 connections
   - -> contains -> [[filecolor]]
   - -> contains -> [[filebarprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **GapAnalysisResultList** (C:\project\tenopa proposer\-agent-master\frontend\components\GapAnalysisResultList.tsx) -- 4 connections
+- **GapAnalysisResultList** (C:\project\tenopa proposer\frontend\components\GapAnalysisResultList.tsx) -- 4 connections
   - -> contains -> [[gapanalysisresultlistprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflucidereact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **fmtWon** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 4 connections
+- **fmtWon** (C:\project\tenopa proposer\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefabs]]
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[bidplanreviewpanel]]
-- **fmtShort** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 4 connections
+- **fmtShort** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefabs]]
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[costsheeteditor]]
-- **fmtWon** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\PriceScoreTable.tsx) -- 4 connections
+- **fmtWon** (C:\project\tenopa proposer\frontend\components\pricing\PriceScoreTable.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefabs]]
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[pricescoretable]]
-- **PriceScoreTable** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\PriceScoreTable.tsx) -- 4 connections
+- **PriceScoreTable** (C:\project\tenopa proposer\frontend\components\pricing\PriceScoreTable.tsx) -- 4 connections
   - -> contains -> [[props]]
   - -> contains -> [[fmtwon]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **fmtWon** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\ScenarioCards.tsx) -- 4 connections
+- **fmtWon** (C:\project\tenopa proposer\frontend\components\pricing\ScenarioCards.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefabs]]
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[scenariocards]]
-- **ProjectArchivePanel** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectArchivePanel.tsx) -- 4 connections
+- **ProjectArchivePanel** (C:\project\tenopa proposer\frontend\components\ProjectArchivePanel.tsx) -- 4 connections
   - -> contains -> [[formatbytes]]
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **CompareView** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\CompareView.tsx) -- 4 connections
+- **CompareView** (C:\project\tenopa proposer\frontend\components\prompt\CompareView.tsx) -- 4 connections
   - -> contains -> [[compareviewprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefsimulationrunner]]
-- **SimulationRunner** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\SimulationRunner.tsx) -- 4 connections
+- **SimulationRunner** (C:\project\tenopa proposer\frontend\components\prompt\SimulationRunner.tsx) -- 4 connections
   - -> contains -> [[simulationrunnerprops]]
   - -> contains -> [[qualitycard]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **QaPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\QaPanel.tsx) -- 4 connections
+- **QaPanel** (C:\project\tenopa proposer\frontend\components\QaPanel.tsx) -- 4 connections
   - -> contains -> [[categorylabel]]
   - -> contains -> [[reactionbadge]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **daysUntil** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamDashboard.tsx) -- 4 connections
+- **daysUntil** (C:\project\tenopa proposer\frontend\components\StreamDashboard.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefceil]]
   - -> calls -> [[unresolvedrefgettime]]
   - -> calls -> [[unresolvedrefabs]]
   - <- contains <- [[streamdashboard]]
-- **SubmissionDocsPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\SubmissionDocsPanel.tsx) -- 4 connections
+- **SubmissionDocsPanel** (C:\project\tenopa proposer\frontend\components\SubmissionDocsPanel.tsx) -- 4 connections
   - -> contains -> [[props]]
   - -> contains -> [[docstatusbadge]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ToastItem** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 4 connections
+- **ToastItem** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefcn]]
   - -> calls -> [[unresolvedrefhandler]]
   - -> calls -> [[unresolvedrefondismiss]]
   - <- contains <- [[toast]]
-- **lineDiff** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionCompareModal.tsx) -- 4 connections
+- **VaultLayout** (C:\project\tenopa proposer\frontend\components\VaultLayout.tsx) -- 4 connections
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedrefvaultsidebar]]
+  - -> imports -> [[unresolvedrefvaultchat]]
+  - -> imports -> [[unresolvedreflibapi]]
+- **VaultSidebar** (C:\project\tenopa proposer\frontend\components\VaultSidebar.tsx) -- 4 connections
+  - -> contains -> [[vaultsidebarprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+  - -> imports -> [[unresolvedrefvaultlayout]]
+- **lineDiff** (C:\project\tenopa proposer\frontend\components\VersionCompareModal.tsx) -- 4 connections
   - -> calls -> [[unresolvedrefsplit]]
   - -> calls -> [[unresolvedrefmax]]
   - -> calls -> [[unresolvedrefpush]]
   - <- contains <- [[versioncomparemodal]]
-- **WorkflowLogPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowLogPanel.tsx) -- 4 connections
+- **WorkflowLogPanel** (C:\project\tenopa proposer\frontend\components\WorkflowLogPanel.tsx) -- 4 connections
   - -> contains -> [[workflowlogpanelprops]]
   - -> contains -> [[logentry]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibhooksuseworkflowstream]]
-- **WorkflowResumeBanner** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowResumeBanner.tsx) -- 4 connections
+- **WorkflowResumeBanner** (C:\project\tenopa proposer\frontend\components\WorkflowResumeBanner.tsx) -- 4 connections
   - -> contains -> [[estimatestepfromphase]]
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **screenshots-auth** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots-auth.ts) -- 4 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-  - -> imports -> [[unresolvedrefpath]]
-  - -> imports -> [[unresolvedreffs]]
-- **screenshots-full** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots-full.ts) -- 4 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-  - -> imports -> [[unresolvedrefpath]]
-  - -> imports -> [[unresolvedreffs]]
-- **screenshots** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshots.ts) -- 4 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-  - -> imports -> [[unresolvedrefpath]]
-  - -> imports -> [[unresolvedreffs]]
-- **mockGapAnalysisApi** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
+- **mockGapAnalysisApi** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
   - -> calls -> [[unresolvedrefroute]]
   - -> calls -> [[unresolvedreffulfill]]
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[workflow-v4-diagnosticsspec]]
-- **mockProposalStatus** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
+- **mockProposalStatus** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
   - -> calls -> [[unresolvedrefroute]]
   - -> calls -> [[unresolvedreffulfill]]
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[workflow-v4-diagnosticsspec]]
-- **mockReviewItemDetail** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
+- **mockReviewItemDetail** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
   - -> calls -> [[unresolvedrefroute]]
   - -> calls -> [[unresolvedreffulfill]]
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[workflow-v4-diagnosticsspec]]
-- **mockWorkflowStateGapReview** (C:\project\tenopa proposer\-agent-master\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
+- **mockWorkflowStateGapReview** (C:\project\tenopa proposer\frontend\e2e\workflow-v4-diagnostics.spec.ts) -- 4 connections
   - -> calls -> [[unresolvedrefroute]]
   - -> calls -> [[unresolvedreffulfill]]
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[workflow-v4-diagnosticsspec]]
-- **usePhaseStatus** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\usePhaseStatus.ts) -- 4 connections
+- **useVaultStep** (C:\project\tenopa proposer\frontend\hooks\useVaultStep.ts) -- 4 connections
+  - -> contains -> [[vaultresponse]]
+  - -> contains -> [[stepdata]]
+  - -> contains -> [[usevaultstepoptions]]
+  - -> imports -> [[unresolvedrefreact]]
+- **usePhaseStatus** (C:\project\tenopa proposer\frontend\lib\hooks\usePhaseStatus.ts) -- 4 connections
   - -> contains -> [[usephasestatusresult]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibsupabaseclient]]
-- **useStep8** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useStep8.ts) -- 4 connections
+- **useStep8** (C:\project\tenopa proposer\frontend\lib\hooks\useStep8.ts) -- 4 connections
   - -> contains -> [[getauthtoken]]
   - -> contains -> [[calculateprogress]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **e2e_frontend** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend.mjs) -- 4 connections
-  - -> contains -> [[ok]]
-  - -> contains -> [[fail]]
-  - -> contains -> [[run]]
-  - -> imports -> [[unresolvedrefplaywright]]
-- **__unresolved__::ref::_** () -- 3 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::___components_guidedtour_** () -- 3 connections
   - <- imports <- [[page]]
   - <- imports <- [[page]]
@@ -2883,6 +2944,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[useelapsedtime]]
   - <- calls <- [[companytab]]
   - <- calls <- [[useprog]]
+- **__unresolved__::ref::click** () -- 3 connections
+  - <- calls <- [[proposalscontent]]
+  - <- calls <- [[companytab]]
+  - <- calls <- [[versiondetailspanel]]
 - **__unresolved__::ref::confirm** () -- 3 connections
   - <- calls <- [[presetstab]]
   - <- calls <- [[proposalscontent]]
@@ -2895,6 +2960,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[formatfetchedat]]
   - <- calls <- [[formatcrawledat]]
   - <- calls <- [[formatdate]]
+- **__unresolved__::ref::getitem** () -- 3 connections
+  - <- calls <- [[displaytab]]
+  - <- calls <- [[safegetitem]]
+  - <- calls <- [[getauthtoken]]
 - **__unresolved__::ref::getminutes** () -- 3 connections
   - <- calls <- [[formatfetchedat]]
   - <- calls <- [[formatcrawledat]]
@@ -2907,10 +2976,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[filterablesortableheader]]
   - <- calls <- [[agencytypeahead]]
   - <- calls <- [[proposalscontent]]
-- **__unresolved__::ref::repeat** () -- 3 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::sethours** () -- 3 connections
   - <- calls <- [[calcdday]]
   - <- calls <- [[calcdday]]
@@ -2935,281 +3000,258 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[versiondetailspanel]]
   - <- calls <- [[reviewpanel]]
   - <- calls <- [[movetonodeaction]]
-- **__unresolved__::ref::textcontent** () -- 3 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::usetoast** () -- 3 connections
   - <- calls <- [[versiondetailspanel]]
   - <- calls <- [[reviewpanel]]
   - <- calls <- [[movetonodeaction]]
-- **embedding_text_for_client** (C:\project\tenopa proposer\-agent-master\app\services\embedding_service.py) -- 3 connections
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedreffilter]]
-  - <- contains <- [[embeddingservice]]
-- **embedding_text_for_competitor** (C:\project\tenopa proposer\-agent-master\app\services\embedding_service.py) -- 3 connections
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedreffilter]]
-  - <- contains <- [[embeddingservice]]
-- **embedding_text_for_lesson** (C:\project\tenopa proposer\-agent-master\app\services\embedding_service.py) -- 3 connections
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedreffilter]]
-  - <- contains <- [[embeddingservice]]
-- **_ratio_delta** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\page_guard.py) -- 3 connections
+- **_period_to_date_range** (C:\project\tenopa proposer\app\api\routes_analytics.py) -- 3 connections
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefint]]
+  - <- contains <- [[routesanalytics]]
+- **_ratio_delta** (C:\project\tenopa proposer\app\services\hwpx\page_guard.py) -- 3 connections
   - -> calls -> [[unresolvedrefmax]]
   - -> calls -> [[unresolvedrefabs]]
   - <- contains <- [[pageguard]]
-- **InlineInput** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 3 connections
+- **InlineInput** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefonchange]]
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[page]]
-- **Sel** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 3 connections
+- **Sel** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefonchange]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\experiments\page.tsx) -- 3 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\experiments\page.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **extractYear** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 3 connections
+- **extractYear** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftostring]]
   - -> calls -> [[unresolvedrefgetfullyear]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\content\page.tsx) -- 3 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\content\page.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedrefcomponentskbusagehistory]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\qa\page.tsx) -- 3 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\qa\page.tsx) -- 3 connections
   - -> contains -> [[categorylabel]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **formatDate** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 3 connections
+- **formatDate** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefslice]]
   - -> calls -> [[unresolvedreftoisostring]]
   - <- contains <- [[page]]
-- **formatBudget** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 3 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\knowledge\page.tsx) -- 3 connections
+  - -> imports -> [[unresolvedrefnext]]
+  - -> imports -> [[unresolvedrefcomponentsknowledgesearchbar]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **formatBudget** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[page]]
-- **classifyAttachment** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
+- **classifyAttachment** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftolowercase]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[page]]
-- **formatBudget** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
+- **formatBudget** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[page]]
-- **getToken** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
+- **getToken** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefcreateclient]]
   - -> calls -> [[unresolvedrefgetsession]]
   - <- contains <- [[page]]
-- **classifyAttachment** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 3 connections
+- **classifyAttachment** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftolowercase]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[page]]
-- **sortBids** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 3 connections
+- **sortBids** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefsort]]
   - -> calls -> [[unresolvedrefgetter]]
   - <- contains <- [[page]]
-- **formatBudget** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\new\page.tsx) -- 3 connections
+- **formatBudget** (C:\project\tenopa proposer\frontend\app\(app)\proposals\new\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[page]]
-- **getAuthToken** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\new\page.tsx) -- 3 connections
+- **getAuthToken** (C:\project\tenopa proposer\frontend\app\(app)\proposals\new\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefcreateclient]]
   - -> calls -> [[unresolvedrefgetsession]]
   - <- contains <- [[page]]
-- **SectionCard** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 3 connections
+- **SectionCard** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefslice]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\change-password\page.tsx) -- 3 connections
+- **page** (C:\project\tenopa proposer\frontend\app\change-password\page.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **RoleMatrixView** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 3 connections
+- **RoleMatrixView** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefhas]]
   - <- contains <- [[adminorgchart]]
-- **stripHtml** (C:\project\tenopa proposer\-agent-master\frontend\components\AiSuggestionDiff.tsx) -- 3 connections
+- **stripHtml** (C:\project\tenopa proposer\frontend\components\AiSuggestionDiff.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefcreateelement]]
   - -> calls -> [[unresolvedrefreplace]]
   - <- contains <- [[aisuggestiondiff]]
-- **AnalyticsCharts** (C:\project\tenopa proposer\-agent-master\frontend\components\AnalyticsCharts.tsx) -- 3 connections
+- **AnalyticsCharts** (C:\project\tenopa proposer\frontend\components\AnalyticsCharts.tsx) -- 3 connections
   - -> contains -> [[emptystate]]
   - -> imports -> [[unresolvedrefrecharts]]
   - -> imports -> [[unresolvedreflibapi]]
-- **GoNoGoContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 3 connections
+- **GoNoGoContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftouppercase]]
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **SearchResultsContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 3 connections
+- **SearchResultsContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[artifactreviewpanel]]
-- **Breadcrumb** (C:\project\tenopa proposer\-agent-master\frontend\components\Breadcrumb.tsx) -- 3 connections
+- **Breadcrumb** (C:\project\tenopa proposer\frontend\components\Breadcrumb.tsx) -- 3 connections
   - -> contains -> [[breadcrumbprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextlink]]
-- **DataTable** (C:\project\tenopa proposer\-agent-master\frontend\components\DataTable.tsx) -- 3 connections
+- **DataTable** (C:\project\tenopa proposer\frontend\components\DataTable.tsx) -- 3 connections
   - -> contains -> [[datatableprops]]
   - -> contains -> [[cellinput]]
   - -> imports -> [[unresolvedrefreact]]
-- **EvaluationRadar** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationRadar.tsx) -- 3 connections
+- **EvaluationRadar** (C:\project\tenopa proposer\frontend\components\EvaluationRadar.tsx) -- 3 connections
   - -> contains -> [[evaluationradarprops]]
   - -> imports -> [[unresolvedrefrecharts]]
   - -> imports -> [[unresolvedreflibapi]]
-- **fileColor** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 3 connections
+- **fileColor** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftolowercase]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[filehubpanel]]
-- **CollapsibleSection** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 3 connections
+- **CollapsibleSection** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefreplace]]
   - -> calls -> [[unresolvedrefbarcolor]]
   - <- contains <- [[gonogopanel]]
-- **HITLReviewStatusList** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewStatusList.tsx) -- 3 connections
+- **HITLReviewStatusList** (C:\project\tenopa proposer\frontend\components\HITLReviewStatusList.tsx) -- 3 connections
   - -> contains -> [[reviewitemstatus]]
   - -> contains -> [[hitlreviewstatuslistprops]]
   - -> imports -> [[unresolvedreflibutils]]
-- **NotificationBell** (C:\project\tenopa proposer\-agent-master\frontend\components\NotificationBell.tsx) -- 3 connections
+- **NotificationBell** (C:\project\tenopa proposer\frontend\components\NotificationBell.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedreflibapi]]
-- **Gt** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 3 connections
+- **Gt** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefstoppropagation]]
   - -> calls -> [[unresolvedrefapprove]]
   - <- contains <- [[phasegraph]]
-- **rGate** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 3 connections
+- **rGate** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefsome]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[phasegraph]]
-- **Sub** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 3 connections
+- **Sub** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[phasegraph]]
-- **PositioningImpactModal** (C:\project\tenopa proposer\-agent-master\frontend\components\PositioningImpactModal.tsx) -- 3 connections
+- **PositioningImpactModal** (C:\project\tenopa proposer\frontend\components\PositioningImpactModal.tsx) -- 3 connections
   - -> contains -> [[positioningimpactmodalprops]]
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ScenarioCards** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\ScenarioCards.tsx) -- 3 connections
+- **ScenarioCards** (C:\project\tenopa proposer\frontend\components\pricing\ScenarioCards.tsx) -- 3 connections
   - -> contains -> [[props]]
   - -> contains -> [[fmtwon]]
   - -> imports -> [[unresolvedreflibapi]]
-- **formatBudget** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 3 connections
+- **formatBudget** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftofixed]]
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[projectcontextheader]]
-- **WorkflowMap** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\WorkflowMap.tsx) -- 3 connections
+- **WorkflowMap** (C:\project\tenopa proposer\frontend\components\prompt\WorkflowMap.tsx) -- 3 connections
   - -> contains -> [[workflowmapprops]]
   - -> imports -> [[unresolvedrefnextlink]]
   - -> imports -> [[unresolvedreflibapi]]
-- **MobileTabBar** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalEditView.tsx) -- 3 connections
+- **MobileTabBar** (C:\project\tenopa proposer\frontend\components\ProposalEditView.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefontabchange]]
   - <- contains <- [[proposaleditview]]
-- **ProposalMemberSelectionModal** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalMemberSelectionModal.tsx) -- 3 connections
+- **ProposalMemberSelectionModal** (C:\project\tenopa proposer\frontend\components\ProposalMemberSelectionModal.tsx) -- 3 connections
   - -> contains -> [[teammember]]
   - -> contains -> [[proposalmemberselectionmodalprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **MockEvalCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\MockEvalCard.tsx) -- 3 connections
+- **MockEvalCard** (C:\project\tenopa proposer\frontend\components\step8\MockEvalCard.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefrecharts]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **NodeStatusDashboard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\NodeStatusDashboard.tsx) -- 3 connections
+- **NodeStatusDashboard** (C:\project\tenopa proposer\frontend\components\step8\NodeStatusDashboard.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
   - -> imports -> [[unresolvedrefindex]]
-- **GoNoGoArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 3 connections
+- **GoNoGoArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftouppercase]]
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[stepartifactviewer]]
-- **RfpAnalyzeArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 3 connections
+- **RfpAnalyzeArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[stepartifactviewer]]
-- **SelfReviewArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 3 connections
+- **SelfReviewArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefentries]]
   - <- contains <- [[stepartifactviewer]]
-- **Alert** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Alert.tsx) -- 3 connections
+- **Alert** (C:\project\tenopa proposer\frontend\components\ui\Alert.tsx) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefclsx]]
   - -> imports -> [[unresolvedreftailwindmerge]]
-- **cn** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 3 connections
+- **cn** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 3 connections
   - -> calls -> [[unresolvedreftwmerge]]
   - -> calls -> [[unresolvedrefclsx]]
   - <- contains <- [[toast]]
-- **ToastContainer** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 3 connections
+- **ToastContainer** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefmap]]
   - -> calls -> [[unresolvedrefondismiss]]
   - <- contains <- [[toast]]
-- **stripHtml** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionCompareModal.tsx) -- 3 connections
+- **CompletedProjectsView** (C:\project\tenopa proposer\frontend\components\vault\CompletedProjectsView.tsx) -- 3 connections
+  - -> contains -> [[project]]
+  - -> contains -> [[completedprojectsviewprops]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **GovernmentGuidelinesView** (C:\project\tenopa proposer\frontend\components\vault\GovernmentGuidelinesView.tsx) -- 3 connections
+  - -> contains -> [[guideline]]
+  - -> contains -> [[governmentguidelinesviewprops]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **VaultSearchBar** (C:\project\tenopa proposer\frontend\components\VaultSearchBar.tsx) -- 3 connections
+  - -> contains -> [[vaultsearchbarprops]]
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflucidereact]]
+- **stripHtml** (C:\project\tenopa proposer\frontend\components\VersionCompareModal.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefcreateelement]]
   - -> calls -> [[unresolvedrefreplace]]
   - <- contains <- [[versioncomparemodal]]
-- **estimateStepFromPhase** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowResumeBanner.tsx) -- 3 connections
+- **estimateStepFromPhase** (C:\project\tenopa proposer\frontend\components\WorkflowResumeBanner.tsx) -- 3 connections
   - -> calls -> [[unresolvedrefentries]]
   - -> calls -> [[unresolvedrefincludes]]
   - <- contains <- [[workflowresumebanner]]
-- **calculateProgress** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useStep8.ts) -- 3 connections
+- **calculateProgress** (C:\project\tenopa proposer\frontend\lib\hooks\useStep8.ts) -- 3 connections
   - -> calls -> [[unresolvedreffilter]]
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[usestep8]]
-- **getAuthToken** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useStep8.ts) -- 3 connections
+- **getAuthToken** (C:\project\tenopa proposer\frontend\lib\hooks\useStep8.ts) -- 3 connections
   - -> calls -> [[unresolvedrefgetitem]]
   - -> calls -> [[unresolvedrefparse]]
   - <- contains <- [[usestep8]]
-- **useStep8Data** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useStep8Data.ts) -- 3 connections
+- **useStep8Data** (C:\project\tenopa proposer\frontend\lib\hooks\useStep8Data.ts) -- 3 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **get_applied_migrations** (C:\project\tenopa proposer\-agent-master\scripts\apply_migrations.py) -- 3 connections
+- **get_applied_migrations** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 3 connections
   - -> calls -> [[unresolvedreffetch]]
   - -> calls -> [[unresolvedrefset]]
   - <- contains <- [[applymigrations]]
-- **index** (C:\project\tenopa proposer\-agent-master\supabase\functions\comment-notify\index.ts) -- 3 connections
+- **_create_proposal** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 3 connections
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - <- contains <- [[e2einterrupttest]]
+- **_start_workflow** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 3 connections
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - <- contains <- [[e2einterrupttest]]
+- **index** (C:\project\tenopa proposer\supabase\functions\comment-notify\index.ts) -- 3 connections
   - -> contains -> [[json]]
   - -> imports -> [[unresolvedrefts]]
   - -> imports -> [[unresolvedrefshsupabasesupabasejs2]]
-- **index** (C:\project\tenopa proposer\-agent-master\supabase\functions\proposal-complete\index.ts) -- 3 connections
+- **index** (C:\project\tenopa proposer\supabase\functions\proposal-complete\index.ts) -- 3 connections
   - -> contains -> [[json]]
   - -> imports -> [[unresolvedrefts]]
   - -> imports -> [[unresolvedrefshsupabasesupabasejs2]]
-- **ok** (C:\project\tenopa proposer\-agent-master\tests\e2e_auth_integration.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2eauthintegration]]
-- **safeGoto** (C:\project\tenopa proposer\-agent-master\tests\e2e_auth_integration.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - <- contains <- [[e2eauthintegration]]
-- **fail** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2efrontend]]
-- **ok** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2efrontend]]
-- **fail** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend_v2.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2efrontendv2]]
-- **ok** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend_v2.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefpush]]
-  - -> calls -> [[unresolvedreflog]]
-  - <- contains <- [[e2efrontendv2]]
-- **safeGoto** (C:\project\tenopa proposer\-agent-master\tests\e2e_frontend_v2.mjs) -- 3 connections
-  - -> calls -> [[unresolvedrefgoto]]
-  - -> calls -> [[unresolvedrefwaitfortimeout]]
-  - <- contains <- [[e2efrontendv2]]
-- **tmp_e2e_bids** (C:\project\tenopa proposer\-agent-master\tmp_e2e_bids.mjs) -- 3 connections
-  - -> contains -> [[run]]
-  - -> imports -> [[unresolvedrefplaywright]]
-  - -> imports -> [[unresolvedreffs]]
-- **__unresolved__::ref::__** () -- 2 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::___components_analyticscharts_** () -- 2 connections
   - <- imports <- [[page]]
   - <- imports <- [[page]]
@@ -3240,24 +3282,15 @@ Cohesion: 0.00 | Nodes: 932
 - **__unresolved__::ref::_msw_node_** () -- 2 connections
   - <- imports <- [[step8-integrationtest]]
   - <- imports <- [[step8-page-integrationtest]]
-- **__unresolved__::ref::_next_** () -- 2 connections
-  - <- imports <- [[nextconfig]]
-  - <- imports <- [[layout]]
 - **__unresolved__::ref::_next_dynamic_** () -- 2 connections
   - <- imports <- [[page]]
   - <- imports <- [[proposaleditview]]
-- **__unresolved__::ref::await** () -- 2 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
+- **__unresolved__::ref::cn** () -- 2 connections
+  - <- calls <- [[projectsourcecard]]
+  - <- calls <- [[toastitem]]
 - **__unresolved__::ref::contains** () -- 2 connections
   - <- calls <- [[filterablesortableheader]]
   - <- calls <- [[agencytypeahead]]
-- **__unresolved__::ref::count** () -- 2 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[summarizefeedback]]
-- **__unresolved__::ref::evaluate** () -- 2 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::every** () -- 2 connections
   - <- calls <- [[matchesscoredsearch]]
   - <- calls <- [[matchesmonitorsearch]]
@@ -3297,9 +3330,6 @@ Cohesion: 0.00 | Nodes: 932
 - **__unresolved__::ref::onstatechange** () -- 2 connections
   - <- calls <- [[reviewpanel]]
   - <- calls <- [[movetonodeaction]]
-- **__unresolved__::ref::safegoto** () -- 2 connections
-  - <- calls <- [[run]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::scorecolor** () -- 2 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[evaluatorcard]]
@@ -3354,9 +3384,6 @@ Cohesion: 0.00 | Nodes: 932
 - **__unresolved__::ref::sortbids** () -- 2 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[monitorbidsview]]
-- **__unresolved__::ref::substring** () -- 2 connections
-  - <- calls <- [[fail]]
-  - <- calls <- [[run]]
 - **__unresolved__::ref::test** () -- 2 connections
   - <- calls <- [[extractdomain]]
   - <- calls <- [[highlightjson]]
@@ -3369,241 +3396,235 @@ Cohesion: 0.00 | Nodes: 932
 - **__unresolved__::ref::usememo** () -- 2 connections
   - <- calls <- [[scoredbidsview]]
   - <- calls <- [[monitorbidsview]]
-- **step8-phase1.test** (C:\project\tenopa proposer\-agent-master\frontend\__tests__\step8-phase1.test.ts) -- 2 connections
+- **remove_listener** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 2 connections
+  - -> calls -> [[unresolvedrefremove]]
+  - <- contains <- [[aistatusmanager]]
+- **step8-phase1.test** (C:\project\tenopa proposer\frontend\__tests__\step8-phase1.test.ts) -- 2 connections
   - -> imports -> [[unresolvedrefvitest]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **BulkResultView** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 2 connections
+- **BulkResultView** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[page]]
-- **FileInput** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 2 connections
+- **FileInput** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefonchange]]
   - <- contains <- [[page]]
-- **GroupRow** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 2 connections
+- **GroupRow** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[page]]
-- **Inp** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 2 connections
+- **Inp** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefonchange]]
   - <- contains <- [[page]]
-- **Overlay** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 2 connections
+- **Overlay** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[page]]
-- **HealthCard** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\page.tsx) -- 2 connections
+- **HealthCard** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\users\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\admin\users\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
-- **formatElapsedTime** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 2 connections
+- **formatElapsedTime** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreffloor]]
   - <- contains <- [[page]]
-- **formatTokenCost** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 2 connections
+- **formatTokenCost** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **formatWinRate** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 2 connections
+- **formatWinRate** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[page]]
-- **dDayLabel** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 2 connections
+- **dDayLabel** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefabs]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\clients\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\clients\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\competitors\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\competitors\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\lessons\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\kb\lessons\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **categoryLabel** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\qa\page.tsx) -- 2 connections
+- **categoryLabel** (C:\project\tenopa proposer\frontend\app\(app)\kb\qa\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreffind]]
   - <- contains <- [[page]]
-- **formatFileSize** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 2 connections
+- **formatFileSize** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **formatBudget** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
+- **formatBudget** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[page]]
-- **guessTeam** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
+- **guessTeam** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmatch]]
   - <- contains <- [[page]]
-- **SortableHeader** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
+- **SortableHeader** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefonsort]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\[id]\edit\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\(app)\proposals\[id]\edit\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefcomponentsproposaleditview]]
-- **TemplateCard** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 2 connections
+- **TemplateCard** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolocaledatestring]]
   - <- contains <- [[page]]
-- **ToggleRow** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 2 connections
+- **ToggleRow** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefonchange]]
   - <- contains <- [[page]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\editor\[id]\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\editor\[id]\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefnextnavigation]]
   - -> imports -> [[unresolvedrefcomponentsproposaleditview]]
-- **page** (C:\project\tenopa proposer\-agent-master\frontend\app\onboarding\page.tsx) -- 2 connections
+- **page** (C:\project\tenopa proposer\frontend\app\onboarding\page.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefnextnavigation]]
-- **safeGetItem** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 2 connections
+- **safeGetItem** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefgetitem]]
   - <- contains <- [[appsidebar]]
-- **safeSetItem** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 2 connections
+- **safeSetItem** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefsetitem]]
   - <- contains <- [[appsidebar]]
-- **BidPlanContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **BidPlanContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[artifactreviewpanel]]
-- **Bullets** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **Bullets** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **PptStoryboardContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **PptStoryboardContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **RfpAnalyzeContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **RfpAnalyzeContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **SelfReviewContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **SelfReviewContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **StrategyContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
+- **StrategyContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[artifactreviewpanel]]
-- **formatWon** (C:\project\tenopa proposer\-agent-master\frontend\components\BiddingWorkspace.tsx) -- 2 connections
+- **formatWon** (C:\project\tenopa proposer\frontend\components\BiddingWorkspace.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefformat]]
   - <- contains <- [[biddingworkspace]]
-- **EditorTocPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\EditorTocPanel.tsx) -- 2 connections
+- **EditorTocPanel** (C:\project\tenopa proposer\frontend\components\EditorTocPanel.tsx) -- 2 connections
   - -> contains -> [[editortocpanelprops]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ErrorReporterInit** (C:\project\tenopa proposer\-agent-master\frontend\components\ErrorReporterInit.tsx) -- 2 connections
+- **ErrorReporterInit** (C:\project\tenopa proposer\frontend\components\ErrorReporterInit.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedrefliberrorreporter]]
-- **FeedbackLoopWorkflow** (C:\project\tenopa proposer\-agent-master\frontend\components\FeedbackLoopWorkflow.tsx) -- 2 connections
+- **FeedbackLoopWorkflow** (C:\project\tenopa proposer\frontend\components\FeedbackLoopWorkflow.tsx) -- 2 connections
   - -> contains -> [[feedbackloopworkflowprops]]
   - -> imports -> [[unresolvedreflibutils]]
-- **fileColor** (C:\project\tenopa proposer\-agent-master\frontend\components\FileBar.tsx) -- 2 connections
+- **fileColor** (C:\project\tenopa proposer\frontend\components\FileBar.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolowercase]]
   - <- contains <- [[filebar]]
-- **formatBytes** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 2 connections
+- **formatBytes** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[filehubpanel]]
-- **Section** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 2 connections
+- **Section** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefstoppropagation]]
   - <- contains <- [[filehubpanel]]
-- **formatAmount** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 2 connections
+- **formatAmount** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[gonogopanel]]
-- **GuidedTour** (C:\project\tenopa proposer\-agent-master\frontend\components\GuidedTour.tsx) -- 2 connections
+- **GuidedTour** (C:\project\tenopa proposer\frontend\components\GuidedTour.tsx) -- 2 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedrefreact]]
-- **Ring** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 2 connections
+- **Ring** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmin]]
   - <- contains <- [[phasegraph]]
-- **CostBreakdownCard** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostBreakdownCard.tsx) -- 2 connections
+- **CostBreakdownCard** (C:\project\tenopa proposer\frontend\components\pricing\CostBreakdownCard.tsx) -- 2 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedreflibapi]]
-- **fmtWon** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 2 connections
+- **fmtWon** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[costsheeteditor]]
-- **MarketContextPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\MarketContextPanel.tsx) -- 2 connections
+- **MarketContextPanel** (C:\project\tenopa proposer\frontend\components\pricing\MarketContextPanel.tsx) -- 2 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedreflibapi]]
-- **SensitivityChart** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\SensitivityChart.tsx) -- 2 connections
+- **SensitivityChart** (C:\project\tenopa proposer\frontend\components\pricing\SensitivityChart.tsx) -- 2 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedreflibapi]]
-- **formatBytes** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectArchivePanel.tsx) -- 2 connections
+- **formatBytes** (C:\project\tenopa proposer\frontend\components\ProjectArchivePanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftofixed]]
   - <- contains <- [[projectarchivepanel]]
-- **StatusBadge** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 2 connections
+- **StatusBadge** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefreplace]]
   - <- contains <- [[projectcontextheader]]
-- **CategoryTabs** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\CategoryTabs.tsx) -- 2 connections
+- **CategoryTabs** (C:\project\tenopa proposer\frontend\components\prompt\CategoryTabs.tsx) -- 2 connections
   - -> contains -> [[categorytabsprops]]
   - -> imports -> [[unresolvedreflibapi]]
-- **PreviewPanel** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\PreviewPanel.tsx) -- 2 connections
+- **PreviewPanel** (C:\project\tenopa proposer\frontend\components\prompt\PreviewPanel.tsx) -- 2 connections
   - -> contains -> [[previewpanelprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **PromptEditor** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\PromptEditor.tsx) -- 2 connections
+- **PromptEditor** (C:\project\tenopa proposer\frontend\components\prompt\PromptEditor.tsx) -- 2 connections
   - -> contains -> [[prompteditorprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **ProposalsTableHeader** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableHeader.tsx) -- 2 connections
+- **ProposalsTableHeader** (C:\project\tenopa proposer\frontend\components\ProposalsTableHeader.tsx) -- 2 connections
   - -> contains -> [[proposalstableheaderprops]]
   - -> imports -> [[unresolvedreflibproposalsutils]]
-- **ProposalsTableSkeleton** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableSkeleton.tsx) -- 2 connections
+- **ProposalsTableSkeleton** (C:\project\tenopa proposer\frontend\components\ProposalsTableSkeleton.tsx) -- 2 connections
   - -> contains -> [[proposalstableskeletonprops]]
   - -> imports -> [[unresolvedreflibproposalsutils]]
-- **categoryLabel** (C:\project\tenopa proposer\-agent-master\frontend\components\QaPanel.tsx) -- 2 connections
+- **categoryLabel** (C:\project\tenopa proposer\frontend\components\QaPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedreffind]]
   - <- contains <- [[qapanel]]
-- **ReviewProgressBanner** (C:\project\tenopa proposer\-agent-master\frontend\components\ReviewProgressBanner.tsx) -- 2 connections
+- **ReviewProgressBanner** (C:\project\tenopa proposer\frontend\components\ReviewProgressBanner.tsx) -- 2 connections
   - -> contains -> [[reviewprogressbannerprops]]
   - -> imports -> [[unresolvedreflibutils]]
-- **ConsolidatedProposalCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\ConsolidatedProposalCard.tsx) -- 2 connections
+- **ConsolidatedProposalCard** (C:\project\tenopa proposer\frontend\components\step8\ConsolidatedProposalCard.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **CustomerProfileCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\CustomerProfileCard.tsx) -- 2 connections
+- **CustomerProfileCard** (C:\project\tenopa proposer\frontend\components\step8\CustomerProfileCard.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **FeedbackSummaryCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\FeedbackSummaryCard.tsx) -- 2 connections
+- **FeedbackSummaryCard** (C:\project\tenopa proposer\frontend\components\step8\FeedbackSummaryCard.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **ReviewPanelEnhanced** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\ReviewPanelEnhanced.tsx) -- 2 connections
+- **ReviewPanelEnhanced** (C:\project\tenopa proposer\frontend\components\step8\ReviewPanelEnhanced.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **RewriteHistoryCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\RewriteHistoryCard.tsx) -- 2 connections
+- **RewriteHistoryCard** (C:\project\tenopa proposer\frontend\components\step8\RewriteHistoryCard.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **ValidationReportCard** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\ValidationReportCard.tsx) -- 2 connections
+- **ValidationReportCard** (C:\project\tenopa proposer\frontend\components\step8\ValidationReportCard.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **VersionHistoryViewer** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\VersionHistoryViewer.tsx) -- 2 connections
+- **VersionHistoryViewer** (C:\project\tenopa proposer\frontend\components\step8\VersionHistoryViewer.tsx) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibtypesstep8]]
-- **StrategyArtifact** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 2 connections
+- **StrategyArtifact** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 2 connections
   - -> calls -> [[unresolvedrefmap]]
   - <- contains <- [[stepartifactviewer]]
-- **StreamDependencyGraph** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamDependencyGraph.tsx) -- 2 connections
+- **StreamDependencyGraph** (C:\project\tenopa proposer\frontend\components\StreamDependencyGraph.tsx) -- 2 connections
   - -> contains -> [[props]]
   - -> imports -> [[unresolvedreflibapi]]
-- **ThemeToggle** (C:\project\tenopa proposer\-agent-master\frontend\components\ThemeToggle.tsx) -- 2 connections
+- **ThemeToggle** (C:\project\tenopa proposer\frontend\components\ThemeToggle.tsx) -- 2 connections
   - -> contains -> [[themetoggleprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **Button** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Button.tsx) -- 2 connections
+- **Button** (C:\project\tenopa proposer\frontend\components\ui\Button.tsx) -- 2 connections
   - -> contains -> [[buttonprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **Modal** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Modal.tsx) -- 2 connections
+- **Modal** (C:\project\tenopa proposer\frontend\components\ui\Modal.tsx) -- 2 connections
   - -> contains -> [[modalprops]]
   - -> imports -> [[unresolvedrefreact]]
-- **VersionDetails** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionSelectionModal.tsx) -- 2 connections
+- **VersionDetails** (C:\project\tenopa proposer\frontend\components\VersionSelectionModal.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolocalestring]]
   - <- contains <- [[versionselectionmodal]]
-- **LogEntry** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowLogPanel.tsx) -- 2 connections
+- **LogEntry** (C:\project\tenopa proposer\frontend\components\WorkflowLogPanel.tsx) -- 2 connections
   - -> calls -> [[unresolvedreftolocaletimestring]]
   - <- contains <- [[workflowlogpanel]]
-- **auth.setup** (C:\project\tenopa proposer\-agent-master\frontend\e2e\auth.setup.ts) -- 2 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-  - -> imports -> [[unresolvedrefpath]]
-- **get** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 2 connections
-  - -> calls -> [[unresolvedrefnow]]
-  - <- contains <- [[ttlcache]]
-- **set** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 2 connections
-  - -> calls -> [[unresolvedrefnow]]
-  - <- contains <- [[ttlcache]]
-- **useProposals** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useProposals.ts) -- 2 connections
+- **useProposals** (C:\project\tenopa proposer\frontend\lib\hooks\useProposals.ts) -- 2 connections
   - -> imports -> [[unresolvedrefreact]]
   - -> imports -> [[unresolvedreflibapi]]
-- **useWorkflowStream** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useWorkflowStream.ts) -- 2 connections
+- **useVaultChatStream** (C:\project\tenopa proposer\frontend\lib\hooks\useVaultChatStream.ts) -- 2 connections
+  - -> imports -> [[unresolvedrefreact]]
+  - -> imports -> [[unresolvedreflibapi]]
+- **useWorkflowStream** (C:\project\tenopa proposer\frontend\lib\hooks\useWorkflowStream.ts) -- 2 connections
   - -> contains -> [[useworkflowstreamresult]]
   - -> imports -> [[unresolvedrefreact]]
-- **utils** (C:\project\tenopa proposer\-agent-master\frontend\lib\utils.ts) -- 2 connections
+- **utils** (C:\project\tenopa proposer\frontend\lib\utils.ts) -- 2 connections
   - -> imports -> [[unresolvedrefclsx]]
   - -> imports -> [[unresolvedreftailwindmerge]]
-- **playwright.config** (C:\project\tenopa proposer\-agent-master\frontend\playwright.config.ts) -- 2 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-  - -> imports -> [[unresolvedrefpath]]
-- **json** (C:\project\tenopa proposer\-agent-master\supabase\functions\comment-notify\index.ts) -- 2 connections
+- **json** (C:\project\tenopa proposer\supabase\functions\comment-notify\index.ts) -- 2 connections
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[index]]
-- **json** (C:\project\tenopa proposer\-agent-master\supabase\functions\proposal-complete\index.ts) -- 2 connections
+- **json** (C:\project\tenopa proposer\supabase\functions\proposal-complete\index.ts) -- 2 connections
   - -> calls -> [[unresolvedrefstringify]]
   - <- contains <- [[index]]
 - **__unresolved__::ref::5_text_xs_border_border___262626__rounded_lg_text___8c8c8c__disabled_opacity_40_hover_bg___1c1c1c__hover_text___ededed__transition_colors______________________________________________________________________________________button___________________________div_________________________div___________________________________________** () -- 1 connections
@@ -3642,6 +3663,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[page]]
 - **__unresolved__::ref::___components_keyboardshortcutsguide_** () -- 1 connections
   - <- imports <- [[proposaleditview]]
+- **__unresolved__::ref::___components_knowledgehealthdashboard_** () -- 1 connections
+  - <- imports <- [[page]]
+- **__unresolved__::ref::___components_knowledgesearchbar_** () -- 1 connections
+  - <- imports <- [[page]]
 - **__unresolved__::ref::___components_phasegraph_** () -- 1 connections
   - <- imports <- [[detailcenterpanel]]
 - **__unresolved__::ref::___components_positioningimpactmodal_** () -- 1 connections
@@ -3696,6 +3721,12 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[page]]
 - **__unresolved__::ref::___components_ui_modal_** () -- 1 connections
   - <- imports <- [[page]]
+- **__unresolved__::ref::___components_ui_select_** () -- 1 connections
+  - <- imports <- [[vaultstepselector]]
+- **__unresolved__::ref::___components_ui_textarea_** () -- 1 connections
+  - <- imports <- [[feedbackform]]
+- **__unresolved__::ref::___components_vaultlayout_** () -- 1 connections
+  - <- imports <- [[page]]
 - **__unresolved__::ref::___components_versioncomparemodal_** () -- 1 connections
   - <- imports <- [[detailrightpanel]]
 - **__unresolved__::ref::___components_versionselectionmodal_** () -- 1 connections
@@ -3712,12 +3743,18 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[page]]
 - **__unresolved__::ref::___lib_hooks_usestep8data_** () -- 1 connections
   - <- imports <- [[page]]
+- **__unresolved__::ref::___lib_hooks_usevaultchatstream_** () -- 1 connections
+  - <- imports <- [[vaultchat]]
 - **__unresolved__::ref::___lib_org_seed_data_** () -- 1 connections
+  - <- imports <- [[page]]
+- **__unresolved__::ref::___lib_supabase_server_** () -- 1 connections
   - <- imports <- [[page]]
 - **__unresolved__::ref::__testing_library_react_** () -- 1 connections
   - <- imports <- [[step8-page-integrationtest]]
 - **__unresolved__::ref::__testing_library_user_event_** () -- 1 connections
   - <- imports <- [[step8-page-integrationtest]]
+- **__unresolved__::ref::_add_paragraph** () -- 1 connections
+  - <- calls <- [[generatesectionxml]]
 - **__unresolved__::ref::_diagnosticscorecard_** () -- 1 connections
   - <- imports <- [[hitlreviewmodal]]
 - **__unresolved__::ref::_evaluationradar_** () -- 1 connections
@@ -3726,8 +3763,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[proposaldetailwithhitlreview]]
 - **__unresolved__::ref::_gapanalysisresultlist_** () -- 1 connections
   - <- imports <- [[proposaldetailwithhitlreview]]
-- **__unresolved__::ref::_get_prompt_by_version** () -- 1 connections
-  - <- calls <- [[runcomparison]]
 - **__unresolved__::ref::_hitlreviewmodal_** () -- 1 connections
   - <- imports <- [[proposaldetailwithhitlreview]]
 - **__unresolved__::ref::_hitlreviewstatuslist_** () -- 1 connections
@@ -3748,6 +3783,12 @@ Cohesion: 0.00 | Nodes: 932
   - <- imports <- [[bidplanreviewpanel]]
 - **__unresolved__::ref::_simulationrunner_** () -- 1 connections
   - <- imports <- [[compareview]]
+- **__unresolved__::ref::_vaultchat_** () -- 1 connections
+  - <- imports <- [[vaultlayout]]
+- **__unresolved__::ref::_vaultlayout_** () -- 1 connections
+  - <- imports <- [[vaultsidebar]]
+- **__unresolved__::ref::_vaultsidebar_** () -- 1 connections
+  - <- imports <- [[vaultlayout]]
 - **__unresolved__::ref::_winprobabilitygauge_** () -- 1 connections
   - <- imports <- [[bidplanreviewpanel]]
 - **__unresolved__::ref::abort** () -- 1 connections
@@ -3776,8 +3817,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[scoredbidsview]]
 - **__unresolved__::ref::cellid** () -- 1 connections
   - <- calls <- [[memberrow]]
-- **__unresolved__::ref::check** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::checkmovefeasibility** () -- 1 connections
   - <- calls <- [[movetonodeaction]]
 - **__unresolved__::ref::classifyattachment** () -- 1 connections
@@ -3786,8 +3825,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[row]]
 - **__unresolved__::ref::clsx** () -- 1 connections
   - <- calls <- [[cn]]
-- **__unresolved__::ref::cn** () -- 1 connections
-  - <- calls <- [[toastitem]]
 - **__unresolved__::ref::createfrombid** () -- 1 connections
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::createfromrfp** () -- 1 connections
@@ -3808,18 +3845,18 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[versiondetailspanel]]
 - **__unresolved__::ref::deletepreset** () -- 1 connections
   - <- calls <- [[presetstab]]
+- **__unresolved__::ref::element** () -- 1 connections
+  - <- calls <- [[generatesectionxml]]
+- **__unresolved__::ref::exec** () -- 1 connections
+  - <- calls <- [[parsecitations]]
 - **__unresolved__::ref::extractdomain** () -- 1 connections
   - <- calls <- [[scoredbidsview]]
 - **__unresolved__::ref::feedbacks** () -- 1 connections
   - <- calls <- [[reviewpanel]]
-- **__unresolved__::ref::fetchdecidedbids** () -- 1 connections
-  - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::fetchproposals** () -- 1 connections
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::fileicon** () -- 1 connections
   - <- calls <- [[biddetailcontent]]
-- **__unresolved__::ref::first** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::fmtwon** () -- 1 connections
   - <- calls <- [[laborrow]]
 - **__unresolved__::ref::formatdate** () -- 1 connections
@@ -3842,10 +3879,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[biddetailcontent]]
 - **__unresolved__::ref::getattachmenturl** () -- 1 connections
   - <- calls <- [[biddetailcontent]]
-- **__unresolved__::ref::getcomputedstyle** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::getdetail** () -- 1 connections
   - <- calls <- [[biddetailcontent]]
+- **__unresolved__::ref::getelementbyid** () -- 1 connections
+  - <- calls <- [[scrolltosource]]
 - **__unresolved__::ref::getnodestatus** () -- 1 connections
   - <- calls <- [[parallelprogress]]
 - **__unresolved__::ref::getprofile** () -- 1 connections
@@ -3882,14 +3919,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[kbhealthwidget]]
 - **__unresolved__::ref::highlightjson** () -- 1 connections
   - <- calls <- [[genericartifact]]
-- **__unresolved__::ref::import** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::isinteger** () -- 1 connections
   - <- calls <- [[formatcurrency]]
 - **__unresolved__::ref::join_____________null_____________________** () -- 1 connections
   - <- calls <- [[scoredbidsview]]
-- **__unresolved__::ref::key** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::listpresets** () -- 1 connections
   - <- calls <- [[presetstab]]
 - **__unresolved__::ref::loadassets** () -- 1 connections
@@ -3900,8 +3933,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::loadteammembers** () -- 1 connections
   - <- calls <- [[proposalscontent]]
-- **__unresolved__::ref::locator** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::matchesmonitorsearch** () -- 1 connections
   - <- calls <- [[monitorbidsview]]
 - **__unresolved__::ref::matchesscoredsearch** () -- 1 connections
@@ -3914,8 +3945,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[profiletab]]
 - **__unresolved__::ref::movetonode** () -- 1 connections
   - <- calls <- [[movetonodeaction]]
-- **__unresolved__::ref::on** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::onbookmark** () -- 1 connections
   - <- calls <- [[bidrow]]
 - **__unresolved__::ref::ondeactivate** () -- 1 connections
@@ -3944,12 +3973,12 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[artifactversiongroup]]
 - **__unresolved__::ref::openinline** () -- 1 connections
   - <- calls <- [[proposalscontent]]
+- **__unresolved__::ref::pagesetup** () -- 1 connections
+  - <- calls <- [[analyzepagesetup]]
 - **__unresolved__::ref::parsefloat** () -- 1 connections
   - <- calls <- [[laborrow]]
 - **__unresolved__::ref::parseint** () -- 1 connections
   - <- calls <- [[laborrow]]
-- **__unresolved__::ref::queryselector** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::recordbiddecision** () -- 1 connections
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::recordeditaction** () -- 1 connections
@@ -3972,12 +4001,14 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[reviewpanel]]
 - **__unresolved__::ref::revokeobjecturl** () -- 1 connections
   - <- calls <- [[versiondetailspanel]]
-- **__unresolved__::ref::run_simulation** () -- 1 connections
-  - <- calls <- [[runcomparison]]
 - **__unresolved__::ref::scorebg** () -- 1 connections
   - <- calls <- [[evaluatorcard]]
 - **__unresolved__::ref::scored** () -- 1 connections
   - <- calls <- [[scoredbidsview]]
+- **__unresolved__::ref::scrollintoview** () -- 1 connections
+  - <- calls <- [[scrolltosource]]
+- **__unresolved__::ref::scrolltosource** () -- 1 connections
+  - <- calls <- [[parsecitations]]
 - **__unresolved__::ref::setactivecell** () -- 1 connections
   - <- calls <- [[memberrow]]
 - **__unresolved__::ref::setactivepreset** () -- 1 connections
@@ -4006,8 +4037,6 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::setdecidedloading** () -- 1 connections
   - <- calls <- [[proposalscontent]]
-- **__unresolved__::ref::setdefaulttimeout** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::setdetailmodalopen** () -- 1 connections
   - <- calls <- [[proposalscontent]]
 - **__unresolved__::ref::setdetailscollapsed** () -- 1 connections
@@ -4138,14 +4167,10 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[logincontent]]
 - **__unresolved__::ref::signout** () -- 1 connections
   - <- calls <- [[request]]
-- **__unresolved__::ref::simulationrequest** () -- 1 connections
-  - <- calls <- [[runcomparison]]
 - **__unresolved__::ref::startedit** () -- 1 connections
   - <- calls <- [[presetstab]]
 - **__unresolved__::ref::startfromdecidedbid** () -- 1 connections
   - <- calls <- [[proposalscontent]]
-- **__unresolved__::ref::status** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::timeout** () -- 1 connections
   - <- calls <- [[scoredbidsview]]
 - **__unresolved__::ref::togglearea** () -- 1 connections
@@ -4178,352 +4203,383 @@ Cohesion: 0.00 | Nodes: 932
   - <- calls <- [[biddetailcontent]]
 - **__unresolved__::ref::useprog** () -- 1 connections
   - <- calls <- [[dot]]
-- **__unresolved__::ref::walk** () -- 1 connections
-  - <- calls <- [[run]]
 - **__unresolved__::ref::warn** () -- 1 connections
   - <- calls <- [[request]]
-- **AdminTeam** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **AdminTeam** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **Division** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **Division** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TreeDivision** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **TreeDivision** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TreeMember** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **TreeMember** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TreeTeam** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **TreeTeam** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **User** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **User** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **Btn** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **Btn** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **FormActions** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **FormActions** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **Sep** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\page.tsx) -- 1 connections
+- **Sep** (C:\project\tenopa proposer\frontend\app\(app)\admin\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **MetricCard** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\[promptId]\improve\page.tsx) -- 1 connections
+- **MetricCard** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\[promptId]\improve\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **MetricCard** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\[promptId]\page.tsx) -- 1 connections
+- **MetricCard** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\[promptId]\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **heatColor** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\admin\prompts\catalog\page.tsx) -- 1 connections
+- **heatColor** (C:\project\tenopa proposer\frontend\app\(app)\admin\prompts\catalog\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **ChartPanel** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\analytics\page.tsx) -- 1 connections
+- **ChartPanel** (C:\project\tenopa proposer\frontend\app\(app)\analytics\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **WinResultBadge** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\archive\page.tsx) -- 1 connections
+- **WinResultBadge** (C:\project\tenopa proposer\frontend\app\(app)\archive\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **dDayColor** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 1 connections
+- **dDayColor** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **statusBadge** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\dashboard\page.tsx) -- 1 connections
+- **statusBadge** (C:\project\tenopa proposer\frontend\app\(app)\dashboard\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **DownloadLink** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\kb\search\page.tsx) -- 1 connections
+- **DownloadLink** (C:\project\tenopa proposer\frontend\app\(app)\kb\search\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **BidInfo** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 1 connections
+- **BidInfo** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\[bidNo]\review\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **layout** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\layout.tsx) -- 1 connections
+- **layout** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\layout.tsx) -- 1 connections
   - -> imports -> [[unresolvedrefreact]]
-- **CacheEntry** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **CacheEntry** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **DdayBadge** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **DdayBadge** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **EmptyState** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **EmptyState** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **PresetButton** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **PresetButton** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **scoreColor** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **scoreColor** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **StageBadge** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
+- **StageBadge** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **Field** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\monitoring\settings\page.tsx) -- 1 connections
+- **Field** (C:\project\tenopa proposer\frontend\app\(app)\monitoring\settings\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **BidPrefill** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\proposals\new\page.tsx) -- 1 connections
+- **BidPrefill** (C:\project\tenopa proposer\frontend\app\(app)\proposals\new\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **SectionCardProps** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **SectionCardProps** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **SectionForm** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **SectionForm** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **SectionsTabProps** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **SectionsTabProps** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TemplateCardProps** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **TemplateCardProps** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TemplatesTabProps** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **TemplatesTabProps** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **TemplateUploadForm** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\resources\page.tsx) -- 1 connections
+- **TemplateUploadForm** (C:\project\tenopa proposer\frontend\app\(app)\resources\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **UserProfile** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 1 connections
+- **UserProfile** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **InfoRow** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\settings\page.tsx) -- 1 connections
+- **InfoRow** (C:\project\tenopa proposer\frontend\app\(app)\settings\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **not-found** (C:\project\tenopa proposer\-agent-master\frontend\app\not-found.tsx) -- 1 connections
+- **not-found** (C:\project\tenopa proposer\frontend\app\not-found.tsx) -- 1 connections
   - -> imports -> [[unresolvedrefnextlink]]
-- **LandingStats** (C:\project\tenopa proposer\-agent-master\frontend\app\page.tsx) -- 1 connections
+- **LandingStats** (C:\project\tenopa proposer\frontend\app\page.tsx) -- 1 connections
   - <- contains <- [[page]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 1 connections
   - <- contains <- [[adminorgchart]]
-- **TreeDivision** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 1 connections
+- **TreeDivision** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 1 connections
   - <- contains <- [[adminorgchart]]
-- **TreeMember** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 1 connections
+- **TreeMember** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 1 connections
   - <- contains <- [[adminorgchart]]
-- **TreeTeam** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 1 connections
+- **TreeTeam** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 1 connections
   - <- contains <- [[adminorgchart]]
-- **PersonCard** (C:\project\tenopa proposer\-agent-master\frontend\components\AdminOrgChart.tsx) -- 1 connections
+- **PersonCard** (C:\project\tenopa proposer\frontend\components\AdminOrgChart.tsx) -- 1 connections
   - <- contains <- [[adminorgchart]]
-- **AiSuggestionDiffProps** (C:\project\tenopa proposer\-agent-master\frontend\components\AiSuggestionDiff.tsx) -- 1 connections
+- **AiSuggestionDiffProps** (C:\project\tenopa proposer\frontend\components\AiSuggestionDiff.tsx) -- 1 connections
   - <- contains <- [[aisuggestiondiff]]
-- **EmptyState** (C:\project\tenopa proposer\-agent-master\frontend\components\AnalyticsCharts.tsx) -- 1 connections
+- **EmptyState** (C:\project\tenopa proposer\frontend\components\AnalyticsCharts.tsx) -- 1 connections
   - <- contains <- [[analyticscharts]]
-- **NavGroup** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 1 connections
+- **NavGroup** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **NavItem** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 1 connections
+- **NavItem** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **isGroup** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 1 connections
+- **isGroup** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **SvgIcon** (C:\project\tenopa proposer\-agent-master\frontend\components\AppSidebar.tsx) -- 1 connections
+- **SvgIcon** (C:\project\tenopa proposer\frontend\components\AppSidebar.tsx) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **ArtifactConfig** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **ArtifactConfig** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **ArtifactReviewPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **ArtifactReviewPanelProps** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **ArtifactContent** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **ArtifactContent** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **KV** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **KV** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **Section** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **Section** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **Tag** (C:\project\tenopa proposer\-agent-master\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
+- **Tag** (C:\project\tenopa proposer\frontend\components\ArtifactReviewPanel.tsx) -- 1 connections
   - <- contains <- [[artifactreviewpanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\BiddingWorkspace.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\BiddingWorkspace.tsx) -- 1 connections
   - <- contains <- [[biddingworkspace]]
-- **BreadcrumbProps** (C:\project\tenopa proposer\-agent-master\frontend\components\Breadcrumb.tsx) -- 1 connections
+- **BreadcrumbProps** (C:\project\tenopa proposer\frontend\components\Breadcrumb.tsx) -- 1 connections
   - <- contains <- [[breadcrumb]]
-- **DataTableProps** (C:\project\tenopa proposer\-agent-master\frontend\components\DataTable.tsx) -- 1 connections
+- **DataTableProps** (C:\project\tenopa proposer\frontend\components\DataTable.tsx) -- 1 connections
   - <- contains <- [[datatable]]
-- **DetailCenterPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\DetailCenterPanel.tsx) -- 1 connections
+- **DetailCenterPanelProps** (C:\project\tenopa proposer\frontend\components\DetailCenterPanel.tsx) -- 1 connections
   - <- contains <- [[detailcenterpanel]]
-- **DetailRightPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\DetailRightPanel.tsx) -- 1 connections
+- **DetailRightPanelProps** (C:\project\tenopa proposer\frontend\components\DetailRightPanel.tsx) -- 1 connections
   - <- contains <- [[detailrightpanel]]
-- **DiagnosticScoreCardProps** (C:\project\tenopa proposer\-agent-master\frontend\components\DiagnosticScoreCard.tsx) -- 1 connections
+- **DiagnosticScoreCardProps** (C:\project\tenopa proposer\frontend\components\DiagnosticScoreCard.tsx) -- 1 connections
   - <- contains <- [[diagnosticscorecard]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\DuplicateBidWarning.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\DuplicateBidWarning.tsx) -- 1 connections
   - <- contains <- [[duplicatebidwarning]]
-- **EditorAiPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\EditorAiPanel.tsx) -- 1 connections
+- **EditorAiPanelProps** (C:\project\tenopa proposer\frontend\components\EditorAiPanel.tsx) -- 1 connections
   - <- contains <- [[editoraipanel]]
-- **EditorTocPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\EditorTocPanel.tsx) -- 1 connections
+- **EditorTocPanelProps** (C:\project\tenopa proposer\frontend\components\EditorTocPanel.tsx) -- 1 connections
   - <- contains <- [[editortocpanel]]
-- **EvaluationRadarProps** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationRadar.tsx) -- 1 connections
+- **EvaluationRadarProps** (C:\project\tenopa proposer\frontend\components\EvaluationRadar.tsx) -- 1 connections
   - <- contains <- [[evaluationradar]]
-- **EvaluationViewProps** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationView.tsx) -- 1 connections
+- **EvaluationViewProps** (C:\project\tenopa proposer\frontend\components\EvaluationView.tsx) -- 1 connections
   - <- contains <- [[evaluationview]]
-- **scoreBg** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationView.tsx) -- 1 connections
+- **scoreBg** (C:\project\tenopa proposer\frontend\components\EvaluationView.tsx) -- 1 connections
   - <- contains <- [[evaluationview]]
-- **scoreColor** (C:\project\tenopa proposer\-agent-master\frontend\components\EvaluationView.tsx) -- 1 connections
+- **scoreColor** (C:\project\tenopa proposer\frontend\components\EvaluationView.tsx) -- 1 connections
   - <- contains <- [[evaluationview]]
-- **FeedbackLoopWorkflowProps** (C:\project\tenopa proposer\-agent-master\frontend\components\FeedbackLoopWorkflow.tsx) -- 1 connections
+- **FeedbackLoopWorkflowProps** (C:\project\tenopa proposer\frontend\components\FeedbackLoopWorkflow.tsx) -- 1 connections
   - <- contains <- [[feedbackloopworkflow]]
-- **FileBarProps** (C:\project\tenopa proposer\-agent-master\frontend\components\FileBar.tsx) -- 1 connections
+- **FileBarProps** (C:\project\tenopa proposer\frontend\components\FileBar.tsx) -- 1 connections
   - <- contains <- [[filebar]]
-- **FileHubPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\FileHubPanel.tsx) -- 1 connections
+- **FileHubPanelProps** (C:\project\tenopa proposer\frontend\components\FileHubPanel.tsx) -- 1 connections
   - <- contains <- [[filehubpanel]]
-- **GapAnalysisResultListProps** (C:\project\tenopa proposer\-agent-master\frontend\components\GapAnalysisResultList.tsx) -- 1 connections
+- **GapAnalysisResultListProps** (C:\project\tenopa proposer\frontend\components\GapAnalysisResultList.tsx) -- 1 connections
   - <- contains <- [[gapanalysisresultlist]]
-- **CompetitionDetail** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **CompetitionDetail** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **GngAnalysis** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **GngAnalysis** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **GoNoGoPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **GoNoGoPanelProps** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **PerformanceDetail** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **PerformanceDetail** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **QualificationDetail** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **QualificationDetail** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **barColor** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **barColor** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **scoreColor** (C:\project\tenopa proposer\-agent-master\frontend\components\GoNoGoPanel.tsx) -- 1 connections
+- **scoreColor** (C:\project\tenopa proposer\frontend\components\GoNoGoPanel.tsx) -- 1 connections
   - <- contains <- [[gonogopanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\GuidedTour.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\GuidedTour.tsx) -- 1 connections
   - <- contains <- [[guidedtour]]
-- **HITLReviewModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewModal.tsx) -- 1 connections
+- **HITLReviewModalProps** (C:\project\tenopa proposer\frontend\components\HITLReviewModal.tsx) -- 1 connections
   - <- contains <- [[hitlreviewmodal]]
-- **ReviewFeedback** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewModal.tsx) -- 1 connections
+- **ReviewFeedback** (C:\project\tenopa proposer\frontend\components\HITLReviewModal.tsx) -- 1 connections
   - <- contains <- [[hitlreviewmodal]]
-- **ReviewItem** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewModal.tsx) -- 1 connections
+- **ReviewItem** (C:\project\tenopa proposer\frontend\components\HITLReviewModal.tsx) -- 1 connections
   - <- contains <- [[hitlreviewmodal]]
-- **HITLReviewStatusListProps** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewStatusList.tsx) -- 1 connections
+- **HITLReviewStatusListProps** (C:\project\tenopa proposer\frontend\components\HITLReviewStatusList.tsx) -- 1 connections
   - <- contains <- [[hitlreviewstatuslist]]
-- **ReviewItemStatus** (C:\project\tenopa proposer\-agent-master\frontend\components\HITLReviewStatusList.tsx) -- 1 connections
+- **ReviewItemStatus** (C:\project\tenopa proposer\frontend\components\HITLReviewStatusList.tsx) -- 1 connections
   - <- contains <- [[hitlreviewstatuslist]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\KbUsageHistory.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\KbUsageHistory.tsx) -- 1 connections
   - <- contains <- [[kbusagehistory]]
-- **UsageRecord** (C:\project\tenopa proposer\-agent-master\frontend\components\KbUsageHistory.tsx) -- 1 connections
+- **UsageRecord** (C:\project\tenopa proposer\frontend\components\KbUsageHistory.tsx) -- 1 connections
   - <- contains <- [[kbusagehistory]]
-- **GDef** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **HealthMetrics** (C:\project\tenopa proposer\frontend\components\KnowledgeHealthDashboard.tsx) -- 1 connections
+  - <- contains <- [[knowledgehealthdashboard]]
+- **KnowledgeHealthDashboardProps** (C:\project\tenopa proposer\frontend\components\KnowledgeHealthDashboard.tsx) -- 1 connections
+  - <- contains <- [[knowledgehealthdashboard]]
+- **KnowledgeRecommendation** (C:\project\tenopa proposer\frontend\components\KnowledgeRecommendations.tsx) -- 1 connections
+  - <- contains <- [[knowledgerecommendations]]
+- **KnowledgeRecommendationsProps** (C:\project\tenopa proposer\frontend\components\KnowledgeRecommendations.tsx) -- 1 connections
+  - <- contains <- [[knowledgerecommendations]]
+- **KnowledgeSearchBarProps** (C:\project\tenopa proposer\frontend\components\KnowledgeSearchBar.tsx) -- 1 connections
+  - <- contains <- [[knowledgesearchbar]]
+- **SearchFiltersType** (C:\project\tenopa proposer\frontend\components\KnowledgeSearchBar.tsx) -- 1 connections
+  - <- contains <- [[knowledgesearchbar]]
+- **SearchResultItem** (C:\project\tenopa proposer\frontend\components\KnowledgeSearchBar.tsx) -- 1 connections
+  - <- contains <- [[knowledgesearchbar]]
+- **ChatMessage** (C:\project\tenopa proposer\frontend\components\MasterProjectsChat.tsx) -- 1 connections
+  - <- contains <- [[masterprojectschat]]
+- **ChatResponse** (C:\project\tenopa proposer\frontend\components\MasterProjectsChat.tsx) -- 1 connections
+  - <- contains <- [[masterprojectschat]]
+- **ProjectCard** (C:\project\tenopa proposer\frontend\components\MasterProjectsChat.tsx) -- 1 connections
+  - <- contains <- [[masterprojectschat]]
+- **GDef** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Chk** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Chk** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Eye** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Eye** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Ln** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Ln** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Lock** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Lock** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **Shield** (C:\project\tenopa proposer\-agent-master\frontend\components\PhaseGraph.tsx) -- 1 connections
+- **Shield** (C:\project\tenopa proposer\frontend\components\PhaseGraph.tsx) -- 1 connections
   - <- contains <- [[phasegraph]]
-- **PositioningImpactModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\PositioningImpactModal.tsx) -- 1 connections
+- **PositioningImpactModalProps** (C:\project\tenopa proposer\frontend\components\PositioningImpactModal.tsx) -- 1 connections
   - <- contains <- [[positioningimpactmodal]]
-- **BidPlanData** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 1 connections
+- **BidPlanData** (C:\project\tenopa proposer\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 1 connections
   - <- contains <- [[bidplanreviewpanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\BidPlanReviewPanel.tsx) -- 1 connections
   - <- contains <- [[bidplanreviewpanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostBreakdownCard.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\CostBreakdownCard.tsx) -- 1 connections
   - <- contains <- [[costbreakdowncard]]
-- **ExpenseGroup** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 1 connections
+- **ExpenseGroup** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 1 connections
   - <- contains <- [[costsheeteditor]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\CostSheetEditor.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\CostSheetEditor.tsx) -- 1 connections
   - <- contains <- [[costsheeteditor]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\MarketContextPanel.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\MarketContextPanel.tsx) -- 1 connections
   - <- contains <- [[marketcontextpanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\PriceScoreTable.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\PriceScoreTable.tsx) -- 1 connections
   - <- contains <- [[pricescoretable]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\ScenarioCards.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\ScenarioCards.tsx) -- 1 connections
   - <- contains <- [[scenariocards]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\pricing\SensitivityChart.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\pricing\SensitivityChart.tsx) -- 1 connections
   - <- contains <- [[sensitivitychart]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectArchivePanel.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\ProjectArchivePanel.tsx) -- 1 connections
   - <- contains <- [[projectarchivepanel]]
-- **ProjectContextHeaderProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProjectContextHeader.tsx) -- 1 connections
+- **ProjectContextHeaderProps** (C:\project\tenopa proposer\frontend\components\ProjectContextHeader.tsx) -- 1 connections
   - <- contains <- [[projectcontextheader]]
-- **CategoryTabsProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\CategoryTabs.tsx) -- 1 connections
+- **CategoryTabsProps** (C:\project\tenopa proposer\frontend\components\prompt\CategoryTabs.tsx) -- 1 connections
   - <- contains <- [[categorytabs]]
-- **CompareViewProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\CompareView.tsx) -- 1 connections
+- **CompareViewProps** (C:\project\tenopa proposer\frontend\components\prompt\CompareView.tsx) -- 1 connections
   - <- contains <- [[compareview]]
-- **PreviewPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\PreviewPanel.tsx) -- 1 connections
+- **PreviewPanelProps** (C:\project\tenopa proposer\frontend\components\prompt\PreviewPanel.tsx) -- 1 connections
   - <- contains <- [[previewpanel]]
-- **PromptEditorProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\PromptEditor.tsx) -- 1 connections
+- **PromptEditorProps** (C:\project\tenopa proposer\frontend\components\prompt\PromptEditor.tsx) -- 1 connections
   - <- contains <- [[prompteditor]]
-- **SimulationRunnerProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\SimulationRunner.tsx) -- 1 connections
+- **SimulationRunnerProps** (C:\project\tenopa proposer\frontend\components\prompt\SimulationRunner.tsx) -- 1 connections
   - <- contains <- [[simulationrunner]]
-- **QualityCard** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\SimulationRunner.tsx) -- 1 connections
+- **QualityCard** (C:\project\tenopa proposer\frontend\components\prompt\SimulationRunner.tsx) -- 1 connections
   - <- contains <- [[simulationrunner]]
-- **WorkflowMapProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\WorkflowMap.tsx) -- 1 connections
+- **WorkflowMapProps** (C:\project\tenopa proposer\frontend\components\prompt\WorkflowMap.tsx) -- 1 connections
   - <- contains <- [[workflowmap]]
-- **ProposalDetailModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailModal.tsx) -- 1 connections
+- **ProposalDetailModalProps** (C:\project\tenopa proposer\frontend\components\ProposalDetailModal.tsx) -- 1 connections
   - <- contains <- [[proposaldetailmodal]]
-- **TeamMember** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailModal.tsx) -- 1 connections
+- **TeamMember** (C:\project\tenopa proposer\frontend\components\ProposalDetailModal.tsx) -- 1 connections
   - <- contains <- [[proposaldetailmodal]]
-- **ProposalDetailWithHITLReviewProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
+- **ProposalDetailWithHITLReviewProps** (C:\project\tenopa proposer\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
   - <- contains <- [[proposaldetailwithhitlreview]]
-- **ReviewItem** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
+- **ReviewItem** (C:\project\tenopa proposer\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
   - <- contains <- [[proposaldetailwithhitlreview]]
-- **ReviewItemStatus** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
+- **ReviewItemStatus** (C:\project\tenopa proposer\frontend\components\ProposalDetailWithHITLReview.tsx) -- 1 connections
   - <- contains <- [[proposaldetailwithhitlreview]]
-- **ProposalEditViewProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalEditView.tsx) -- 1 connections
+- **ProposalEditViewProps** (C:\project\tenopa proposer\frontend\components\ProposalEditView.tsx) -- 1 connections
   - <- contains <- [[proposaleditview]]
-- **ProposalMemberSelectionModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalMemberSelectionModal.tsx) -- 1 connections
+- **ProposalMemberSelectionModalProps** (C:\project\tenopa proposer\frontend\components\ProposalMemberSelectionModal.tsx) -- 1 connections
   - <- contains <- [[proposalmemberselectionmodal]]
-- **TeamMember** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalMemberSelectionModal.tsx) -- 1 connections
+- **TeamMember** (C:\project\tenopa proposer\frontend\components\ProposalMemberSelectionModal.tsx) -- 1 connections
   - <- contains <- [[proposalmemberselectionmodal]]
-- **ProposalsTableHeaderProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableHeader.tsx) -- 1 connections
+- **ProposalsTableHeaderProps** (C:\project\tenopa proposer\frontend\components\ProposalsTableHeader.tsx) -- 1 connections
   - <- contains <- [[proposalstableheader]]
-- **ProposalsTableRowProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableRow.tsx) -- 1 connections
+- **ProposalsTableRowProps** (C:\project\tenopa proposer\frontend\components\ProposalsTableRow.tsx) -- 1 connections
   - <- contains <- [[proposalstablerow]]
-- **ProposalsTableSkeletonProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ProposalsTableSkeleton.tsx) -- 1 connections
+- **ProposalsTableSkeletonProps** (C:\project\tenopa proposer\frontend\components\ProposalsTableSkeleton.tsx) -- 1 connections
   - <- contains <- [[proposalstableskeleton]]
-- **reactionBadge** (C:\project\tenopa proposer\-agent-master\frontend\components\QaPanel.tsx) -- 1 connections
+- **reactionBadge** (C:\project\tenopa proposer\frontend\components\QaPanel.tsx) -- 1 connections
   - <- contains <- [[qapanel]]
-- **ReviewProgressBannerProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ReviewProgressBanner.tsx) -- 1 connections
+- **ReviewProgressBannerProps** (C:\project\tenopa proposer\frontend\components\ReviewProgressBanner.tsx) -- 1 connections
   - <- contains <- [[reviewprogressbanner]]
-- **StepArtifactViewerProps** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 1 connections
+- **StepArtifactViewerProps** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 1 connections
   - <- contains <- [[stepartifactviewer]]
-- **ArtifactRenderer** (C:\project\tenopa proposer\-agent-master\frontend\components\StepArtifactViewer.tsx) -- 1 connections
+- **ArtifactRenderer** (C:\project\tenopa proposer\frontend\components\StepArtifactViewer.tsx) -- 1 connections
   - <- contains <- [[stepartifactviewer]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamDashboard.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\StreamDashboard.tsx) -- 1 connections
   - <- contains <- [[streamdashboard]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamDependencyGraph.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\StreamDependencyGraph.tsx) -- 1 connections
   - <- contains <- [[streamdependencygraph]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\SubmissionDocsPanel.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\SubmissionDocsPanel.tsx) -- 1 connections
   - <- contains <- [[submissiondocspanel]]
-- **DocStatusBadge** (C:\project\tenopa proposer\-agent-master\frontend\components\SubmissionDocsPanel.tsx) -- 1 connections
+- **DocStatusBadge** (C:\project\tenopa proposer\frontend\components\SubmissionDocsPanel.tsx) -- 1 connections
   - <- contains <- [[submissiondocspanel]]
-- **ThemeToggleProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ThemeToggle.tsx) -- 1 connections
+- **ThemeToggleProps** (C:\project\tenopa proposer\frontend\components\ThemeToggle.tsx) -- 1 connections
   - <- contains <- [[themetoggle]]
-- **ButtonProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Button.tsx) -- 1 connections
+- **ButtonProps** (C:\project\tenopa proposer\frontend\components\ui\Button.tsx) -- 1 connections
   - <- contains <- [[button]]
-- **CardBodyProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Card.tsx) -- 1 connections
-  - <- contains <- [[card]]
-- **CardFooterProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Card.tsx) -- 1 connections
-  - <- contains <- [[card]]
-- **CardHeaderProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Card.tsx) -- 1 connections
-  - <- contains <- [[card]]
-- **CardProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Card.tsx) -- 1 connections
-  - <- contains <- [[card]]
-- **FormFieldProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\FormField.tsx) -- 1 connections
-  - <- contains <- [[formfield]]
-- **SelectProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\FormField.tsx) -- 1 connections
-  - <- contains <- [[formfield]]
-- **TextAreaProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\FormField.tsx) -- 1 connections
-  - <- contains <- [[formfield]]
-- **TextInputProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\FormField.tsx) -- 1 connections
-  - <- contains <- [[formfield]]
-- **ModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Modal.tsx) -- 1 connections
+- **ModalProps** (C:\project\tenopa proposer\frontend\components\ui\Modal.tsx) -- 1 connections
   - <- contains <- [[modal]]
-- **ToastContainerProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 1 connections
+- **ToastContainerProps** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 1 connections
   - <- contains <- [[toast]]
-- **ToastContextType** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 1 connections
+- **ToastContextType** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 1 connections
   - <- contains <- [[toast]]
-- **ToastItemProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Toast.tsx) -- 1 connections
+- **ToastItemProps** (C:\project\tenopa proposer\frontend\components\ui\Toast.tsx) -- 1 connections
   - <- contains <- [[toast]]
-- **VersionCompareModalProps** (C:\project\tenopa proposer\-agent-master\frontend\components\VersionCompareModal.tsx) -- 1 connections
+- **CompletedProjectsViewProps** (C:\project\tenopa proposer\frontend\components\vault\CompletedProjectsView.tsx) -- 1 connections
+  - <- contains <- [[completedprojectsview]]
+- **Project** (C:\project\tenopa proposer\frontend\components\vault\CompletedProjectsView.tsx) -- 1 connections
+  - <- contains <- [[completedprojectsview]]
+- **FeedbackData** (C:\project\tenopa proposer\frontend\components\vault\FeedbackForm.tsx) -- 1 connections
+  - <- contains <- [[feedbackform]]
+- **FeedbackFormProps** (C:\project\tenopa proposer\frontend\components\vault\FeedbackForm.tsx) -- 1 connections
+  - <- contains <- [[feedbackform]]
+- **GovernmentGuidelinesViewProps** (C:\project\tenopa proposer\frontend\components\vault\GovernmentGuidelinesView.tsx) -- 1 connections
+  - <- contains <- [[governmentguidelinesview]]
+- **Guideline** (C:\project\tenopa proposer\frontend\components\vault\GovernmentGuidelinesView.tsx) -- 1 connections
+  - <- contains <- [[governmentguidelinesview]]
+- **BidPriceData** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **ClientInfo** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **CompetitiveAnalysis** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **PersonnelRecommendation** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **PredictedQA** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **PricingStrategy** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **StrategyPoint** (C:\project\tenopa proposer\frontend\components\vault\StepSpecificViews.tsx) -- 1 connections
+  - <- contains <- [[stepspecificviews]]
+- **Message** (C:\project\tenopa proposer\frontend\components\VaultChat.tsx) -- 1 connections
+  - <- contains <- [[vaultchat]]
+- **VaultChatProps** (C:\project\tenopa proposer\frontend\components\VaultChat.tsx) -- 1 connections
+  - <- contains <- [[vaultchat]]
+- **Source** (C:\project\tenopa proposer\frontend\components\VaultResponseCard.tsx) -- 1 connections
+  - <- contains <- [[vaultresponsecard]]
+- **VaultResponseCardProps** (C:\project\tenopa proposer\frontend\components\VaultResponseCard.tsx) -- 1 connections
+  - <- contains <- [[vaultresponsecard]]
+- **VaultSearchBarProps** (C:\project\tenopa proposer\frontend\components\VaultSearchBar.tsx) -- 1 connections
+  - <- contains <- [[vaultsearchbar]]
+- **VaultSidebarProps** (C:\project\tenopa proposer\frontend\components\VaultSidebar.tsx) -- 1 connections
+  - <- contains <- [[vaultsidebar]]
+- **VaultStepSelectorProps** (C:\project\tenopa proposer\frontend\components\VaultStepSelector.tsx) -- 1 connections
+  - <- contains <- [[vaultstepselector]]
+- **VersionCompareModalProps** (C:\project\tenopa proposer\frontend\components\VersionCompareModal.tsx) -- 1 connections
   - <- contains <- [[versioncomparemodal]]
-- **WorkflowLogPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowLogPanel.tsx) -- 1 connections
+- **WorkflowLogPanelProps** (C:\project\tenopa proposer\frontend\components\WorkflowLogPanel.tsx) -- 1 connections
   - <- contains <- [[workflowlogpanel]]
-- **AiIssue** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 1 connections
+- **AiIssue** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 1 connections
   - <- contains <- [[workflowpanel]]
-- **WorkflowPanelProps** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowPanel.tsx) -- 1 connections
+- **WorkflowPanelProps** (C:\project\tenopa proposer\frontend\components\WorkflowPanel.tsx) -- 1 connections
   - <- contains <- [[workflowpanel]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\WorkflowResumeBanner.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\WorkflowResumeBanner.tsx) -- 1 connections
   - <- contains <- [[workflowresumebanner]]
-- **authenticated.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\authenticated.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **bids-kb-analytics.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\bids-kb-analytics.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **login-flow.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\login-flow.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **pages.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\pages.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **proposal-decision-workflow.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\proposal-decision-workflow.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **proposals.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\proposals.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **screenshot-monitoring.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\screenshot-monitoring.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **smoke.spec** (C:\project\tenopa proposer\-agent-master\frontend\e2e\smoke.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
-- **clear** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 1 connections
-  - <- contains <- [[ttlcache]]
-- **constructor** (C:\project\tenopa proposer\-agent-master\frontend\lib\api.ts) -- 1 connections
-  - <- contains <- [[ttlcache]]
-- **error-reporter** (C:\project\tenopa proposer\-agent-master\frontend\lib\error-reporter.ts) -- 1 connections
+- **StepData** (C:\project\tenopa proposer\frontend\hooks\useVaultStep.ts) -- 1 connections
+  - <- contains <- [[usevaultstep]]
+- **UseVaultStepOptions** (C:\project\tenopa proposer\frontend\hooks\useVaultStep.ts) -- 1 connections
+  - <- contains <- [[usevaultstep]]
+- **VaultResponse** (C:\project\tenopa proposer\frontend\hooks\useVaultStep.ts) -- 1 connections
+  - <- contains <- [[usevaultstep]]
+- **error-reporter** (C:\project\tenopa proposer\frontend\lib\error-reporter.ts) -- 1 connections
   - -> contains -> [[reporterror]]
-- **UsePhaseStatusResult** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\usePhaseStatus.ts) -- 1 connections
+- **UsePhaseStatusResult** (C:\project\tenopa proposer\frontend\lib\hooks\usePhaseStatus.ts) -- 1 connections
   - <- contains <- [[usephasestatus]]
-- **UseWorkflowStreamResult** (C:\project\tenopa proposer\-agent-master\frontend\lib\hooks\useWorkflowStream.ts) -- 1 connections
+- **UseWorkflowStreamResult** (C:\project\tenopa proposer\frontend\lib\hooks\useWorkflowStream.ts) -- 1 connections
   - <- contains <- [[useworkflowstream]]
-- **proposals-utils** (C:\project\tenopa proposer\-agent-master\frontend\lib\proposals-utils.ts) -- 1 connections
+- **proposals-utils** (C:\project\tenopa proposer\frontend\lib\proposals-utils.ts) -- 1 connections
   - -> imports -> [[unresolvedreflibapi]]
-- **next.config** (C:\project\tenopa proposer\-agent-master\frontend\next.config.ts) -- 1 connections
+- **next.config** (C:\project\tenopa proposer\frontend\next.config.ts) -- 1 connections
   - -> imports -> [[unresolvedrefnext]]
-- **test_documents_e2e.spec** (C:\project\tenopa proposer\-agent-master\tests\e2e\test_documents_e2e.spec.ts) -- 1 connections
-  - -> imports -> [[unresolvedrefplaywrighttest]]
 
 ## Internal Relationships
-- embedding_text_for_client -> calls -> __unresolved__::ref::filter [EXTRACTED]
-- embedding_text_for_competitor -> calls -> __unresolved__::ref::filter [EXTRACTED]
-- embedding_text_for_lesson -> calls -> __unresolved__::ref::filter [EXTRACTED]
+- _period_to_date_range -> calls -> __unresolved__::ref::split [EXTRACTED]
+- remove_listener -> calls -> __unresolved__::ref::remove [EXTRACTED]
+- _chunk_articles -> calls -> __unresolved__::ref::split [EXTRACTED]
+- _chunk_articles -> calls -> __unresolved__::ref::match [EXTRACTED]
+- _analyze_page_setup -> calls -> __unresolved__::ref::find [EXTRACTED]
+- _analyze_page_setup -> calls -> __unresolved__::ref::pagesetup [EXTRACTED]
 - _ratio_delta -> calls -> __unresolved__::ref::abs [EXTRACTED]
-- run_comparison -> calls -> __unresolved__::ref::_get_prompt_by_version [EXTRACTED]
-- run_comparison -> calls -> __unresolved__::ref::simulationrequest [EXTRACTED]
-- run_comparison -> calls -> __unresolved__::ref::run_simulation [EXTRACTED]
-- run_comparison -> calls -> __unresolved__::ref::abs [EXTRACTED]
+- _generate_section_xml -> calls -> __unresolved__::ref::element [EXTRACTED]
+- _generate_section_xml -> calls -> __unresolved__::ref::_add_paragraph [EXTRACTED]
+- _generate_section_xml -> calls -> __unresolved__::ref::split [EXTRACTED]
+- _generate_section_xml -> calls -> __unresolved__::ref::find [EXTRACTED]
+- _generate_section_xml -> calls -> __unresolved__::ref::tostring [EXTRACTED]
+- _split_sentences -> calls -> __unresolved__::ref::split [EXTRACTED]
 - step8-integration.test -> imports -> __unresolved__::ref::_vitest_ [EXTRACTED]
 - step8-integration.test -> imports -> __unresolved__::ref::_msw_node_ [EXTRACTED]
 - step8-integration.test -> imports -> __unresolved__::ref::_msw_ [EXTRACTED]
@@ -4547,6 +4603,7 @@ Cohesion: 0.00 | Nodes: 932
 - MemberRow -> calls -> __unresolved__::ref::onpatch [EXTRACTED]
 - MemberRow -> calls -> __unresolved__::ref::setactivecell [EXTRACTED]
 - MemberRow -> calls -> __unresolved__::ref::map [EXTRACTED]
+- MemberRow -> calls -> __unresolved__::ref::find [EXTRACTED]
 - MemberRow -> calls -> __unresolved__::ref::onresetpw [EXTRACTED]
 - MemberRow -> calls -> __unresolved__::ref::ondeactivate [EXTRACTED]
 - MemberRow -> calls -> __unresolved__::ref::ondelete [EXTRACTED]
@@ -4688,6 +4745,7 @@ Cohesion: 0.00 | Nodes: 932
 - page -> imports -> __unresolved__::ref::_next_link_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___components_datatable_ [EXTRACTED]
+- categoryLabel -> calls -> __unresolved__::ref::find [EXTRACTED]
 - page -> contains -> categoryLabel [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
@@ -4701,6 +4759,7 @@ Cohesion: 0.00 | Nodes: 932
 - ArtifactsView -> calls -> __unresolved__::ref::setloading [EXTRACTED]
 - ArtifactsView -> calls -> __unresolved__::ref::setitems [EXTRACTED]
 - ArtifactsView -> calls -> __unresolved__::ref::settotalpages [EXTRACTED]
+- ArtifactsView -> calls -> __unresolved__::ref::load [EXTRACTED]
 - ArtifactsView -> calls -> __unresolved__::ref::setpage [EXTRACTED]
 - ArtifactsView -> calls -> __unresolved__::ref::setquery [EXTRACTED]
 - ArtifactsView -> calls -> __unresolved__::ref::map [EXTRACTED]
@@ -4735,6 +4794,7 @@ Cohesion: 0.00 | Nodes: 932
 - KbSearchView -> calls -> __unresolved__::ref::map [EXTRACTED]
 - KbSearchView -> calls -> __unresolved__::ref::togglearea [EXTRACTED]
 - KbSearchView -> calls -> __unresolved__::ref::entries [EXTRACTED]
+- KbSearchView -> calls -> __unresolved__::ref::find [EXTRACTED]
 - KbSearchView -> calls -> __unresolved__::ref::push [EXTRACTED]
 - KbSearchView -> calls -> __unresolved__::ref::tofixed [EXTRACTED]
 - page -> contains -> formatDate [EXTRACTED]
@@ -4745,6 +4805,13 @@ Cohesion: 0.00 | Nodes: 932
 - page -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_next_navigation_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_next_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::___components_knowledgehealthdashboard_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_next_link_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_next_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::___components_knowledgesearchbar_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::useparams [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::usesearchparams [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::userouter [EXTRACTED]
@@ -4755,6 +4822,7 @@ Cohesion: 0.00 | Nodes: 932
 - BidDetailContent -> calls -> __unresolved__::ref::setannouncement [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::setrecommendation [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- BidDetailContent -> calls -> __unresolved__::ref::json [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::seterror [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::getattachments [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::setattachments [EXTRACTED]
@@ -4777,6 +4845,8 @@ Cohesion: 0.00 | Nodes: 932
 - BidDetailContent -> calls -> __unresolved__::ref::handledownloadattachment [EXTRACTED]
 - BidDetailContent -> calls -> __unresolved__::ref::filter [EXTRACTED]
 - fileIcon -> calls -> __unresolved__::ref::tolowercase [EXTRACTED]
+- fileIcon -> calls -> __unresolved__::ref::pop [EXTRACTED]
+- fileIcon -> calls -> __unresolved__::ref::split [EXTRACTED]
 - formatBudget -> calls -> __unresolved__::ref::tofixed [EXTRACTED]
 - formatBudget -> calls -> __unresolved__::ref::tolocalestring [EXTRACTED]
 - formatFileSize -> calls -> __unresolved__::ref::tofixed [EXTRACTED]
@@ -4819,8 +4889,11 @@ Cohesion: 0.00 | Nodes: 932
 - AgencyTypeahead -> calls -> __unresolved__::ref::tolowercase [EXTRACTED]
 - AgencyTypeahead -> calls -> __unresolved__::ref::onchange [EXTRACTED]
 - AgencyTypeahead -> calls -> __unresolved__::ref::map [EXTRACTED]
+- AttachmentLink -> calls -> __unresolved__::ref::find [EXTRACTED]
 - AttachmentLink -> calls -> __unresolved__::ref::classifyattachment [EXTRACTED]
 - AttachmentLink -> calls -> __unresolved__::ref::touppercase [EXTRACTED]
+- AttachmentLink -> calls -> __unresolved__::ref::pop [EXTRACTED]
+- AttachmentLink -> calls -> __unresolved__::ref::split [EXTRACTED]
 - AttachmentLink -> calls -> __unresolved__::ref::stoppropagation [EXTRACTED]
 - BidRow -> calls -> __unresolved__::ref::formatdeadline [EXTRACTED]
 - BidRow -> calls -> __unresolved__::ref::stoppropagation [EXTRACTED]
@@ -4864,11 +4937,14 @@ Cohesion: 0.00 | Nodes: 932
 - formatFetchedAt -> calls -> __unresolved__::ref::tostring [EXTRACTED]
 - formatFetchedAt -> calls -> __unresolved__::ref::gethours [EXTRACTED]
 - formatFetchedAt -> calls -> __unresolved__::ref::getminutes [EXTRACTED]
+- guessTeam -> calls -> __unresolved__::ref::match [EXTRACTED]
 - matchesMonitorSearch -> calls -> __unresolved__::ref::filter [EXTRACTED]
+- matchesMonitorSearch -> calls -> __unresolved__::ref::split [EXTRACTED]
 - matchesMonitorSearch -> calls -> __unresolved__::ref::tolowercase [EXTRACTED]
 - matchesMonitorSearch -> calls -> __unresolved__::ref::every [EXTRACTED]
 - matchesMonitorSearch -> calls -> __unresolved__::ref::includes [EXTRACTED]
 - matchesScoredSearch -> calls -> __unresolved__::ref::filter [EXTRACTED]
+- matchesScoredSearch -> calls -> __unresolved__::ref::split [EXTRACTED]
 - matchesScoredSearch -> calls -> __unresolved__::ref::tolowercase [EXTRACTED]
 - matchesScoredSearch -> calls -> __unresolved__::ref::every [EXTRACTED]
 - matchesScoredSearch -> calls -> __unresolved__::ref::includes [EXTRACTED]
@@ -4889,9 +4965,11 @@ Cohesion: 0.00 | Nodes: 932
 - MonitorBidsView -> calls -> __unresolved__::ref::seterror [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::monitor [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- MonitorBidsView -> calls -> __unresolved__::ref::json [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::loadbids [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::setpage [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::usememo [EXTRACTED]
+- MonitorBidsView -> calls -> __unresolved__::ref::sort [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::map [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::filter [EXTRACTED]
 - MonitorBidsView -> calls -> __unresolved__::ref::matchesmonitorsearch [EXTRACTED]
@@ -4929,6 +5007,7 @@ Cohesion: 0.00 | Nodes: 932
 - ScoredBidsView -> calls -> __unresolved__::ref::setfetchedat [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setrequirescrawl [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::onfetched [EXTRACTED]
+- ScoredBidsView -> calls -> __unresolved__::ref::load [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::usecallback [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::applyresponse [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setloading [EXTRACTED]
@@ -4936,7 +5015,9 @@ Cohesion: 0.00 | Nodes: 932
 - ScoredBidsView -> calls -> __unresolved__::ref::scored [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::isarray [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- ScoredBidsView -> calls -> __unresolved__::ref::json [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::usememo [EXTRACTED]
+- ScoredBidsView -> calls -> __unresolved__::ref::sort [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::map [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::filter [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::has [EXTRACTED]
@@ -4944,6 +5025,7 @@ Cohesion: 0.00 | Nodes: 932
 - ScoredBidsView -> calls -> __unresolved__::ref::sortbids [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setsortconfig [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setstagefilter [EXTRACTED]
+- ScoredBidsView -> calls -> __unresolved__::ref::add [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setquery [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::setbudgetfiltertype [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::togglestage [EXTRACTED]
@@ -4964,6 +5046,7 @@ Cohesion: 0.00 | Nodes: 932
 - ScoredBidsView -> calls -> __unresolved__::ref::extractdomain [EXTRACTED]
 - ScoredBidsView -> calls -> __unresolved__::ref::guessteam [EXTRACTED]
 - SortableHeader -> calls -> __unresolved__::ref::onsort [EXTRACTED]
+- sortBids -> calls -> __unresolved__::ref::sort [EXTRACTED]
 - sortBids -> calls -> __unresolved__::ref::getter [EXTRACTED]
 - page -> contains -> formatBudget [EXTRACTED]
 - page -> contains -> calcDday [EXTRACTED]
@@ -4999,6 +5082,7 @@ Cohesion: 0.00 | Nodes: 932
 - PresetsTab -> calls -> __unresolved__::ref::seterror [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::setloading [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::useeffect [EXTRACTED]
+- PresetsTab -> calls -> __unresolved__::ref::load [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::setform [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::setediting [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::trim [EXTRACTED]
@@ -5011,6 +5095,7 @@ Cohesion: 0.00 | Nodes: 932
 - PresetsTab -> calls -> __unresolved__::ref::onpresetactivated [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::map [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::tofixed [EXTRACTED]
+- PresetsTab -> calls -> __unresolved__::ref::find [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::handleactivate [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::startedit [EXTRACTED]
 - PresetsTab -> calls -> __unresolved__::ref::handledelete [EXTRACTED]
@@ -5114,6 +5199,7 @@ Cohesion: 0.00 | Nodes: 932
 - ProposalsContent -> calls -> __unresolved__::ref::setsortkey [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::useref [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::json [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setteammembers [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::map [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::loadteammembers [EXTRACTED]
@@ -5138,7 +5224,7 @@ Cohesion: 0.00 | Nodes: 932
 - ProposalsContent -> calls -> __unresolved__::ref::createfrombid [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::push [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::recordbiddecision [EXTRACTED]
-- ProposalsContent -> calls -> __unresolved__::ref::fetchdecidedbids [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::loaddecidedbids [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::stringify [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::catch [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setselectedproposal [EXTRACTED]
@@ -5153,7 +5239,6 @@ Cohesion: 0.00 | Nodes: 932
 - ProposalsContent -> calls -> __unresolved__::ref::setrfpuploadtitle [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setrfpclientname [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::resetinline [EXTRACTED]
-- ProposalsContent -> calls -> __unresolved__::ref::loaddecidedbids [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setscope [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::openinline [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setsearchinput [EXTRACTED]
@@ -5169,10 +5254,14 @@ Cohesion: 0.00 | Nodes: 932
 - ProposalsContent -> calls -> __unresolved__::ref::handledecisionhold [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::handledecisionirrelevant [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::touppercase [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::pop [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::split [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::tofixed [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::click [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::setdragging [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::sort [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::createsortcomparator [EXTRACTED]
+- ProposalsContent -> calls -> __unresolved__::ref::find [EXTRACTED]
 - ProposalsContent -> calls -> __unresolved__::ref::5_text_xs_border_border___262626__rounded_lg_text___8c8c8c__disabled_opacity_40_hover_bg___1c1c1c__hover_text___ededed__transition_colors______________________________________________________________________________________button___________________________div_________________________div___________________________________________ [EXTRACTED]
 - page -> contains -> ProposalsContent [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
@@ -5196,6 +5285,8 @@ Cohesion: 0.00 | Nodes: 932
 - CompanyTab -> calls -> __unresolved__::ref::setinterval [EXTRACTED]
 - CompanyTab -> calls -> __unresolved__::ref::clearinterval [EXTRACTED]
 - CompanyTab -> calls -> __unresolved__::ref::tolowercase [EXTRACTED]
+- CompanyTab -> calls -> __unresolved__::ref::pop [EXTRACTED]
+- CompanyTab -> calls -> __unresolved__::ref::split [EXTRACTED]
 - CompanyTab -> calls -> __unresolved__::ref::setuploading [EXTRACTED]
 - CompanyTab -> calls -> __unresolved__::ref::preventdefault [EXTRACTED]
 - CompanyTab -> calls -> __unresolved__::ref::setdragging [EXTRACTED]
@@ -5243,6 +5334,8 @@ Cohesion: 0.00 | Nodes: 932
 - DisplayTab -> calls -> __unresolved__::ref::getitem [EXTRACTED]
 - DisplayTab -> calls -> __unresolved__::ref::settheme [EXTRACTED]
 - DisplayTab -> calls -> __unresolved__::ref::setitem [EXTRACTED]
+- DisplayTab -> calls -> __unresolved__::ref::add [EXTRACTED]
+- DisplayTab -> calls -> __unresolved__::ref::remove [EXTRACTED]
 - DisplayTab -> calls -> __unresolved__::ref::removeitem [EXTRACTED]
 - DisplayTab -> calls -> __unresolved__::ref::matchmedia [EXTRACTED]
 - DisplayTab -> calls -> __unresolved__::ref::map [EXTRACTED]
@@ -5277,6 +5370,10 @@ Cohesion: 0.00 | Nodes: 932
 - page -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_next_navigation_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_next_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::___lib_supabase_server_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::___components_vaultlayout_ [EXTRACTED]
+- page -> imports -> __unresolved__::ref::_next_navigation_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::_next_navigation_ [EXTRACTED]
 - page -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
@@ -5311,6 +5408,7 @@ Cohesion: 0.00 | Nodes: 932
 - LoginContent -> calls -> __unresolved__::ref::signinwithpassword [EXTRACTED]
 - LoginContent -> calls -> __unresolved__::ref::getsession [EXTRACTED]
 - LoginContent -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- LoginContent -> calls -> __unresolved__::ref::json [EXTRACTED]
 - LoginContent -> calls -> __unresolved__::ref::push [EXTRACTED]
 - LoginContent -> calls -> __unresolved__::ref::refresh [EXTRACTED]
 - LoginContent -> calls -> __unresolved__::ref::setemail [EXTRACTED]
@@ -5338,6 +5436,7 @@ Cohesion: 0.00 | Nodes: 932
 - AdminOrgChart -> contains -> PersonCard [EXTRACTED]
 - AdminOrgChart -> contains -> RoleMatrixView [EXTRACTED]
 - AdminOrgChart -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- computeSimpleDiff -> calls -> __unresolved__::ref::split [EXTRACTED]
 - computeSimpleDiff -> calls -> __unresolved__::ref::push [EXTRACTED]
 - stripHtml -> calls -> __unresolved__::ref::createelement [EXTRACTED]
 - AiSuggestionDiff -> contains -> AiSuggestionDiffProps [EXTRACTED]
@@ -5409,11 +5508,13 @@ Cohesion: 0.00 | Nodes: 932
 - ArtifactReviewPanel -> contains -> GenericContent [EXTRACTED]
 - ArtifactReviewPanel -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - ArtifactReviewPanel -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- ArtifactVersionGroup -> calls -> __unresolved__::ref::find [EXTRACTED]
 - ArtifactVersionGroup -> calls -> __unresolved__::ref::map [EXTRACTED]
 - ArtifactVersionGroup -> calls -> __unresolved__::ref::onversionselect [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::usetoast [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::usecallback [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- VersionDetailsPanel -> calls -> __unresolved__::ref::match [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::decodeuricomponent [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::blob [EXTRACTED]
 - VersionDetailsPanel -> calls -> __unresolved__::ref::createobjecturl [EXTRACTED]
@@ -5466,11 +5567,16 @@ Cohesion: 0.00 | Nodes: 932
 - DetailCenterPanel -> imports -> __unresolved__::ref::___components_versionselectionmodal_ [EXTRACTED]
 - DetailCenterPanel -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - DetailCenterPanel -> imports -> __unresolved__::ref::___lib_hooks_useworkflowstream_ [EXTRACTED]
+- renderInline -> calls -> __unresolved__::ref::split [EXTRACTED]
+- renderInline -> calls -> __unresolved__::ref::map [EXTRACTED]
+- renderInline -> calls -> __unresolved__::ref::slice [EXTRACTED]
+- SimpleMarkdown -> calls -> __unresolved__::ref::split [EXTRACTED]
 - SimpleMarkdown -> calls -> __unresolved__::ref::map [EXTRACTED]
 - SimpleMarkdown -> calls -> __unresolved__::ref::trimstart [EXTRACTED]
 - SimpleMarkdown -> calls -> __unresolved__::ref::renderinline [EXTRACTED]
 - DetailRightPanel -> contains -> DetailRightPanelProps [EXTRACTED]
 - DetailRightPanel -> contains -> SimpleMarkdown [EXTRACTED]
+- DetailRightPanel -> contains -> renderInline [EXTRACTED]
 - DetailRightPanel -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - DetailRightPanel -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - DetailRightPanel -> imports -> __unresolved__::ref::___components_ui_toast_ [EXTRACTED]
@@ -5571,6 +5677,33 @@ Cohesion: 0.00 | Nodes: 932
 - KbUsageHistory -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - KbUsageHistory -> imports -> __unresolved__::ref::_next_link_ [EXTRACTED]
 - KbUsageHistory -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- KnowledgeHealthDashboard -> contains -> HealthMetrics [EXTRACTED]
+- KnowledgeHealthDashboard -> contains -> KnowledgeHealthDashboardProps [EXTRACTED]
+- KnowledgeHealthDashboard -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- KnowledgeHealthDashboard -> imports -> __unresolved__::ref::_recharts_ [EXTRACTED]
+- KnowledgeHealthDashboard -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- KnowledgeHealthDashboard -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- KnowledgeRecommendations -> contains -> KnowledgeRecommendation [EXTRACTED]
+- KnowledgeRecommendations -> contains -> KnowledgeRecommendationsProps [EXTRACTED]
+- KnowledgeRecommendations -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- KnowledgeRecommendations -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- KnowledgeRecommendations -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- KnowledgeSearchBar -> contains -> SearchResultItem [EXTRACTED]
+- KnowledgeSearchBar -> contains -> SearchFiltersType [EXTRACTED]
+- KnowledgeSearchBar -> contains -> KnowledgeSearchBarProps [EXTRACTED]
+- KnowledgeSearchBar -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- KnowledgeSearchBar -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- KnowledgeSearchBar -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- ProjectSourceCard -> calls -> __unresolved__::ref::cn [EXTRACTED]
+- ProjectSourceCard -> calls -> __unresolved__::ref::map [EXTRACTED]
+- ProjectSourceCard -> calls -> __unresolved__::ref::slice [EXTRACTED]
+- MasterProjectsChat -> contains -> ChatMessage [EXTRACTED]
+- MasterProjectsChat -> contains -> ProjectCard [EXTRACTED]
+- MasterProjectsChat -> contains -> ChatResponse [EXTRACTED]
+- MasterProjectsChat -> contains -> ProjectSourceCard [EXTRACTED]
+- MasterProjectsChat -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- MasterProjectsChat -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- MasterProjectsChat -> imports -> __unresolved__::ref::___lib_utils_ [EXTRACTED]
 - NotificationBell -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - NotificationBell -> imports -> __unresolved__::ref::_next_navigation_ [EXTRACTED]
 - NotificationBell -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
@@ -5579,6 +5712,7 @@ Cohesion: 0.00 | Nodes: 932
 - Dot -> calls -> __unresolved__::ref::sethovered [EXTRACTED]
 - Dot -> calls -> __unresolved__::ref::stoppropagation [EXTRACTED]
 - Dot -> calls -> __unresolved__::ref::move [EXTRACTED]
+- Dot -> calls -> __unresolved__::ref::start [EXTRACTED]
 - Gt -> calls -> __unresolved__::ref::stoppropagation [EXTRACTED]
 - Gt -> calls -> __unresolved__::ref::approve [EXTRACTED]
 - rGate -> calls -> __unresolved__::ref::some [EXTRACTED]
@@ -5586,6 +5720,7 @@ Cohesion: 0.00 | Nodes: 932
 - Row -> calls -> __unresolved__::ref::map [EXTRACTED]
 - Row -> calls -> __unresolved__::ref::indexof [EXTRACTED]
 - Row -> calls -> __unresolved__::ref::clk [EXTRACTED]
+- Row -> calls -> __unresolved__::ref::start [EXTRACTED]
 - Row -> calls -> __unresolved__::ref::move [EXTRACTED]
 - Row -> calls -> __unresolved__::ref::gate [EXTRACTED]
 - rStep -> calls -> __unresolved__::ref::some [EXTRACTED]
@@ -5753,6 +5888,7 @@ Cohesion: 0.00 | Nodes: 932
 - ProposalsTableRow -> imports -> __unresolved__::ref::___lib_utils_ [EXTRACTED]
 - ProposalsTableSkeleton -> contains -> ProposalsTableSkeletonProps [EXTRACTED]
 - ProposalsTableSkeleton -> imports -> __unresolved__::ref::___lib_proposals_utils_ [EXTRACTED]
+- categoryLabel -> calls -> __unresolved__::ref::find [EXTRACTED]
 - QaPanel -> contains -> categoryLabel [EXTRACTED]
 - QaPanel -> contains -> reactionBadge [EXTRACTED]
 - QaPanel -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
@@ -5788,6 +5924,10 @@ Cohesion: 0.00 | Nodes: 932
 - GenericArtifact -> calls -> __unresolved__::ref::stoppropagation [EXTRACTED]
 - GoNoGoArtifact -> calls -> __unresolved__::ref::touppercase [EXTRACTED]
 - GoNoGoArtifact -> calls -> __unresolved__::ref::map [EXTRACTED]
+- highlightJson -> calls -> __unresolved__::ref::split [EXTRACTED]
+- highlightJson -> calls -> __unresolved__::ref::map [EXTRACTED]
+- highlightJson -> calls -> __unresolved__::ref::slice [EXTRACTED]
+- highlightJson -> calls -> __unresolved__::ref::test [EXTRACTED]
 - PlanArtifact -> calls -> __unresolved__::ref::map [EXTRACTED]
 - PlanArtifact -> calls -> __unresolved__::ref::tolocalestring [EXTRACTED]
 - PlanArtifact -> calls -> __unresolved__::ref::number [EXTRACTED]
@@ -5802,6 +5942,7 @@ Cohesion: 0.00 | Nodes: 932
 - StepArtifactViewer -> contains -> StrategyArtifact [EXTRACTED]
 - StepArtifactViewer -> contains -> SelfReviewArtifact [EXTRACTED]
 - StepArtifactViewer -> contains -> PlanArtifact [EXTRACTED]
+- StepArtifactViewer -> contains -> highlightJson [EXTRACTED]
 - StepArtifactViewer -> contains -> GenericArtifact [EXTRACTED]
 - StepArtifactViewer -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - StepArtifactViewer -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
@@ -5826,16 +5967,6 @@ Cohesion: 0.00 | Nodes: 932
 - Alert -> imports -> __unresolved__::ref::_tailwind_merge_ [EXTRACTED]
 - Button -> contains -> ButtonProps [EXTRACTED]
 - Button -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
-- Card -> contains -> CardProps [EXTRACTED]
-- Card -> contains -> CardHeaderProps [EXTRACTED]
-- Card -> contains -> CardBodyProps [EXTRACTED]
-- Card -> contains -> CardFooterProps [EXTRACTED]
-- Card -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
-- FormField -> contains -> FormFieldProps [EXTRACTED]
-- FormField -> contains -> TextInputProps [EXTRACTED]
-- FormField -> contains -> TextAreaProps [EXTRACTED]
-- FormField -> contains -> SelectProps [EXTRACTED]
-- FormField -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - Modal -> contains -> ModalProps [EXTRACTED]
 - Modal -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - cn -> calls -> __unresolved__::ref::twmerge [EXTRACTED]
@@ -5854,6 +5985,72 @@ Cohesion: 0.00 | Nodes: 932
 - Toast -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - Toast -> imports -> __unresolved__::ref::_clsx_ [EXTRACTED]
 - Toast -> imports -> __unresolved__::ref::_tailwind_merge_ [EXTRACTED]
+- CompletedProjectsView -> contains -> Project [EXTRACTED]
+- CompletedProjectsView -> contains -> CompletedProjectsViewProps [EXTRACTED]
+- CompletedProjectsView -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- FeedbackForm -> contains -> FeedbackFormProps [EXTRACTED]
+- FeedbackForm -> contains -> FeedbackData [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::___components_ui_card_ [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::___components_ui_button_ [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::___components_ui_badge_ [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::___components_ui_textarea_ [EXTRACTED]
+- FeedbackForm -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- GovernmentGuidelinesView -> contains -> Guideline [EXTRACTED]
+- GovernmentGuidelinesView -> contains -> GovernmentGuidelinesViewProps [EXTRACTED]
+- GovernmentGuidelinesView -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- StepSpecificViews -> contains -> ClientInfo [EXTRACTED]
+- StepSpecificViews -> contains -> CompetitiveAnalysis [EXTRACTED]
+- StepSpecificViews -> contains -> StrategyPoint [EXTRACTED]
+- StepSpecificViews -> contains -> PricingStrategy [EXTRACTED]
+- StepSpecificViews -> contains -> PersonnelRecommendation [EXTRACTED]
+- StepSpecificViews -> contains -> BidPriceData [EXTRACTED]
+- StepSpecificViews -> contains -> PredictedQA [EXTRACTED]
+- StepSpecificViews -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- StepSpecificViews -> imports -> __unresolved__::ref::_recharts_ [EXTRACTED]
+- StepSpecificViews -> imports -> __unresolved__::ref::___components_ui_card_ [EXTRACTED]
+- StepSpecificViews -> imports -> __unresolved__::ref::___components_ui_badge_ [EXTRACTED]
+- StepSpecificViews -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- parseCitations -> calls -> __unresolved__::ref::exec [EXTRACTED]
+- parseCitations -> calls -> __unresolved__::ref::push [EXTRACTED]
+- parseCitations -> calls -> __unresolved__::ref::slice [EXTRACTED]
+- parseCitations -> calls -> __unresolved__::ref::scrolltosource [EXTRACTED]
+- scrollToSource -> calls -> __unresolved__::ref::getelementbyid [EXTRACTED]
+- scrollToSource -> calls -> __unresolved__::ref::scrollintoview [EXTRACTED]
+- scrollToSource -> calls -> __unresolved__::ref::add [EXTRACTED]
+- scrollToSource -> calls -> __unresolved__::ref::settimeout [EXTRACTED]
+- scrollToSource -> calls -> __unresolved__::ref::remove [EXTRACTED]
+- VaultChat -> contains -> VaultChatProps [EXTRACTED]
+- VaultChat -> contains -> Message [EXTRACTED]
+- VaultChat -> contains -> parseCitations [EXTRACTED]
+- VaultChat -> contains -> scrollToSource [EXTRACTED]
+- VaultChat -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultChat -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- VaultChat -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- VaultChat -> imports -> __unresolved__::ref::___lib_hooks_usevaultchatstream_ [EXTRACTED]
+- VaultLayout -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultLayout -> imports -> __unresolved__::ref::_vaultsidebar_ [EXTRACTED]
+- VaultLayout -> imports -> __unresolved__::ref::_vaultchat_ [EXTRACTED]
+- VaultLayout -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
+- VaultResponseCard -> contains -> Source [EXTRACTED]
+- VaultResponseCard -> contains -> VaultResponseCardProps [EXTRACTED]
+- VaultResponseCard -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultResponseCard -> imports -> __unresolved__::ref::___components_ui_card_ [EXTRACTED]
+- VaultResponseCard -> imports -> __unresolved__::ref::___components_ui_badge_ [EXTRACTED]
+- VaultResponseCard -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- VaultSearchBar -> contains -> VaultSearchBarProps [EXTRACTED]
+- VaultSearchBar -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultSearchBar -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- VaultSidebar -> contains -> VaultSidebarProps [EXTRACTED]
+- VaultSidebar -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultSidebar -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- VaultSidebar -> imports -> __unresolved__::ref::_vaultlayout_ [EXTRACTED]
+- VaultStepSelector -> contains -> VaultStepSelectorProps [EXTRACTED]
+- VaultStepSelector -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- VaultStepSelector -> imports -> __unresolved__::ref::___components_ui_select_ [EXTRACTED]
+- VaultStepSelector -> imports -> __unresolved__::ref::___components_ui_badge_ [EXTRACTED]
+- VaultStepSelector -> imports -> __unresolved__::ref::_lucide_react_ [EXTRACTED]
+- lineDiff -> calls -> __unresolved__::ref::split [EXTRACTED]
 - lineDiff -> calls -> __unresolved__::ref::push [EXTRACTED]
 - stripHtml -> calls -> __unresolved__::ref::createelement [EXTRACTED]
 - VersionCompareModal -> contains -> VersionCompareModalProps [EXTRACTED]
@@ -5864,6 +6061,7 @@ Cohesion: 0.00 | Nodes: 932
 - ConflictCard -> calls -> __unresolved__::ref::map [EXTRACTED]
 - ConflictCard -> calls -> __unresolved__::ref::onselect [EXTRACTED]
 - ConflictCard -> calls -> __unresolved__::ref::tolocaledatestring [EXTRACTED]
+- ConflictCard -> calls -> __unresolved__::ref::find [EXTRACTED]
 - VersionDetails -> calls -> __unresolved__::ref::tolocalestring [EXTRACTED]
 - VersionSelectionModal -> contains -> ConflictCard [EXTRACTED]
 - VersionSelectionModal -> contains -> VersionDetails [EXTRACTED]
@@ -5948,57 +6146,6 @@ Cohesion: 0.00 | Nodes: 932
 - WorkflowResumeBanner -> contains -> Props [EXTRACTED]
 - WorkflowResumeBanner -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - WorkflowResumeBanner -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
-- auth.setup -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- auth.setup -> imports -> __unresolved__::ref::_path_ [EXTRACTED]
-- authenticated.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- bids-kb-analytics.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- login-flow.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- pages.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- proposal-decision-workflow.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- proposals.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- screenshot-monitoring.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- main -> calls -> __unresolved__::ref::existssync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::mkdirsync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::log [EXTRACTED]
-- main -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newcontext [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- main -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- main -> calls -> __unresolved__::ref::catch [EXTRACTED]
-- main -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- main -> calls -> __unresolved__::ref::screenshot [EXTRACTED]
-- screenshots-auth -> contains -> main [EXTRACTED]
-- screenshots-auth -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- screenshots-auth -> imports -> __unresolved__::ref::_path_ [EXTRACTED]
-- screenshots-auth -> imports -> __unresolved__::ref::_fs_ [EXTRACTED]
-- main -> calls -> __unresolved__::ref::existssync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::mkdirsync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newcontext [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- main -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- main -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- main -> calls -> __unresolved__::ref::screenshot [EXTRACTED]
-- main -> calls -> __unresolved__::ref::log [EXTRACTED]
-- screenshots-full -> contains -> main [EXTRACTED]
-- screenshots-full -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- screenshots-full -> imports -> __unresolved__::ref::_path_ [EXTRACTED]
-- screenshots-full -> imports -> __unresolved__::ref::_fs_ [EXTRACTED]
-- main -> calls -> __unresolved__::ref::existssync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::mkdirsync [EXTRACTED]
-- main -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newcontext [EXTRACTED]
-- main -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- main -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- main -> calls -> __unresolved__::ref::catch [EXTRACTED]
-- main -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- main -> calls -> __unresolved__::ref::screenshot [EXTRACTED]
-- main -> calls -> __unresolved__::ref::log [EXTRACTED]
-- screenshots -> contains -> main [EXTRACTED]
-- screenshots -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- screenshots -> imports -> __unresolved__::ref::_path_ [EXTRACTED]
-- screenshots -> imports -> __unresolved__::ref::_fs_ [EXTRACTED]
-- smoke.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
 - mockGapAnalysisApi -> calls -> __unresolved__::ref::route [EXTRACTED]
 - mockGapAnalysisApi -> calls -> __unresolved__::ref::fulfill [EXTRACTED]
 - mockGapAnalysisApi -> calls -> __unresolved__::ref::stringify [EXTRACTED]
@@ -6020,11 +6167,10 @@ Cohesion: 0.00 | Nodes: 932
 - workflow-v4-diagnostics.spec -> contains -> mockProposalStatus [EXTRACTED]
 - workflow-v4-diagnostics.spec -> contains -> mockReviewItems [EXTRACTED]
 - workflow-v4-diagnostics.spec -> contains -> mockReviewItemDetail [EXTRACTED]
-- workflow-v4-diagnostics.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- TTLCache -> contains -> constructor [EXTRACTED]
-- TTLCache -> contains -> get [EXTRACTED]
-- TTLCache -> contains -> set [EXTRACTED]
-- TTLCache -> contains -> clear [EXTRACTED]
+- useVaultStep -> contains -> VaultResponse [EXTRACTED]
+- useVaultStep -> contains -> StepData [EXTRACTED]
+- useVaultStep -> contains -> UseVaultStepOptions [EXTRACTED]
+- useVaultStep -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - _qs -> calls -> __unresolved__::ref::entries [EXTRACTED]
 - _qs -> calls -> __unresolved__::ref::string [EXTRACTED]
 - _qs -> calls -> __unresolved__::ref::tostring [EXTRACTED]
@@ -6032,6 +6178,7 @@ Cohesion: 0.00 | Nodes: 932
 - authRequest -> calls -> __unresolved__::ref::fetch [EXTRACTED]
 - authRequest -> calls -> __unresolved__::ref::stringify [EXTRACTED]
 - authRequest -> calls -> __unresolved__::ref::catch [EXTRACTED]
+- authRequest -> calls -> __unresolved__::ref::json [EXTRACTED]
 - getToken -> calls -> __unresolved__::ref::createclient [EXTRACTED]
 - getToken -> calls -> __unresolved__::ref::getsession [EXTRACTED]
 - request -> calls -> __unresolved__::ref::gettoken [EXTRACTED]
@@ -6043,12 +6190,12 @@ Cohesion: 0.00 | Nodes: 932
 - request -> calls -> __unresolved__::ref::createclient [EXTRACTED]
 - request -> calls -> __unresolved__::ref::signout [EXTRACTED]
 - request -> calls -> __unresolved__::ref::catch [EXTRACTED]
+- request -> calls -> __unresolved__::ref::json [EXTRACTED]
 - request -> calls -> __unresolved__::ref::isarray [EXTRACTED]
 - request -> calls -> __unresolved__::ref::map [EXTRACTED]
 - request -> calls -> __unresolved__::ref::warn [EXTRACTED]
 - request -> calls -> __unresolved__::ref::request [EXTRACTED]
 - request -> calls -> __unresolved__::ref::cleartimeout [EXTRACTED]
-- api -> contains -> TTLCache [EXTRACTED]
 - api -> contains -> getToken [EXTRACTED]
 - api -> contains -> request [EXTRACTED]
 - api -> contains -> authRequest [EXTRACTED]
@@ -6076,15 +6223,19 @@ Cohesion: 0.00 | Nodes: 932
 - useStep8Data -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - useStep8Data -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - useStep8Data -> imports -> __unresolved__::ref::___lib_types_step8_ [EXTRACTED]
+- useVaultChatStream -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
+- useVaultChatStream -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - useWorkflowStream -> contains -> UseWorkflowStreamResult [EXTRACTED]
 - useWorkflowStream -> imports -> __unresolved__::ref::_react_ [EXTRACTED]
 - proposals-utils -> imports -> __unresolved__::ref::___lib_api_ [EXTRACTED]
 - utils -> imports -> __unresolved__::ref::_clsx_ [EXTRACTED]
 - utils -> imports -> __unresolved__::ref::_tailwind_merge_ [EXTRACTED]
 - next.config -> imports -> __unresolved__::ref::_next_ [EXTRACTED]
-- playwright.config -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- playwright.config -> imports -> __unresolved__::ref::_path_ [EXTRACTED]
 - get_applied_migrations -> calls -> __unresolved__::ref::fetch [EXTRACTED]
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::sort [EXTRACTED]
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::remove [EXTRACTED]
+- _create_proposal -> calls -> __unresolved__::ref::json [EXTRACTED]
+- _start_workflow -> calls -> __unresolved__::ref::json [EXTRACTED]
 - json -> calls -> __unresolved__::ref::stringify [EXTRACTED]
 - index -> contains -> json [EXTRACTED]
 - index -> imports -> __unresolved__::ref::ts_ [EXTRACTED]
@@ -6093,283 +6244,119 @@ Cohesion: 0.00 | Nodes: 932
 - index -> contains -> json [EXTRACTED]
 - index -> imports -> __unresolved__::ref::ts_ [EXTRACTED]
 - index -> imports -> __unresolved__::ref::sh__supabase_supabase_js_2_ [EXTRACTED]
-- test_documents_e2e.spec -> imports -> __unresolved__::ref::__playwright_test_ [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::push [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::substring [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::string [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::log [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::push [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newcontext [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- run -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::await [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fetch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::ok [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fail [EXTRACTED]
-- run -> calls -> __unresolved__::ref::safegoto [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fill [EXTRACTED]
-- run -> calls -> __unresolved__::ref::click [EXTRACTED]
-- run -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- run -> calls -> __unresolved__::ref::includes [EXTRACTED]
-- run -> calls -> __unresolved__::ref::url [EXTRACTED]
-- run -> calls -> __unresolved__::ref::evaluate [EXTRACTED]
-- run -> calls -> __unresolved__::ref::import [EXTRACTED]
-- run -> calls -> __unresolved__::ref::queryselector [EXTRACTED]
-- run -> calls -> __unresolved__::ref::getitem [EXTRACTED]
-- run -> calls -> __unresolved__::ref::key [EXTRACTED]
-- run -> calls -> __unresolved__::ref::walk [EXTRACTED]
-- run -> calls -> __unresolved__::ref::substring [EXTRACTED]
-- run -> calls -> __unresolved__::ref::isarray [EXTRACTED]
-- run -> calls -> __unresolved__::ref::check [EXTRACTED]
-- run -> calls -> __unresolved__::ref::stringify [EXTRACTED]
-- run -> calls -> __unresolved__::ref::catch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::on [EXTRACTED]
-- run -> calls -> __unresolved__::ref::push [EXTRACTED]
-- run -> calls -> __unresolved__::ref::status [EXTRACTED]
-- run -> calls -> __unresolved__::ref::_ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::filter [EXTRACTED]
-- run -> calls -> __unresolved__::ref::map [EXTRACTED]
-- run -> calls -> __unresolved__::ref::repeat [EXTRACTED]
-- run -> calls -> __unresolved__::ref::some [EXTRACTED]
-- run -> calls -> __unresolved__::ref::entries [EXTRACTED]
-- safeGoto -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- safeGoto -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- e2e_auth_integration -> contains -> ok [EXTRACTED]
-- e2e_auth_integration -> contains -> fail [EXTRACTED]
-- e2e_auth_integration -> contains -> safeGoto [EXTRACTED]
-- e2e_auth_integration -> contains -> run [EXTRACTED]
-- e2e_auth_integration -> imports -> __unresolved__::ref::_playwright_ [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::push [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::log [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::push [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- run -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- run -> calls -> __unresolved__::ref::_ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::ok [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fail [EXTRACTED]
-- run -> calls -> __unresolved__::ref::textcontent [EXTRACTED]
-- run -> calls -> __unresolved__::ref::includes [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fill [EXTRACTED]
-- run -> calls -> __unresolved__::ref::click [EXTRACTED]
-- run -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- run -> calls -> __unresolved__::ref::url [EXTRACTED]
-- run -> calls -> __unresolved__::ref::__ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::repeat [EXTRACTED]
-- run -> calls -> __unresolved__::ref::filter [EXTRACTED]
-- e2e_frontend -> contains -> ok [EXTRACTED]
-- e2e_frontend -> contains -> fail [EXTRACTED]
-- e2e_frontend -> contains -> run [EXTRACTED]
-- e2e_frontend -> imports -> __unresolved__::ref::_playwright_ [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::push [EXTRACTED]
-- fail -> calls -> __unresolved__::ref::log [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::push [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- run -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::safegoto [EXTRACTED]
-- run -> calls -> __unresolved__::ref::_ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::ok [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fail [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fill [EXTRACTED]
-- run -> calls -> __unresolved__::ref::click [EXTRACTED]
-- run -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- run -> calls -> __unresolved__::ref::includes [EXTRACTED]
-- run -> calls -> __unresolved__::ref::url [EXTRACTED]
-- run -> calls -> __unresolved__::ref::__ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::textcontent [EXTRACTED]
-- run -> calls -> __unresolved__::ref::evaluate [EXTRACTED]
-- run -> calls -> __unresolved__::ref::getcomputedstyle [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fetch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::stringify [EXTRACTED]
-- run -> calls -> __unresolved__::ref::repeat [EXTRACTED]
-- run -> calls -> __unresolved__::ref::filter [EXTRACTED]
-- safeGoto -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- safeGoto -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- e2e_frontend_v2 -> contains -> ok [EXTRACTED]
-- e2e_frontend_v2 -> contains -> fail [EXTRACTED]
-- e2e_frontend_v2 -> contains -> safeGoto [EXTRACTED]
-- e2e_frontend_v2 -> contains -> run [EXTRACTED]
-- e2e_frontend_v2 -> imports -> __unresolved__::ref::_playwright_ [EXTRACTED]
-- run -> calls -> __unresolved__::ref::existssync [EXTRACTED]
-- run -> calls -> __unresolved__::ref::mkdirsync [EXTRACTED]
-- run -> calls -> __unresolved__::ref::launch [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newpage [EXTRACTED]
-- run -> calls -> __unresolved__::ref::await [EXTRACTED]
-- run -> calls -> __unresolved__::ref::newcontext [EXTRACTED]
-- run -> calls -> __unresolved__::ref::setdefaulttimeout [EXTRACTED]
-- run -> calls -> __unresolved__::ref::log [EXTRACTED]
-- run -> calls -> __unresolved__::ref::goto [EXTRACTED]
-- run -> calls -> __unresolved__::ref::waitfortimeout [EXTRACTED]
-- run -> calls -> __unresolved__::ref::screenshot [EXTRACTED]
-- run -> calls -> __unresolved__::ref::fill [EXTRACTED]
-- run -> calls -> __unresolved__::ref::first [EXTRACTED]
-- run -> calls -> __unresolved__::ref::locator [EXTRACTED]
-- run -> calls -> __unresolved__::ref::click [EXTRACTED]
-- run -> calls -> __unresolved__::ref::url [EXTRACTED]
-- run -> calls -> __unresolved__::ref::textcontent [EXTRACTED]
-- run -> calls -> __unresolved__::ref::includes [EXTRACTED]
-- run -> calls -> __unresolved__::ref::count [EXTRACTED]
-- run -> calls -> __unresolved__::ref::catch [EXTRACTED]
-- tmp_e2e_bids -> contains -> run [EXTRACTED]
-- tmp_e2e_bids -> imports -> __unresolved__::ref::_playwright_ [EXTRACTED]
-- tmp_e2e_bids -> imports -> __unresolved__::ref::_fs_ [EXTRACTED]
 
 ## Cross-Community Connections
-- embedding_text_for_client -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_text_for_competitor -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_text_for_lesson -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- _ratio_delta -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
-- run_comparison -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedreflen]])
-- run_comparison -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- MemberRow -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- formatCurrency -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- formatWinRate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- categoryLabel -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- ArtifactsView -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedreflen]])
-- ArtifactsView -> calls -> __unresolved__::ref::load (-> [[unresolvedrefget-unresolvedreflen]])
-- ArtifactsView -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
-- ArtifactsView -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- KbHealthWidget -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- KbSearchView -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- KbSearchView -> calls -> __unresolved__::ref::search (-> [[unresolvedrefget-unresolvedreflen]])
-- KbSearchView -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- BidDetailContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- BidDetailContent -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- BidDetailContent -> calls -> __unresolved__::ref::open (-> [[unresolvedrefget-unresolvedreflen]])
-- BidDetailContent -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- fileIcon -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefget-unresolvedreflen]])
-- fileIcon -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- AttachmentLink -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- AttachmentLink -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefget-unresolvedreflen]])
-- AttachmentLink -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- guessTeam -> calls -> __unresolved__::ref::match (-> [[unresolvedrefget-unresolvedreflen]])
-- matchesMonitorSearch -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- matchesMonitorSearch -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- matchesScoredSearch -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- matchesScoredSearch -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- MonitorBidsView -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- MonitorBidsView -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- MonitorBidsView -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- MonitorBidsView -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::load (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::add (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::keys (-> [[unresolvedrefget-unresolvedreflen]])
-- ScoredBidsView -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- sortBids -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefget-unresolvedreflen]])
-- PresetsTab -> calls -> __unresolved__::ref::load (-> [[unresolvedrefget-unresolvedreflen]])
-- PresetsTab -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- PresetsTab -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- useElapsedTime -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalsContent -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::upload (-> [[unresolvedrefget-unresolvedreflen]])
-- CompanyTab -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedreflen]])
-- DisplayTab -> calls -> __unresolved__::ref::add (-> [[unresolvedrefget-unresolvedreflen]])
-- DisplayTab -> calls -> __unresolved__::ref::remove (-> [[unresolvedrefget-unresolvedreflen]])
-- ProfileTab -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- AcceptInvitationContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- LoginContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- LoginContent -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- OrgChartView -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
-- computeSimpleDiff -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- computeSimpleDiff -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
-- stripHtml -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- ArtifactVersionGroup -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- VersionDetailsPanel -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
-- VersionDetailsPanel -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- VersionDetailsPanel -> calls -> __unresolved__::ref::match (-> [[unresolvedrefget-unresolvedreflen]])
-- VersionDetailsPanel -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- VersionDetailsPanel -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- formatWon -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedreflen]])
-- SimpleMarkdown -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- SimpleMarkdown -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefget-unresolvedreflen]])
-- SimpleMarkdown -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- DetailRightPanel -> contains -> renderInline (-> [[unresolvedrefget-unresolvedreflen]])
-- EvaluatorCard -> calls -> __unresolved__::ref::keys (-> [[unresolvedrefget-unresolvedreflen]])
-- CollapsibleSection -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- formatAmount -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- Dot -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- Dot -> calls -> __unresolved__::ref::start (-> [[unresolvedrefget-unresolvedreflen]])
-- Ring -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- Row -> calls -> __unresolved__::ref::start (-> [[unresolvedrefget-unresolvedreflen]])
-- Sub -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- useProg -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- useProg -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- formatDday -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- StatusBadge -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- categoryLabel -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- PlanArtifact -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- RfpAnalyzeArtifact -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- StepArtifactViewer -> contains -> highlightJson (-> [[unresolvedrefget-unresolvedreflen]])
-- lineDiff -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- lineDiff -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
-- stripHtml -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- ConflictCard -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- MoveToNodeAction -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- ReviewPanel -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- ReviewPanel -> calls -> __unresolved__::ref::focus (-> [[toolbar-unresolvedrefparseargs]])
-- ReviewPanel -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
-- ReviewPanel -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- ReviewPanel -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- _qs -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- authRequest -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- getToken -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- getToken -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- request -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- request -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- get -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- set -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- calculateProgress -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
+- _period_to_date_range -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _chunk_articles -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _chunk_articles -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _chunk_articles -> calls -> __unresolved__::ref::_chunk_by_window (-> [[chunkdocument-documentchunker]])
+- _chunk_articles -> calls -> __unresolved__::ref::group (-> [[unresolvedrefvalueerror-executefromphase]])
+- _chunk_articles -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _chunk_articles -> calls -> __unresolved__::ref::chunk (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _analyze_page_setup -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _analyze_page_setup -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _ratio_delta -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::subelement (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _generate_section_xml -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::range (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::_add_empty (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _generate_section_xml -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_section_xml -> calls -> __unresolved__::ref::indent (-> [[collectmetrics-unresolvedreffindall]])
+- _split_sentences -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _split_sentences -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- formatCurrency -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- formatWinRate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ArtifactsView -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ArtifactsView -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ArtifactsView -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- KbHealthWidget -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- KbSearchView -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- KbSearchView -> calls -> __unresolved__::ref::search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- BidDetailContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- BidDetailContent -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
+- BidDetailContent -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- matchesMonitorSearch -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- matchesScoredSearch -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- MonitorBidsView -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- MonitorBidsView -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ScoredBidsView -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ScoredBidsView -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ScoredBidsView -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ScoredBidsView -> calls -> __unresolved__::ref::keys (-> [[dailyg2bmonitor-healthcheckrunner]])
+- ScoredBidsView -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- PresetsTab -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- useElapsedTime -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalsContent -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalsContent -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalsContent -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalsContent -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalsContent -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- CompanyTab -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- CompanyTab -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- CompanyTab -> calls -> __unresolved__::ref::upload (-> [[unresolvedrefget-unresolvedrefexecute]])
+- CompanyTab -> calls -> __unresolved__::ref::delete (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProfileTab -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- AcceptInvitationContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- LoginContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- OrgChartView -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- computeSimpleDiff -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stripHtml -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalContent -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- VersionDetailsPanel -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- VersionDetailsPanel -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- VersionDetailsPanel -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- VersionDetailsPanel -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- formatWon -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedrefexecute]])
+- renderInline -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- renderInline -> calls -> __unresolved__::ref::endswith (-> [[unresolvedrefprint-unresolvedrefpath]])
+- SimpleMarkdown -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- SimpleMarkdown -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- EvaluatorCard -> calls -> __unresolved__::ref::keys (-> [[dailyg2bmonitor-healthcheckrunner]])
+- CollapsibleSection -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- formatAmount -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProjectSourceCard -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- Dot -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- Ring -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- Sub -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- useProg -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- useProg -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- formatDday -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- StatusBadge -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- highlightJson -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- highlightJson -> calls -> __unresolved__::ref::endswith (-> [[unresolvedrefprint-unresolvedrefpath]])
+- highlightJson -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- highlightJson -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- PlanArtifact -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RfpAnalyzeArtifact -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- lineDiff -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stripHtml -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- MoveToNodeAction -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ReviewPanel -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ReviewPanel -> calls -> __unresolved__::ref::focus (-> [[toolbar-proposaleditor]])
+- ReviewPanel -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ReviewPanel -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ReviewPanel -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- workflow-v4-diagnostics.spec -> imports -> __unresolved__::ref::__playwright_test_ (-> [[unresolvedrefplaywrighttest-main]])
+- _qs -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- getToken -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- getToken -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- request -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- api -> contains -> TTLCache (-> [[ttlcache-get]])
+- calculateProgress -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
 - getAuthToken -> calls -> __unresolved__::ref::parse (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- get_applied_migrations -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::keys (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::parse (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- run -> calls -> __unresolved__::ref::values (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::text (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
-- run -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::split (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::find (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::exit (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::exit (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::exit (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- run -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedreflen]])
+- get_applied_migrations -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::copy (-> [[parallelworkengine-reviewnode]])
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _resolve_task_dependencies -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _create_proposal -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _start_workflow -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
 이 커뮤니티는 __unresolved__::ref::_react_, __unresolved__::ref::___lib_api_, ProposalsContent를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 AdminOrgChart.tsx, AiSuggestionDiff.tsx, Alert.tsx, AnalyticsCharts.tsx, AppSidebar.tsx이다.
@@ -6378,5 +6365,5 @@ Cohesion: 0.00 | Nodes: 932
 - /* ── 메인 컨텐츠 ── */ function ProposalsContent() { const router = useRouter();
 - {/* 콘텐츠 */} <div className="flex-1 overflow-auto px-6 py-4"> <ScoredBidsView refreshKey={refreshKey} onFetched={setLastCrawledAt} /> </div>
 - function MonitorBidsView({ scope, refreshKey, onFetched, }: { scope: Scope; refreshKey?: number; onFetched?: (ts: number) => void; }) { const router = useRouter(); const searchParams = useSearchParams();
-- async function run() { const browser = await chromium.launch(); const context = await browser.newContext({ viewport: { width: 1440, height: 900 } }); const page = await context.newPage();
 - if (activeReview) { return ( <ReviewPanel proposalId={proposalId} reviewNode={activeReview} workflowState={workflowState} onStateChange={onStateChange} className={className} /> ); }
+- function BidDetailContent() { const params = useParams(); const searchParams = useSearchParams(); const router = useRouter(); const bidNo = params.bidNo as string; const teamId = searchParams.get("team_id");

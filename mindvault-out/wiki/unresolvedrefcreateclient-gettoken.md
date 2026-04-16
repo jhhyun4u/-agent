@@ -2,16 +2,15 @@
 Cohesion: 0.67 | Nodes: 4
 
 ## Key Nodes
-- **__unresolved__::ref::create_client** () -- 4 connections
-  - <- calls <- [[main]]
+- **__unresolved__::ref::create_client** () -- 3 connections
   - <- calls <- [[diagnose]]
   - <- calls <- [[gettoken]]
   - <- calls <- [[gettoken]]
-- **_get_token** (C:\project\tenopa proposer\-agent-master\scripts\e2e_interrupt_test.py) -- 3 connections
+- **_get_token** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 3 connections
   - -> calls -> [[unresolvedrefcreateclient]]
   - -> calls -> [[unresolvedrefsigninwithpassword]]
   - <- contains <- [[e2einterrupttest]]
-- **_get_token** (C:\project\tenopa proposer\-agent-master\scripts\e2e_workflow_test.py) -- 3 connections
+- **_get_token** (C:\project\tenopa proposer\scripts\e2e_workflow_test.py) -- 3 connections
   - -> calls -> [[unresolvedrefcreateclient]]
   - -> calls -> [[unresolvedrefsigninwithpassword]]
   - <- contains <- [[e2eworkflowtest]]

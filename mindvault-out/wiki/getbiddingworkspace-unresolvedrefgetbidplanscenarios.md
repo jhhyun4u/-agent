@@ -2,7 +2,7 @@
 Cohesion: 0.40 | Nodes: 5
 
 ## Key Nodes
-- **get_bidding_workspace** (C:\project\tenopa proposer\-agent-master\app\services\bidding\submission\stream.py) -- 5 connections
+- **get_bidding_workspace** (C:\project\tenopa proposer\app\services\bidding\submission\stream.py) -- 5 connections
   - -> calls -> [[unresolvedrefgetbidsubmissionstatus]]
   - -> calls -> [[unresolvedrefgetbidpricehistory]]
   - -> calls -> [[unresolvedrefgetbidplanscenarios]]

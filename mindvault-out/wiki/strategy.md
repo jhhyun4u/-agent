@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **strategy** (C:\project\tenopa proposer\-agent-master\app\prompts\strategy.py) -- 0 connections
+- **strategy** (C:\project\tenopa proposer\app\prompts\strategy.py) -- 0 connections
 
 ## Internal Relationships
 

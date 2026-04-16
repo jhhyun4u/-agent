@@ -2,7 +2,7 @@
 Cohesion: 0.22 | Nodes: 9
 
 ## Key Nodes
-- **analyze_prompt** (C:\project\tenopa proposer\-agent-master\app\services\prompt_analyzer.py) -- 9 connections
+- **analyze_prompt** (C:\project\tenopa proposer\app\services\prompt_analyzer.py) -- 9 connections
   - -> calls -> [[unresolvedrefcomputemetrics]]
   - -> calls -> [[unresolvedrefclassifyeditpatterns]]
   - -> calls -> [[unresolvedrefsummarizefeedback]]

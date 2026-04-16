@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **next-env.d** (C:\project\tenopa proposer\-agent-master\frontend\next-env.d.ts) -- 0 connections
+- **next-env.d** (C:\project\tenopa proposer\frontend\next-env.d.ts) -- 0 connections
 
 ## Internal Relationships
 

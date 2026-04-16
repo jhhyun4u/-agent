@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **json** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
+- **json** (C:\project\tenopa proposer\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
   - <- has_code_example <- [[localstorage]]
-- **💾 localStorage 키 요약** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
+- **💾 localStorage 키 요약** (C:\project\tenopa proposer\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
   - -> has_code_example -> [[json]]
 
 ## Internal Relationships

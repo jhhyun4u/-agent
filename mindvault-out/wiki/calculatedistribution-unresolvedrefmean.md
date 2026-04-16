@@ -2,7 +2,7 @@
 Cohesion: 0.40 | Nodes: 5
 
 ## Key Nodes
-- **_calculate_distribution** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\evaluation_nodes.py) -- 8 connections
+- **_calculate_distribution** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 8 connections
   - -> calls -> [[unresolvedrefmean]]
   - -> calls -> [[unresolvedrefmedian]]
   - -> calls -> [[unresolvedrefstdev]]
@@ -27,9 +27,9 @@ Cohesion: 0.40 | Nodes: 5
 - _calculate_distribution -> calls -> __unresolved__::ref::variance [EXTRACTED]
 
 ## Cross-Community Connections
-- _calculate_distribution -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- _calculate_distribution -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedreflen]])
-- _calculate_distribution -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedreflen]])
+- _calculate_distribution -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_distribution -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_distribution -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
 이 커뮤니티는 _calculate_distribution, __unresolved__::ref::mean, __unresolved__::ref::median를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 evaluation_nodes.py이다.

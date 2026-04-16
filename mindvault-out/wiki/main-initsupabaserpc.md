@@ -1,0 +1,225 @@
+# main & _init_supabase_rpc
+Cohesion: 0.04 | Nodes: 47
+
+## Key Nodes
+- **main** (C:\project\tenopa proposer\app\main.py) -- 52 connections
+  - -> contains -> [[initsupabaserpc]]
+  - -> contains -> [[safestartuptask]]
+  - -> contains -> [[addcorsheaders]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefcors]]
+  - -> imports -> [[unresolvedrefresponses]]
+  - -> imports -> [[unresolvedrefcontextlib]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefratelimit]]
+  - -> imports -> [[unresolvedrefrequestid]]
+  - -> imports -> [[unresolvedrefsecurityheaders]]
+  - -> imports -> [[unresolvedreferrors]]
+  - -> imports -> [[unresolvedrefroutesauth]]
+  - -> imports -> [[unresolvedrefroutesusers]]
+  - -> imports -> [[unresolvedrefroutesproposal]]
+  - -> imports -> [[unresolvedrefroutesworkflow]]
+  - -> imports -> [[unresolvedrefroutesartifacts]]
+  - -> imports -> [[unresolvedrefroutesnotification]]
+  - -> imports -> [[unresolvedrefroutesperformance]]
+  - -> imports -> [[unresolvedrefroutesadmin]]
+  - -> imports -> [[unresolvedrefrouteskb]]
+  - -> imports -> [[unresolvedrefroutesintranet]]
+  - -> imports -> [[unresolvedrefroutesdocuments]]
+  - -> imports -> [[unresolvedrefroutesmigrations]]
+  - -> imports -> [[unresolvedrefroutesmigrationstatus]]
+  - -> imports -> [[unresolvedrefroutesanalytics]]
+  - -> imports -> [[unresolvedrefroutesqa]]
+  - -> imports -> [[unresolvedrefroutesfiles]]
+  - -> imports -> [[unresolvedrefroutesprojectarchive]]
+  - -> imports -> [[unresolvedrefroutesmasterprojects]]
+  - -> imports -> [[unresolvedrefroutespricing]]
+  - -> imports -> [[unresolvedrefroutesbidsubmission]]
+  - -> imports -> [[unresolvedrefroutespromptevolution]]
+  - -> imports -> [[unresolvedrefroutesstreams]]
+  - -> imports -> [[unresolvedrefroutessubmissiondocs]]
+  - -> imports -> [[unresolvedrefroutesteam]]
+  - -> imports -> [[unresolvedrefroutesg2b]]
+  - -> imports -> [[unresolvedrefroutesresources]]
+  - -> imports -> [[unresolvedrefroutestemplates]]
+  - -> imports -> [[unresolvedrefroutesstats]]
+  - -> imports -> [[unresolvedrefroutespublic]]
+  - -> imports -> [[unresolvedrefroutescalendar]]
+  - -> imports -> [[unresolvedrefroutesv31]]
+  - -> imports -> [[unresolvedrefroutespresentation]]
+  - -> imports -> [[unresolvedrefroutesbids]]
+  - -> imports -> [[unresolvedrefroutesstep8a]]
+  - -> imports -> [[unresolvedrefroutesstep8review]]
+  - -> imports -> [[unresolvedrefroutesknowledge]]
+  - -> imports -> [[unresolvedrefroutesvaultchat]]
+  - -> imports -> [[unresolvedrefroutesvaultembeddings]]
+- **_init_supabase_rpc** (C:\project\tenopa proposer\app\main.py) -- 3 connections
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefrpc]]
+  - <- contains <- [[main]]
+- **__unresolved__::ref::errors** () -- 2 connections
+  - <- imports <- [[main]]
+  - <- imports <- [[ratelimit]]
+- **__unresolved__::ref::routes_v31** () -- 2 connections
+  - <- imports <- [[main]]
+  - <- imports <- [[routes]]
+- **routes** (C:\project\tenopa proposer\app\api\routes.py) -- 2 connections
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefroutesv31]]
+- **_add_cors_headers** (C:\project\tenopa proposer\app\main.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[main]]
+- **__unresolved__::ref::contextlib** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::cors** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::request_id** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_admin** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_analytics** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_artifacts** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_auth** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_bid_submission** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_bids** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_calendar** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_documents** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_files** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_g2b** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_intranet** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_kb** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_knowledge** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_master_projects** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_migration_status** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_migrations** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_notification** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_performance** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_presentation** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_pricing** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_project_archive** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_prompt_evolution** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_proposal** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_public** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_qa** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_resources** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_stats** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_step8_review** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_step8a** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_streams** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_submission_docs** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_team** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_templates** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_users** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_vault_chat** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_vault_embeddings** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::routes_workflow** () -- 1 connections
+  - <- imports <- [[main]]
+- **__unresolved__::ref::security_headers** () -- 1 connections
+  - <- imports <- [[main]]
+
+## Internal Relationships
+- routes -> imports -> __unresolved__::ref::routes_v31 [EXTRACTED]
+- main -> contains -> _init_supabase_rpc [EXTRACTED]
+- main -> contains -> _add_cors_headers [EXTRACTED]
+- main -> imports -> __unresolved__::ref::cors [EXTRACTED]
+- main -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
+- main -> imports -> __unresolved__::ref::request_id [EXTRACTED]
+- main -> imports -> __unresolved__::ref::security_headers [EXTRACTED]
+- main -> imports -> __unresolved__::ref::errors [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_auth [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_users [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_proposal [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_workflow [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_artifacts [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_notification [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_performance [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_admin [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_kb [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_intranet [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_documents [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_migrations [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_migration_status [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_analytics [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_qa [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_files [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_project_archive [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_master_projects [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_pricing [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_bid_submission [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_prompt_evolution [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_streams [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_submission_docs [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_team [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_g2b [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_resources [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_templates [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_stats [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_public [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_calendar [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_v31 [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_presentation [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_bids [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_step8a [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_step8_review [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_knowledge [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_vault_chat [EXTRACTED]
+- main -> imports -> __unresolved__::ref::routes_vault_embeddings [EXTRACTED]
+
+## Cross-Community Connections
+- routes -> imports -> __unresolved__::ref::fastapi (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- _add_cors_headers -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _init_supabase_rpc -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _init_supabase_rpc -> calls -> __unresolved__::ref::rpc (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> contains -> _safe_startup_task (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> imports -> __unresolved__::ref::fastapi (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> imports -> __unresolved__::ref::responses (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> imports -> __unresolved__::ref::config (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> imports -> __unresolved__::ref::exceptions (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> imports -> __unresolved__::ref::rate_limit (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+
+## Context
+이 커뮤니티는 main, _init_supabase_rpc, __unresolved__::ref::errors를 중심으로 imports 관계로 연결되어 있다. 주요 소스 파일은 main.py, routes.py이다.
+
+### Key Facts
+- await _safe_startup_task("공고 자동 정리", _cleanup_bids())
+- async def _init_supabase_rpc(client): """Initialize Supabase RPC calls for stale proposals and cache cleanup""" await client.rpc("mark_stale_running_proposals").execute() await client.rpc("cleanup_expired_g2b_cache").execute()
+- from . import routes_v31, routes_team, routes_g2b, routes_resources, routes_templates, routes_stats, routes_calendar, routes_presentation
+- def _add_cors_headers(response: JSONResponse, request: Request) -> JSONResponse: """응답에 CORS 헤더 추가""" origin = request.headers.get("origin", "") if origin in settings.cors_origins: response.headers["Access-Control-Allow-Origin"] = origin response.headers["Access-Control-Allow-Credentials"] = "true"…

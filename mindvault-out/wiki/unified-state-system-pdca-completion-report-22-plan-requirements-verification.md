@@ -1,0 +1,210 @@
+# Unified State System - PDCA Completion Report & 2.2 Plan Requirements Verification
+Cohesion: 0.04 | Nodes: 48
+
+## Key Nodes
+- **Unified State System - PDCA Completion Report** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 9 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[strategic-alignment-verification]]
+  - -> contains -> [[decision-record-summary]]
+  - -> contains -> [[gap-analysis-act-phase-resolution]]
+  - -> contains -> [[implementation-completeness]]
+  - -> contains -> [[deployment-readiness]]
+  - -> contains -> [[lessons-learned]]
+  - -> contains -> [[conclusion]]
+  - -> contains -> [[appendix-document-references]]
+- **2.2 Plan Requirements Verification** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 6 connections
+  - -> contains -> [[phase-0-critical-bug-fix-completed]]
+  - -> contains -> [[phase-1-database-schema-migration-completed]]
+  - -> contains -> [[phase-2-backend-code-refactoring-completed]]
+  - -> contains -> [[phase-3-api-and-service-updates-completed]]
+  - -> contains -> [[phase-4-testing-and-deployment-completed]]
+  - <- contains <- [[strategic-alignment-verification]]
+- **Act Phase Fixes Applied** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 6 connections
+  - -> contains -> [[critical-enum-corrections]]
+  - -> contains -> [[missing-columns-added]]
+  - -> contains -> [[winresult-enum-implemented]]
+  - -> contains -> [[database-constraints-added]]
+  - -> contains -> [[frontend-type-synchronization]]
+  - <- contains <- [[gap-analysis-act-phase-resolution]]
+- **Backend Implementation** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[services-phase-2]]
+  - -> contains -> [[api-endpoints-phase-3]]
+  - -> contains -> [[database-phase-1]]
+  - <- contains <- [[implementation-completeness]]
+- **Deployment Readiness** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[pre-deployment-checklist]]
+  - -> contains -> [[production-deployment-plan]]
+  - -> contains -> [[risk-assessment]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Frontend Implementation (Do Phase) ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[type-definitions]]
+  - -> contains -> [[component-updates]]
+  - -> contains -> [[build-verification]]
+  - <- contains <- [[implementation-completeness]]
+- **Gap Analysis → Act Phase Resolution** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[initial-analysis-results-2026-03-30]]
+  - -> contains -> [[act-phase-fixes-applied]]
+  - -> contains -> [[final-match-rate-assessment]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Implementation Completeness** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[backend-implementation]]
+  - -> contains -> [[frontend-implementation-do-phase]]
+  - -> contains -> [[testing-phase-4]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Lessons Learned** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 4 connections
+  - -> contains -> [[what-went-well]]
+  - -> contains -> [[what-could-improve]]
+  - -> contains -> [[future-enhancements]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Decision Record Summary** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 3 connections
+  - -> contains -> [[key-architectural-decisions]]
+  - -> contains -> [[implementation-trade-offs]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Executive Summary** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 3 connections
+  - -> contains -> [[11-problem-solved-strategic-intent]]
+  - -> contains -> [[12-success-criteria-status]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Strategic Alignment Verification** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 3 connections
+  - -> contains -> [[21-prd-intent-vs-delivered-value]]
+  - -> contains -> [[22-plan-requirements-verification]]
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Testing (Phase 4) ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 3 connections
+  - -> contains -> [[integration-tests]]
+  - -> contains -> [[unit-tests]]
+  - <- contains <- [[implementation-completeness]]
+- **sql** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 2 connections
+  - <- has_code_example <- [[database-constraints-added]]
+  - <- has_code_example <- [[production-deployment-plan]]
+- **Database Constraints Added ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[act-phase-fixes-applied]]
+- **Production Deployment Plan** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[deployment-readiness]]
+- **Type Definitions ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 2 connections
+  - -> has_code_example -> [[typescript]]
+  - <- contains <- [[frontend-implementation-do-phase]]
+- **typescript** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- has_code_example <- [[type-definitions]]
+- **1.1 Problem Solved (Strategic Intent)** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **1.2 Success Criteria Status** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[executive-summary]]
+- **2.1 PRD Intent vs Delivered Value** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[strategic-alignment-verification]]
+- **API Endpoints (Phase 3) ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[backend-implementation]]
+- **Appendix: Document References** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Build Verification ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[frontend-implementation-do-phase]]
+- **Component Updates ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[frontend-implementation-do-phase]]
+- **Conclusion** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[unified-state-system-pdca-completion-report]]
+- **Critical Enum Corrections ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[act-phase-fixes-applied]]
+- **Database (Phase 1) ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[backend-implementation]]
+- **Final Match Rate Assessment** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[gap-analysis-act-phase-resolution]]
+- **Frontend Type Synchronization ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[act-phase-fixes-applied]]
+- **Future Enhancements 🚀** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **Implementation Trade-offs** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[decision-record-summary]]
+- **Initial Analysis Results (2026-03-30)** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[gap-analysis-act-phase-resolution]]
+- **Integration Tests** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[testing-phase-4]]
+- **Key Architectural Decisions** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[decision-record-summary]]
+- **Missing Columns Added ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[act-phase-fixes-applied]]
+- **Phase 0: CRITICAL BUG FIX ✅ COMPLETED** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[22-plan-requirements-verification]]
+- **Phase 1: Database Schema Migration ✅ COMPLETED** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[22-plan-requirements-verification]]
+- **Phase 2: Backend Code Refactoring ✅ COMPLETED** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[22-plan-requirements-verification]]
+- **Phase 3: API and Service Updates ✅ COMPLETED** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[22-plan-requirements-verification]]
+- **Phase 4: Testing and Deployment ✅ COMPLETED** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[22-plan-requirements-verification]]
+- **Pre-Deployment Checklist ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[deployment-readiness]]
+- **Risk Assessment** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[deployment-readiness]]
+- **Services (Phase 2) ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[backend-implementation]]
+- **Unit Tests** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[testing-phase-4]]
+- **What Could Improve 🔄** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **What Went Well ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[lessons-learned]]
+- **WinResult Enum Implemented ✅** (C:\project\tenopa proposer\docs\archive\2026-04\unified-state-system\unified-state-system.report.md) -- 1 connections
+  - <- contains <- [[act-phase-fixes-applied]]
+
+## Internal Relationships
+- 2.2 Plan Requirements Verification -> contains -> Phase 0: CRITICAL BUG FIX ✅ COMPLETED [EXTRACTED]
+- 2.2 Plan Requirements Verification -> contains -> Phase 1: Database Schema Migration ✅ COMPLETED [EXTRACTED]
+- 2.2 Plan Requirements Verification -> contains -> Phase 2: Backend Code Refactoring ✅ COMPLETED [EXTRACTED]
+- 2.2 Plan Requirements Verification -> contains -> Phase 3: API and Service Updates ✅ COMPLETED [EXTRACTED]
+- 2.2 Plan Requirements Verification -> contains -> Phase 4: Testing and Deployment ✅ COMPLETED [EXTRACTED]
+- Act Phase Fixes Applied -> contains -> Critical Enum Corrections ✅ [EXTRACTED]
+- Act Phase Fixes Applied -> contains -> Missing Columns Added ✅ [EXTRACTED]
+- Act Phase Fixes Applied -> contains -> WinResult Enum Implemented ✅ [EXTRACTED]
+- Act Phase Fixes Applied -> contains -> Database Constraints Added ✅ [EXTRACTED]
+- Act Phase Fixes Applied -> contains -> Frontend Type Synchronization ✅ [EXTRACTED]
+- Backend Implementation -> contains -> Services (Phase 2) ✅ [EXTRACTED]
+- Backend Implementation -> contains -> API Endpoints (Phase 3) ✅ [EXTRACTED]
+- Backend Implementation -> contains -> Database (Phase 1) ✅ [EXTRACTED]
+- Database Constraints Added ✅ -> has_code_example -> sql [EXTRACTED]
+- Decision Record Summary -> contains -> Key Architectural Decisions [EXTRACTED]
+- Decision Record Summary -> contains -> Implementation Trade-offs [EXTRACTED]
+- Deployment Readiness -> contains -> Pre-Deployment Checklist ✅ [EXTRACTED]
+- Deployment Readiness -> contains -> Production Deployment Plan [EXTRACTED]
+- Deployment Readiness -> contains -> Risk Assessment [EXTRACTED]
+- Executive Summary -> contains -> 1.1 Problem Solved (Strategic Intent) [EXTRACTED]
+- Executive Summary -> contains -> 1.2 Success Criteria Status [EXTRACTED]
+- Frontend Implementation (Do Phase) ✅ -> contains -> Type Definitions ✅ [EXTRACTED]
+- Frontend Implementation (Do Phase) ✅ -> contains -> Component Updates ✅ [EXTRACTED]
+- Frontend Implementation (Do Phase) ✅ -> contains -> Build Verification ✅ [EXTRACTED]
+- Gap Analysis → Act Phase Resolution -> contains -> Initial Analysis Results (2026-03-30) [EXTRACTED]
+- Gap Analysis → Act Phase Resolution -> contains -> Act Phase Fixes Applied [EXTRACTED]
+- Gap Analysis → Act Phase Resolution -> contains -> Final Match Rate Assessment [EXTRACTED]
+- Implementation Completeness -> contains -> Backend Implementation [EXTRACTED]
+- Implementation Completeness -> contains -> Frontend Implementation (Do Phase) ✅ [EXTRACTED]
+- Implementation Completeness -> contains -> Testing (Phase 4) ✅ [EXTRACTED]
+- Lessons Learned -> contains -> What Went Well ✅ [EXTRACTED]
+- Lessons Learned -> contains -> What Could Improve 🔄 [EXTRACTED]
+- Lessons Learned -> contains -> Future Enhancements 🚀 [EXTRACTED]
+- Production Deployment Plan -> has_code_example -> sql [EXTRACTED]
+- Strategic Alignment Verification -> contains -> 2.1 PRD Intent vs Delivered Value [EXTRACTED]
+- Strategic Alignment Verification -> contains -> 2.2 Plan Requirements Verification [EXTRACTED]
+- Testing (Phase 4) ✅ -> contains -> Integration Tests [EXTRACTED]
+- Testing (Phase 4) ✅ -> contains -> Unit Tests [EXTRACTED]
+- Type Definitions ✅ -> has_code_example -> typescript [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Executive Summary [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Strategic Alignment Verification [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Decision Record Summary [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Gap Analysis → Act Phase Resolution [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Implementation Completeness [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Deployment Readiness [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Lessons Learned [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Conclusion [EXTRACTED]
+- Unified State System - PDCA Completion Report -> contains -> Appendix: Document References [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Unified State System - PDCA Completion Report, 2.2 Plan Requirements Verification, Act Phase Fixes Applied를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 unified-state-system.report.md이다.
+
+### Key Facts
+- **Feature**: unified-state-system **Cycle**: Plan → Design → Do → Check → Act → Report **Completed**: 2026-04-15 **Project**: tenopa proposer (Proposal Agent v4.0)
+- **Plan Document**: `docs/01-plan/features/unified-state-system.plan.md`
+- Critical Enum Corrections ✅ **Fix**: Rewrote ProposalStatus enum from 10 incorrect values to 10 correct unified values - ❌ Before: initialized, searching, analyzing, strategizing, processing, submitted, presented, won, lost, no_go - ✅ After: initialized, waiting, in_progress, completed, submitted,…
+- Services (Phase 2) ✅ | Service | File | Implemented | Status | |---------|:----:|:----------:|:------:| | StateValidator | app/services/state_validator.py | ✅ | Valid transitions, timeline logging | | StateMachine | app/state_machine.py | ✅ | Business-level convenience methods | | AI Status Manager…
+- Pre-Deployment Checklist ✅

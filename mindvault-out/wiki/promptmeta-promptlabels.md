@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **PromptMeta** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\promptLabels.ts) -- 1 connections
+- **PromptMeta** (C:\project\tenopa proposer\frontend\components\prompt\promptLabels.ts) -- 1 connections
   - <- contains <- [[promptlabels]]
-- **promptLabels** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\promptLabels.ts) -- 1 connections
+- **promptLabels** (C:\project\tenopa proposer\frontend\components\prompt\promptLabels.ts) -- 1 connections
   - -> contains -> [[promptmeta]]
 
 ## Internal Relationships

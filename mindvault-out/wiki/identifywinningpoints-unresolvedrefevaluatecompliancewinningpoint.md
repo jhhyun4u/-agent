@@ -2,7 +2,7 @@
 Cohesion: 0.29 | Nodes: 7
 
 ## Key Nodes
-- **_identify_winning_points** (C:\project\tenopa proposer\-agent-master\scripts\archive\strategy_planning_engine.py) -- 8 connections
+- **_identify_winning_points** (C:\project\tenopa proposer\scripts\archive\strategy_planning_engine.py) -- 8 connections
   - -> calls -> [[unresolvedrefevaluatetechnicalwinningpoint]]
   - -> calls -> [[unresolvedrefappend]]
   - -> calls -> [[unresolvedrefevaluateperformancewinningpoint]]
@@ -33,7 +33,7 @@ Cohesion: 0.29 | Nodes: 7
 - _identify_winning_points -> calls -> __unresolved__::ref::_evaluate_compliance_winning_point [EXTRACTED]
 
 ## Cross-Community Connections
-- _identify_winning_points -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
+- _identify_winning_points -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
 이 커뮤니티는 _identify_winning_points, __unresolved__::ref::_evaluate_compliance_winning_point, __unresolved__::ref::_evaluate_innovation_winning_point를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 strategy_planning_engine.py이다.

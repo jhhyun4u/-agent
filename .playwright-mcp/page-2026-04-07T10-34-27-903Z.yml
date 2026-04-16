@@ -1,0 +1,27 @@
+- generic:
+  - dialog "쿠키 동의 배너" [ref=e1]:
+    - button "이 대화 상자 닫기" [ref=e2] [cursor=pointer]:
+      - img "이 대화 상자 닫기" [ref=e3]
+    - generic [ref=e4]:
+      - generic [ref=e5]: 이 웹사이트는 분석, 개인화 및 표적 광고뿐만 아니라 필수 사이트 기능을 활성화하기 위해 쿠키와 같은 기술을 활용합니다. 언제든지 설정을 변경하거나 기본 설정을 그대로 사용할 수 있습니다. 필수 쿠키만 계속 사용하려면 이 배너를 닫을 수 있습니다.
+      - link "개인정보 보호정책" [ref=e6] [cursor=pointer]:
+        - /url: https://railway.com/legal/privacy
+    - generic [ref=e7]:
+      - button "환경 설정 관리" [ref=e8] [cursor=pointer]
+      - button "모두 동의" [ref=e9] [cursor=pointer]
+      - button "필수적이지 않은 항목 거부" [ref=e10] [cursor=pointer]
+  - dialog "Login" [active] [ref=e12]:
+    - heading "Login" [level=3] [ref=e14]
+    - generic [ref=e15]:
+      - button "무시"
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e24]:
+          - img "Railway Logo" [ref=e26]
+          - generic [ref=e29]:
+            - paragraph [ref=e30]: Welcome to Railway
+            - paragraph [ref=e31]: Instant deployments, effortless scale
+        - button "Continue with GitHub" [ref=e33] [cursor=pointer]:
+          - img [ref=e35]
+          - generic [ref=e37]: Continue with GitHub
+      - button "Log in using email" [ref=e38] [cursor=pointer]

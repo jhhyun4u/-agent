@@ -2,20 +2,20 @@
 Cohesion: 0.50 | Nodes: 5
 
 ## Key Nodes
-- **bid_review** (C:\project\tenopa proposer\-agent-master\app\prompts\bid_review.py) -- 3 connections
+- **bid_review** (C:\project\tenopa proposer\app\prompts\bid_review.py) -- 3 connections
   - -> contains -> [[formatkeywordlist]]
   - -> contains -> [[buildreviewersystem]]
   - -> contains -> [[buildunifiedanalysissystem]]
 - **__unresolved__::ref::_format_keyword_list** () -- 2 connections
   - <- calls <- [[buildreviewersystem]]
   - <- calls <- [[buildunifiedanalysissystem]]
-- **_format_keyword_list** (C:\project\tenopa proposer\-agent-master\app\prompts\bid_review.py) -- 2 connections
+- **_format_keyword_list** (C:\project\tenopa proposer\app\prompts\bid_review.py) -- 2 connections
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[bidreview]]
-- **build_reviewer_system** (C:\project\tenopa proposer\-agent-master\app\prompts\bid_review.py) -- 2 connections
+- **build_reviewer_system** (C:\project\tenopa proposer\app\prompts\bid_review.py) -- 2 connections
   - -> calls -> [[unresolvedrefformatkeywordlist]]
   - <- contains <- [[bidreview]]
-- **build_unified_analysis_system** (C:\project\tenopa proposer\-agent-master\app\prompts\bid_review.py) -- 2 connections
+- **build_unified_analysis_system** (C:\project\tenopa proposer\app\prompts\bid_review.py) -- 2 connections
   - -> calls -> [[unresolvedrefformatkeywordlist]]
   - <- contains <- [[bidreview]]
 
@@ -27,7 +27,7 @@ Cohesion: 0.50 | Nodes: 5
 - bid_review -> contains -> build_unified_analysis_system [EXTRACTED]
 
 ## Cross-Community Connections
-- _format_keyword_list -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
+- _format_keyword_list -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
 이 커뮤니티는 bid_review, __unresolved__::ref::_format_keyword_list, _format_keyword_list를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 bid_review.py이다.

@@ -2,7 +2,7 @@
 Cohesion: 0.48 | Nodes: 7
 
 ## Key Nodes
-- **can_access_proposal** (C:\project\tenopa proposer\-agent-master\app\api\permissions.py) -- 10 connections
+- **can_access_proposal** (C:\project\tenopa proposer\app\api\permissions.py) -- 10 connections
   - -> calls -> [[unresolvedrefexecute]]
   - -> calls -> [[unresolvedrefmaybesingle]]
   - -> calls -> [[unresolvedrefeq]]
@@ -13,7 +13,7 @@ Cohesion: 0.48 | Nodes: 7
   - -> calls -> [[unresolvedrefgetteammemberrole]]
   - -> calls -> [[unresolvedrefteamaccessdeniederror]]
   - <- contains <- [[permissions]]
-- **permissions** (C:\project\tenopa proposer\-agent-master\app\api\permissions.py) -- 7 connections
+- **permissions** (C:\project\tenopa proposer\app\api\permissions.py) -- 7 connections
   - -> contains -> [[getteammemberrole]]
   - -> contains -> [[requireteammember]]
   - -> contains -> [[requireteamadmin]]
@@ -33,11 +33,11 @@ Cohesion: 0.48 | Nodes: 7
   - <- calls <- [[requireteammember]]
   - <- calls <- [[requireteamadmin]]
   - <- calls <- [[canaccessproposal]]
-- **require_team_admin** (C:\project\tenopa proposer\-agent-master\app\api\permissions.py) -- 3 connections
+- **require_team_admin** (C:\project\tenopa proposer\app\api\permissions.py) -- 3 connections
   - -> calls -> [[unresolvedrefgetteammemberrole]]
   - -> calls -> [[unresolvedrefteamaccessdeniederror]]
   - <- contains <- [[permissions]]
-- **require_team_member** (C:\project\tenopa proposer\-agent-master\app\api\permissions.py) -- 3 connections
+- **require_team_member** (C:\project\tenopa proposer\app\api\permissions.py) -- 3 connections
   - -> calls -> [[unresolvedrefgetteammemberrole]]
   - -> calls -> [[unresolvedrefteamaccessdeniederror]]
   - <- contains <- [[permissions]]
@@ -55,14 +55,14 @@ Cohesion: 0.48 | Nodes: 7
 - permissions -> contains -> can_access_proposal [EXTRACTED]
 
 ## Cross-Community Connections
-- can_access_proposal -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedreflen]])
-- can_access_proposal -> calls -> __unresolved__::ref::maybe_single (-> [[unresolvedrefget-unresolvedreflen]])
-- can_access_proposal -> calls -> __unresolved__::ref::eq (-> [[unresolvedrefget-unresolvedreflen]])
-- can_access_proposal -> calls -> __unresolved__::ref::select (-> [[unresolvedrefget-unresolvedreflen]])
-- can_access_proposal -> calls -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedreflen]])
-- can_access_proposal -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- permissions -> contains -> get_team_member_role (-> [[unresolvedrefget-unresolvedreflen]])
-- permissions -> contains -> get_user_team_ids (-> [[unresolvedrefget-unresolvedreflen]])
+- can_access_proposal -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- can_access_proposal -> calls -> __unresolved__::ref::maybe_single (-> [[unresolvedrefget-unresolvedrefexecute]])
+- can_access_proposal -> calls -> __unresolved__::ref::eq (-> [[unresolvedrefget-unresolvedrefexecute]])
+- can_access_proposal -> calls -> __unresolved__::ref::select (-> [[unresolvedrefget-unresolvedrefexecute]])
+- can_access_proposal -> calls -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedrefexecute]])
+- can_access_proposal -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- permissions -> contains -> get_team_member_role (-> [[unresolvedrefget-unresolvedrefexecute]])
+- permissions -> contains -> get_user_team_ids (-> [[unresolvedrefget-unresolvedrefexecute]])
 - permissions -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 - permissions -> imports -> __unresolved__::ref::exceptions (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 

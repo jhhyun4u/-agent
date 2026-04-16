@@ -2,12 +2,12 @@
 Cohesion: 0.67 | Nodes: 3
 
 ## Key Nodes
-- **WinLossComparison** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\WinLossComparison.tsx) -- 2 connections
+- **WinLossComparison** (C:\project\tenopa proposer\frontend\components\prompt\WinLossComparison.tsx) -- 2 connections
   - -> contains -> [[winlossdata]]
   - -> contains -> [[winlosscomparisonprops]]
-- **WinLossComparisonProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\WinLossComparison.tsx) -- 1 connections
+- **WinLossComparisonProps** (C:\project\tenopa proposer\frontend\components\prompt\WinLossComparison.tsx) -- 1 connections
   - <- contains <- [[winlosscomparison]]
-- **WinLossData** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\WinLossComparison.tsx) -- 1 connections
+- **WinLossData** (C:\project\tenopa proposer\frontend\components\prompt\WinLossComparison.tsx) -- 1 connections
   - <- contains <- [[winlosscomparison]]
 
 ## Internal Relationships

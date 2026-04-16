@@ -1,0 +1,22 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: PA
+      - generic [ref=e6]: Proposal Coworker
+    - generic [ref=e7]:
+      - blockquote [ref=e8]:
+        - text: “이기는 제안서,
+        - text: AI Coworker와 함께 만듭니다.”
+      - paragraph [ref=e9]: 프로젝트 수주 성공률을 높이는 AI Coworker
+    - paragraph [ref=e10]: © 2026 tenopa
+  - generic [ref=e12]:
+    - heading "로그인" [level=2] [ref=e13]
+    - paragraph [ref=e14]: 계정에 로그인하세요
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: 이메일
+        - textbox "you@company.com" [ref=e18]
+      - generic [ref=e19]:
+        - generic [ref=e20]: 비밀번호
+        - textbox "비밀번호 입력" [ref=e21]
+      - button "로그인" [ref=e22] [cursor=pointer]

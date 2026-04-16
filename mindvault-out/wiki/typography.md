@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **typography** (C:\project\tenopa proposer\-agent-master\frontend\lib\typography.ts) -- 0 connections
+- **typography** (C:\project\tenopa proposer\frontend\lib\typography.ts) -- 0 connections
 
 ## Internal Relationships
 

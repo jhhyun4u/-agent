@@ -2,27 +2,27 @@
 Cohesion: 0.33 | Nodes: 6
 
 ## Key Nodes
-- **date_utils** (C:\project\tenopa proposer\-agent-master\app\utils\date_utils.py) -- 6 connections
+- **date_utils** (C:\project\tenopa proposer\app\utils\date_utils.py) -- 6 connections
   - -> contains -> [[calcdday]]
   - -> contains -> [[calcprogress]]
   - -> contains -> [[calcbudgetrate]]
   - -> contains -> [[deadlinealertlevel]]
   - -> contains -> [[todate]]
   - -> imports -> [[unresolvedrefdatetime]]
-- **calc_dday** (C:\project\tenopa proposer\-agent-master\app\utils\date_utils.py) -- 4 connections
+- **calc_dday** (C:\project\tenopa proposer\app\utils\date_utils.py) -- 4 connections
   - -> calls -> [[unresolvedreftodate]]
   - -> calls -> [[unresolvedrefdate]]
   - -> calls -> [[unresolvedrefnow]]
   - <- contains <- [[dateutils]]
-- **calc_budget_rate** (C:\project\tenopa proposer\-agent-master\app\utils\date_utils.py) -- 2 connections
+- **calc_budget_rate** (C:\project\tenopa proposer\app\utils\date_utils.py) -- 2 connections
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[dateutils]]
-- **calc_progress** (C:\project\tenopa proposer\-agent-master\app\utils\date_utils.py) -- 2 connections
+- **calc_progress** (C:\project\tenopa proposer\app\utils\date_utils.py) -- 2 connections
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[dateutils]]
 - **__unresolved__::ref::_to_date** () -- 1 connections
   - <- calls <- [[calcdday]]
-- **deadline_alert_level** (C:\project\tenopa proposer\-agent-master\app\utils\date_utils.py) -- 1 connections
+- **deadline_alert_level** (C:\project\tenopa proposer\app\utils\date_utils.py) -- 1 connections
   - <- contains <- [[dateutils]]
 
 ## Internal Relationships
@@ -33,11 +33,11 @@ Cohesion: 0.33 | Nodes: 6
 - date_utils -> contains -> deadline_alert_level [EXTRACTED]
 
 ## Cross-Community Connections
-- calc_budget_rate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- calc_dday -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedreflen]])
-- calc_dday -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- calc_progress -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- date_utils -> contains -> _to_date (-> [[unresolvedrefget-unresolvedreflen]])
+- calc_budget_rate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- calc_dday -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedrefexecute]])
+- calc_dday -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- calc_progress -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- date_utils -> contains -> _to_date (-> [[unresolvedrefget-unresolvedrefexecute]])
 - date_utils -> imports -> __unresolved__::ref::datetime (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
 
 ## Context

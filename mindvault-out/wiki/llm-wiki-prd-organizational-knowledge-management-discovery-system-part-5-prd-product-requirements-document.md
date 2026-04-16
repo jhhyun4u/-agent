@@ -1,0 +1,275 @@
+# LLM-Wiki PRD: Organizational Knowledge Management & Discovery System & Part 5: PRD (Product Requirements Document)
+Cohesion: 0.03 | Nodes: 65
+
+## Key Nodes
+- **LLM-Wiki PRD: Organizational Knowledge Management & Discovery System** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 9 connections
+  - -> contains -> [[executive-summary]]
+  - -> contains -> [[part-1-discovery-analysis]]
+  - -> contains -> [[part-2-strategy-analysis]]
+  - -> contains -> [[part-3-market-research]]
+  - -> contains -> [[part-4-go-to-market-strategy]]
+  - -> contains -> [[part-5-prd-product-requirements-document]]
+  - -> contains -> [[part-6-stakeholder-map]]
+  - -> contains -> [[part-7-user-story-test-scenarios]]
+  - -> contains -> [[appendix]]
+- **Part 5: PRD (Product Requirements Document)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 9 connections
+  - -> contains -> [[51-product-overview]]
+  - -> contains -> [[52-goals-success-metrics]]
+  - -> contains -> [[53-user-stories-requirements]]
+  - -> contains -> [[54-functional-requirements]]
+  - -> contains -> [[55-non-functional-requirements]]
+  - -> contains -> [[56-technical-architecture-high-level]]
+  - -> contains -> [[57-release-plan]]
+  - -> contains -> [[58-dependencies-risks]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **1.1 Five-Step Discovery Chain** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 6 connections
+  - -> contains -> [[step-1-brainstorm-customer-pain-points]]
+  - -> contains -> [[step-2-assumptions-critical-hypotheses]]
+  - -> contains -> [[step-3-prioritize-impact-x-risk-matrix]]
+  - -> contains -> [[step-4-experiments]]
+  - -> contains -> [[step-5-opportunity-solution-tree-ost]]
+  - <- contains <- [[part-1-discovery-analysis]]
+- **5.3 User Stories & Requirements** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 6 connections
+  - -> contains -> [[epic-1-knowledge-search]]
+  - -> contains -> [[epic-2-contextual-recommendations]]
+  - -> contains -> [[epic-3-knowledge-curation]]
+  - -> contains -> [[epic-4-knowledge-dashboard]]
+  - -> contains -> [[epic-5-knowledge-ingestion-enhancement]]
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **Part 4: Go-To-Market Strategy** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 6 connections
+  - -> contains -> [[41-icp-ideal-customer-profile]]
+  - -> contains -> [[42-beachhead-segment-geoffrey-moore-criteria]]
+  - -> contains -> [[43-gtm-strategy]]
+  - -> contains -> [[44-battlecards]]
+  - -> contains -> [[45-growth-loops]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **5.4 Functional Requirements** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 5 connections
+  - -> contains -> [[fr-1-unified-search-api]]
+  - -> contains -> [[fr-2-contextual-recommendation-engine]]
+  - -> contains -> [[fr-3-knowledge-health-api]]
+  - -> contains -> [[fr-4-knowledge-feedback-api]]
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **Part 2: Strategy Analysis** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 5 connections
+  - -> contains -> [[21-jtbd-jobs-to-be-done-6-part-value-proposition]]
+  - -> contains -> [[22-lean-canvas]]
+  - -> contains -> [[23-swot-analysis]]
+  - -> contains -> [[24-strategic-positioning]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **Part 3: Market Research** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 5 connections
+  - -> contains -> [[31-user-personas]]
+  - -> contains -> [[32-competitive-analysis]]
+  - -> contains -> [[33-market-sizing-tamsamsom]]
+  - -> contains -> [[34-customer-journey-map-primary-persona]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **2.1 JTBD (Jobs to Be Done) — 6-Part Value Proposition** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 4 connections
+  - -> contains -> [[primary-job-proposal-writer]]
+  - -> contains -> [[secondary-job-team-lead]]
+  - -> contains -> [[tertiary-job-knowledge-manager]]
+  - <- contains <- [[part-2-strategy-analysis]]
+- **3.1 User Personas** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 4 connections
+  - -> contains -> [[persona-1-proposal-writer]]
+  - -> contains -> [[persona-2-team-lead]]
+  - -> contains -> [[persona-3-knowledge-manager]]
+  - <- contains <- [[part-3-market-research]]
+- **3.3 Market Sizing (TAM/SAM/SOM)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 4 connections
+  - -> contains -> [[method-1-top-down]]
+  - -> contains -> [[method-2-bottom-up]]
+  - -> contains -> [[dual-method-average]]
+  - <- contains <- [[part-3-market-research]]
+- **Appendix** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 4 connections
+  - -> contains -> [[a-framework-attribution]]
+  - -> contains -> [[b-research-sources]]
+  - -> contains -> [[c-existing-infrastructure-map]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **Part 7: User Story Test Scenarios** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 4 connections
+  - -> contains -> [[us-101]]
+  - -> contains -> [[us-201]]
+  - -> contains -> [[us-401]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **4.4 Battlecards** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 3 connections
+  - -> contains -> [[vs-sk-ax-ai]]
+  - -> contains -> [[vs-confluencenotion]]
+  - <- contains <- [[part-4-go-to-market-strategy]]
+- **5.8 Dependencies & Risks** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 3 connections
+  - -> contains -> [[dependencies]]
+  - -> contains -> [[pre-mortem-analysis]]
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **Part 1: Discovery Analysis** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 2 connections
+  - -> contains -> [[11-five-step-discovery-chain]]
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **2.2 Lean Canvas** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-2-strategy-analysis]]
+- **2.3 SWOT Analysis** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-2-strategy-analysis]]
+- **2.4 Strategic Positioning** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-2-strategy-analysis]]
+- **3.2 Competitive Analysis** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-3-market-research]]
+- **3.4 Customer Journey Map (Primary Persona: 박제안)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-3-market-research]]
+- **4.1 ICP (Ideal Customer Profile)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-4-go-to-market-strategy]]
+- **4.2 Beachhead Segment (Geoffrey Moore Criteria)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-4-go-to-market-strategy]]
+- **4.3 GTM Strategy** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-4-go-to-market-strategy]]
+- **4.5 Growth Loops** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-4-go-to-market-strategy]]
+- **5.1 Product Overview** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **5.2 Goals & Success Metrics** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **5.5 Non-Functional Requirements** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **5.6 Technical Architecture (High-Level)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **5.7 Release Plan** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-5-prd-product-requirements-document]]
+- **A. Framework Attribution** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[appendix]]
+- **B. Research Sources** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[appendix]]
+- **C. Existing Infrastructure Map** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[appendix]]
+- **Dependencies** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[58-dependencies-risks]]
+- **Dual-Method Average** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[33-market-sizing-tamsamsom]]
+- **Epic 1: Knowledge Search (지식 검색)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[53-user-stories-requirements]]
+- **Epic 2: Contextual Recommendations (맥락적 추천)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[53-user-stories-requirements]]
+- **Epic 3: Knowledge Curation (지식 큐레이션)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[53-user-stories-requirements]]
+- **Epic 4: Knowledge Dashboard (지식 대시보드)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[53-user-stories-requirements]]
+- **Epic 5: Knowledge Ingestion Enhancement (지식 수집 강화)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[53-user-stories-requirements]]
+- **Executive Summary** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **FR-1: Unified Search API** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[54-functional-requirements]]
+- **FR-2: Contextual Recommendation Engine** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[54-functional-requirements]]
+- **FR-3: Knowledge Health API** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[54-functional-requirements]]
+- **FR-4: Knowledge Feedback API** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[54-functional-requirements]]
+- **Method 1: Top-Down** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[33-market-sizing-tamsamsom]]
+- **Method 2: Bottom-Up** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[33-market-sizing-tamsamsom]]
+- **Part 6: Stakeholder Map** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[llm-wiki-prd-organizational-knowledge-management-discovery-system]]
+- **Persona 1: 박제안 (Proposal Writer)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[31-user-personas]]
+- **Persona 2: 김팀장 (Team Lead)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[31-user-personas]]
+- **Persona 3: 이지식 (Knowledge Manager)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[31-user-personas]]
+- **Pre-Mortem Analysis** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[58-dependencies-risks]]
+- **Primary Job: 제안서 작성자 (Proposal Writer)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[21-jtbd-jobs-to-be-done-6-part-value-proposition]]
+- **Secondary Job: 팀 리드 (Team Lead)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[21-jtbd-jobs-to-be-done-6-part-value-proposition]]
+- **Step 1: Brainstorm — Customer Pain Points** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[11-five-step-discovery-chain]]
+- **Step 2: Assumptions — Critical Hypotheses** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[11-five-step-discovery-chain]]
+- **Step 3: Prioritize — Impact x Risk Matrix** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[11-five-step-discovery-chain]]
+- **Step 4: Experiments** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[11-five-step-discovery-chain]]
+- **Step 5: Opportunity Solution Tree (OST)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[11-five-step-discovery-chain]]
+- **Tertiary Job: 지식 관리자 (Knowledge Manager)** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[21-jtbd-jobs-to-be-done-6-part-value-proposition]]
+- **US-101: 자연어 지식 검색** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-7-user-story-test-scenarios]]
+- **US-201: 맥락적 추천** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-7-user-story-test-scenarios]]
+- **US-401: 지식 대시보드** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[part-7-user-story-test-scenarios]]
+- **vs Confluence/Notion** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[44-battlecards]]
+- **vs SK AX 제안서 AI** (C:\project\tenopa proposer\docs\00-pm\llm-wiki.prd.md) -- 1 connections
+  - <- contains <- [[44-battlecards]]
+
+## Internal Relationships
+- 1.1 Five-Step Discovery Chain -> contains -> Step 1: Brainstorm — Customer Pain Points [EXTRACTED]
+- 1.1 Five-Step Discovery Chain -> contains -> Step 2: Assumptions — Critical Hypotheses [EXTRACTED]
+- 1.1 Five-Step Discovery Chain -> contains -> Step 3: Prioritize — Impact x Risk Matrix [EXTRACTED]
+- 1.1 Five-Step Discovery Chain -> contains -> Step 4: Experiments [EXTRACTED]
+- 1.1 Five-Step Discovery Chain -> contains -> Step 5: Opportunity Solution Tree (OST) [EXTRACTED]
+- 2.1 JTBD (Jobs to Be Done) — 6-Part Value Proposition -> contains -> Primary Job: 제안서 작성자 (Proposal Writer) [EXTRACTED]
+- 2.1 JTBD (Jobs to Be Done) — 6-Part Value Proposition -> contains -> Secondary Job: 팀 리드 (Team Lead) [EXTRACTED]
+- 2.1 JTBD (Jobs to Be Done) — 6-Part Value Proposition -> contains -> Tertiary Job: 지식 관리자 (Knowledge Manager) [EXTRACTED]
+- 3.1 User Personas -> contains -> Persona 1: 박제안 (Proposal Writer) [EXTRACTED]
+- 3.1 User Personas -> contains -> Persona 2: 김팀장 (Team Lead) [EXTRACTED]
+- 3.1 User Personas -> contains -> Persona 3: 이지식 (Knowledge Manager) [EXTRACTED]
+- 3.3 Market Sizing (TAM/SAM/SOM) -> contains -> Method 1: Top-Down [EXTRACTED]
+- 3.3 Market Sizing (TAM/SAM/SOM) -> contains -> Method 2: Bottom-Up [EXTRACTED]
+- 3.3 Market Sizing (TAM/SAM/SOM) -> contains -> Dual-Method Average [EXTRACTED]
+- 4.4 Battlecards -> contains -> vs SK AX 제안서 AI [EXTRACTED]
+- 4.4 Battlecards -> contains -> vs Confluence/Notion [EXTRACTED]
+- 5.3 User Stories & Requirements -> contains -> Epic 1: Knowledge Search (지식 검색) [EXTRACTED]
+- 5.3 User Stories & Requirements -> contains -> Epic 2: Contextual Recommendations (맥락적 추천) [EXTRACTED]
+- 5.3 User Stories & Requirements -> contains -> Epic 3: Knowledge Curation (지식 큐레이션) [EXTRACTED]
+- 5.3 User Stories & Requirements -> contains -> Epic 4: Knowledge Dashboard (지식 대시보드) [EXTRACTED]
+- 5.3 User Stories & Requirements -> contains -> Epic 5: Knowledge Ingestion Enhancement (지식 수집 강화) [EXTRACTED]
+- 5.4 Functional Requirements -> contains -> FR-1: Unified Search API [EXTRACTED]
+- 5.4 Functional Requirements -> contains -> FR-2: Contextual Recommendation Engine [EXTRACTED]
+- 5.4 Functional Requirements -> contains -> FR-3: Knowledge Health API [EXTRACTED]
+- 5.4 Functional Requirements -> contains -> FR-4: Knowledge Feedback API [EXTRACTED]
+- 5.8 Dependencies & Risks -> contains -> Dependencies [EXTRACTED]
+- 5.8 Dependencies & Risks -> contains -> Pre-Mortem Analysis [EXTRACTED]
+- Appendix -> contains -> A. Framework Attribution [EXTRACTED]
+- Appendix -> contains -> B. Research Sources [EXTRACTED]
+- Appendix -> contains -> C. Existing Infrastructure Map [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Executive Summary [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 1: Discovery Analysis [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 2: Strategy Analysis [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 3: Market Research [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 4: Go-To-Market Strategy [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 5: PRD (Product Requirements Document) [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 6: Stakeholder Map [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Part 7: User Story Test Scenarios [EXTRACTED]
+- LLM-Wiki PRD: Organizational Knowledge Management & Discovery System -> contains -> Appendix [EXTRACTED]
+- Part 1: Discovery Analysis -> contains -> 1.1 Five-Step Discovery Chain [EXTRACTED]
+- Part 2: Strategy Analysis -> contains -> 2.1 JTBD (Jobs to Be Done) — 6-Part Value Proposition [EXTRACTED]
+- Part 2: Strategy Analysis -> contains -> 2.2 Lean Canvas [EXTRACTED]
+- Part 2: Strategy Analysis -> contains -> 2.3 SWOT Analysis [EXTRACTED]
+- Part 2: Strategy Analysis -> contains -> 2.4 Strategic Positioning [EXTRACTED]
+- Part 3: Market Research -> contains -> 3.1 User Personas [EXTRACTED]
+- Part 3: Market Research -> contains -> 3.2 Competitive Analysis [EXTRACTED]
+- Part 3: Market Research -> contains -> 3.3 Market Sizing (TAM/SAM/SOM) [EXTRACTED]
+- Part 3: Market Research -> contains -> 3.4 Customer Journey Map (Primary Persona: 박제안) [EXTRACTED]
+- Part 4: Go-To-Market Strategy -> contains -> 4.1 ICP (Ideal Customer Profile) [EXTRACTED]
+- Part 4: Go-To-Market Strategy -> contains -> 4.2 Beachhead Segment (Geoffrey Moore Criteria) [EXTRACTED]
+- Part 4: Go-To-Market Strategy -> contains -> 4.3 GTM Strategy [EXTRACTED]
+- Part 4: Go-To-Market Strategy -> contains -> 4.4 Battlecards [EXTRACTED]
+- Part 4: Go-To-Market Strategy -> contains -> 4.5 Growth Loops [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.1 Product Overview [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.2 Goals & Success Metrics [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.3 User Stories & Requirements [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.4 Functional Requirements [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.5 Non-Functional Requirements [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.6 Technical Architecture (High-Level) [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.7 Release Plan [EXTRACTED]
+- Part 5: PRD (Product Requirements Document) -> contains -> 5.8 Dependencies & Risks [EXTRACTED]
+- Part 7: User Story Test Scenarios -> contains -> US-101: 자연어 지식 검색 [EXTRACTED]
+- Part 7: User Story Test Scenarios -> contains -> US-201: 맥락적 추천 [EXTRACTED]
+- Part 7: User Story Test Scenarios -> contains -> US-401: 지식 대시보드 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 LLM-Wiki PRD: Organizational Knowledge Management & Discovery System, Part 5: PRD (Product Requirements Document), 1.1 Five-Step Discovery Chain를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 llm-wiki.prd.md이다.
+
+### Key Facts
+- > **Feature**: llm-wiki > **Product**: tenopa proposer (용역제안 AI 협업 플랫폼) > **Version**: 1.0 > **Date**: 2026-04-11 > **Status**: Draft > **PM Agent Team Analysis**: pm-discovery + pm-strategy + pm-research + pm-prd
+- Step 1: Brainstorm — Customer Pain Points
+- Epic 1: Knowledge Search (지식 검색)
+- 4.1 ICP (Ideal Customer Profile)
+- FR-1: Unified Search API

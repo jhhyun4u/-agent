@@ -2,51 +2,51 @@
 Cohesion: 0.26 | Nodes: 12
 
 ## Key Nodes
-- **tsx** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 6 connections
+- **tsx** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 6 connections
   - <- has_code_example <- [[button]]
   - <- has_code_example <- [[card]]
   - <- has_code_example <- [[formfield]]
   - <- has_code_example <- [[typography]]
   - <- has_code_example <- [[status-badge]]
   - <- has_code_example <- [[react]]
-- **UI 컴포넌트 사용 가이드** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 5 connections
+- **UI 컴포넌트 사용 가이드** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 5 connections
   - -> contains -> [[button]]
   - -> contains -> [[card]]
   - -> contains -> [[formfield]]
   - -> contains -> [[typography]]
   - -> contains -> [[status-badge]]
-- **상태 배지 (Status Badge)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 4 connections
+- **상태 배지 (Status Badge)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 4 connections
   - -> has_code_example -> [[tsx]]
   - -> has_code_example -> [[css]]
   - -> contains -> [[react]]
   - <- contains <- [[ui]]
-- **버튼 (Button)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 3 connections
+- **버튼 (Button)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 3 connections
   - -> has_code_example -> [[tsx]]
   - -> contains -> [[button-props]]
   - <- contains <- [[ui]]
-- **카드 (Card)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 3 connections
+- **카드 (Card)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 3 connections
   - -> has_code_example -> [[tsx]]
   - -> contains -> [[card-props]]
   - <- contains <- [[ui]]
-- **폼 필드 (FormField)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 3 connections
+- **폼 필드 (FormField)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 3 connections
   - -> has_code_example -> [[tsx]]
   - -> contains -> [[formfield-props]]
   - <- contains <- [[ui]]
-- **버튼 클래스 (React 컴포넌트 권장)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 3 connections
+- **버튼 클래스 (React 컴포넌트 권장)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 3 connections
   - -> has_code_example -> [[css]]
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[status-badge]]
-- **css** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 2 connections
+- **css** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 2 connections
   - <- has_code_example <- [[status-badge]]
   - <- has_code_example <- [[react]]
-- **타이포그래피 (Typography)** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 2 connections
+- **타이포그래피 (Typography)** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[ui]]
-- **Button Props** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 1 connections
+- **Button Props** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 1 connections
   - <- contains <- [[button]]
-- **Card Props** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 1 connections
+- **Card Props** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 1 connections
   - <- contains <- [[card]]
-- **FormField Props** (C:\project\tenopa proposer\-agent-master\frontend\COMPONENT_USAGE.md) -- 1 connections
+- **FormField Props** (C:\project\tenopa proposer\frontend\COMPONENT_USAGE.md) -- 1 connections
   - <- contains <- [[formfield]]
 
 ## Internal Relationships

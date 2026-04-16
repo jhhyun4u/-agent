@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **index** (C:\project\tenopa proposer\-agent-master\frontend\components\step8\index.ts) -- 0 connections
+- **index** (C:\project\tenopa proposer\frontend\components\step8\index.ts) -- 0 connections
 
 ## Internal Relationships
 

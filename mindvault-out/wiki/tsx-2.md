@@ -2,26 +2,26 @@
 Cohesion: 0.53 | Nodes: 6
 
 ## Key Nodes
-- **tsx** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
+- **tsx** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
   - <- has_code_example <- [[1]]
   - <- has_code_example <- [[2]]
   - <- has_code_example <- [[typescript]]
-- **방법 2: 전체 마이그레이션** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
+- **방법 2: 전체 마이그레이션** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
   - -> has_code_example -> [[tsx]]
   - -> has_code_example -> [[bash]]
   - <- contains <- [[uiux]]
-- **TypeScript 검사** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
+- **TypeScript 검사** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
   - -> has_code_example -> [[bash]]
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[uiux]]
-- **UI/UX 디자인 개선 완료 가이드** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
+- **UI/UX 디자인 개선 완료 가이드** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 3 connections
   - -> contains -> [[1]]
   - -> contains -> [[2]]
   - -> contains -> [[typescript]]
-- **bash** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 2 connections
+- **bash** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 2 connections
   - <- has_code_example <- [[2]]
   - <- has_code_example <- [[typescript]]
-- **방법 1: 점진적 마이그레이션 (권장)** (C:\project\tenopa proposer\-agent-master\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 2 connections
+- **방법 1: 점진적 마이그레이션 (권장)** (C:\project\tenopa proposer\frontend\UI_IMPROVEMENT_COMPLETION.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[uiux]]
 

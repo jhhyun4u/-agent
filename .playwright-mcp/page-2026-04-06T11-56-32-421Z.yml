@@ -1,0 +1,83 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - button "사이드바 접기" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: PA
+        - generic [ref=e8]: Proposal Coworker
+      - navigation [ref=e9]:
+        - link "대시보드" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e11]
+          - generic [ref=e13]: 대시보드
+        - link "공고 모니터링" [ref=e14] [cursor=pointer]:
+          - /url: /monitoring
+          - img [ref=e15]
+          - generic [ref=e17]: 공고 모니터링
+        - link "제안 프로젝트" [ref=e18] [cursor=pointer]:
+          - /url: /proposals
+          - img [ref=e19]
+          - generic [ref=e21]: 제안 프로젝트
+        - button "지식 베이스 ▸" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - generic [ref=e26]: 지식 베이스
+          - generic [ref=e27]: ▸
+      - generic [ref=e28]:
+        - button "라이트 모드" [ref=e29] [cursor=pointer]:
+          - generic [ref=e30]: ☀️
+          - generic [ref=e31]: 라이트 모드
+        - button "알림" [ref=e34] [cursor=pointer]:
+          - img [ref=e35]
+        - button "로그아웃" [ref=e37] [cursor=pointer]:
+          - img [ref=e38]
+          - generic [ref=e40]: 로그아웃
+    - generic "드래그로 너비 조절 · 더블클릭으로 초기화" [ref=e41]
+  - generic [ref=e43]:
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - heading "공고 모니터링" [level=1] [ref=e47]
+        - button "나라장터 공고 새로고침" [ref=e48] [cursor=pointer]:
+          - img [ref=e49]
+        - paragraph [ref=e52]: AI 적합도 스코어링 기반 추천 · TENOPA 관심분야
+      - generic [ref=e54]:
+        - button "개인" [ref=e55] [cursor=pointer]
+        - button "팀" [ref=e56] [cursor=pointer]
+        - button "본부" [ref=e57] [cursor=pointer]
+        - button "전체" [ref=e58] [cursor=pointer]
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - textbox "공고명, 발주처, 키워드 검색" [ref=e62]
+        - combobox [ref=e63]:
+          - option "금액" [selected]
+          - option "5천만+"
+          - option "1억+"
+          - option "3억+"
+          - option "5억+"
+          - option "10억+"
+        - textbox "발주처" [ref=e66]
+        - generic [ref=e67]:
+          - text: 기간
+          - combobox "기간" [ref=e68]:
+            - option "당일"
+            - option "3일"
+            - option "5일"
+            - option "7일" [selected]
+            - option "10일"
+            - option "14일"
+            - option "30일"
+        - generic [ref=e69]:
+          - generic [ref=e70] [cursor=pointer]:
+            - checkbox "공고" [checked] [ref=e71]
+            - generic [ref=e72]: 공고
+          - generic [ref=e73] [cursor=pointer]:
+            - checkbox "사전" [checked] [ref=e74]
+            - generic [ref=e75]: 사전
+          - generic [ref=e76] [cursor=pointer]:
+            - checkbox "계획" [checked] [ref=e77]
+            - generic [ref=e78]: 계획
+        - generic [ref=e79]:
+          - text: 수집 중...
+          - button "수집 중..." [disabled] [ref=e80]
+      - paragraph [ref=e82]: G2B 전수 수집 + 스코어링 중...
+    - generic [ref=e83]:
+      - paragraph [ref=e84]: 데이터 수집 대기 중...
+      - paragraph [ref=e85]: "출처: 나라장터 (G2B)"

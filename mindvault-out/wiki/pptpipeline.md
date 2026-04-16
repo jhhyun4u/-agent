@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **ppt_pipeline** (C:\project\tenopa proposer\-agent-master\app\prompts\ppt_pipeline.py) -- 0 connections
+- **ppt_pipeline** (C:\project\tenopa proposer\app\prompts\ppt_pipeline.py) -- 0 connections
 
 ## Internal Relationships
 

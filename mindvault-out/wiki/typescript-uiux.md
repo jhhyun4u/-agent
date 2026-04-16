@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\REFACTORING_CHECKLIST.md) -- 1 connections
+- **typescript** (C:\project\tenopa proposer\frontend\REFACTORING_CHECKLIST.md) -- 1 connections
   - <- has_code_example <- [[uiux]]
-- **UI/UX 검증** (C:\project\tenopa proposer\-agent-master\frontend\REFACTORING_CHECKLIST.md) -- 1 connections
+- **UI/UX 검증** (C:\project\tenopa proposer\frontend\REFACTORING_CHECKLIST.md) -- 1 connections
   - -> has_code_example -> [[typescript]]
 
 ## Internal Relationships

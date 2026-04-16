@@ -2,7 +2,7 @@
 Cohesion: 0.40 | Nodes: 5
 
 ## Key Nodes
-- **_review_to_recommendation** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\recommender.py) -- 6 connections
+- **_review_to_recommendation** (C:\project\tenopa proposer\app\services\bidding\monitor\recommender.py) -- 6 connections
   - -> calls -> [[unresolvedrefrecommendationreason]]
   - -> calls -> [[unresolvedrefriskfactor]]
   - -> calls -> [[unresolvedrefbidrecommendation]]
@@ -25,7 +25,7 @@ Cohesion: 0.40 | Nodes: 5
 - _review_to_recommendation -> calls -> __unresolved__::ref::_score_to_grade [EXTRACTED]
 
 ## Cross-Community Connections
-- _review_to_recommendation -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
+- _review_to_recommendation -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
 이 커뮤니티는 _review_to_recommendation, __unresolved__::ref::_score_to_grade, __unresolved__::ref::bidrecommendation를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 recommender.py이다.

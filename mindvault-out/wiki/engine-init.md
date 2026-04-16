@@ -1,0 +1,168 @@
+# engine & __init__
+Cohesion: 0.07 | Nodes: 30
+
+## Key Nodes
+- **engine** (C:\project\tenopa proposer\app\services\bidding\pricing\engine.py) -- 11 connections
+  - -> contains -> [[pricingengine]]
+  - -> contains -> [[computebudgettier]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefclientpreference]]
+  - -> imports -> [[unresolvedrefcompetitorpricing]]
+  - -> imports -> [[unresolvedrefcostestimator]]
+  - -> imports -> [[unresolvedrefcoststandardselector]]
+  - -> imports -> [[unresolvedrefmodels]]
+  - -> imports -> [[unresolvedrefpricescore]]
+  - -> imports -> [[unresolvedrefsensitivity]]
+  - -> imports -> [[unresolvedrefwinprobability]]
+- **__init__** (C:\project\tenopa proposer\app\services\bidding\pricing\engine.py) -- 8 connections
+  - -> calls -> [[unresolvedrefcoststandardselector]]
+  - -> calls -> [[unresolvedrefenhancedcostestimator]]
+  - -> calls -> [[unresolvedrefwinprobabilitymodel]]
+  - -> calls -> [[unresolvedrefsensitivityanalyzer]]
+  - -> calls -> [[unresolvedrefcompetitorpricinganalyzer]]
+  - -> calls -> [[unresolvedrefclientpreferenceanalyzer]]
+  - -> calls -> [[unresolvedrefpricescorecalculator]]
+  - <- contains <- [[pricingengine]]
+- **__unresolved__::ref::models** () -- 7 connections
+  - <- imports <- [[clientpreference]]
+  - <- imports <- [[competitorpricing]]
+  - <- imports <- [[costestimator]]
+  - <- imports <- [[coststandardselector]]
+  - <- imports <- [[engine]]
+  - <- imports <- [[sensitivity]]
+  - <- imports <- [[init]]
+- **cost_standard_selector** (C:\project\tenopa proposer\app\services\bidding\pricing\cost_standard_selector.py) -- 5 connections
+  - -> contains -> [[coststandardselector]]
+  - -> contains -> [[domaintostandard]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefmodels]]
+- **sensitivity** (C:\project\tenopa proposer\app\services\bidding\pricing\sensitivity.py) -- 4 connections
+  - -> contains -> [[sensitivityanalyzer]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefmodels]]
+  - -> imports -> [[unresolvedrefwinprobability]]
+- **__init__** (C:\project\tenopa proposer\app\services\bidding\pricing\__init__.py) -- 3 connections
+  - -> imports -> [[unresolvedrefengine]]
+  - -> imports -> [[unresolvedrefmodels]]
+  - -> imports -> [[unresolvedrefpricescore]]
+- **client_preference** (C:\project\tenopa proposer\app\services\bidding\pricing\client_preference.py) -- 3 connections
+  - -> contains -> [[clientpreferenceanalyzer]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefmodels]]
+- **competitor_pricing** (C:\project\tenopa proposer\app\services\bidding\pricing\competitor_pricing.py) -- 3 connections
+  - -> contains -> [[competitorpricinganalyzer]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefmodels]]
+- **SensitivityAnalyzer** (C:\project\tenopa proposer\app\services\bidding\pricing\sensitivity.py) -- 3 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[analyze]]
+  - <- contains <- [[sensitivity]]
+- **__unresolved__::ref::price_score** () -- 2 connections
+  - <- imports <- [[engine]]
+  - <- imports <- [[init]]
+- **__unresolved__::ref::sensitivity** () -- 2 connections
+  - <- imports <- [[routespricing]]
+  - <- imports <- [[engine]]
+- **__unresolved__::ref::win_probability** () -- 2 connections
+  - <- imports <- [[engine]]
+  - <- imports <- [[sensitivity]]
+- **__unresolved__::ref::winprobabilitymodel** () -- 2 connections
+  - <- calls <- [[init]]
+  - <- calls <- [[init]]
+- **ClientPreferenceAnalyzer** (C:\project\tenopa proposer\app\services\bidding\pricing\client_preference.py) -- 2 connections
+  - -> contains -> [[analyze]]
+  - <- contains <- [[clientpreference]]
+- **CompetitorPricingAnalyzer** (C:\project\tenopa proposer\app\services\bidding\pricing\competitor_pricing.py) -- 2 connections
+  - -> contains -> [[analyze]]
+  - <- contains <- [[competitorpricing]]
+- **CostStandardSelector** (C:\project\tenopa proposer\app\services\bidding\pricing\cost_standard_selector.py) -- 2 connections
+  - -> contains -> [[select]]
+  - <- contains <- [[coststandardselector]]
+- **_domain_to_standard** (C:\project\tenopa proposer\app\services\bidding\pricing\cost_standard_selector.py) -- 2 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - <- contains <- [[coststandardselector]]
+- **__init__** (C:\project\tenopa proposer\app\services\bidding\pricing\sensitivity.py) -- 2 connections
+  - -> calls -> [[unresolvedrefwinprobabilitymodel]]
+  - <- contains <- [[sensitivityanalyzer]]
+- **__unresolved__::ref::client_preference** () -- 1 connections
+  - <- imports <- [[engine]]
+- **__unresolved__::ref::clientpreferenceanalyzer** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::competitor_pricing** () -- 1 connections
+  - <- imports <- [[engine]]
+- **__unresolved__::ref::competitorpricinganalyzer** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::cost_estimator** () -- 1 connections
+  - <- imports <- [[engine]]
+- **__unresolved__::ref::cost_standard_selector** () -- 1 connections
+  - <- imports <- [[engine]]
+- **__unresolved__::ref::coststandardselector** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::engine** () -- 1 connections
+  - <- imports <- [[init]]
+- **__unresolved__::ref::enhancedcostestimator** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::pricescorecalculator** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::sensitivityanalyzer** () -- 1 connections
+  - <- calls <- [[init]]
+- **_compute_budget_tier** (C:\project\tenopa proposer\app\services\bidding\pricing\engine.py) -- 1 connections
+  - <- contains <- [[engine]]
+
+## Internal Relationships
+- __init__ -> imports -> __unresolved__::ref::engine [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::models [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::price_score [EXTRACTED]
+- client_preference -> contains -> ClientPreferenceAnalyzer [EXTRACTED]
+- client_preference -> imports -> __unresolved__::ref::models [EXTRACTED]
+- competitor_pricing -> contains -> CompetitorPricingAnalyzer [EXTRACTED]
+- competitor_pricing -> imports -> __unresolved__::ref::models [EXTRACTED]
+- cost_standard_selector -> contains -> CostStandardSelector [EXTRACTED]
+- cost_standard_selector -> contains -> _domain_to_standard [EXTRACTED]
+- cost_standard_selector -> imports -> __unresolved__::ref::models [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::coststandardselector [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::enhancedcostestimator [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::winprobabilitymodel [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::sensitivityanalyzer [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::competitorpricinganalyzer [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::clientpreferenceanalyzer [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::pricescorecalculator [EXTRACTED]
+- engine -> contains -> _compute_budget_tier [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::client_preference [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::competitor_pricing [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::cost_estimator [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::cost_standard_selector [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::models [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::price_score [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::sensitivity [EXTRACTED]
+- engine -> imports -> __unresolved__::ref::win_probability [EXTRACTED]
+- SensitivityAnalyzer -> contains -> __init__ [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::winprobabilitymodel [EXTRACTED]
+- sensitivity -> contains -> SensitivityAnalyzer [EXTRACTED]
+- sensitivity -> imports -> __unresolved__::ref::models [EXTRACTED]
+- sensitivity -> imports -> __unresolved__::ref::win_probability [EXTRACTED]
+
+## Cross-Community Connections
+- ClientPreferenceAnalyzer -> contains -> analyze (-> [[unresolvedrefget-unresolvedrefexecute]])
+- client_preference -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- CompetitorPricingAnalyzer -> contains -> analyze (-> [[unresolvedrefget-unresolvedrefexecute]])
+- competitor_pricing -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- CostStandardSelector -> contains -> select (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _domain_to_standard -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- cost_standard_selector -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- cost_standard_selector -> imports -> __unresolved__::ref::re (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- engine -> contains -> PricingEngine (-> [[unresolvedrefget-unresolvedrefexecute]])
+- engine -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- SensitivityAnalyzer -> contains -> analyze (-> [[unresolvedrefget-unresolvedrefexecute]])
+- sensitivity -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+
+## Context
+이 커뮤니티는 engine, __init__, __unresolved__::ref::models를 중심으로 imports 관계로 연결되어 있다. 주요 소스 파일은 __init__.py, client_preference.py, competitor_pricing.py, cost_standard_selector.py, engine.py이다.
+
+### Key Facts
+- """ PricingEngine — 비딩 가격 산정 오케스트레이터
+- def __init__(self): self._cost_selector = CostStandardSelector() self._cost_estimator = EnhancedCostEstimator() self._win_model = WinProbabilityModel() self._sensitivity = SensitivityAnalyzer() self._competitor = CompetitorPricingAnalyzer() self._client_pref = ClientPreferenceAnalyzer()…
+- from app.services.bidding.pricing.models import SensitivityPoint from app.services.bidding.pricing.win_probability import WinProbabilityModel
+- class SensitivityAnalyzer: """민감도 분석기. 입찰 비율 범위를 스윕하며 최적점을 찾는다."""
+- class ClientPreferenceAnalyzer: """발주기관 가격 성향 분석기."""

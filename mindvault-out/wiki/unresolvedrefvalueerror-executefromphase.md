@@ -1,0 +1,469 @@
+# __unresolved__::ref::valueerror & execute_from_phase
+Cohesion: 0.03 | Nodes: 69
+
+## Key Nodes
+- **__unresolved__::ref::valueerror** () -- 21 connections
+  - <- calls <- [[init]]
+  - <- calls <- [[getstepprompt]]
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[ensurebidindb]]
+  - <- calls <- [[parse]]
+  - <- calls <- [[executefromphase]]
+  - <- calls <- [[archiveartifact]]
+  - <- calls <- [[saveqarecords]]
+  - <- calls <- [[updateqarecord]]
+  - <- calls <- [[deleteqarecord]]
+  - <- calls <- [[validateurl]]
+  - <- calls <- [[confirmoriginaldocument]]
+  - <- calls <- [[buildcopybundle]]
+  - <- calls <- [[initopenai]]
+  - <- calls <- [[embedtext]]
+  - <- calls <- [[verifybidsubmission]]
+  - <- calls <- [[validatexml]]
+  - <- calls <- [[validateextension]]
+  - <- calls <- [[getdbconnection]]
+  - <- calls <- [[executeworkflow]]
+  - <- calls <- [[executeworkflow]]
+- **execute_from_phase** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 19 connections
+  - -> calls -> [[unresolvedrefrange]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefgetsession]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefartifactcls]]
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefload]]
+  - -> calls -> [[unresolvedrefphase1research]]
+  - -> calls -> [[unresolvedrefphase2analysis]]
+  - -> calls -> [[unresolvedrefphase3plan]]
+  - -> calls -> [[unresolvedrefphase4implement]]
+  - -> calls -> [[unresolvedrefphase5test]]
+  - -> calls -> [[unresolvedrefruntimeerror]]
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefbgtask]]
+  - -> calls -> [[unresolvedrefuploadtostorage]]
+  - -> calls -> [[unresolvedrefnotifyproposalcomplete]]
+  - -> calls -> [[unresolvedrefstr]]
+  - <- contains <- [[phaseexecutor]]
+- **extract_source_tags** (C:\project\tenopa proposer\app\services\source_tagger.py) -- 9 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedreffinditer]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefsourcetag]]
+  - -> calls -> [[unresolvedrefgroup]]
+  - -> calls -> [[unresolvedrefstart]]
+  - -> calls -> [[unresolvedrefend]]
+  - -> calls -> [[unresolvedrefsort]]
+  - <- contains <- [[sourcetagger]]
+- **__unresolved__::ref::group** () -- 8 connections
+  - <- calls <- [[chunkarticles]]
+  - <- calls <- [[parse]]
+  - <- calls <- [[substitutevariables]]
+  - <- calls <- [[extractsourcetags]]
+  - <- calls <- [[checknumberconsistency]]
+  - <- calls <- [[extracttocwithclaude]]
+  - <- calls <- [[parsebudgetstring]]
+  - <- calls <- [[extractpattern]]
+- **get_step_prompt** (C:\project\tenopa proposer\app\prompts\vault_step_prompts.py) -- 8 connections
+  - -> calls -> [[unresolvedrefstep1rfpanalysisprompt]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefstep2strategyprompt]]
+  - -> calls -> [[unresolvedrefstep3planprompt]]
+  - -> calls -> [[unresolvedrefstep4sectionprompt]]
+  - -> calls -> [[unresolvedrefstep5presentationprompt]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - <- contains <- [[vaultstepprompts]]
+- **EmbeddingService** (C:\project\tenopa proposer\app\services\vault_embedding_service.py) -- 8 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[initopenai]]
+  - -> contains -> [[embedtext]]
+  - -> contains -> [[embeddocumentsbatch]]
+  - -> contains -> [[searchsimilar]]
+  - -> contains -> [[regenerateembeddingsforsection]]
+  - -> contains -> [[getembeddingstatus]]
+  - <- contains <- [[vaultembeddingservice]]
+- **get_db_connection** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 8 connections
+  - -> calls -> [[unresolvedrefgetenv]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefconnect]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedreftype]]
+  - <- contains <- [[applymigrations]]
+- **__unresolved__::ref::update_session** () -- 7 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[runphases]]
+  - <- calls <- [[runphasesfrom]]
+  - <- calls <- [[updatestatus]]
+  - <- calls <- [[saveartifact]]
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **embed_text** (C:\project\tenopa proposer\app\services\vault_embedding_service.py) -- 7 connections
+  - -> calls -> [[unresolvedrefinitopenai]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedreferror]]
+  - -> calls -> [[unresolvedrefstr]]
+  - <- contains <- [[embeddingservice]]
+- **__unresolved__::ref::extract_json_from_response** () -- 6 connections
+  - <- calls <- [[parse]]
+  - <- calls <- [[generatepresentationslides]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+  - <- imports <- [[init]]
+  - <- calls <- [[callclaude]]
+- **_run_phases** (C:\project\tenopa proposer\app\api\routes_v31.py) -- 6 connections
+  - -> calls -> [[unresolvedrefphaseexecutor]]
+  - -> calls -> [[unresolvedrefexecuteall]]
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[routesv31]]
+- **_run_phases_from** (C:\project\tenopa proposer\app\api\routes_v31.py) -- 6 connections
+  - -> calls -> [[unresolvedrefphaseexecutor]]
+  - -> calls -> [[unresolvedrefexecutefromphase]]
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[routesv31]]
+- **parse_budget_string** (C:\project\tenopa proposer\app\services\bidding\calculator.py) -- 6 connections
+  - -> calls -> [[unresolvedrefreplace]]
+  - -> calls -> [[unresolvedrefmatch]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedreffloat]]
+  - -> calls -> [[unresolvedrefgroup]]
+  - <- contains <- [[calculator]]
+- **_parse** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 6 connections
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefsearch]]
+  - -> calls -> [[unresolvedrefloads]]
+  - -> calls -> [[unresolvedrefgroup]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - <- contains <- [[phaseexecutor]]
+- **parse_rfp_text** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 6 connections
+  - -> calls -> [[unresolvedrefcreateanthropicclient]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefformat]]
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefrfpdata]]
+  - <- contains <- [[rfpparser]]
+- **validate_extension** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 6 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefgetextension]]
+  - -> calls -> [[unresolvedreffileformaterror]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - <- contains <- [[fileutils]]
+- **execute_workflow** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 6 connections
+  - -> calls -> [[unresolvedrefupdate]]
+  - -> calls -> [[unresolvedrefvalidateinput]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefhandleiteration]]
+  - <- contains <- [[modularproposalworkflow]]
+- **_extract_filename** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefurlparse]]
+  - -> calls -> [[unresolvedrefunquote]]
+  - -> calls -> [[unresolvedrefrsplit]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[g2bservice]]
+- **_save_artifact** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 5 connections
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefmodeldump]]
+  - -> calls -> [[unresolvedrefbgtask]]
+  - -> calls -> [[unresolvedrefdbsaveartifact]]
+  - <- contains <- [[phaseexecutor]]
+- **_update_status** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 5 connections
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefbgtask]]
+  - -> calls -> [[unresolvedrefdbupdatestatus]]
+  - <- contains <- [[phaseexecutor]]
+- **_validate_url** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 5 connections
+  - -> calls -> [[unresolvedrefurlparse]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefgetaddrinfo]]
+  - -> calls -> [[unresolvedrefipaddress]]
+  - <- contains <- [[rfpparser]]
+- **ModularProposalWorkflow** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 5 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[executeworkflow]]
+  - -> contains -> [[handleiteration]]
+  - -> contains -> [[getworkflowstatus]]
+  - <- contains <- [[modulararchitecture]]
+- **_call_claude** (C:\project\tenopa proposer\scripts\archive\proposal_generator.py) -- 5 connections
+  - -> calls -> [[unresolvedrefcreateanthropicclient]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefextractjsonfromresponse]]
+  - -> calls -> [[unresolvedrefproposalcontent]]
+  - <- contains <- [[proposalgenerator]]
+- **__unresolved__::ref::create_anthropic_client** () -- 4 connections
+  - <- calls <- [[extractsectionsfromasset]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+  - <- calls <- [[callclaude]]
+- **__unresolved__::ref::runtimeerror** () -- 4 connections
+  - <- calls <- [[initdevuser]]
+  - <- calls <- [[callapi]]
+  - <- calls <- [[injectcharstyles]]
+  - <- calls <- [[executefromphase]]
+- **_init_openai** (C:\project\tenopa proposer\app\services\vault_embedding_service.py) -- 4 connections
+  - -> calls -> [[unresolvedrefgetenv]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefopenaiclient]]
+  - <- contains <- [[embeddingservice]]
+- **_extract_pattern** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefsearch]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefgroup]]
+  - <- contains <- [[rfpreviewengine]]
+- **__unresolved__::ref::_upload_to_storage** () -- 3 connections
+  - <- calls <- [[downloadbidattachments]]
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::finditer** () -- 3 connections
+  - <- calls <- [[chunkbyheadings]]
+  - <- calls <- [[extractsourcetags]]
+  - <- calls <- [[checknumberconsistency]]
+- **__unresolved__::ref::rfpdata** () -- 3 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[parserfp]]
+  - <- calls <- [[parserfptext]]
+- **__unresolved__::ref::urlparse** () -- 3 connections
+  - <- calls <- [[extractfilename]]
+  - <- calls <- [[validateurl]]
+  - <- calls <- [[fetchdocumentcontent]]
+- **vault_step_prompts** (C:\project\tenopa proposer\app\prompts\vault_step_prompts.py) -- 3 connections
+  - -> contains -> [[vaultstepprompts]]
+  - -> contains -> [[getstepprompt]]
+  - -> imports -> [[unresolvedreftyping]]
+- **__init__** (C:\project\tenopa proposer\app\utils\__init__.py) -- 3 connections
+  - -> imports -> [[unresolvedrefextractjsonfromresponse]]
+  - -> imports -> [[unresolvedrefvalidatefiletype]]
+  - -> imports -> [[unresolvedrefcalcdday]]
+- **_handle_iteration** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - <- contains <- [[modularproposalworkflow]]
+- **__unresolved__::ref::end** () -- 2 connections
+  - <- calls <- [[extractsourcetags]]
+  - <- calls <- [[checknumberconsistency]]
+- **__unresolved__::ref::notify_proposal_complete** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phase1_research** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phase2_analysis** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phase3_plan** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phase4_implement** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phase5_test** () -- 2 connections
+  - <- calls <- [[executeall]]
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::phaseexecutor** () -- 2 connections
+  - <- calls <- [[runphases]]
+  - <- calls <- [[runphasesfrom]]
+- **__unresolved__::ref::unquote** () -- 2 connections
+  - <- calls <- [[extractfilename]]
+  - <- calls <- [[extractandclassifyfilename]]
+- **get_workflow_status** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 2 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - <- contains <- [[modularproposalworkflow]]
+- **__unresolved__::ref::_db_save_artifact** () -- 1 connections
+  - <- calls <- [[saveartifact]]
+- **__unresolved__::ref::_db_update_status** () -- 1 connections
+  - <- calls <- [[updatestatus]]
+- **__unresolved__::ref::_handle_iteration** () -- 1 connections
+  - <- calls <- [[executeworkflow]]
+- **__unresolved__::ref::_init_openai** () -- 1 connections
+  - <- calls <- [[embedtext]]
+- **__unresolved__::ref::_load** () -- 1 connections
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::artifact_cls** () -- 1 connections
+  - <- calls <- [[executefromphase]]
+- **__unresolved__::ref::calc_dday** () -- 1 connections
+  - <- imports <- [[init]]
+- **__unresolved__::ref::execute_all** () -- 1 connections
+  - <- calls <- [[runphases]]
+- **__unresolved__::ref::execute_from_phase** () -- 1 connections
+  - <- calls <- [[runphasesfrom]]
+- **__unresolved__::ref::fileformaterror** () -- 1 connections
+  - <- calls <- [[validateextension]]
+- **__unresolved__::ref::get_extension** () -- 1 connections
+  - <- calls <- [[validateextension]]
+- **__unresolved__::ref::getaddrinfo** () -- 1 connections
+  - <- calls <- [[validateurl]]
+- **__unresolved__::ref::ip_address** () -- 1 connections
+  - <- calls <- [[validateurl]]
+- **__unresolved__::ref::openaiclient** () -- 1 connections
+  - <- calls <- [[initopenai]]
+- **__unresolved__::ref::proposalcontent** () -- 1 connections
+  - <- calls <- [[callclaude]]
+- **__unresolved__::ref::sourcetag** () -- 1 connections
+  - <- calls <- [[extractsourcetags]]
+- **__unresolved__::ref::step_1_rfp_analysis_prompt** () -- 1 connections
+  - <- calls <- [[getstepprompt]]
+- **__unresolved__::ref::step_2_strategy_prompt** () -- 1 connections
+  - <- calls <- [[getstepprompt]]
+- **__unresolved__::ref::step_3_plan_prompt** () -- 1 connections
+  - <- calls <- [[getstepprompt]]
+- **__unresolved__::ref::step_4_section_prompt** () -- 1 connections
+  - <- calls <- [[getstepprompt]]
+- **__unresolved__::ref::step_5_presentation_prompt** () -- 1 connections
+  - <- calls <- [[getstepprompt]]
+- **__unresolved__::ref::validate_file_type** () -- 1 connections
+  - <- imports <- [[init]]
+- **__unresolved__::ref::validate_input** () -- 1 connections
+  - <- calls <- [[executeworkflow]]
+- **VaultStepPrompts** (C:\project\tenopa proposer\app\prompts\vault_step_prompts.py) -- 1 connections
+  - <- contains <- [[vaultstepprompts]]
+- **__init__** (C:\project\tenopa proposer\app\services\vault_embedding_service.py) -- 1 connections
+  - <- contains <- [[embeddingservice]]
+
+## Internal Relationships
+- _run_phases -> calls -> __unresolved__::ref::phaseexecutor [EXTRACTED]
+- _run_phases -> calls -> __unresolved__::ref::execute_all [EXTRACTED]
+- _run_phases -> calls -> __unresolved__::ref::update_session [EXTRACTED]
+- _run_phases_from -> calls -> __unresolved__::ref::phaseexecutor [EXTRACTED]
+- _run_phases_from -> calls -> __unresolved__::ref::execute_from_phase [EXTRACTED]
+- _run_phases_from -> calls -> __unresolved__::ref::update_session [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::step_1_rfp_analysis_prompt [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::step_2_strategy_prompt [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::step_3_plan_prompt [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::step_4_section_prompt [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::step_5_presentation_prompt [EXTRACTED]
+- get_step_prompt -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- vault_step_prompts -> contains -> VaultStepPrompts [EXTRACTED]
+- vault_step_prompts -> contains -> get_step_prompt [EXTRACTED]
+- parse_budget_string -> calls -> __unresolved__::ref::group [EXTRACTED]
+- _extract_filename -> calls -> __unresolved__::ref::urlparse [EXTRACTED]
+- _extract_filename -> calls -> __unresolved__::ref::unquote [EXTRACTED]
+- _parse -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- _parse -> calls -> __unresolved__::ref::group [EXTRACTED]
+- _parse -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- _save_artifact -> calls -> __unresolved__::ref::update_session [EXTRACTED]
+- _save_artifact -> calls -> __unresolved__::ref::_db_save_artifact [EXTRACTED]
+- _update_status -> calls -> __unresolved__::ref::update_session [EXTRACTED]
+- _update_status -> calls -> __unresolved__::ref::_db_update_status [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::artifact_cls [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::_load [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::phase1_research [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::phase2_analysis [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::phase3_plan [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::phase4_implement [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::phase5_test [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::runtimeerror [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::update_session [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::_upload_to_storage [EXTRACTED]
+- execute_from_phase -> calls -> __unresolved__::ref::notify_proposal_complete [EXTRACTED]
+- _validate_url -> calls -> __unresolved__::ref::urlparse [EXTRACTED]
+- _validate_url -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- _validate_url -> calls -> __unresolved__::ref::getaddrinfo [EXTRACTED]
+- _validate_url -> calls -> __unresolved__::ref::ip_address [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::create_anthropic_client [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- parse_rfp_text -> calls -> __unresolved__::ref::rfpdata [EXTRACTED]
+- extract_source_tags -> calls -> __unresolved__::ref::finditer [EXTRACTED]
+- extract_source_tags -> calls -> __unresolved__::ref::sourcetag [EXTRACTED]
+- extract_source_tags -> calls -> __unresolved__::ref::group [EXTRACTED]
+- extract_source_tags -> calls -> __unresolved__::ref::end [EXTRACTED]
+- EmbeddingService -> contains -> __init__ [EXTRACTED]
+- EmbeddingService -> contains -> _init_openai [EXTRACTED]
+- EmbeddingService -> contains -> embed_text [EXTRACTED]
+- _init_openai -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- _init_openai -> calls -> __unresolved__::ref::openaiclient [EXTRACTED]
+- embed_text -> calls -> __unresolved__::ref::_init_openai [EXTRACTED]
+- embed_text -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::validate_file_type [EXTRACTED]
+- __init__ -> imports -> __unresolved__::ref::calc_dday [EXTRACTED]
+- validate_extension -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- validate_extension -> calls -> __unresolved__::ref::get_extension [EXTRACTED]
+- validate_extension -> calls -> __unresolved__::ref::fileformaterror [EXTRACTED]
+- get_db_connection -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- ModularProposalWorkflow -> contains -> execute_workflow [EXTRACTED]
+- ModularProposalWorkflow -> contains -> _handle_iteration [EXTRACTED]
+- ModularProposalWorkflow -> contains -> get_workflow_status [EXTRACTED]
+- execute_workflow -> calls -> __unresolved__::ref::validate_input [EXTRACTED]
+- execute_workflow -> calls -> __unresolved__::ref::valueerror [EXTRACTED]
+- execute_workflow -> calls -> __unresolved__::ref::_handle_iteration [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::create_anthropic_client [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::extract_json_from_response [EXTRACTED]
+- _call_claude -> calls -> __unresolved__::ref::proposalcontent [EXTRACTED]
+- _extract_pattern -> calls -> __unresolved__::ref::group [EXTRACTED]
+
+## Cross-Community Connections
+- _run_phases -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_phases -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_phases_from -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_phases_from -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_step_prompt -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- vault_step_prompts -> imports -> __unresolved__::ref::typing (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- parse_budget_string -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_budget_string -> calls -> __unresolved__::ref::match (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- parse_budget_string -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_budget_string -> calls -> __unresolved__::ref::float (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_filename -> calls -> __unresolved__::ref::rsplit (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _extract_filename -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _parse -> calls -> __unresolved__::ref::search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _parse -> calls -> __unresolved__::ref::loads (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _save_artifact -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _save_artifact -> calls -> __unresolved__::ref::_bg_task (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _update_status -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _update_status -> calls -> __unresolved__::ref::_bg_task (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::range (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::get_session (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::_bg_task (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_from_phase -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_rfp_text -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_rfp_text -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_source_tags -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_source_tags -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_source_tags -> calls -> __unresolved__::ref::start (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- extract_source_tags -> calls -> __unresolved__::ref::sort (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- EmbeddingService -> contains -> embed_documents_batch (-> [[unresolvedrefget-unresolvedrefexecute]])
+- EmbeddingService -> contains -> search_similar (-> [[unresolvedrefget-unresolvedrefexecute]])
+- EmbeddingService -> contains -> regenerate_embeddings_for_section (-> [[unresolvedrefget-unresolvedrefexecute]])
+- EmbeddingService -> contains -> get_embedding_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _init_openai -> calls -> __unresolved__::ref::getenv (-> [[unresolvedrefget-unresolvedrefexecute]])
+- embed_text -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- embed_text -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedrefexecute]])
+- embed_text -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- embed_text -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_extension -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_extension -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_db_connection -> calls -> __unresolved__::ref::getenv (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_db_connection -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- get_db_connection -> calls -> __unresolved__::ref::connect (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_db_connection -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_db_connection -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
+- get_db_connection -> calls -> __unresolved__::ref::type (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ModularProposalWorkflow -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
+- _handle_iteration -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _handle_iteration -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_workflow -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedrefexecute]])
+- execute_workflow -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_workflow_status -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _call_claude -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_pattern -> calls -> __unresolved__::ref::search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_pattern -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+
+## Context
+이 커뮤니티는 __unresolved__::ref::valueerror, execute_from_phase, extract_source_tags를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 __init__.py, apply_migrations.py, calculator.py, file_utils.py, g2b_service.py이다.
+
+### Key Facts
+- async def execute_from_phase(self, start_phase: int, improvement_instructions=None): """특정 phase부터 재실행 (개선 지침 적용)""" if start_phase not in range(1, 6): raise ValueError(f"start_phase는 1~5여야 합니다: {start_phase}") try: session = self.session_manager.get_session(self.proposal_id) rfp_content =…
+- def extract_source_tags(text: str) -> list[SourceTag]: """텍스트에서 모든 출처 태그를 추출.""" tags: list[SourceTag] = [] for tag_type, pattern in TAG_PATTERNS.items(): for match in pattern.finditer(text): tags.append(SourceTag( tag_type=tag_type, reference_id=match.group(), text_span=(match.start(),…
+- def get_step_prompt( step_number: int, context: Dict[str, Any] ) -> str: """ Get the appropriate prompt for a proposal step.
+- class EmbeddingService: """Service for generating and managing vector embeddings""" def __init__( self, model: str = "text-embedding-3-small", provider: str = "openai", batch_size: int = 100, similarity_threshold: float = 0.7 ): """ Initialize embedding service Args: model: Embedding model name…
+- async def get_db_connection(): """PostgreSQL 직접 연결""" db_url = os.getenv("DATABASE_URL") if not db_url: raise ValueError("DATABASE_URL 환경변수 설정 필요")

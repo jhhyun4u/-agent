@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **StepProgressProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\StepProgress.tsx) -- 1 connections
+- **StepProgressProps** (C:\project\tenopa proposer\frontend\components\prompt\StepProgress.tsx) -- 1 connections
   - <- contains <- [[stepprogress]]
-- **StepProgress** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\StepProgress.tsx) -- 1 connections
+- **StepProgress** (C:\project\tenopa proposer\frontend\components\prompt\StepProgress.tsx) -- 1 connections
   - -> contains -> [[stepprogressprops]]
 
 ## Internal Relationships

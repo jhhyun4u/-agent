@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **활성 (Active)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 0 connections
+- **활성 (Active)** (C:\project\tenopa proposer\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 0 connections
 
 ## Internal Relationships
 

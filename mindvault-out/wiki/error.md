@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **error** (C:\project\tenopa proposer\-agent-master\frontend\app\error.tsx) -- 0 connections
+- **error** (C:\project\tenopa proposer\frontend\app\error.tsx) -- 0 connections
 
 ## Internal Relationships
 

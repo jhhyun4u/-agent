@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **PPTX 템플릿 파일 위치** (C:\project\tenopa proposer\-agent-master\app\templates\presentation\README.md) -- 0 connections
+- **PPTX 템플릿 파일 위치** (C:\project\tenopa proposer\app\templates\presentation\README.md) -- 0 connections
 
 ## Internal Relationships
 

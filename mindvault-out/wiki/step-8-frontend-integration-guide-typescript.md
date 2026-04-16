@@ -2,7 +2,7 @@
 Cohesion: 0.06 | Nodes: 48
 
 ## Key Nodes
-- **STEP 8 Frontend Integration Guide** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 15 connections
+- **STEP 8 Frontend Integration Guide** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 15 connections
   - -> contains -> [[overview]]
   - -> contains -> [[architecture]]
   - -> contains -> [[components]]
@@ -18,7 +18,7 @@ Cohesion: 0.06 | Nodes: 48
   - -> contains -> [[browser-support]]
   - -> contains -> [[troubleshooting]]
   - -> contains -> [[references]]
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 10 connections
+- **typescript** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 10 connections
   - <- has_code_example <- [[1-nodestatusdashboardtsx]]
   - <- has_code_example <- [[2-reviewpanelenhancedtsx]]
   - <- has_code_example <- [[3-versionhistoryviewertsx]]
@@ -29,139 +29,139 @@ Cohesion: 0.06 | Nodes: 48
   - <- has_code_example <- [[2-mock-data]]
   - <- has_code_example <- [[3-api-fallback]]
   - <- has_code_example <- [[performance-considerations]]
-- **bash** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 6 connections
+- **bash** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 6 connections
   - <- has_code_example <- [[unit-tests]]
   - <- has_code_example <- [[integration-tests]]
   - <- has_code_example <- [[e2e-tests-future]]
   - <- has_code_example <- [[1-local-development]]
   - <- has_code_example <- [[issue-components-not-rendering]]
   - <- has_code_example <- [[issue-data-not-loading]]
-- **tsx** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 6 connections
+- **tsx** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 6 connections
   - <- has_code_example <- [[1-nodestatusdashboardtsx]]
   - <- has_code_example <- [[2-reviewpanelenhancedtsx]]
   - <- has_code_example <- [[3-versionhistoryviewertsx]]
   - <- has_code_example <- [[1-proposal-detail-page-integration]]
   - <- has_code_example <- [[2-workflow-state-integration]]
   - <- has_code_example <- [[3-artifact-viewer-integration]]
-- **API Endpoints** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **API Endpoints** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[status-endpoints]]
   - -> contains -> [[action-endpoints]]
   - -> contains -> [[version-endpoints]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Components** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Components** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[1-nodestatusdashboardtsx]]
   - -> contains -> [[2-reviewpanelenhancedtsx]]
   - -> contains -> [[3-versionhistoryviewertsx]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Development Workflow** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Development Workflow** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[1-local-development]]
   - -> contains -> [[2-mock-data]]
   - -> contains -> [[3-api-fallback]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Integration Points** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Integration Points** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[1-proposal-detail-page-integration]]
   - -> contains -> [[2-workflow-state-integration]]
   - -> contains -> [[3-artifact-viewer-integration]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **References** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **References** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> references -> [[unresolvedrefstep8]]
   - -> references -> [[unresolvedrefstep8test]]
   - -> references -> [[unresolvedrefstep8pageintegrationtest]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Response Types** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Response Types** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[step8status]]
   - -> contains -> [[reviewpaneldata]]
   - -> contains -> [[aiissueflag]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Testing** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Testing** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[unit-tests]]
   - -> contains -> [[integration-tests]]
   - -> contains -> [[e2e-tests-future]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Troubleshooting** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 4 connections
+- **Troubleshooting** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 4 connections
   - -> contains -> [[issue-components-not-rendering]]
   - -> contains -> [[issue-data-not-loading]]
   - -> contains -> [[issue-version-history-empty]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **http** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **http** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - <- has_code_example <- [[status-endpoints]]
   - <- has_code_example <- [[action-endpoints]]
   - <- has_code_example <- [[version-endpoints]]
-- **1. NodeStatusDashboard.tsx** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **1. NodeStatusDashboard.tsx** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - -> has_code_example -> [[typescript]]
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[components]]
-- **2. ReviewPanelEnhanced.tsx** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **2. ReviewPanelEnhanced.tsx** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - -> has_code_example -> [[typescript]]
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[components]]
-- **3. VersionHistoryViewer.tsx** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **3. VersionHistoryViewer.tsx** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - -> has_code_example -> [[typescript]]
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[components]]
-- **Architecture** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **Architecture** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - -> contains -> [[page-structure]]
   - -> contains -> [[component-hierarchy]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Known Limitations & TODOs** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 3 connections
+- **Known Limitations & TODOs** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 3 connections
   - -> contains -> [[current-limitations]]
   - -> contains -> [[todos]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **1. Local Development** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **1. Local Development** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[development-workflow]]
-- **1. Proposal Detail Page Integration** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **1. Proposal Detail Page Integration** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[integration-points]]
-- **2. Mock Data** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **2. Mock Data** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[development-workflow]]
-- **2. Workflow State Integration** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **2. Workflow State Integration** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[integration-points]]
-- **3. API Fallback** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **3. API Fallback** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[development-workflow]]
-- **3. Artifact Viewer Integration** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **3. Artifact Viewer Integration** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[tsx]]
   - <- contains <- [[integration-points]]
-- **Action Endpoints** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Action Endpoints** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[http]]
   - <- contains <- [[api-endpoints]]
-- **AIIssueFlag** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **AIIssueFlag** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[response-types]]
-- **Custom Hook: useStep8Data** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Custom Hook: useStep8Data** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **E2E Tests (Future)** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **E2E Tests (Future)** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[testing]]
-- **Integration Tests** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Integration Tests** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[testing]]
-- **Issue: Components Not Rendering** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Issue: Components Not Rendering** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[troubleshooting]]
-- **Issue: Data Not Loading** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Issue: Data Not Loading** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[troubleshooting]]
-- **Performance Considerations** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Performance Considerations** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **ReviewPanelData** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **ReviewPanelData** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[response-types]]
-- **Status Endpoints** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Status Endpoints** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[http]]
   - <- contains <- [[api-endpoints]]
-- **Step8Status** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Step8Status** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[response-types]]
-- **Unit Tests** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Unit Tests** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[testing]]
-- **Version Endpoints** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 2 connections
+- **Version Endpoints** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 2 connections
   - -> has_code_example -> [[http]]
   - <- contains <- [[api-endpoints]]
 - **__unresolved__::ref::step8** () -- 1 connections
@@ -170,21 +170,21 @@ Cohesion: 0.06 | Nodes: 48
   - <- references <- [[references]]
 - **__unresolved__::ref::step8_page_integration_test** () -- 1 connections
   - <- references <- [[references]]
-- **Accessibility** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Accessibility** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Browser Support** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Browser Support** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Component Hierarchy** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Component Hierarchy** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[architecture]]
-- **Current Limitations** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Current Limitations** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[known-limitations-todos]]
-- **Issue: Version History Empty** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Issue: Version History Empty** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[troubleshooting]]
-- **Overview** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Overview** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[step-8-frontend-integration-guide]]
-- **Page Structure** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **Page Structure** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[architecture]]
-- **TODOs** (C:\project\tenopa proposer\-agent-master\frontend\STEP8_INTEGRATION.md) -- 1 connections
+- **TODOs** (C:\project\tenopa proposer\frontend\STEP8_INTEGRATION.md) -- 1 connections
   - <- contains <- [[known-limitations-todos]]
 
 ## Internal Relationships

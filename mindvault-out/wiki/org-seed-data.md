@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **org-seed-data** (C:\project\tenopa proposer\-agent-master\frontend\lib\org-seed-data.ts) -- 0 connections
+- **org-seed-data** (C:\project\tenopa proposer\frontend\lib\org-seed-data.ts) -- 0 connections
 
 ## Internal Relationships
 

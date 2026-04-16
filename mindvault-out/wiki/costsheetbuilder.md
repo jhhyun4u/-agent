@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **cost_sheet_builder** (C:\project\tenopa proposer\-agent-master\app\services\cost_sheet_builder.py) -- 0 connections
+- **cost_sheet_builder** (C:\project\tenopa proposer\app\services\cost_sheet_builder.py) -- 0 connections
 
 ## Internal Relationships
 

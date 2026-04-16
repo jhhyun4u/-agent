@@ -1,8 +1,8 @@
 # __unresolved__::ref::basemodel & __unresolved__::ref::logging
-Cohesion: 0.00 | Nodes: 954
+Cohesion: 0.00 | Nodes: 1017
 
 ## Key Nodes
-- **__unresolved__::ref::basemodel** () -- 307 connections
+- **__unresolved__::ref::basemodel** () -- 407 connections
   - <- extends <- [[roleupdatebody]]
   - <- extends <- [[statusupdatebody]]
   - <- extends <- [[reopenbody]]
@@ -29,12 +29,10 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[laborratebody]]
   - <- extends <- [[marketpricebody]]
   - <- extends <- [[reindexrequest]]
-  - <- extends <- [[teaminfo]]
-  - <- extends <- [[participantinfo]]
-  - <- extends <- [[proposalparticipantinfo]]
-  - <- extends <- [[documentinfo]]
-  - <- extends <- [[archiveinfo]]
   - <- extends <- [[masterprojectresponse]]
+  - <- extends <- [[projectstatsresponse]]
+  - <- extends <- [[chatsearchrequest]]
+  - <- extends <- [[chatsearchresponse]]
   - <- extends <- [[migrationitem]]
   - <- extends <- [[migrationstatusresponse]]
   - <- extends <- [[migrationhistoryitem]]
@@ -95,6 +93,46 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[templateupdate]]
   - <- extends <- [[personnelrequest]]
   - <- extends <- [[bidcalculaterequest]]
+  - <- extends <- [[sessionmetricsrequest]]
+  - <- extends <- [[feedbackrequest]]
+  - <- extends <- [[metricsresponse]]
+  - <- extends <- [[satisfactionresponse]]
+  - <- extends <- [[npsresponse]]
+  - <- extends <- [[golivereadinessresponse]]
+  - <- extends <- [[createanalysisrequest]]
+  - <- extends <- [[similarprojectresponse]]
+  - <- extends <- [[analysisresultresponse]]
+  - <- extends <- [[biddinganalysisresponse]]
+  - <- extends <- [[industrystatisticsresponse]]
+  - <- extends <- [[budgetrangestatisticsresponse]]
+  - <- extends <- [[projectcomparisonresponse]]
+  - <- extends <- [[updateg2bdatarequest]]
+  - <- extends <- [[clientperformancemetricsresponse]]
+  - <- extends <- [[clientresponse]]
+  - <- extends <- [[clientsearchrequest]]
+  - <- extends <- [[clientupdaterequest]]
+  - <- extends <- [[clientreviewrequest]]
+  - <- extends <- [[clientlistresponse]]
+  - <- extends <- [[clientproposalsresponse]]
+  - <- extends <- [[regionalsummaryresponse]]
+  - <- extends <- [[credentialresponse]]
+  - <- extends <- [[credentialuploadrequest]]
+  - <- extends <- [[ocrresultresponse]]
+  - <- extends <- [[credentialslistresponse]]
+  - <- extends <- [[skillrequest]]
+  - <- extends <- [[personnelresponse]]
+  - <- extends <- [[personnelsearchresponse]]
+  - <- extends <- [[personnelperformanceresponse]]
+  - <- extends <- [[availablepersonnelresponse]]
+  - <- extends <- [[departmentstatsresponse]]
+  - <- extends <- [[expertiseinventoryresponse]]
+  - <- extends <- [[utilizationresponse]]
+  - <- extends <- [[stepsearchrequest]]
+  - <- extends <- [[step1response]]
+  - <- extends <- [[step2response]]
+  - <- extends <- [[step3response]]
+  - <- extends <- [[step4response]]
+  - <- extends <- [[step5response]]
   - <- extends <- [[workflowstartrequest]]
   - <- extends <- [[workflowresumerequest]]
   - <- extends <- [[feedbackrecord]]
@@ -196,6 +234,34 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[chunklistresponse]]
   - <- extends <- [[documentprocessrequest]]
   - <- extends <- [[documentprocessresponse]]
+  - <- extends <- [[classificationrequest]]
+  - <- extends <- [[classificationresult]]
+  - <- extends <- [[searchfilters]]
+  - <- extends <- [[searchrequest]]
+  - <- extends <- [[searchresultitem]]
+  - <- extends <- [[searchresponse]]
+  - <- extends <- [[proposalcontext]]
+  - <- extends <- [[recommendationrequest]]
+  - <- extends <- [[recommendationresultitem]]
+  - <- extends <- [[recommendationresponse]]
+  - <- extends <- [[knowledgebasesize]]
+  - <- extends <- [[coverageitem]]
+  - <- extends <- [[coveragemetrics]]
+  - <- extends <- [[freshnessmetrics]]
+  - <- extends <- [[searchanalytics]]
+  - <- extends <- [[recommendationfeedback]]
+  - <- extends <- [[healthmetrics]]
+  - <- extends <- [[flathealthmetrics]]
+  - <- extends <- [[knowledgefeedbackrequest]]
+  - <- extends <- [[knowledgefeedbackresponse]]
+  - <- extends <- [[deprecationrequest]]
+  - <- extends <- [[deprecationresponse]]
+  - <- extends <- [[sharingrequest]]
+  - <- extends <- [[sharingresponse]]
+  - <- extends <- [[sharingauditrecord]]
+  - <- extends <- [[knowledgemetadatadb]]
+  - <- extends <- [[knowledgesharingauditdb]]
+  - <- extends <- [[errorresponse]]
   - <- extends <- [[migrationbatch]]
   - <- extends <- [[migrationschedule]]
   - <- extends <- [[migrationtriggerrequest]]
@@ -273,6 +339,35 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[participantresponse]]
   - <- extends <- [[delegationcreate]]
   - <- extends <- [[delegationresponse]]
+  - <- extends <- [[vaultchatrequest]]
+  - <- extends <- [[routingdecision]]
+  - <- extends <- [[documentsource]]
+  - <- extends <- [[chatmessage]]
+  - <- extends <- [[vaultchatresponse]]
+  - <- extends <- [[conversationcreate]]
+  - <- extends <- [[conversationdetail]]
+  - <- extends <- [[conversationsummary]]
+  - <- extends <- [[conversationupdate]]
+  - <- extends <- [[conversationshareresponse]]
+  - <- extends <- [[vaultregeneraterequest]]
+  - <- extends <- [[bookmarkcreate]]
+  - <- extends <- [[bookmarkresponse]]
+  - <- extends <- [[vaultdocument]]
+  - <- extends <- [[projectmeta]]
+  - <- extends <- [[governmentguideline]]
+  - <- extends <- [[searchfilter]]
+  - <- extends <- [[searchresult]]
+  - <- extends <- [[searchresults]]
+  - <- extends <- [[vaultchatstreamtoken]]
+  - <- extends <- [[vaultchatstreamsources]]
+  - <- extends <- [[vaultchatstreamdone]]
+  - <- extends <- [[vaultchatstreamerror]]
+  - <- extends <- [[validationreport]]
+  - <- extends <- [[contradiction]]
+  - <- extends <- [[exportrequest]]
+  - <- extends <- [[exportresponse]]
+  - <- extends <- [[chatmetrics]]
+  - <- extends <- [[vaultstats]]
   - <- extends <- [[tokensummary]]
   - <- extends <- [[tokenusagebynode]]
   - <- extends <- [[tokenusagetotal]]
@@ -293,6 +388,11 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[statehistoryresponse]]
   - <- extends <- [[simulationrequest]]
   - <- extends <- [[simulationresult]]
+  - <- extends <- [[similarproject]]
+  - <- extends <- [[biddinganalysisresult]]
+  - <- extends <- [[clientperformancemetrics]]
+  - <- extends <- [[clientinfo]]
+  - <- extends <- [[credentialmetadata]]
   - <- extends <- [[versionconflict]]
   - <- extends <- [[movevalidationresult]]
   - <- extends <- [[personnelinput]]
@@ -310,10 +410,9 @@ Cohesion: 0.00 | Nodes: 954
   - <- extends <- [[clientpricingpreference]]
   - <- extends <- [[pricingsimulationresult]]
   - <- extends <- [[quickestimateresult]]
-- **__unresolved__::ref::logging** () -- 146 connections
+- **__unresolved__::ref::logging** () -- 171 connections
   - <- imports <- [[main]]
   - <- imports <- [[scheduler]]
-  - <- imports <- [[statemachine]]
   - <- imports <- [[deps]]
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesanalytics]]
@@ -327,6 +426,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesg2b]]
   - <- imports <- [[routesintranet]]
   - <- imports <- [[routeskb]]
+  - <- imports <- [[routesknowledge]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesperformance]]
@@ -347,6 +447,14 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
   - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultembeddings]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
   - <- imports <- [[contexthelpers]]
   - <- imports <- [[graph]]
@@ -380,6 +488,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[assetextractor]]
   - <- imports <- [[auditservice]]
   - <- imports <- [[authservice]]
+  - <- imports <- [[betametricstracker]]
   - <- imports <- [[bidanalysisservice]]
   - <- imports <- [[bidattachmentstore]]
   - <- imports <- [[bidpipeline]]
@@ -392,13 +501,16 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[emailservice]]
   - <- imports <- [[embeddingservice]]
   - <- imports <- [[feedbackloop]]
+  - <- imports <- [[g2bbiddingcollector]]
   - <- imports <- [[g2bservice]]
   - <- imports <- [[healthchecker]]
   - <- imports <- [[humanedittracker]]
   - <- imports <- [[hwpxbuilder]]
   - <- imports <- [[hwpxservice]]
   - <- imports <- [[kbupdater]]
+  - <- imports <- [[knowledgemanager]]
   - <- imports <- [[knowledgesearch]]
+  - <- imports <- [[masterprojectschatservice]]
   - <- imports <- [[migrationservice]]
   - <- imports <- [[notificationservice]]
   - <- imports <- [[phaseexecutor]]
@@ -418,12 +530,23 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[scheduledmonitor]]
   - <- imports <- [[sectionlock]]
   - <- imports <- [[sessionmanager]]
-  - <- imports <- [[statevalidator]]
   - <- imports <- [[streamorchestrator]]
   - <- imports <- [[submissiondocsservice]]
   - <- imports <- [[templateservice]]
   - <- imports <- [[tokenmanager]]
   - <- imports <- [[useraccountservice]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultcitationservice]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcontextmanager]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[vaultembeddingservice]]
+  - <- imports <- [[vaultpersonnelservice]]
+  - <- imports <- [[vaultqueryrouter]]
+  - <- imports <- [[vaultstepsearch]]
+  - <- imports <- [[vaultvalidation]]
   - <- imports <- [[workflowtimer]]
   - <- imports <- [[costsheetbuilder]]
   - <- imports <- [[cleanup]]
@@ -442,6 +565,9 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[handoff]]
   - <- imports <- [[marketresearch]]
   - <- imports <- [[stream]]
+  - <- imports <- [[vaultbiddingbatch]]
+  - <- imports <- [[completedprojects]]
+  - <- imports <- [[governmentguidelines]]
   - <- imports <- [[claudeutils]]
   - <- imports <- [[edgefunctions]]
   - <- imports <- [[fileutils]]
@@ -453,97 +579,10 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[monitorg2bpipeline]]
   - <- imports <- [[pilotmigration10projects]]
   - <- imports <- [[pilotmigrationdemo]]
+  - <- imports <- [[runmasterprojectsmigration]]
   - <- imports <- [[modulararchitecturesimple]]
   - <- imports <- [[stubnodes]]
-  - <- imports <- [[testproposalcreationintegration]]
-  - <- imports <- [[testproposaldecision]]
-- **__unresolved__::ref::datetime** () -- 85 connections
-  - <- imports <- [[response]]
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routesartifacts]]
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesintranet]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesperformance]]
-  - <- imports <- [[routesproposal]]
-  - <- imports <- [[routespublic]]
-  - <- imports <- [[routesstep8review]]
-  - <- imports <- [[routesteam]]
-  - <- imports <- [[authschemas]]
-  - <- imports <- [[bidschemas]]
-  - <- imports <- [[documentschemas]]
-  - <- imports <- [[migrationschemas]]
-  - <- imports <- [[notificationschemas]]
-  - <- imports <- [[phaseschemas]]
-  - <- imports <- [[proposalschemas]]
-  - <- imports <- [[schemas]]
-  - <- imports <- [[userschemas]]
-  - <- imports <- [[aistatusmanager]]
-  - <- imports <- [[alertmanager]]
-  - <- imports <- [[approvalchain]]
-  - <- imports <- [[authservice]]
-  - <- imports <- [[bidpipeline]]
-  - <- imports <- [[contentlibrary]]
-  - <- imports <- [[g2bservice]]
-  - <- imports <- [[healthchecker]]
-  - <- imports <- [[knowledgesearch]]
-  - <- imports <- [[migrationservice]]
-  - <- imports <- [[projectarchiveservice]]
-  - <- imports <- [[promptanalyzer]]
-  - <- imports <- [[scheduledmonitor]]
-  - <- imports <- [[sectionlock]]
-  - <- imports <- [[sessionmanager]]
-  - <- imports <- [[statevalidator]]
-  - <- imports <- [[streamorchestrator]]
-  - <- imports <- [[submissiondocsservice]]
-  - <- imports <- [[workflowtimer]]
-  - <- imports <- [[costsheetbuilder]]
-  - <- imports <- [[cleanup]]
-  - <- imports <- [[fetcher]]
-  - <- imports <- [[scorer]]
-  - <- imports <- [[costestimator]]
-  - <- imports <- [[models]]
-  - <- imports <- [[handoff]]
-  - <- imports <- [[marketresearch]]
-  - <- imports <- [[stream]]
-  - <- imports <- [[buildhwpx]]
-  - <- imports <- [[dateutils]]
-  - <- imports <- [[bidscoring]]
-  - <- imports <- [[dailybidscan]]
-  - <- imports <- [[inserttestbid]]
-  - <- imports <- [[migratestatesunified]]
-  - <- imports <- [[monitorg2bpipeline]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[pilotmigrationdemo]]
-  - <- imports <- [[searchmatchingbids]]
-  - <- imports <- [[testg2b]]
-  - <- imports <- [[testg2bsearch]]
-  - <- imports <- [[finalreviewengine]]
-  - <- imports <- [[modulararchitecture]]
-  - <- imports <- [[modulararchitecturesimple]]
-  - <- imports <- [[parallelworkengine]]
-  - <- imports <- [[testworkflow]]
-  - <- calls <- [[testdatetimewithtz]]
-  - <- imports <- [[testchecklistcore]]
-  - <- imports <- [[testdocuments]]
-  - <- imports <- [[testmigrationscript]]
-  - <- imports <- [[testmigrationservice]]
-  - <- imports <- [[teststep8anodes]]
-  - <- imports <- [[teststep8e2e]]
-  - <- imports <- [[testbidsendpoints]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testdocumentflow]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testroutesdocuments]]
-  - <- imports <- [[testbidfetcherunit]]
-  - <- imports <- [[testbidrecommendation]]
-  - <- imports <- [[testbidrecommenderunit]]
-  - <- imports <- [[testbidscorerunit]]
-  - <- imports <- [[testdocumentbuilders]]
-  - <- imports <- [[testdocumentschemas]]
-- **__unresolved__::ref::typing** () -- 83 connections
+- **__unresolved__::ref::typing** () -- 114 connections
   - <- imports <- [[config]]
   - <- imports <- [[exceptions]]
   - <- imports <- [[statemachine]]
@@ -555,6 +594,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routescalendar]]
   - <- imports <- [[routesdocuments]]
   - <- imports <- [[routesg2b]]
+  - <- imports <- [[routesknowledge]]
   - <- imports <- [[routesmasterprojects]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
@@ -568,6 +608,14 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesteam]]
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultembeddings]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
   - <- imports <- [[contexthelpers]]
   - <- imports <- [[edges]]
@@ -577,18 +625,25 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[bidschemas]]
   - <- imports <- [[common]]
   - <- imports <- [[documentschemas]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- imports <- [[masterprojects]]
   - <- imports <- [[migrationschemas]]
   - <- imports <- [[step8schemas]]
   - <- imports <- [[streamschemas]]
   - <- imports <- [[types]]
+  - <- imports <- [[vaultschemas]]
+  - <- imports <- [[vaultstepprompts]]
   - <- imports <- [[aistatusmanager]]
   - <- imports <- [[auditservice]]
   - <- imports <- [[authservice]]
+  - <- imports <- [[betametricstracker]]
   - <- imports <- [[bidanalysisservice]]
   - <- imports <- [[claudeclient]]
+  - <- imports <- [[g2bbiddingcollector]]
   - <- imports <- [[g2bservice]]
   - <- imports <- [[healthchecker]]
   - <- imports <- [[humanedittracker]]
+  - <- imports <- [[knowledgemanager]]
   - <- imports <- [[knowledgesearch]]
   - <- imports <- [[migrationservice]]
   - <- imports <- [[pptxbuilder]]
@@ -605,11 +660,26 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[statevalidator]]
   - <- imports <- [[templateservice]]
   - <- imports <- [[tokenmanager]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultcitationservice]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcontextmanager]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[vaultembeddingservice]]
+  - <- imports <- [[vaultpersonnelservice]]
+  - <- imports <- [[vaultqueryrouter]]
+  - <- imports <- [[vaultstepsearch]]
+  - <- imports <- [[vaultvalidation]]
   - <- imports <- [[versionmanager]]
   - <- imports <- [[calculator]]
   - <- imports <- [[fetcher]]
   - <- imports <- [[preprocessor]]
   - <- imports <- [[scorer]]
+  - <- imports <- [[vaultbiddingbatch]]
+  - <- imports <- [[completedprojects]]
+  - <- imports <- [[governmentguidelines]]
   - <- imports <- [[claudeutils]]
   - <- imports <- [[fileutils]]
   - <- imports <- [[supabaseclient]]
@@ -619,6 +689,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[monitorg2bpipeline]]
   - <- imports <- [[pilotmigration10projects]]
   - <- imports <- [[pilotmigrationdemo]]
+  - <- imports <- [[runmasterprojectsmigration]]
   - <- imports <- [[finalreviewengine]]
   - <- imports <- [[modulararchitecture]]
   - <- imports <- [[modulararchitecturesimple]]
@@ -626,31 +697,193 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[proposalgenerator]]
   - <- imports <- [[rfpreviewengine]]
   - <- imports <- [[strategyplanningengine]]
-  - <- imports <- [[testdocumentsperformance]]
-- **__unresolved__::ref::asyncio** () -- 79 connections
-  - <- imports <- [[checkproposals]]
-  - <- imports <- [[checkstoragefiles]]
-  - <- imports <- [[deleteallproposals]]
-  - <- imports <- [[deletetestproposals]]
-  - <- imports <- [[testanalysis]]
-  - <- imports <- [[testapi]]
-  - <- imports <- [[testapi2]]
-  - <- imports <- [[testbackgroundanalysis]]
-  - <- imports <- [[testdocumentingestion]]
-  - <- imports <- [[teststep8imports]]
-  - <- imports <- [[teststep8nodesstandalone]]
-  - <- imports <- [[truncateproposals]]
+- **__unresolved__::ref::datetime** () -- 88 connections
+  - <- imports <- [[response]]
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routesartifacts]]
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesintranet]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[routesmigrationstatus]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routespublic]]
+  - <- imports <- [[routesstep8review]]
+  - <- imports <- [[routesteam]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[authschemas]]
+  - <- imports <- [[bidschemas]]
+  - <- imports <- [[documentschemas]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- imports <- [[masterprojects]]
+  - <- imports <- [[migrationschemas]]
+  - <- imports <- [[notificationschemas]]
+  - <- imports <- [[phaseschemas]]
+  - <- imports <- [[proposalschemas]]
+  - <- imports <- [[schemas]]
+  - <- imports <- [[userschemas]]
+  - <- imports <- [[vaultschemas]]
+  - <- imports <- [[aistatusmanager]]
+  - <- imports <- [[alertmanager]]
+  - <- imports <- [[approvalchain]]
+  - <- imports <- [[authservice]]
+  - <- imports <- [[betametricstracker]]
+  - <- imports <- [[bidpipeline]]
+  - <- imports <- [[contentlibrary]]
+  - <- imports <- [[g2bbiddingcollector]]
+  - <- imports <- [[g2bservice]]
+  - <- imports <- [[healthchecker]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[knowledgesearch]]
+  - <- imports <- [[migrationservice]]
+  - <- imports <- [[projectarchiveservice]]
+  - <- imports <- [[promptanalyzer]]
+  - <- imports <- [[scheduledmonitor]]
+  - <- imports <- [[sectionlock]]
+  - <- imports <- [[sessionmanager]]
+  - <- imports <- [[statevalidator]]
+  - <- imports <- [[streamorchestrator]]
+  - <- imports <- [[submissiondocsservice]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[vaultembeddingservice]]
+  - <- imports <- [[vaultpersonnelservice]]
+  - <- imports <- [[vaultstepsearch]]
+  - <- imports <- [[workflowtimer]]
+  - <- imports <- [[costsheetbuilder]]
+  - <- imports <- [[cleanup]]
+  - <- imports <- [[fetcher]]
+  - <- imports <- [[scorer]]
+  - <- imports <- [[costestimator]]
+  - <- imports <- [[models]]
+  - <- imports <- [[handoff]]
+  - <- imports <- [[marketresearch]]
+  - <- imports <- [[stream]]
+  - <- imports <- [[buildhwpx]]
+  - <- imports <- [[vaultbiddingbatch]]
+  - <- imports <- [[completedprojects]]
+  - <- imports <- [[governmentguidelines]]
+  - <- imports <- [[dateutils]]
+  - <- imports <- [[bidscoring]]
+  - <- imports <- [[dailybidscan]]
+  - <- imports <- [[inserttestbid]]
+  - <- imports <- [[migratestatesunified]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[pilotmigrationdemo]]
+  - <- imports <- [[searchmatchingbids]]
+  - <- imports <- [[testg2b]]
+  - <- imports <- [[testg2bsearch]]
+  - <- imports <- [[finalreviewengine]]
+  - <- imports <- [[modulararchitecture]]
+  - <- imports <- [[modulararchitecturesimple]]
+  - <- imports <- [[parallelworkengine]]
+  - <- imports <- [[testworkflow]]
+- **__unresolved__::ref::supabase_client** () -- 84 connections
+  - <- imports <- [[deps]]
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routesanalytics]]
+  - <- imports <- [[routesauth]]
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routescalendar]]
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesfiles]]
+  - <- imports <- [[routesg2b]]
+  - <- imports <- [[routesintranet]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routesmasterprojects]]
+  - <- imports <- [[routesmigrations]]
+  - <- imports <- [[routesmigrationstatus]]
+  - <- imports <- [[routesnotification]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routespresentation]]
+  - <- imports <- [[routespricing]]
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routespublic]]
+  - <- imports <- [[routesresources]]
+  - <- imports <- [[routesstats]]
+  - <- imports <- [[routesteam]]
+  - <- imports <- [[routestemplates]]
+  - <- imports <- [[routesusers]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesworkflow]]
+  - <- imports <- [[migrationjobs]]
+  - <- imports <- [[auth]]
+  - <- imports <- [[aistatusmanager]]
+  - <- imports <- [[alertmanager]]
+  - <- imports <- [[approvalchain]]
+  - <- imports <- [[assetextractor]]
+  - <- imports <- [[auditservice]]
+  - <- imports <- [[authservice]]
+  - <- imports <- [[betametricstracker]]
+  - <- imports <- [[bidanalysisservice]]
+  - <- imports <- [[bidscoringservice]]
+  - <- imports <- [[contentlibrary]]
+  - <- imports <- [[documentingestion]]
+  - <- imports <- [[feedbackloop]]
+  - <- imports <- [[g2bbiddingcollector]]
+  - <- imports <- [[healthchecker]]
+  - <- imports <- [[kbupdater]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[knowledgesearch]]
+  - <- imports <- [[masterprojectschatservice]]
+  - <- imports <- [[notificationservice]]
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[projectarchiveservice]]
+  - <- imports <- [[qaservice]]
+  - <- imports <- [[scheduledmonitor]]
+  - <- imports <- [[sectionlock]]
+  - <- imports <- [[statevalidator]]
+  - <- imports <- [[streamorchestrator]]
+  - <- imports <- [[submissiondocsservice]]
+  - <- imports <- [[useraccountservice]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[vaultembeddingservice]]
+  - <- imports <- [[vaultpersonnelservice]]
+  - <- imports <- [[vaultstepsearch]]
+  - <- imports <- [[versionmanager]]
+  - <- imports <- [[workflowtimer]]
+  - <- imports <- [[cleanup]]
+  - <- imports <- [[handoff]]
+  - <- imports <- [[marketresearch]]
+  - <- imports <- [[stream]]
+  - <- imports <- [[vaultbiddingbatch]]
+  - <- imports <- [[completedprojects]]
+  - <- imports <- [[governmentguidelines]]
+  - <- imports <- [[applydocumentingestionmigration]]
+  - <- imports <- [[checkcolumns]]
+  - <- imports <- [[checkdata]]
+  - <- imports <- [[checkschema]]
+  - <- imports <- [[execmigration]]
+  - <- imports <- [[migratelegacydocuments]]
+  - <- imports <- [[provisionusers]]
+  - <- imports <- [[runmigration]]
+  - <- imports <- [[seeddata]]
+  - <- imports <- [[seedorgstructure]]
+- **__unresolved__::ref::asyncio** () -- 67 connections
   - <- imports <- [[scheduler]]
   - <- imports <- [[routesbids]]
   - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesmasterprojects]]
   - <- imports <- [[routespresentation]]
+  - <- imports <- [[routesvaultchat]]
   - <- imports <- [[routesworkflow]]
   - <- imports <- [[evaluationnodes]]
   - <- imports <- [[gatenodes]]
   - <- imports <- [[proposalnodes]]
   - <- imports <- [[reviewnode]]
   - <- imports <- [[bidpipeline]]
+  - <- imports <- [[documentingestion]]
   - <- imports <- [[docxbuilder]]
   - <- imports <- [[emailservice]]
   - <- imports <- [[g2bservice]]
@@ -662,7 +895,9 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[pptxbuilder]]
   - <- imports <- [[scheduledmonitor]]
   - <- imports <- [[sessionmanager]]
+  - <- imports <- [[vaultembeddingservice]]
   - <- imports <- [[fetcher]]
+  - <- imports <- [[vaultbiddingbatch]]
   - <- imports <- [[supabaseclient]]
   - <- imports <- [[applydocumentingestionmigration]]
   - <- imports <- [[applymigrations]]
@@ -687,6 +922,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[pilotmigration10projects]]
   - <- imports <- [[pilotmigrationdemo]]
   - <- imports <- [[provisionusers]]
+  - <- imports <- [[runmasterprojectsmigration]]
   - <- imports <- [[runmigration]]
   - <- imports <- [[searchmatchingbids]]
   - <- imports <- [[seeddata]]
@@ -702,180 +938,229 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[testmodulararchitecture]]
   - <- imports <- [[testtechnicaloptimization]]
   - <- imports <- [[testworkflow]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testdocumentsperformance]]
-  - <- imports <- [[testschedulerintegration]]
-  - <- imports <- [[testagentpipeline]]
-  - <- imports <- [[testphasedsupervisor]]
-- **__unresolved__::ref::supabase_client** () -- 71 connections
-  - <- imports <- [[checkproposals]]
-  - <- imports <- [[deleteallproposals]]
-  - <- imports <- [[deletetestproposals]]
+  - <- imports <- [[testperformanceoptimization]]
+- **__unresolved__::ref::uuid** () -- 63 connections
+  - <- imports <- [[routescalendar]]
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesfiles]]
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[routesmasterprojects]]
+  - <- imports <- [[routesmigrations]]
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routesresources]]
+  - <- imports <- [[routesstep8a]]
+  - <- imports <- [[routesteam]]
+  - <- imports <- [[routestemplates]]
+  - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
+  - <- calls <- [[proposalcustomeranalysis]]
+  - <- imports <- [[plannodes]]
+  - <- calls <- [[proposalwritenext]]
+  - <- imports <- [[proposalnodes]]
+  - <- calls <- [[proposalcustomeranalysis]]
+  - <- imports <- [[step8acustomeranalysis]]
+  - <- calls <- [[proposalsectionvalidator]]
+  - <- imports <- [[step8bsectionvalidator]]
+  - <- calls <- [[proposalsectionsconsolidation]]
+  - <- imports <- [[step8cconsolidation]]
+  - <- calls <- [[mockevaluationanalysis]]
+  - <- imports <- [[step8dmockevaluation]]
+  - <- calls <- [[mockevaluationfeedbackprocessor]]
+  - <- imports <- [[step8efeedbackprocessor]]
+  - <- calls <- [[proposalwritenextv2]]
+  - <- imports <- [[step8frewrite]]
+  - <- calls <- [[strategygenerate]]
+  - <- imports <- [[strategygenerate]]
+  - <- imports <- [[requestid]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- imports <- [[masterprojects]]
+  - <- imports <- [[migrationschemas]]
+  - <- imports <- [[assetextractor]]
+  - <- imports <- [[betametricstracker]]
+  - <- imports <- [[g2bbiddingcollector]]
+  - <- calls <- [[storeclassification]]
+  - <- calls <- [[sharetoorg]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[masterprojectschatservice]]
+  - <- calls <- [[detectchangeddocuments]]
+  - <- calls <- [[createbatchrecord]]
+  - <- calls <- [[getfaileddocuments]]
+  - <- imports <- [[migrationservice]]
+  - <- imports <- [[useraccountservice]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[vaultpersonnelservice]]
+  - <- imports <- [[vaultstepsearch]]
+  - <- imports <- [[versionmanager]]
+  - <- calls <- [[rundailybatch]]
+  - <- imports <- [[vaultbiddingbatch]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[pilotmigrationdemo]]
+- **__unresolved__::ref::pydantic** () -- 55 connections
+  - <- imports <- [[config]]
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routesartifacts]]
+  - <- imports <- [[routesbidsubmission]]
+  - <- imports <- [[routescalendar]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[routesmasterprojects]]
+  - <- imports <- [[routesmigrationstatus]]
+  - <- imports <- [[routesnotification]]
+  - <- imports <- [[routespricing]]
+  - <- imports <- [[routespromptevolution]]
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routespublic]]
+  - <- imports <- [[routesresources]]
+  - <- imports <- [[routesstats]]
+  - <- imports <- [[routesstep8]]
+  - <- imports <- [[routesstep8a]]
+  - <- imports <- [[routesstep8review]]
+  - <- imports <- [[routesteam]]
+  - <- imports <- [[routestemplates]]
+  - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
+  - <- imports <- [[routesworkflow]]
+  - <- imports <- [[state]]
+  - <- imports <- [[adminschemas]]
+  - <- imports <- [[analyticsschemas]]
+  - <- imports <- [[artifactschemas]]
+  - <- imports <- [[authschemas]]
+  - <- imports <- [[bidschemas]]
+  - <- imports <- [[common]]
+  - <- imports <- [[documentschemas]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- imports <- [[migrationschemas]]
+  - <- imports <- [[notificationschemas]]
+  - <- imports <- [[performanceschemas]]
+  - <- imports <- [[phaseschemas]]
+  - <- imports <- [[proposalschemas]]
+  - <- imports <- [[schemas]]
+  - <- imports <- [[step8schemas]]
+  - <- imports <- [[streamschemas]]
+  - <- imports <- [[userschemas]]
+  - <- imports <- [[vaultschemas]]
+  - <- imports <- [[workflowschemas]]
+  - <- imports <- [[promptsimulator]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultclientservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[versionmanager]]
+  - <- imports <- [[models]]
+- **__unresolved__::ref::fastapi** () -- 51 connections
+  - <- imports <- [[main]]
   - <- imports <- [[deps]]
+  - <- imports <- [[routes]]
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesanalytics]]
+  - <- imports <- [[routesartifacts]]
   - <- imports <- [[routesauth]]
   - <- imports <- [[routesbids]]
+  - <- imports <- [[routesbidsubmission]]
   - <- imports <- [[routescalendar]]
   - <- imports <- [[routesdocuments]]
   - <- imports <- [[routesfiles]]
   - <- imports <- [[routesg2b]]
   - <- imports <- [[routesintranet]]
   - <- imports <- [[routeskb]]
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[routesmasterprojects]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
   - <- imports <- [[routesnotification]]
   - <- imports <- [[routesperformance]]
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routespricing]]
+  - <- imports <- [[routesprojectarchive]]
+  - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
   - <- imports <- [[routespublic]]
+  - <- imports <- [[routesqa]]
   - <- imports <- [[routesresources]]
   - <- imports <- [[routesstats]]
+  - <- imports <- [[routesstep8]]
+  - <- imports <- [[routesstep8a]]
+  - <- imports <- [[routesstep8review]]
+  - <- imports <- [[routesstreams]]
+  - <- imports <- [[routessubmissiondocs]]
   - <- imports <- [[routesteam]]
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
+  - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultembeddings]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
-  - <- imports <- [[migrationjobs]]
   - <- imports <- [[auth]]
-  - <- imports <- [[aistatusmanager]]
-  - <- imports <- [[alertmanager]]
-  - <- imports <- [[approvalchain]]
-  - <- imports <- [[assetextractor]]
-  - <- imports <- [[auditservice]]
-  - <- imports <- [[authservice]]
-  - <- imports <- [[bidanalysisservice]]
-  - <- imports <- [[bidscoringservice]]
-  - <- imports <- [[contentlibrary]]
-  - <- imports <- [[documentingestion]]
-  - <- imports <- [[feedbackloop]]
-  - <- imports <- [[healthchecker]]
-  - <- imports <- [[kbupdater]]
-  - <- imports <- [[knowledgesearch]]
-  - <- imports <- [[notificationservice]]
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[projectarchiveservice]]
-  - <- imports <- [[qaservice]]
-  - <- imports <- [[scheduledmonitor]]
-  - <- imports <- [[sectionlock]]
-  - <- imports <- [[statevalidator]]
-  - <- imports <- [[streamorchestrator]]
-  - <- imports <- [[submissiondocsservice]]
-  - <- imports <- [[useraccountservice]]
-  - <- imports <- [[versionmanager]]
-  - <- imports <- [[workflowtimer]]
-  - <- imports <- [[cleanup]]
-  - <- imports <- [[handoff]]
-  - <- imports <- [[marketresearch]]
-  - <- imports <- [[stream]]
-  - <- imports <- [[applydocumentingestionmigration]]
-  - <- imports <- [[checkcolumns]]
-  - <- imports <- [[checkdata]]
-  - <- imports <- [[checkschema]]
-  - <- imports <- [[execmigration]]
-  - <- imports <- [[migratelegacydocuments]]
-  - <- imports <- [[provisionusers]]
-  - <- imports <- [[runmigration]]
-  - <- imports <- [[seeddata]]
-  - <- imports <- [[seedorgstructure]]
-  - <- imports <- [[conftest]]
-- **main** (C:\project\tenopa proposer\-agent-master\app\main.py) -- 48 connections
-  - -> contains -> [[initsupabaserpc]]
-  - -> contains -> [[safestartuptask]]
-  - -> contains -> [[addcorsheaders]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefcors]]
-  - -> imports -> [[unresolvedrefresponses]]
-  - -> imports -> [[unresolvedrefcontextlib]]
+  - <- imports <- [[ratelimit]]
+  - <- imports <- [[pagination]]
+- **routes_bids** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 49 connections
+  - -> contains -> [[loadfilecache]]
+  - -> contains -> [[savefilecache]]
+  - -> contains -> [[escapelike]]
+  - -> contains -> [[monitormy]]
+  - -> contains -> [[monitorteamordivision]]
+  - -> contains -> [[monitorcompany]]
+  - -> contains -> [[enrichmonitordata]]
+  - -> contains -> [[extractcontentfromraw]]
+  - -> contains -> [[checkanalysiscache]]
+  - -> contains -> [[loadbidcontent]]
+  - -> contains -> [[loadteamsinfo]]
+  - -> contains -> [[rununifiedanalysis]]
+  - -> contains -> [[invalidaterecommendationscache]]
+  - -> contains -> [[getpresetor404]]
+  - -> contains -> [[getactivepresetor422]]
+  - -> contains -> [[getprofileor422]]
+  - -> contains -> [[getcachedrecommendations]]
+  - -> contains -> [[buildrecommendationsresponse]]
+  - -> contains -> [[runfetchandanalyze]]
+  - -> contains -> [[queuebidanalysis]]
+  - -> contains -> [[analyzebidbackground]]
+  - -> contains -> [[savemarkdowntostorage]]
+  - -> contains -> [[formatrfpsections]]
+  - -> contains -> [[formatnoticemarkdown]]
+  - -> contains -> [[saverecommendations]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefpermissions]]
+  - -> imports -> [[unresolvedrefresponse]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefexceptions]]
-  - -> imports -> [[unresolvedrefratelimit]]
-  - -> imports -> [[unresolvedrefrequestid]]
-  - -> imports -> [[unresolvedrefsecurityheaders]]
-  - -> imports -> [[unresolvedreferrors]]
-  - -> imports -> [[unresolvedrefroutesauth]]
-  - -> imports -> [[unresolvedrefroutesusers]]
-  - -> imports -> [[unresolvedrefroutesproposal]]
-  - -> imports -> [[unresolvedrefroutesworkflow]]
-  - -> imports -> [[unresolvedrefroutesartifacts]]
-  - -> imports -> [[unresolvedrefroutesnotification]]
-  - -> imports -> [[unresolvedrefroutesperformance]]
-  - -> imports -> [[unresolvedrefroutesadmin]]
-  - -> imports -> [[unresolvedrefrouteskb]]
-  - -> imports -> [[unresolvedrefroutesintranet]]
-  - -> imports -> [[unresolvedrefroutesdocuments]]
-  - -> imports -> [[unresolvedrefroutesmigrations]]
-  - -> imports -> [[unresolvedrefroutesmigrationstatus]]
-  - -> imports -> [[unresolvedrefroutesanalytics]]
-  - -> imports -> [[unresolvedrefroutesqa]]
-  - -> imports -> [[unresolvedrefroutesfiles]]
-  - -> imports -> [[unresolvedrefroutesprojectarchive]]
-  - -> imports -> [[unresolvedrefroutespricing]]
-  - -> imports -> [[unresolvedrefroutesbidsubmission]]
-  - -> imports -> [[unresolvedrefroutespromptevolution]]
-  - -> imports -> [[unresolvedrefroutesstreams]]
-  - -> imports -> [[unresolvedrefroutessubmissiondocs]]
-  - -> imports -> [[unresolvedrefroutesteam]]
-  - -> imports -> [[unresolvedrefroutesg2b]]
-  - -> imports -> [[unresolvedrefroutesresources]]
-  - -> imports -> [[unresolvedrefroutestemplates]]
-  - -> imports -> [[unresolvedrefroutesstats]]
-  - -> imports -> [[unresolvedrefroutespublic]]
-  - -> imports -> [[unresolvedrefroutescalendar]]
-  - -> imports -> [[unresolvedrefroutesv31]]
-  - -> imports -> [[unresolvedrefroutespresentation]]
-  - -> imports -> [[unresolvedrefroutesbids]]
-  - -> imports -> [[unresolvedrefroutesstep8a]]
-  - -> imports -> [[unresolvedrefroutesstep8review]]
-- **__unresolved__::ref::pathlib** () -- 47 connections
-  - <- imports <- [[testdocumentingestion]]
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[routespresentation]]
-  - <- imports <- [[bidattachmentstore]]
-  - <- imports <- [[bidpipeline]]
-  - <- imports <- [[documentingestion]]
-  - <- imports <- [[docxbuilder]]
-  - <- imports <- [[healthchecker]]
-  - <- imports <- [[hwpxbuilder]]
-  - <- imports <- [[hwpxservice]]
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[presentationpptxbuilder]]
-  - <- imports <- [[rfpparser]]
-  - <- imports <- [[templateservice]]
-  - <- imports <- [[cleanup]]
-  - <- imports <- [[analyzetemplate]]
-  - <- imports <- [[buildhwpx]]
-  - <- imports <- [[pageguard]]
-  - <- imports <- [[validate]]
-  - <- imports <- [[fileutils]]
-  - <- imports <- [[addmissingcolumns]]
-  - <- imports <- [[applymigrations]]
-  - <- imports <- [[bidscoring]]
-  - <- imports <- [[collectmarketdata]]
-  - <- imports <- [[dailybidscan]]
-  - <- imports <- [[diagnosesupabase]]
-  - <- imports <- [[execmigration]]
-  - <- imports <- [[hwpxtopptx]]
-  - <- imports <- [[importprojecthistory]]
-  - <- imports <- [[importteamstructure]]
-  - <- imports <- [[migrateintranet]]
-  - <- imports <- [[migratelegacydocuments]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[provisionusers]]
-  - <- imports <- [[runmigration]]
-  - <- imports <- [[searchmatchingbids]]
-  - <- imports <- [[teamrecommender]]
-  - <- imports <- [[testpresentationsample]]
-  - <- imports <- [[finalreviewengine]]
-  - <- imports <- [[fixdocsfinal]]
-  - <- imports <- [[testhwpx]]
-  - <- imports <- [[testworkflow]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testproposaldecision]]
-  - <- imports <- [[testdocumentbuilders]]
-  - <- imports <- [[testrfpparser]]
-  - <- imports <- [[conftest]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefbidschemas]]
+  - -> imports -> [[unresolvedrefbidreview]]
+  - -> imports -> [[unresolvedrefbidattachmentstore]]
+  - -> imports -> [[unresolvedrefbidfetcher]]
+  - -> imports -> [[unresolvedrefbidpipeline]]
+  - -> imports -> [[unresolvedrefbidrecommender]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+  - -> imports -> [[unresolvedrefg2bservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
 - **__unresolved__::ref::config** () -- 46 connections
   - <- imports <- [[main]]
   - <- imports <- [[deps]]
@@ -923,102 +1208,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[testsearchflow]]
   - <- imports <- [[testsearchstrategy]]
   - <- imports <- [[proposalgenerator]]
-- **__unresolved__::ref::pydantic** () -- 45 connections
-  - <- imports <- [[config]]
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routesartifacts]]
-  - <- imports <- [[routesbidsubmission]]
-  - <- imports <- [[routescalendar]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routesmasterprojects]]
-  - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesnotification]]
-  - <- imports <- [[routespricing]]
-  - <- imports <- [[routespromptevolution]]
-  - <- imports <- [[routesproposal]]
-  - <- imports <- [[routespublic]]
-  - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
-  - <- imports <- [[routesstep8]]
-  - <- imports <- [[routesstep8a]]
-  - <- imports <- [[routesstep8review]]
-  - <- imports <- [[routesteam]]
-  - <- imports <- [[routestemplates]]
-  - <- imports <- [[routesv31]]
-  - <- imports <- [[routesworkflow]]
-  - <- imports <- [[state]]
-  - <- imports <- [[adminschemas]]
-  - <- imports <- [[analyticsschemas]]
-  - <- imports <- [[artifactschemas]]
-  - <- imports <- [[authschemas]]
-  - <- imports <- [[bidschemas]]
-  - <- imports <- [[common]]
-  - <- imports <- [[documentschemas]]
-  - <- imports <- [[migrationschemas]]
-  - <- imports <- [[notificationschemas]]
-  - <- imports <- [[performanceschemas]]
-  - <- imports <- [[phaseschemas]]
-  - <- imports <- [[proposalschemas]]
-  - <- imports <- [[schemas]]
-  - <- imports <- [[step8schemas]]
-  - <- imports <- [[streamschemas]]
-  - <- imports <- [[userschemas]]
-  - <- imports <- [[workflowschemas]]
-  - <- imports <- [[promptsimulator]]
-  - <- imports <- [[versionmanager]]
-  - <- imports <- [[models]]
-  - <- imports <- [[testdatavalidation]]
-  - <- imports <- [[testdocumentschemas]]
-- **__unresolved__::ref::uuid** () -- 45 connections
-  - <- imports <- [[routescalendar]]
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesfiles]]
-  - <- imports <- [[routesmigrations]]
-  - <- imports <- [[routesproposal]]
-  - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstep8a]]
-  - <- imports <- [[routesteam]]
-  - <- imports <- [[routestemplates]]
-  - <- imports <- [[routesv31]]
-  - <- calls <- [[proposalcustomeranalysis]]
-  - <- imports <- [[plannodes]]
-  - <- calls <- [[proposalwritenext]]
-  - <- imports <- [[proposalnodes]]
-  - <- calls <- [[proposalcustomeranalysis]]
-  - <- imports <- [[step8acustomeranalysis]]
-  - <- calls <- [[proposalsectionvalidator]]
-  - <- imports <- [[step8bsectionvalidator]]
-  - <- calls <- [[proposalsectionsconsolidation]]
-  - <- imports <- [[step8cconsolidation]]
-  - <- calls <- [[mockevaluationanalysis]]
-  - <- imports <- [[step8dmockevaluation]]
-  - <- calls <- [[mockevaluationfeedbackprocessor]]
-  - <- imports <- [[step8efeedbackprocessor]]
-  - <- calls <- [[proposalwritenextv2]]
-  - <- imports <- [[step8frewrite]]
-  - <- calls <- [[strategygenerate]]
-  - <- imports <- [[strategygenerate]]
-  - <- imports <- [[requestid]]
-  - <- imports <- [[migrationschemas]]
-  - <- imports <- [[assetextractor]]
-  - <- calls <- [[detectchangeddocuments]]
-  - <- calls <- [[createbatchrecord]]
-  - <- calls <- [[getfaileddocuments]]
-  - <- imports <- [[migrationservice]]
-  - <- imports <- [[useraccountservice]]
-  - <- imports <- [[versionmanager]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[pilotmigrationdemo]]
-  - <- imports <- [[testartifactversioning]]
-  - <- imports <- [[testmigrationscript]]
-  - <- imports <- [[testmigrationservice]]
-  - <- imports <- [[teststep8anodes]]
-  - <- imports <- [[teststep8e2e]]
-  - <- imports <- [[testdocuments]]
-- **__unresolved__::ref::fastapi** () -- 42 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[deps]]
-  - <- imports <- [[routes]]
+- **__unresolved__::ref::deps** () -- 43 connections
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesanalytics]]
   - <- imports <- [[routesartifacts]]
@@ -1031,6 +1221,7 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesg2b]]
   - <- imports <- [[routesintranet]]
   - <- imports <- [[routeskb]]
+  - <- imports <- [[routesknowledge]]
   - <- imports <- [[routesmasterprojects]]
   - <- imports <- [[routesmigrations]]
   - <- imports <- [[routesmigrationstatus]]
@@ -1041,11 +1232,9 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesprojectarchive]]
   - <- imports <- [[routespromptevolution]]
   - <- imports <- [[routesproposal]]
-  - <- imports <- [[routespublic]]
   - <- imports <- [[routesqa]]
   - <- imports <- [[routesresources]]
   - <- imports <- [[routesstats]]
-  - <- imports <- [[routesstep8]]
   - <- imports <- [[routesstep8a]]
   - <- imports <- [[routesstep8review]]
   - <- imports <- [[routesstreams]]
@@ -1054,89 +1243,135 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
   - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultbeta]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultembeddings]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
   - <- imports <- [[routesworkflow]]
-  - <- imports <- [[auth]]
-  - <- imports <- [[ratelimit]]
-  - <- imports <- [[pagination]]
-- **__unresolved__::ref::sys** () -- 40 connections
-  - <- imports <- [[checkstoragefiles]]
-  - <- imports <- [[testapi]]
-  - <- imports <- [[testapi2]]
-  - <- imports <- [[testbackgroundanalysis]]
-  - <- imports <- [[testintegration]]
-  - <- imports <- [[teststep8imports]]
-  - <- imports <- [[teststep8nodesstandalone]]
-  - <- imports <- [[testsyntaxonly]]
-  - <- imports <- [[testworkflowv4integration]]
+- **__unresolved__::ref::pathlib** () -- 43 connections
+  - <- imports <- [[restructuredirs]]
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routespresentation]]
+  - <- imports <- [[bidattachmentstore]]
+  - <- imports <- [[bidpipeline]]
+  - <- imports <- [[documentingestion]]
+  - <- imports <- [[docxbuilder]]
+  - <- imports <- [[healthchecker]]
+  - <- imports <- [[hwpxbuilder]]
+  - <- imports <- [[hwpxservice]]
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[presentationpptxbuilder]]
+  - <- imports <- [[rfpparser]]
+  - <- imports <- [[templateservice]]
+  - <- imports <- [[cleanup]]
+  - <- imports <- [[analyzetemplate]]
+  - <- imports <- [[buildhwpx]]
+  - <- imports <- [[pageguard]]
+  - <- imports <- [[validate]]
+  - <- imports <- [[fileutils]]
   - <- imports <- [[addmissingcolumns]]
   - <- imports <- [[applymigrations]]
-  - <- imports <- [[checkbidstatus]]
-  - <- imports <- [[checkcolumns]]
-  - <- imports <- [[checkdata]]
-  - <- imports <- [[checkschema]]
+  - <- imports <- [[bidscoring]]
   - <- imports <- [[collectmarketdata]]
-  - <- imports <- [[createe2euser]]
   - <- imports <- [[dailybidscan]]
+  - <- imports <- [[diagnosesupabase]]
   - <- imports <- [[execmigration]]
   - <- imports <- [[hwpxtopptx]]
   - <- imports <- [[importprojecthistory]]
   - <- imports <- [[importteamstructure]]
-  - <- imports <- [[initstoragebuckets]]
-  - <- imports <- [[inserttestbid]]
   - <- imports <- [[migrateintranet]]
   - <- imports <- [[migratelegacydocuments]]
-  - <- imports <- [[migratestatesunified]]
-  - <- imports <- [[monitorg2bpipeline]]
   - <- imports <- [[pilotmigration10projects]]
   - <- imports <- [[provisionusers]]
+  - <- imports <- [[runmasterprojectsmigration]]
   - <- imports <- [[runmigration]]
   - <- imports <- [[searchmatchingbids]]
-  - <- imports <- [[seeddata]]
-  - <- imports <- [[seedorgstructure]]
   - <- imports <- [[teamrecommender]]
-  - <- imports <- [[testg2b]]
-  - <- imports <- [[testg2bsearch]]
-  - <- imports <- [[testsearchflow]]
-  - <- imports <- [[testsearchstrategy]]
-  - <- imports <- [[testmodulararchitecture]]
-- **__unresolved__::ref::deps** () -- 37 connections
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routesanalytics]]
-  - <- imports <- [[routesartifacts]]
-  - <- imports <- [[routesauth]]
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[routesbidsubmission]]
-  - <- imports <- [[routescalendar]]
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesfiles]]
-  - <- imports <- [[routesg2b]]
-  - <- imports <- [[routesintranet]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routesmasterprojects]]
-  - <- imports <- [[routesmigrations]]
-  - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
-  - <- imports <- [[routespresentation]]
-  - <- imports <- [[routespricing]]
-  - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routespromptevolution]]
-  - <- imports <- [[routesproposal]]
-  - <- imports <- [[routesqa]]
-  - <- imports <- [[routesresources]]
-  - <- imports <- [[routesstats]]
-  - <- imports <- [[routesstep8a]]
-  - <- imports <- [[routesstep8review]]
-  - <- imports <- [[routesstreams]]
-  - <- imports <- [[routessubmissiondocs]]
-  - <- imports <- [[routesteam]]
-  - <- imports <- [[routestemplates]]
-  - <- imports <- [[routesusers]]
-  - <- imports <- [[routesv31]]
-  - <- imports <- [[routesworkflow]]
-  - <- imports <- [[testphase8miscapi]]
-  - <- imports <- [[testbidsendpoints]]
-  - <- imports <- [[conftest]]
+  - <- imports <- [[testpresentationsample]]
+  - <- imports <- [[finalreviewengine]]
+  - <- imports <- [[fixdocsfinal]]
+  - <- imports <- [[testhwpx]]
+  - <- imports <- [[testworkflow]]
+- **knowledge_schemas** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 37 connections
+  - -> contains -> [[knowledgetype]]
+  - -> contains -> [[classificationrequest]]
+  - -> contains -> [[classificationresult]]
+  - -> contains -> [[searchfilters]]
+  - -> contains -> [[searchrequest]]
+  - -> contains -> [[searchresultitem]]
+  - -> contains -> [[searchresponse]]
+  - -> contains -> [[proposalcontext]]
+  - -> contains -> [[recommendationrequest]]
+  - -> contains -> [[recommendationresultitem]]
+  - -> contains -> [[recommendationresponse]]
+  - -> contains -> [[knowledgebasesize]]
+  - -> contains -> [[coverageitem]]
+  - -> contains -> [[coveragemetrics]]
+  - -> contains -> [[freshnessmetrics]]
+  - -> contains -> [[searchanalytics]]
+  - -> contains -> [[recommendationfeedback]]
+  - -> contains -> [[healthmetrics]]
+  - -> contains -> [[flathealthmetrics]]
+  - -> contains -> [[knowledgefeedbackrequest]]
+  - -> contains -> [[knowledgefeedbackresponse]]
+  - -> contains -> [[deprecationrequest]]
+  - -> contains -> [[deprecationresponse]]
+  - -> contains -> [[sharingrequest]]
+  - -> contains -> [[sharingresponse]]
+  - -> contains -> [[sharingauditrecord]]
+  - -> contains -> [[knowledgemetadatadb]]
+  - -> contains -> [[config]]
+  - -> contains -> [[knowledgesharingauditdb]]
+  - -> contains -> [[errorresponse]]
+  - -> contains -> [[embeddingunavailableresponse]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedrefenum]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefpydantic]]
+- **vault_schemas** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 37 connections
+  - -> contains -> [[vaultsection]]
+  - -> contains -> [[querytype]]
+  - -> contains -> [[messagerole]]
+  - -> contains -> [[vaultchatrequest]]
+  - -> contains -> [[config]]
+  - -> contains -> [[routingdecision]]
+  - -> contains -> [[documentsource]]
+  - -> contains -> [[chatmessage]]
+  - -> contains -> [[vaultchatresponse]]
+  - -> contains -> [[conversationcreate]]
+  - -> contains -> [[conversationdetail]]
+  - -> contains -> [[conversationsummary]]
+  - -> contains -> [[conversationupdate]]
+  - -> contains -> [[conversationshareresponse]]
+  - -> contains -> [[vaultregeneraterequest]]
+  - -> contains -> [[bookmarkcreate]]
+  - -> contains -> [[bookmarkresponse]]
+  - -> contains -> [[vaultdocument]]
+  - -> contains -> [[projectmeta]]
+  - -> contains -> [[governmentguideline]]
+  - -> contains -> [[searchfilter]]
+  - -> contains -> [[searchresult]]
+  - -> contains -> [[searchresults]]
+  - -> contains -> [[vaultchatstreamtoken]]
+  - -> contains -> [[vaultchatstreamsources]]
+  - -> contains -> [[vaultchatstreamdone]]
+  - -> contains -> [[vaultchatstreamerror]]
+  - -> contains -> [[validationreport]]
+  - -> contains -> [[contradiction]]
+  - -> contains -> [[exportrequest]]
+  - -> contains -> [[exportresponse]]
+  - -> contains -> [[chatmetrics]]
+  - -> contains -> [[vaultstats]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefenum]]
 - **__unresolved__::ref::exceptions** () -- 35 connections
   - <- imports <- [[main]]
   - <- imports <- [[deps]]
@@ -1169,11 +1404,11 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesworkflow]]
   - <- imports <- [[sectionlock]]
   - <- imports <- [[sessionmanager]]
+  - <- imports <- [[statevalidator]]
   - <- imports <- [[useraccountservice]]
   - <- imports <- [[claudeutils]]
   - <- imports <- [[fileutils]]
-  - <- imports <- [[testchecklistcore]]
-- **state** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 34 connections
+- **state** (C:\project\tenopa proposer\app\graph\state.py) -- 34 connections
   - -> contains -> [[approvalchainentry]]
   - -> contains -> [[approvalstatus]]
   - -> contains -> [[rfprecommendation]]
@@ -1208,42 +1443,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[proposalstate]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **presentation_pptx_builder** (C:\project\tenopa proposer\-agent-master\app\services\presentation_pptx_builder.py) -- 34 connections
-  - -> contains -> [[addtextbox]]
-  - -> contains -> [[addevalbadge]]
-  - -> contains -> [[addspeakernotes]]
-  - -> contains -> [[addslidenumber]]
-  - -> contains -> [[addslidetitle]]
-  - -> contains -> [[addkeystatcallout]]
-  - -> contains -> [[addbulletsenhanced]]
-  - -> contains -> [[rendercover]]
-  - -> contains -> [[renderkeymessage]]
-  - -> contains -> [[renderevalsection]]
-  - -> contains -> [[rendercomparison]]
-  - -> contains -> [[rendertimeline]]
-  - -> contains -> [[renderteam]]
-  - -> contains -> [[rendernumberscallout]]
-  - -> contains -> [[renderagenda]]
-  - -> contains -> [[renderprocessflow]]
-  - -> contains -> [[renderquotehighlight]]
-  - -> contains -> [[renderproblemsync]]
-  - -> contains -> [[renderclosing]]
-  - -> contains -> [[rendersplitpanel]]
-  - -> contains -> [[rendernumberedstrategy]]
-  - -> contains -> [[rendercasestudy]]
-  - -> contains -> [[renderslide]]
-  - -> contains -> [[initpresentation]]
-  - -> contains -> [[buildpresentationpptx]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefpathlib]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedrefpptx]]
-  - -> imports -> [[unresolvedrefdata]]
-  - -> imports -> [[unresolvedrefcolor]]
-  - -> imports -> [[unresolvedrefchart]]
-  - -> imports -> [[unresolvedreftext]]
-  - -> imports -> [[unresolvedrefutil]]
-- **hwpx_to_pptx** (C:\project\tenopa proposer\-agent-master\scripts\hwpx_to_pptx.py) -- 34 connections
+- **hwpx_to_pptx** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 34 connections
   - -> contains -> [[extracthwpxtext]]
   - -> contains -> [[callclaude]]
   - -> contains -> [[generatestoryboard]]
@@ -1278,7 +1478,157 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftext]]
   - -> imports -> [[unresolvedrefanthropic]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **__unresolved__::ref::state** () -- 33 connections
+- **__unresolved__::ref::sys** () -- 31 connections
+  - <- imports <- [[addmissingcolumns]]
+  - <- imports <- [[applymigrations]]
+  - <- imports <- [[checkbidstatus]]
+  - <- imports <- [[checkcolumns]]
+  - <- imports <- [[checkdata]]
+  - <- imports <- [[checkschema]]
+  - <- imports <- [[collectmarketdata]]
+  - <- imports <- [[createe2euser]]
+  - <- imports <- [[dailybidscan]]
+  - <- imports <- [[execmigration]]
+  - <- imports <- [[hwpxtopptx]]
+  - <- imports <- [[importprojecthistory]]
+  - <- imports <- [[importteamstructure]]
+  - <- imports <- [[initstoragebuckets]]
+  - <- imports <- [[inserttestbid]]
+  - <- imports <- [[migrateintranet]]
+  - <- imports <- [[migratelegacydocuments]]
+  - <- imports <- [[migratestatesunified]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[provisionusers]]
+  - <- imports <- [[runmigration]]
+  - <- imports <- [[searchmatchingbids]]
+  - <- imports <- [[seeddata]]
+  - <- imports <- [[seedorgstructure]]
+  - <- imports <- [[teamrecommender]]
+  - <- imports <- [[testg2b]]
+  - <- imports <- [[testg2bsearch]]
+  - <- imports <- [[testsearchflow]]
+  - <- imports <- [[testsearchstrategy]]
+  - <- imports <- [[testmodulararchitecture]]
+- **routes_vault_chat** (C:\project\tenopa proposer\app\api\routes_vault_chat.py) -- 31 connections
+  - -> contains -> [[ratelimiter]]
+  - -> contains -> [[formatnumberedsources]]
+  - -> contains -> [[buildsystemprompt]]
+  - -> contains -> [[searchsectionsparallel]]
+  - -> contains -> [[buildusermessage]]
+  - -> contains -> [[loganalytics]]
+  - -> contains -> [[loadconversationcontext]]
+  - -> contains -> [[createconversation]]
+  - -> contains -> [[savemessage]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedrefsecrets]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefresponses]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefcollections]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+  - -> imports -> [[unresolvedrefvaultqueryrouter]]
+  - -> imports -> [[unresolvedrefvaultvalidation]]
+  - -> imports -> [[unresolvedrefvaultcacheservice]]
+  - -> imports -> [[unresolvedrefvaultcontextmanager]]
+  - -> imports -> [[unresolvedrefvaultcitationservice]]
+  - -> imports -> [[unresolvedrefcompletedprojects]]
+  - -> imports -> [[unresolvedrefgovernmentguidelines]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+- **__unresolved__::ref::enum** () -- 28 connections
+  - <- extends <- [[knowledgetype]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- extends <- [[vaultsection]]
+  - <- extends <- [[querytype]]
+  - <- extends <- [[messagerole]]
+  - <- imports <- [[vaultschemas]]
+  - <- extends <- [[proposalstatus]]
+  - <- extends <- [[winresult]]
+  - <- extends <- [[aitaskstatus]]
+  - <- imports <- [[statevalidator]]
+  - <- extends <- [[dependencylevel]]
+  - <- imports <- [[versionmanager]]
+  - <- extends <- [[procurementmethod]]
+  - <- imports <- [[calculator]]
+  - <- extends <- [[reviewstatus]]
+  - <- extends <- [[pptsection]]
+  - <- extends <- [[reviewpriority]]
+  - <- imports <- [[finalreviewengine]]
+  - <- extends <- [[agentrole]]
+  - <- extends <- [[taskstatus]]
+  - <- extends <- [[checklistcategory]]
+  - <- imports <- [[parallelworkengine]]
+  - <- extends <- [[feasibilitylevel]]
+  - <- extends <- [[decisiontype]]
+  - <- imports <- [[rfpreviewengine]]
+  - <- extends <- [[winningstrategy]]
+  - <- extends <- [[pricestrategy]]
+  - <- imports <- [[strategyplanningengine]]
+- **__unresolved__::ref::time** () -- 28 connections
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routesvaultchat]]
+  - <- calls <- [[tracktokens]]
+  - <- imports <- [[tokentracking]]
+  - <- calls <- [[dispatch]]
+  - <- imports <- [[requestid]]
+  - <- calls <- [[starttask]]
+  - <- calls <- [[updatesubtask]]
+  - <- calls <- [[heartbeat]]
+  - <- calls <- [[checkheartbeat]]
+  - <- calls <- [[failtask]]
+  - <- calls <- [[getcompositestatus]]
+  - <- imports <- [[aistatusmanager]]
+  - <- calls <- [[getgraphtoken]]
+  - <- imports <- [[emailservice]]
+  - <- imports <- [[healthchecker]]
+  - <- calls <- [[runsimulation]]
+  - <- imports <- [[promptsimulator]]
+  - <- calls <- [[init]]
+  - <- calls <- [[startscheduler]]
+  - <- calls <- [[applymigration]]
+  - <- imports <- [[applymigrations]]
+  - <- calls <- [[main]]
+  - <- imports <- [[e2einterrupttest]]
+  - <- calls <- [[main]]
+  - <- imports <- [[e2eworkflowtest]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[testperformanceoptimization]]
+- **__unresolved__::ref::auth_schemas** () -- 27 connections
+  - <- imports <- [[deps]]
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routesanalytics]]
+  - <- imports <- [[routesartifacts]]
+  - <- imports <- [[routesauth]]
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routesbidsubmission]]
+  - <- imports <- [[routescalendar]]
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesfiles]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routesmasterprojects]]
+  - <- imports <- [[routesmigrations]]
+  - <- imports <- [[routesmigrationstatus]]
+  - <- imports <- [[routesnotification]]
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routespricing]]
+  - <- imports <- [[routesprojectarchive]]
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routesqa]]
+  - <- imports <- [[routesstep8a]]
+  - <- imports <- [[routesstep8review]]
+  - <- imports <- [[routessubmissiondocs]]
+  - <- imports <- [[routesusers]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesvaultembeddings]]
+  - <- imports <- [[routesworkflow]]
+- **__unresolved__::ref::state** () -- 27 connections
   - <- imports <- [[edges]]
   - <- imports <- [[graph]]
   - <- imports <- [[bidplan]]
@@ -1306,70 +1656,111 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[compliancetracker]]
   - <- imports <- [[versionmanager]]
   - <- imports <- [[stubnodes]]
-  - <- imports <- [[testartifactversioning]]
-  - <- imports <- [[teststep8acustomeranalysis]]
-  - <- imports <- [[teststep8bsectionvalidator]]
-  - <- imports <- [[teststep8cconsolidation]]
-  - <- imports <- [[teststep8d8e8fnodes]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::auth_schemas** () -- 29 connections
-  - <- imports <- [[deps]]
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routesanalytics]]
-  - <- imports <- [[routesartifacts]]
-  - <- imports <- [[routesauth]]
+- **__unresolved__::ref::claude_client** () -- 26 connections
   - <- imports <- [[routesbids]]
-  - <- imports <- [[routesbidsubmission]]
-  - <- imports <- [[routescalendar]]
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesfiles]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routesmigrations]]
-  - <- imports <- [[routesmigrationstatus]]
-  - <- imports <- [[routesnotification]]
-  - <- imports <- [[routesperformance]]
-  - <- imports <- [[routespricing]]
-  - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routesproposal]]
-  - <- imports <- [[routesqa]]
-  - <- imports <- [[routesstep8a]]
-  - <- imports <- [[routesstep8review]]
-  - <- imports <- [[routessubmissiondocs]]
-  - <- imports <- [[routesusers]]
-  - <- imports <- [[routesworkflow]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testdocuments]]
-  - <- imports <- [[testbidsendpoints]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[conftest]]
-- **__unresolved__::ref::os** () -- 26 connections
-  - <- imports <- [[truncateproposals]]
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesv31]]
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[promptsimulator]]
-  - <- imports <- [[fileutils]]
-  - <- imports <- [[applymigrations]]
-  - <- imports <- [[cleanupproposals]]
-  - <- imports <- [[createe2euser]]
-  - <- imports <- [[createexceltemplate]]
-  - <- imports <- [[createsupabasetables]]
-  - <- imports <- [[diagnosesupabase]]
-  - <- imports <- [[e2einterrupttest]]
-  - <- imports <- [[hwpxtopptx]]
-  - <- imports <- [[migrateintranet]]
-  - <- imports <- [[migratestatesunified]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[pilotmigrationdemo]]
-  - <- imports <- [[provisionusers]]
-  - <- imports <- [[seeddata]]
-  - <- imports <- [[seedorgstructure]]
-  - <- imports <- [[testmodulararchitecture]]
-  - <- imports <- [[testdocumentse2e]]
-  - <- imports <- [[testdocumentsperformance]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[conftest]]
-- **routes_step8_review** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 24 connections
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[tokentracking]]
+  - <- imports <- [[evaluationnodes]]
+  - <- imports <- [[gonogo]]
+  - <- imports <- [[plannodes]]
+  - <- imports <- [[pptnodes]]
+  - <- imports <- [[proposalnodes]]
+  - <- imports <- [[researchgather]]
+  - <- imports <- [[rfpanalyze]]
+  - <- imports <- [[rfpsearch]]
+  - <- imports <- [[step8acustomeranalysis]]
+  - <- imports <- [[step8bsectionvalidator]]
+  - <- imports <- [[step8cconsolidation]]
+  - <- imports <- [[step8dmockevaluation]]
+  - <- imports <- [[step8efeedbackprocessor]]
+  - <- imports <- [[step8frewrite]]
+  - <- imports <- [[strategygenerate]]
+  - <- imports <- [[submissionnodes]]
+  - <- imports <- [[bidanalysisservice]]
+  - <- imports <- [[compliancetracker]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[masterprojectschatservice]]
+  - <- imports <- [[vaultqueryrouter]]
+  - <- imports <- [[testsearchflow]]
+  - <- imports <- [[testsearchstrategy]]
+- **routes_workflow** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 25 connections
+  - -> contains -> [[workflowstartrequest]]
+  - -> contains -> [[workflowresumerequest]]
+  - -> contains -> [[getgraph]]
+  - -> contains -> [[isinterrupted]]
+  - -> contains -> [[serializeapproval]]
+  - -> contains -> [[getstreamsstatussafe]]
+  - -> contains -> [[extractoutputsummary]]
+  - -> contains -> [[feedbackrecord]]
+  - -> contains -> [[feedbackhistoryresponse]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefresponses]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefratelimit]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefstatemachine]]
+  - -> imports -> [[unresolvedrefstatevalidator]]
+  - -> imports -> [[unresolvedrefworkflowschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **submission_docs_service** (C:\project\tenopa proposer\app\services\submission_docs_service.py) -- 25 connections
+  - -> contains -> [[extractchecklistfromrfp]]
+  - -> contains -> [[istemplateexpired]]
+  - -> contains -> [[getchecklist]]
+  - -> contains -> [[adddocument]]
+  - -> contains -> [[updatedocumentstatus]]
+  - -> contains -> [[deletedocument]]
+  - -> contains -> [[assigndocument]]
+  - -> contains -> [[uploaddocument]]
+  - -> contains -> [[verifydocument]]
+  - -> contains -> [[validatedocument]]
+  - -> contains -> [[recalculatedocumentsprogress]]
+  - -> contains -> [[confirmoriginaldocument]]
+  - -> contains -> [[buildcopybundle]]
+  - -> contains -> [[linkstream1artifacts]]
+  - -> contains -> [[checkdocumentsready]]
+  - -> contains -> [[getorgtemplates]]
+  - -> contains -> [[upsertorgtemplate]]
+  - -> contains -> [[deleteorgtemplate]]
+  - -> imports -> [[unresolvedrefio]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefzipfile]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **routes_proposal** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 24 connections
+  - -> contains -> [[uploadfiletostorage]]
+  - -> contains -> [[proposalfrombid]]
+  - -> contains -> [[proposalupdate]]
+  - -> contains -> [[proposallistresponse]]
+  - -> contains -> [[biddecisionrequest]]
+  - -> contains -> [[startwithmembersrequest]]
+  - -> contains -> [[reviewitemstatus]]
+  - -> contains -> [[reviewfeedback]]
+  - -> contains -> [[reviewitemdetail]]
+  - -> contains -> [[submitreviewfeedback]]
+  - -> contains -> [[runworkflowbackground]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefresponse]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefproposalschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+  - -> imports -> [[unresolvedrefstatemachine]]
+- **routes_step8_review** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 24 connections
   - -> contains -> [[nodestatusmodel]]
   - -> contains -> [[step8statusresponse]]
   - -> contains -> [[aiissueflagmodel]]
@@ -1394,7 +1785,57 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
-- **version_manager** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 24 connections
+- **g2b_service** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 24 connections
+  - -> contains -> [[cachekey]]
+  - -> contains -> [[getcache]]
+  - -> contains -> [[setcache]]
+  - -> contains -> [[g2bservice]]
+  - -> contains -> [[searchbids]]
+  - -> contains -> [[getbiddetail]]
+  - -> contains -> [[getbidresultinfo]]
+  - -> contains -> [[mapevaluationmethod]]
+  - -> contains -> [[fetchandstorebidresult]]
+  - -> contains -> [[bulksyncbidresults]]
+  - -> contains -> [[extractattachments]]
+  - -> contains -> [[guessfileext]]
+  - -> contains -> [[extractfilename]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefhashlib]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefcollections]]
+  - -> imports -> [[unresolvedrefdataclasses]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefaiohttp]]
+  - -> imports -> [[unresolvedrefconfig]]
+- **prompt_simulator** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 24 connections
+  - -> contains -> [[simulationrequest]]
+  - -> contains -> [[simulationresult]]
+  - -> contains -> [[checkquota]]
+  - -> contains -> [[getquotainfo]]
+  - -> contains -> [[runsimulation]]
+  - -> contains -> [[runcomparison]]
+  - -> contains -> [[getsimulationhistory]]
+  - -> contains -> [[getpromptbyversion]]
+  - -> contains -> [[loadstatedata]]
+  - -> contains -> [[loadsampledata]]
+  - -> contains -> [[defaultsamplestate]]
+  - -> contains -> [[loadprojectstate]]
+  - -> contains -> [[substitutevariables]]
+  - -> contains -> [[validateoutputformat]]
+  - -> contains -> [[runqualitycheck]]
+  - -> contains -> [[savesimulation]]
+  - -> contains -> [[updatequota]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefos]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefpydantic]]
+- **version_manager** (C:\project\tenopa proposer\app\services\version_manager.py) -- 24 connections
   - -> contains -> [[dependencylevel]]
   - -> contains -> [[versionconflict]]
   - -> contains -> [[movevalidationresult]]
@@ -1419,7 +1860,31 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_kb** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 23 connections
+- **__unresolved__::ref::os** () -- 23 connections
+  - <- imports <- [[restructuredirs]]
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesv31]]
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[promptsimulator]]
+  - <- imports <- [[vaultembeddingservice]]
+  - <- imports <- [[fileutils]]
+  - <- imports <- [[applymigrations]]
+  - <- imports <- [[cleanupproposals]]
+  - <- imports <- [[createe2euser]]
+  - <- imports <- [[createexceltemplate]]
+  - <- imports <- [[createsupabasetables]]
+  - <- imports <- [[diagnosesupabase]]
+  - <- imports <- [[e2einterrupttest]]
+  - <- imports <- [[hwpxtopptx]]
+  - <- imports <- [[migrateintranet]]
+  - <- imports <- [[migratestatesunified]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[pilotmigrationdemo]]
+  - <- imports <- [[provisionusers]]
+  - <- imports <- [[seeddata]]
+  - <- imports <- [[seedorgstructure]]
+  - <- imports <- [[testmodulararchitecture]]
+- **routes_kb** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 23 connections
   - -> contains -> [[contentcreatebody]]
   - -> contains -> [[contentupdatebody]]
   - -> contains -> [[clientcreatebody]]
@@ -1443,78 +1908,31 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_proposal** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 23 connections
-  - -> contains -> [[uploadfiletostorage]]
-  - -> contains -> [[proposalfrombid]]
-  - -> contains -> [[proposalupdate]]
-  - -> contains -> [[proposallistresponse]]
-  - -> contains -> [[biddecisionrequest]]
-  - -> contains -> [[startwithmembersrequest]]
-  - -> contains -> [[reviewitemstatus]]
-  - -> contains -> [[reviewfeedback]]
-  - -> contains -> [[reviewitemdetail]]
-  - -> contains -> [[submitreviewfeedback]]
-  - -> contains -> [[runworkflowbackground]]
-  - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefpydantic]]
-  - -> imports -> [[unresolvedrefdeps]]
-  - -> imports -> [[unresolvedrefresponse]]
-  - -> imports -> [[unresolvedrefconfig]]
-  - -> imports -> [[unresolvedrefexceptions]]
-  - -> imports -> [[unresolvedrefauthschemas]]
-  - -> imports -> [[unresolvedrefproposalschemas]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_workflow** (C:\project\tenopa proposer\-agent-master\app\api\routes_workflow.py) -- 23 connections
-  - -> contains -> [[workflowstartrequest]]
-  - -> contains -> [[workflowresumerequest]]
-  - -> contains -> [[getgraph]]
-  - -> contains -> [[isinterrupted]]
-  - -> contains -> [[serializeapproval]]
-  - -> contains -> [[getstreamsstatussafe]]
-  - -> contains -> [[extractoutputsummary]]
-  - -> contains -> [[feedbackrecord]]
-  - -> contains -> [[feedbackhistoryresponse]]
-  - -> imports -> [[unresolvedrefasyncio]]
+- **project_archive_service** (C:\project\tenopa proposer\app\services\project_archive_service.py) -- 23 connections
+  - -> contains -> [[todict]]
+  - -> contains -> [[renderrfpanalysis]]
+  - -> contains -> [[rendercompliancematrix]]
+  - -> contains -> [[rendergonogo]]
+  - -> contains -> [[renderstrategy]]
+  - -> contains -> [[renderbidplan]]
+  - -> contains -> [[renderplansection]]
+  - -> contains -> [[renderstoryline]]
+  - -> contains -> [[renderproposalsections]]
+  - -> contains -> [[renderpptslides]]
+  - -> contains -> [[renderfeedbackhistory]]
+  - -> contains -> [[renderjsonasmd]]
+  - -> contains -> [[renderartifact]]
+  - -> contains -> [[archiveartifact]]
+  - -> contains -> [[archivebinaryartifact]]
+  - -> contains -> [[snapshotfromstate]]
+  - -> contains -> [[getprojectmanifest]]
   - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefresponses]]
-  - -> imports -> [[unresolvedrefpydantic]]
-  - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefconfig]]
-  - -> imports -> [[unresolvedrefratelimit]]
-  - -> imports -> [[unresolvedrefexceptions]]
-  - -> imports -> [[unresolvedrefauthschemas]]
-  - -> imports -> [[unresolvedrefworkflowschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **__unresolved__::ref::claude_client** () -- 22 connections
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[tokentracking]]
-  - <- imports <- [[evaluationnodes]]
-  - <- imports <- [[gonogo]]
-  - <- imports <- [[plannodes]]
-  - <- imports <- [[pptnodes]]
-  - <- imports <- [[proposalnodes]]
-  - <- imports <- [[researchgather]]
-  - <- imports <- [[rfpanalyze]]
-  - <- imports <- [[rfpsearch]]
-  - <- imports <- [[step8acustomeranalysis]]
-  - <- imports <- [[step8bsectionvalidator]]
-  - <- imports <- [[step8cconsolidation]]
-  - <- imports <- [[step8dmockevaluation]]
-  - <- imports <- [[step8efeedbackprocessor]]
-  - <- imports <- [[step8frewrite]]
-  - <- imports <- [[strategygenerate]]
-  - <- imports <- [[submissionnodes]]
-  - <- imports <- [[bidanalysisservice]]
-  - <- imports <- [[compliancetracker]]
-  - <- imports <- [[testsearchflow]]
-  - <- imports <- [[testsearchstrategy]]
-- **routes_team** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 22 connections
+- **routes_team** (C:\project\tenopa proposer\app\api\routes_team.py) -- 22 connections
   - -> contains -> [[teamcreate]]
   - -> contains -> [[teamupdate]]
   - -> contains -> [[memberroleupdate]]
@@ -1537,7 +1955,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpagination]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
   - -> imports -> [[unresolvedrefedgefunctions]]
-- **user_schemas** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 22 connections
+- **user_schemas** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 22 connections
   - -> contains -> [[organizationcreate]]
   - -> contains -> [[organizationresponse]]
   - -> contains -> [[divisioncreate]]
@@ -1560,29 +1978,29 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedreftypes]]
-- **__unresolved__::ref::enum** () -- 21 connections
-  - <- extends <- [[proposalstatus]]
-  - <- extends <- [[winresult]]
-  - <- imports <- [[statevalidator]]
-  - <- extends <- [[dependencylevel]]
-  - <- imports <- [[versionmanager]]
-  - <- extends <- [[procurementmethod]]
+- **__unresolved__::ref::dataclasses** () -- 21 connections
+  - <- imports <- [[betametricstracker]]
+  - <- imports <- [[documentchunker]]
+  - <- imports <- [[g2bservice]]
+  - <- imports <- [[healthchecker]]
+  - <- imports <- [[preflightcheck]]
+  - <- imports <- [[sourcetagger]]
   - <- imports <- [[calculator]]
-  - <- extends <- [[reviewstatus]]
-  - <- extends <- [[pptsection]]
-  - <- extends <- [[reviewpriority]]
+  - <- imports <- [[scorer]]
+  - <- imports <- [[pricescore]]
+  - <- imports <- [[analyzetemplate]]
+  - <- imports <- [[pageguard]]
+  - <- imports <- [[migrateintranet]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[teamrecommender]]
   - <- imports <- [[finalreviewengine]]
-  - <- extends <- [[agentrole]]
-  - <- extends <- [[taskstatus]]
-  - <- extends <- [[checklistcategory]]
+  - <- imports <- [[modulararchitecture]]
+  - <- imports <- [[modulararchitecturesimple]]
   - <- imports <- [[parallelworkengine]]
-  - <- extends <- [[feasibilitylevel]]
-  - <- extends <- [[decisiontype]]
   - <- imports <- [[rfpreviewengine]]
-  - <- extends <- [[winningstrategy]]
-  - <- extends <- [[pricestrategy]]
   - <- imports <- [[strategyplanningengine]]
-- **routes_admin** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 21 connections
+- **routes_admin** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 21 connections
   - -> contains -> [[roleupdatebody]]
   - -> contains -> [[statusupdatebody]]
   - -> contains -> [[reopenbody]]
@@ -1604,7 +2022,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefadminschemas]]
   - -> imports -> [[unresolvedrefauditservice]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_presentation** (C:\project\tenopa proposer\-agent-master\app\api\routes_presentation.py) -- 21 connections
+- **routes_presentation** (C:\project\tenopa proposer\app\api\routes_presentation.py) -- 21 connections
   - -> contains -> [[resolvetemplatepath]]
   - -> contains -> [[downloadsampletemplate]]
   - -> contains -> [[uploadpresentation]]
@@ -1626,7 +2044,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpresentationpptxbuilder]]
   - -> imports -> [[unresolvedrefsessionmanager]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **bid_schemas** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 21 connections
+- **bid_schemas** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 21 connections
   - -> contains -> [[bidannouncement]]
   - -> contains -> [[teambidprofile]]
   - -> contains -> [[teambidprofilecreate]]
@@ -1648,27 +2066,28 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **__unresolved__::ref::dataclasses** () -- 20 connections
-  - <- imports <- [[documentchunker]]
-  - <- imports <- [[g2bservice]]
-  - <- imports <- [[healthchecker]]
-  - <- imports <- [[preflightcheck]]
-  - <- imports <- [[sourcetagger]]
-  - <- imports <- [[calculator]]
-  - <- imports <- [[scorer]]
-  - <- imports <- [[pricescore]]
-  - <- imports <- [[analyzetemplate]]
-  - <- imports <- [[pageguard]]
-  - <- imports <- [[migrateintranet]]
-  - <- imports <- [[monitorg2bpipeline]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[teamrecommender]]
-  - <- imports <- [[finalreviewengine]]
-  - <- imports <- [[modulararchitecture]]
-  - <- imports <- [[modulararchitecturesimple]]
-  - <- imports <- [[parallelworkengine]]
-  - <- imports <- [[rfpreviewengine]]
-  - <- imports <- [[strategyplanningengine]]
+- **monitor_g2b_pipeline** (C:\project\tenopa proposer\scripts\monitor_g2b_pipeline.py) -- 21 connections
+  - -> contains -> [[checksearchexists]]
+  - -> contains -> [[parsebudget]]
+  - -> contains -> [[parsedeadline]]
+  - -> contains -> [[checkresultaccuracy]]
+  - -> contains -> [[checkaiquality]]
+  - -> contains -> [[checke2epipeline]]
+  - -> contains -> [[formatreportconsole]]
+  - -> contains -> [[formatreportjson]]
+  - -> contains -> [[notifyteams]]
+  - -> contains -> [[parseargs]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefargparse]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefsys]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefdataclasses]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
 - **__unresolved__::ref::response** () -- 20 connections
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesbids]]
@@ -1690,7 +2109,28 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesteam]]
   - <- imports <- [[routestemplates]]
   - <- imports <- [[routesusers]]
-- **phase_executor** (C:\project\tenopa proposer\-agent-master\app\services\phase_executor.py) -- 20 connections
+- **deps** (C:\project\tenopa proposer\app\api\deps.py) -- 20 connections
+  - -> contains -> [[initdevuser]]
+  - -> contains -> [[shouldbypassauth]]
+  - -> contains -> [[getdevuser]]
+  - -> contains -> [[getcurrentuser]]
+  - -> contains -> [[getcurrentuserornone]]
+  - -> contains -> [[getrlsclient]]
+  - -> contains -> [[requirerole]]
+  - -> contains -> [[validateuserstatus]]
+  - -> contains -> [[hasaccessbyrole]]
+  - -> contains -> [[requireprojectaccess]]
+  - -> contains -> [[requireknowledgeaccess]]
+  - -> contains -> [[getdb]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefsecurity]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **phase_executor** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 20 connections
   - -> contains -> [[phaseexecutor]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefjson]]
@@ -1711,47 +2151,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftemplateservice]]
   - -> imports -> [[unresolvedrefedgefunctions]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **__unresolved__::ref::dotenv** () -- 19 connections
-  - <- imports <- [[checkstoragefiles]]
-  - <- imports <- [[testapi]]
-  - <- imports <- [[testapi2]]
-  - <- imports <- [[testbackgroundanalysis]]
-  - <- imports <- [[applymigrations]]
-  - <- imports <- [[checkbidstatus]]
-  - <- imports <- [[checkcolumns]]
-  - <- imports <- [[checkdata]]
-  - <- imports <- [[checkschema]]
-  - <- imports <- [[cleanupproposals]]
-  - <- imports <- [[createsupabasetables]]
-  - <- imports <- [[diagnosesupabase]]
-  - <- imports <- [[execmigration]]
-  - <- imports <- [[hwpxtopptx]]
-  - <- imports <- [[initstoragebuckets]]
-  - <- imports <- [[inserttestbid]]
-  - <- imports <- [[testdocumentse2e]]
-  - <- imports <- [[conftest]]
-  - <- imports <- [[testagentpipeline]]
-- **deps** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 19 connections
-  - -> contains -> [[initdevuser]]
-  - -> contains -> [[shouldbypassauth]]
-  - -> contains -> [[getdevuser]]
-  - -> contains -> [[getcurrentuser]]
-  - -> contains -> [[getcurrentuserornone]]
-  - -> contains -> [[getrlsclient]]
-  - -> contains -> [[requirerole]]
-  - -> contains -> [[validateuserstatus]]
-  - -> contains -> [[hasaccessbyrole]]
-  - -> contains -> [[requireprojectaccess]]
-  - -> contains -> [[getdb]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefsecurity]]
-  - -> imports -> [[unresolvedrefconfig]]
-  - -> imports -> [[unresolvedrefexceptions]]
-  - -> imports -> [[unresolvedrefauthschemas]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_artifacts** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 19 connections
+- **routes_artifacts** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 19 connections
   - -> contains -> [[formatdownloadfilename]]
   - -> contains -> [[uploadtostoragewithtracking]]
   - -> contains -> [[artifactsaverequest]]
@@ -1771,7 +2171,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefartifactschemas]]
-- **routes_v31** (C:\project\tenopa proposer\-agent-master\app\api\routes_v31.py) -- 19 connections
+- **routes_v31** (C:\project\tenopa proposer\app\api\routes_v31.py) -- 19 connections
   - -> contains -> [[runphases]]
   - -> contains -> [[runphasesfrom]]
   - -> contains -> [[personnelrequest]]
@@ -1791,7 +2191,27 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedreftemplateservice]]
   - -> imports -> [[unresolvedrefdeps]]
-- **plan_nodes** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\plan_nodes.py) -- 19 connections
+- **evaluation_nodes** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 19 connections
+  - -> contains -> [[createevaluatorprofiles]]
+  - -> contains -> [[mockevaluation]]
+  - -> contains -> [[scoreevaluationitem]]
+  - -> contains -> [[calculatedistribution]]
+  - -> contains -> [[assessconsensus]]
+  - -> contains -> [[summarizestrengths]]
+  - -> contains -> [[summarizeweaknesses]]
+  - -> contains -> [[findhighconsensusitems]]
+  - -> contains -> [[findlowconsensusitems]]
+  - -> contains -> [[assesswinprobability]]
+  - -> contains -> [[evalresultnode]]
+  - -> contains -> [[projectclosing]]
+  - -> contains -> [[firekbupdate]]
+  - -> contains -> [[firestatusupdate]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefstatistics]]
+  - -> imports -> [[unresolvedrefstate]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+- **plan_nodes** (C:\project\tenopa proposer\app\graph\nodes\plan_nodes.py) -- 19 connections
   - -> contains -> [[getevolvedprompt]]
   - -> contains -> [[trackplanprompt]]
   - -> contains -> [[getrfpsummary]]
@@ -1811,7 +2231,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
   - -> imports -> [[unresolvedrefversionmanager]]
-- **workflow_schemas** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 19 connections
+- **workflow_schemas** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 19 connections
   - -> contains -> [[tokensummary]]
   - -> contains -> [[tokenusagebynode]]
   - -> contains -> [[tokenusagetotal]]
@@ -1831,7 +2251,27 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[enhancedworkflowstateresponse]]
   - -> contains -> [[statehistoryresponse]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **file_utils** (C:\project\tenopa proposer\-agent-master\app\utils\file_utils.py) -- 19 connections
+- **document_ingestion** (C:\project\tenopa proposer\app\services\document_ingestion.py) -- 19 connections
+  - -> contains -> [[processdocument]]
+  - -> contains -> [[processdocumentbounded]]
+  - -> contains -> [[extractfromstorage]]
+  - -> contains -> [[updatedocstatus]]
+  - -> contains -> [[importproject]]
+  - -> contains -> [[seedcapability]]
+  - -> contains -> [[seedclientintelligence]]
+  - -> contains -> [[seedmarketpricedata]]
+  - -> contains -> [[computefilehash]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefgc]]
+  - -> imports -> [[unresolvedrefhashlib]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftempfile]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedrefdocumentchunker]]
+  - -> imports -> [[unresolvedrefembeddingservice]]
+  - -> imports -> [[unresolvedrefknowledgemanager]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **file_utils** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 19 connections
   - -> contains -> [[validatefiletype]]
   - -> contains -> [[extracttextfrompdf]]
   - -> contains -> [[extracttextfromdocx]]
@@ -1851,7 +2291,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpypdf2]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefexceptions]]
-- **daily_bid_scan** (C:\project\tenopa proposer\-agent-master\scripts\daily_bid_scan.py) -- 19 connections
+- **daily_bid_scan** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 19 connections
   - -> contains -> [[getrecommender]]
   - -> contains -> [[enrichwithteam]]
   - -> contains -> [[emptypipeline]]
@@ -1871,7 +2311,26 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefg2bservice]]
   - -> imports -> [[unresolvedrefbidscoring]]
   - -> imports -> [[unresolvedrefteamrecommender]]
-- **pilot_migration_10projects** (C:\project\tenopa proposer\-agent-master\scripts\pilot_migration_10projects.py) -- 18 connections
+- **__unresolved__::ref::re** () -- 18 connections
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[documentchunker]]
+  - <- imports <- [[docxbuilder]]
+  - <- imports <- [[g2bservice]]
+  - <- imports <- [[preflightcheck]]
+  - <- imports <- [[promptsimulator]]
+  - <- imports <- [[sourcetagger]]
+  - <- imports <- [[vaultchatsearch]]
+  - <- imports <- [[vaultcitationservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[calculator]]
+  - <- imports <- [[scorer]]
+  - <- imports <- [[coststandardselector]]
+  - <- imports <- [[importprojecthistory]]
+  - <- imports <- [[migrateintranet]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[rfpreviewengine]]
+- **pilot_migration_10projects** (C:\project\tenopa proposer\scripts\pilot_migration_10projects.py) -- 18 connections
   - -> contains -> [[extractkeywords]]
   - -> contains -> [[parsebudget]]
   - -> contains -> [[parsedate]]
@@ -1890,7 +2349,25 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefuuid]]
-- **routes_resources** (C:\project\tenopa proposer\-agent-master\app\api\routes_resources.py) -- 17 connections
+- **__unresolved__::ref::zipfile** () -- 17 connections
+  - <- imports <- [[routesprojectarchive]]
+  - <- calls <- [[buildcopybundle]]
+  - <- imports <- [[submissiondocsservice]]
+  - <- calls <- [[readhwpxtext]]
+  - <- imports <- [[templateservice]]
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[extractheaderxml]]
+  - <- calls <- [[extractsectionxml]]
+  - <- imports <- [[analyzetemplate]]
+  - <- calls <- [[packhwpx]]
+  - <- imports <- [[buildhwpx]]
+  - <- calls <- [[readsectionxmlbytes]]
+  - <- imports <- [[pageguard]]
+  - <- calls <- [[validatehwpx]]
+  - <- imports <- [[validate]]
+  - <- calls <- [[extracthwpxtext]]
+  - <- imports <- [[hwpxtopptx]]
+- **routes_resources** (C:\project\tenopa proposer\app\api\routes_resources.py) -- 17 connections
   - -> contains -> [[sectioncreate]]
   - -> contains -> [[sectionupdate]]
   - -> contains -> [[runextraction]]
@@ -1908,7 +2385,61 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpagination]]
   - -> imports -> [[unresolvedrefassetextractor]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **proposal_nodes** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\proposal_nodes.py) -- 17 connections
+- **routes_vault_bidding** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 17 connections
+  - -> contains -> [[createanalysisrequest]]
+  - -> contains -> [[similarprojectresponse]]
+  - -> contains -> [[analysisresultresponse]]
+  - -> contains -> [[biddinganalysisresponse]]
+  - -> contains -> [[industrystatisticsresponse]]
+  - -> contains -> [[budgetrangestatisticsresponse]]
+  - -> contains -> [[projectcomparisonresponse]]
+  - -> contains -> [[updateg2bdatarequest]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefuserschemas]]
+  - -> imports -> [[unresolvedrefvaultbiddingservice]]
+- **routes_vault_clients** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 17 connections
+  - -> contains -> [[clientperformancemetricsresponse]]
+  - -> contains -> [[clientresponse]]
+  - -> contains -> [[clientsearchrequest]]
+  - -> contains -> [[clientupdaterequest]]
+  - -> contains -> [[clientreviewrequest]]
+  - -> contains -> [[clientlistresponse]]
+  - -> contains -> [[clientproposalsresponse]]
+  - -> contains -> [[regionalsummaryresponse]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefuserschemas]]
+  - -> imports -> [[unresolvedrefvaultclientservice]]
+- **routes_vault_personnel** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 17 connections
+  - -> contains -> [[skillrequest]]
+  - -> contains -> [[personnelresponse]]
+  - -> contains -> [[personnelsearchresponse]]
+  - -> contains -> [[personnelperformanceresponse]]
+  - -> contains -> [[availablepersonnelresponse]]
+  - -> contains -> [[departmentstatsresponse]]
+  - -> contains -> [[expertiseinventoryresponse]]
+  - -> contains -> [[utilizationresponse]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefuserschemas]]
+  - -> imports -> [[unresolvedrefvaultpersonnelservice]]
+- **proposal_nodes** (C:\project\tenopa proposer\app\graph\nodes\proposal_nodes.py) -- 17 connections
   - -> contains -> [[persistnoderesult]]
   - -> contains -> [[getsectionstowrite]]
   - -> contains -> [[buildcontext]]
@@ -1926,7 +2457,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefstrategy]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
-- **models** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 17 connections
+- **models** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 17 connections
   - -> contains -> [[personnelinput]]
   - -> contains -> [[pricingsimulationrequest]]
   - -> contains -> [[quickestimaterequest]]
@@ -1944,7 +2475,25 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[quickestimateresult]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **apply_migrations** (C:\project\tenopa proposer\-agent-master\scripts\apply_migrations.py) -- 17 connections
+- **notification_service** (C:\project\tenopa proposer\app\services\notification_service.py) -- 17 connections
+  - -> contains -> [[getuseremailinfo]]
+  - -> contains -> [[shouldsendemail]]
+  - -> contains -> [[trysendemail]]
+  - -> contains -> [[sendteamsnotification]]
+  - -> contains -> [[createnotification]]
+  - -> contains -> [[notifyapprovalrequest]]
+  - -> contains -> [[notifyapprovalresult]]
+  - -> contains -> [[notifydeadlinealert]]
+  - -> contains -> [[notifyaicomplete]]
+  - -> contains -> [[notifyagenterror]]
+  - -> contains -> [[notifybidconfirmed]]
+  - -> contains -> [[notifybidsubmitted]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefhttpx]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefemailservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **apply_migrations** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 17 connections
   - -> contains -> [[getdbconnection]]
   - -> contains -> [[getappliedmigrations]]
   - -> contains -> [[getmigrationfiles]]
@@ -1962,7 +2511,24 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefasyncpg]]
-- **admin_schemas** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 16 connections
+- **__unresolved__::ref::read** () -- 16 connections
+  - <- calls <- [[uploadpresentation]]
+  - <- calls <- [[copybidattachmentstoproposal]]
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[uploadtostorage]]
+  - <- calls <- [[buildpptxsync]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[downloadfilefromurl]]
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[extractheaderxml]]
+  - <- calls <- [[extractsectionxml]]
+  - <- calls <- [[readsectionxmlbytes]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[extracttextfromhwp]]
+  - <- calls <- [[readmigrationfile]]
+  - <- calls <- [[checkschema]]
+  - <- calls <- [[extracthwpxtext]]
+- **admin_schemas** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 16 connections
   - -> contains -> [[userstats]]
   - -> contains -> [[proposalstats]]
   - -> contains -> [[systemstatsresponse]]
@@ -1979,7 +2545,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[timetravelresponse]]
   - -> contains -> [[reopenresponse]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **stream_schemas** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 16 connections
+- **stream_schemas** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 16 connections
   - -> contains -> [[streamprogressresponse]]
   - -> contains -> [[streamsoverview]]
   - -> contains -> [[finalsubmitrequest]]
@@ -1996,7 +2562,24 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[bidpriceadjustresponse]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **pptx_builder** (C:\project\tenopa proposer\-agent-master\app\services\pptx_builder.py) -- 16 connections
+- **knowledge_search** (C:\project\tenopa proposer\app\services\knowledge_search.py) -- 16 connections
+  - -> contains -> [[unifiedsearch]]
+  - -> contains -> [[applyhybridranking]]
+  - -> contains -> [[searchcontent]]
+  - -> contains -> [[searchclients]]
+  - -> contains -> [[searchcompetitors]]
+  - -> contains -> [[searchlessons]]
+  - -> contains -> [[searchcapabilities]]
+  - -> contains -> [[searchqa]]
+  - -> contains -> [[searchintranetdocs]]
+  - -> contains -> [[searchintranetprojects]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefembeddingservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **pptx_builder** (C:\project\tenopa proposer\app\services\pptx_builder.py) -- 16 connections
   - -> contains -> [[buildpptx]]
   - -> contains -> [[buildpptxsync]]
   - -> contains -> [[addtitleslide]]
@@ -2013,7 +2596,24 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpptx]]
   - -> imports -> [[unresolvedrefutil]]
   - -> imports -> [[unresolvedreftext]]
-- **migrate_intranet** (C:\project\tenopa proposer\-agent-master\scripts\migrate_intranet.py) -- 16 connections
+- **scheduled_monitor** (C:\project\tenopa proposer\app\services\scheduled_monitor.py) -- 16 connections
+  - -> contains -> [[iskoreanholiday]]
+  - -> contains -> [[dailyg2bmonitor]]
+  - -> contains -> [[filternewbids]]
+  - -> contains -> [[recordnotifiedbids]]
+  - -> contains -> [[getteamleader]]
+  - -> contains -> [[formatbidsummary]]
+  - -> contains -> [[formatscoredbidsummary]]
+  - -> contains -> [[senddailysummaryemail]]
+  - -> contains -> [[checkmonthlyintranetsync]]
+  - -> contains -> [[runscheduledmigration]]
+  - -> contains -> [[setupscheduler]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **migrate_intranet** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 16 connections
   - -> contains -> [[migrateconfig]]
   - -> contains -> [[extractkeywords]]
   - -> contains -> [[parsebudget]]
@@ -2030,39 +2630,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefpathlib]]
-- **__unresolved__::ref::io** () -- 15 connections
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routesusers]]
-  - <- imports <- [[docxbuilder]]
-  - <- imports <- [[pptxbuilder]]
-  - <- imports <- [[submissiondocsservice]]
-  - <- imports <- [[costsheetbuilder]]
-  - <- imports <- [[pageguard]]
-  - <- imports <- [[testdocuments]]
-  - <- imports <- [[testdocumentsapi]]
-  - <- imports <- [[testdocumentscoverageimprovement]]
-  - <- imports <- [[testphase1proposal]]
-  - <- imports <- [[testdocuments]]
-  - <- imports <- [[testroutesdocuments]]
-- **routes_master_projects** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 15 connections
-  - -> contains -> [[teaminfo]]
-  - -> contains -> [[participantinfo]]
-  - -> contains -> [[proposalparticipantinfo]]
-  - -> contains -> [[documentinfo]]
-  - -> contains -> [[archiveinfo]]
-  - -> contains -> [[masterprojectresponse]]
-  - -> contains -> [[config]]
-  - -> contains -> [[masterprojectdetailresponse]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefsqlalchemy]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefdeps]]
-  - -> imports -> [[unresolvedrefschemas]]
-  - -> imports -> [[unresolvedrefpydantic]]
-- **routes_performance** (C:\project\tenopa proposer\-agent-master\app\api\routes_performance.py) -- 15 connections
+- **routes_performance** (C:\project\tenopa proposer\app\api\routes_performance.py) -- 15 connections
   - -> contains -> [[getproposalor404]]
   - -> contains -> [[refreshviews]]
   - -> contains -> [[resolvepricingpredictions]]
@@ -2078,7 +2646,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefperformanceschemas]]
   - -> imports -> [[unresolvedrefschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_stats** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 15 connections
+- **routes_stats** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 15 connections
   - -> contains -> [[overallstat]]
   - -> contains -> [[agencystat]]
   - -> contains -> [[monthstat]]
@@ -2094,7 +2662,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefresponse]]
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **analytics_schemas** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 15 connections
+- **analytics_schemas** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 15 connections
   - -> contains -> [[failurereasonitem]]
   - -> contains -> [[positioningitem]]
   - -> contains -> [[monthlytrenditem]]
@@ -2110,7 +2678,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[competitorresponse]]
   - -> contains -> [[clientwinrateresponse]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **schemas** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 15 connections
+- **schemas** (C:\project\tenopa proposer\app\models\schemas.py) -- 15 connections
   - -> contains -> [[projectinput]]
   - -> contains -> [[rfpdata]]
   - -> contains -> [[proposalsection]]
@@ -2126,7 +2694,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedreftypes]]
-- **bid_pipeline** (C:\project\tenopa proposer\-agent-master\app\services\bid_pipeline.py) -- 15 connections
+- **bid_pipeline** (C:\project\tenopa proposer\app\services\bid_pipeline.py) -- 15 connections
   - -> contains -> [[runpipeline]]
   - -> contains -> [[processsingle]]
   - -> contains -> [[runallsteps]]
@@ -2142,7 +2710,39 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefconfig]]
-- **rfp_parser** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 15 connections
+- **claude_client** (C:\project\tenopa proposer\app\services\claude_client.py) -- 15 connections
+  - -> contains -> [[resetusagecontext]]
+  - -> contains -> [[getaccumulatedusage]]
+  - -> contains -> [[getclient]]
+  - -> contains -> [[claudegenerate]]
+  - -> contains -> [[claudegeneratestreaming]]
+  - -> contains -> [[parsejsonresponse]]
+  - -> contains -> [[claudeclient]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefcontextvars]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefanthropic]]
+  - -> imports -> [[unresolvedreftypes]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedreftrustworthiness]]
+- **analyze_template** (C:\project\tenopa proposer\app\services\hwpx\analyze_template.py) -- 15 connections
+  - -> contains -> [[gettext]]
+  - -> contains -> [[analyzefonts]]
+  - -> contains -> [[analyzecharstyles]]
+  - -> contains -> [[analyzeparastyles]]
+  - -> contains -> [[analyzepagesetup]]
+  - -> contains -> [[analyzetables]]
+  - -> contains -> [[analyzetemplate]]
+  - -> contains -> [[extractheaderxml]]
+  - -> contains -> [[extractsectionxml]]
+  - -> imports -> [[unresolvedrefshutil]]
+  - -> imports -> [[unresolvedreftempfile]]
+  - -> imports -> [[unresolvedrefzipfile]]
+  - -> imports -> [[unresolvedrefdataclasses]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedreflxml]]
+- **rfp_parser** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 15 connections
   - -> contains -> [[validateurl]]
   - -> contains -> [[extracttextfrompdf]]
   - -> contains -> [[extracttextfromdocx]]
@@ -2158,22 +2758,23 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefparse]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefschemas]]
-- **__unresolved__::ref::types** () -- 14 connections
-  - <- imports <- [[gatenodes]]
-  - <- imports <- [[reviewnode]]
-  - <- imports <- [[rfpfetch]]
-  - <- imports <- [[authschemas]]
-  - <- imports <- [[proposalschemas]]
-  - <- imports <- [[schemas]]
-  - <- imports <- [[userschemas]]
-  - <- imports <- [[testpresentationsample]]
-  - <- imports <- [[testmcptools]]
-  - <- imports <- [[testworkflowerrorrecovery]]
-  - <- imports <- [[testworkflowintegration]]
-  - <- imports <- [[testworkflowlivedb]]
-  - <- imports <- [[testgraphbranching]]
-  - <- imports <- [[testgraphhappypath]]
-- **routes_documents** (C:\project\tenopa proposer\-agent-master\app\api\routes_documents.py) -- 14 connections
+- **e2e_interrupt_test** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 15 connections
+  - -> contains -> [[check]]
+  - -> contains -> [[skiptest]]
+  - -> contains -> [[gettoken]]
+  - -> contains -> [[createproposal]]
+  - -> contains -> [[startworkflow]]
+  - -> contains -> [[scenario1nogo]]
+  - -> contains -> [[scenario2abortretry]]
+  - -> contains -> [[scenario3timetravel]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefhttpx]]
+  - -> imports -> [[unresolvedrefos]]
+  - -> imports -> [[unresolvedrefmain]]
+- **routes_documents** (C:\project\tenopa proposer\app\api\routes_documents.py) -- 14 connections
   - -> contains -> [[validatefilemagicbytes]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2188,7 +2789,22 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdocumentschemas]]
   - -> imports -> [[unresolvedrefdocumentingestion]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_migration_status** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 14 connections
+- **routes_master_projects** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 14 connections
+  - -> contains -> [[masterprojectresponse]]
+  - -> contains -> [[masterprojectdetailresponse]]
+  - -> contains -> [[projectstatsresponse]]
+  - -> contains -> [[chatsearchrequest]]
+  - -> contains -> [[config]]
+  - -> contains -> [[chatsearchresponse]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+  - -> imports -> [[unresolvedrefmasterprojectschatservice]]
+- **routes_migration_status** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 14 connections
   - -> contains -> [[migrationitem]]
   - -> contains -> [[migrationstatusresponse]]
   - -> contains -> [[migrationhistoryitem]]
@@ -2203,7 +2819,37 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **migration_schemas** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 14 connections
+- **routes_vault_beta** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 14 connections
+  - -> contains -> [[sessionmetricsrequest]]
+  - -> contains -> [[feedbackrequest]]
+  - -> contains -> [[metricsresponse]]
+  - -> contains -> [[satisfactionresponse]]
+  - -> contains -> [[npsresponse]]
+  - -> contains -> [[golivereadinessresponse]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefbetametricstracker]]
+- **routes_vault_step_search** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 14 connections
+  - -> contains -> [[stepsearchrequest]]
+  - -> contains -> [[step1response]]
+  - -> contains -> [[step2response]]
+  - -> contains -> [[step3response]]
+  - -> contains -> [[step4response]]
+  - -> contains -> [[step5response]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefuserschemas]]
+  - -> imports -> [[unresolvedrefvaultstepsearch]]
+- **migration_schemas** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 14 connections
   - -> contains -> [[migrationbatch]]
   - -> contains -> [[migrationschedule]]
   - -> contains -> [[migrationtriggerrequest]]
@@ -2218,22 +2864,51 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedrefuuid]]
-- **test_migration_service** (C:\project\tenopa proposer\-agent-master\tests\test_migration_service.py) -- 14 connections
-  - -> contains -> [[testmigrationservicebasic]]
-  - -> contains -> [[testdetectchangeddocuments]]
-  - -> contains -> [[testprocessdocuments]]
-  - -> contains -> [[testexponentialbackoffretry]]
-  - -> contains -> [[testbatchprogressupdate]]
-  - -> contains -> [[testschedulemanagement]]
-  - -> contains -> [[testerrorhandling]]
-  - -> contains -> [[testbatchimportintegration]]
-  - -> imports -> [[unresolvedrefpytest]]
+- **template_service** (C:\project\tenopa proposer\app\services\template_service.py) -- 14 connections
+  - -> contains -> [[readpdftext]]
+  - -> contains -> [[readhwpxtext]]
+  - -> contains -> [[gettemplatefiles]]
+  - -> contains -> [[extracttocwithclaude]]
+  - -> contains -> [[gettemplatetoc]]
+  - -> contains -> [[getavailabletemplates]]
+  - -> contains -> [[cleartoccache]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefzipfile]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefanthropic]]
+  - -> imports -> [[unresolvedrefconfig]]
+- **vault_credential_service** (C:\project\tenopa proposer\app\services\vault_credential_service.py) -- 14 connections
+  - -> contains -> [[credentialmetadata]]
+  - -> contains -> [[vaultcredentialservice]]
+  - -> imports -> [[unresolvedrefio]]
+  - -> imports -> [[unresolvedrefre]]
   - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefmigrationservice]]
-  - -> imports -> [[unresolvedrefmigrationschemas]]
-- **routes_calendar** (C:\project\tenopa proposer\-agent-master\app\api\routes_calendar.py) -- 13 connections
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefpytesseract]]
+  - -> imports -> [[unresolvedrefpil]]
+  - -> imports -> [[unresolvedrefpypdf2]]
+  - -> imports -> [[unresolvedrefdocx]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **__unresolved__::ref::responses** () -- 13 connections
+  - <- imports <- [[main]]
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routesartifacts]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routespresentation]]
+  - <- imports <- [[routesprojectarchive]]
+  - <- imports <- [[routessubmissiondocs]]
+  - <- imports <- [[routesv31]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[routesworkflow]]
+  - <- imports <- [[ratelimit]]
+  - <- imports <- [[requestid]]
+  - <- imports <- [[securityheaders]]
+- **routes_calendar** (C:\project\tenopa proposer\app\api\routes_calendar.py) -- 13 connections
   - -> contains -> [[calendaritem]]
   - -> contains -> [[calendarcreate]]
   - -> contains -> [[calendarupdate]]
@@ -2247,7 +2922,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_templates** (C:\project\tenopa proposer\-agent-master\app\api\routes_templates.py) -- 13 connections
+- **routes_templates** (C:\project\tenopa proposer\app\api\routes_templates.py) -- 13 connections
   - -> contains -> [[templateupdate]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefmimetypes]]
@@ -2261,7 +2936,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedreffileutils]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_users** (C:\project\tenopa proposer\-agent-master\app\api\routes_users.py) -- 13 connections
+- **routes_users** (C:\project\tenopa proposer\app\api\routes_users.py) -- 13 connections
   - -> imports -> [[unresolvedrefcsv]]
   - -> imports -> [[unresolvedrefio]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2275,48 +2950,116 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefauditservice]]
   - -> imports -> [[unresolvedrefservices]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **claude_client** (C:\project\tenopa proposer\-agent-master\app\services\claude_client.py) -- 13 connections
-  - -> contains -> [[resetusagecontext]]
-  - -> contains -> [[getaccumulatedusage]]
-  - -> contains -> [[getclient]]
-  - -> contains -> [[claudegenerate]]
-  - -> contains -> [[claudegeneratestreaming]]
-  - -> contains -> [[parsejsonresponse]]
+- **ppt_nodes** (C:\project\tenopa proposer\app\graph\nodes\ppt_nodes.py) -- 13 connections
+  - -> contains -> [[trackpptprompt]]
+  - -> contains -> [[presentationstrategy]]
+  - -> contains -> [[buildpptcontext]]
+  - -> contains -> [[ppttoc]]
+  - -> contains -> [[pptvisualbrief]]
+  - -> contains -> [[pptstoryboardnode]]
   - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefcontextvars]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedrefanthropic]]
-  - -> imports -> [[unresolvedrefconfig]]
-  - -> imports -> [[unresolvedreftrustworthiness]]
-- **test_step8a_nodes** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 13 connections
-  - -> contains -> [[testproposalcustomeranalysis]]
-  - -> contains -> [[testproposalsectionvalidator]]
-  - -> contains -> [[testproposalsectionsconsolidation]]
-  - -> contains -> [[testmockevaluationanalysis]]
-  - -> contains -> [[testmockevaluationfeedbackprocessor]]
-  - -> contains -> [[testproposalwritenextv2]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
+  - -> imports -> [[unresolvedrefstate]]
+  - -> imports -> [[unresolvedrefpptpipeline]]
+  - -> imports -> [[unresolvedrefproposalprompts]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+  - -> imports -> [[unresolvedrefservices]]
+- **docx_builder** (C:\project\tenopa proposer\app\services\docx_builder.py) -- 13 connections
+  - -> contains -> [[builddocxlegacy]]
+  - -> contains -> [[builddocx]]
+  - -> contains -> [[buildfreeform]]
+  - -> contains -> [[buildfromtemplate]]
+  - -> contains -> [[rendermarkdowncontent]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedrefdocx]]
+  - -> imports -> [[unresolvedrefshared]]
+  - -> imports -> [[unresolvedreftext]]
+- **knowledge_manager** (C:\project\tenopa proposer\app\services\knowledge_manager.py) -- 13 connections
+  - -> contains -> [[classificationerror]]
+  - -> contains -> [[knowledgemanager]]
+  - -> contains -> [[getknowledgemanager]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefstep8schemas]]
-  - -> imports -> [[unresolvedrefstep8acustomeranalysis]]
-  - -> imports -> [[unresolvedrefstep8bsectionvalidator]]
-- **__unresolved__::ref::responses** () -- 12 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[routesadmin]]
-  - <- imports <- [[routesartifacts]]
-  - <- imports <- [[routeskb]]
-  - <- imports <- [[routespresentation]]
-  - <- imports <- [[routesprojectarchive]]
-  - <- imports <- [[routessubmissiondocs]]
-  - <- imports <- [[routesv31]]
-  - <- imports <- [[routesworkflow]]
-  - <- imports <- [[ratelimit]]
-  - <- imports <- [[requestid]]
-  - <- imports <- [[securityheaders]]
-- **routes_g2b** (C:\project\tenopa proposer\-agent-master\app\api\routes_g2b.py) -- 12 connections
+  - -> imports -> [[unresolvedrefknowledgeschemas]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+  - -> imports -> [[unresolvedrefknowledge]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **user_account_service** (C:\project\tenopa proposer\app\services\user_account_service.py) -- 13 connections
+  - -> contains -> [[createauthuser]]
+  - -> contains -> [[resetuserpassword]]
+  - -> contains -> [[parsexlsxusers]]
+  - -> contains -> [[bulkcreateusers]]
+  - -> contains -> [[findsheet]]
+  - -> contains -> [[parsesheetrows]]
+  - -> contains -> [[parsexlsxall]]
+  - -> contains -> [[bulksetuporg]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefsecrets]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **bid_scoring** (C:\project\tenopa proposer\scripts\bid_scoring.py) -- 13 connections
+  - -> contains -> [[loadprofile]]
+  - -> contains -> [[parsebudget]]
+  - -> contains -> [[daysuntildeadline]]
+  - -> contains -> [[buildclienttodept]]
+  - -> contains -> [[scorebid]]
+  - -> contains -> [[formatbudget]]
+  - -> contains -> [[formatdday]]
+  - -> contains -> [[searchbykeywords]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedrefmath]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedreftyping]]
+- **__unresolved__::ref::argparse** () -- 12 connections
+  - <- imports <- [[applymigrations]]
+  - <- imports <- [[collectmarketdata]]
+  - <- imports <- [[dailybidscan]]
+  - <- imports <- [[importteamstructure]]
+  - <- imports <- [[migrateintranet]]
+  - <- imports <- [[migratelegacydocuments]]
+  - <- imports <- [[migratestatesunified]]
+  - <- imports <- [[monitorg2bpipeline]]
+  - <- imports <- [[pilotmigration10projects]]
+  - <- imports <- [[pilotmigrationdemo]]
+  - <- imports <- [[runmasterprojectsmigration]]
+  - <- imports <- [[searchmatchingbids]]
+- **__unresolved__::ref::decimal** () -- 12 connections
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[knowledgeschemas]]
+  - <- calls <- [[classifychunk]]
+  - <- calls <- [[semanticsearch]]
+  - <- calls <- [[keywordsearch]]
+  - <- calls <- [[formatsearchresult]]
+  - <- calls <- [[gethealthmetrics]]
+  - <- imports <- [[knowledgemanager]]
+  - <- imports <- [[vaultbiddingservice]]
+  - <- imports <- [[vaultclientservice]]
+- **__unresolved__::ref::dotenv** () -- 12 connections
+  - <- imports <- [[applymigrations]]
+  - <- imports <- [[checkbidstatus]]
+  - <- imports <- [[checkcolumns]]
+  - <- imports <- [[checkdata]]
+  - <- imports <- [[checkschema]]
+  - <- imports <- [[cleanupproposals]]
+  - <- imports <- [[createsupabasetables]]
+  - <- imports <- [[diagnosesupabase]]
+  - <- imports <- [[execmigration]]
+  - <- imports <- [[hwpxtopptx]]
+  - <- imports <- [[initstoragebuckets]]
+  - <- imports <- [[inserttestbid]]
+- **routes_g2b** (C:\project\tenopa proposer\app\api\routes_g2b.py) -- 12 connections
   - -> contains -> [[classifyg2berror]]
   - -> contains -> [[parseamount]]
   - -> contains -> [[parseint]]
@@ -2329,7 +3072,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefg2bservice]]
   - -> imports -> [[unresolvedrefbidanalysisservice]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_prompt_evolution** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 12 connections
+- **routes_prompt_evolution** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 12 connections
   - -> contains -> [[editactionrequest]]
   - -> contains -> [[experimentrequest]]
   - -> contains -> [[candidaterequest]]
@@ -2342,7 +3085,59 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefresponse]]
-- **token_manager** (C:\project\tenopa proposer\-agent-master\app\services\token_manager.py) -- 12 connections
+- **routes_vault_credentials** (C:\project\tenopa proposer\app\api\routes_vault_credentials.py) -- 12 connections
+  - -> contains -> [[credentialresponse]]
+  - -> contains -> [[credentialuploadrequest]]
+  - -> contains -> [[ocrresultresponse]]
+  - -> contains -> [[credentialslistresponse]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefuserschemas]]
+  - -> imports -> [[unresolvedrefvaultcredentialservice]]
+- **bid_attachment_store** (C:\project\tenopa proposer\app\services\bid_attachment_store.py) -- 12 connections
+  - -> contains -> [[classifyattachment]]
+  - -> contains -> [[classifypriority]]
+  - -> contains -> [[parseattachmentsfromraw]]
+  - -> contains -> [[downloadbidattachments]]
+  - -> contains -> [[uploadtostorage]]
+  - -> contains -> [[getattachmentdownloadurl]]
+  - -> contains -> [[copybidattachmentstoproposal]]
+  - -> contains -> [[downloadfile]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedrefaiohttp]]
+  - -> imports -> [[unresolvedrefconfig]]
+- **_extract_from_storage** (C:\project\tenopa proposer\app\services\document_ingestion.py) -- 12 connections
+  - -> calls -> [[unresolvedrefgetattr]]
+  - -> calls -> [[unresolvedrefdownload]]
+  - -> calls -> [[unresolvedreffrom]]
+  - -> calls -> [[unresolvedreflower]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefnamedtemporaryfile]]
+  - -> calls -> [[unresolvedrefwrite]]
+  - -> calls -> [[unresolvedrefflush]]
+  - -> calls -> [[unresolvedrefextracttextfromfile]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefunlink]]
+  - <- contains <- [[documentingestion]]
+- **parse_rfp_from_url** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 12 connections
+  - -> calls -> [[unresolvedrefvalidateurl]]
+  - -> calls -> [[unresolvedrefclientsession]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefclienttimeout]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefnamedtemporaryfile]]
+  - -> calls -> [[unresolvedrefwrite]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefextracttextfromfile]]
+  - -> calls -> [[unresolvedrefunlink]]
+  - <- contains <- [[rfpparser]]
+- **token_manager** (C:\project\tenopa proposer\app\services\token_manager.py) -- 12 connections
   - -> contains -> [[getbudget]]
   - -> contains -> [[checkbudget]]
   - -> contains -> [[truncatecontext]]
@@ -2355,58 +3150,20 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefconfig]]
-- **stub_nodes** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 12 connections
-  - -> contains -> [[strategygenerate]]
-  - -> contains -> [[planteam]]
-  - -> contains -> [[planassign]]
-  - -> contains -> [[planschedule]]
-  - -> contains -> [[planstory]]
-  - -> contains -> [[planprice]]
-  - -> contains -> [[proposalsection]]
-  - -> contains -> [[selfreviewwithautoimprove]]
-  - -> contains -> [[presentationstrategy]]
-  - -> contains -> [[pptslide]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefstate]]
-- **test_documents** (C:\project\tenopa proposer\-agent-master\tests\api\test_documents.py) -- 12 connections
-  - -> contains -> [[testdocumentupload]]
-  - -> contains -> [[testdocumentlist]]
-  - -> contains -> [[testdocumentdetail]]
-  - -> contains -> [[testdocumentprocess]]
-  - -> contains -> [[testdocumentchunks]]
-  - -> contains -> [[testdocumentdelete]]
-  - -> contains -> [[testdocumenterrorhandling]]
-  - -> contains -> [[testdocumentauthandorgisolation]]
-  - -> contains -> [[testdocumentintegration]]
-  - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefio]]
-  - -> imports -> [[unresolvedrefhttpx]]
-- **test_step8_e2e** (C:\project\tenopa proposer\-agent-master\tests\test_step8_e2e.py) -- 12 connections
-  - -> contains -> [[stepmetrics]]
-  - -> imports -> [[unresolvedreftime]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefstate]]
-  - -> imports -> [[unresolvedrefstep8acustomeranalysis]]
-  - -> imports -> [[unresolvedrefstep8bsectionvalidator]]
-  - -> imports -> [[unresolvedrefstep8cconsolidation]]
-  - -> imports -> [[unresolvedrefstep8dmockevaluation]]
-  - -> imports -> [[unresolvedrefstep8efeedbackprocessor]]
-  - -> imports -> [[unresolvedrefstep8frewrite]]
-- **__unresolved__::ref::argparse** () -- 11 connections
-  - <- imports <- [[applymigrations]]
-  - <- imports <- [[collectmarketdata]]
-  - <- imports <- [[dailybidscan]]
-  - <- imports <- [[importteamstructure]]
-  - <- imports <- [[migrateintranet]]
-  - <- imports <- [[migratelegacydocuments]]
-  - <- imports <- [[migratestatesunified]]
-  - <- imports <- [[monitorg2bpipeline]]
-  - <- imports <- [[pilotmigration10projects]]
-  - <- imports <- [[pilotmigrationdemo]]
-  - <- imports <- [[searchmatchingbids]]
-- **routes_files** (C:\project\tenopa proposer\-agent-master\app\api\routes_files.py) -- 11 connections
+- **import_project_history** (C:\project\tenopa proposer\scripts\import_project_history.py) -- 12 connections
+  - -> contains -> [[parseexcel]]
+  - -> contains -> [[extractkeywords]]
+  - -> contains -> [[buildkeywordindex]]
+  - -> contains -> [[buildsearchkeywords]]
+  - -> contains -> [[buildprofile]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefsys]]
+  - -> imports -> [[unresolvedrefcollections]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedrefopenpyxl]]
+- **routes_files** (C:\project\tenopa proposer\app\api\routes_files.py) -- 11 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
   - -> imports -> [[unresolvedreffastapi]]
@@ -2418,7 +3175,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreffileutils]]
   - -> imports -> [[unresolvedrefratelimit]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_migrations** (C:\project\tenopa proposer\-agent-master\app\api\routes_migrations.py) -- 11 connections
+- **routes_migrations** (C:\project\tenopa proposer\app\api\routes_migrations.py) -- 11 connections
   - -> contains -> [[getmigrationservice]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftyping]]
@@ -2430,7 +3187,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefmigrationschemas]]
   - -> imports -> [[unresolvedrefmigrationservice]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_pricing** (C:\project\tenopa proposer\-agent-master\app\api\routes_pricing.py) -- 11 connections
+- **routes_pricing** (C:\project\tenopa proposer\app\api\routes_pricing.py) -- 11 connections
   - -> contains -> [[sensitivityrequest]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
@@ -2442,7 +3199,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpricing]]
   - -> imports -> [[unresolvedrefsensitivity]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_step8a** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8a.py) -- 11 connections
+- **routes_step8a** (C:\project\tenopa proposer\app\api\routes_step8a.py) -- 11 connections
   - -> contains -> [[nodestatusresponse]]
   - -> contains -> [[validationtriggerrequest]]
   - -> contains -> [[versionlistresponse]]
@@ -2454,7 +3211,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
-- **artifact_schemas** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 11 connections
+- **artifact_schemas** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 11 connections
   - -> contains -> [[artifactresponse]]
   - -> contains -> [[artifactsaveresponse]]
   - -> contains -> [[diffmeta]]
@@ -2466,7 +3223,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[compliancecheckresponse]]
   - -> contains -> [[costsheetdraftresponse]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **document_schemas** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 11 connections
+- **document_schemas** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 11 connections
   - -> contains -> [[documentuploadrequest]]
   - -> contains -> [[documentresponse]]
   - -> contains -> [[documentlistresponse]]
@@ -2478,7 +3235,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **performance_schemas** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 11 connections
+- **performance_schemas** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 11 connections
   - -> contains -> [[individualperformance]]
   - -> contains -> [[teamquarterperformance]]
   - -> contains -> [[divisionteamstat]]
@@ -2490,7 +3247,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> contains -> [[myprojectsdashboard]]
   - -> contains -> [[teamdashboard]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **cost_sheet_builder** (C:\project\tenopa proposer\-agent-master\app\services\bidding\artifacts\cost_sheet_builder.py) -- 11 connections
+- **cost_sheet_builder** (C:\project\tenopa proposer\app\services\bidding\artifacts\cost_sheet_builder.py) -- 11 connections
   - -> contains -> [[fmtwon]]
   - -> contains -> [[setcell]]
   - -> contains -> [[shaderow]]
@@ -2502,19 +3259,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftable]]
   - -> imports -> [[unresolvedreftext]]
   - -> imports -> [[unresolvedrefshared]]
-- **engine** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\engine.py) -- 11 connections
-  - -> contains -> [[pricingengine]]
-  - -> contains -> [[computebudgettier]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefclientpreference]]
-  - -> imports -> [[unresolvedrefcompetitorpricing]]
-  - -> imports -> [[unresolvedrefcostestimator]]
-  - -> imports -> [[unresolvedrefcoststandardselector]]
-  - -> imports -> [[unresolvedrefmodels]]
-  - -> imports -> [[unresolvedrefpricescore]]
-  - -> imports -> [[unresolvedrefsensitivity]]
-  - -> imports -> [[unresolvedrefwinprobability]]
-- **email_service** (C:\project\tenopa proposer\-agent-master\app\services\email_service.py) -- 11 connections
+- **email_service** (C:\project\tenopa proposer\app\services\email_service.py) -- 11 connections
   - -> contains -> [[getgraphtoken]]
   - -> contains -> [[sendemail]]
   - -> contains -> [[sendemailbatch]]
@@ -2526,7 +3271,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftime]]
   - -> imports -> [[unresolvedrefhttpx]]
   - -> imports -> [[unresolvedrefconfig]]
-- **build_hwpx** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\build_hwpx.py) -- 11 connections
+- **build_hwpx** (C:\project\tenopa proposer\app\services\hwpx\build_hwpx.py) -- 11 connections
   - -> contains -> [[validatexml]]
   - -> contains -> [[updatemetadata]]
   - -> contains -> [[packhwpx]]
@@ -2538,7 +3283,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefzipfile]]
   - -> imports -> [[unresolvedreflxml]]
-- **hwpx_service** (C:\project\tenopa proposer\-agent-master\app\services\hwpx_service.py) -- 11 connections
+- **hwpx_service** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 11 connections
   - -> contains -> [[analyzereference]]
   - -> contains -> [[generatesectionxml]]
   - -> contains -> [[buildproposalhwpx]]
@@ -2550,7 +3295,43 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftempfile]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedreflxml]]
-- **final_review_engine** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 11 connections
+- **vault_bidding_batch** (C:\project\tenopa proposer\app\services\scheduler\vault_bidding_batch.py) -- 11 connections
+  - -> contains -> [[vaultbiddingbatchscheduler]]
+  - -> contains -> [[getscheduler]]
+  - -> contains -> [[startbatchscheduler]]
+  - -> contains -> [[stopbatchscheduler]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefg2bbiddingcollector]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **section_lock** (C:\project\tenopa proposer\app\services\section_lock.py) -- 11 connections
+  - -> contains -> [[acquirelock]]
+  - -> contains -> [[releaselock]]
+  - -> contains -> [[getlocks]]
+  - -> contains -> [[forcerelease]]
+  - -> contains -> [[cleanupexpired]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefconfig]]
+  - -> imports -> [[unresolvedrefexceptions]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_bidding_service** (C:\project\tenopa proposer\app\services\vault_bidding_service.py) -- 11 connections
+  - -> contains -> [[similarproject]]
+  - -> contains -> [[biddinganalysisresult]]
+  - -> contains -> [[vaultbiddingservice]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedrefstatistics]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **final_review_engine** (C:\project\tenopa proposer\scripts\archive\final_review_engine.py) -- 11 connections
   - -> contains -> [[reviewstatus]]
   - -> contains -> [[pptsection]]
   - -> contains -> [[reviewpriority]]
@@ -2562,7 +3343,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefjson]]
-- **modular_architecture** (C:\project\tenopa proposer\-agent-master\scripts\archive\modular_architecture.py) -- 11 connections
+- **modular_architecture** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 11 connections
   - -> contains -> [[proposalmodule]]
   - -> contains -> [[rfpreviewmodule]]
   - -> contains -> [[strategyplanningmodule]]
@@ -2574,7 +3355,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefasyncio]]
-- **modular_architecture_simple** (C:\project\tenopa proposer\-agent-master\scripts\archive\modular_architecture_simple.py) -- 11 connections
+- **modular_architecture_simple** (C:\project\tenopa proposer\scripts\archive\modular_architecture_simple.py) -- 11 connections
   - -> contains -> [[proposalmodule]]
   - -> contains -> [[rfpreviewmodule]]
   - -> contains -> [[strategyplanningmodule]]
@@ -2586,7 +3367,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreflogging]]
-- **migrate_legacy_documents** (C:\project\tenopa proposer\-agent-master\scripts\migrate_legacy_documents.py) -- 11 connections
+- **migrate_legacy_documents** (C:\project\tenopa proposer\scripts\migrate_legacy_documents.py) -- 11 connections
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
@@ -2598,18 +3379,6 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsupabaseclient]]
   - -> imports -> [[unresolvedrefmigrationservice]]
   - -> imports -> [[unresolvedrefnotificationservice]]
-- **test_routes_documents** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 11 connections
-  - -> contains -> [[testuploadendpoint]]
-  - -> contains -> [[testlistendpoint]]
-  - -> contains -> [[testdetailendpoint]]
-  - -> contains -> [[testreprocessendpoint]]
-  - -> contains -> [[testchunksendpoint]]
-  - -> contains -> [[testdeleteendpoint]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefhttpx]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefio]]
 - **__unresolved__::ref::anthropic** () -- 10 connections
   - <- imports <- [[claudeclient]]
   - <- imports <- [[phaseexecutor]]
@@ -2621,18 +3390,29 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[claudeutils]]
   - <- calls <- [[callclaude]]
   - <- imports <- [[hwpxtopptx]]
-- **__unresolved__::ref::schemas** () -- 10 connections
-  - <- imports <- [[routesmasterprojects]]
-  - <- imports <- [[routesperformance]]
-  - <- imports <- [[routespresentation]]
-  - <- imports <- [[routesqa]]
-  - <- imports <- [[phaseschemas]]
-  - <- imports <- [[presentationgenerator]]
-  - <- imports <- [[rfpparser]]
-  - <- imports <- [[proposalgenerator]]
-  - <- imports <- [[testworkflow]]
-  - <- imports <- [[testdocumentbuilders]]
-- **routes_project_archive** (C:\project\tenopa proposer\-agent-master\app\api\routes_project_archive.py) -- 10 connections
+- **__unresolved__::ref::io** () -- 10 connections
+  - <- imports <- [[routesadmin]]
+  - <- imports <- [[routeskb]]
+  - <- imports <- [[routesprojectarchive]]
+  - <- imports <- [[routesusers]]
+  - <- imports <- [[docxbuilder]]
+  - <- imports <- [[pptxbuilder]]
+  - <- imports <- [[submissiondocsservice]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[costsheetbuilder]]
+  - <- imports <- [[pageguard]]
+- **routes_knowledge** (C:\project\tenopa proposer\app\api\routes_knowledge.py) -- 10 connections
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefknowledgeschemas]]
+  - -> imports -> [[unresolvedrefknowledgemanager]]
+- **routes_project_archive** (C:\project\tenopa proposer\app\api\routes_project_archive.py) -- 10 connections
   - -> imports -> [[unresolvedrefio]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefzipfile]]
@@ -2643,7 +3423,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefresponse]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefauthschemas]]
-- **routes_submission_docs** (C:\project\tenopa proposer\-agent-master\app\api\routes_submission_docs.py) -- 10 connections
+- **routes_submission_docs** (C:\project\tenopa proposer\app\api\routes_submission_docs.py) -- 10 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefresponses]]
@@ -2654,18 +3434,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreffileutils]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefstreamschemas]]
-- **gate_nodes** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 10 connections
-  - -> contains -> [[passthrough]]
-  - -> contains -> [[proposalstartgate]]
-  - -> contains -> [[convergencegate]]
-  - -> contains -> [[forktobranches]]
-  - -> contains -> [[planselectivefanout]]
-  - -> contains -> [[stream1completehook]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedreftypes]]
-  - -> imports -> [[unresolvedrefstate]]
-- **strategy_generate** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\strategy_generate.py) -- 10 connections
+- **strategy_generate** (C:\project\tenopa proposer\app\graph\nodes\strategy_generate.py) -- 10 connections
   - -> contains -> [[strategygenerate]]
   - -> contains -> [[formatpositioningguide]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2676,7 +3445,18 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
   - -> imports -> [[unresolvedrefversionmanager]]
-- **scorer** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\scorer.py) -- 10 connections
+- **asset_extractor** (C:\project\tenopa proposer\app\services\asset_extractor.py) -- 10 connections
+  - -> contains -> [[extracttextfrombytes]]
+  - -> contains -> [[extracttextfrompdfbytes]]
+  - -> contains -> [[extracttextfromdocxbytes]]
+  - -> contains -> [[parsesectionsfromresponse]]
+  - -> contains -> [[extractsectionsfromasset]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefutils]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **scorer** (C:\project\tenopa proposer\app\services\bidding\monitor\scorer.py) -- 10 connections
   - -> contains -> [[normalizeprespecforscoring]]
   - -> contains -> [[normalizeplanforscoring]]
   - -> contains -> [[normalizetitle]]
@@ -2687,18 +3467,29 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
-- **embedding_service** (C:\project\tenopa proposer\-agent-master\app\services\embedding_service.py) -- 10 connections
-  - -> contains -> [[getopenai]]
-  - -> contains -> [[generateembedding]]
-  - -> contains -> [[generateembeddingsbatch]]
-  - -> contains -> [[embeddingtextforcontent]]
-  - -> contains -> [[embeddingtextforclient]]
-  - -> contains -> [[embeddingtextforcompetitor]]
-  - -> contains -> [[batchreindex]]
-  - -> contains -> [[embeddingtextforlesson]]
+- **handoff** (C:\project\tenopa proposer\app\services\bidding\submission\handoff.py) -- 10 connections
+  - -> contains -> [[persistbidconfirmation]]
+  - -> contains -> [[savebidplanartifact]]
+  - -> contains -> [[recordbidsubmission]]
+  - -> contains -> [[verifybidsubmission]]
+  - -> contains -> [[getbidpricehistory]]
+  - -> contains -> [[getbidsubmissionstatus]]
+  - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefconfig]]
-- **health_checker** (C:\project\tenopa proposer\-agent-master\app\services\health_checker.py) -- 10 connections
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **content_library** (C:\project\tenopa proposer\app\services\content_library.py) -- 10 connections
+  - -> contains -> [[createcontent]]
+  - -> contains -> [[updatecontent]]
+  - -> contains -> [[approvecontent]]
+  - -> contains -> [[calculatequalityscore]]
+  - -> contains -> [[autoregistersection]]
+  - -> contains -> [[suggestcontentforsection]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefembeddingservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **health_checker** (C:\project\tenopa proposer\app\services\health_checker.py) -- 10 connections
   - -> contains -> [[healthcheckrunner]]
   - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2709,7 +3500,18 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **page_guard** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\page_guard.py) -- 10 connections
+- **_pack_hwpx** (C:\project\tenopa proposer\app\services\hwpx\build_hwpx.py) -- 10 connections
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - -> calls -> [[unresolvedrefasposix]]
+  - -> calls -> [[unresolvedrefrelativeto]]
+  - -> calls -> [[unresolvedrefrglob]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefwrite]]
+  - <- contains <- [[buildhwpx]]
+- **page_guard** (C:\project\tenopa proposer\app\services\hwpx\page_guard.py) -- 10 connections
   - -> contains -> [[readsectionxmlbytes]]
   - -> contains -> [[textoftnode]]
   - -> contains -> [[collectmetrics]]
@@ -2720,7 +3522,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefio]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedreflxml]]
-- **migration_service** (C:\project\tenopa proposer\-agent-master\app\services\migration_service.py) -- 10 connections
+- **migration_service** (C:\project\tenopa proposer\app\services\migration_service.py) -- 10 connections
   - -> contains -> [[nowutc]]
   - -> contains -> [[rowtobatch]]
   - -> contains -> [[rowtoschedule]]
@@ -2731,7 +3533,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefuuid]]
   - -> imports -> [[unresolvedrefmigrationschemas]]
-- **presentation_generator** (C:\project\tenopa proposer\-agent-master\app\services\presentation_generator.py) -- 10 connections
+- **presentation_generator** (C:\project\tenopa proposer\app\services\presentation_generator.py) -- 10 connections
   - -> contains -> [[buildinput]]
   - -> contains -> [[generatepresentationslides]]
   - -> imports -> [[unresolvedrefjson]]
@@ -2742,7 +3544,51 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefphaseschemas]]
   - -> imports -> [[unresolvedrefschemas]]
   - -> imports -> [[unresolvedrefclaudeutils]]
-- **parallel_work_engine** (C:\project\tenopa proposer\-agent-master\scripts\archive\parallel_work_engine.py) -- 10 connections
+- **qa_service** (C:\project\tenopa proposer\app\services\qa_service.py) -- 10 connections
+  - -> contains -> [[saveqarecords]]
+  - -> contains -> [[saveqalessonsummary]]
+  - -> contains -> [[getproposalqa]]
+  - -> contains -> [[updateqarecord]]
+  - -> contains -> [[deleteqarecord]]
+  - -> contains -> [[searchqa]]
+  - -> contains -> [[keywordsearchqa]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefembeddingservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **source_tagger** (C:\project\tenopa proposer\app\services\source_tagger.py) -- 10 connections
+  - -> contains -> [[extractsourcetags]]
+  - -> contains -> [[calculategroundingratio]]
+  - -> contains -> [[findungroundedclaims]]
+  - -> contains -> [[evaluatetrustworthiness]]
+  - -> contains -> [[checknumberconsistency]]
+  - -> contains -> [[splitsentences]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefdataclasses]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreftrustworthiness]]
+- **stream_orchestrator** (C:\project\tenopa proposer\app\services\stream_orchestrator.py) -- 10 connections
+  - -> contains -> [[initializestreams]]
+  - -> contains -> [[updatestreamprogress]]
+  - -> contains -> [[syncstreamsready]]
+  - -> contains -> [[getstreamsstatus]]
+  - -> contains -> [[checkconvergencelogic]]
+  - -> contains -> [[checkconvergence]]
+  - -> contains -> [[markfinalsubmission]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_client_service** (C:\project\tenopa proposer\app\services\vault_client_service.py) -- 10 connections
+  - -> contains -> [[clientperformancemetrics]]
+  - -> contains -> [[clientinfo]]
+  - -> contains -> [[vaultclientservice]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdecimal]]
+  - -> imports -> [[unresolvedrefpydantic]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **parallel_work_engine** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 10 connections
   - -> contains -> [[agentrole]]
   - -> contains -> [[taskstatus]]
   - -> contains -> [[checklistcategory]]
@@ -2753,7 +3599,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefenum]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefjson]]
-- **pilot_migration_demo** (C:\project\tenopa proposer\-agent-master\scripts\pilot_migration_demo.py) -- 10 connections
+- **pilot_migration_demo** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 10 connections
   - -> contains -> [[supabasemigrator]]
   - -> contains -> [[testvectorsearch]]
   - -> contains -> [[main]]
@@ -2764,7 +3610,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefuuid]]
-- **provision_users** (C:\project\tenopa proposer\-agent-master\scripts\provision_users.py) -- 10 connections
+- **provision_users** (C:\project\tenopa proposer\scripts\provision_users.py) -- 10 connections
   - -> contains -> [[maprole]]
   - -> contains -> [[provision]]
   - -> contains -> [[main]]
@@ -2775,7 +3621,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **search_matching_bids** (C:\project\tenopa proposer\-agent-master\scripts\search_matching_bids.py) -- 10 connections
+- **search_matching_bids** (C:\project\tenopa proposer\scripts\search_matching_bids.py) -- 10 connections
   - -> contains -> [[searchandscore]]
   - -> contains -> [[printresults]]
   - -> contains -> [[main]]
@@ -2786,17 +3632,6 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefg2bservice]]
   - -> imports -> [[unresolvedrefbidscoring]]
-- **test_artifact_versioning** (C:\project\tenopa proposer\-agent-master\tests\test_artifact_versioning.py) -- 10 connections
-  - -> contains -> [[testchecksumcalculation]]
-  - -> contains -> [[testreasondetermination]]
-  - -> contains -> [[testnodedependencies]]
-  - -> contains -> [[testdependencyclassification]]
-  - -> contains -> [[testversionrecommendation]]
-  - -> contains -> [[testartifactversionmodel]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefversionmanager]]
-  - -> imports -> [[unresolvedrefstate]]
 - **__unresolved__::ref::services** () -- 9 connections
   - <- imports <- [[routesusers]]
   - <- imports <- [[gonogo]]
@@ -2807,17 +3642,17 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[rfpanalyze]]
   - <- imports <- [[rfpsearch]]
   - <- imports <- [[strategygenerate]]
-- **__unresolved__::ref::version_manager** () -- 9 connections
-  - <- imports <- [[plannodes]]
-  - <- imports <- [[step8acustomeranalysis]]
-  - <- imports <- [[step8bsectionvalidator]]
-  - <- imports <- [[step8cconsolidation]]
-  - <- imports <- [[step8dmockevaluation]]
-  - <- imports <- [[step8efeedbackprocessor]]
-  - <- imports <- [[step8frewrite]]
-  - <- imports <- [[strategygenerate]]
-  - <- imports <- [[testartifactversioning]]
-- **routes_analytics** (C:\project\tenopa proposer\-agent-master\app\api\routes_analytics.py) -- 9 connections
+- **__unresolved__::ref::types** () -- 9 connections
+  - <- imports <- [[gatenodes]]
+  - <- imports <- [[reviewnode]]
+  - <- imports <- [[rfpfetch]]
+  - <- imports <- [[authschemas]]
+  - <- imports <- [[proposalschemas]]
+  - <- imports <- [[schemas]]
+  - <- imports <- [[userschemas]]
+  - <- imports <- [[claudeclient]]
+  - <- imports <- [[testpresentationsample]]
+- **routes_analytics** (C:\project\tenopa proposer\app\api\routes_analytics.py) -- 9 connections
   - -> contains -> [[resolvescope]]
   - -> contains -> [[periodtodaterange]]
   - -> contains -> [[fetchproposals]]
@@ -2827,7 +3662,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefanalyticsschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_bid_submission** (C:\project\tenopa proposer\-agent-master\app\api\routes_bid_submission.py) -- 9 connections
+- **routes_bid_submission** (C:\project\tenopa proposer\app\api\routes_bid_submission.py) -- 9 connections
   - -> contains -> [[bidsubmissionrequest]]
   - -> contains -> [[bidpriceadjustrequest]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2837,7 +3672,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefresponse]]
   - -> imports -> [[unresolvedrefexceptions]]
   - -> imports -> [[unresolvedrefauthschemas]]
-- **routes_intranet** (C:\project\tenopa proposer\-agent-master\app\api\routes_intranet.py) -- 9 connections
+- **routes_intranet** (C:\project\tenopa proposer\app\api\routes_intranet.py) -- 9 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreffastapi]]
@@ -2847,7 +3682,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdocumentingestion]]
   - -> imports -> [[unresolvedreffileutils]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **routes_notification** (C:\project\tenopa proposer\-agent-master\app\api\routes_notification.py) -- 9 connections
+- **routes_notification** (C:\project\tenopa proposer\app\api\routes_notification.py) -- 9 connections
   - -> contains -> [[notificationsettingsupdate]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefpydantic]]
@@ -2857,7 +3692,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefcommon]]
   - -> imports -> [[unresolvedrefnotificationschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **token_tracking** (C:\project\tenopa proposer\-agent-master\app\graph\token_tracking.py) -- 9 connections
+- **token_tracking** (C:\project\tenopa proposer\app\graph\token_tracking.py) -- 9 connections
   - -> contains -> [[tracktokens]]
   - -> contains -> [[persistaitasklog]]
   - -> contains -> [[persistaitasklogerror]]
@@ -2867,7 +3702,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedreftokenmanager]]
   - -> imports -> [[unresolvedreftokenpricing]]
-- **request_id** (C:\project\tenopa proposer\-agent-master\app\middleware\request_id.py) -- 9 connections
+- **request_id** (C:\project\tenopa proposer\app\middleware\request_id.py) -- 9 connections
   - -> contains -> [[getrequestid]]
   - -> contains -> [[requestidmiddleware]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -2877,7 +3712,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefbase]]
   - -> imports -> [[unresolvedrefrequests]]
   - -> imports -> [[unresolvedrefresponses]]
-- **phase_schemas** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 9 connections
+- **phase_schemas** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 9 connections
   - -> contains -> [[phaseartifact]]
   - -> contains -> [[phase1artifact]]
   - -> contains -> [[phase2artifact]]
@@ -2887,7 +3722,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedrefschemas]]
-- **proposal_schemas** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 9 connections
+- **proposal_schemas** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 9 connections
   - -> contains -> [[proposallistitem]]
   - -> contains -> [[proposaldetail]]
   - -> contains -> [[proposalcreateresponse]]
@@ -2897,7 +3732,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedreftypes]]
-- **recommender** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\recommender.py) -- 9 connections
+- **recommender** (C:\project\tenopa proposer\app\services\bidding\monitor\recommender.py) -- 9 connections
   - -> contains -> [[scoretograde]]
   - -> contains -> [[bidrecommender]]
   - -> imports -> [[unresolvedrefjson]]
@@ -2907,7 +3742,17 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefbidschemas]]
   - -> imports -> [[unresolvedrefbidreview]]
   - -> imports -> [[unresolvedrefpreprocessor]]
-- **claude_utils** (C:\project\tenopa proposer\-agent-master\app\utils\claude_utils.py) -- 9 connections
+- **state_validator** (C:\project\tenopa proposer\app\services\state_validator.py) -- 9 connections
+  - -> contains -> [[proposalstatus]]
+  - -> contains -> [[winresult]]
+  - -> contains -> [[aitaskstatus]]
+  - -> contains -> [[statevalidator]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefenum]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+  - -> imports -> [[unresolvedrefexceptions]]
+- **claude_utils** (C:\project\tenopa proposer\app\utils\claude_utils.py) -- 9 connections
   - -> contains -> [[extractjsonfromresponse]]
   - -> contains -> [[repairtruncatedjson]]
   - -> contains -> [[createanthropicclient]]
@@ -2917,35 +3762,34 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefanthropic]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefexceptions]]
-- **test_document_ingestion** (C:\project\tenopa proposer\-agent-master\test_document_ingestion.py) -- 9 connections
-  - -> contains -> [[testimports]]
-  - -> contains -> [[testschemas]]
-  - -> contains -> [[testchunker]]
-  - -> contains -> [[testfileextraction]]
-  - -> contains -> [[testdoctypevalidation]]
-  - -> contains -> [[testdoctypemapping]]
+- **import_team_structure** (C:\project\tenopa proposer\scripts\import_team_structure.py) -- 9 connections
+  - -> contains -> [[cell]]
+  - -> contains -> [[findcol]]
+  - -> contains -> [[importfromexcel]]
   - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefargparse]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedrefsys]]
+  - -> imports -> [[unresolvedrefcollections]]
   - -> imports -> [[unresolvedrefpathlib]]
-- **test_graph_happy_path** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_happy_path.py) -- 9 connections
-  - -> contains -> [[buildgraphwithmocks]]
-  - -> contains -> [[resumeapproved]]
-  - -> contains -> [[resumego]]
-  - -> contains -> [[getinterruptids]]
-  - -> contains -> [[resumeallpending]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefcontextlib]]
-  - -> imports -> [[unresolvedrefmemory]]
-  - -> imports -> [[unresolvedreftypes]]
-- **__unresolved__::ref::parse** () -- 8 connections
-  - <- imports <- [[routesartifacts]]
+- **__unresolved__::ref::g2b_service** () -- 8 connections
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[routesg2b]]
+  - <- imports <- [[g2bbiddingcollector]]
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[fetcher]]
+  - <- imports <- [[dailybidscan]]
+  - <- imports <- [[searchmatchingbids]]
+  - <- imports <- [[testg2bsearch]]
+- **__unresolved__::ref::schemas** () -- 8 connections
+  - <- imports <- [[routesperformance]]
+  - <- imports <- [[routespresentation]]
+  - <- imports <- [[routesqa]]
+  - <- imports <- [[phaseschemas]]
+  - <- imports <- [[presentationgenerator]]
   - <- imports <- [[rfpparser]]
-  - <- calls <- [[analyzetemplate]]
-  - <- calls <- [[validatexml]]
-  - <- calls <- [[updatemetadata]]
-  - <- calls <- [[collectmetrics]]
-  - <- calls <- [[getauthtoken]]
-  - <- calls <- [[run]]
+  - <- imports <- [[proposalgenerator]]
+  - <- imports <- [[testworkflow]]
 - **__unresolved__::ref::text** () -- 8 connections
   - <- imports <- [[docxbuilder]]
   - <- calls <- [[callapi]]
@@ -2954,8 +3798,26 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[costsheetbuilder]]
   - <- calls <- [[call]]
   - <- imports <- [[hwpxtopptx]]
-  - <- calls <- [[run]]
-- **routes_auth** (C:\project\tenopa proposer\-agent-master\app\api\routes_auth.py) -- 8 connections
+  - <- calls <- [[runmigration]]
+- **__unresolved__::ref::vault_schemas** () -- 8 connections
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[vaultcacheservice]]
+  - <- imports <- [[vaultcitationservice]]
+  - <- imports <- [[vaultcontextmanager]]
+  - <- imports <- [[vaultqueryrouter]]
+  - <- imports <- [[vaultvalidation]]
+  - <- imports <- [[completedprojects]]
+  - <- imports <- [[governmentguidelines]]
+- **__unresolved__::ref::version_manager** () -- 8 connections
+  - <- imports <- [[plannodes]]
+  - <- imports <- [[step8acustomeranalysis]]
+  - <- imports <- [[step8bsectionvalidator]]
+  - <- imports <- [[step8cconsolidation]]
+  - <- imports <- [[step8dmockevaluation]]
+  - <- imports <- [[step8efeedbackprocessor]]
+  - <- imports <- [[step8frewrite]]
+  - <- imports <- [[strategygenerate]]
+- **routes_auth** (C:\project\tenopa proposer\app\api\routes_auth.py) -- 8 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefdeps]]
@@ -2964,16 +3826,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefuserschemas]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 8 connections
-  - -> calls -> [[unresolvedrefinit]]
-  - -> calls -> [[unresolvedrefsuper]]
-  - -> calls -> [[unresolvedreflen]]
-  - -> calls -> [[unresolvedrefvalueerror]]
-  - -> calls -> [[unresolvedrefall]]
-  - -> calls -> [[unresolvedrefisalnum]]
-  - <- contains <- [[proposalfrombid]]
-  - <- contains <- [[biddecisionrequest]]
-- **go_no_go** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\go_no_go.py) -- 8 connections
+- **go_no_go** (C:\project\tenopa proposer\app\graph\nodes\go_no_go.py) -- 8 connections
   - -> contains -> [[gonogo]]
   - -> contains -> [[aistrategicassessment]]
   - -> imports -> [[unresolvedrefhashlib]]
@@ -2982,7 +3835,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefcontexthelpers]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
-- **step8e_feedback_processor** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8e_feedback_processor.py) -- 8 connections
+- **step8e_feedback_processor** (C:\project\tenopa proposer\app\graph\nodes\step8e_feedback_processor.py) -- 8 connections
   - -> contains -> [[convertprioritytoint]]
   - -> contains -> [[mockevaluationfeedbackprocessor]]
   - -> imports -> [[unresolvedreflogging]]
@@ -2991,7 +3844,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefversionmanager]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8e]]
-- **step8f_rewrite** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8f_rewrite.py) -- 8 connections
+- **step8f_rewrite** (C:\project\tenopa proposer\app\graph\nodes\step8f_rewrite.py) -- 8 connections
   - -> contains -> [[proposalwritenextv2]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -3000,7 +3853,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8f]]
   - -> imports -> [[unresolvedrefconstants]]
-- **rate_limit** (C:\project\tenopa proposer\-agent-master\app\middleware\rate_limit.py) -- 8 connections
+- **rate_limit** (C:\project\tenopa proposer\app\middleware\rate_limit.py) -- 8 connections
   - -> contains -> [[keyfunc]]
   - -> contains -> [[ratelimitexceededhandler]]
   - -> imports -> [[unresolvedrefhashlib]]
@@ -3009,7 +3862,61 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreferrors]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefresponses]]
-- **calculator** (C:\project\tenopa proposer\-agent-master\app\services\bidding\calculator.py) -- 8 connections
+- **master_projects** (C:\project\tenopa proposer\app\models\master_projects.py) -- 8 connections
+  - -> contains -> [[masterproject]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefsqlalchemy]]
+  - -> imports -> [[unresolvedrefpostgresql]]
+  - -> imports -> [[unresolvedreform]]
+  - -> imports -> [[unresolvedrefsql]]
+- **approval_chain** (C:\project\tenopa proposer\app\services\approval_chain.py) -- 8 connections
+  - -> contains -> [[buildapprovalchain]]
+  - -> contains -> [[checkcanapprove]]
+  - -> contains -> [[getapprovalstatus]]
+  - -> contains -> [[getroleuser]]
+  - -> contains -> [[checkdelegation]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **auth_service** (C:\project\tenopa proposer\app\services\auth_service.py) -- 8 connections
+  - -> contains -> [[getorcreateuserprofile]]
+  - -> contains -> [[resolveorgbyemail]]
+  - -> contains -> [[updateuserprofile]]
+  - -> contains -> [[deactivateuser]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **beta_metrics_tracker** (C:\project\tenopa proposer\app\services\beta_metrics_tracker.py) -- 8 connections
+  - -> contains -> [[betametricstracker]]
+  - -> contains -> [[getmetricstracker]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefdataclasses]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **bid_analysis_service** (C:\project\tenopa proposer\app\services\bid_analysis_service.py) -- 8 connections
+  - -> contains -> [[generatebidanalysisdocuments]]
+  - -> contains -> [[generaterfpanalysismd]]
+  - -> contains -> [[generatenoticemd]]
+  - -> contains -> [[generateinstructionmd]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **_download_file** (C:\project\tenopa proposer\app\services\bid_attachment_store.py) -- 8 connections
+  - -> calls -> [[unresolvedrefvalidateurl]]
+  - -> calls -> [[unresolvedrefclientsession]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefclienttimeout]]
+  - -> calls -> [[unresolvedrefvalueerror]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedrefwritebytes]]
+  - <- contains <- [[bidattachmentstore]]
+- **calculator** (C:\project\tenopa proposer\app\services\bidding\calculator.py) -- 8 connections
   - -> contains -> [[procurementmethod]]
   - -> contains -> [[fmt]]
   - -> contains -> [[parsebudgetstring]]
@@ -3018,7 +3925,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefenum]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefre]]
-- **fetcher** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\fetcher.py) -- 8 connections
+- **fetcher** (C:\project\tenopa proposer\app\services\bidding\monitor\fetcher.py) -- 8 connections
   - -> contains -> [[bidfetcher]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedreflogging]]
@@ -3027,7 +3934,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefaiohttp]]
   - -> imports -> [[unresolvedrefbidschemas]]
   - -> imports -> [[unresolvedrefg2bservice]]
-- **preprocessor** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\preprocessor.py) -- 8 connections
+- **preprocessor** (C:\project\tenopa proposer\app\services\bidding\monitor\preprocessor.py) -- 8 connections
   - -> contains -> [[bidpreprocessor]]
   - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
@@ -3036,7 +3943,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefbidschemas]]
   - -> imports -> [[unresolvedrefbidreview]]
-- **market_research** (C:\project\tenopa proposer\-agent-master\app\services\bidding\submission\market_research.py) -- 8 connections
+- **market_research** (C:\project\tenopa proposer\app\services\bidding\submission\market_research.py) -- 8 connections
   - -> contains -> [[ensuremarketdata]]
   - -> contains -> [[buildsearchkeywords]]
   - -> contains -> [[countcomparable]]
@@ -3045,7 +3952,25 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **session_manager** (C:\project\tenopa proposer\-agent-master\app\services\session_manager.py) -- 8 connections
+- **stream** (C:\project\tenopa proposer\app\services\bidding\submission\stream.py) -- 8 connections
+  - -> contains -> [[getbiddingworkspace]]
+  - -> contains -> [[updatebidpricepostworkflow]]
+  - -> contains -> [[getmarkettrackingsummary]]
+  - -> contains -> [[getbidplanscenarios]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **g2b_bidding_collector** (C:\project\tenopa proposer\app\services\g2b_bidding_collector.py) -- 8 connections
+  - -> contains -> [[g2bbiddingcollector]]
+  - -> contains -> [[g2bbiddinganalyzer]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefg2bservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **session_manager** (C:\project\tenopa proposer\app\services\session_manager.py) -- 8 connections
   - -> contains -> [[todbpayload]]
   - -> contains -> [[fromdbrow]]
   - -> contains -> [[proposalsessionmanager]]
@@ -3054,16 +3979,25 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefexceptions]]
-- **state_validator** (C:\project\tenopa proposer\-agent-master\app\services\state_validator.py) -- 8 connections
-  - -> contains -> [[proposalstatus]]
-  - -> contains -> [[winresult]]
-  - -> contains -> [[statevalidator]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedrefenum]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_cache_service** (C:\project\tenopa proposer\app\services\vault_cache_service.py) -- 8 connections
+  - -> contains -> [[vaultcacheservice]]
+  - -> imports -> [[unresolvedrefhashlib]]
+  - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedreflogging]]
-- **test_workflow** (C:\project\tenopa proposer\-agent-master\scripts\archive\test_workflow.py) -- 8 connections
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_embedding_service** (C:\project\tenopa proposer\app\services\vault_embedding_service.py) -- 8 connections
+  - -> contains -> [[embeddingservice]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefos]]
+  - -> imports -> [[unresolvedrefopenai]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **test_workflow** (C:\project\tenopa proposer\scripts\archive\test_workflow.py) -- 8 connections
   - -> contains -> [[testfullworkflow]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefpathlib]]
@@ -3072,7 +4006,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefproposalgenerator]]
   - -> imports -> [[unresolvedrefdocxbuilder]]
   - -> imports -> [[unresolvedrefpptxbuilder]]
-- **migrate_states_unified** (C:\project\tenopa proposer\-agent-master\scripts\migrate_states_unified.py) -- 8 connections
+- **migrate_states_unified** (C:\project\tenopa proposer\scripts\migrate_states_unified.py) -- 8 connections
   - -> contains -> [[runmigration]]
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
@@ -3081,7 +4015,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreftyping]]
-- **seed_org_structure** (C:\project\tenopa proposer\-agent-master\scripts\seed_org_structure.py) -- 8 connections
+- **seed_org_structure** (C:\project\tenopa proposer\scripts\seed_org_structure.py) -- 8 connections
   - -> contains -> [[parsexlsx]]
   - -> contains -> [[seed]]
   - -> contains -> [[main]]
@@ -3090,7 +4024,16 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefopenpyxl]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **test_presentation_sample** (C:\project\tenopa proposer\-agent-master\scripts\test_presentation_sample.py) -- 8 connections
+- **test_g2b** (C:\project\tenopa proposer\scripts\test_g2b.py) -- 8 connections
+  - -> contains -> [[testbidsearch]]
+  - -> contains -> [[testbidresults]]
+  - -> contains -> [[teststandalonewrapper]]
+  - -> contains -> [[testbiddetail]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefsys]]
+  - -> imports -> [[unresolvedrefdatetime]]
+- **test_presentation_sample** (C:\project\tenopa proposer\scripts\test_presentation_sample.py) -- 8 connections
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefjson]]
@@ -3099,7 +4042,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefphaseschemas]]
   - -> imports -> [[unresolvedrefpresentationgenerator]]
   - -> imports -> [[unresolvedrefpresentationpptxbuilder]]
-- **test_search_flow** (C:\project\tenopa proposer\-agent-master\scripts\test_search_flow.py) -- 8 connections
+- **test_search_flow** (C:\project\tenopa proposer\scripts\test_search_flow.py) -- 8 connections
   - -> contains -> [[formatbids]]
   - -> contains -> [[testwithliveg2b]]
   - -> contains -> [[testairecommendation]]
@@ -3108,55 +4051,22 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefconfig]]
-- **test_graph_branching** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_branching.py) -- 8 connections
-  - -> contains -> [[resumeapproved]]
-  - -> contains -> [[resumego]]
-  - -> contains -> [[resumerejected]]
-  - -> contains -> [[advancetostep]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefcontextlib]]
-  - -> imports -> [[unresolvedrefmemory]]
-  - -> imports -> [[unresolvedreftypes]]
-- **__unresolved__::ref::asyncanthropic** () -- 7 connections
-  - <- calls <- [[getclient]]
-  - <- calls <- [[init]]
-  - <- calls <- [[generatepresentationslides]]
-  - <- calls <- [[extracttocwithclaude]]
-  - <- calls <- [[init]]
-  - <- calls <- [[init]]
-  - <- calls <- [[createanthropicclient]]
-- **__unresolved__::ref::bid_schemas** () -- 7 connections
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[fetcher]]
-  - <- imports <- [[preprocessor]]
-  - <- imports <- [[recommender]]
-  - <- imports <- [[testbidfetcherunit]]
-  - <- imports <- [[testbidrecommendation]]
-  - <- imports <- [[testbidrecommenderunit]]
-- **__unresolved__::ref::contextlib** () -- 7 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[testmcptools]]
-  - <- imports <- [[testworkflowerrorrecovery]]
-  - <- imports <- [[testworkflowlivedb]]
-  - <- imports <- [[testgraphbranching]]
-  - <- imports <- [[testgraphhappypath]]
-  - <- imports <- [[testnodesunit]]
-- **__unresolved__::ref::g2b_service** () -- 7 connections
-  - <- imports <- [[routesbids]]
-  - <- imports <- [[routesg2b]]
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[fetcher]]
-  - <- imports <- [[dailybidscan]]
-  - <- imports <- [[searchmatchingbids]]
-  - <- imports <- [[testg2bsearch]]
+- **__unresolved__::ref::clientsession** () -- 7 connections
+  - <- calls <- [[copybidattachmentstoproposal]]
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[aenter]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[downloadfilefromurl]]
+  - <- calls <- [[fetchdocumentcontent]]
+  - <- calls <- [[call]]
 - **__unresolved__::ref::hashlib** () -- 7 connections
   - <- imports <- [[gonogo]]
   - <- imports <- [[ratelimit]]
   - <- imports <- [[documentingestion]]
   - <- imports <- [[g2bservice]]
   - <- imports <- [[promptregistry]]
+  - <- imports <- [[vaultcacheservice]]
   - <- imports <- [[versionmanager]]
-  - <- imports <- [[testpromptevolutione2e]]
 - **__unresolved__::ref::lxml** () -- 7 connections
   - <- imports <- [[hwpxbuilder]]
   - <- imports <- [[hwpxservice]]
@@ -3165,23 +4075,31 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[pageguard]]
   - <- imports <- [[validate]]
   - <- imports <- [[hwpxtopptx]]
-- **__unresolved__::ref::models** () -- 7 connections
-  - <- imports <- [[clientpreference]]
-  - <- imports <- [[competitorpricing]]
-  - <- imports <- [[costestimator]]
-  - <- imports <- [[coststandardselector]]
-  - <- imports <- [[engine]]
-  - <- imports <- [[sensitivity]]
-  - <- imports <- [[init]]
-- **_get_dev_user** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 7 connections
-  - -> calls -> [[unresolvedrefshouldbypassauth]]
-  - -> calls -> [[unresolvedrefauthtokenexpirederror]]
-  - -> calls -> [[unresolvedrefall]]
-  - -> calls -> [[unresolvedrefprint]]
-  - -> calls -> [[unresolvedrefwarning]]
-  - -> calls -> [[unresolvedrefcurrentuser]]
-  - <- contains <- [[deps]]
-- **routes_public** (C:\project\tenopa proposer\-agent-master\app\api\routes_public.py) -- 7 connections
+- **__unresolved__::ref::parse** () -- 7 connections
+  - <- imports <- [[routesartifacts]]
+  - <- imports <- [[rfpparser]]
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[validatexml]]
+  - <- calls <- [[updatemetadata]]
+  - <- calls <- [[collectmetrics]]
+  - <- calls <- [[getauthtoken]]
+- **__unresolved__::ref::user_schemas** () -- 7 connections
+  - <- imports <- [[routesauth]]
+  - <- imports <- [[routesusers]]
+  - <- imports <- [[routesvaultbidding]]
+  - <- imports <- [[routesvaultclients]]
+  - <- imports <- [[routesvaultcredentials]]
+  - <- imports <- [[routesvaultpersonnel]]
+  - <- imports <- [[routesvaultstepsearch]]
+- **__unresolved__::ref::write** () -- 7 connections
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[parserfpbytes]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[buildcopybundle]]
+  - <- calls <- [[updatemetadata]]
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[provision]]
+- **routes_public** (C:\project\tenopa proposer\app\api\routes_public.py) -- 7 connections
   - -> contains -> [[landingstats]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
@@ -3189,7 +4107,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedrefresponse]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **step8a_customer_analysis** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8a_customer_analysis.py) -- 7 connections
+- **step8a_customer_analysis** (C:\project\tenopa proposer\app\graph\nodes\step8a_customer_analysis.py) -- 7 connections
   - -> contains -> [[proposalcustomeranalysis]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -3197,7 +4115,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefversionmanager]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8a]]
-- **step8b_section_validator** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8b_section_validator.py) -- 7 connections
+- **step8b_section_validator** (C:\project\tenopa proposer\app\graph\nodes\step8b_section_validator.py) -- 7 connections
   - -> contains -> [[proposalsectionvalidator]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -3205,7 +4123,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefversionmanager]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8b]]
-- **step8c_consolidation** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8c_consolidation.py) -- 7 connections
+- **step8c_consolidation** (C:\project\tenopa proposer\app\graph\nodes\step8c_consolidation.py) -- 7 connections
   - -> contains -> [[proposalsectionsconsolidation]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -3213,7 +4131,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefversionmanager]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8c]]
-- **step8d_mock_evaluation** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\step8d_mock_evaluation.py) -- 7 connections
+- **step8d_mock_evaluation** (C:\project\tenopa proposer\app\graph\nodes\step8d_mock_evaluation.py) -- 7 connections
   - -> contains -> [[mockevaluationanalysis]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefuuid]]
@@ -3221,23 +4139,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefversionmanager]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefstep8d]]
-- **get_current_user** (C:\project\tenopa proposer\-agent-master\app\middleware\auth.py) -- 7 connections
-  - -> calls -> [[unresolvedrefheader]]
-  - -> calls -> [[unresolvedrefstartswith]]
-  - -> calls -> [[unresolvedrefhttpexception]]
-  - -> calls -> [[unresolvedrefremoveprefix]]
-  - -> calls -> [[unresolvedrefgetasyncclient]]
-  - -> calls -> [[unresolvedrefgetuser]]
-  - <- contains <- [[auth]]
-- **scheduler** (C:\project\tenopa proposer\-agent-master\app\scheduler.py) -- 7 connections
-  - -> contains -> [[getscheduler]]
-  - -> contains -> [[initscheduler]]
-  - -> contains -> [[shutdownscheduler]]
-  - -> contains -> [[registerjobs]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefcron]]
-- **ai_status_manager** (C:\project\tenopa proposer\-agent-master\app\services\ai_status_manager.py) -- 7 connections
+- **ai_status_manager** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 7 connections
   - -> contains -> [[aistatusmanager]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftime]]
@@ -3245,7 +4147,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **cleanup** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\cleanup.py) -- 7 connections
+- **cleanup** (C:\project\tenopa proposer\app\services\bidding\monitor\cleanup.py) -- 7 connections
   - -> contains -> [[cleanupexpiredbids]]
   - -> contains -> [[cleancache]]
   - -> imports -> [[unresolvedrefjson]]
@@ -3253,15 +4155,39 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **ensure_market_data** (C:\project\tenopa proposer\-agent-master\app\services\bidding\submission\market_research.py) -- 7 connections
-  - -> calls -> [[unresolvedrefcomputebudgettier]]
-  - -> calls -> [[unresolvedrefcountcomparable]]
-  - -> calls -> [[unresolvedrefinfo]]
-  - -> calls -> [[unresolvedrefbuildsearchkeywords]]
-  - -> calls -> [[unresolvedrefcrawlbidresults]]
+- **download_file_from_url** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 7 connections
+  - -> calls -> [[unresolvedrefvalidateurl]]
+  - -> calls -> [[unresolvedrefclientsession]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefclienttimeout]]
+  - -> calls -> [[unresolvedrefread]]
   - -> calls -> [[unresolvedrefwarning]]
-  - <- contains <- [[marketresearch]]
-- **supabase_client** (C:\project\tenopa proposer\-agent-master\app\utils\supabase_client.py) -- 7 connections
+  - <- contains <- [[rfpparser]]
+- **parse_rfp_bytes** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 7 connections
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefnamedtemporaryfile]]
+  - -> calls -> [[unresolvedrefwrite]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefextracttextfromfile]]
+  - -> calls -> [[unresolvedrefunlink]]
+  - <- contains <- [[rfpparser]]
+- **vault_chat_search** (C:\project\tenopa proposer\app\services\vault_chat_search.py) -- 7 connections
+  - -> contains -> [[vaultchatsearch]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **_call** (C:\project\tenopa proposer\app\utils\edge_functions.py) -- 7 connections
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedrefclienttimeout]]
+  - -> calls -> [[unresolvedrefclientsession]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedreftext]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[edgefunctions]]
+- **supabase_client** (C:\project\tenopa proposer\app\utils\supabase_client.py) -- 7 connections
   - -> contains -> [[getasyncclient]]
   - -> contains -> [[resetclient]]
   - -> contains -> [[getuserclient]]
@@ -3269,7 +4195,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefsupabase]]
   - -> imports -> [[unresolvedrefconfig]]
-- **rfp_review_engine** (C:\project\tenopa proposer\-agent-master\scripts\archive\rfp_review_engine.py) -- 7 connections
+- **rfp_review_engine** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 7 connections
   - -> contains -> [[feasibilitylevel]]
   - -> contains -> [[decisiontype]]
   - -> contains -> [[rfpreviewengine]]
@@ -3277,7 +4203,7 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedrefre]]
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefenum]]
-- **collect_market_data** (C:\project\tenopa proposer\-agent-master\scripts\collect_market_data.py) -- 7 connections
+- **collect_market_data** (C:\project\tenopa proposer\scripts\collect_market_data.py) -- 7 connections
   - -> contains -> [[collect]]
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefargparse]]
@@ -3285,6 +4211,29 @@ Cohesion: 0.00 | Nodes: 954
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefpathlib]]
+- **e2e_workflow_test** (C:\project\tenopa proposer\scripts\e2e_workflow_test.py) -- 7 connections
+  - -> contains -> [[gettoken]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefhttpx]]
+  - -> imports -> [[unresolvedrefmain]]
+  - -> imports -> [[unresolvedreflogging]]
+- **run_master_projects_migration** (C:\project\tenopa proposer\scripts\run_master_projects_migration.py) -- 7 connections
+  - -> contains -> [[runmigration]]
+  - -> contains -> [[main]]
+  - -> imports -> [[unresolvedrefargparse]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefpathlib]]
+  - -> imports -> [[unresolvedreftyping]]
+- **__unresolved__::ref::clienttimeout** () -- 6 connections
+  - <- calls <- [[copybidattachmentstoproposal]]
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[callapi]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[downloadfilefromurl]]
+  - <- calls <- [[call]]
 - **__unresolved__::ref::extract_text_from_file** () -- 6 connections
   - <- calls <- [[extractfromstorage]]
   - <- calls <- [[extracttextfrompdf]]
@@ -3292,185 +4241,232 @@ Cohesion: 0.00 | Nodes: 954
   - <- calls <- [[extracttext]]
   - <- calls <- [[parserfpbytes]]
   - <- calls <- [[parserfpfromurl]]
-- **__unresolved__::ref::file_utils** () -- 6 connections
-  - <- imports <- [[routesfiles]]
-  - <- imports <- [[routesintranet]]
-  - <- imports <- [[routesresources]]
-  - <- imports <- [[routessubmissiondocs]]
-  - <- imports <- [[routestemplates]]
-  - <- imports <- [[testfileutils]]
-- **__unresolved__::ref::memory** () -- 6 connections
-  - <- imports <- [[testdbfallback]]
-  - <- imports <- [[testmcptools]]
-  - <- imports <- [[testworkflowerrorrecovery]]
-  - <- imports <- [[testgraphbranching]]
-  - <- imports <- [[testgraphhappypath]]
-  - <- references <- [[appendix-related-documents]]
-- **routes_qa** (C:\project\tenopa proposer\-agent-master\app\api\routes_qa.py) -- 6 connections
+- **routes_qa** (C:\project\tenopa proposer\app\api\routes_qa.py) -- 6 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefauthschemas]]
   - -> imports -> [[unresolvedrefschemas]]
   - -> imports -> [[unresolvedrefqaservice]]
-- **_run_phases** (C:\project\tenopa proposer\-agent-master\app\api\routes_v31.py) -- 6 connections
-  - -> calls -> [[unresolvedrefphaseexecutor]]
-  - -> calls -> [[unresolvedrefexecuteall]]
-  - -> calls -> [[unresolvedrefupdatesession]]
-  - -> calls -> [[unresolvedrefinfo]]
-  - -> calls -> [[unresolvedreferror]]
-  - <- contains <- [[routesv31]]
-- **_run_phases_from** (C:\project\tenopa proposer\-agent-master\app\api\routes_v31.py) -- 6 connections
-  - -> calls -> [[unresolvedrefphaseexecutor]]
-  - -> calls -> [[unresolvedrefexecutefromphase]]
-  - -> calls -> [[unresolvedrefupdatesession]]
-  - -> calls -> [[unresolvedrefinfo]]
-  - -> calls -> [[unresolvedreferror]]
-  - <- contains <- [[routesv31]]
-- **rfp_fetch** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\rfp_fetch.py) -- 6 connections
+- **routes_vault_embeddings** (C:\project\tenopa proposer\app\api\routes_vault_embeddings.py) -- 6 connections
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreffastapi]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefdeps]]
+  - -> imports -> [[unresolvedrefauthschemas]]
+  - -> imports -> [[unresolvedrefvaultembeddingservice]]
+- **merge_nodes** (C:\project\tenopa proposer\app\graph\nodes\merge_nodes.py) -- 6 connections
+  - -> contains -> [[syncdynamicsections]]
+  - -> contains -> [[planmerge]]
+  - -> contains -> [[proposalmerge]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefstate]]
+  - -> imports -> [[unresolvedrefsectionprompts]]
+- **rfp_fetch** (C:\project\tenopa proposer\app\graph\nodes\rfp_fetch.py) -- 6 connections
   - -> contains -> [[rfpfetch]]
   - -> contains -> [[uploadattachmenttostorage]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftypes]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefstate]]
-- **rfp_search** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\rfp_search.py) -- 6 connections
+- **rfp_search** (C:\project\tenopa proposer\app\graph\nodes\rfp_search.py) -- 6 connections
   - -> contains -> [[rfpsearch]]
   - -> contains -> [[formatbids]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
-- **common** (C:\project\tenopa proposer\-agent-master\app\models\common.py) -- 6 connections
+- **submission_nodes** (C:\project\tenopa proposer\app\graph\nodes\submission_nodes.py) -- 6 connections
+  - -> contains -> [[submissionplan]]
+  - -> contains -> [[costsheetgenerate]]
+  - -> contains -> [[submissionchecklist]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefstate]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+- **common** (C:\project\tenopa proposer\app\models\common.py) -- 6 connections
   - -> contains -> [[statusresponse]]
   - -> contains -> [[itemsresponse]]
   - -> contains -> [[paginatedresponse]]
   - -> contains -> [[deleteresponse]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **step8_schemas** (C:\project\tenopa proposer\-agent-master\app\models\step8_schemas.py) -- 6 connections
+- **step8_schemas** (C:\project\tenopa proposer\app\models\step8_schemas.py) -- 6 connections
   - -> contains -> [[consolidatedsection]]
   - -> contains -> [[evaluationdimension]]
   - -> contains -> [[improvementaction]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **alert_manager** (C:\project\tenopa proposer\-agent-master\app\services\alert_manager.py) -- 6 connections
+- **alert_manager** (C:\project\tenopa proposer\app\services\alert_manager.py) -- 6 connections
   - -> contains -> [[alertmanager]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefhealthchecker]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **_shade_row** (C:\project\tenopa proposer\-agent-master\app\services\bidding\artifacts\cost_sheet_builder.py) -- 6 connections
-  - -> calls -> [[unresolvedrefoxmlelement]]
-  - -> calls -> [[unresolvedrefset]]
-  - -> calls -> [[unresolvedrefqn]]
-  - -> calls -> [[unresolvedrefappend]]
-  - -> calls -> [[unresolvedrefgetoraddtcpr]]
-  - <- contains <- [[costsheetbuilder]]
-- **feedback_loop** (C:\project\tenopa proposer\-agent-master\app\services\feedback_loop.py) -- 6 connections
+- **bid_scoring_service** (C:\project\tenopa proposer\app\services\bid_scoring_service.py) -- 6 connections
+  - -> contains -> [[parsebudget]]
+  - -> contains -> [[bidscoringservice]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefmath]]
+  - -> imports -> [[unresolvedrefembeddingservice]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **feedback_loop** (C:\project\tenopa proposer\app\services\feedback_loop.py) -- 6 connections
   - -> contains -> [[processprojectcompletion]]
   - -> contains -> [[updateclienthistory]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefconfig]]
   - -> imports -> [[unresolvedrefnotificationservice]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **edge_functions** (C:\project\tenopa proposer\-agent-master\app\utils\edge_functions.py) -- 6 connections
+- **extract_header_xml** (C:\project\tenopa proposer\app\services\hwpx\analyze_template.py) -- 6 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefwritebytes]]
+  - <- contains <- [[analyzetemplate]]
+- **extract_section_xml** (C:\project\tenopa proposer\app\services\hwpx\analyze_template.py) -- 6 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefwritebytes]]
+  - <- contains <- [[analyzetemplate]]
+- **master_projects_chat_service** (C:\project\tenopa proposer\app\services\master_projects_chat_service.py) -- 6 connections
+  - -> contains -> [[masterprojectschatservice]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **completed_projects** (C:\project\tenopa proposer\app\services\vault_handlers\completed_projects.py) -- 6 connections
+  - -> contains -> [[completedprojectshandler]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **government_guidelines** (C:\project\tenopa proposer\app\services\vault_handlers\government_guidelines.py) -- 6 connections
+  - -> contains -> [[governmentguidelineshandler]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_personnel_service** (C:\project\tenopa proposer\app\services\vault_personnel_service.py) -- 6 connections
+  - -> contains -> [[vaultpersonnelservice]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **vault_query_router** (C:\project\tenopa proposer\app\services\vault_query_router.py) -- 6 connections
+  - -> contains -> [[vaultqueryrouter]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefjson]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+  - -> imports -> [[unresolvedrefclaudeclient]]
+- **vault_step_search** (C:\project\tenopa proposer\app\services\vault_step_search.py) -- 6 connections
+  - -> contains -> [[vaultstepsearch]]
+  - -> imports -> [[unresolvedrefdatetime]]
+  - -> imports -> [[unresolvedrefuuid]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedrefsupabaseclient]]
+- **edge_functions** (C:\project\tenopa proposer\app\utils\edge_functions.py) -- 6 connections
   - -> contains -> [[call]]
   - -> contains -> [[notifyproposalcomplete]]
   - -> contains -> [[notifycommentcreated]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefaiohttp]]
   - -> imports -> [[unresolvedrefconfig]]
-- **strategy_planning_engine** (C:\project\tenopa proposer\-agent-master\scripts\archive\strategy_planning_engine.py) -- 6 connections
+- **strategy_planning_engine** (C:\project\tenopa proposer\scripts\archive\strategy_planning_engine.py) -- 6 connections
   - -> contains -> [[winningstrategy]]
   - -> contains -> [[pricestrategy]]
   - -> contains -> [[strategyplanningengine]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefenum]]
-- **create_excel_template** (C:\project\tenopa proposer\-agent-master\scripts\create_excel_template.py) -- 6 connections
+- **create_excel_template** (C:\project\tenopa proposer\scripts\create_excel_template.py) -- 6 connections
   - -> contains -> [[setupsheet]]
   - -> imports -> [[unresolvedrefopenpyxl]]
   - -> imports -> [[unresolvedrefstyles]]
   - -> imports -> [[unresolvedrefutils]]
   - -> imports -> [[unresolvedrefdatavalidation]]
   - -> imports -> [[unresolvedrefos]]
-- **exec_migration** (C:\project\tenopa proposer\-agent-master\scripts\exec_migration.py) -- 6 connections
+- **exec_migration** (C:\project\tenopa proposer\scripts\exec_migration.py) -- 6 connections
   - -> contains -> [[runmigration]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **run_migration** (C:\project\tenopa proposer\-agent-master\scripts\run_migration.py) -- 6 connections
+- **call_claude** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 6 connections
+  - -> calls -> [[unresolvedrefanthropic]]
+  - -> calls -> [[unresolvedrefgetenv]]
+  - -> calls -> [[unresolvedrefcreate]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - <- contains <- [[hwpxtopptx]]
+- **extract_hwpx_text** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 6 connections
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedreffromstring]]
+  - -> calls -> [[unresolvedrefiter]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - <- contains <- [[hwpxtopptx]]
+- **run_migration** (C:\project\tenopa proposer\scripts\run_migration.py) -- 6 connections
   - -> contains -> [[runmigration]]
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **team_recommender** (C:\project\tenopa proposer\-agent-master\scripts\team_recommender.py) -- 6 connections
+- **team_recommender** (C:\project\tenopa proposer\scripts\team_recommender.py) -- 6 connections
   - -> contains -> [[teamrecommender]]
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefjson]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdataclasses]]
   - -> imports -> [[unresolvedrefpathlib]]
-- **main** (C:\project\tenopa proposer\-agent-master\scripts\test_search_flow.py) -- 6 connections
-  - -> calls -> [[unresolvedrefprint]]
-  - -> calls -> [[unresolvedreftestwithliveg2b]]
-  - -> calls -> [[unresolvedreflen]]
-  - -> calls -> [[unresolvedrefenumerate]]
-  - -> calls -> [[unresolvedreftestairecommendation]]
-  - <- contains <- [[testsearchflow]]
-- **test_search_strategy** (C:\project\tenopa proposer\-agent-master\scripts\test_search_strategy.py) -- 6 connections
+- **test_search_strategy** (C:\project\tenopa proposer\scripts\test_search_strategy.py) -- 6 connections
   - -> contains -> [[formatbids]]
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefconfig]]
-- **conftest** (C:\project\tenopa proposer\-agent-master\tests\e2e\conftest.py) -- 6 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefos]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefdotenv]]
-  - -> imports -> [[unresolvedrefauthschemas]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **test_step8d_8e_8f_nodes** (C:\project\tenopa proposer\-agent-master\tests\test_step8d_8e_8f_nodes.py) -- 6 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefstate]]
-  - -> imports -> [[unresolvedrefstep8dmockevaluation]]
-  - -> imports -> [[unresolvedrefstep8efeedbackprocessor]]
-  - -> imports -> [[unresolvedrefstep8frewrite]]
-- **test_document_builders** (C:\project\tenopa proposer\-agent-master\tests\unit\test_document_builders.py) -- 6 connections
-  - -> contains -> [[testdocumentbuilders]]
-  - -> imports -> [[unresolvedrefpathlib]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefschemas]]
-  - -> imports -> [[unresolvedrefdocxbuilder]]
-  - -> imports -> [[unresolvedrefpptxbuilder]]
 - **__unresolved__::ref::abc** () -- 5 connections
   - <- imports <- [[routesprojectarchive]]
   - <- extends <- [[proposalmodule]]
   - <- imports <- [[modulararchitecture]]
   - <- extends <- [[proposalmodule]]
   - <- imports <- [[modulararchitecturesimple]]
-- **__unresolved__::ref::depends** () -- 5 connections
-  - <- calls <- [[getcurrentuser]]
-  - <- calls <- [[getcurrentuserornone]]
-  - <- calls <- [[getrlsclient]]
-  - <- calls <- [[requirerole]]
-  - <- calls <- [[requireprojectaccess]]
-- **__unresolved__::ref::migration_service** () -- 5 connections
-  - <- imports <- [[routesmigrations]]
-  - <- imports <- [[migrationjobs]]
-  - <- imports <- [[migratelegacydocuments]]
-  - <- imports <- [[testmigrationscript]]
-  - <- imports <- [[testmigrationservice]]
+- **__unresolved__::ref::collections** () -- 5 connections
+  - <- imports <- [[routesstats]]
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[g2bservice]]
+  - <- imports <- [[importprojecthistory]]
+  - <- imports <- [[importteamstructure]]
+- **__unresolved__::ref::embedding_service** () -- 5 connections
+  - <- imports <- [[bidscoringservice]]
+  - <- imports <- [[contentlibrary]]
+  - <- imports <- [[documentingestion]]
+  - <- imports <- [[knowledgesearch]]
+  - <- imports <- [[qaservice]]
+- **__unresolved__::ref::file_utils** () -- 5 connections
+  - <- imports <- [[routesfiles]]
+  - <- imports <- [[routesintranet]]
+  - <- imports <- [[routesresources]]
+  - <- imports <- [[routessubmissiondocs]]
+  - <- imports <- [[routestemplates]]
+- **__unresolved__::ref::httpx** () -- 5 connections
+  - <- imports <- [[emailservice]]
+  - <- imports <- [[notificationservice]]
+  - <- imports <- [[e2einterrupttest]]
+  - <- imports <- [[e2eworkflowtest]]
+  - <- imports <- [[initstoragebuckets]]
 - **__unresolved__::ref::phase_schemas** () -- 5 connections
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routesv31]]
@@ -3489,167 +4485,124 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[hwpxservice]]
   - <- imports <- [[analyzetemplate]]
   - <- imports <- [[buildhwpx]]
-- **get_rls_client** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 5 connections
-  - -> calls -> [[unresolvedrefdepends]]
-  - -> calls -> [[unresolvedrefgetasyncclient]]
-  - -> calls -> [[unresolvedrefauthtokenexpirederror]]
-  - -> calls -> [[unresolvedrefgetuserclient]]
-  - <- contains <- [[deps]]
-- **require_role** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 5 connections
-  - -> calls -> [[unresolvedrefdepends]]
-  - -> calls -> [[unresolvedrefauthinsufficientroleerror]]
-  - -> calls -> [[unresolvedreflist]]
-  - -> calls -> [[unresolvedrefvalidateuserstatus]]
-  - <- contains <- [[deps]]
-- **response** (C:\project\tenopa proposer\-agent-master\app\api\response.py) -- 5 connections
-  - -> contains -> [[ok]]
-  - -> contains -> [[oklist]]
-  - -> contains -> [[now]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedreftyping]]
-- **routes_step8** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8.py) -- 5 connections
+- **routes_step8** (C:\project\tenopa proposer\app\api\routes_step8.py) -- 5 connections
   - -> contains -> [[nodestatusresponse]]
   - -> contains -> [[nodevalidaterequest]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **research_gather** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\research_gather.py) -- 5 connections
+- **research_gather** (C:\project\tenopa proposer\app\graph\nodes\research_gather.py) -- 5 connections
   - -> contains -> [[researchgather]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
-- **rfp_analyze** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\rfp_analyze.py) -- 5 connections
+- **rfp_analyze** (C:\project\tenopa proposer\app\graph\nodes\rfp_analyze.py) -- 5 connections
   - -> contains -> [[rfpanalyze]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedrefclaudeclient]]
   - -> imports -> [[unresolvedrefservices]]
-- **auth_schemas** (C:\project\tenopa proposer\-agent-master\app\models\auth_schemas.py) -- 5 connections
+- **auth_schemas** (C:\project\tenopa proposer\app\models\auth_schemas.py) -- 5 connections
   - -> contains -> [[currentuser]]
   - -> contains -> [[authmessageresponse]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedreftypes]]
-- **notification_schemas** (C:\project\tenopa proposer\-agent-master\app\models\notification_schemas.py) -- 5 connections
+- **notification_schemas** (C:\project\tenopa proposer\app\models\notification_schemas.py) -- 5 connections
   - -> contains -> [[notificationitem]]
   - -> contains -> [[notificationlistresponse]]
   - -> contains -> [[notificationsettingsresponse]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefpydantic]]
-- **_run_all_steps** (C:\project\tenopa proposer\-agent-master\app\services\bid_pipeline.py) -- 5 connections
-  - -> calls -> [[unresolvedrefensurebidindb]]
-  - -> calls -> [[unresolvedrefupdatestatus]]
-  - -> calls -> [[unresolvedrefdownloadandextract]]
-  - -> calls -> [[unresolvedrefrunanalysisifneeded]]
-  - <- contains <- [[bidpipeline]]
-- **BidPreprocessor** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\preprocessor.py) -- 5 connections
-  - -> contains -> [[init]]
-  - -> contains -> [[preprocess]]
-  - -> contains -> [[preprocessbatch]]
-  - -> contains -> [[parsesummary]]
-  - <- contains <- [[preprocessor]]
-- **cost_estimator** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\cost_estimator.py) -- 5 connections
+- **cost_estimator** (C:\project\tenopa proposer\app\services\bidding\pricing\cost_estimator.py) -- 5 connections
   - -> contains -> [[enhancedcostestimator]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefcalculator]]
   - -> imports -> [[unresolvedrefmodels]]
-- **cost_standard_selector** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\cost_standard_selector.py) -- 5 connections
-  - -> contains -> [[coststandardselector]]
-  - -> contains -> [[domaintostandard]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefre]]
-  - -> imports -> [[unresolvedrefmodels]]
-- **human_edit_tracker** (C:\project\tenopa proposer\-agent-master\app\services\human_edit_tracker.py) -- 5 connections
+- **human_edit_tracker** (C:\project\tenopa proposer\app\services\human_edit_tracker.py) -- 5 connections
   - -> contains -> [[computeeditratio]]
   - -> contains -> [[recordaction]]
   - -> imports -> [[unresolvedrefdifflib]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftyping]]
-- **_validate_url** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 5 connections
-  - -> calls -> [[unresolvedrefurlparse]]
-  - -> calls -> [[unresolvedrefvalueerror]]
-  - -> calls -> [[unresolvedrefgetaddrinfo]]
-  - -> calls -> [[unresolvedrefipaddress]]
-  - <- contains <- [[rfpparser]]
-- **workflow_timer** (C:\project\tenopa proposer\-agent-master\app\services\workflow_timer.py) -- 5 connections
+- **vault_citation_service** (C:\project\tenopa proposer\app\services\vault_citation_service.py) -- 5 connections
+  - -> contains -> [[vaultcitationservice]]
+  - -> imports -> [[unresolvedrefre]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+- **workflow_timer** (C:\project\tenopa proposer\app\services\workflow_timer.py) -- 5 connections
   - -> contains -> [[workflowtimer]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
   - -> imports -> [[unresolvedreftokenpricing]]
-- **test_modular_architecture** (C:\project\tenopa proposer\-agent-master\scripts\archive\test_modular_architecture.py) -- 5 connections
+- **test_modular_architecture** (C:\project\tenopa proposer\scripts\archive\test_modular_architecture.py) -- 5 connections
   - -> contains -> [[testmodulararchitecture]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefos]]
   - -> imports -> [[unresolvedrefmodulararchitecturesimple]]
-- **check_columns** (C:\project\tenopa proposer\-agent-master\scripts\check_columns.py) -- 5 connections
+- **check_columns** (C:\project\tenopa proposer\scripts\check_columns.py) -- 5 connections
   - -> contains -> [[checkcolumns]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **check_data** (C:\project\tenopa proposer\-agent-master\scripts\check_data.py) -- 5 connections
+- **check_data** (C:\project\tenopa proposer\scripts\check_data.py) -- 5 connections
   - -> contains -> [[checkdata]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **check_schema** (C:\project\tenopa proposer\-agent-master\scripts\check_schema.py) -- 5 connections
+- **check_schema** (C:\project\tenopa proposer\scripts\check_schema.py) -- 5 connections
   - -> contains -> [[checkschema]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **diagnose_supabase** (C:\project\tenopa proposer\-agent-master\scripts\diagnose_supabase.py) -- 5 connections
+- **diagnose_supabase** (C:\project\tenopa proposer\scripts\diagnose_supabase.py) -- 5 connections
   - -> contains -> [[diagnose]]
   - -> imports -> [[unresolvedrefos]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **init_storage_buckets** (C:\project\tenopa proposer\-agent-master\scripts\init_storage_buckets.py) -- 5 connections
+- **init_storage_buckets** (C:\project\tenopa proposer\scripts\init_storage_buckets.py) -- 5 connections
   - -> contains -> [[initbuckets]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefhttpx]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **insert_test_bid** (C:\project\tenopa proposer\-agent-master\scripts\insert_test_bid.py) -- 5 connections
+- **insert_test_bid** (C:\project\tenopa proposer\scripts\insert_test_bid.py) -- 5 connections
   - -> contains -> [[inserttestbid]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **seed_data** (C:\project\tenopa proposer\-agent-master\scripts\seed_data.py) -- 5 connections
+- **seed_data** (C:\project\tenopa proposer\scripts\seed_data.py) -- 5 connections
   - -> contains -> [[seed]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefos]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **test_g2b_search** (C:\project\tenopa proposer\-agent-master\scripts\test_g2b_search.py) -- 5 connections
+- **test_g2b_search** (C:\project\tenopa proposer\scripts\test_g2b_search.py) -- 5 connections
   - -> contains -> [[testsearch]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdatetime]]
   - -> imports -> [[unresolvedrefg2bservice]]
-- **test_workflow_error_recovery** (C:\project\tenopa proposer\-agent-master\tests\integration\test_workflow_error_recovery.py) -- 5 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefcontextlib]]
-  - -> imports -> [[unresolvedrefmemory]]
-  - -> imports -> [[unresolvedreftypes]]
-  - -> imports -> [[unresolvedrefconftest]]
-- **test_migration_script** (C:\project\tenopa proposer\-agent-master\tests\test_migration_script.py) -- 5 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefdatetime]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefuuid]]
-  - -> imports -> [[unresolvedrefmigrationservice]]
 - **__unresolved__::ref::aiohttp** () -- 4 connections
   - <- imports <- [[bidattachmentstore]]
   - <- imports <- [[g2bservice]]
   - <- imports <- [[fetcher]]
   - <- imports <- [[edgefunctions]]
+- **__unresolved__::ref::bid_schemas** () -- 4 connections
+  - <- imports <- [[routesbids]]
+  - <- imports <- [[fetcher]]
+  - <- imports <- [[preprocessor]]
+  - <- imports <- [[recommender]]
 - **__unresolved__::ref::context_helpers** () -- 4 connections
   - <- imports <- [[gonogo]]
   - <- imports <- [[plannodes]]
@@ -3665,204 +4618,134 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesauth]]
   - <- imports <- [[routesfiles]]
   - <- imports <- [[routesworkflow]]
-- **__unresolved__::ref::requests** () -- 4 connections
-  - <- imports <- [[requestid]]
-  - <- imports <- [[securityheaders]]
-  - <- imports <- [[testdocumentse2e]]
-  - <- imports <- [[testv31endpoints]]
-- **__unresolved__::ref::strategy** () -- 4 connections
-  - <- imports <- [[proposalnodes]]
-  - <- calls <- [[strategygenerate]]
-  - <- imports <- [[strategygenerate]]
-  - <- calls <- [[strategyobj]]
-- **__unresolved__::ref::supabase** () -- 4 connections
-  - <- imports <- [[truncateproposals]]
-  - <- imports <- [[supabaseclient]]
-  - <- imports <- [[cleanupproposals]]
-  - <- imports <- [[testdocumentse2e]]
+- **__unresolved__::ref::unlink** () -- 4 connections
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[parserfpbytes]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[cleancache]]
 - **__unresolved__::ref::util** () -- 4 connections
   - <- imports <- [[ratelimit]]
   - <- imports <- [[pptxbuilder]]
   - <- imports <- [[presentationpptxbuilder]]
   - <- imports <- [[hwpxtopptx]]
-- **_classify_g2b_error** (C:\project\tenopa proposer\-agent-master\app\api\routes_g2b.py) -- 4 connections
-  - -> calls -> [[unresolvedrefstr]]
-  - -> calls -> [[unresolvedrefg2bexternalerror]]
-  - -> calls -> [[unresolvedrefg2bserviceerror]]
-  - <- contains <- [[routesg2b]]
-- **routes_streams** (C:\project\tenopa proposer\-agent-master\app\api\routes_streams.py) -- 4 connections
+- **__unresolved__::ref::write_bytes** () -- 4 connections
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[extractheaderxml]]
+  - <- calls <- [[extractsectionxml]]
+- **routes_streams** (C:\project\tenopa proposer\app\api\routes_streams.py) -- 4 connections
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefdeps]]
   - -> imports -> [[unresolvedrefstreamschemas]]
-- **config** (C:\project\tenopa proposer\-agent-master\app\config.py) -- 4 connections
+- **config** (C:\project\tenopa proposer\app\config.py) -- 4 connections
   - -> contains -> [[settings]]
   - -> imports -> [[unresolvedrefpydanticsettings]]
   - -> imports -> [[unresolvedrefpydantic]]
   - -> imports -> [[unresolvedreftyping]]
-- **bid_plan** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\bid_plan.py) -- 4 connections
+- **bid_plan** (C:\project\tenopa proposer\app\graph\nodes\bid_plan.py) -- 4 connections
   - -> contains -> [[bidplan]]
   - -> contains -> [[buildconstraint]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefstate]]
-- **_get_rfp_summary** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\plan_nodes.py) -- 4 connections
+- **_get_rfp_summary** (C:\project\tenopa proposer\app\graph\nodes\plan_nodes.py) -- 4 connections
   - -> calls -> [[unresolvedrefgetrfpsummarycompact]]
   - -> calls -> [[unresolvedrefrfptodict]]
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[plannodes]]
-- **migration_jobs** (C:\project\tenopa proposer\-agent-master\app\jobs\migration_jobs.py) -- 4 connections
+- **migration_jobs** (C:\project\tenopa proposer\app\jobs\migration_jobs.py) -- 4 connections
   - -> contains -> [[runscheduledmigration]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefmigrationservice]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **auth** (C:\project\tenopa proposer\-agent-master\app\middleware\auth.py) -- 4 connections
+- **auth** (C:\project\tenopa proposer\app\middleware\auth.py) -- 4 connections
   - -> contains -> [[getcurrentuser]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedreffastapi]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **security_headers** (C:\project\tenopa proposer\-agent-master\app\middleware\security_headers.py) -- 4 connections
+- **security_headers** (C:\project\tenopa proposer\app\middleware\security_headers.py) -- 4 connections
   - -> contains -> [[securityheadersmiddleware]]
   - -> imports -> [[unresolvedrefbase]]
   - -> imports -> [[unresolvedrefrequests]]
   - -> imports -> [[unresolvedrefresponses]]
-- **audit_service** (C:\project\tenopa proposer\-agent-master\app\services\audit_service.py) -- 4 connections
+- **audit_service** (C:\project\tenopa proposer\app\services\audit_service.py) -- 4 connections
   - -> contains -> [[logaction]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedreftyping]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **sensitivity** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\sensitivity.py) -- 4 connections
-  - -> contains -> [[sensitivityanalyzer]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefmodels]]
-  - -> imports -> [[unresolvedrefwinprobability]]
-- **win_probability** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\win_probability.py) -- 4 connections
+- **_clean_cache** (C:\project\tenopa proposer\app\services\bidding\monitor\cleanup.py) -- 4 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefunlink]]
+  - <- contains <- [[cleanup]]
+- **win_probability** (C:\project\tenopa proposer\app\services\bidding\pricing\win_probability.py) -- 4 connections
   - -> contains -> [[winprobabilitymodel]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefmath]]
   - -> imports -> [[unresolvedrefcalculator]]
-- **compliance_tracker** (C:\project\tenopa proposer\-agent-master\app\services\compliance_tracker.py) -- 4 connections
+- **compliance_tracker** (C:\project\tenopa proposer\app\services\compliance_tracker.py) -- 4 connections
   - -> contains -> [[compliancetracker]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefstate]]
   - -> imports -> [[unresolvedrefclaudeclient]]
-- **_safe_link** (C:\project\tenopa proposer\-agent-master\app\services\email_service.py) -- 4 connections
-  - -> calls -> [[unresolvedrefstrip]]
-  - -> calls -> [[unresolvedrefstartswith]]
-  - -> calls -> [[unresolvedrefescape]]
-  - <- contains <- [[emailservice]]
-- **compute_edit_ratio** (C:\project\tenopa proposer\-agent-master\app\services\human_edit_tracker.py) -- 4 connections
-  - -> calls -> [[unresolvedrefsequencematcher]]
-  - -> calls -> [[unresolvedrefratio]]
-  - -> calls -> [[unresolvedrefround]]
-  - <- contains <- [[humanedittracker]]
-- **_validate_xml** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\build_hwpx.py) -- 4 connections
+- **_validate_xml** (C:\project\tenopa proposer\app\services\hwpx\build_hwpx.py) -- 4 connections
   - -> calls -> [[unresolvedrefparse]]
   - -> calls -> [[unresolvedrefstr]]
   - -> calls -> [[unresolvedrefvalueerror]]
   - <- contains <- [[buildhwpx]]
-- **validate** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\validate.py) -- 4 connections
+- **validate** (C:\project\tenopa proposer\app\services\hwpx\validate.py) -- 4 connections
   - -> contains -> [[validatehwpx]]
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefzipfile]]
   - -> imports -> [[unresolvedreflxml]]
-- **preflight_check** (C:\project\tenopa proposer\-agent-master\app\services\preflight_check.py) -- 4 connections
+- **preflight_check** (C:\project\tenopa proposer\app\services\preflight_check.py) -- 4 connections
   - -> contains -> [[checkprompt]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefre]]
   - -> imports -> [[unresolvedrefdataclasses]]
-- **state_machine** (C:\project\tenopa proposer\-agent-master\app\state_machine.py) -- 4 connections
-  - -> contains -> [[statemachine]]
-  - -> imports -> [[unresolvedreftyping]]
-  - -> imports -> [[unresolvedrefstatevalidator]]
+- **vault_context_manager** (C:\project\tenopa proposer\app\services\vault_context_manager.py) -- 4 connections
+  - -> contains -> [[vaultcontextmanager]]
   - -> imports -> [[unresolvedreflogging]]
-- **create_anthropic_client** (C:\project\tenopa proposer\-agent-master\app\utils\claude_utils.py) -- 4 connections
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+- **vault_validation** (C:\project\tenopa proposer\app\services\vault_validation.py) -- 4 connections
+  - -> contains -> [[hallucinationvalidator]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefvaultschemas]]
+- **create_anthropic_client** (C:\project\tenopa proposer\app\utils\claude_utils.py) -- 4 connections
   - -> calls -> [[unresolvedrefclaudeapierror]]
   - -> calls -> [[unresolvedrefasyncanthropic]]
   - -> calls -> [[unresolvedrefanthropic]]
   - <- contains <- [[claudeutils]]
-- **check_storage_files** (C:\project\tenopa proposer\-agent-master\check_storage_files.py) -- 4 connections
-  - -> contains -> [[checkfiles]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsys]]
-  - -> imports -> [[unresolvedrefdotenv]]
-- **ProposalModule** (C:\project\tenopa proposer\-agent-master\scripts\archive\modular_architecture_simple.py) -- 4 connections
+- **ProposalModule** (C:\project\tenopa proposer\scripts\archive\modular_architecture_simple.py) -- 4 connections
   - -> extends -> [[unresolvedrefabc]]
   - -> contains -> [[init]]
   - -> contains -> [[validateinputs]]
   - <- contains <- [[modulararchitecturesimple]]
-- **check_bid_status** (C:\project\tenopa proposer\-agent-master\scripts\check_bid_status.py) -- 4 connections
+- **check_bid_status** (C:\project\tenopa proposer\scripts\check_bid_status.py) -- 4 connections
   - -> contains -> [[checkstatus]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **create_e2e_user** (C:\project\tenopa proposer\-agent-master\scripts\create_e2e_user.py) -- 4 connections
+- **create_e2e_user** (C:\project\tenopa proposer\scripts\create_e2e_user.py) -- 4 connections
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefos]]
-- **create_supabase_tables** (C:\project\tenopa proposer\-agent-master\scripts\create_supabase_tables.py) -- 4 connections
+- **create_supabase_tables** (C:\project\tenopa proposer\scripts\create_supabase_tables.py) -- 4 connections
   - -> contains -> [[main]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefos]]
   - -> imports -> [[unresolvedrefdotenv]]
-- **enrich_with_team** (C:\project\tenopa proposer\-agent-master\scripts\daily_bid_scan.py) -- 4 connections
-  - -> calls -> [[unresolvedrefget]]
-  - -> calls -> [[unresolvedrefrecommend]]
-  - -> calls -> [[unresolvedreftopipelinedict]]
-  - <- contains <- [[dailybidscan]]
-- **test_api2** (C:\project\tenopa proposer\-agent-master\test_api2.py) -- 4 connections
-  - -> contains -> [[testapi]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsys]]
-  - -> imports -> [[unresolvedrefdotenv]]
-- **test_api** (C:\project\tenopa proposer\-agent-master\test_api.py) -- 4 connections
-  - -> contains -> [[testapi]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsys]]
-  - -> imports -> [[unresolvedrefdotenv]]
-- **test_background_analysis** (C:\project\tenopa proposer\-agent-master\test_background_analysis.py) -- 4 connections
-  - -> contains -> [[test]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsys]]
-  - -> imports -> [[unresolvedrefdotenv]]
-- **test_agent_pipeline** (C:\project\tenopa proposer\-agent-master\tests\integration\test_agent_pipeline.py) -- 4 connections
-  - -> contains -> [[testfullpipeline]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefdotenv]]
-  - -> imports -> [[unresolvedrefagents]]
-- **StepMetrics** (C:\project\tenopa proposer\-agent-master\tests\test_step8_e2e.py) -- 4 connections
-  - -> contains -> [[init]]
-  - -> contains -> [[record]]
-  - -> contains -> [[printsummary]]
-  - <- contains <- [[teststep8e2e]]
-- **test_step8a_customer_analysis** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_customer_analysis.py) -- 4 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefstate]]
-  - -> imports -> [[unresolvedrefstep8acustomeranalysis]]
-- **test_step8b_section_validator** (C:\project\tenopa proposer\-agent-master\tests\test_step8b_section_validator.py) -- 4 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefstate]]
-  - -> imports -> [[unresolvedrefstep8bsectionvalidator]]
-- **test_step8c_consolidation** (C:\project\tenopa proposer\-agent-master\tests\test_step8c_consolidation.py) -- 4 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmock]]
-  - -> imports -> [[unresolvedrefstate]]
-  - -> imports -> [[unresolvedrefstep8cconsolidation]]
-- **truncate_proposals** (C:\project\tenopa proposer\-agent-master\truncate_proposals.py) -- 4 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefos]]
-  - -> imports -> [[unresolvedrefsupabase]]
-- **__unresolved__::ref::artifactversion** () -- 3 connections
-  - <- calls <- [[executenodeandcreateversion]]
-  - <- calls <- [[testartifactversioncreation]]
-  - <- calls <- [[testartifactversionoptionalfields]]
-- **__unresolved__::ref::authtokenexpirederror** () -- 3 connections
-  - <- calls <- [[getdevuser]]
-  - <- calls <- [[getcurrentuser]]
-  - <- calls <- [[getrlsclient]]
+- **__unresolved__::ref::_validate_url** () -- 3 connections
+  - <- calls <- [[downloadfile]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[downloadfilefromurl]]
+- **__unresolved__::ref::base** () -- 3 connections
+  - <- imports <- [[requestid]]
+  - <- imports <- [[securityheaders]]
+  - <- extends <- [[masterproject]]
 - **__unresolved__::ref::bid_review** () -- 3 connections
   - <- imports <- [[routesbids]]
   - <- imports <- [[preprocessor]]
@@ -3871,14 +4754,26 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesnotification]]
   - <- imports <- [[routesperformance]]
-- **__unresolved__::ref::docx_builder** () -- 3 connections
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[testworkflow]]
-  - <- imports <- [[testdocumentbuilders]]
-- **__unresolved__::ref::migration_schemas** () -- 3 connections
+- **__unresolved__::ref::document_ingestion** () -- 3 connections
+  - <- imports <- [[routesdocuments]]
+  - <- imports <- [[routesintranet]]
+  - <- imports <- [[testperformanceoptimization]]
+- **__unresolved__::ref::docx** () -- 3 connections
+  - <- imports <- [[docxbuilder]]
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[costsheetbuilder]]
+- **__unresolved__::ref::math** () -- 3 connections
+  - <- imports <- [[bidscoringservice]]
+  - <- imports <- [[winprobability]]
+  - <- imports <- [[bidscoring]]
+- **__unresolved__::ref::migration_service** () -- 3 connections
   - <- imports <- [[routesmigrations]]
-  - <- imports <- [[migrationservice]]
-  - <- imports <- [[testmigrationservice]]
+  - <- imports <- [[migrationjobs]]
+  - <- imports <- [[migratelegacydocuments]]
+- **__unresolved__::ref::namedtemporaryfile** () -- 3 connections
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[parserfpbytes]]
+  - <- calls <- [[parserfpfromurl]]
 - **__unresolved__::ref::openpyxl** () -- 3 connections
   - <- imports <- [[createexceltemplate]]
   - <- imports <- [[importprojecthistory]]
@@ -3891,327 +4786,235 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[pptxbuilder]]
   - <- imports <- [[presentationpptxbuilder]]
   - <- imports <- [[hwpxtopptx]]
-- **__unresolved__::ref::pptx_builder** () -- 3 connections
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[testworkflow]]
-  - <- imports <- [[testdocumentbuilders]]
-- **__unresolved__::ref::preprocess** () -- 3 connections
-  - <- calls <- [[runanalysisifneeded]]
-  - <- calls <- [[preprocessbatch]]
-  - <- calls <- [[reviewsingle]]
-- **__unresolved__::ref::step8a_customer_analysis** () -- 3 connections
-  - <- imports <- [[teststep8acustomeranalysis]]
-  - <- imports <- [[teststep8anodes]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::step8b_section_validator** () -- 3 connections
-  - <- imports <- [[teststep8anodes]]
-  - <- imports <- [[teststep8bsectionvalidator]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::urlparse** () -- 3 connections
-  - <- calls <- [[extractfilename]]
-  - <- calls <- [[validateurl]]
-  - <- calls <- [[fetchdocumentcontent]]
-- **get_current_user_or_none** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 3 connections
-  - -> calls -> [[unresolvedrefdepends]]
-  - -> calls -> [[unresolvedrefgetcurrentuser]]
-  - <- contains <- [[deps]]
-- **validate_file_magic_bytes** (C:\project\tenopa proposer\-agent-master\app\api\routes_documents.py) -- 3 connections
-  - -> calls -> [[unresolvedrefstartswith]]
-  - -> calls -> [[unresolvedrefhttpexception]]
-  - <- contains <- [[routesdocuments]]
-- **_normalize_bid_detail** (C:\project\tenopa proposer\-agent-master\app\api\routes_g2b.py) -- 3 connections
+- **__unresolved__::ref::secrets** () -- 3 connections
+  - <- imports <- [[routesvaultchat]]
+  - <- imports <- [[useraccountservice]]
+  - <- imports <- [[provisionusers]]
+- **__unresolved__::ref::shutil** () -- 3 connections
+  - <- imports <- [[restructuredirs]]
+  - <- imports <- [[analyzetemplate]]
+  - <- imports <- [[buildhwpx]]
+- **__unresolved__::ref::strategy** () -- 3 connections
+  - <- imports <- [[proposalnodes]]
+  - <- calls <- [[strategygenerate]]
+  - <- imports <- [[strategygenerate]]
+- **__unresolved__::ref::utils** () -- 3 connections
+  - <- imports <- [[assetextractor]]
+  - <- imports <- [[createexceltemplate]]
+  - <- imports <- [[proposalgenerator]]
+- **_queue_bid_analysis** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 3 connections
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefaddtask]]
+  - <- contains <- [[routesbids]]
+- **_normalize_bid_detail** (C:\project\tenopa proposer\app\api\routes_g2b.py) -- 3 connections
   - -> calls -> [[unresolvedrefget]]
   - -> calls -> [[unresolvedrefparseamount]]
   - <- contains <- [[routesg2b]]
-- **BidDecisionRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 3 connections
+- **BidDecisionRequest** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 3 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - -> contains -> [[init]]
   - <- contains <- [[routesproposal]]
-- **ProposalFromBid** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 3 connections
+- **ProposalFromBid** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 3 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - -> contains -> [[init]]
   - <- contains <- [[routesproposal]]
-- **Settings** (C:\project\tenopa proposer\-agent-master\app\config.py) -- 3 connections
-  - -> extends -> [[unresolvedrefbasesettings]]
-  - -> contains -> [[validaterequiredkeys]]
-  - <- contains <- [[config]]
-- **normalize_proposal_section** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\_constants.py) -- 3 connections
+- **_build_user_message** (C:\project\tenopa proposer\app\api\routes_vault_chat.py) -- 3 connections
+  - -> calls -> [[unresolvedrefextractcontext]]
+  - -> calls -> [[unresolvedrefbuildusermessagewithcontext]]
+  - <- contains <- [[routesvaultchat]]
+- **normalize_proposal_section** (C:\project\tenopa proposer\app\graph\nodes\_constants.py) -- 3 connections
   - -> calls -> [[unresolvedrefhasattr]]
   - -> calls -> [[unresolvedrefmodeldump]]
   - <- contains <- [[constants]]
-- **plan_selective_fan_out** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 3 connections
-  - -> calls -> [[unresolvedrefget]]
-  - -> calls -> [[unresolvedrefsend]]
-  - <- contains <- [[gatenodes]]
-- **rate_limit_exceeded_handler** (C:\project\tenopa proposer\-agent-master\app\middleware\rate_limit.py) -- 3 connections
+- **rate_limit_exceeded_handler** (C:\project\tenopa proposer\app\middleware\rate_limit.py) -- 3 connections
   - -> calls -> [[unresolvedrefjsonresponse]]
   - -> calls -> [[unresolvedrefstr]]
   - <- contains <- [[ratelimit]]
-- **RequestIdMiddleware** (C:\project\tenopa proposer\-agent-master\app\middleware\request_id.py) -- 3 connections
-  - -> extends -> [[unresolvedrefbasehttpmiddleware]]
-  - -> contains -> [[dispatch]]
-  - <- contains <- [[requestid]]
-- **SecurityHeadersMiddleware** (C:\project\tenopa proposer\-agent-master\app\middleware\security_headers.py) -- 3 connections
-  - -> extends -> [[unresolvedrefbasehttpmiddleware]]
-  - -> contains -> [[dispatch]]
-  - <- contains <- [[securityheaders]]
-- **BidSummary** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 3 connections
+- **BidSummary** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 3 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - -> contains -> [[totext]]
   - <- contains <- [[bidschemas]]
-- **to_text** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 3 connections
+- **to_text** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 3 connections
   - -> calls -> [[unresolvedrefappend]]
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[bidsummary]]
-- **ProcurementMethod** (C:\project\tenopa proposer\-agent-master\app\services\bidding\calculator.py) -- 3 connections
+- **KnowledgeType** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 3 connections
+  - -> extends -> [[unresolvedrefstr]]
+  - -> extends -> [[unresolvedrefenum]]
+  - <- contains <- [[knowledgeschemas]]
+- **MasterProject** (C:\project\tenopa proposer\app\models\master_projects.py) -- 3 connections
+  - -> extends -> [[unresolvedrefbase]]
+  - -> contains -> [[repr]]
+  - <- contains <- [[masterprojects]]
+- **MessageRole** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 3 connections
+  - -> extends -> [[unresolvedrefstr]]
+  - -> extends -> [[unresolvedrefenum]]
+  - <- contains <- [[vaultschemas]]
+- **QueryType** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 3 connections
+  - -> extends -> [[unresolvedrefstr]]
+  - -> extends -> [[unresolvedrefenum]]
+  - <- contains <- [[vaultschemas]]
+- **VaultSection** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 3 connections
+  - -> extends -> [[unresolvedrefstr]]
+  - -> extends -> [[unresolvedrefenum]]
+  - <- contains <- [[vaultschemas]]
+- **check_can_approve** (C:\project\tenopa proposer\app\services\approval_chain.py) -- 3 connections
+  - -> calls -> [[unresolvedrefbuildapprovalchain]]
+  - -> calls -> [[unresolvedrefany]]
+  - <- contains <- [[approvalchain]]
+- **ProcurementMethod** (C:\project\tenopa proposer\app\services\bidding\calculator.py) -- 3 connections
   - -> extends -> [[unresolvedrefstr]]
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[calculator]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\recommender.py) -- 3 connections
-  - -> calls -> [[unresolvedrefasyncanthropic]]
-  - -> calls -> [[unresolvedrefbidpreprocessor]]
-  - <- contains <- [[bidrecommender]]
-- **review_single** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\recommender.py) -- 3 connections
-  - -> calls -> [[unresolvedrefpreprocess]]
-  - -> calls -> [[unresolvedrefcalltenopareview]]
-  - <- contains <- [[bidrecommender]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\__init__.py) -- 3 connections
-  - -> imports -> [[unresolvedrefengine]]
-  - -> imports -> [[unresolvedrefmodels]]
-  - -> imports -> [[unresolvedrefpricescore]]
-- **client_preference** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\client_preference.py) -- 3 connections
-  - -> contains -> [[clientpreferenceanalyzer]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefmodels]]
-- **competitor_pricing** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\competitor_pricing.py) -- 3 connections
-  - -> contains -> [[competitorpricinganalyzer]]
-  - -> imports -> [[unresolvedreflogging]]
-  - -> imports -> [[unresolvedrefmodels]]
-- **PricingSimulationResult** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 3 connections
+- **PricingSimulationResult** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 3 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - -> contains -> [[topromptcontext]]
   - <- contains <- [[models]]
-- **to_prompt_context** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 3 connections
+- **to_prompt_context** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 3 connections
   - -> calls -> [[unresolvedrefappend]]
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[pricingsimulationresult]]
-- **price_score** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\price_score.py) -- 3 connections
+- **price_score** (C:\project\tenopa proposer\app\services\bidding\pricing\price_score.py) -- 3 connections
   - -> contains -> [[pricescorecalculator]]
   - -> imports -> [[unresolvedreflogging]]
   - -> imports -> [[unresolvedrefdataclasses]]
-- **_safe** (C:\project\tenopa proposer\-agent-master\app\services\email_service.py) -- 3 connections
-  - -> calls -> [[unresolvedrefescape]]
-  - -> calls -> [[unresolvedrefstr]]
-  - <- contains <- [[emailservice]]
-- **build_email_html** (C:\project\tenopa proposer\-agent-master\app\services\email_service.py) -- 3 connections
+- **process_document_bounded** (C:\project\tenopa proposer\app\services\document_ingestion.py) -- 3 connections
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedrefprocessdocument]]
+  - <- contains <- [[documentingestion]]
+- **build_email_html** (C:\project\tenopa proposer\app\services\email_service.py) -- 3 connections
   - -> calls -> [[unresolvedrefsafe]]
   - -> calls -> [[unresolvedrefsafelink]]
   - <- contains <- [[emailservice]]
-- **_get_openai** (C:\project\tenopa proposer\-agent-master\app\services\embedding_service.py) -- 3 connections
-  - -> calls -> [[unresolvedrefasyncopenai]]
-  - -> calls -> [[unresolvedrefgetattr]]
-  - <- contains <- [[embeddingservice]]
-- **_text_of_t_node** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\page_guard.py) -- 3 connections
-  - -> calls -> [[unresolvedrefjoin]]
-  - -> calls -> [[unresolvedrefitertext]]
+- **_read_section_xml_bytes** (C:\project\tenopa proposer\app\services\hwpx\page_guard.py) -- 3 connections
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefread]]
   - <- contains <- [[pageguard]]
-- **analyze_reference** (C:\project\tenopa proposer\-agent-master\app\services\hwpx_service.py) -- 3 connections
+- **analyze_reference** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 3 connections
   - -> calls -> [[unresolvedrefanalyzetemplate]]
   - -> calls -> [[unresolvedreflen]]
   - <- contains <- [[hwpxservice]]
-- **ProposalStatus** (C:\project\tenopa proposer\-agent-master\app\services\state_validator.py) -- 3 connections
+- **_load_state_data** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 3 connections
+  - -> calls -> [[unresolvedrefloadsampledata]]
+  - -> calls -> [[unresolvedrefloadprojectstate]]
+  - <- contains <- [[promptsimulator]]
+- **__init__** (C:\project\tenopa proposer\app\services\scheduler\vault_bidding_batch.py) -- 3 connections
+  - -> calls -> [[unresolvedrefg2bbiddingcollector]]
+  - -> calls -> [[unresolvedreftime]]
+  - <- contains <- [[vaultbiddingbatchscheduler]]
+- **AITaskStatus** (C:\project\tenopa proposer\app\services\state_validator.py) -- 3 connections
   - -> extends -> [[unresolvedrefstr]]
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[statevalidator]]
-- **WinResult** (C:\project\tenopa proposer\-agent-master\app\services\state_validator.py) -- 3 connections
+- **ProposalStatus** (C:\project\tenopa proposer\app\services\state_validator.py) -- 3 connections
   - -> extends -> [[unresolvedrefstr]]
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[statevalidator]]
-- **trim_feedback_history** (C:\project\tenopa proposer\-agent-master\app\services\token_manager.py) -- 3 connections
+- **WinResult** (C:\project\tenopa proposer\app\services\state_validator.py) -- 3 connections
+  - -> extends -> [[unresolvedrefstr]]
+  - -> extends -> [[unresolvedrefenum]]
+  - <- contains <- [[statevalidator]]
+- **trim_feedback_history** (C:\project\tenopa proposer\app\services\token_manager.py) -- 3 connections
   - -> calls -> [[unresolvedreflen]]
   - -> calls -> [[unresolvedrefsummarizefeedbacks]]
   - <- contains <- [[tokenmanager]]
-- **DependencyLevel** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 3 connections
+- **DependencyLevel** (C:\project\tenopa proposer\app\services\version_manager.py) -- 3 connections
   - -> extends -> [[unresolvedrefstr]]
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[versionmanager]]
-- **validate_file_size** (C:\project\tenopa proposer\-agent-master\app\utils\file_utils.py) -- 3 connections
+- **state_machine** (C:\project\tenopa proposer\app\state_machine.py) -- 3 connections
+  - -> contains -> [[statemachine]]
+  - -> imports -> [[unresolvedreftyping]]
+  - -> imports -> [[unresolvedrefstatevalidator]]
+- **validate_file_size** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 3 connections
   - -> calls -> [[unresolvedreflen]]
   - -> calls -> [[unresolvedreffilesizeexceedederror]]
   - <- contains <- [[fileutils]]
-- **PageParams** (C:\project\tenopa proposer\-agent-master\app\utils\pagination.py) -- 3 connections
-  - -> contains -> [[init]]
-  - -> contains -> [[apply]]
-  - <- contains <- [[pagination]]
-- **get_user_client** (C:\project\tenopa proposer\-agent-master\app\utils\supabase_client.py) -- 3 connections
+- **get_user_client** (C:\project\tenopa proposer\app\utils\supabase_client.py) -- 3 connections
   - -> calls -> [[unresolvedrefacreateclient]]
   - -> calls -> [[unresolvedrefsetsession]]
   - <- contains <- [[supabaseclient]]
-- **check_proposals** (C:\project\tenopa proposer\-agent-master\check_proposals.py) -- 3 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **delete_all_proposals** (C:\project\tenopa proposer\-agent-master\delete_all_proposals.py) -- 3 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **delete_test_proposals** (C:\project\tenopa proposer\-agent-master\delete_test_proposals.py) -- 3 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsupabaseclient]]
-- **add_missing_columns** (C:\project\tenopa proposer\-agent-master\scripts\add_missing_columns.py) -- 3 connections
+- **restructure_dirs** (C:\project\tenopa proposer\restructure_dirs.py) -- 3 connections
+  - -> imports -> [[unresolvedrefos]]
+  - -> imports -> [[unresolvedrefshutil]]
+  - -> imports -> [[unresolvedrefpathlib]]
+- **add_missing_columns** (C:\project\tenopa proposer\scripts\add_missing_columns.py) -- 3 connections
   - -> contains -> [[printmigrationsql]]
   - -> imports -> [[unresolvedrefsys]]
   - -> imports -> [[unresolvedrefpathlib]]
-- **apply_document_ingestion_migration** (C:\project\tenopa proposer\-agent-master\scripts\apply_document_ingestion_migration.py) -- 3 connections
+- **apply_document_ingestion_migration** (C:\project\tenopa proposer\scripts\apply_document_ingestion_migration.py) -- 3 connections
   - -> contains -> [[applymigration]]
   - -> imports -> [[unresolvedrefasyncio]]
   - -> imports -> [[unresolvedrefsupabaseclient]]
-- **ProposalModule** (C:\project\tenopa proposer\-agent-master\scripts\archive\modular_architecture.py) -- 3 connections
+- **read_migration_file** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 3 connections
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefread]]
+  - <- contains <- [[applymigrations]]
+- **ProposalModule** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 3 connections
   - -> extends -> [[unresolvedrefabc]]
   - -> contains -> [[init]]
   - <- contains <- [[modulararchitecture]]
-- **cleanup_proposals** (C:\project\tenopa proposer\-agent-master\scripts\cleanup_proposals.py) -- 3 connections
+- **cleanup_proposals** (C:\project\tenopa proposer\scripts\cleanup_proposals.py) -- 3 connections
   - -> imports -> [[unresolvedrefos]]
   - -> imports -> [[unresolvedrefdotenv]]
   - -> imports -> [[unresolvedrefsupabase]]
-- **_get_recommender** (C:\project\tenopa proposer\-agent-master\scripts\daily_bid_scan.py) -- 3 connections
-  - -> calls -> [[unresolvedrefexists]]
-  - -> calls -> [[unresolvedrefteamrecommender]]
-  - <- contains <- [[dailybidscan]]
-- **test_analysis** (C:\project\tenopa proposer\-agent-master\test_analysis.py) -- 3 connections
-  - -> contains -> [[test]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefbidanalysisservice]]
-- **test_step8_imports** (C:\project\tenopa proposer\-agent-master\test_step8_imports.py) -- 3 connections
-  - -> contains -> [[testallimports]]
-  - -> imports -> [[unresolvedrefasyncio]]
-  - -> imports -> [[unresolvedrefsys]]
-- **test_syntax_only** (C:\project\tenopa proposer\-agent-master\test_syntax_only.py) -- 3 connections
-  - -> contains -> [[main]]
-  - -> imports -> [[unresolvedrefpycompile]]
-  - -> imports -> [[unresolvedrefsys]]
-- **conftest** (C:\project\tenopa proposer\-agent-master\tests\integration\live\conftest.py) -- 3 connections
-  - -> contains -> [[pytestcollectionmodifyitems]]
-  - -> imports -> [[unresolvedrefos]]
-  - -> imports -> [[unresolvedrefpytest]]
-- **test_workflow_live_db** (C:\project\tenopa proposer\-agent-master\tests\integration\live\test_workflow_live_db.py) -- 3 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefcontextlib]]
-  - -> imports -> [[unresolvedreftypes]]
-- **TestArtifactVersionModel** (C:\project\tenopa proposer\-agent-master\tests\test_artifact_versioning.py) -- 3 connections
-  - -> contains -> [[testartifactversioncreation]]
-  - -> contains -> [[testartifactversionoptionalfields]]
-  - <- contains <- [[testartifactversioning]]
-- **test_migration_api** (C:\project\tenopa proposer\-agent-master\tests\test_migration_api.py) -- 3 connections
-  - -> contains -> [[testmigrationapi]]
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefroutesmigrations]]
-- **record** (C:\project\tenopa proposer\-agent-master\tests\test_step8_e2e.py) -- 3 connections
-  - -> calls -> [[unresolvedrefisoformat]]
-  - -> calls -> [[unresolvedrefnow]]
-  - <- contains <- [[stepmetrics]]
-- **test_extract_text_from_pdf_nonexistent** (C:\project\tenopa proposer\-agent-master\tests\unit\test_rfp_parser.py) -- 3 connections
-  - -> calls -> [[unresolvedrefextracttextfrompdf]]
-  - -> calls -> [[unresolvedrefpath]]
-  - <- contains <- [[testrfpparser]]
-- **test_rfp_parser** (C:\project\tenopa proposer\-agent-master\tests\unit\test_rfp_parser.py) -- 3 connections
-  - -> contains -> [[testextracttextfrompdfnonexistent]]
-  - -> imports -> [[unresolvedrefpathlib]]
-  - -> imports -> [[unresolvedrefrfpparser]]
 - **__unresolved__::ref::_call** () -- 2 connections
   - <- calls <- [[notifyproposalcomplete]]
   - <- calls <- [[notifycommentcreated]]
-- **__unresolved__::ref::_call_tenopa_review** () -- 2 connections
-  - <- calls <- [[scorebids]]
-  - <- calls <- [[reviewsingle]]
-- **__unresolved__::ref::_now** () -- 2 connections
-  - <- calls <- [[ok]]
-  - <- calls <- [[oklist]]
 - **__unresolved__::ref::acreate_client** () -- 2 connections
   - <- calls <- [[getasyncclient]]
   - <- calls <- [[getuserclient]]
-- **__unresolved__::ref::asyncioscheduler** () -- 2 connections
-  - <- calls <- [[getscheduler]]
-  - <- calls <- [[setupscheduler]]
-- **__unresolved__::ref::asyncopenai** () -- 2 connections
-  - <- calls <- [[getopenai]]
-  - <- calls <- [[generatelessonembedding]]
 - **__unresolved__::ref::audit_service** () -- 2 connections
   - <- imports <- [[routesadmin]]
   - <- imports <- [[routesusers]]
-- **__unresolved__::ref::base** () -- 2 connections
-  - <- imports <- [[requestid]]
-  - <- imports <- [[securityheaders]]
-- **__unresolved__::ref::basehttpmiddleware** () -- 2 connections
-  - <- extends <- [[requestidmiddleware]]
-  - <- extends <- [[securityheadersmiddleware]]
-- **__unresolved__::ref::bid_analysis_service** () -- 2 connections
-  - <- imports <- [[testanalysis]]
-  - <- imports <- [[routesg2b]]
 - **__unresolved__::ref::bid_calculator** () -- 2 connections
   - <- imports <- [[routesv31]]
   - <- imports <- [[phaseexecutor]]
 - **__unresolved__::ref::bid_scoring** () -- 2 connections
   - <- imports <- [[dailybidscan]]
   - <- imports <- [[searchmatchingbids]]
-- **__unresolved__::ref::bidpreprocessor** () -- 2 connections
-  - <- calls <- [[runanalysisifneeded]]
-  - <- calls <- [[init]]
+- **__unresolved__::ref::build_approval_chain** () -- 2 connections
+  - <- calls <- [[checkcanapprove]]
+  - <- calls <- [[getapprovalstatus]]
 - **__unresolved__::ref::calculator** () -- 2 connections
   - <- imports <- [[costestimator]]
   - <- imports <- [[winprobability]]
-- **__unresolved__::ref::call_next** () -- 2 connections
-  - <- calls <- [[dispatch]]
-  - <- calls <- [[dispatch]]
 - **__unresolved__::ref::claude_utils** () -- 2 connections
   - <- imports <- [[phaseexecutor]]
   - <- imports <- [[presentationgenerator]]
 - **__unresolved__::ref::claudeapierror** () -- 2 connections
   - <- calls <- [[extractjsonfromresponse]]
   - <- calls <- [[createanthropicclient]]
-- **__unresolved__::ref::color** () -- 2 connections
-  - <- imports <- [[presentationpptxbuilder]]
-  - <- imports <- [[hwpxtopptx]]
 - **__unresolved__::ref::contextvars** () -- 2 connections
   - <- imports <- [[requestid]]
   - <- imports <- [[claudeclient]]
-- **__unresolved__::ref::currentuser** () -- 2 connections
-  - <- calls <- [[getdevuser]]
-  - <- calls <- [[getcurrentuser]]
-- **__unresolved__::ref::document_ingestion** () -- 2 connections
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[routesintranet]]
-- **__unresolved__::ref::document_schemas** () -- 2 connections
-  - <- imports <- [[routesdocuments]]
-  - <- imports <- [[testdocumentschemas]]
-- **__unresolved__::ref::docx** () -- 2 connections
-  - <- imports <- [[docxbuilder]]
-  - <- imports <- [[costsheetbuilder]]
+- **__unresolved__::ref::docx_builder** () -- 2 connections
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[testworkflow]]
 - **__unresolved__::ref::edge_functions** () -- 2 connections
   - <- imports <- [[routesteam]]
   - <- imports <- [[phaseexecutor]]
-- **__unresolved__::ref::errors** () -- 2 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[ratelimit]]
-- **__unresolved__::ref::escape** () -- 2 connections
-  - <- calls <- [[safe]]
-  - <- calls <- [[safelink]]
-- **__unresolved__::ref::extract_text_from_pdf** () -- 2 connections
-  - <- calls <- [[extracttextfromfile]]
-  - <- calls <- [[testextracttextfrompdfnonexistent]]
-- **__unresolved__::ref::get_user** () -- 2 connections
-  - <- calls <- [[getcurrentuser]]
-  - <- calls <- [[getcurrentuser]]
-- **__unresolved__::ref::httpexception** () -- 2 connections
-  - <- calls <- [[validatefilemagicbytes]]
-  - <- calls <- [[getcurrentuser]]
+- **__unresolved__::ref::get_streams_status** () -- 2 connections
+  - <- calls <- [[getstreamsstatussafe]]
+  - <- calls <- [[checkconvergence]]
 - **__unresolved__::ref::hwpx_builder** () -- 2 connections
   - <- imports <- [[phaseexecutor]]
   - <- imports <- [[testhwpx]]
-- **__unresolved__::ref::itertext** () -- 2 connections
-  - <- calls <- [[readhwpxtext]]
-  - <- calls <- [[textoftnode]]
+- **__unresolved__::ref::knowledge_manager** () -- 2 connections
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[documentingestion]]
+- **__unresolved__::ref::knowledge_schemas** () -- 2 connections
+  - <- imports <- [[routesknowledge]]
+  - <- imports <- [[knowledgemanager]]
+- **__unresolved__::ref::main** () -- 2 connections
+  - <- imports <- [[e2einterrupttest]]
+  - <- imports <- [[e2eworkflowtest]]
+- **__unresolved__::ref::migration_schemas** () -- 2 connections
+  - <- imports <- [[routesmigrations]]
+  - <- imports <- [[migrationservice]]
+- **__unresolved__::ref::migrationbatch** () -- 2 connections
+  - <- calls <- [[rowtobatch]]
+  - <- calls <- [[createbatchrecord]]
 - **__unresolved__::ref::mimetypes** () -- 2 connections
   - <- imports <- [[routesresources]]
   - <- imports <- [[routestemplates]]
@@ -4221,78 +5024,57 @@ Cohesion: 0.00 | Nodes: 954
 - **__unresolved__::ref::permissions** () -- 2 connections
   - <- imports <- [[routesbids]]
   - <- imports <- [[routesteam]]
-- **__unresolved__::ref::phaseexecutor** () -- 2 connections
-  - <- calls <- [[runphases]]
-  - <- calls <- [[runphasesfrom]]
+- **__unresolved__::ref::pptx_builder** () -- 2 connections
+  - <- imports <- [[phaseexecutor]]
+  - <- imports <- [[testworkflow]]
 - **__unresolved__::ref::presentation_generator** () -- 2 connections
   - <- imports <- [[routespresentation]]
   - <- imports <- [[testpresentationsample]]
 - **__unresolved__::ref::presentation_pptx_builder** () -- 2 connections
   - <- imports <- [[routespresentation]]
   - <- imports <- [[testpresentationsample]]
-- **__unresolved__::ref::price_score** () -- 2 connections
-  - <- imports <- [[engine]]
-  - <- imports <- [[init]]
 - **__unresolved__::ref::proposal_prompts** () -- 2 connections
   - <- imports <- [[pptnodes]]
   - <- imports <- [[proposalnodes]]
 - **__unresolved__::ref::proposal_schemas** () -- 2 connections
   - <- imports <- [[routesperformance]]
   - <- imports <- [[routesproposal]]
-- **__unresolved__::ref::recommend** () -- 2 connections
-  - <- calls <- [[enrichwithteam]]
-  - <- calls <- [[main]]
-- **__unresolved__::ref::rfp_parser** () -- 2 connections
-  - <- imports <- [[phaseexecutor]]
-  - <- imports <- [[testrfpparser]]
-- **__unresolved__::ref::routes_migrations** () -- 2 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[testmigrationapi]]
-- **__unresolved__::ref::routes_v31** () -- 2 connections
-  - <- imports <- [[main]]
-  - <- imports <- [[routes]]
-- **__unresolved__::ref::secrets** () -- 2 connections
-  - <- imports <- [[useraccountservice]]
-  - <- imports <- [[provisionusers]]
+- **__unresolved__::ref::pypdf2** () -- 2 connections
+  - <- imports <- [[vaultcredentialservice]]
+  - <- imports <- [[fileutils]]
+- **__unresolved__::ref::requests** () -- 2 connections
+  - <- imports <- [[requestid]]
+  - <- imports <- [[securityheaders]]
+- **__unresolved__::ref::searchresponse** () -- 2 connections
+  - <- extends <- [[embeddingunavailableresponse]]
+  - <- calls <- [[search]]
 - **__unresolved__::ref::section_prompts** () -- 2 connections
   - <- imports <- [[mergenodes]]
   - <- imports <- [[proposalnodes]]
-- **__unresolved__::ref::send** () -- 2 connections
-  - <- calls <- [[forktobranches]]
-  - <- calls <- [[planselectivefanout]]
-- **__unresolved__::ref::sensitivity** () -- 2 connections
-  - <- imports <- [[routespricing]]
-  - <- imports <- [[engine]]
 - **__unresolved__::ref::session_manager** () -- 2 connections
   - <- imports <- [[routespresentation]]
   - <- imports <- [[routesv31]]
 - **__unresolved__::ref::shared** () -- 2 connections
   - <- imports <- [[docxbuilder]]
   - <- imports <- [[costsheetbuilder]]
-- **__unresolved__::ref::shutil** () -- 2 connections
-  - <- imports <- [[analyzetemplate]]
-  - <- imports <- [[buildhwpx]]
+- **__unresolved__::ref::state_machine** () -- 2 connections
+  - <- imports <- [[routesproposal]]
+  - <- imports <- [[routesworkflow]]
+- **__unresolved__::ref::state_validator** () -- 2 connections
+  - <- imports <- [[statemachine]]
+  - <- imports <- [[routesworkflow]]
+- **__unresolved__::ref::statistics** () -- 2 connections
+  - <- imports <- [[evaluationnodes]]
+  - <- imports <- [[vaultbiddingservice]]
 - **__unresolved__::ref::step8a** () -- 2 connections
   - <- imports <- [[plannodes]]
   - <- imports <- [[step8acustomeranalysis]]
-- **__unresolved__::ref::step8c_consolidation** () -- 2 connections
-  - <- imports <- [[teststep8cconsolidation]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::step8d_mock_evaluation** () -- 2 connections
-  - <- imports <- [[teststep8d8e8fnodes]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::step8e_feedback_processor** () -- 2 connections
-  - <- imports <- [[teststep8d8e8fnodes]]
-  - <- imports <- [[teststep8e2e]]
-- **__unresolved__::ref::step8f_rewrite** () -- 2 connections
-  - <- imports <- [[teststep8d8e8fnodes]]
-  - <- imports <- [[teststep8e2e]]
 - **__unresolved__::ref::stream_schemas** () -- 2 connections
   - <- imports <- [[routesstreams]]
   - <- imports <- [[routessubmissiondocs]]
-- **__unresolved__::ref::teamrecommender** () -- 2 connections
-  - <- calls <- [[getrecommender]]
-  - <- calls <- [[main]]
+- **__unresolved__::ref::supabase** () -- 2 connections
+  - <- imports <- [[supabaseclient]]
+  - <- imports <- [[cleanupproposals]]
 - **__unresolved__::ref::template_service** () -- 2 connections
   - <- imports <- [[routesv31]]
   - <- imports <- [[phaseexecutor]]
@@ -4302,1288 +5084,1514 @@ Cohesion: 0.00 | Nodes: 954
 - **__unresolved__::ref::trustworthiness** () -- 2 connections
   - <- imports <- [[claudeclient]]
   - <- imports <- [[sourcetagger]]
-- **__unresolved__::ref::user_schemas** () -- 2 connections
-  - <- imports <- [[routesauth]]
-  - <- imports <- [[routesusers]]
 - **__unresolved__::ref::validate_hwpx** () -- 2 connections
   - <- calls <- [[validate]]
   - <- calls <- [[validateoutput]]
-- **__unresolved__::ref::win_probability** () -- 2 connections
-  - <- imports <- [[engine]]
-  - <- imports <- [[sensitivity]]
-- **_has_access_by_role** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 2 connections
+- **_has_access_by_role** (C:\project\tenopa proposer\app\api\deps.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[deps]]
-- **ok** (C:\project\tenopa proposer\-agent-master\app\api\response.py) -- 2 connections
-  - -> calls -> [[unresolvedrefnow]]
-  - <- contains <- [[response]]
-- **ok_list** (C:\project\tenopa proposer\-agent-master\app\api\response.py) -- 2 connections
-  - -> calls -> [[unresolvedrefnow]]
-  - <- contains <- [[response]]
-- **CapabilityUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **CapabilityUpdateBody** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesadmin]]
-- **ClientErrorReport** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **ClientErrorReport** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesadmin]]
-- **ReopenBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **ReopenBody** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesadmin]]
-- **RoleUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **RoleUpdateBody** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesadmin]]
-- **StatusUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **StatusUpdateBody** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesadmin]]
-- **_count_by** (C:\project\tenopa proposer\-agent-master\app\api\routes_admin.py) -- 2 connections
+- **_count_by** (C:\project\tenopa proposer\app\api\routes_admin.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[routesadmin]]
-- **AiAssistRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 2 connections
+- **AiAssistRequest** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesartifacts]]
-- **ArtifactSaveRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 2 connections
+- **ArtifactSaveRequest** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesartifacts]]
-- **CostSheetGenerateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 2 connections
+- **CostSheetGenerateRequest** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesartifacts]]
-- **MoveToNodeRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 2 connections
+- **MoveToNodeRequest** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesartifacts]]
-- **SectionRegenerateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_artifacts.py) -- 2 connections
+- **SectionRegenerateRequest** (C:\project\tenopa proposer\app\api\routes_artifacts.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesartifacts]]
-- **BidPriceAdjustRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_bid_submission.py) -- 2 connections
+- **BidPriceAdjustRequest** (C:\project\tenopa proposer\app\api\routes_bid_submission.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesbidsubmission]]
-- **BidSubmissionRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_bid_submission.py) -- 2 connections
+- **BidSubmissionRequest** (C:\project\tenopa proposer\app\api\routes_bid_submission.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesbidsubmission]]
-- **CalendarCreate** (C:\project\tenopa proposer\-agent-master\app\api\routes_calendar.py) -- 2 connections
+- **_escape_like** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 2 connections
+  - -> calls -> [[unresolvedrefreplace]]
+  - <- contains <- [[routesbids]]
+- **_extract_content_from_raw** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[routesbids]]
+- **CalendarCreate** (C:\project\tenopa proposer\app\api\routes_calendar.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routescalendar]]
-- **CalendarItem** (C:\project\tenopa proposer\-agent-master\app\api\routes_calendar.py) -- 2 connections
+- **CalendarItem** (C:\project\tenopa proposer\app\api\routes_calendar.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routescalendar]]
-- **CalendarUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_calendar.py) -- 2 connections
+- **CalendarUpdate** (C:\project\tenopa proposer\app\api\routes_calendar.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routescalendar]]
-- **ClientCreateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **ClientCreateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **ClientUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **ClientUpdateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **CompetitorCreateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **CompetitorCreateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **CompetitorUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **CompetitorUpdateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **ContentCreateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **ContentCreateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **ContentUpdateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **ContentUpdateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **LaborRateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **LaborRateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **LessonCreateBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **LessonCreateBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **MarketPriceBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **MarketPriceBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **ReindexRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **ReindexRequest** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **RetrospectBody** (C:\project\tenopa proposer\-agent-master\app\api\routes_kb.py) -- 2 connections
+- **RetrospectBody** (C:\project\tenopa proposer\app\api\routes_kb.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routeskb]]
-- **ArchiveInfo** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
+- **ChatSearchRequest** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmasterprojects]]
-- **DocumentInfo** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
+- **ChatSearchResponse** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmasterprojects]]
-- **MasterProjectDetailResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
+- **MasterProjectDetailResponse** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 2 connections
   - -> extends -> [[unresolvedrefmasterprojectresponse]]
   - <- contains <- [[routesmasterprojects]]
-- **MasterProjectResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
+- **MasterProjectResponse** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmasterprojects]]
-- **ParticipantInfo** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
+- **ProjectStatsResponse** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmasterprojects]]
-- **ProposalParticipantInfo** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
-  - -> extends -> [[unresolvedrefbasemodel]]
-  - <- contains <- [[routesmasterprojects]]
-- **TeamInfo** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 2 connections
-  - -> extends -> [[unresolvedrefbasemodel]]
-  - <- contains <- [[routesmasterprojects]]
-- **MigrationHistoryItem** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 2 connections
+- **MigrationHistoryItem** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmigrationstatus]]
-- **MigrationHistoryResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 2 connections
+- **MigrationHistoryResponse** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmigrationstatus]]
-- **MigrationItem** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 2 connections
+- **MigrationItem** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmigrationstatus]]
-- **MigrationStatusResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 2 connections
+- **MigrationStatusResponse** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmigrationstatus]]
-- **MigrationSummaryResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_migration_status.py) -- 2 connections
+- **MigrationSummaryResponse** (C:\project\tenopa proposer\app\api\routes_migration_status.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesmigrationstatus]]
-- **NotificationSettingsUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_notification.py) -- 2 connections
+- **NotificationSettingsUpdate** (C:\project\tenopa proposer\app\api\routes_notification.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesnotification]]
-- **SensitivityRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_pricing.py) -- 2 connections
+- **SensitivityRequest** (C:\project\tenopa proposer\app\api\routes_pricing.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespricing]]
-- **CandidateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **CandidateRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **CompareRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **CompareRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **EditActionRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **EditActionRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **ExperimentRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **ExperimentRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **SimulateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **SimulateRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **SuggestionFeedbackRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_prompt_evolution.py) -- 2 connections
+- **SuggestionFeedbackRequest** (C:\project\tenopa proposer\app\api\routes_prompt_evolution.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespromptevolution]]
-- **ProposalListResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **ProposalListResponse** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **ProposalUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **ProposalUpdate** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **ReviewFeedback** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **ReviewFeedback** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **ReviewItemDetail** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **ReviewItemDetail** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **ReviewItemStatus** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **ReviewItemStatus** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **StartWithMembersRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **StartWithMembersRequest** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **SubmitReviewFeedback** (C:\project\tenopa proposer\-agent-master\app\api\routes_proposal.py) -- 2 connections
+- **SubmitReviewFeedback** (C:\project\tenopa proposer\app\api\routes_proposal.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesproposal]]
-- **LandingStats** (C:\project\tenopa proposer\-agent-master\app\api\routes_public.py) -- 2 connections
+- **LandingStats** (C:\project\tenopa proposer\app\api\routes_public.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routespublic]]
-- **routes** (C:\project\tenopa proposer\-agent-master\app\api\routes.py) -- 2 connections
-  - -> imports -> [[unresolvedreffastapi]]
-  - -> imports -> [[unresolvedrefroutesv31]]
-- **SectionCreate** (C:\project\tenopa proposer\-agent-master\app\api\routes_resources.py) -- 2 connections
+- **SectionCreate** (C:\project\tenopa proposer\app\api\routes_resources.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesresources]]
-- **SectionUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_resources.py) -- 2 connections
+- **SectionUpdate** (C:\project\tenopa proposer\app\api\routes_resources.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesresources]]
-- **AgencyStat** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 2 connections
+- **AgencyStat** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstats]]
-- **MonthStat** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 2 connections
+- **MonthStat** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstats]]
-- **OverallStat** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 2 connections
+- **OverallStat** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstats]]
-- **WinRateResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 2 connections
+- **WinRateResponse** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstats]]
-- **_calc_rate** (C:\project\tenopa proposer\-agent-master\app\api\routes_stats.py) -- 2 connections
+- **_calc_rate** (C:\project\tenopa proposer\app\api\routes_stats.py) -- 2 connections
   - -> calls -> [[unresolvedrefround]]
   - <- contains <- [[routesstats]]
-- **NodeStatusResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8.py) -- 2 connections
+- **NodeStatusResponse** (C:\project\tenopa proposer\app\api\routes_step8.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8]]
-- **NodeValidateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8.py) -- 2 connections
+- **NodeValidateRequest** (C:\project\tenopa proposer\app\api\routes_step8.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8]]
-- **AIIssueFlagModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **AIIssueFlagModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **ApprovalRequestModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **ApprovalRequestModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **ConsolidatedProposalModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **ConsolidatedProposalModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **CustomerProfileModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **CustomerProfileModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **FeedbackRequestModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **FeedbackRequestModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **FeedbackSummaryModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **FeedbackSummaryModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **MockEvalResultModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **MockEvalResultModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **NodeStatusModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **NodeStatusModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **ReviewPanelDataResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **ReviewPanelDataResponse** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **RewriteHistoryModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **RewriteHistoryModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **RewriteRequestModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **RewriteRequestModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **Step8StatusResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **Step8StatusResponse** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **ValidationReportModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **ValidationReportModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **VersionMetadataModel** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8_review.py) -- 2 connections
+- **VersionMetadataModel** (C:\project\tenopa proposer\app\api\routes_step8_review.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8review]]
-- **NodeStatusResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8a.py) -- 2 connections
+- **NodeStatusResponse** (C:\project\tenopa proposer\app\api\routes_step8a.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8a]]
-- **ValidationTriggerRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8a.py) -- 2 connections
+- **ValidationTriggerRequest** (C:\project\tenopa proposer\app\api\routes_step8a.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8a]]
-- **VersionListResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_step8a.py) -- 2 connections
+- **VersionListResponse** (C:\project\tenopa proposer\app\api\routes_step8a.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesstep8a]]
-- **CommentCreate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **CommentCreate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **CommentUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **CommentUpdate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **InvitationAccept** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **InvitationAccept** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **InvitationCreate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **InvitationCreate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **MemberRoleUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **MemberRoleUpdate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **ProposalStatusUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **ProposalStatusUpdate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **TeamCreate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **TeamCreate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **TeamUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **TeamUpdate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **WinResultUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_team.py) -- 2 connections
+- **WinResultUpdate** (C:\project\tenopa proposer\app\api\routes_team.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesteam]]
-- **TemplateUpdate** (C:\project\tenopa proposer\-agent-master\app\api\routes_templates.py) -- 2 connections
+- **TemplateUpdate** (C:\project\tenopa proposer\app\api\routes_templates.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routestemplates]]
-- **BidCalculateRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_v31.py) -- 2 connections
+- **BidCalculateRequest** (C:\project\tenopa proposer\app\api\routes_v31.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesv31]]
-- **PersonnelRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_v31.py) -- 2 connections
+- **PersonnelRequest** (C:\project\tenopa proposer\app\api\routes_v31.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesv31]]
-- **FeedbackHistoryResponse** (C:\project\tenopa proposer\-agent-master\app\api\routes_workflow.py) -- 2 connections
+- **FeedbackRequest** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **GoLiveReadinessResponse** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **MetricsResponse** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **NPSResponse** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **SatisfactionResponse** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **SessionMetricsRequest** (C:\project\tenopa proposer\app\api\routes_vault_beta.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbeta]]
+- **AnalysisResultResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **BiddingAnalysisResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **BudgetRangeStatisticsResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **CreateAnalysisRequest** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **IndustryStatisticsResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **ProjectComparisonResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **SimilarProjectResponse** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **UpdateG2BDataRequest** (C:\project\tenopa proposer\app\api\routes_vault_bidding.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultbidding]]
+- **_build_system_prompt** (C:\project\tenopa proposer\app\api\routes_vault_chat.py) -- 2 connections
+  - -> calls -> [[unresolvedrefinjectcitationinstructions]]
+  - <- contains <- [[routesvaultchat]]
+- **ClientListResponse** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientPerformanceMetricsResponse** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientProposalsResponse** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientResponse** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientReviewRequest** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientSearchRequest** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **ClientUpdateRequest** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **RegionalSummaryResponse** (C:\project\tenopa proposer\app\api\routes_vault_clients.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultclients]]
+- **CredentialResponse** (C:\project\tenopa proposer\app\api\routes_vault_credentials.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultcredentials]]
+- **CredentialsListResponse** (C:\project\tenopa proposer\app\api\routes_vault_credentials.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultcredentials]]
+- **CredentialUploadRequest** (C:\project\tenopa proposer\app\api\routes_vault_credentials.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultcredentials]]
+- **OCRResultResponse** (C:\project\tenopa proposer\app\api\routes_vault_credentials.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultcredentials]]
+- **AvailablePersonnelResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **DepartmentStatsResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **ExpertiseInventoryResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **PersonnelPerformanceResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **PersonnelResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **PersonnelSearchResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **SkillRequest** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **UtilizationResponse** (C:\project\tenopa proposer\app\api\routes_vault_personnel.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultpersonnel]]
+- **Step1Response** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **Step2Response** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **Step3Response** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **Step4Response** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **Step5Response** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **StepSearchRequest** (C:\project\tenopa proposer\app\api\routes_vault_step_search.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[routesvaultstepsearch]]
+- **FeedbackHistoryResponse** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesworkflow]]
-- **FeedbackRecord** (C:\project\tenopa proposer\-agent-master\app\api\routes_workflow.py) -- 2 connections
+- **FeedbackRecord** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesworkflow]]
-- **WorkflowResumeRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_workflow.py) -- 2 connections
+- **WorkflowResumeRequest** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesworkflow]]
-- **WorkflowStartRequest** (C:\project\tenopa proposer\-agent-master\app\api\routes_workflow.py) -- 2 connections
+- **WorkflowStartRequest** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[routesworkflow]]
-- **validate_required_keys** (C:\project\tenopa proposer\-agent-master\app\config.py) -- 2 connections
-  - -> calls -> [[unresolvedrefappend]]
-  - <- contains <- [[settings]]
-- **_constants** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\_constants.py) -- 2 connections
+- **_constants** (C:\project\tenopa proposer\app\graph\nodes\_constants.py) -- 2 connections
   - -> contains -> [[normalizeproposalsection]]
   - -> imports -> [[unresolvedreftyping]]
-- **fork_to_branches** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefsend]]
-  - <- contains <- [[gatenodes]]
-- **_get_sections_to_write** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\proposal_nodes.py) -- 2 connections
+- **eval_result_node** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[evaluationnodes]]
+- **_get_sections_to_write** (C:\project\tenopa proposer\app\graph\nodes\proposal_nodes.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[proposalnodes]]
-- **_format_positioning_guide** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\strategy_generate.py) -- 2 connections
+- **_format_positioning_guide** (C:\project\tenopa proposer\app\graph\nodes\strategy_generate.py) -- 2 connections
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[strategygenerate]]
-- **ApprovalChainEntry** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ApprovalChainEntry** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ApprovalStatus** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ApprovalStatus** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ArtifactVersion** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ArtifactVersion** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **BidDetail** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **BidDetail** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **BidPlanResult** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **BidPlanResult** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ComplianceItem** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ComplianceItem** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ConsolidatedProposal** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ConsolidatedProposal** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **CustomerProfile** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **CustomerProfile** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **DiagnosisResult** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **DiagnosisResult** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **FeedbackItem** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **FeedbackItem** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **FeedbackSummary** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **FeedbackSummary** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **GapReport** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **GapReport** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **GoNoGoResult** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **GoNoGoResult** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **MockEvalResult** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **MockEvalResult** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **PPTSlide** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **PPTSlide** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **PriceScoringFormula** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **PriceScoringFormula** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ProposalPlan** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ProposalPlan** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ProposalSection** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ProposalSection** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ProposalState** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ProposalState** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedreftypeddict]]
   - <- contains <- [[state]]
-- **RFPAnalysis** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **RFPAnalysis** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **RfpRecommendation** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **RfpRecommendation** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ScoreComponent** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ScoreComponent** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **SectionLineage** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **SectionLineage** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **Stakeholder** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **Stakeholder** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **Strategy** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **Strategy** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **StrategyAlternative** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **StrategyAlternative** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ValidationIssue** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ValidationIssue** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **ValidationReport** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **ValidationReport** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **VersionSelection** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 2 connections
+- **VersionSelection** (C:\project\tenopa proposer\app\graph\state.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[state]]
-- **_add_cors_headers** (C:\project\tenopa proposer\-agent-master\app\main.py) -- 2 connections
-  - -> calls -> [[unresolvedrefget]]
-  - <- contains <- [[main]]
-- **get_request_id** (C:\project\tenopa proposer\-agent-master\app\middleware\request_id.py) -- 2 connections
+- **get_request_id** (C:\project\tenopa proposer\app\middleware\request_id.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[requestid]]
-- **dispatch** (C:\project\tenopa proposer\-agent-master\app\middleware\security_headers.py) -- 2 connections
-  - -> calls -> [[unresolvedrefcallnext]]
-  - <- contains <- [[securityheadersmiddleware]]
-- **DivisionDashboardResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **DivisionDashboardResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **DivisionTeamDashboardItem** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **DivisionTeamDashboardItem** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **ExecutiveDashboardResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **ExecutiveDashboardResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **KpiSummary** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **KpiSummary** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **MonthlyTrendItem** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **MonthlyTrendItem** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **PositioningStat** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **PositioningStat** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **ProposalStats** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **ProposalStats** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **ProposalVersionsResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **ProposalVersionsResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **ReopenResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **ReopenResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **RoleUpdateResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **RoleUpdateResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **StatusUpdateResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **StatusUpdateResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **SystemStatsResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **SystemStatsResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **TimeTravelResponse** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **TimeTravelResponse** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **UserStats** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **UserStats** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **VersionItem** (C:\project\tenopa proposer\-agent-master\app\models\admin_schemas.py) -- 2 connections
+- **VersionItem** (C:\project\tenopa proposer\app\models\admin_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[adminschemas]]
-- **ClientWinRateItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **ClientWinRateItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **ClientWinRateResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **ClientWinRateResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **CompetitorItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **CompetitorItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **CompetitorResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **CompetitorResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **FailureReasonItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **FailureReasonItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **FailureReasonsResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **FailureReasonsResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **MonthlyTrendItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **MonthlyTrendItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **MonthlyTrendsResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **MonthlyTrendsResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **PositioningItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **PositioningItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **PositioningWinRateResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **PositioningWinRateResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **TeamPerformanceItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **TeamPerformanceItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **TeamPerformanceResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **TeamPerformanceResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **WinRateItem** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **WinRateItem** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **WinRateResponse** (C:\project\tenopa proposer\-agent-master\app\models\analytics_schemas.py) -- 2 connections
+- **WinRateResponse** (C:\project\tenopa proposer\app\models\analytics_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[analyticsschemas]]
-- **AiAssistResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **AiAssistResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ArtifactDiffResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ArtifactDiffResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ArtifactResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ArtifactResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ArtifactSaveResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ArtifactSaveResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ComplianceCheckResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ComplianceCheckResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ComplianceMatrixResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ComplianceMatrixResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **ComplianceStats** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **ComplianceStats** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **CostSheetDraftResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **CostSheetDraftResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **DiffMeta** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **DiffMeta** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **SectionRegenerateResponse** (C:\project\tenopa proposer\-agent-master\app\models\artifact_schemas.py) -- 2 connections
+- **SectionRegenerateResponse** (C:\project\tenopa proposer\app\models\artifact_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[artifactschemas]]
-- **AuthMessageResponse** (C:\project\tenopa proposer\-agent-master\app\models\auth_schemas.py) -- 2 connections
+- **AuthMessageResponse** (C:\project\tenopa proposer\app\models\auth_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[authschemas]]
-- **CurrentUser** (C:\project\tenopa proposer\-agent-master\app\models\auth_schemas.py) -- 2 connections
+- **CurrentUser** (C:\project\tenopa proposer\app\models\auth_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[authschemas]]
-- **BidAnnouncement** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **BidAnnouncement** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **BidRecommendation** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **BidRecommendation** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **BidStatusUpdate** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **BidStatusUpdate** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **ExcludedBid** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **ExcludedBid** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **QualificationResult** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **QualificationResult** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **ReasonAnalysis** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **ReasonAnalysis** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RecommendationReason** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RecommendationReason** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RecommendationsData** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RecommendationsData** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RecommendationsMeta** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RecommendationsMeta** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RecommendationsResponse** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RecommendationsResponse** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RecommendedBid** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RecommendedBid** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **RiskFactor** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **RiskFactor** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **SearchPresetCreate** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **SearchPreset** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefsearchpresetcreate]]
+  - <- contains <- [[bidschemas]]
+- **SearchPresetCreate** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **TeamBidProfile** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **TeamBidProfile** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **TeamBidProfileCreate** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **TeamBidProfileCreate** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **TenopaBidReview** (C:\project\tenopa proposer\-agent-master\app\models\bid_schemas.py) -- 2 connections
+- **TenopaBidReview** (C:\project\tenopa proposer\app\models\bid_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[bidschemas]]
-- **DeleteResponse** (C:\project\tenopa proposer\-agent-master\app\models\common.py) -- 2 connections
+- **DeleteResponse** (C:\project\tenopa proposer\app\models\common.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[common]]
-- **ItemsResponse** (C:\project\tenopa proposer\-agent-master\app\models\common.py) -- 2 connections
+- **ItemsResponse** (C:\project\tenopa proposer\app\models\common.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[common]]
-- **PaginatedResponse** (C:\project\tenopa proposer\-agent-master\app\models\common.py) -- 2 connections
+- **PaginatedResponse** (C:\project\tenopa proposer\app\models\common.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[common]]
-- **StatusResponse** (C:\project\tenopa proposer\-agent-master\app\models\common.py) -- 2 connections
+- **StatusResponse** (C:\project\tenopa proposer\app\models\common.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[common]]
-- **ChunkListResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **ChunkListResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **ChunkResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **ChunkResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **DocumentListResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **DocumentDetailResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefdocumentresponse]]
+  - <- contains <- [[documentschemas]]
+- **DocumentListResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **DocumentProcessRequest** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **DocumentProcessRequest** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **DocumentProcessResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **DocumentProcessResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **DocumentResponse** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **DocumentResponse** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **DocumentUploadRequest** (C:\project\tenopa proposer\-agent-master\app\models\document_schemas.py) -- 2 connections
+- **DocumentUploadRequest** (C:\project\tenopa proposer\app\models\document_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[documentschemas]]
-- **BatchListParams** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **ClassificationRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **ClassificationResult** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **CoverageItem** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **CoverageMetrics** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **DeprecationRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **DeprecationResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **EmbeddingUnavailableResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefsearchresponse]]
+  - <- contains <- [[knowledgeschemas]]
+- **ErrorResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **FlatHealthMetrics** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **FreshnessMetrics** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **HealthMetrics** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **KnowledgeBaseSize** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **KnowledgeFeedbackRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **KnowledgeFeedbackResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **KnowledgeMetadataDB** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **KnowledgeSharingAuditDB** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **ProposalContext** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **RecommendationFeedback** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **RecommendationRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **RecommendationResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **RecommendationResultItem** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SearchAnalytics** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SearchFilters** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SearchRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SearchResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SearchResultItem** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SharingAuditRecord** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SharingRequest** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **SharingResponse** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[knowledgeschemas]]
+- **BatchListParams** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **BatchListResponse** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **BatchListResponse** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **BatchResult** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **BatchResult** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **DocumentProcessResult** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **DocumentProcessResult** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **IntranetDocument** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **IntranetDocument** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **MigrationBatch** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **MigrationBatch** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **MigrationSchedule** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **MigrationSchedule** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **MigrationScheduleUpdate** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **MigrationScheduleUpdate** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **MigrationTriggerRequest** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **MigrationTriggerRequest** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **MigrationTriggerResponse** (C:\project\tenopa proposer\-agent-master\app\models\migration_schemas.py) -- 2 connections
+- **MigrationTriggerResponse** (C:\project\tenopa proposer\app\models\migration_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[migrationschemas]]
-- **NotificationItem** (C:\project\tenopa proposer\-agent-master\app\models\notification_schemas.py) -- 2 connections
+- **NotificationItem** (C:\project\tenopa proposer\app\models\notification_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[notificationschemas]]
-- **NotificationListResponse** (C:\project\tenopa proposer\-agent-master\app\models\notification_schemas.py) -- 2 connections
+- **NotificationListResponse** (C:\project\tenopa proposer\app\models\notification_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[notificationschemas]]
-- **NotificationSettingsResponse** (C:\project\tenopa proposer\-agent-master\app\models\notification_schemas.py) -- 2 connections
+- **NotificationSettingsResponse** (C:\project\tenopa proposer\app\models\notification_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[notificationschemas]]
-- **CompanyPerformance** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **CompanyPerformance** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **DivisionPerformance** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **DivisionPerformance** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **DivisionTeamStat** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **DivisionTeamStat** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **IndividualPerformance** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **IndividualPerformance** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **MyProjectsDashboard** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **MyProjectsDashboard** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **PerformanceTrends** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **PerformanceTrends** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **PositioningStat** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **PositioningStat** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **TeamDashboard** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **TeamDashboard** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **TeamQuarterPerformance** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **TeamQuarterPerformance** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **TrendItem** (C:\project\tenopa proposer\-agent-master\app\models\performance_schemas.py) -- 2 connections
+- **TrendItem** (C:\project\tenopa proposer\app\models\performance_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[performanceschemas]]
-- **Phase1Artifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **Phase1Artifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefphaseartifact]]
   - <- contains <- [[phaseschemas]]
-- **Phase2Artifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **Phase2Artifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefphaseartifact]]
   - <- contains <- [[phaseschemas]]
-- **Phase3Artifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **Phase3Artifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefphaseartifact]]
   - <- contains <- [[phaseschemas]]
-- **Phase4Artifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **Phase4Artifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefphaseartifact]]
   - <- contains <- [[phaseschemas]]
-- **Phase5Artifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **Phase5Artifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefphaseartifact]]
   - <- contains <- [[phaseschemas]]
-- **PhaseArtifact** (C:\project\tenopa proposer\-agent-master\app\models\phase_schemas.py) -- 2 connections
+- **PhaseArtifact** (C:\project\tenopa proposer\app\models\phase_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[phaseschemas]]
-- **LessonResponse** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **LessonResponse** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[proposalschemas]]
-- **ProposalCreateResponse** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **ProposalCreateResponse** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[proposalschemas]]
-- **ProposalDetail** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **ProposalDetail** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefproposallistitem]]
   - <- contains <- [[proposalschemas]]
-- **ProposalListItem** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **ProposalListItem** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[proposalschemas]]
-- **ProposalResultResponse** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **ProposalResultResponse** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[proposalschemas]]
-- **ProposalTaskResponse** (C:\project\tenopa proposer\-agent-master\app\models\proposal_schemas.py) -- 2 connections
+- **ProposalTaskResponse** (C:\project\tenopa proposer\app\models\proposal_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[proposalschemas]]
-- **LessonCreate** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **LessonCreate** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProjectInput** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProjectInput** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProposalContent** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProposalContent** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProposalResponse** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProposalResponse** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProposalResultCreate** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProposalResultCreate** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProposalResultUpdate** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProposalResultUpdate** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ProposalSection** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **ProposalSection** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **QARecordCreate** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **QARecordCreate** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **QARecordResponse** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **QARecordResponse** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **QARecordUpdate** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **QARecordUpdate** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **QASearchResult** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **QASearchResult** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **RFPData** (C:\project\tenopa proposer\-agent-master\app\models\schemas.py) -- 2 connections
+- **RFPData** (C:\project\tenopa proposer\app\models\schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[schemas]]
-- **ConsolidatedSection** (C:\project\tenopa proposer\-agent-master\app\models\step8_schemas.py) -- 2 connections
+- **ConsolidatedSection** (C:\project\tenopa proposer\app\models\step8_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[step8schemas]]
-- **EvaluationDimension** (C:\project\tenopa proposer\-agent-master\app\models\step8_schemas.py) -- 2 connections
+- **EvaluationDimension** (C:\project\tenopa proposer\app\models\step8_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[step8schemas]]
-- **ImprovementAction** (C:\project\tenopa proposer\-agent-master\app\models\step8_schemas.py) -- 2 connections
+- **ImprovementAction** (C:\project\tenopa proposer\app\models\step8_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[step8schemas]]
-- **BidPriceAdjustRequest** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **BidPriceAdjustRequest** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **BidPriceAdjustResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **BidPriceAdjustResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **FinalSubmitRequest** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **FinalSubmitRequest** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **FinalSubmitResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **FinalSubmitResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **OrgDocTemplateCreate** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **OrgDocTemplateCreate** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **OrgDocTemplateResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **OrgDocTemplateResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **ReadinessItem** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **ReadinessItem** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **ReadinessResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **ReadinessResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **StreamProgressResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **StreamProgressResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **StreamsOverview** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **StreamsOverview** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **SubmissionDocCreate** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **SubmissionDocCreate** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **SubmissionDocumentResponse** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **SubmissionDocumentResponse** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **SubmissionDocUpdate** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **SubmissionDocUpdate** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **SubmissionDocVerify** (C:\project\tenopa proposer\-agent-master\app\models\stream_schemas.py) -- 2 connections
+- **SubmissionDocVerify** (C:\project\tenopa proposer\app\models\stream_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[streamschemas]]
-- **BulkCreateResult** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **BulkCreateResult** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **DelegationCreate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **DelegationCreate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **DelegationResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **DelegationResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **DivisionCreate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **DivisionCreate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **DivisionResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **DivisionResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **OrganizationCreate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **OrganizationCreate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **OrganizationResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **OrganizationResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **ParticipantAdd** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **ParticipantAdd** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **ParticipantResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **ParticipantResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **PasswordChangeRequest** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **PasswordChangeRequest** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **PasswordResetRequest** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **PasswordResetRequest** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **TeamCreate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **TeamCreate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **TeamResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **TeamResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **TeamUpdate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **TeamUpdate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **UserCreate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **UserCreate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **UserCreateWithPassword** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **UserCreateWithPassword** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **UserListResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **UserListResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **UserResponse** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **UserResponse** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **UserUpdate** (C:\project\tenopa proposer\-agent-master\app\models\user_schemas.py) -- 2 connections
+- **UserUpdate** (C:\project\tenopa proposer\app\models\user_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[userschemas]]
-- **AiActionResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **BookmarkCreate** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **BookmarkResponse** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ChatMessage** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ChatMetrics** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **Contradiction** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ConversationCreate** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ConversationDetail** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ConversationShareResponse** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ConversationSummary** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ConversationUpdate** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **DocumentSource** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ExportRequest** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ExportResponse** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **GovernmentGuideline** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ProjectMeta** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **RoutingDecision** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **SearchFilter** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **SearchResult** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **SearchResults** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **ValidationReport** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatRequest** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatResponse** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatStreamDone** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatStreamError** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatStreamSources** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultChatStreamToken** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultDocument** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultRegenerateRequest** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **VaultStats** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultschemas]]
+- **AiActionResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **AiStatusResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **AiStatusResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **EnhancedWorkflowStateResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **EnhancedWorkflowStateResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **GotoResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **GotoResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **ImpactResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **ImpactResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **SectionLockResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **SectionLockResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **SectionUnlockResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **SectionUnlockResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **StateHistoryResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **StateHistoryResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **TimelineEntry** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **TimelineEntry** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **TokenSummary** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **TokenSummary** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **TokenUsageByNode** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **TokenUsageByNode** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **TokenUsageResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **TokenUsageResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **TokenUsageTotal** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **TokenUsageTotal** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **WorkflowHistoryResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **WorkflowHistoryResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **WorkflowHistoryStep** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **WorkflowHistoryStep** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **WorkflowResumeResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **WorkflowResumeResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **WorkflowStartResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **WorkflowStartResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **WorkflowStateResponse** (C:\project\tenopa proposer\-agent-master\app\models\workflow_schemas.py) -- 2 connections
+- **WorkflowStateResponse** (C:\project\tenopa proposer\app\models\workflow_schemas.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[workflowschemas]]
-- **get_scheduler** (C:\project\tenopa proposer\-agent-master\app\scheduler.py) -- 2 connections
-  - -> calls -> [[unresolvedrefasyncioscheduler]]
-  - <- contains <- [[scheduler]]
-- **get_all_pipeline_status** (C:\project\tenopa proposer\-agent-master\app\services\bid_pipeline.py) -- 2 connections
-  - -> calls -> [[unresolvedrefdict]]
-  - <- contains <- [[bidpipeline]]
-- **get_pipeline_status** (C:\project\tenopa proposer\-agent-master\app\services\bid_pipeline.py) -- 2 connections
+- **get_metrics_tracker** (C:\project\tenopa proposer\app\services\beta_metrics_tracker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefbetametricstracker]]
+  - <- contains <- [[betametricstracker]]
+- **classify_attachment** (C:\project\tenopa proposer\app\services\bid_attachment_store.py) -- 2 connections
+  - -> calls -> [[unresolvedreflower]]
+  - <- contains <- [[bidattachmentstore]]
+- **get_pipeline_status** (C:\project\tenopa proposer\app\services\bid_pipeline.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[bidpipeline]]
-- **_fmt_won** (C:\project\tenopa proposer\-agent-master\app\services\bidding\artifacts\cost_sheet_builder.py) -- 2 connections
+- **_fmt_won** (C:\project\tenopa proposer\app\services\bidding\artifacts\cost_sheet_builder.py) -- 2 connections
   - -> calls -> [[unresolvedrefint]]
   - <- contains <- [[costsheetbuilder]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\preprocessor.py) -- 2 connections
-  - -> calls -> [[unresolvedrefasyncanthropic]]
-  - <- contains <- [[bidpreprocessor]]
-- **preprocess_batch** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\preprocessor.py) -- 2 connections
-  - -> calls -> [[unresolvedrefpreprocess]]
-  - <- contains <- [[bidpreprocessor]]
-- **ClientPreferenceAnalyzer** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\client_preference.py) -- 2 connections
-  - -> contains -> [[analyze]]
-  - <- contains <- [[clientpreference]]
-- **CompetitorPricingAnalyzer** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\competitor_pricing.py) -- 2 connections
-  - -> contains -> [[analyze]]
-  - <- contains <- [[competitorpricing]]
-- **CostStandardSelector** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\cost_standard_selector.py) -- 2 connections
-  - -> contains -> [[select]]
-  - <- contains <- [[coststandardselector]]
-- **_domain_to_standard** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\cost_standard_selector.py) -- 2 connections
-  - -> calls -> [[unresolvedrefitems]]
-  - <- contains <- [[coststandardselector]]
-- **BidRange** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **BidRange** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **ClientPricingPreference** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **ClientPricingPreference** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **CompetitorPricingProfile** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **CompetitorPricingProfile** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **CostBreakdownDetail** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **CostBreakdownDetail** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **CostStandardRecommendation** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **CostStandardRecommendation** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **MarketContext** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **MarketContext** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **PersonnelCostDetail** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **PersonnelCostDetail** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **PersonnelInput** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **PersonnelInput** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **PriceScoreDetail** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **PriceScoreDetail** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **PricingSimulationRequest** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **PricingSimulationRequest** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **QuickEstimateRequest** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **QuickEstimateRequest** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **QuickEstimateResult** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **QuickEstimateResult** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **Scenario** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **Scenario** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **SensitivityPoint** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\models.py) -- 2 connections
+- **SensitivityPoint** (C:\project\tenopa proposer\app\services\bidding\pricing\models.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[models]]
-- **_get_client** (C:\project\tenopa proposer\-agent-master\app\services\claude_client.py) -- 2 connections
-  - -> calls -> [[unresolvedrefasyncanthropic]]
-  - <- contains <- [[claudeclient]]
-- **get_accumulated_usage** (C:\project\tenopa proposer\-agent-master\app\services\claude_client.py) -- 2 connections
+- **get_accumulated_usage** (C:\project\tenopa proposer\app\services\claude_client.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[claudeclient]]
-- **reset_usage_context** (C:\project\tenopa proposer\-agent-master\app\services\claude_client.py) -- 2 connections
+- **reset_usage_context** (C:\project\tenopa proposer\app\services\claude_client.py) -- 2 connections
   - -> calls -> [[unresolvedrefset]]
   - <- contains <- [[claudeclient]]
-- **validate_output** (C:\project\tenopa proposer\-agent-master\app\services\hwpx\build_hwpx.py) -- 2 connections
+- **_guess_file_ext** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 2 connections
+  - -> calls -> [[unresolvedreflower]]
+  - <- contains <- [[g2bservice]]
+- **_map_evaluation_method** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefstrip]]
+  - <- contains <- [[g2bservice]]
+- **__aenter__** (C:\project\tenopa proposer\app\services\g2b_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefclientsession]]
+  - <- contains <- [[g2bservice]]
+- **validate_output** (C:\project\tenopa proposer\app\services\hwpx\build_hwpx.py) -- 2 connections
   - -> calls -> [[unresolvedrefvalidatehwpx]]
   - <- contains <- [[buildhwpx]]
-- **build_proposal_hwpx_async** (C:\project\tenopa proposer\-agent-master\app\services\hwpx_service.py) -- 2 connections
-  - -> calls -> [[unresolvedreftothread]]
-  - <- contains <- [[hwpxservice]]
-- **validate** (C:\project\tenopa proposer\-agent-master\app\services\hwpx_service.py) -- 2 connections
+- **validate** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 2 connections
   - -> calls -> [[unresolvedrefvalidatehwpx]]
   - <- contains <- [[hwpxservice]]
-- **_now_utc** (C:\project\tenopa proposer\-agent-master\app\services\migration_service.py) -- 2 connections
+- **get_knowledge_manager** (C:\project\tenopa proposer\app\services\knowledge_manager.py) -- 2 connections
+  - -> calls -> [[unresolvedrefknowledgemanager]]
+  - <- contains <- [[knowledgemanager]]
+- **_now_utc** (C:\project\tenopa proposer\app\services\migration_service.py) -- 2 connections
   - -> calls -> [[unresolvedrefnow]]
   - <- contains <- [[migrationservice]]
-- **_row_to_schedule** (C:\project\tenopa proposer\-agent-master\app\services\migration_service.py) -- 2 connections
+- **_row_to_batch** (C:\project\tenopa proposer\app\services\migration_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefmigrationbatch]]
+  - <- contains <- [[migrationservice]]
+- **_row_to_schedule** (C:\project\tenopa proposer\app\services\migration_service.py) -- 2 connections
   - -> calls -> [[unresolvedrefmigrationschedule]]
   - <- contains <- [[migrationservice]]
-- **build_pptx** (C:\project\tenopa proposer\-agent-master\app\services\pptx_builder.py) -- 2 connections
-  - -> calls -> [[unresolvedreftothread]]
-  - <- contains <- [[pptxbuilder]]
-- **SimulationRequest** (C:\project\tenopa proposer\-agent-master\app\services\prompt_simulator.py) -- 2 connections
+- **SimulationRequest** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[promptsimulator]]
-- **SimulationResult** (C:\project\tenopa proposer\-agent-master\app\services\prompt_simulator.py) -- 2 connections
+- **SimulationResult** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[promptsimulator]]
-- **extract_text** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 2 connections
+- **extract_text** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 2 connections
   - -> calls -> [[unresolvedrefextracttextfromfile]]
   - <- contains <- [[rfpparser]]
-- **extract_text_from_docx** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 2 connections
+- **extract_text_from_docx** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 2 connections
   - -> calls -> [[unresolvedrefextracttextfromfile]]
   - <- contains <- [[rfpparser]]
-- **extract_text_from_pdf** (C:\project\tenopa proposer\-agent-master\app\services\rfp_parser.py) -- 2 connections
+- **extract_text_from_pdf** (C:\project\tenopa proposer\app\services\rfp_parser.py) -- 2 connections
   - -> calls -> [[unresolvedrefextracttextfromfile]]
   - <- contains <- [[rfpparser]]
-- **build_structured_output_schema** (C:\project\tenopa proposer\-agent-master\app\services\token_manager.py) -- 2 connections
+- **get_scheduler** (C:\project\tenopa proposer\app\services\scheduler\vault_bidding_batch.py) -- 2 connections
+  - -> calls -> [[unresolvedrefvaultbiddingbatchscheduler]]
+  - <- contains <- [[vaultbiddingbatch]]
+- **stop_batch_scheduler** (C:\project\tenopa proposer\app\services\scheduler\vault_bidding_batch.py) -- 2 connections
+  - -> calls -> [[unresolvedrefstopscheduler]]
+  - <- contains <- [[vaultbiddingbatch]]
+- **check_convergence** (C:\project\tenopa proposer\app\services\stream_orchestrator.py) -- 2 connections
+  - -> calls -> [[unresolvedrefgetstreamsstatus]]
+  - <- contains <- [[streamorchestrator]]
+- **assign_document** (C:\project\tenopa proposer\app\services\submission_docs_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefupdatedocumentstatus]]
+  - <- contains <- [[submissiondocsservice]]
+- **build_structured_output_schema** (C:\project\tenopa proposer\app\services\token_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[tokenmanager]]
-- **get_budget** (C:\project\tenopa proposer\-agent-master\app\services\token_manager.py) -- 2 connections
+- **get_budget** (C:\project\tenopa proposer\app\services\token_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[tokenmanager]]
-- **MoveValidationResult** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **BiddingAnalysisResult** (C:\project\tenopa proposer\app\services\vault_bidding_service.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultbiddingservice]]
+- **SimilarProject** (C:\project\tenopa proposer\app\services\vault_bidding_service.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultbiddingservice]]
+- **ClientInfo** (C:\project\tenopa proposer\app\services\vault_client_service.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultclientservice]]
+- **ClientPerformanceMetrics** (C:\project\tenopa proposer\app\services\vault_client_service.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultclientservice]]
+- **CredentialMetadata** (C:\project\tenopa proposer\app\services\vault_credential_service.py) -- 2 connections
+  - -> extends -> [[unresolvedrefbasemodel]]
+  - <- contains <- [[vaultcredentialservice]]
+- **MoveValidationResult** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[versionmanager]]
-- **VersionConflict** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **VersionConflict** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> extends -> [[unresolvedrefbasemodel]]
   - <- contains <- [[versionmanager]]
-- **_classify_dependency_level** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **_classify_dependency_level** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefany]]
   - <- contains <- [[versionmanager]]
-- **_determine_reason** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **_determine_reason** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[versionmanager]]
-- **_generate_validation_message** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **_generate_validation_message** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefjoin]]
   - <- contains <- [[versionmanager]]
-- **_get_downstream_nodes** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **_get_downstream_nodes** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[versionmanager]]
-- **_get_node_dependencies** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 2 connections
+- **_get_node_dependencies** (C:\project\tenopa proposer\app\services\version_manager.py) -- 2 connections
   - -> calls -> [[unresolvedrefget]]
   - <- contains <- [[versionmanager]]
-- **notify_comment_created** (C:\project\tenopa proposer\-agent-master\app\utils\edge_functions.py) -- 2 connections
+- **notify_comment_created** (C:\project\tenopa proposer\app\utils\edge_functions.py) -- 2 connections
   - -> calls -> [[unresolvedrefcall]]
   - <- contains <- [[edgefunctions]]
-- **notify_proposal_complete** (C:\project\tenopa proposer\-agent-master\app\utils\edge_functions.py) -- 2 connections
+- **notify_proposal_complete** (C:\project\tenopa proposer\app\utils\edge_functions.py) -- 2 connections
   - -> calls -> [[unresolvedrefcall]]
   - <- contains <- [[edgefunctions]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\utils\pagination.py) -- 2 connections
-  - -> calls -> [[unresolvedrefquery]]
-  - <- contains <- [[pageparams]]
-- **apply** (C:\project\tenopa proposer\-agent-master\app\utils\pagination.py) -- 2 connections
-  - -> calls -> [[unresolvedrefrange]]
-  - <- contains <- [[pageparams]]
-- **pagination** (C:\project\tenopa proposer\-agent-master\app\utils\pagination.py) -- 2 connections
-  - -> contains -> [[pageparams]]
-  - -> imports -> [[unresolvedreffastapi]]
-- **get_async_client** (C:\project\tenopa proposer\-agent-master\app\utils\supabase_client.py) -- 2 connections
+- **get_async_client** (C:\project\tenopa proposer\app\utils\supabase_client.py) -- 2 connections
   - -> calls -> [[unresolvedrefacreateclient]]
   - <- contains <- [[supabaseclient]]
-- **PPTSection** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+- **PPTSection** (C:\project\tenopa proposer\scripts\archive\final_review_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[finalreviewengine]]
-- **ReviewPriority** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+- **ReviewPriority** (C:\project\tenopa proposer\scripts\archive\final_review_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[finalreviewengine]]
-- **ReviewStatus** (C:\project\tenopa proposer\-agent-master\scripts\archive\final_review_engine.py) -- 2 connections
+- **ReviewStatus** (C:\project\tenopa proposer\scripts\archive\final_review_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[finalreviewengine]]
-- **AgentRole** (C:\project\tenopa proposer\-agent-master\scripts\archive\parallel_work_engine.py) -- 2 connections
+- **AgentRole** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[parallelworkengine]]
-- **ChecklistCategory** (C:\project\tenopa proposer\-agent-master\scripts\archive\parallel_work_engine.py) -- 2 connections
+- **ChecklistCategory** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[parallelworkengine]]
-- **TaskStatus** (C:\project\tenopa proposer\-agent-master\scripts\archive\parallel_work_engine.py) -- 2 connections
+- **TaskStatus** (C:\project\tenopa proposer\scripts\archive\parallel_work_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[parallelworkengine]]
-- **DecisionType** (C:\project\tenopa proposer\-agent-master\scripts\archive\rfp_review_engine.py) -- 2 connections
+- **DecisionType** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[rfpreviewengine]]
-- **FeasibilityLevel** (C:\project\tenopa proposer\-agent-master\scripts\archive\rfp_review_engine.py) -- 2 connections
+- **FeasibilityLevel** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[rfpreviewengine]]
-- **PriceStrategy** (C:\project\tenopa proposer\-agent-master\scripts\archive\strategy_planning_engine.py) -- 2 connections
+- **PriceStrategy** (C:\project\tenopa proposer\scripts\archive\strategy_planning_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[strategyplanningengine]]
-- **WinningStrategy** (C:\project\tenopa proposer\-agent-master\scripts\archive\strategy_planning_engine.py) -- 2 connections
+- **WinningStrategy** (C:\project\tenopa proposer\scripts\archive\strategy_planning_engine.py) -- 2 connections
   - -> extends -> [[unresolvedrefenum]]
   - <- contains <- [[strategyplanningengine]]
-- **plan_assign** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **plan_price** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **plan_schedule** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **plan_story** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **plan_team** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **ppt_slide** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **presentation_strategy** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **self_review_with_auto_improve** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **strategy_generate** (C:\project\tenopa proposer\-agent-master\scripts\archive\stub_nodes.py) -- 2 connections
-  - -> calls -> [[unresolvedrefinfo]]
-  - <- contains <- [[stubnodes]]
-- **test_hwpx** (C:\project\tenopa proposer\-agent-master\scripts\archive\test_hwpx.py) -- 2 connections
+- **test_hwpx** (C:\project\tenopa proposer\scripts\archive\test_hwpx.py) -- 2 connections
   - -> imports -> [[unresolvedrefpathlib]]
   - -> imports -> [[unresolvedrefhwpxbuilder]]
-- **parse_date** (C:\project\tenopa proposer\-agent-master\scripts\pilot_migration_10projects.py) -- 2 connections
+- **build_search_keywords** (C:\project\tenopa proposer\scripts\import_project_history.py) -- 2 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - <- contains <- [[importprojecthistory]]
+- **format_report_json** (C:\project\tenopa proposer\scripts\monitor_g2b_pipeline.py) -- 2 connections
+  - -> calls -> [[unresolvedrefdumps]]
+  - <- contains <- [[monitorg2bpipeline]]
+- **parse_date** (C:\project\tenopa proposer\scripts\pilot_migration_10projects.py) -- 2 connections
   - -> calls -> [[unresolvedrefint]]
   - <- contains <- [[pilotmigration10projects]]
-- **test_imports** (C:\project\tenopa proposer\-agent-master\test_document_ingestion.py) -- 2 connections
-  - -> calls -> [[unresolvedrefprint]]
-  - <- contains <- [[testdocumentingestion]]
-- **test_document_flow** (C:\project\tenopa proposer\-agent-master\tests\e2e\test_document_flow.py) -- 2 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefdatetime]]
-- **test_db_fallback** (C:\project\tenopa proposer\-agent-master\tests\integration\test_db_fallback.py) -- 2 connections
-  - -> imports -> [[unresolvedrefpytest]]
-  - -> imports -> [[unresolvedrefmemory]]
-- **test_artifact_version_creation** (C:\project\tenopa proposer\-agent-master\tests\test_artifact_versioning.py) -- 2 connections
-  - -> calls -> [[unresolvedrefartifactversion]]
-  - <- contains <- [[testartifactversionmodel]]
-- **test_artifact_version_optional_fields** (C:\project\tenopa proposer\-agent-master\tests\test_artifact_versioning.py) -- 2 connections
-  - -> calls -> [[unresolvedrefartifactversion]]
-  - <- contains <- [[testartifactversionmodel]]
-- **_resume_approved** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_branching.py) -- 2 connections
-  - -> calls -> [[unresolvedrefupdate]]
-  - <- contains <- [[testgraphbranching]]
-- **_resume_go** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_branching.py) -- 2 connections
-  - -> calls -> [[unresolvedrefupdate]]
-  - <- contains <- [[testgraphbranching]]
-- **_resume_rejected** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_branching.py) -- 2 connections
-  - -> calls -> [[unresolvedrefupdate]]
-  - <- contains <- [[testgraphbranching]]
-- **_resume_approved** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_happy_path.py) -- 2 connections
-  - -> calls -> [[unresolvedrefupdate]]
-  - <- contains <- [[testgraphhappypath]]
-- **_resume_go** (C:\project\tenopa proposer\-agent-master\tests\workflow\test_graph_happy_path.py) -- 2 connections
-  - -> calls -> [[unresolvedrefupdate]]
-  - <- contains <- [[testgraphhappypath]]
-- **__unresolved__::ref::_build_search_keywords** () -- 1 connections
-  - <- calls <- [[ensuremarketdata]]
 - **__unresolved__::ref::_constants** () -- 1 connections
   - <- imports <- [[step8frewrite]]
-- **__unresolved__::ref::_count_comparable** () -- 1 connections
-  - <- calls <- [[ensuremarketdata]]
-- **__unresolved__::ref::_crawl_bid_results** () -- 1 connections
-  - <- calls <- [[ensuremarketdata]]
-- **__unresolved__::ref::_download_and_extract** () -- 1 connections
-  - <- calls <- [[runallsteps]]
-- **__unresolved__::ref::_ensure_bid_in_db** () -- 1 connections
-  - <- calls <- [[runallsteps]]
+- **__unresolved__::ref::_load_project_state** () -- 1 connections
+  - <- calls <- [[loadstatedata]]
+- **__unresolved__::ref::_load_sample_data** () -- 1 connections
+  - <- calls <- [[loadstatedata]]
 - **__unresolved__::ref::_parse_amount** () -- 1 connections
   - <- calls <- [[normalizebiddetail]]
-- **__unresolved__::ref::_run_analysis_if_needed** () -- 1 connections
-  - <- calls <- [[runallsteps]]
 - **__unresolved__::ref::_safe** () -- 1 connections
   - <- calls <- [[buildemailhtml]]
 - **__unresolved__::ref::_safe_link** () -- 1 connections
   - <- calls <- [[buildemailhtml]]
-- **__unresolved__::ref::_should_bypass_auth** () -- 1 connections
-  - <- calls <- [[getdevuser]]
 - **__unresolved__::ref::_summarize_feedbacks** () -- 1 connections
   - <- calls <- [[trimfeedbackhistory]]
-- **__unresolved__::ref::_validate_user_status** () -- 1 connections
-  - <- calls <- [[requirerole]]
+- **__unresolved__::ref::add_task** () -- 1 connections
+  - <- calls <- [[queuebidanalysis]]
 - **__unresolved__::ref::admin_schemas** () -- 1 connections
   - <- imports <- [[routesadmin]]
-- **__unresolved__::ref::agents** () -- 1 connections
-  - <- imports <- [[testagentpipeline]]
 - **__unresolved__::ref::analytics_schemas** () -- 1 connections
   - <- imports <- [[routesanalytics]]
 - **__unresolved__::ref::analyze_template** () -- 1 connections
   - <- calls <- [[analyzereference]]
 - **__unresolved__::ref::artifact_schemas** () -- 1 connections
   - <- imports <- [[routesartifacts]]
+- **__unresolved__::ref::as_posix** () -- 1 connections
+  - <- calls <- [[packhwpx]]
 - **__unresolved__::ref::asset_extractor** () -- 1 connections
   - <- imports <- [[routesresources]]
 - **__unresolved__::ref::asyncpg** () -- 1 connections
   - <- imports <- [[applymigrations]]
-- **__unresolved__::ref::authinsufficientroleerror** () -- 1 connections
-  - <- calls <- [[requirerole]]
-- **__unresolved__::ref::basesettings** () -- 1 connections
-  - <- extends <- [[settings]]
-- **__unresolved__::ref::chart** () -- 1 connections
-  - <- imports <- [[presentationpptxbuilder]]
-- **__unresolved__::ref::client_preference** () -- 1 connections
-  - <- imports <- [[engine]]
-- **__unresolved__::ref::competitor_pricing** () -- 1 connections
-  - <- imports <- [[engine]]
-- **__unresolved__::ref::cors** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::cost_estimator** () -- 1 connections
-  - <- imports <- [[engine]]
-- **__unresolved__::ref::cost_standard_selector** () -- 1 connections
-  - <- imports <- [[engine]]
-- **__unresolved__::ref::cron** () -- 1 connections
-  - <- imports <- [[scheduler]]
-- **__unresolved__::ref::data** () -- 1 connections
-  - <- imports <- [[presentationpptxbuilder]]
+- **__unresolved__::ref::beta_metrics_tracker** () -- 1 connections
+  - <- imports <- [[routesvaultbeta]]
+- **__unresolved__::ref::betametricstracker** () -- 1 connections
+  - <- calls <- [[getmetricstracker]]
+- **__unresolved__::ref::bid_analysis_service** () -- 1 connections
+  - <- imports <- [[routesg2b]]
+- **__unresolved__::ref::bid_attachment_store** () -- 1 connections
+  - <- imports <- [[routesbids]]
+- **__unresolved__::ref::bid_fetcher** () -- 1 connections
+  - <- imports <- [[routesbids]]
+- **__unresolved__::ref::bid_pipeline** () -- 1 connections
+  - <- imports <- [[routesbids]]
+- **__unresolved__::ref::bid_recommender** () -- 1 connections
+  - <- imports <- [[routesbids]]
+- **__unresolved__::ref::build_user_message_with_context** () -- 1 connections
+  - <- calls <- [[buildusermessage]]
+- **__unresolved__::ref::completed_projects** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
 - **__unresolved__::ref::datavalidation** () -- 1 connections
   - <- imports <- [[createexceltemplate]]
 - **__unresolved__::ref::difflib** () -- 1 connections
   - <- imports <- [[humanedittracker]]
-- **__unresolved__::ref::engine** () -- 1 connections
-  - <- imports <- [[init]]
-- **__unresolved__::ref::execute_all** () -- 1 connections
-  - <- calls <- [[runphases]]
-- **__unresolved__::ref::execute_from_phase** () -- 1 connections
-  - <- calls <- [[runphasesfrom]]
+- **__unresolved__::ref::document_chunker** () -- 1 connections
+  - <- imports <- [[documentingestion]]
+- **__unresolved__::ref::document_schemas** () -- 1 connections
+  - <- imports <- [[routesdocuments]]
+- **__unresolved__::ref::documentresponse** () -- 1 connections
+  - <- extends <- [[documentdetailresponse]]
+- **__unresolved__::ref::email_service** () -- 1 connections
+  - <- imports <- [[notificationservice]]
+- **__unresolved__::ref::extract_context** () -- 1 connections
+  - <- calls <- [[buildusermessage]]
 - **__unresolved__::ref::filesizeexceedederror** () -- 1 connections
   - <- calls <- [[validatefilesize]]
+- **__unresolved__::ref::flush** () -- 1 connections
+  - <- calls <- [[extractfromstorage]]
 - **__unresolved__::ref::functools** () -- 1 connections
   - <- imports <- [[tokentracking]]
-- **__unresolved__::ref::g2bexternalerror** () -- 1 connections
-  - <- calls <- [[classifyg2berror]]
-- **__unresolved__::ref::g2bserviceerror** () -- 1 connections
-  - <- calls <- [[classifyg2berror]]
-- **__unresolved__::ref::get_current_user** () -- 1 connections
-  - <- calls <- [[getcurrentuserornone]]
-- **__unresolved__::ref::get_or_add_tcpr** () -- 1 connections
-  - <- calls <- [[shaderow]]
+- **__unresolved__::ref::g2b_bidding_collector** () -- 1 connections
+  - <- imports <- [[vaultbiddingbatch]]
+- **__unresolved__::ref::g2bbiddingcollector** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::gc** () -- 1 connections
+  - <- imports <- [[documentingestion]]
 - **__unresolved__::ref::get_rfp_summary_compact** () -- 1 connections
   - <- calls <- [[getrfpsummary]]
-- **__unresolved__::ref::get_user_client** () -- 1 connections
-  - <- calls <- [[getrlsclient]]
-- **__unresolved__::ref::getaddrinfo** () -- 1 connections
-  - <- calls <- [[validateurl]]
-- **__unresolved__::ref::header** () -- 1 connections
-  - <- calls <- [[getcurrentuser]]
+- **__unresolved__::ref::government_guidelines** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
 - **__unresolved__::ref::health_checker** () -- 1 connections
   - <- imports <- [[alertmanager]]
-- **__unresolved__::ref::ip_address** () -- 1 connections
-  - <- calls <- [[validateurl]]
+- **__unresolved__::ref::inject_citation_instructions** () -- 1 connections
+  - <- calls <- [[buildsystemprompt]]
 - **__unresolved__::ref::ipaddress** () -- 1 connections
   - <- imports <- [[rfpparser]]
-- **__unresolved__::ref::isalnum** () -- 1 connections
-  - <- calls <- [[init]]
 - **__unresolved__::ref::jsonresponse** () -- 1 connections
   - <- calls <- [[ratelimitexceededhandler]]
+- **__unresolved__::ref::knowledge** () -- 1 connections
+  - <- imports <- [[knowledgemanager]]
+- **__unresolved__::ref::knowledgemanager** () -- 1 connections
+  - <- calls <- [[getknowledgemanager]]
+- **__unresolved__::ref::master_projects_chat_service** () -- 1 connections
+  - <- imports <- [[routesmasterprojects]]
 - **__unresolved__::ref::masterprojectresponse** () -- 1 connections
   - <- extends <- [[masterprojectdetailresponse]]
 - **__unresolved__::ref::migrationschedule** () -- 1 connections
@@ -5592,120 +6600,54 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[testmodulararchitecture]]
 - **__unresolved__::ref::notification_schemas** () -- 1 connections
   - <- imports <- [[routesnotification]]
-- **__unresolved__::ref::oxmlelement** () -- 1 connections
-  - <- calls <- [[shaderow]]
+- **__unresolved__::ref::orm** () -- 1 connections
+  - <- imports <- [[masterprojects]]
 - **__unresolved__::ref::performance_schemas** () -- 1 connections
   - <- imports <- [[routesperformance]]
 - **__unresolved__::ref::phase_executor** () -- 1 connections
   - <- imports <- [[routesv31]]
 - **__unresolved__::ref::phase_prompts** () -- 1 connections
   - <- imports <- [[phaseexecutor]]
+- **__unresolved__::ref::pil** () -- 1 connections
+  - <- imports <- [[vaultcredentialservice]]
 - **__unresolved__::ref::plan** () -- 1 connections
   - <- imports <- [[plannodes]]
 - **__unresolved__::ref::platform** () -- 1 connections
   - <- imports <- [[migrateintranet]]
+- **__unresolved__::ref::postgresql** () -- 1 connections
+  - <- imports <- [[masterprojects]]
+- **__unresolved__::ref::ppt_pipeline** () -- 1 connections
+  - <- imports <- [[pptnodes]]
 - **__unresolved__::ref::pricing** () -- 1 connections
   - <- imports <- [[routespricing]]
+- **__unresolved__::ref::process_document** () -- 1 connections
+  - <- calls <- [[processdocumentbounded]]
 - **__unresolved__::ref::proposal_generator** () -- 1 connections
   - <- imports <- [[testworkflow]]
 - **__unresolved__::ref::proposallistitem** () -- 1 connections
   - <- extends <- [[proposaldetail]]
-- **__unresolved__::ref::py_compile** () -- 1 connections
-  - <- imports <- [[testsyntaxonly]]
 - **__unresolved__::ref::pydantic_settings** () -- 1 connections
   - <- imports <- [[config]]
-- **__unresolved__::ref::pypdf2** () -- 1 connections
-  - <- imports <- [[fileutils]]
+- **__unresolved__::ref::pytesseract** () -- 1 connections
+  - <- imports <- [[vaultcredentialservice]]
 - **__unresolved__::ref::qa_service** () -- 1 connections
   - <- imports <- [[routesqa]]
-- **__unresolved__::ref::qn** () -- 1 connections
-  - <- calls <- [[shaderow]]
-- **__unresolved__::ref::query** () -- 1 connections
-  - <- calls <- [[init]]
-- **__unresolved__::ref::ratio** () -- 1 connections
-  - <- calls <- [[computeeditratio]]
-- **__unresolved__::ref::removeprefix** () -- 1 connections
-  - <- calls <- [[getcurrentuser]]
-- **__unresolved__::ref::request_id** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_admin** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_analytics** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_artifacts** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_auth** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_bid_submission** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_bids** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_calendar** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_documents** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_files** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_g2b** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_intranet** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_kb** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_migration_status** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_notification** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_performance** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_presentation** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_pricing** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_project_archive** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_prompt_evolution** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_proposal** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_public** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_qa** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_resources** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_stats** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_step8_review** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_step8a** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_streams** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_submission_docs** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_team** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_templates** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_users** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::routes_workflow** () -- 1 connections
-  - <- imports <- [[main]]
+- **__unresolved__::ref::relative_to** () -- 1 connections
+  - <- calls <- [[packhwpx]]
+- **__unresolved__::ref::rfp_parser** () -- 1 connections
+  - <- imports <- [[phaseexecutor]]
+- **__unresolved__::ref::searchpresetcreate** () -- 1 connections
+  - <- extends <- [[searchpreset]]
 - **__unresolved__::ref::security** () -- 1 connections
   - <- imports <- [[deps]]
-- **__unresolved__::ref::security_headers** () -- 1 connections
-  - <- imports <- [[main]]
-- **__unresolved__::ref::sequencematcher** () -- 1 connections
-  - <- calls <- [[computeeditratio]]
 - **__unresolved__::ref::set_session** () -- 1 connections
   - <- calls <- [[getuserclient]]
 - **__unresolved__::ref::slowapi** () -- 1 connections
   - <- imports <- [[ratelimit]]
+- **__unresolved__::ref::sql** () -- 1 connections
+  - <- imports <- [[masterprojects]]
 - **__unresolved__::ref::sqlalchemy** () -- 1 connections
-  - <- imports <- [[routesmasterprojects]]
-- **__unresolved__::ref::state_validator** () -- 1 connections
-  - <- imports <- [[statemachine]]
+  - <- imports <- [[masterprojects]]
 - **__unresolved__::ref::step8b** () -- 1 connections
   - <- imports <- [[step8bsectionvalidator]]
 - **__unresolved__::ref::step8c** () -- 1 connections
@@ -5716,126 +6658,145 @@ Cohesion: 0.00 | Nodes: 954
   - <- imports <- [[step8efeedbackprocessor]]
 - **__unresolved__::ref::step8f** () -- 1 connections
   - <- imports <- [[step8frewrite]]
+- **__unresolved__::ref::stop_scheduler** () -- 1 connections
+  - <- calls <- [[stopbatchscheduler]]
 - **__unresolved__::ref::styles** () -- 1 connections
   - <- imports <- [[createexceltemplate]]
 - **__unresolved__::ref::team_recommender** () -- 1 connections
   - <- imports <- [[dailybidscan]]
-- **__unresolved__::ref::test_ai_recommendation** () -- 1 connections
-  - <- calls <- [[main]]
-- **__unresolved__::ref::test_with_live_g2b** () -- 1 connections
-  - <- calls <- [[main]]
-- **__unresolved__::ref::to_pipeline_dict** () -- 1 connections
-  - <- calls <- [[enrichwithteam]]
 - **__unresolved__::ref::token_manager** () -- 1 connections
   - <- imports <- [[tokentracking]]
 - **__unresolved__::ref::typeddict** () -- 1 connections
   - <- extends <- [[proposalstate]]
+- **__unresolved__::ref::update_document_status** () -- 1 connections
+  - <- calls <- [[assigndocument]]
+- **__unresolved__::ref::vault_bidding_service** () -- 1 connections
+  - <- imports <- [[routesvaultbidding]]
+- **__unresolved__::ref::vault_cache_service** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
+- **__unresolved__::ref::vault_citation_service** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
+- **__unresolved__::ref::vault_client_service** () -- 1 connections
+  - <- imports <- [[routesvaultclients]]
+- **__unresolved__::ref::vault_context_manager** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
+- **__unresolved__::ref::vault_credential_service** () -- 1 connections
+  - <- imports <- [[routesvaultcredentials]]
+- **__unresolved__::ref::vault_embedding_service** () -- 1 connections
+  - <- imports <- [[routesvaultembeddings]]
+- **__unresolved__::ref::vault_personnel_service** () -- 1 connections
+  - <- imports <- [[routesvaultpersonnel]]
+- **__unresolved__::ref::vault_query_router** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
+- **__unresolved__::ref::vault_step_search** () -- 1 connections
+  - <- imports <- [[routesvaultstepsearch]]
+- **__unresolved__::ref::vault_validation** () -- 1 connections
+  - <- imports <- [[routesvaultchat]]
+- **__unresolved__::ref::vaultbiddingbatchscheduler** () -- 1 connections
+  - <- calls <- [[getscheduler]]
 - **__unresolved__::ref::workflow_schemas** () -- 1 connections
   - <- imports <- [[routesworkflow]]
-- **_should_bypass_auth** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 1 connections
+- **_should_bypass_auth** (C:\project\tenopa proposer\app\api\deps.py) -- 1 connections
   - <- contains <- [[deps]]
-- **get_db** (C:\project\tenopa proposer\-agent-master\app\api\deps.py) -- 1 connections
+- **get_db** (C:\project\tenopa proposer\app\api\deps.py) -- 1 connections
   - <- contains <- [[deps]]
-- **_resolve_scope** (C:\project\tenopa proposer\-agent-master\app\api\routes_analytics.py) -- 1 connections
+- **_resolve_scope** (C:\project\tenopa proposer\app\api\routes_analytics.py) -- 1 connections
   - <- contains <- [[routesanalytics]]
-- **Config** (C:\project\tenopa proposer\-agent-master\app\api\routes_master_projects.py) -- 1 connections
+- **Config** (C:\project\tenopa proposer\app\api\routes_master_projects.py) -- 1 connections
   - <- contains <- [[routesmasterprojects]]
-- **convergence_gate** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 1 connections
-  - <- contains <- [[gatenodes]]
-- **passthrough** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 1 connections
-  - <- contains <- [[gatenodes]]
-- **proposal_start_gate** (C:\project\tenopa proposer\-agent-master\app\graph\nodes\gate_nodes.py) -- 1 connections
-  - <- contains <- [[gatenodes]]
-- **_append_list** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 1 connections
+- **_assess_win_probability** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 1 connections
+  - <- contains <- [[evaluationnodes]]
+- **_create_evaluator_profiles** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 1 connections
+  - <- contains <- [[evaluationnodes]]
+- **_append_list** (C:\project\tenopa proposer\app\graph\state.py) -- 1 connections
   - <- contains <- [[state]]
-- **_merge_dict** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 1 connections
+- **_merge_dict** (C:\project\tenopa proposer\app\graph\state.py) -- 1 connections
   - <- contains <- [[state]]
-- **_replace** (C:\project\tenopa proposer\-agent-master\app\graph\state.py) -- 1 connections
+- **_replace** (C:\project\tenopa proposer\app\graph\state.py) -- 1 connections
   - <- contains <- [[state]]
-- **types** (C:\project\tenopa proposer\-agent-master\app\models\types.py) -- 1 connections
+- **Config** (C:\project\tenopa proposer\app\models\knowledge_schemas.py) -- 1 connections
+  - <- contains <- [[knowledgeschemas]]
+- **__repr__** (C:\project\tenopa proposer\app\models\master_projects.py) -- 1 connections
+  - <- contains <- [[masterproject]]
+- **types** (C:\project\tenopa proposer\app\models\types.py) -- 1 connections
   - -> imports -> [[unresolvedreftyping]]
-- **_update_status** (C:\project\tenopa proposer\-agent-master\app\services\bid_pipeline.py) -- 1 connections
+- **Config** (C:\project\tenopa proposer\app\models\vault_schemas.py) -- 1 connections
+  - <- contains <- [[vaultschemas]]
+- **_update_status** (C:\project\tenopa proposer\app\services\bid_pipeline.py) -- 1 connections
   - <- contains <- [[bidpipeline]]
-- **_fmt** (C:\project\tenopa proposer\-agent-master\app\services\bidding\calculator.py) -- 1 connections
+- **_fmt** (C:\project\tenopa proposer\app\services\bidding\calculator.py) -- 1 connections
   - <- contains <- [[calculator]]
-- **_score_to_grade** (C:\project\tenopa proposer\-agent-master\app\services\bidding\monitor\recommender.py) -- 1 connections
+- **_score_to_grade** (C:\project\tenopa proposer\app\services\bidding\monitor\recommender.py) -- 1 connections
   - <- contains <- [[recommender]]
-- **_compute_budget_tier** (C:\project\tenopa proposer\-agent-master\app\services\bidding\pricing\engine.py) -- 1 connections
-  - <- contains <- [[engine]]
-- **_compute_budget_tier** (C:\project\tenopa proposer\-agent-master\app\services\bidding\submission\market_research.py) -- 1 connections
+- **_compute_budget_tier** (C:\project\tenopa proposer\app\services\bidding\submission\market_research.py) -- 1 connections
   - <- contains <- [[marketresearch]]
-- **ComplianceTracker** (C:\project\tenopa proposer\-agent-master\app\services\compliance_tracker.py) -- 1 connections
+- **ComplianceTracker** (C:\project\tenopa proposer\app\services\compliance_tracker.py) -- 1 connections
   - <- contains <- [[compliancetracker]]
-- **_add_speaker_notes** (C:\project\tenopa proposer\-agent-master\app\services\presentation_pptx_builder.py) -- 1 connections
-  - <- contains <- [[presentationpptxbuilder]]
-- **StateValidator** (C:\project\tenopa proposer\-agent-master\app\services\state_validator.py) -- 1 connections
+- **G2BBiddingAnalyzer** (C:\project\tenopa proposer\app\services\g2b_bidding_collector.py) -- 1 connections
+  - <- contains <- [[g2bbiddingcollector]]
+- **_default_sample_state** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 1 connections
+  - <- contains <- [[promptsimulator]]
+- **_is_korean_holiday** (C:\project\tenopa proposer\app\services\scheduled_monitor.py) -- 1 connections
+  - <- contains <- [[scheduledmonitor]]
+- **StateValidator** (C:\project\tenopa proposer\app\services\state_validator.py) -- 1 connections
   - <- contains <- [[statevalidator]]
-- **check_dependency_mismatch** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 1 connections
+- **_find_sheet** (C:\project\tenopa proposer\app\services\user_account_service.py) -- 1 connections
+  - <- contains <- [[useraccountservice]]
+- **VaultBiddingService** (C:\project\tenopa proposer\app\services\vault_bidding_service.py) -- 1 connections
+  - <- contains <- [[vaultbiddingservice]]
+- **VaultCacheService** (C:\project\tenopa proposer\app\services\vault_cache_service.py) -- 1 connections
+  - <- contains <- [[vaultcacheservice]]
+- **VaultChatSearch** (C:\project\tenopa proposer\app\services\vault_chat_search.py) -- 1 connections
+  - <- contains <- [[vaultchatsearch]]
+- **VaultCitationService** (C:\project\tenopa proposer\app\services\vault_citation_service.py) -- 1 connections
+  - <- contains <- [[vaultcitationservice]]
+- **VaultClientService** (C:\project\tenopa proposer\app\services\vault_client_service.py) -- 1 connections
+  - <- contains <- [[vaultclientservice]]
+- **VaultContextManager** (C:\project\tenopa proposer\app\services\vault_context_manager.py) -- 1 connections
+  - <- contains <- [[vaultcontextmanager]]
+- **VaultCredentialService** (C:\project\tenopa proposer\app\services\vault_credential_service.py) -- 1 connections
+  - <- contains <- [[vaultcredentialservice]]
+- **CompletedProjectsHandler** (C:\project\tenopa proposer\app\services\vault_handlers\completed_projects.py) -- 1 connections
+  - <- contains <- [[completedprojects]]
+- **GovernmentGuidelinesHandler** (C:\project\tenopa proposer\app\services\vault_handlers\government_guidelines.py) -- 1 connections
+  - <- contains <- [[governmentguidelines]]
+- **VaultPersonnelService** (C:\project\tenopa proposer\app\services\vault_personnel_service.py) -- 1 connections
+  - <- contains <- [[vaultpersonnelservice]]
+- **VaultQueryRouter** (C:\project\tenopa proposer\app\services\vault_query_router.py) -- 1 connections
+  - <- contains <- [[vaultqueryrouter]]
+- **VaultStepSearch** (C:\project\tenopa proposer\app\services\vault_step_search.py) -- 1 connections
+  - <- contains <- [[vaultstepsearch]]
+- **HallucinationValidator** (C:\project\tenopa proposer\app\services\vault_validation.py) -- 1 connections
+  - <- contains <- [[vaultvalidation]]
+- **check_dependency_mismatch** (C:\project\tenopa proposer\app\services\version_manager.py) -- 1 connections
   - <- contains <- [[versionmanager]]
-- **compare_versions** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 1 connections
+- **compare_versions** (C:\project\tenopa proposer\app\services\version_manager.py) -- 1 connections
   - <- contains <- [[versionmanager]]
-- **rollback_version** (C:\project\tenopa proposer\-agent-master\app\services\version_manager.py) -- 1 connections
+- **rollback_version** (C:\project\tenopa proposer\app\services\version_manager.py) -- 1 connections
   - <- contains <- [[versionmanager]]
-- **WorkflowTimer** (C:\project\tenopa proposer\-agent-master\app\services\workflow_timer.py) -- 1 connections
+- **WorkflowTimer** (C:\project\tenopa proposer\app\services\workflow_timer.py) -- 1 connections
   - <- contains <- [[workflowtimer]]
-- **reset_client** (C:\project\tenopa proposer\-agent-master\app\utils\supabase_client.py) -- 1 connections
+- **reset_client** (C:\project\tenopa proposer\app\utils\supabase_client.py) -- 1 connections
   - <- contains <- [[supabaseclient]]
-- **fix_docs_final** (C:\project\tenopa proposer\-agent-master\scripts\archive\fix_docs_final.py) -- 1 connections
+- **fix_docs_final** (C:\project\tenopa proposer\scripts\archive\fix_docs_final.py) -- 1 connections
   - -> imports -> [[unresolvedrefpathlib]]
-- **validate_inputs** (C:\project\tenopa proposer\-agent-master\scripts\archive\modular_architecture_simple.py) -- 1 connections
+- **validate_inputs** (C:\project\tenopa proposer\scripts\archive\modular_architecture_simple.py) -- 1 connections
   - <- contains <- [[proposalmodule]]
-- **_empty_pipeline** (C:\project\tenopa proposer\-agent-master\scripts\daily_bid_scan.py) -- 1 connections
+- **build_client_to_dept** (C:\project\tenopa proposer\scripts\bid_scoring.py) -- 1 connections
+  - <- contains <- [[bidscoring]]
+- **format_budget** (C:\project\tenopa proposer\scripts\bid_scoring.py) -- 1 connections
+  - <- contains <- [[bidscoring]]
+- **format_d_day** (C:\project\tenopa proposer\scripts\bid_scoring.py) -- 1 connections
+  - <- contains <- [[bidscoring]]
+- **_empty_pipeline** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 1 connections
   - <- contains <- [[dailybidscan]]
-- **set_speaker_notes** (C:\project\tenopa proposer\-agent-master\scripts\hwpx_to_pptx.py) -- 1 connections
+- **set_speaker_notes** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 1 connections
   - <- contains <- [[hwpxtopptx]]
-- **map_role** (C:\project\tenopa proposer\-agent-master\scripts\provision_users.py) -- 1 connections
+- **map_role** (C:\project\tenopa proposer\scripts\provision_users.py) -- 1 connections
   - <- contains <- [[provisionusers]]
-- **pytest_collection_modifyitems** (C:\project\tenopa proposer\-agent-master\tests\integration\live\conftest.py) -- 1 connections
-  - <- contains <- [[conftest]]
-- **TestChunksEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **TestDeleteEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **TestDetailEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **TestListEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **TestReprocessEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **TestUploadEndpoint** (C:\project\tenopa proposer\-agent-master\tests\integration\test_routes_documents.py) -- 1 connections
-  - <- contains <- [[testroutesdocuments]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\tests\test_step8_e2e.py) -- 1 connections
-  - <- contains <- [[stepmetrics]]
-- **TestMockEvaluationAnalysis** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
-- **TestMockEvaluationFeedbackProcessor** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
-- **TestProposalCustomerAnalysis** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
-- **TestProposalSectionsConsolidation** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
-- **TestProposalSectionValidator** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
-- **TestProposalWriteNextV2** (C:\project\tenopa proposer\-agent-master\tests\test_step8a_nodes.py) -- 1 connections
-  - <- contains <- [[teststep8anodes]]
 
 ## Internal Relationships
-- _get_dev_user -> calls -> __unresolved__::ref::_should_bypass_auth [EXTRACTED]
-- _get_dev_user -> calls -> __unresolved__::ref::authtokenexpirederror [EXTRACTED]
-- _get_dev_user -> calls -> __unresolved__::ref::currentuser [EXTRACTED]
-- get_current_user_or_none -> calls -> __unresolved__::ref::depends [EXTRACTED]
-- get_current_user_or_none -> calls -> __unresolved__::ref::get_current_user [EXTRACTED]
-- get_rls_client -> calls -> __unresolved__::ref::depends [EXTRACTED]
-- get_rls_client -> calls -> __unresolved__::ref::authtokenexpirederror [EXTRACTED]
-- get_rls_client -> calls -> __unresolved__::ref::get_user_client [EXTRACTED]
-- require_role -> calls -> __unresolved__::ref::depends [EXTRACTED]
-- require_role -> calls -> __unresolved__::ref::authinsufficientroleerror [EXTRACTED]
-- require_role -> calls -> __unresolved__::ref::_validate_user_status [EXTRACTED]
 - deps -> contains -> _should_bypass_auth [EXTRACTED]
-- deps -> contains -> _get_dev_user [EXTRACTED]
-- deps -> contains -> get_current_user_or_none [EXTRACTED]
-- deps -> contains -> get_rls_client [EXTRACTED]
-- deps -> contains -> require_role [EXTRACTED]
 - deps -> contains -> _has_access_by_role [EXTRACTED]
 - deps -> contains -> get_db [EXTRACTED]
 - deps -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -5846,12 +6807,6 @@ Cohesion: 0.00 | Nodes: 954
 - deps -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - deps -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
 - deps -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- ok -> calls -> __unresolved__::ref::_now [EXTRACTED]
-- ok_list -> calls -> __unresolved__::ref::_now [EXTRACTED]
-- response -> contains -> ok [EXTRACTED]
-- response -> contains -> ok_list [EXTRACTED]
-- response -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- response -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - CapabilityUpdateBody -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ClientErrorReport -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ReopenBody -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -5926,6 +6881,33 @@ Cohesion: 0.00 | Nodes: 954
 - routes_bid_submission -> imports -> __unresolved__::ref::response [EXTRACTED]
 - routes_bid_submission -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_bid_submission -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- _queue_bid_analysis -> calls -> __unresolved__::ref::add_task [EXTRACTED]
+- routes_bids -> contains -> _escape_like [EXTRACTED]
+- routes_bids -> contains -> _extract_content_from_raw [EXTRACTED]
+- routes_bids -> contains -> _queue_bid_analysis [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::re [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::time [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::permissions [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::response [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::config [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_schemas [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_review [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_attachment_store [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_fetcher [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_pipeline [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::bid_recommender [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::g2b_service [EXTRACTED]
+- routes_bids -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - CalendarCreate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - CalendarItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - CalendarUpdate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -5942,8 +6924,6 @@ Cohesion: 0.00 | Nodes: 954
 - routes_calendar -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_calendar -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
 - routes_calendar -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- validate_file_magic_bytes -> calls -> __unresolved__::ref::httpexception [EXTRACTED]
-- routes_documents -> contains -> validate_file_magic_bytes [EXTRACTED]
 - routes_documents -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - routes_documents -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - routes_documents -> imports -> __unresolved__::ref::os [EXTRACTED]
@@ -5968,10 +6948,7 @@ Cohesion: 0.00 | Nodes: 954
 - routes_files -> imports -> __unresolved__::ref::file_utils [EXTRACTED]
 - routes_files -> imports -> __unresolved__::ref::rate_limit [EXTRACTED]
 - routes_files -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- _classify_g2b_error -> calls -> __unresolved__::ref::g2bexternalerror [EXTRACTED]
-- _classify_g2b_error -> calls -> __unresolved__::ref::g2bserviceerror [EXTRACTED]
 - _normalize_bid_detail -> calls -> __unresolved__::ref::_parse_amount [EXTRACTED]
-- routes_g2b -> contains -> _classify_g2b_error [EXTRACTED]
 - routes_g2b -> contains -> _normalize_bid_detail [EXTRACTED]
 - routes_g2b -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - routes_g2b -> imports -> __unresolved__::ref::typing [EXTRACTED]
@@ -6024,28 +7001,35 @@ Cohesion: 0.00 | Nodes: 954
 - routes_kb -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_kb -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
 - routes_kb -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- ArchiveInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- DocumentInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::knowledge_schemas [EXTRACTED]
+- routes_knowledge -> imports -> __unresolved__::ref::knowledge_manager [EXTRACTED]
+- ChatSearchRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ChatSearchResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - MasterProjectDetailResponse -> extends -> __unresolved__::ref::masterprojectresponse [EXTRACTED]
 - MasterProjectResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- ParticipantInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- ProposalParticipantInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- TeamInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- routes_master_projects -> contains -> TeamInfo [EXTRACTED]
-- routes_master_projects -> contains -> ParticipantInfo [EXTRACTED]
-- routes_master_projects -> contains -> ProposalParticipantInfo [EXTRACTED]
-- routes_master_projects -> contains -> DocumentInfo [EXTRACTED]
-- routes_master_projects -> contains -> ArchiveInfo [EXTRACTED]
+- ProjectStatsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - routes_master_projects -> contains -> MasterProjectResponse [EXTRACTED]
-- routes_master_projects -> contains -> Config [EXTRACTED]
 - routes_master_projects -> contains -> MasterProjectDetailResponse [EXTRACTED]
+- routes_master_projects -> contains -> ProjectStatsResponse [EXTRACTED]
+- routes_master_projects -> contains -> ChatSearchRequest [EXTRACTED]
+- routes_master_projects -> contains -> Config [EXTRACTED]
+- routes_master_projects -> contains -> ChatSearchResponse [EXTRACTED]
 - routes_master_projects -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_master_projects -> imports -> __unresolved__::ref::uuid [EXTRACTED]
 - routes_master_projects -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
-- routes_master_projects -> imports -> __unresolved__::ref::sqlalchemy [EXTRACTED]
-- routes_master_projects -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- routes_master_projects -> imports -> __unresolved__::ref::deps [EXTRACTED]
-- routes_master_projects -> imports -> __unresolved__::ref::schemas [EXTRACTED]
 - routes_master_projects -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_master_projects -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_master_projects -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- routes_master_projects -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- routes_master_projects -> imports -> __unresolved__::ref::master_projects_chat_service [EXTRACTED]
 - MigrationHistoryItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - MigrationHistoryResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - MigrationItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6124,10 +7108,10 @@ Cohesion: 0.00 | Nodes: 954
 - routes_pricing -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_pricing -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
 - routes_pricing -> imports -> __unresolved__::ref::pricing [EXTRACTED]
-- routes_pricing -> imports -> __unresolved__::ref::sensitivity [EXTRACTED]
 - routes_pricing -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - routes_project_archive -> imports -> __unresolved__::ref::io [EXTRACTED]
 - routes_project_archive -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_project_archive -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - routes_project_archive -> imports -> __unresolved__::ref::abc [EXTRACTED]
 - routes_project_archive -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - routes_project_archive -> imports -> __unresolved__::ref::responses [EXTRACTED]
@@ -6154,9 +7138,7 @@ Cohesion: 0.00 | Nodes: 954
 - routes_prompt_evolution -> imports -> __unresolved__::ref::deps [EXTRACTED]
 - routes_prompt_evolution -> imports -> __unresolved__::ref::response [EXTRACTED]
 - BidDecisionRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- BidDecisionRequest -> contains -> __init__ [EXTRACTED]
 - ProposalFromBid -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- ProposalFromBid -> contains -> __init__ [EXTRACTED]
 - ProposalListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ProposalUpdate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ReviewFeedback -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6164,7 +7146,6 @@ Cohesion: 0.00 | Nodes: 954
 - ReviewItemStatus -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - StartWithMembersRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - SubmitReviewFeedback -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- __init__ -> calls -> __unresolved__::ref::isalnum [EXTRACTED]
 - routes_proposal -> contains -> ProposalFromBid [EXTRACTED]
 - routes_proposal -> contains -> ProposalUpdate [EXTRACTED]
 - routes_proposal -> contains -> ProposalListResponse [EXTRACTED]
@@ -6186,6 +7167,7 @@ Cohesion: 0.00 | Nodes: 954
 - routes_proposal -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
 - routes_proposal -> imports -> __unresolved__::ref::proposal_schemas [EXTRACTED]
 - routes_proposal -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- routes_proposal -> imports -> __unresolved__::ref::state_machine [EXTRACTED]
 - LandingStats -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - routes_public -> contains -> LandingStats [EXTRACTED]
 - routes_public -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -6194,8 +7176,6 @@ Cohesion: 0.00 | Nodes: 954
 - routes_public -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - routes_public -> imports -> __unresolved__::ref::response [EXTRACTED]
 - routes_public -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- routes -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
-- routes -> imports -> __unresolved__::ref::routes_v31 [EXTRACTED]
 - routes_qa -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - routes_qa -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - routes_qa -> imports -> __unresolved__::ref::deps [EXTRACTED]
@@ -6230,6 +7210,7 @@ Cohesion: 0.00 | Nodes: 954
 - routes_stats -> contains -> WinRateResponse [EXTRACTED]
 - routes_stats -> contains -> _calc_rate [EXTRACTED]
 - routes_stats -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_stats -> imports -> __unresolved__::ref::collections [EXTRACTED]
 - routes_stats -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - routes_stats -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - routes_stats -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
@@ -6368,12 +7349,6 @@ Cohesion: 0.00 | Nodes: 954
 - routes_users -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - BidCalculateRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - PersonnelRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- _run_phases -> calls -> __unresolved__::ref::phaseexecutor [EXTRACTED]
-- _run_phases -> calls -> __unresolved__::ref::execute_all [EXTRACTED]
-- _run_phases_from -> calls -> __unresolved__::ref::phaseexecutor [EXTRACTED]
-- _run_phases_from -> calls -> __unresolved__::ref::execute_from_phase [EXTRACTED]
-- routes_v31 -> contains -> _run_phases [EXTRACTED]
-- routes_v31 -> contains -> _run_phases_from [EXTRACTED]
 - routes_v31 -> contains -> PersonnelRequest [EXTRACTED]
 - routes_v31 -> contains -> BidCalculateRequest [EXTRACTED]
 - routes_v31 -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -6391,6 +7366,169 @@ Cohesion: 0.00 | Nodes: 954
 - routes_v31 -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_v31 -> imports -> __unresolved__::ref::template_service [EXTRACTED]
 - routes_v31 -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- FeedbackRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- GoLiveReadinessResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- MetricsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- NPSResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SatisfactionResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SessionMetricsRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_beta -> contains -> SessionMetricsRequest [EXTRACTED]
+- routes_vault_beta -> contains -> FeedbackRequest [EXTRACTED]
+- routes_vault_beta -> contains -> MetricsResponse [EXTRACTED]
+- routes_vault_beta -> contains -> SatisfactionResponse [EXTRACTED]
+- routes_vault_beta -> contains -> NPSResponse [EXTRACTED]
+- routes_vault_beta -> contains -> GoLiveReadinessResponse [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_beta -> imports -> __unresolved__::ref::beta_metrics_tracker [EXTRACTED]
+- AnalysisResultResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- BiddingAnalysisResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- BudgetRangeStatisticsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- CreateAnalysisRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- IndustryStatisticsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ProjectComparisonResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SimilarProjectResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- UpdateG2BDataRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_bidding -> contains -> CreateAnalysisRequest [EXTRACTED]
+- routes_vault_bidding -> contains -> SimilarProjectResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> AnalysisResultResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> BiddingAnalysisResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> IndustryStatisticsResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> BudgetRangeStatisticsResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> ProjectComparisonResponse [EXTRACTED]
+- routes_vault_bidding -> contains -> UpdateG2BDataRequest [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::user_schemas [EXTRACTED]
+- routes_vault_bidding -> imports -> __unresolved__::ref::vault_bidding_service [EXTRACTED]
+- _build_system_prompt -> calls -> __unresolved__::ref::inject_citation_instructions [EXTRACTED]
+- _build_user_message -> calls -> __unresolved__::ref::extract_context [EXTRACTED]
+- _build_user_message -> calls -> __unresolved__::ref::build_user_message_with_context [EXTRACTED]
+- routes_vault_chat -> contains -> _build_system_prompt [EXTRACTED]
+- routes_vault_chat -> contains -> _build_user_message [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::time [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::secrets [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::responses [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::collections [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_query_router [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_validation [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_cache_service [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_context_manager [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::vault_citation_service [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::completed_projects [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::government_guidelines [EXTRACTED]
+- routes_vault_chat -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- ClientListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientPerformanceMetricsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientProposalsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientReviewRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientSearchRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientUpdateRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- RegionalSummaryResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_clients -> contains -> ClientPerformanceMetricsResponse [EXTRACTED]
+- routes_vault_clients -> contains -> ClientResponse [EXTRACTED]
+- routes_vault_clients -> contains -> ClientSearchRequest [EXTRACTED]
+- routes_vault_clients -> contains -> ClientUpdateRequest [EXTRACTED]
+- routes_vault_clients -> contains -> ClientReviewRequest [EXTRACTED]
+- routes_vault_clients -> contains -> ClientListResponse [EXTRACTED]
+- routes_vault_clients -> contains -> ClientProposalsResponse [EXTRACTED]
+- routes_vault_clients -> contains -> RegionalSummaryResponse [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::user_schemas [EXTRACTED]
+- routes_vault_clients -> imports -> __unresolved__::ref::vault_client_service [EXTRACTED]
+- CredentialResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- CredentialsListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- CredentialUploadRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- OCRResultResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_credentials -> contains -> CredentialResponse [EXTRACTED]
+- routes_vault_credentials -> contains -> CredentialUploadRequest [EXTRACTED]
+- routes_vault_credentials -> contains -> OCRResultResponse [EXTRACTED]
+- routes_vault_credentials -> contains -> CredentialsListResponse [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::user_schemas [EXTRACTED]
+- routes_vault_credentials -> imports -> __unresolved__::ref::vault_credential_service [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- routes_vault_embeddings -> imports -> __unresolved__::ref::vault_embedding_service [EXTRACTED]
+- AvailablePersonnelResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- DepartmentStatsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ExpertiseInventoryResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- PersonnelPerformanceResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- PersonnelResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- PersonnelSearchResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SkillRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- UtilizationResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_personnel -> contains -> SkillRequest [EXTRACTED]
+- routes_vault_personnel -> contains -> PersonnelResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> PersonnelSearchResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> PersonnelPerformanceResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> AvailablePersonnelResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> DepartmentStatsResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> ExpertiseInventoryResponse [EXTRACTED]
+- routes_vault_personnel -> contains -> UtilizationResponse [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::user_schemas [EXTRACTED]
+- routes_vault_personnel -> imports -> __unresolved__::ref::vault_personnel_service [EXTRACTED]
+- Step1Response -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- Step2Response -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- Step3Response -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- Step4Response -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- Step5Response -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- StepSearchRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- routes_vault_step_search -> contains -> StepSearchRequest [EXTRACTED]
+- routes_vault_step_search -> contains -> Step1Response [EXTRACTED]
+- routes_vault_step_search -> contains -> Step2Response [EXTRACTED]
+- routes_vault_step_search -> contains -> Step3Response [EXTRACTED]
+- routes_vault_step_search -> contains -> Step4Response [EXTRACTED]
+- routes_vault_step_search -> contains -> Step5Response [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::deps [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::user_schemas [EXTRACTED]
+- routes_vault_step_search -> imports -> __unresolved__::ref::vault_step_search [EXTRACTED]
 - FeedbackHistoryResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - FeedbackRecord -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - WorkflowResumeRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6410,11 +7548,10 @@ Cohesion: 0.00 | Nodes: 954
 - routes_workflow -> imports -> __unresolved__::ref::rate_limit [EXTRACTED]
 - routes_workflow -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
 - routes_workflow -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
+- routes_workflow -> imports -> __unresolved__::ref::state_machine [EXTRACTED]
+- routes_workflow -> imports -> __unresolved__::ref::state_validator [EXTRACTED]
 - routes_workflow -> imports -> __unresolved__::ref::workflow_schemas [EXTRACTED]
 - routes_workflow -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- Settings -> extends -> __unresolved__::ref::basesettings [EXTRACTED]
-- Settings -> contains -> validate_required_keys [EXTRACTED]
-- config -> contains -> Settings [EXTRACTED]
 - config -> imports -> __unresolved__::ref::pydantic_settings [EXTRACTED]
 - config -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - config -> imports -> __unresolved__::ref::typing [EXTRACTED]
@@ -6422,23 +7559,23 @@ Cohesion: 0.00 | Nodes: 954
 - _constants -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - bid_plan -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - bid_plan -> imports -> __unresolved__::ref::state [EXTRACTED]
-- fork_to_branches -> calls -> __unresolved__::ref::send [EXTRACTED]
-- plan_selective_fan_out -> calls -> __unresolved__::ref::send [EXTRACTED]
-- gate_nodes -> contains -> passthrough [EXTRACTED]
-- gate_nodes -> contains -> proposal_start_gate [EXTRACTED]
-- gate_nodes -> contains -> convergence_gate [EXTRACTED]
-- gate_nodes -> contains -> fork_to_branches [EXTRACTED]
-- gate_nodes -> contains -> plan_selective_fan_out [EXTRACTED]
-- gate_nodes -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- gate_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- gate_nodes -> imports -> __unresolved__::ref::types [EXTRACTED]
-- gate_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
+- evaluation_nodes -> contains -> _create_evaluator_profiles [EXTRACTED]
+- evaluation_nodes -> contains -> _assess_win_probability [EXTRACTED]
+- evaluation_nodes -> contains -> eval_result_node [EXTRACTED]
+- evaluation_nodes -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- evaluation_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- evaluation_nodes -> imports -> __unresolved__::ref::statistics [EXTRACTED]
+- evaluation_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
+- evaluation_nodes -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::state [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::context_helpers [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - go_no_go -> imports -> __unresolved__::ref::services [EXTRACTED]
+- merge_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- merge_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
+- merge_nodes -> imports -> __unresolved__::ref::section_prompts [EXTRACTED]
 - _get_rfp_summary -> calls -> __unresolved__::ref::get_rfp_summary_compact [EXTRACTED]
 - plan_nodes -> contains -> _get_rfp_summary [EXTRACTED]
 - plan_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -6450,6 +7587,12 @@ Cohesion: 0.00 | Nodes: 954
 - plan_nodes -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - plan_nodes -> imports -> __unresolved__::ref::services [EXTRACTED]
 - plan_nodes -> imports -> __unresolved__::ref::version_manager [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::ppt_pipeline [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::proposal_prompts [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- ppt_nodes -> imports -> __unresolved__::ref::services [EXTRACTED]
 - proposal_nodes -> contains -> _get_sections_to_write [EXTRACTED]
 - proposal_nodes -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - proposal_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -6523,6 +7666,9 @@ Cohesion: 0.00 | Nodes: 954
 - strategy_generate -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - strategy_generate -> imports -> __unresolved__::ref::services [EXTRACTED]
 - strategy_generate -> imports -> __unresolved__::ref::version_manager [EXTRACTED]
+- submission_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- submission_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
+- submission_nodes -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - ApprovalChainEntry -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ApprovalStatus -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ArtifactVersion -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6588,63 +7734,13 @@ Cohesion: 0.00 | Nodes: 954
 - state -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - token_tracking -> imports -> __unresolved__::ref::functools [EXTRACTED]
 - token_tracking -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- token_tracking -> imports -> __unresolved__::ref::time [EXTRACTED]
 - token_tracking -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - token_tracking -> imports -> __unresolved__::ref::token_manager [EXTRACTED]
 - token_tracking -> imports -> __unresolved__::ref::token_pricing [EXTRACTED]
 - migration_jobs -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - migration_jobs -> imports -> __unresolved__::ref::migration_service [EXTRACTED]
 - migration_jobs -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- main -> contains -> _add_cors_headers [EXTRACTED]
-- main -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
-- main -> imports -> __unresolved__::ref::cors [EXTRACTED]
-- main -> imports -> __unresolved__::ref::responses [EXTRACTED]
-- main -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
-- main -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- main -> imports -> __unresolved__::ref::config [EXTRACTED]
-- main -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
-- main -> imports -> __unresolved__::ref::rate_limit [EXTRACTED]
-- main -> imports -> __unresolved__::ref::request_id [EXTRACTED]
-- main -> imports -> __unresolved__::ref::security_headers [EXTRACTED]
-- main -> imports -> __unresolved__::ref::errors [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_auth [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_users [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_proposal [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_workflow [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_artifacts [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_notification [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_performance [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_admin [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_kb [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_intranet [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_documents [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_migrations [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_migration_status [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_analytics [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_qa [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_files [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_project_archive [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_pricing [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_bid_submission [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_prompt_evolution [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_streams [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_submission_docs [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_team [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_g2b [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_resources [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_templates [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_stats [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_public [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_calendar [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_v31 [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_presentation [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_bids [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_step8a [EXTRACTED]
-- main -> imports -> __unresolved__::ref::routes_step8_review [EXTRACTED]
-- get_current_user -> calls -> __unresolved__::ref::header [EXTRACTED]
-- get_current_user -> calls -> __unresolved__::ref::httpexception [EXTRACTED]
-- get_current_user -> calls -> __unresolved__::ref::removeprefix [EXTRACTED]
-- get_current_user -> calls -> __unresolved__::ref::get_user [EXTRACTED]
-- auth -> contains -> get_current_user [EXTRACTED]
 - auth -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - auth -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - auth -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
@@ -6653,22 +7749,16 @@ Cohesion: 0.00 | Nodes: 954
 - rate_limit -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
 - rate_limit -> imports -> __unresolved__::ref::slowapi [EXTRACTED]
 - rate_limit -> imports -> __unresolved__::ref::util [EXTRACTED]
-- rate_limit -> imports -> __unresolved__::ref::errors [EXTRACTED]
 - rate_limit -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - rate_limit -> imports -> __unresolved__::ref::responses [EXTRACTED]
-- RequestIdMiddleware -> extends -> __unresolved__::ref::basehttpmiddleware [EXTRACTED]
 - request_id -> contains -> get_request_id [EXTRACTED]
-- request_id -> contains -> RequestIdMiddleware [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- request_id -> imports -> __unresolved__::ref::time [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::contextvars [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::base [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::requests [EXTRACTED]
 - request_id -> imports -> __unresolved__::ref::responses [EXTRACTED]
-- SecurityHeadersMiddleware -> extends -> __unresolved__::ref::basehttpmiddleware [EXTRACTED]
-- SecurityHeadersMiddleware -> contains -> dispatch [EXTRACTED]
-- dispatch -> calls -> __unresolved__::ref::call_next [EXTRACTED]
-- security_headers -> contains -> SecurityHeadersMiddleware [EXTRACTED]
 - security_headers -> imports -> __unresolved__::ref::base [EXTRACTED]
 - security_headers -> imports -> __unresolved__::ref::requests [EXTRACTED]
 - security_headers -> imports -> __unresolved__::ref::responses [EXTRACTED]
@@ -6774,6 +7864,7 @@ Cohesion: 0.00 | Nodes: 954
 - RecommendationsResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - RecommendedBid -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - RiskFactor -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchPreset -> extends -> __unresolved__::ref::searchpresetcreate [EXTRACTED]
 - SearchPresetCreate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - TeamBidProfile -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - TeamBidProfileCreate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6782,6 +7873,7 @@ Cohesion: 0.00 | Nodes: 954
 - bid_schemas -> contains -> TeamBidProfile [EXTRACTED]
 - bid_schemas -> contains -> TeamBidProfileCreate [EXTRACTED]
 - bid_schemas -> contains -> SearchPresetCreate [EXTRACTED]
+- bid_schemas -> contains -> SearchPreset [EXTRACTED]
 - bid_schemas -> contains -> QualificationResult [EXTRACTED]
 - bid_schemas -> contains -> RecommendationReason [EXTRACTED]
 - bid_schemas -> contains -> RiskFactor [EXTRACTED]
@@ -6810,6 +7902,7 @@ Cohesion: 0.00 | Nodes: 954
 - common -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - ChunkListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ChunkResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- DocumentDetailResponse -> extends -> __unresolved__::ref::documentresponse [EXTRACTED]
 - DocumentListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - DocumentProcessRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - DocumentProcessResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -6818,6 +7911,7 @@ Cohesion: 0.00 | Nodes: 954
 - document_schemas -> contains -> DocumentUploadRequest [EXTRACTED]
 - document_schemas -> contains -> DocumentResponse [EXTRACTED]
 - document_schemas -> contains -> DocumentListResponse [EXTRACTED]
+- document_schemas -> contains -> DocumentDetailResponse [EXTRACTED]
 - document_schemas -> contains -> ChunkResponse [EXTRACTED]
 - document_schemas -> contains -> ChunkListResponse [EXTRACTED]
 - document_schemas -> contains -> DocumentProcessRequest [EXTRACTED]
@@ -6825,6 +7919,83 @@ Cohesion: 0.00 | Nodes: 954
 - document_schemas -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - document_schemas -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - document_schemas -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- ClassificationRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClassificationResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- CoverageItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- CoverageMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- DeprecationRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- DeprecationResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- EmbeddingUnavailableResponse -> extends -> __unresolved__::ref::searchresponse [EXTRACTED]
+- ErrorResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- FlatHealthMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- FreshnessMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- HealthMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeBaseSize -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeFeedbackRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeFeedbackResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeMetadataDB -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeSharingAuditDB -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- KnowledgeType -> extends -> __unresolved__::ref::enum [EXTRACTED]
+- ProposalContext -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- RecommendationFeedback -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- RecommendationRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- RecommendationResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- RecommendationResultItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchAnalytics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchFilters -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchResultItem -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SharingAuditRecord -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SharingRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SharingResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeType [EXTRACTED]
+- knowledge_schemas -> contains -> ClassificationRequest [EXTRACTED]
+- knowledge_schemas -> contains -> ClassificationResult [EXTRACTED]
+- knowledge_schemas -> contains -> SearchFilters [EXTRACTED]
+- knowledge_schemas -> contains -> SearchRequest [EXTRACTED]
+- knowledge_schemas -> contains -> SearchResultItem [EXTRACTED]
+- knowledge_schemas -> contains -> SearchResponse [EXTRACTED]
+- knowledge_schemas -> contains -> ProposalContext [EXTRACTED]
+- knowledge_schemas -> contains -> RecommendationRequest [EXTRACTED]
+- knowledge_schemas -> contains -> RecommendationResultItem [EXTRACTED]
+- knowledge_schemas -> contains -> RecommendationResponse [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeBaseSize [EXTRACTED]
+- knowledge_schemas -> contains -> CoverageItem [EXTRACTED]
+- knowledge_schemas -> contains -> CoverageMetrics [EXTRACTED]
+- knowledge_schemas -> contains -> FreshnessMetrics [EXTRACTED]
+- knowledge_schemas -> contains -> SearchAnalytics [EXTRACTED]
+- knowledge_schemas -> contains -> RecommendationFeedback [EXTRACTED]
+- knowledge_schemas -> contains -> HealthMetrics [EXTRACTED]
+- knowledge_schemas -> contains -> FlatHealthMetrics [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeFeedbackRequest [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeFeedbackResponse [EXTRACTED]
+- knowledge_schemas -> contains -> DeprecationRequest [EXTRACTED]
+- knowledge_schemas -> contains -> DeprecationResponse [EXTRACTED]
+- knowledge_schemas -> contains -> SharingRequest [EXTRACTED]
+- knowledge_schemas -> contains -> SharingResponse [EXTRACTED]
+- knowledge_schemas -> contains -> SharingAuditRecord [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeMetadataDB [EXTRACTED]
+- knowledge_schemas -> contains -> Config [EXTRACTED]
+- knowledge_schemas -> contains -> KnowledgeSharingAuditDB [EXTRACTED]
+- knowledge_schemas -> contains -> ErrorResponse [EXTRACTED]
+- knowledge_schemas -> contains -> EmbeddingUnavailableResponse [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::enum [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- knowledge_schemas -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- MasterProject -> extends -> __unresolved__::ref::base [EXTRACTED]
+- MasterProject -> contains -> __repr__ [EXTRACTED]
+- master_projects -> contains -> MasterProject [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::sqlalchemy [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::postgresql [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::orm [EXTRACTED]
+- master_projects -> imports -> __unresolved__::ref::sql [EXTRACTED]
 - BatchListParams -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - BatchListResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - BatchResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -7016,6 +8187,75 @@ Cohesion: 0.00 | Nodes: 954
 - user_schemas -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - user_schemas -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - user_schemas -> imports -> __unresolved__::ref::types [EXTRACTED]
+- BookmarkCreate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- BookmarkResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ChatMessage -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ChatMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- Contradiction -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ConversationCreate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ConversationDetail -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ConversationShareResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ConversationSummary -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ConversationUpdate -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- DocumentSource -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ExportRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ExportResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- GovernmentGuideline -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- MessageRole -> extends -> __unresolved__::ref::enum [EXTRACTED]
+- ProjectMeta -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- QueryType -> extends -> __unresolved__::ref::enum [EXTRACTED]
+- RoutingDecision -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchFilter -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SearchResults -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ValidationReport -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatStreamDone -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatStreamError -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatStreamSources -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultChatStreamToken -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultDocument -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultRegenerateRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- VaultSection -> extends -> __unresolved__::ref::enum [EXTRACTED]
+- VaultStats -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- vault_schemas -> contains -> VaultSection [EXTRACTED]
+- vault_schemas -> contains -> QueryType [EXTRACTED]
+- vault_schemas -> contains -> MessageRole [EXTRACTED]
+- vault_schemas -> contains -> VaultChatRequest [EXTRACTED]
+- vault_schemas -> contains -> Config [EXTRACTED]
+- vault_schemas -> contains -> RoutingDecision [EXTRACTED]
+- vault_schemas -> contains -> DocumentSource [EXTRACTED]
+- vault_schemas -> contains -> ChatMessage [EXTRACTED]
+- vault_schemas -> contains -> VaultChatResponse [EXTRACTED]
+- vault_schemas -> contains -> ConversationCreate [EXTRACTED]
+- vault_schemas -> contains -> ConversationDetail [EXTRACTED]
+- vault_schemas -> contains -> ConversationSummary [EXTRACTED]
+- vault_schemas -> contains -> ConversationUpdate [EXTRACTED]
+- vault_schemas -> contains -> ConversationShareResponse [EXTRACTED]
+- vault_schemas -> contains -> VaultRegenerateRequest [EXTRACTED]
+- vault_schemas -> contains -> BookmarkCreate [EXTRACTED]
+- vault_schemas -> contains -> BookmarkResponse [EXTRACTED]
+- vault_schemas -> contains -> VaultDocument [EXTRACTED]
+- vault_schemas -> contains -> ProjectMeta [EXTRACTED]
+- vault_schemas -> contains -> GovernmentGuideline [EXTRACTED]
+- vault_schemas -> contains -> SearchFilter [EXTRACTED]
+- vault_schemas -> contains -> SearchResult [EXTRACTED]
+- vault_schemas -> contains -> SearchResults [EXTRACTED]
+- vault_schemas -> contains -> VaultChatStreamToken [EXTRACTED]
+- vault_schemas -> contains -> VaultChatStreamSources [EXTRACTED]
+- vault_schemas -> contains -> VaultChatStreamDone [EXTRACTED]
+- vault_schemas -> contains -> VaultChatStreamError [EXTRACTED]
+- vault_schemas -> contains -> ValidationReport [EXTRACTED]
+- vault_schemas -> contains -> Contradiction [EXTRACTED]
+- vault_schemas -> contains -> ExportRequest [EXTRACTED]
+- vault_schemas -> contains -> ExportResponse [EXTRACTED]
+- vault_schemas -> contains -> ChatMetrics [EXTRACTED]
+- vault_schemas -> contains -> VaultStats [EXTRACTED]
+- vault_schemas -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_schemas -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- vault_schemas -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_schemas -> imports -> __unresolved__::ref::enum [EXTRACTED]
 - AiActionResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - AiStatusResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - EnhancedWorkflowStateResponse -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -7053,12 +8293,8 @@ Cohesion: 0.00 | Nodes: 954
 - workflow_schemas -> contains -> EnhancedWorkflowStateResponse [EXTRACTED]
 - workflow_schemas -> contains -> StateHistoryResponse [EXTRACTED]
 - workflow_schemas -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
-- get_scheduler -> calls -> __unresolved__::ref::asyncioscheduler [EXTRACTED]
-- scheduler -> contains -> get_scheduler [EXTRACTED]
-- scheduler -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- scheduler -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- scheduler -> imports -> __unresolved__::ref::cron [EXTRACTED]
 - ai_status_manager -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- ai_status_manager -> imports -> __unresolved__::ref::time [EXTRACTED]
 - ai_status_manager -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - ai_status_manager -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - ai_status_manager -> imports -> __unresolved__::ref::config [EXTRACTED]
@@ -7068,26 +8304,57 @@ Cohesion: 0.00 | Nodes: 954
 - alert_manager -> imports -> __unresolved__::ref::config [EXTRACTED]
 - alert_manager -> imports -> __unresolved__::ref::health_checker [EXTRACTED]
 - alert_manager -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- check_can_approve -> calls -> __unresolved__::ref::build_approval_chain [EXTRACTED]
+- approval_chain -> contains -> check_can_approve [EXTRACTED]
+- approval_chain -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- approval_chain -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- approval_chain -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- asset_extractor -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- asset_extractor -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- asset_extractor -> imports -> __unresolved__::ref::utils [EXTRACTED]
+- asset_extractor -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - audit_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - audit_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - audit_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- _run_all_steps -> calls -> __unresolved__::ref::_ensure_bid_in_db [EXTRACTED]
-- _run_all_steps -> calls -> __unresolved__::ref::_download_and_extract [EXTRACTED]
-- _run_all_steps -> calls -> __unresolved__::ref::_run_analysis_if_needed [EXTRACTED]
-- bid_pipeline -> contains -> _run_all_steps [EXTRACTED]
+- auth_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- auth_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- auth_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- auth_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- get_metrics_tracker -> calls -> __unresolved__::ref::betametricstracker [EXTRACTED]
+- beta_metrics_tracker -> contains -> get_metrics_tracker [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
+- beta_metrics_tracker -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- bid_analysis_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- bid_analysis_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- bid_analysis_service -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- bid_analysis_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- _download_file -> calls -> __unresolved__::ref::_validate_url [EXTRACTED]
+- _download_file -> calls -> __unresolved__::ref::clientsession [EXTRACTED]
+- _download_file -> calls -> __unresolved__::ref::clienttimeout [EXTRACTED]
+- _download_file -> calls -> __unresolved__::ref::read [EXTRACTED]
+- _download_file -> calls -> __unresolved__::ref::write_bytes [EXTRACTED]
+- bid_attachment_store -> contains -> classify_attachment [EXTRACTED]
+- bid_attachment_store -> contains -> _download_file [EXTRACTED]
+- bid_attachment_store -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- bid_attachment_store -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- bid_attachment_store -> imports -> __unresolved__::ref::aiohttp [EXTRACTED]
+- bid_attachment_store -> imports -> __unresolved__::ref::config [EXTRACTED]
 - bid_pipeline -> contains -> _update_status [EXTRACTED]
 - bid_pipeline -> contains -> get_pipeline_status [EXTRACTED]
-- bid_pipeline -> contains -> get_all_pipeline_status [EXTRACTED]
 - bid_pipeline -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - bid_pipeline -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - bid_pipeline -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - bid_pipeline -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - bid_pipeline -> imports -> __unresolved__::ref::config [EXTRACTED]
-- _shade_row -> calls -> __unresolved__::ref::oxmlelement [EXTRACTED]
-- _shade_row -> calls -> __unresolved__::ref::qn [EXTRACTED]
-- _shade_row -> calls -> __unresolved__::ref::get_or_add_tcpr [EXTRACTED]
+- bid_scoring_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- bid_scoring_service -> imports -> __unresolved__::ref::math [EXTRACTED]
+- bid_scoring_service -> imports -> __unresolved__::ref::embedding_service [EXTRACTED]
+- bid_scoring_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - cost_sheet_builder -> contains -> _fmt_won [EXTRACTED]
-- cost_sheet_builder -> contains -> _shade_row [EXTRACTED]
 - cost_sheet_builder -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - cost_sheet_builder -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - cost_sheet_builder -> imports -> __unresolved__::ref::io [EXTRACTED]
@@ -7100,6 +8367,9 @@ Cohesion: 0.00 | Nodes: 954
 - calculator -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - calculator -> imports -> __unresolved__::ref::enum [EXTRACTED]
 - calculator -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- calculator -> imports -> __unresolved__::ref::re [EXTRACTED]
+- _clean_cache -> calls -> __unresolved__::ref::unlink [EXTRACTED]
+- cleanup -> contains -> _clean_cache [EXTRACTED]
 - cleanup -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - cleanup -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - cleanup -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
@@ -7111,21 +8381,12 @@ Cohesion: 0.00 | Nodes: 954
 - fetcher -> imports -> __unresolved__::ref::aiohttp [EXTRACTED]
 - fetcher -> imports -> __unresolved__::ref::bid_schemas [EXTRACTED]
 - fetcher -> imports -> __unresolved__::ref::g2b_service [EXTRACTED]
-- BidPreprocessor -> contains -> __init__ [EXTRACTED]
-- BidPreprocessor -> contains -> preprocess_batch [EXTRACTED]
-- __init__ -> calls -> __unresolved__::ref::asyncanthropic [EXTRACTED]
-- preprocess_batch -> calls -> __unresolved__::ref::preprocess [EXTRACTED]
-- preprocessor -> contains -> BidPreprocessor [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::config [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::bid_schemas [EXTRACTED]
 - preprocessor -> imports -> __unresolved__::ref::bid_review [EXTRACTED]
-- __init__ -> calls -> __unresolved__::ref::asyncanthropic [EXTRACTED]
-- __init__ -> calls -> __unresolved__::ref::bidpreprocessor [EXTRACTED]
-- review_single -> calls -> __unresolved__::ref::preprocess [EXTRACTED]
-- review_single -> calls -> __unresolved__::ref::_call_tenopa_review [EXTRACTED]
 - recommender -> contains -> _score_to_grade [EXTRACTED]
 - recommender -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - recommender -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
@@ -7133,36 +8394,13 @@ Cohesion: 0.00 | Nodes: 954
 - recommender -> imports -> __unresolved__::ref::bid_schemas [EXTRACTED]
 - recommender -> imports -> __unresolved__::ref::bid_review [EXTRACTED]
 - scorer -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- scorer -> imports -> __unresolved__::ref::re [EXTRACTED]
 - scorer -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - scorer -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - scorer -> imports -> __unresolved__::ref::typing [EXTRACTED]
-- __init__ -> imports -> __unresolved__::ref::engine [EXTRACTED]
-- __init__ -> imports -> __unresolved__::ref::models [EXTRACTED]
-- __init__ -> imports -> __unresolved__::ref::price_score [EXTRACTED]
-- client_preference -> contains -> ClientPreferenceAnalyzer [EXTRACTED]
-- client_preference -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- client_preference -> imports -> __unresolved__::ref::models [EXTRACTED]
-- competitor_pricing -> contains -> CompetitorPricingAnalyzer [EXTRACTED]
-- competitor_pricing -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- competitor_pricing -> imports -> __unresolved__::ref::models [EXTRACTED]
 - cost_estimator -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - cost_estimator -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - cost_estimator -> imports -> __unresolved__::ref::calculator [EXTRACTED]
-- cost_estimator -> imports -> __unresolved__::ref::models [EXTRACTED]
-- cost_standard_selector -> contains -> CostStandardSelector [EXTRACTED]
-- cost_standard_selector -> contains -> _domain_to_standard [EXTRACTED]
-- cost_standard_selector -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- cost_standard_selector -> imports -> __unresolved__::ref::models [EXTRACTED]
-- engine -> contains -> _compute_budget_tier [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::client_preference [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::competitor_pricing [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::cost_estimator [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::cost_standard_selector [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::models [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::price_score [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::sensitivity [EXTRACTED]
-- engine -> imports -> __unresolved__::ref::win_probability [EXTRACTED]
 - BidRange -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - ClientPricingPreference -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - CompetitorPricingProfile -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -7198,93 +8436,179 @@ Cohesion: 0.00 | Nodes: 954
 - models -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
 - price_score -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - price_score -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
-- sensitivity -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- sensitivity -> imports -> __unresolved__::ref::models [EXTRACTED]
-- sensitivity -> imports -> __unresolved__::ref::win_probability [EXTRACTED]
 - win_probability -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- win_probability -> imports -> __unresolved__::ref::math [EXTRACTED]
 - win_probability -> imports -> __unresolved__::ref::calculator [EXTRACTED]
-- ensure_market_data -> calls -> __unresolved__::ref::_count_comparable [EXTRACTED]
-- ensure_market_data -> calls -> __unresolved__::ref::_build_search_keywords [EXTRACTED]
-- ensure_market_data -> calls -> __unresolved__::ref::_crawl_bid_results [EXTRACTED]
-- market_research -> contains -> ensure_market_data [EXTRACTED]
+- handoff -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- handoff -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- handoff -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - market_research -> contains -> _compute_budget_tier [EXTRACTED]
 - market_research -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - market_research -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - market_research -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- _get_client -> calls -> __unresolved__::ref::asyncanthropic [EXTRACTED]
+- stream -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- stream -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- stream -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - claude_client -> contains -> reset_usage_context [EXTRACTED]
 - claude_client -> contains -> get_accumulated_usage [EXTRACTED]
-- claude_client -> contains -> _get_client [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::contextvars [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
+- claude_client -> imports -> __unresolved__::ref::types [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::config [EXTRACTED]
 - claude_client -> imports -> __unresolved__::ref::trustworthiness [EXTRACTED]
 - compliance_tracker -> contains -> ComplianceTracker [EXTRACTED]
 - compliance_tracker -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - compliance_tracker -> imports -> __unresolved__::ref::state [EXTRACTED]
 - compliance_tracker -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
-- _safe -> calls -> __unresolved__::ref::escape [EXTRACTED]
-- _safe_link -> calls -> __unresolved__::ref::escape [EXTRACTED]
+- content_library -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- content_library -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- content_library -> imports -> __unresolved__::ref::embedding_service [EXTRACTED]
+- content_library -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- _extract_from_storage -> calls -> __unresolved__::ref::namedtemporaryfile [EXTRACTED]
+- _extract_from_storage -> calls -> __unresolved__::ref::write [EXTRACTED]
+- _extract_from_storage -> calls -> __unresolved__::ref::flush [EXTRACTED]
+- _extract_from_storage -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
+- _extract_from_storage -> calls -> __unresolved__::ref::unlink [EXTRACTED]
+- process_document_bounded -> calls -> __unresolved__::ref::process_document [EXTRACTED]
+- document_ingestion -> contains -> process_document_bounded [EXTRACTED]
+- document_ingestion -> contains -> _extract_from_storage [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::gc [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::tempfile [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::document_chunker [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::embedding_service [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::knowledge_manager [EXTRACTED]
+- document_ingestion -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::io [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::re [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::docx [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::shared [EXTRACTED]
+- docx_builder -> imports -> __unresolved__::ref::text [EXTRACTED]
 - build_email_html -> calls -> __unresolved__::ref::_safe [EXTRACTED]
 - build_email_html -> calls -> __unresolved__::ref::_safe_link [EXTRACTED]
-- email_service -> contains -> _safe [EXTRACTED]
-- email_service -> contains -> _safe_link [EXTRACTED]
 - email_service -> contains -> build_email_html [EXTRACTED]
 - email_service -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - email_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- email_service -> imports -> __unresolved__::ref::time [EXTRACTED]
+- email_service -> imports -> __unresolved__::ref::httpx [EXTRACTED]
 - email_service -> imports -> __unresolved__::ref::config [EXTRACTED]
-- _get_openai -> calls -> __unresolved__::ref::asyncopenai [EXTRACTED]
-- embedding_service -> contains -> _get_openai [EXTRACTED]
-- embedding_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- embedding_service -> imports -> __unresolved__::ref::config [EXTRACTED]
 - feedback_loop -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - feedback_loop -> imports -> __unresolved__::ref::config [EXTRACTED]
 - feedback_loop -> imports -> __unresolved__::ref::notification_service [EXTRACTED]
 - feedback_loop -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- g2b_bidding_collector -> contains -> G2BBiddingAnalyzer [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::g2b_service [EXTRACTED]
+- g2b_bidding_collector -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- __aenter__ -> calls -> __unresolved__::ref::clientsession [EXTRACTED]
+- g2b_service -> contains -> _map_evaluation_method [EXTRACTED]
+- g2b_service -> contains -> _guess_file_ext [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::re [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::collections [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::aiohttp [EXTRACTED]
+- g2b_service -> imports -> __unresolved__::ref::config [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- health_checker -> imports -> __unresolved__::ref::time [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::config [EXTRACTED]
 - health_checker -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- compute_edit_ratio -> calls -> __unresolved__::ref::sequencematcher [EXTRACTED]
-- compute_edit_ratio -> calls -> __unresolved__::ref::ratio [EXTRACTED]
-- human_edit_tracker -> contains -> compute_edit_ratio [EXTRACTED]
 - human_edit_tracker -> imports -> __unresolved__::ref::difflib [EXTRACTED]
 - human_edit_tracker -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - human_edit_tracker -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- extract_header_xml -> calls -> __unresolved__::ref::zipfile [EXTRACTED]
+- extract_header_xml -> calls -> __unresolved__::ref::read [EXTRACTED]
+- extract_header_xml -> calls -> __unresolved__::ref::write_bytes [EXTRACTED]
+- extract_section_xml -> calls -> __unresolved__::ref::zipfile [EXTRACTED]
+- extract_section_xml -> calls -> __unresolved__::ref::read [EXTRACTED]
+- extract_section_xml -> calls -> __unresolved__::ref::write_bytes [EXTRACTED]
+- analyze_template -> contains -> extract_header_xml [EXTRACTED]
+- analyze_template -> contains -> extract_section_xml [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::shutil [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::tempfile [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- analyze_template -> imports -> __unresolved__::ref::lxml [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::as_posix [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::relative_to [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::zipfile [EXTRACTED]
+- _pack_hwpx -> calls -> __unresolved__::ref::write [EXTRACTED]
 - _validate_xml -> calls -> __unresolved__::ref::parse [EXTRACTED]
 - validate_output -> calls -> __unresolved__::ref::validate_hwpx [EXTRACTED]
 - build_hwpx -> contains -> _validate_xml [EXTRACTED]
+- build_hwpx -> contains -> _pack_hwpx [EXTRACTED]
 - build_hwpx -> contains -> validate_output [EXTRACTED]
 - build_hwpx -> imports -> __unresolved__::ref::shutil [EXTRACTED]
 - build_hwpx -> imports -> __unresolved__::ref::tempfile [EXTRACTED]
 - build_hwpx -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - build_hwpx -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- build_hwpx -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - build_hwpx -> imports -> __unresolved__::ref::lxml [EXTRACTED]
-- _text_of_t_node -> calls -> __unresolved__::ref::itertext [EXTRACTED]
-- page_guard -> contains -> _text_of_t_node [EXTRACTED]
+- _read_section_xml_bytes -> calls -> __unresolved__::ref::zipfile [EXTRACTED]
+- _read_section_xml_bytes -> calls -> __unresolved__::ref::read [EXTRACTED]
+- page_guard -> contains -> _read_section_xml_bytes [EXTRACTED]
+- page_guard -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - page_guard -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - page_guard -> imports -> __unresolved__::ref::io [EXTRACTED]
 - page_guard -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - page_guard -> imports -> __unresolved__::ref::lxml [EXTRACTED]
 - validate -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- validate -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - validate -> imports -> __unresolved__::ref::lxml [EXTRACTED]
 - analyze_reference -> calls -> __unresolved__::ref::analyze_template [EXTRACTED]
 - validate -> calls -> __unresolved__::ref::validate_hwpx [EXTRACTED]
 - hwpx_service -> contains -> analyze_reference [EXTRACTED]
-- hwpx_service -> contains -> build_proposal_hwpx_async [EXTRACTED]
 - hwpx_service -> contains -> validate [EXTRACTED]
 - hwpx_service -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - hwpx_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - hwpx_service -> imports -> __unresolved__::ref::tempfile [EXTRACTED]
 - hwpx_service -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - hwpx_service -> imports -> __unresolved__::ref::lxml [EXTRACTED]
+- get_knowledge_manager -> calls -> __unresolved__::ref::knowledgemanager [EXTRACTED]
+- knowledge_manager -> contains -> get_knowledge_manager [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::knowledge_schemas [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::knowledge [EXTRACTED]
+- knowledge_manager -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::embedding_service [EXTRACTED]
+- knowledge_search -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- master_projects_chat_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- master_projects_chat_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- master_projects_chat_service -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- master_projects_chat_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- _row_to_batch -> calls -> __unresolved__::ref::migrationbatch [EXTRACTED]
 - _row_to_schedule -> calls -> __unresolved__::ref::migrationschedule [EXTRACTED]
 - migration_service -> contains -> _now_utc [EXTRACTED]
+- migration_service -> contains -> _row_to_batch [EXTRACTED]
 - migration_service -> contains -> _row_to_schedule [EXTRACTED]
 - migration_service -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - migration_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -7292,6 +8616,11 @@ Cohesion: 0.00 | Nodes: 954
 - migration_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - migration_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
 - migration_service -> imports -> __unresolved__::ref::migration_schemas [EXTRACTED]
+- notification_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- notification_service -> imports -> __unresolved__::ref::httpx [EXTRACTED]
+- notification_service -> imports -> __unresolved__::ref::config [EXTRACTED]
+- notification_service -> imports -> __unresolved__::ref::email_service [EXTRACTED]
+- notification_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - phase_executor -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - phase_executor -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - phase_executor -> imports -> __unresolved__::ref::os [EXTRACTED]
@@ -7310,7 +8639,6 @@ Cohesion: 0.00 | Nodes: 954
 - phase_executor -> imports -> __unresolved__::ref::template_service [EXTRACTED]
 - phase_executor -> imports -> __unresolved__::ref::edge_functions [EXTRACTED]
 - phase_executor -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- pptx_builder -> contains -> build_pptx [EXTRACTED]
 - pptx_builder -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - pptx_builder -> imports -> __unresolved__::ref::io [EXTRACTED]
 - pptx_builder -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -7319,6 +8647,7 @@ Cohesion: 0.00 | Nodes: 954
 - pptx_builder -> imports -> __unresolved__::ref::util [EXTRACTED]
 - pptx_builder -> imports -> __unresolved__::ref::text [EXTRACTED]
 - preflight_check -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- preflight_check -> imports -> __unresolved__::ref::re [EXTRACTED]
 - preflight_check -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - presentation_generator -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - presentation_generator -> imports -> __unresolved__::ref::typing [EXTRACTED]
@@ -7327,49 +8656,124 @@ Cohesion: 0.00 | Nodes: 954
 - presentation_generator -> imports -> __unresolved__::ref::phase_schemas [EXTRACTED]
 - presentation_generator -> imports -> __unresolved__::ref::schemas [EXTRACTED]
 - presentation_generator -> imports -> __unresolved__::ref::claude_utils [EXTRACTED]
-- presentation_pptx_builder -> contains -> _add_speaker_notes [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::typing [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::pptx [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::data [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::color [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::chart [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::text [EXTRACTED]
-- presentation_pptx_builder -> imports -> __unresolved__::ref::util [EXTRACTED]
+- project_archive_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- project_archive_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- project_archive_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- project_archive_service -> imports -> __unresolved__::ref::config [EXTRACTED]
+- project_archive_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - SimulationRequest -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - SimulationResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
-- _validate_url -> calls -> __unresolved__::ref::urlparse [EXTRACTED]
-- _validate_url -> calls -> __unresolved__::ref::getaddrinfo [EXTRACTED]
-- _validate_url -> calls -> __unresolved__::ref::ip_address [EXTRACTED]
+- _load_state_data -> calls -> __unresolved__::ref::_load_sample_data [EXTRACTED]
+- _load_state_data -> calls -> __unresolved__::ref::_load_project_state [EXTRACTED]
+- prompt_simulator -> contains -> SimulationRequest [EXTRACTED]
+- prompt_simulator -> contains -> SimulationResult [EXTRACTED]
+- prompt_simulator -> contains -> _load_state_data [EXTRACTED]
+- prompt_simulator -> contains -> _default_sample_state [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::os [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::re [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::time [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- prompt_simulator -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- qa_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- qa_service -> imports -> __unresolved__::ref::embedding_service [EXTRACTED]
+- qa_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- download_file_from_url -> calls -> __unresolved__::ref::_validate_url [EXTRACTED]
+- download_file_from_url -> calls -> __unresolved__::ref::clientsession [EXTRACTED]
+- download_file_from_url -> calls -> __unresolved__::ref::clienttimeout [EXTRACTED]
+- download_file_from_url -> calls -> __unresolved__::ref::read [EXTRACTED]
 - extract_text -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
 - extract_text_from_docx -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
 - extract_text_from_pdf -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
-- rfp_parser -> contains -> _validate_url [EXTRACTED]
+- parse_rfp_bytes -> calls -> __unresolved__::ref::namedtemporaryfile [EXTRACTED]
+- parse_rfp_bytes -> calls -> __unresolved__::ref::write [EXTRACTED]
+- parse_rfp_bytes -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
+- parse_rfp_bytes -> calls -> __unresolved__::ref::unlink [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::_validate_url [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::clientsession [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::clienttimeout [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::read [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::namedtemporaryfile [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::write [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::extract_text_from_file [EXTRACTED]
+- parse_rfp_from_url -> calls -> __unresolved__::ref::unlink [EXTRACTED]
 - rfp_parser -> contains -> extract_text_from_pdf [EXTRACTED]
 - rfp_parser -> contains -> extract_text_from_docx [EXTRACTED]
 - rfp_parser -> contains -> extract_text [EXTRACTED]
+- rfp_parser -> contains -> parse_rfp_bytes [EXTRACTED]
+- rfp_parser -> contains -> parse_rfp_from_url [EXTRACTED]
+- rfp_parser -> contains -> download_file_from_url [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::ipaddress [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::parse [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::config [EXTRACTED]
 - rfp_parser -> imports -> __unresolved__::ref::schemas [EXTRACTED]
+- scheduled_monitor -> contains -> _is_korean_holiday [EXTRACTED]
+- scheduled_monitor -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- scheduled_monitor -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- scheduled_monitor -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- scheduled_monitor -> imports -> __unresolved__::ref::config [EXTRACTED]
+- scheduled_monitor -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- get_scheduler -> calls -> __unresolved__::ref::vaultbiddingbatchscheduler [EXTRACTED]
+- stop_batch_scheduler -> calls -> __unresolved__::ref::stop_scheduler [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::g2bbiddingcollector [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::time [EXTRACTED]
+- vault_bidding_batch -> contains -> get_scheduler [EXTRACTED]
+- vault_bidding_batch -> contains -> stop_batch_scheduler [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::g2b_bidding_collector [EXTRACTED]
+- vault_bidding_batch -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::config [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- section_lock -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
 - session_manager -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - session_manager -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - session_manager -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - session_manager -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - session_manager -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- source_tagger -> imports -> __unresolved__::ref::re [EXTRACTED]
+- source_tagger -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
+- source_tagger -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- source_tagger -> imports -> __unresolved__::ref::trustworthiness [EXTRACTED]
+- AITaskStatus -> extends -> __unresolved__::ref::enum [EXTRACTED]
 - ProposalStatus -> extends -> __unresolved__::ref::enum [EXTRACTED]
 - WinResult -> extends -> __unresolved__::ref::enum [EXTRACTED]
 - state_validator -> contains -> ProposalStatus [EXTRACTED]
 - state_validator -> contains -> WinResult [EXTRACTED]
+- state_validator -> contains -> AITaskStatus [EXTRACTED]
 - state_validator -> contains -> StateValidator [EXTRACTED]
 - state_validator -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - state_validator -> imports -> __unresolved__::ref::enum [EXTRACTED]
 - state_validator -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - state_validator -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- state_validator -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- state_validator -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- check_convergence -> calls -> __unresolved__::ref::get_streams_status [EXTRACTED]
+- stream_orchestrator -> contains -> check_convergence [EXTRACTED]
+- stream_orchestrator -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- stream_orchestrator -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- stream_orchestrator -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- assign_document -> calls -> __unresolved__::ref::update_document_status [EXTRACTED]
+- submission_docs_service -> contains -> assign_document [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::io [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::config [EXTRACTED]
+- submission_docs_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
+- template_service -> imports -> __unresolved__::ref::config [EXTRACTED]
 - trim_feedback_history -> calls -> __unresolved__::ref::_summarize_feedbacks [EXTRACTED]
 - token_manager -> contains -> get_budget [EXTRACTED]
 - token_manager -> contains -> trim_feedback_history [EXTRACTED]
@@ -7377,6 +8781,114 @@ Cohesion: 0.00 | Nodes: 954
 - token_manager -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - token_manager -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - token_manager -> imports -> __unresolved__::ref::config [EXTRACTED]
+- user_account_service -> contains -> _find_sheet [EXTRACTED]
+- user_account_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- user_account_service -> imports -> __unresolved__::ref::secrets [EXTRACTED]
+- user_account_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- user_account_service -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- user_account_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- BiddingAnalysisResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- SimilarProject -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- vault_bidding_service -> contains -> SimilarProject [EXTRACTED]
+- vault_bidding_service -> contains -> BiddingAnalysisResult [EXTRACTED]
+- vault_bidding_service -> contains -> VaultBiddingService [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::statistics [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- vault_bidding_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_cache_service -> contains -> VaultCacheService [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::hashlib [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- vault_cache_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_chat_search -> contains -> VaultChatSearch [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::re [EXTRACTED]
+- vault_chat_search -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_citation_service -> contains -> VaultCitationService [EXTRACTED]
+- vault_citation_service -> imports -> __unresolved__::ref::re [EXTRACTED]
+- vault_citation_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_citation_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_citation_service -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- ClientInfo -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- ClientPerformanceMetrics -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- vault_client_service -> contains -> ClientPerformanceMetrics [EXTRACTED]
+- vault_client_service -> contains -> ClientInfo [EXTRACTED]
+- vault_client_service -> contains -> VaultClientService [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::decimal [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- vault_client_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_context_manager -> contains -> VaultContextManager [EXTRACTED]
+- vault_context_manager -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_context_manager -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_context_manager -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- CredentialMetadata -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
+- vault_credential_service -> contains -> CredentialMetadata [EXTRACTED]
+- vault_credential_service -> contains -> VaultCredentialService [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::io [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::re [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::pydantic [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::pytesseract [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::pil [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::pypdf2 [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::docx [EXTRACTED]
+- vault_credential_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::os [EXTRACTED]
+- vault_embedding_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- completed_projects -> contains -> CompletedProjectsHandler [EXTRACTED]
+- completed_projects -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- completed_projects -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- completed_projects -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- completed_projects -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- completed_projects -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- government_guidelines -> contains -> GovernmentGuidelinesHandler [EXTRACTED]
+- government_guidelines -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- government_guidelines -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- government_guidelines -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- government_guidelines -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- government_guidelines -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_personnel_service -> contains -> VaultPersonnelService [EXTRACTED]
+- vault_personnel_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_personnel_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_personnel_service -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_personnel_service -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_personnel_service -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_query_router -> contains -> VaultQueryRouter [EXTRACTED]
+- vault_query_router -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_query_router -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_query_router -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
+- vault_query_router -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
+- vault_step_search -> contains -> VaultStepSearch [EXTRACTED]
+- vault_step_search -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- vault_step_search -> imports -> __unresolved__::ref::uuid [EXTRACTED]
+- vault_step_search -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_step_search -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_step_search -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- vault_validation -> contains -> HallucinationValidator [EXTRACTED]
+- vault_validation -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- vault_validation -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- vault_validation -> imports -> __unresolved__::ref::vault_schemas [EXTRACTED]
 - DependencyLevel -> extends -> __unresolved__::ref::enum [EXTRACTED]
 - MoveValidationResult -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
 - VersionConflict -> extends -> __unresolved__::ref::basemodel [EXTRACTED]
@@ -7405,9 +8917,7 @@ Cohesion: 0.00 | Nodes: 954
 - workflow_timer -> imports -> __unresolved__::ref::token_pricing [EXTRACTED]
 - state_machine -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - state_machine -> imports -> __unresolved__::ref::state_validator [EXTRACTED]
-- state_machine -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - create_anthropic_client -> calls -> __unresolved__::ref::claudeapierror [EXTRACTED]
-- create_anthropic_client -> calls -> __unresolved__::ref::asyncanthropic [EXTRACTED]
 - create_anthropic_client -> calls -> __unresolved__::ref::anthropic [EXTRACTED]
 - claude_utils -> contains -> create_anthropic_client [EXTRACTED]
 - claude_utils -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -7415,8 +8925,12 @@ Cohesion: 0.00 | Nodes: 954
 - claude_utils -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
 - claude_utils -> imports -> __unresolved__::ref::config [EXTRACTED]
 - claude_utils -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
+- _call -> calls -> __unresolved__::ref::clienttimeout [EXTRACTED]
+- _call -> calls -> __unresolved__::ref::clientsession [EXTRACTED]
+- _call -> calls -> __unresolved__::ref::text [EXTRACTED]
 - notify_comment_created -> calls -> __unresolved__::ref::_call [EXTRACTED]
 - notify_proposal_complete -> calls -> __unresolved__::ref::_call [EXTRACTED]
+- edge_functions -> contains -> _call [EXTRACTED]
 - edge_functions -> contains -> notify_proposal_complete [EXTRACTED]
 - edge_functions -> contains -> notify_comment_created [EXTRACTED]
 - edge_functions -> imports -> __unresolved__::ref::logging [EXTRACTED]
@@ -7431,11 +8945,6 @@ Cohesion: 0.00 | Nodes: 954
 - file_utils -> imports -> __unresolved__::ref::pypdf2 [EXTRACTED]
 - file_utils -> imports -> __unresolved__::ref::config [EXTRACTED]
 - file_utils -> imports -> __unresolved__::ref::exceptions [EXTRACTED]
-- PageParams -> contains -> __init__ [EXTRACTED]
-- PageParams -> contains -> apply [EXTRACTED]
-- __init__ -> calls -> __unresolved__::ref::query [EXTRACTED]
-- pagination -> contains -> PageParams [EXTRACTED]
-- pagination -> imports -> __unresolved__::ref::fastapi [EXTRACTED]
 - get_async_client -> calls -> __unresolved__::ref::acreate_client [EXTRACTED]
 - get_user_client -> calls -> __unresolved__::ref::acreate_client [EXTRACTED]
 - get_user_client -> calls -> __unresolved__::ref::set_session [EXTRACTED]
@@ -7446,23 +8955,20 @@ Cohesion: 0.00 | Nodes: 954
 - supabase_client -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - supabase_client -> imports -> __unresolved__::ref::supabase [EXTRACTED]
 - supabase_client -> imports -> __unresolved__::ref::config [EXTRACTED]
-- check_proposals -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- check_proposals -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- check_storage_files -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- check_storage_files -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- check_storage_files -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- delete_all_proposals -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- delete_all_proposals -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- delete_test_proposals -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- delete_test_proposals -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- restructure_dirs -> imports -> __unresolved__::ref::os [EXTRACTED]
+- restructure_dirs -> imports -> __unresolved__::ref::shutil [EXTRACTED]
+- restructure_dirs -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - add_missing_columns -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - add_missing_columns -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - apply_document_ingestion_migration -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - apply_document_ingestion_migration -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- read_migration_file -> calls -> __unresolved__::ref::read [EXTRACTED]
+- apply_migrations -> contains -> read_migration_file [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::os [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::argparse [EXTRACTED]
+- apply_migrations -> imports -> __unresolved__::ref::time [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - apply_migrations -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
@@ -7511,6 +9017,7 @@ Cohesion: 0.00 | Nodes: 954
 - rfp_review_engine -> contains -> FeasibilityLevel [EXTRACTED]
 - rfp_review_engine -> contains -> DecisionType [EXTRACTED]
 - rfp_review_engine -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- rfp_review_engine -> imports -> __unresolved__::ref::re [EXTRACTED]
 - rfp_review_engine -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - rfp_review_engine -> imports -> __unresolved__::ref::enum [EXTRACTED]
 - PriceStrategy -> extends -> __unresolved__::ref::enum [EXTRACTED]
@@ -7520,17 +9027,6 @@ Cohesion: 0.00 | Nodes: 954
 - strategy_planning_engine -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - strategy_planning_engine -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - strategy_planning_engine -> imports -> __unresolved__::ref::enum [EXTRACTED]
-- stub_nodes -> contains -> strategy_generate [EXTRACTED]
-- stub_nodes -> contains -> plan_team [EXTRACTED]
-- stub_nodes -> contains -> plan_assign [EXTRACTED]
-- stub_nodes -> contains -> plan_schedule [EXTRACTED]
-- stub_nodes -> contains -> plan_story [EXTRACTED]
-- stub_nodes -> contains -> plan_price [EXTRACTED]
-- stub_nodes -> contains -> self_review_with_auto_improve [EXTRACTED]
-- stub_nodes -> contains -> presentation_strategy [EXTRACTED]
-- stub_nodes -> contains -> ppt_slide [EXTRACTED]
-- stub_nodes -> imports -> __unresolved__::ref::logging [EXTRACTED]
-- stub_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
 - test_hwpx -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - test_hwpx -> imports -> __unresolved__::ref::hwpx_builder [EXTRACTED]
 - test_modular_architecture -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
@@ -7544,6 +9040,13 @@ Cohesion: 0.00 | Nodes: 954
 - test_workflow -> imports -> __unresolved__::ref::proposal_generator [EXTRACTED]
 - test_workflow -> imports -> __unresolved__::ref::docx_builder [EXTRACTED]
 - test_workflow -> imports -> __unresolved__::ref::pptx_builder [EXTRACTED]
+- bid_scoring -> contains -> build_client_to_dept [EXTRACTED]
+- bid_scoring -> contains -> format_budget [EXTRACTED]
+- bid_scoring -> contains -> format_d_day [EXTRACTED]
+- bid_scoring -> imports -> __unresolved__::ref::math [EXTRACTED]
+- bid_scoring -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- bid_scoring -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- bid_scoring -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - check_bid_status -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - check_bid_status -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - check_bid_status -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
@@ -7572,16 +9075,12 @@ Cohesion: 0.00 | Nodes: 954
 - create_e2e_user -> imports -> __unresolved__::ref::os [EXTRACTED]
 - create_excel_template -> imports -> __unresolved__::ref::openpyxl [EXTRACTED]
 - create_excel_template -> imports -> __unresolved__::ref::styles [EXTRACTED]
+- create_excel_template -> imports -> __unresolved__::ref::utils [EXTRACTED]
 - create_excel_template -> imports -> __unresolved__::ref::datavalidation [EXTRACTED]
 - create_excel_template -> imports -> __unresolved__::ref::os [EXTRACTED]
 - create_supabase_tables -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - create_supabase_tables -> imports -> __unresolved__::ref::os [EXTRACTED]
 - create_supabase_tables -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- _get_recommender -> calls -> __unresolved__::ref::teamrecommender [EXTRACTED]
-- enrich_with_team -> calls -> __unresolved__::ref::recommend [EXTRACTED]
-- enrich_with_team -> calls -> __unresolved__::ref::to_pipeline_dict [EXTRACTED]
-- daily_bid_scan -> contains -> _get_recommender [EXTRACTED]
-- daily_bid_scan -> contains -> enrich_with_team [EXTRACTED]
 - daily_bid_scan -> contains -> _empty_pipeline [EXTRACTED]
 - daily_bid_scan -> imports -> __unresolved__::ref::argparse [EXTRACTED]
 - daily_bid_scan -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
@@ -7595,24 +9094,50 @@ Cohesion: 0.00 | Nodes: 954
 - diagnose_supabase -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - diagnose_supabase -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - diagnose_supabase -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
+- e2e_interrupt_test -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- e2e_interrupt_test -> imports -> __unresolved__::ref::time [EXTRACTED]
+- e2e_interrupt_test -> imports -> __unresolved__::ref::httpx [EXTRACTED]
+- e2e_interrupt_test -> imports -> __unresolved__::ref::os [EXTRACTED]
+- e2e_interrupt_test -> imports -> __unresolved__::ref::main [EXTRACTED]
+- e2e_workflow_test -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- e2e_workflow_test -> imports -> __unresolved__::ref::time [EXTRACTED]
+- e2e_workflow_test -> imports -> __unresolved__::ref::httpx [EXTRACTED]
+- e2e_workflow_test -> imports -> __unresolved__::ref::main [EXTRACTED]
+- e2e_workflow_test -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - exec_migration -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - exec_migration -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - exec_migration -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - exec_migration -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
 - exec_migration -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- call_claude -> calls -> __unresolved__::ref::anthropic [EXTRACTED]
+- extract_hwpx_text -> calls -> __unresolved__::ref::zipfile [EXTRACTED]
+- extract_hwpx_text -> calls -> __unresolved__::ref::read [EXTRACTED]
+- hwpx_to_pptx -> contains -> extract_hwpx_text [EXTRACTED]
+- hwpx_to_pptx -> contains -> call_claude [EXTRACTED]
 - hwpx_to_pptx -> contains -> set_speaker_notes [EXTRACTED]
+- hwpx_to_pptx -> imports -> __unresolved__::ref::zipfile [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::os [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::lxml [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::pptx [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::util [EXTRACTED]
-- hwpx_to_pptx -> imports -> __unresolved__::ref::color [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::text [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::anthropic [EXTRACTED]
 - hwpx_to_pptx -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
+- import_project_history -> contains -> build_search_keywords [EXTRACTED]
+- import_project_history -> imports -> __unresolved__::ref::re [EXTRACTED]
+- import_project_history -> imports -> __unresolved__::ref::sys [EXTRACTED]
+- import_project_history -> imports -> __unresolved__::ref::collections [EXTRACTED]
+- import_project_history -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- import_project_history -> imports -> __unresolved__::ref::openpyxl [EXTRACTED]
+- import_team_structure -> imports -> __unresolved__::ref::argparse [EXTRACTED]
+- import_team_structure -> imports -> __unresolved__::ref::sys [EXTRACTED]
+- import_team_structure -> imports -> __unresolved__::ref::collections [EXTRACTED]
+- import_team_structure -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - init_storage_buckets -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - init_storage_buckets -> imports -> __unresolved__::ref::sys [EXTRACTED]
+- init_storage_buckets -> imports -> __unresolved__::ref::httpx [EXTRACTED]
 - init_storage_buckets -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
 - insert_test_bid -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - insert_test_bid -> imports -> __unresolved__::ref::sys [EXTRACTED]
@@ -7624,6 +9149,7 @@ Cohesion: 0.00 | Nodes: 954
 - migrate_intranet -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - migrate_intranet -> imports -> __unresolved__::ref::os [EXTRACTED]
 - migrate_intranet -> imports -> __unresolved__::ref::platform [EXTRACTED]
+- migrate_intranet -> imports -> __unresolved__::ref::re [EXTRACTED]
 - migrate_intranet -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - migrate_intranet -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - migrate_intranet -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
@@ -7643,11 +9169,22 @@ Cohesion: 0.00 | Nodes: 954
 - migrate_states_unified -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - migrate_states_unified -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - migrate_states_unified -> imports -> __unresolved__::ref::typing [EXTRACTED]
+- monitor_g2b_pipeline -> contains -> format_report_json [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::argparse [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::re [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::sys [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::time [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::datetime [EXTRACTED]
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - pilot_migration_10projects -> contains -> parse_date [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::argparse [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::logging [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::os [EXTRACTED]
+- pilot_migration_10projects -> imports -> __unresolved__::ref::re [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - pilot_migration_10projects -> imports -> __unresolved__::ref::datetime [EXTRACTED]
@@ -7668,6 +9205,11 @@ Cohesion: 0.00 | Nodes: 954
 - provision_users -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - provision_users -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
 - provision_users -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
+- run_master_projects_migration -> imports -> __unresolved__::ref::argparse [EXTRACTED]
+- run_master_projects_migration -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- run_master_projects_migration -> imports -> __unresolved__::ref::logging [EXTRACTED]
+- run_master_projects_migration -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- run_master_projects_migration -> imports -> __unresolved__::ref::typing [EXTRACTED]
 - run_migration -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - run_migration -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - run_migration -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
@@ -7691,6 +9233,9 @@ Cohesion: 0.00 | Nodes: 954
 - team_recommender -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - team_recommender -> imports -> __unresolved__::ref::dataclasses [EXTRACTED]
 - team_recommender -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
+- test_g2b -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
+- test_g2b -> imports -> __unresolved__::ref::sys [EXTRACTED]
+- test_g2b -> imports -> __unresolved__::ref::datetime [EXTRACTED]
 - test_g2b_search -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - test_g2b_search -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - test_g2b_search -> imports -> __unresolved__::ref::datetime [EXTRACTED]
@@ -7701,9 +9246,6 @@ Cohesion: 0.00 | Nodes: 954
 - test_presentation_sample -> imports -> __unresolved__::ref::phase_schemas [EXTRACTED]
 - test_presentation_sample -> imports -> __unresolved__::ref::presentation_generator [EXTRACTED]
 - test_presentation_sample -> imports -> __unresolved__::ref::presentation_pptx_builder [EXTRACTED]
-- main -> calls -> __unresolved__::ref::test_with_live_g2b [EXTRACTED]
-- main -> calls -> __unresolved__::ref::test_ai_recommendation [EXTRACTED]
-- test_search_flow -> contains -> main [EXTRACTED]
 - test_search_flow -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
 - test_search_flow -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - test_search_flow -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
@@ -7712,674 +9254,733 @@ Cohesion: 0.00 | Nodes: 954
 - test_search_strategy -> imports -> __unresolved__::ref::sys [EXTRACTED]
 - test_search_strategy -> imports -> __unresolved__::ref::claude_client [EXTRACTED]
 - test_search_strategy -> imports -> __unresolved__::ref::config [EXTRACTED]
-- test_analysis -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_analysis -> imports -> __unresolved__::ref::bid_analysis_service [EXTRACTED]
-- test_api2 -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_api2 -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- test_api2 -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- test_api -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_api -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- test_api -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- test_background_analysis -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_background_analysis -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- test_background_analysis -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- test_document_ingestion -> contains -> test_imports [EXTRACTED]
-- test_document_ingestion -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_document_ingestion -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
-- test_step8_imports -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_step8_imports -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- test_syntax_only -> imports -> __unresolved__::ref::py_compile [EXTRACTED]
-- test_syntax_only -> imports -> __unresolved__::ref::sys [EXTRACTED]
-- test_documents -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_documents -> imports -> __unresolved__::ref::io [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::os [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::auth_schemas [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::supabase_client [EXTRACTED]
-- test_document_flow -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- conftest -> contains -> pytest_collection_modifyitems [EXTRACTED]
-- conftest -> imports -> __unresolved__::ref::os [EXTRACTED]
-- test_workflow_live_db -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
-- test_workflow_live_db -> imports -> __unresolved__::ref::types [EXTRACTED]
-- test_agent_pipeline -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- test_agent_pipeline -> imports -> __unresolved__::ref::dotenv [EXTRACTED]
-- test_agent_pipeline -> imports -> __unresolved__::ref::agents [EXTRACTED]
-- test_db_fallback -> imports -> __unresolved__::ref::memory [EXTRACTED]
-- test_routes_documents -> contains -> TestUploadEndpoint [EXTRACTED]
-- test_routes_documents -> contains -> TestListEndpoint [EXTRACTED]
-- test_routes_documents -> contains -> TestDetailEndpoint [EXTRACTED]
-- test_routes_documents -> contains -> TestReprocessEndpoint [EXTRACTED]
-- test_routes_documents -> contains -> TestChunksEndpoint [EXTRACTED]
-- test_routes_documents -> contains -> TestDeleteEndpoint [EXTRACTED]
-- test_routes_documents -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_routes_documents -> imports -> __unresolved__::ref::io [EXTRACTED]
-- test_workflow_error_recovery -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
-- test_workflow_error_recovery -> imports -> __unresolved__::ref::memory [EXTRACTED]
-- test_workflow_error_recovery -> imports -> __unresolved__::ref::types [EXTRACTED]
-- TestArtifactVersionModel -> contains -> test_artifact_version_creation [EXTRACTED]
-- TestArtifactVersionModel -> contains -> test_artifact_version_optional_fields [EXTRACTED]
-- test_artifact_version_creation -> calls -> __unresolved__::ref::artifactversion [EXTRACTED]
-- test_artifact_version_optional_fields -> calls -> __unresolved__::ref::artifactversion [EXTRACTED]
-- test_artifact_versioning -> contains -> TestArtifactVersionModel [EXTRACTED]
-- test_artifact_versioning -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_artifact_versioning -> imports -> __unresolved__::ref::version_manager [EXTRACTED]
-- test_artifact_versioning -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_migration_api -> imports -> __unresolved__::ref::routes_migrations [EXTRACTED]
-- test_migration_script -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_migration_script -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_migration_script -> imports -> __unresolved__::ref::migration_service [EXTRACTED]
-- test_migration_service -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_migration_service -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_migration_service -> imports -> __unresolved__::ref::migration_service [EXTRACTED]
-- test_migration_service -> imports -> __unresolved__::ref::migration_schemas [EXTRACTED]
-- StepMetrics -> contains -> __init__ [EXTRACTED]
-- StepMetrics -> contains -> record [EXTRACTED]
-- test_step8_e2e -> contains -> StepMetrics [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8a_customer_analysis [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8b_section_validator [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8c_consolidation [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8d_mock_evaluation [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8e_feedback_processor [EXTRACTED]
-- test_step8_e2e -> imports -> __unresolved__::ref::step8f_rewrite [EXTRACTED]
-- test_step8a_customer_analysis -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_step8a_customer_analysis -> imports -> __unresolved__::ref::step8a_customer_analysis [EXTRACTED]
-- test_step8a_nodes -> contains -> TestProposalCustomerAnalysis [EXTRACTED]
-- test_step8a_nodes -> contains -> TestProposalSectionValidator [EXTRACTED]
-- test_step8a_nodes -> contains -> TestProposalSectionsConsolidation [EXTRACTED]
-- test_step8a_nodes -> contains -> TestMockEvaluationAnalysis [EXTRACTED]
-- test_step8a_nodes -> contains -> TestMockEvaluationFeedbackProcessor [EXTRACTED]
-- test_step8a_nodes -> contains -> TestProposalWriteNextV2 [EXTRACTED]
-- test_step8a_nodes -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_step8a_nodes -> imports -> __unresolved__::ref::uuid [EXTRACTED]
-- test_step8a_nodes -> imports -> __unresolved__::ref::step8a_customer_analysis [EXTRACTED]
-- test_step8a_nodes -> imports -> __unresolved__::ref::step8b_section_validator [EXTRACTED]
-- test_step8b_section_validator -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_step8b_section_validator -> imports -> __unresolved__::ref::step8b_section_validator [EXTRACTED]
-- test_step8c_consolidation -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_step8c_consolidation -> imports -> __unresolved__::ref::step8c_consolidation [EXTRACTED]
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::state [EXTRACTED]
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::step8d_mock_evaluation [EXTRACTED]
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::step8e_feedback_processor [EXTRACTED]
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::step8f_rewrite [EXTRACTED]
-- test_document_builders -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
-- test_document_builders -> imports -> __unresolved__::ref::datetime [EXTRACTED]
-- test_document_builders -> imports -> __unresolved__::ref::schemas [EXTRACTED]
-- test_document_builders -> imports -> __unresolved__::ref::docx_builder [EXTRACTED]
-- test_document_builders -> imports -> __unresolved__::ref::pptx_builder [EXTRACTED]
-- test_extract_text_from_pdf_nonexistent -> calls -> __unresolved__::ref::extract_text_from_pdf [EXTRACTED]
-- test_rfp_parser -> contains -> test_extract_text_from_pdf_nonexistent [EXTRACTED]
-- test_rfp_parser -> imports -> __unresolved__::ref::pathlib [EXTRACTED]
-- test_rfp_parser -> imports -> __unresolved__::ref::rfp_parser [EXTRACTED]
-- test_graph_branching -> contains -> _resume_approved [EXTRACTED]
-- test_graph_branching -> contains -> _resume_go [EXTRACTED]
-- test_graph_branching -> contains -> _resume_rejected [EXTRACTED]
-- test_graph_branching -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
-- test_graph_branching -> imports -> __unresolved__::ref::memory [EXTRACTED]
-- test_graph_branching -> imports -> __unresolved__::ref::types [EXTRACTED]
-- test_graph_happy_path -> contains -> _resume_approved [EXTRACTED]
-- test_graph_happy_path -> contains -> _resume_go [EXTRACTED]
-- test_graph_happy_path -> imports -> __unresolved__::ref::contextlib [EXTRACTED]
-- test_graph_happy_path -> imports -> __unresolved__::ref::memory [EXTRACTED]
-- test_graph_happy_path -> imports -> __unresolved__::ref::types [EXTRACTED]
-- truncate_proposals -> imports -> __unresolved__::ref::asyncio [EXTRACTED]
-- truncate_proposals -> imports -> __unresolved__::ref::os [EXTRACTED]
-- truncate_proposals -> imports -> __unresolved__::ref::supabase [EXTRACTED]
 
 ## Cross-Community Connections
-- _get_dev_user -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_dev_user -> calls -> __unresolved__::ref::print (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_dev_user -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
-- _has_access_by_role -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- get_rls_client -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedreflen]])
-- require_role -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedreflen]])
-- deps -> contains -> _init_dev_user (-> [[unresolvedrefget-unresolvedreflen]])
-- deps -> contains -> get_current_user (-> [[unresolvedrefget-unresolvedreflen]])
-- deps -> contains -> _validate_user_status (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- deps -> contains -> require_project_access (-> [[unresolvedrefget-unresolvedreflen]])
-- response -> contains -> _now (-> [[unresolvedrefget-unresolvedreflen]])
-- _count_by -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_analytics -> contains -> _period_to_date_range (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_analytics -> contains -> _fetch_proposals (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_artifacts -> contains -> _format_download_filename (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_artifacts -> contains -> _upload_to_storage_with_tracking (-> [[unresolvedrefget-unresolvedreflen]])
-- validate_file_magic_bytes -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefget-unresolvedreflen]])
-- _classify_g2b_error -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- _normalize_bid_detail -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_g2b -> contains -> _parse_amount (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_g2b -> contains -> _parse_int (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_migrations -> contains -> _get_migration_service (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- routes_performance -> contains -> _get_proposal_or_404 (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_performance -> contains -> _refresh_views (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_performance -> contains -> _resolve_pricing_predictions (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_presentation -> contains -> _resolve_template_path (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_presentation -> contains -> _download_sample_template (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_presentation -> contains -> _upload_presentation (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_presentation -> contains -> _run_presentation (-> [[runpresentation-buildproposalhwpx]])
-- routes_project_archive -> imports -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
-- __init__ -> calls -> __unresolved__::ref::__init__ (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- __init__ -> calls -> __unresolved__::ref::super (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- __init__ -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- __init__ -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefget-unresolvedreflen]])
-- __init__ -> calls -> __unresolved__::ref::all (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_proposal -> contains -> _upload_file_to_storage (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_proposal -> contains -> _run_workflow_background (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_resources -> contains -> _run_extraction (-> [[unresolvedrefget-unresolvedreflen]])
-- _calc_rate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_stats -> contains -> _aggregate (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_stats -> imports -> __unresolved__::ref::collections (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_step8_review -> contains -> get_proposal_artifacts (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_step8_review -> contains -> build_node_status (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- _run_phases -> calls -> __unresolved__::ref::update_session (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_phases -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_phases -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_phases_from -> calls -> __unresolved__::ref::update_session (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_phases_from -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_phases_from -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_workflow -> contains -> _get_graph (-> [[testphase6kb-testphase9services]])
-- routes_workflow -> contains -> _is_interrupted (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_workflow -> contains -> _serialize_approval (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_workflow -> contains -> _get_streams_status_safe (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_workflow -> contains -> _extract_output_summary (-> [[unresolvedrefget-unresolvedreflen]])
-- routes_workflow -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- validate_required_keys -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- normalize_proposal_section -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedreflen]])
-- normalize_proposal_section -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_plan -> contains -> bid_plan (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_plan -> contains -> _build_constraint (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_selective_fan_out -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- gate_nodes -> contains -> stream1_complete_hook (-> [[unresolvedrefget-unresolvedreflen]])
-- go_no_go -> contains -> go_no_go (-> [[unresolvedrefbasestate-testchecklistcore]])
-- go_no_go -> contains -> _ai_strategic_assessment (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_rfp_summary -> calls -> __unresolved__::ref::rfp_to_dict (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_rfp_summary -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> _get_evolved_prompt (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> _track_plan_prompt (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> _get_strategy_fields (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> _get_budget_constraint_text (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> plan_team (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> plan_assign (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> plan_schedule (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> plan_story (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_nodes -> contains -> proposal_customer_analysis (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_sections_to_write -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> _persist_node_result (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> _build_context (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> proposal_write_next (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> self_review_with_auto_improve (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> section_quality_check (-> [[unresolvedrefget-unresolvedreflen]])
-- proposal_nodes -> contains -> storyline_gap_analysis (-> [[unresolvedrefget-unresolvedreflen]])
-- research_gather -> contains -> research_gather (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_analyze -> contains -> rfp_analyze (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_fetch -> contains -> rfp_fetch (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_fetch -> contains -> _upload_attachment_to_storage (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_search -> contains -> rfp_search (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_search -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedreflen]])
-- step8a_customer_analysis -> contains -> proposal_customer_analysis (-> [[unresolvedrefget-unresolvedreflen]])
-- step8b_section_validator -> contains -> proposal_section_validator (-> [[unresolvedrefget-unresolvedreflen]])
-- step8c_consolidation -> contains -> proposal_sections_consolidation (-> [[unresolvedrefget-unresolvedreflen]])
-- step8d_mock_evaluation -> contains -> mock_evaluation_analysis (-> [[unresolvedrefget-unresolvedreflen]])
-- step8e_feedback_processor -> contains -> _convert_priority_to_int (-> [[unresolvedrefget-unresolvedreflen]])
-- step8e_feedback_processor -> contains -> mock_evaluation_feedback_processor (-> [[unresolvedrefget-unresolvedreflen]])
-- step8f_rewrite -> contains -> proposal_write_next_v2 (-> [[unresolvedrefget-unresolvedreflen]])
-- _format_positioning_guide -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- strategy_generate -> contains -> strategy_generate (-> [[unresolvedrefget-unresolvedreflen]])
-- token_tracking -> contains -> track_tokens (-> [[unresolvedrefget-unresolvedreflen]])
-- token_tracking -> contains -> _persist_ai_task_log (-> [[unresolvedrefget-unresolvedreflen]])
-- token_tracking -> contains -> _persist_ai_task_log_error (-> [[unresolvedrefget-unresolvedreflen]])
-- token_tracking -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- migration_jobs -> contains -> run_scheduled_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- _add_cors_headers -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> contains -> _init_supabase_rpc (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> contains -> _safe_startup_task (-> [[unresolvedrefget-unresolvedreflen]])
-- get_current_user -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefget-unresolvedreflen]])
-- get_current_user -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedreflen]])
-- rate_limit_exceeded_handler -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- rate_limit -> contains -> _key_func (-> [[unresolvedrefget-unresolvedreflen]])
-- RequestIdMiddleware -> contains -> dispatch (-> [[unresolvedrefget-unresolvedreflen]])
-- get_request_id -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- request_id -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- to_text -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- to_text -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_schemas -> contains -> SearchPreset (-> [[unresolvedrefraises-unresolvedrefmakebid]])
-- document_schemas -> contains -> DocumentDetailResponse (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- scheduler -> contains -> init_scheduler (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- scheduler -> contains -> shutdown_scheduler (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- scheduler -> contains -> _register_jobs (-> [[unresolvedrefget-unresolvedreflen]])
-- ai_status_manager -> contains -> AiStatusManager (-> [[unresolvedrefget-unresolvedreflen]])
-- ai_status_manager -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- alert_manager -> contains -> AlertManager (-> [[alertmanager-handleresults]])
-- audit_service -> contains -> log_action (-> [[unresolvedrefget-unresolvedreflen]])
-- _run_all_steps -> calls -> __unresolved__::ref::_update_status (-> [[unresolvedrefget-unresolvedreflen]])
-- get_all_pipeline_status -> calls -> __unresolved__::ref::dict (-> [[unresolvedrefget-unresolvedreflen]])
-- get_pipeline_status -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> run_pipeline (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> _process_single (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> _ensure_bid_in_db (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> _safe_int (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> _download_and_extract (-> [[unresolvedrefget-unresolvedreflen]])
-- bid_pipeline -> contains -> _run_analysis_if_needed (-> [[unresolvedrefget-unresolvedreflen]])
-- _fmt_won -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedreflen]])
-- _shade_row -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- _shade_row -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- cost_sheet_builder -> contains -> _set_cell (-> [[unresolvedrefinches-rendersplitpanel]])
-- cost_sheet_builder -> contains -> build_cost_sheet (-> [[unresolvedrefget-unresolvedreflen]])
-- cost_sheet_builder -> imports -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedreflen]])
-- ProcurementMethod -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- calculator -> contains -> parse_budget_string (-> [[unresolvedrefget-unresolvedreflen]])
-- calculator -> contains -> BidCalculator (-> [[estimate-calculatecost]])
-- calculator -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- cleanup -> contains -> cleanup_expired_bids (-> [[unresolvedrefget-unresolvedreflen]])
-- cleanup -> contains -> _clean_cache (-> [[unresolvedrefget-unresolvedreflen]])
-- cleanup -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- fetcher -> contains -> BidFetcher (-> [[unresolvedrefget-unresolvedreflen]])
-- BidPreprocessor -> contains -> preprocess (-> [[unresolvedrefget-unresolvedreflen]])
-- BidPreprocessor -> contains -> _parse_summary (-> [[unresolvedrefget-unresolvedreflen]])
-- preprocessor -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- recommender -> contains -> BidRecommender (-> [[unresolvedrefget-unresolvedreflen]])
-- recommender -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- recommender -> imports -> __unresolved__::ref::preprocessor (-> [[unresolvedrefmakeraw-unresolvedrefscorebid]])
-- scorer -> contains -> normalize_pre_spec_for_scoring (-> [[unresolvedrefget-unresolvedreflen]])
-- scorer -> contains -> normalize_plan_for_scoring (-> [[unresolvedrefget-unresolvedreflen]])
-- scorer -> contains -> _normalize_title (-> [[unresolvedrefget-unresolvedreflen]])
-- scorer -> contains -> score_bid (-> [[unresolvedrefget-unresolvedreflen]])
-- scorer -> contains -> score_and_rank_bids (-> [[unresolvedrefget-unresolvedreflen]])
-- scorer -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- ClientPreferenceAnalyzer -> contains -> analyze (-> [[unresolvedrefget-unresolvedreflen]])
-- CompetitorPricingAnalyzer -> contains -> analyze (-> [[unresolvedrefget-unresolvedreflen]])
-- cost_estimator -> contains -> EnhancedCostEstimator (-> [[estimate-calculatecost]])
-- CostStandardSelector -> contains -> select (-> [[unresolvedrefget-unresolvedreflen]])
-- _domain_to_standard -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedreflen]])
-- cost_standard_selector -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- engine -> contains -> PricingEngine (-> [[unresolvedrefget-unresolvedreflen]])
-- to_prompt_context -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedreflen]])
-- to_prompt_context -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
+- _has_access_by_role -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- deps -> contains -> _init_dev_user (-> [[unresolvedrefget-unresolvedrefexecute]])
+- deps -> contains -> _get_dev_user (-> [[unresolvedreftenopapierror-init]])
+- deps -> contains -> get_current_user (-> [[unresolvedrefget-unresolvedrefexecute]])
+- deps -> contains -> get_current_user_or_none (-> [[unresolvedreftenopapierror-init]])
+- deps -> contains -> get_rls_client (-> [[unresolvedreftenopapierror-init]])
+- deps -> contains -> require_role (-> [[unresolvedreftenopapierror-init]])
+- deps -> contains -> _validate_user_status (-> [[unresolvedreftenopapierror-init]])
+- deps -> contains -> require_project_access (-> [[unresolvedrefget-unresolvedrefexecute]])
+- deps -> contains -> require_knowledge_access (-> [[unresolvedreftenopapierror-init]])
+- _count_by -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_analytics -> contains -> _period_to_date_range (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- routes_analytics -> contains -> _fetch_proposals (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_artifacts -> contains -> _format_download_filename (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_artifacts -> contains -> _upload_to_storage_with_tracking (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _escape_like -> calls -> __unresolved__::ref::replace (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_content_from_raw -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _queue_bid_analysis -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _load_file_cache (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_bids -> contains -> _save_file_cache (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_bids -> contains -> _monitor_my (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _monitor_team_or_division (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _monitor_company (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _enrich_monitor_data (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _check_analysis_cache (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _load_bid_content (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _load_teams_info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _run_unified_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _invalidate_recommendations_cache (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _get_preset_or_404 (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _get_active_preset_or_422 (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _get_profile_or_422 (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _get_cached_recommendations (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _build_recommendations_response (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _run_fetch_and_analyze (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _analyze_bid_background (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _save_markdown_to_storage (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _format_rfp_sections (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _format_notice_markdown (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> contains -> _save_recommendations (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_bids -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- routes_documents -> contains -> validate_file_magic_bytes (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _normalize_bid_detail -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_g2b -> contains -> _classify_g2b_error (-> [[classifyg2berror-unresolvedrefg2bexternalerror]])
+- routes_g2b -> contains -> _parse_amount (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_g2b -> contains -> _parse_int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_migrations -> contains -> _get_migration_service (-> [[runscheduledmigration-runscheduledmigration]])
+- routes_performance -> contains -> _get_proposal_or_404 (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_performance -> contains -> _refresh_views (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_performance -> contains -> _resolve_pricing_predictions (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_presentation -> contains -> _resolve_template_path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_presentation -> contains -> _download_sample_template (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_presentation -> contains -> _upload_presentation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_presentation -> contains -> _run_presentation (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_pricing -> imports -> __unresolved__::ref::sensitivity (-> [[engine-init]])
+- BidDecisionRequest -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
+- ProposalFromBid -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
+- routes_proposal -> contains -> _upload_file_to_storage (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_proposal -> contains -> _run_workflow_background (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_resources -> contains -> _run_extraction (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calc_rate -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_stats -> contains -> _aggregate (-> [[aggregate-isallowed]])
+- routes_step8_review -> contains -> get_proposal_artifacts (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_step8_review -> contains -> build_node_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_v31 -> contains -> _run_phases (-> [[unresolvedrefvalueerror-executefromphase]])
+- routes_v31 -> contains -> _run_phases_from (-> [[unresolvedrefvalueerror-executefromphase]])
+- routes_vault_chat -> contains -> RateLimiter (-> [[aggregate-isallowed]])
+- routes_vault_chat -> contains -> _format_numbered_sources (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> contains -> _search_sections_parallel (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> contains -> _log_analytics (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> contains -> _load_conversation_context (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> contains -> _create_conversation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> contains -> _save_message (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_vault_chat -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- routes_workflow -> contains -> _get_graph (-> [[getgraph-unresolvedrefbuildgraph]])
+- routes_workflow -> contains -> _is_interrupted (-> [[unresolvedrefprint-unresolvedrefpath]])
+- routes_workflow -> contains -> _serialize_approval (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_workflow -> contains -> _get_streams_status_safe (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_workflow -> contains -> _extract_output_summary (-> [[unresolvedrefget-unresolvedrefexecute]])
+- routes_workflow -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- config -> contains -> Settings (-> [[settings-validaterequiredkeys]])
+- normalize_proposal_section -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedrefexecute]])
+- normalize_proposal_section -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_plan -> contains -> bid_plan (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_plan -> contains -> _build_constraint (-> [[unresolvedrefget-unresolvedrefexecute]])
+- eval_result_node -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> mock_evaluation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _score_evaluation_item (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _calculate_distribution (-> [[calculatedistribution-unresolvedrefmean]])
+- evaluation_nodes -> contains -> _assess_consensus (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _summarize_strengths (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _summarize_weaknesses (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _find_high_consensus_items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> _find_low_consensus_items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- evaluation_nodes -> contains -> project_closing (-> [[projectclosing-unresolvedreffirekbupdate]])
+- evaluation_nodes -> contains -> _fire_kb_update (-> [[dailyg2bmonitor-healthcheckrunner]])
+- evaluation_nodes -> contains -> _fire_status_update (-> [[dailyg2bmonitor-healthcheckrunner]])
+- go_no_go -> contains -> go_no_go (-> [[gonogo-unresolvedrefaistrategicassessment]])
+- go_no_go -> contains -> _ai_strategic_assessment (-> [[unresolvedrefget-unresolvedrefexecute]])
+- merge_nodes -> contains -> _sync_dynamic_sections (-> [[unresolvedrefget-unresolvedrefexecute]])
+- merge_nodes -> contains -> plan_merge (-> [[planmerge-unresolvedrefdict]])
+- merge_nodes -> contains -> proposal_merge (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_rfp_summary -> calls -> __unresolved__::ref::rfp_to_dict (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_rfp_summary -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> _get_evolved_prompt (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> _track_plan_prompt (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> _get_strategy_fields (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> _get_budget_constraint_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> plan_team (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> plan_assign (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> plan_schedule (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> plan_story (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_nodes -> contains -> proposal_customer_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> _track_ppt_prompt (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> presentation_strategy (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> _build_ppt_context (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> ppt_toc (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> ppt_visual_brief (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> contains -> ppt_storyboard_node (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ppt_nodes -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _get_sections_to_write -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> _persist_node_result (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> _build_context (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> proposal_write_next (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> self_review_with_auto_improve (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> section_quality_check (-> [[unresolvedrefget-unresolvedrefexecute]])
+- proposal_nodes -> contains -> storyline_gap_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- research_gather -> contains -> research_gather (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_analyze -> contains -> rfp_analyze (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_fetch -> contains -> rfp_fetch (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_fetch -> contains -> _upload_attachment_to_storage (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_search -> contains -> rfp_search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_search -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8a_customer_analysis -> contains -> proposal_customer_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8b_section_validator -> contains -> proposal_section_validator (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8c_consolidation -> contains -> proposal_sections_consolidation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8d_mock_evaluation -> contains -> mock_evaluation_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8e_feedback_processor -> contains -> _convert_priority_to_int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8e_feedback_processor -> contains -> mock_evaluation_feedback_processor (-> [[unresolvedrefget-unresolvedrefexecute]])
+- step8f_rewrite -> contains -> proposal_write_next_v2 (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _format_positioning_guide -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- strategy_generate -> contains -> strategy_generate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_nodes -> contains -> submission_plan (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_nodes -> contains -> cost_sheet_generate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_nodes -> contains -> submission_checklist (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_tracking -> contains -> track_tokens (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_tracking -> contains -> _persist_ai_task_log (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_tracking -> contains -> _persist_ai_task_log_error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migration_jobs -> contains -> run_scheduled_migration (-> [[runscheduledmigration-runscheduledmigration]])
+- auth -> contains -> get_current_user (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- rate_limit_exceeded_handler -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rate_limit -> contains -> _key_func (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rate_limit -> imports -> __unresolved__::ref::errors (-> [[main-initsupabaserpc]])
+- get_request_id -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- request_id -> contains -> RequestIdMiddleware (-> [[requestidmiddleware-securityheadersmiddleware]])
+- security_headers -> contains -> SecurityHeadersMiddleware (-> [[requestidmiddleware-securityheadersmiddleware]])
+- to_text -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- to_text -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- KnowledgeType -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- MessageRole -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- QueryType -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- VaultSection -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ai_status_manager -> contains -> AiStatusManager (-> [[aistatusmanager-failtask]])
+- alert_manager -> contains -> AlertManager (-> [[unresolvedreftenopapierror-init]])
+- check_can_approve -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedrefexecute]])
+- approval_chain -> contains -> build_approval_chain (-> [[unresolvedrefget-unresolvedrefexecute]])
+- approval_chain -> contains -> get_approval_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- approval_chain -> contains -> _get_role_user (-> [[unresolvedrefget-unresolvedrefexecute]])
+- approval_chain -> contains -> _check_delegation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- asset_extractor -> contains -> _extract_text_from_bytes (-> [[unresolvedrefprint-unresolvedrefpath]])
+- asset_extractor -> contains -> _extract_text_from_pdf_bytes (-> [[unresolvedrefget-unresolvedrefexecute]])
+- asset_extractor -> contains -> _extract_text_from_docx_bytes (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- asset_extractor -> contains -> _parse_sections_from_response (-> [[unresolvedrefget-unresolvedrefexecute]])
+- asset_extractor -> contains -> extract_sections_from_asset (-> [[unresolvedrefget-unresolvedrefexecute]])
+- asset_extractor -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- audit_service -> contains -> log_action (-> [[unresolvedrefget-unresolvedrefexecute]])
+- auth_service -> contains -> get_or_create_user_profile (-> [[unresolvedrefget-unresolvedrefexecute]])
+- auth_service -> contains -> _resolve_org_by_email (-> [[unresolvedrefget-unresolvedrefexecute]])
+- auth_service -> contains -> update_user_profile (-> [[unresolvedrefget-unresolvedrefexecute]])
+- auth_service -> contains -> deactivate_user (-> [[unresolvedrefget-unresolvedrefexecute]])
+- beta_metrics_tracker -> contains -> BetaMetricsTracker (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_analysis_service -> contains -> generate_bid_analysis_documents (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_analysis_service -> contains -> _generate_rfp_analysis_md (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_analysis_service -> contains -> _generate_notice_md (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_analysis_service -> contains -> _generate_instruction_md (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_file -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_file -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- classify_attachment -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_attachment_store -> contains -> _classify_priority (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- bid_attachment_store -> contains -> parse_attachments_from_raw (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- bid_attachment_store -> contains -> download_bid_attachments (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_attachment_store -> contains -> _upload_to_storage (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_attachment_store -> contains -> get_attachment_download_url (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_attachment_store -> contains -> copy_bid_attachments_to_proposal (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_pipeline_status -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_pipeline -> contains -> run_pipeline (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_pipeline -> contains -> _process_single (-> [[unresolvedrefprint-unresolvedrefpath]])
+- bid_pipeline -> contains -> _run_all_steps (-> [[runallsteps-unresolvedrefdownloadandextract]])
+- bid_pipeline -> contains -> get_all_pipeline_status (-> [[planmerge-unresolvedrefdict]])
+- bid_pipeline -> contains -> _ensure_bid_in_db (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_pipeline -> contains -> _safe_int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_pipeline -> contains -> _download_and_extract (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_pipeline -> contains -> _run_analysis_if_needed (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring_service -> contains -> _parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring_service -> contains -> BidScoringService (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fmt_won -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- cost_sheet_builder -> contains -> _set_cell (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- cost_sheet_builder -> contains -> _shade_row (-> [[shaderow-unresolvedrefgetoraddtcpr]])
+- cost_sheet_builder -> contains -> build_cost_sheet (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- cost_sheet_builder -> imports -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProcurementMethod -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- calculator -> contains -> parse_budget_string (-> [[unresolvedrefvalueerror-executefromphase]])
+- calculator -> contains -> BidCalculator (-> [[estimate-optimizebid]])
+- _clean_cache -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _clean_cache -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
+- cleanup -> contains -> cleanup_expired_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- cleanup -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- fetcher -> contains -> BidFetcher (-> [[unresolvedrefget-unresolvedrefexecute]])
+- preprocessor -> contains -> BidPreprocessor (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
+- preprocessor -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- recommender -> contains -> BidRecommender (-> [[unresolvedrefget-unresolvedrefexecute]])
+- recommender -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- recommender -> imports -> __unresolved__::ref::preprocessor (-> [[init-unresolvedrefpreprocessor]])
+- scorer -> contains -> normalize_pre_spec_for_scoring (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scorer -> contains -> normalize_plan_for_scoring (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scorer -> contains -> _normalize_title (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scorer -> contains -> score_bid (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scorer -> contains -> score_and_rank_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- cost_estimator -> contains -> EnhancedCostEstimator (-> [[estimate-optimizebid]])
+- cost_estimator -> imports -> __unresolved__::ref::models (-> [[engine-init]])
+- to_prompt_context -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- to_prompt_context -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
 - price_score -> contains -> PriceScoreCalculator (-> [[pricescorecalculator-calculaterfpformula]])
-- sensitivity -> contains -> SensitivityAnalyzer (-> [[init-sensitivityanalyzer]])
-- win_probability -> contains -> WinProbabilityModel (-> [[unresolvedrefget-unresolvedreflen]])
-- win_probability -> imports -> __unresolved__::ref::math (-> [[unresolvedrefget-unresolvedreflen]])
-- ensure_market_data -> calls -> __unresolved__::ref::_compute_budget_tier (-> [[unresolvedrefget-unresolvedreflen]])
-- ensure_market_data -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- ensure_market_data -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedreflen]])
-- market_research -> contains -> _build_search_keywords (-> [[unresolvedrefget-unresolvedreflen]])
-- market_research -> contains -> _count_comparable (-> [[unresolvedrefget-unresolvedreflen]])
-- market_research -> contains -> _crawl_bid_results (-> [[unresolvedrefget-unresolvedreflen]])
-- get_accumulated_usage -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- reset_usage_context -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedreflen]])
-- claude_client -> contains -> claude_generate (-> [[unresolvedrefget-unresolvedreflen]])
-- claude_client -> contains -> claude_generate_streaming (-> [[claudegeneratestreaming-init]])
-- claude_client -> contains -> _parse_json_response (-> [[unresolvedrefget-unresolvedreflen]])
-- claude_client -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- _safe -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- _safe_link -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedreflen]])
-- _safe_link -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefget-unresolvedreflen]])
-- email_service -> contains -> _get_graph_token (-> [[unresolvedrefget-unresolvedreflen]])
-- email_service -> contains -> send_email (-> [[unresolvedrefget-unresolvedreflen]])
-- email_service -> contains -> send_email_batch (-> [[unresolvedrefget-unresolvedreflen]])
-- email_service -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- email_service -> imports -> __unresolved__::ref::httpx (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_openai -> calls -> __unresolved__::ref::getattr (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_service -> contains -> generate_embedding (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_service -> contains -> generate_embeddings_batch (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_service -> contains -> embedding_text_for_content (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_service -> contains -> embedding_text_for_client (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- embedding_service -> contains -> embedding_text_for_competitor (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- embedding_service -> contains -> batch_reindex (-> [[unresolvedrefget-unresolvedreflen]])
-- embedding_service -> contains -> embedding_text_for_lesson (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- feedback_loop -> contains -> process_project_completion (-> [[unresolvedrefget-unresolvedreflen]])
-- feedback_loop -> contains -> _update_client_history (-> [[unresolvedrefget-unresolvedreflen]])
-- health_checker -> contains -> HealthCheckRunner (-> [[unresolvedrefget-unresolvedreflen]])
-- health_checker -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- health_checker -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- compute_edit_ratio -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedreflen]])
-- human_edit_tracker -> contains -> record_action (-> [[unresolvedrefget-unresolvedreflen]])
-- _validate_xml -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- _validate_xml -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefget-unresolvedreflen]])
-- build_hwpx -> contains -> _update_metadata (-> [[unresolvedrefget-unresolvedreflen]])
-- build_hwpx -> contains -> _pack_hwpx (-> [[analyzetemplate-buildfromtemplate]])
-- build_hwpx -> contains -> build_from_template (-> [[analyzetemplate-buildfromtemplate]])
-- build_hwpx -> imports -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
-- _text_of_t_node -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- page_guard -> contains -> _read_section_xml_bytes (-> [[unresolvedrefget-unresolvedreflen]])
-- page_guard -> contains -> collect_metrics (-> [[unresolvedrefget-unresolvedreflen]])
+- win_probability -> contains -> WinProbabilityModel (-> [[rulebasedmodel-winprobabilitymodel]])
+- handoff -> contains -> persist_bid_confirmation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> contains -> _save_bid_plan_artifact (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> contains -> record_bid_submission (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> contains -> verify_bid_submission (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> contains -> get_bid_price_history (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> contains -> get_bid_submission_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- handoff -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- market_research -> contains -> ensure_market_data (-> [[quickestimate-ensuremarketdata]])
+- market_research -> contains -> _build_search_keywords (-> [[unresolvedrefget-unresolvedrefexecute]])
+- market_research -> contains -> _count_comparable (-> [[unresolvedrefget-unresolvedrefexecute]])
+- market_research -> contains -> _crawl_bid_results (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream -> contains -> get_bidding_workspace (-> [[getbiddingworkspace-unresolvedrefgetbidplanscenarios]])
+- stream -> contains -> update_bid_price_post_workflow (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream -> contains -> get_market_tracking_summary (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream -> contains -> _get_bid_plan_scenarios (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- get_accumulated_usage -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- reset_usage_context -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- claude_client -> contains -> _get_client (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
+- claude_client -> contains -> claude_generate (-> [[edges-claudegenerate]])
+- claude_client -> contains -> claude_generate_streaming (-> [[edges-claudegenerate]])
+- claude_client -> contains -> _parse_json_response (-> [[unresolvedrefget-unresolvedrefexecute]])
+- claude_client -> contains -> ClaudeClient (-> [[edges-claudegenerate]])
+- claude_client -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- content_library -> contains -> create_content (-> [[unresolvedrefget-unresolvedrefexecute]])
+- content_library -> contains -> update_content (-> [[unresolvedrefget-unresolvedrefexecute]])
+- content_library -> contains -> approve_content (-> [[unresolvedrefget-unresolvedrefexecute]])
+- content_library -> contains -> calculate_quality_score (-> [[unresolvedrefget-unresolvedrefexecute]])
+- content_library -> contains -> auto_register_section (-> [[unresolvedrefget-unresolvedrefexecute]])
+- content_library -> contains -> suggest_content_for_section (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_from_storage -> calls -> __unresolved__::ref::getattr (-> [[edges-claudegenerate]])
+- _extract_from_storage -> calls -> __unresolved__::ref::download (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _extract_from_storage -> calls -> __unresolved__::ref::from_ (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_from_storage -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _extract_from_storage -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _extract_from_storage -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefprint-unresolvedrefpath]])
+- process_document_bounded -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> process_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> _update_doc_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> import_project (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> _seed_capability (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> _seed_client_intelligence (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> _seed_market_price_data (-> [[unresolvedrefget-unresolvedrefexecute]])
+- document_ingestion -> contains -> compute_file_hash (-> [[unresolvedrefget-unresolvedrefexecute]])
+- docx_builder -> contains -> build_docx_legacy (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- docx_builder -> contains -> build_docx (-> [[unresolvedrefget-unresolvedrefexecute]])
+- docx_builder -> contains -> _build_freeform (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- docx_builder -> contains -> _build_from_template (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- docx_builder -> contains -> _render_markdown_content (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- email_service -> contains -> _get_graph_token (-> [[unresolvedrefget-unresolvedrefexecute]])
+- email_service -> contains -> send_email (-> [[unresolvedrefprint-unresolvedrefpath]])
+- email_service -> contains -> send_email_batch (-> [[dailyg2bmonitor-healthcheckrunner]])
+- email_service -> contains -> _safe (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- email_service -> contains -> _safe_link (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- feedback_loop -> contains -> process_project_completion (-> [[unresolvedrefget-unresolvedrefexecute]])
+- feedback_loop -> contains -> _update_client_history (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_bidding_collector -> contains -> G2BBiddingCollector (-> [[g2bbiddingcollector-init]])
+- _guess_file_ext -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _map_evaluation_method -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> _cache_key (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> _get_cache (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> _set_cache (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> G2BService (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> search_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> get_bid_detail (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> get_bid_result_info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> fetch_and_store_bid_result (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> bulk_sync_bid_results (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> _extract_attachments (-> [[unresolvedrefget-unresolvedrefexecute]])
+- g2b_service -> contains -> _extract_filename (-> [[unresolvedrefvalueerror-executefromphase]])
+- g2b_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- health_checker -> contains -> HealthCheckRunner (-> [[dailyg2bmonitor-healthcheckrunner]])
+- health_checker -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- human_edit_tracker -> contains -> compute_edit_ratio (-> [[computeeditratio-unresolvedrefratio]])
+- human_edit_tracker -> contains -> record_action (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_header_xml -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- extract_header_xml -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
+- extract_section_xml -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- extract_section_xml -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
+- analyze_template -> contains -> _get_text (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _analyze_fonts (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _analyze_char_styles (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _analyze_para_styles (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> _analyze_page_setup (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- analyze_template -> contains -> _analyze_tables (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> contains -> analyze_template (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _pack_hwpx -> calls -> __unresolved__::ref::is_file (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _pack_hwpx -> calls -> __unresolved__::ref::filenotfounderror (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _pack_hwpx -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _pack_hwpx -> calls -> __unresolved__::ref::rglob (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _pack_hwpx -> calls -> __unresolved__::ref::mkdir (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _validate_xml -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _validate_xml -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefvalueerror-executefromphase]])
+- build_hwpx -> contains -> _update_metadata (-> [[collectmetrics-unresolvedreffindall]])
+- build_hwpx -> contains -> build_from_template (-> [[unresolvedrefprint-unresolvedrefpath]])
+- page_guard -> contains -> _text_of_t_node (-> [[unresolvedrefprint-unresolvedrefpath]])
+- page_guard -> contains -> collect_metrics (-> [[collectmetrics-unresolvedreffindall]])
 - page_guard -> contains -> _ratio_delta (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- page_guard -> contains -> check_page_drift (-> [[unresolvedrefget-unresolvedreflen]])
-- page_guard -> imports -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
-- validate -> contains -> validate_hwpx (-> [[unresolvedrefget-unresolvedreflen]])
-- validate -> imports -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
-- analyze_reference -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- build_proposal_hwpx_async -> calls -> __unresolved__::ref::to_thread (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_service -> contains -> _generate_section_xml (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_service -> contains -> build_proposal_hwpx (-> [[runpresentation-buildproposalhwpx]])
-- hwpx_service -> contains -> check_page_drift (-> [[unresolvedrefget-unresolvedreflen]])
-- _now_utc -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- migration_service -> contains -> _row_to_batch (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- migration_service -> contains -> MigrationService (-> [[unresolvedrefget-unresolvedreflen]])
-- phase_executor -> contains -> PhaseExecutor (-> [[unresolvedrefget-unresolvedreflen]])
-- phase_executor -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- build_pptx -> calls -> __unresolved__::ref::to_thread (-> [[unresolvedrefget-unresolvedreflen]])
-- pptx_builder -> contains -> _build_pptx_sync (-> [[buildpptxsync-unresolvedrefseek]])
-- pptx_builder -> contains -> _add_title_slide (-> [[unresolvedrefinches-rendersplitpanel]])
-- pptx_builder -> contains -> _add_toc_slide (-> [[unresolvedrefget-unresolvedreflen]])
-- pptx_builder -> contains -> _add_content_slide (-> [[unresolvedrefinches-rendersplitpanel]])
-- pptx_builder -> contains -> _render_bullets (-> [[unresolvedrefget-unresolvedreflen]])
-- pptx_builder -> contains -> _render_body (-> [[unresolvedrefget-unresolvedreflen]])
-- pptx_builder -> contains -> _add_closing_slide (-> [[unresolvedrefinches-rendersplitpanel]])
-- pptx_builder -> contains -> build_pptx_legacy (-> [[unresolvedrefget-unresolvedreflen]])
-- preflight_check -> contains -> check_prompt (-> [[unresolvedrefget-unresolvedreflen]])
-- preflight_check -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_generator -> contains -> _build_input (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_generator -> contains -> generate_presentation_slides (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_generator -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_pptx_builder -> contains -> _add_textbox (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _add_eval_badge (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _add_slide_number (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _add_slide_title (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _add_key_stat_callout (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _add_bullets_enhanced (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_pptx_builder -> contains -> _render_cover (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_key_message (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_eval_section (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_comparison (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_timeline (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_team (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_numbers_callout (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_agenda (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_process_flow (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_quote_highlight (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_problem_sync (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_closing (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_split_panel (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_numbered_strategy (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_case_study (-> [[unresolvedrefinches-rendersplitpanel]])
-- presentation_pptx_builder -> contains -> _render_slide (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_pptx_builder -> contains -> _init_presentation (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_pptx_builder -> contains -> build_presentation_pptx (-> [[unresolvedrefget-unresolvedreflen]])
-- _validate_url -> calls -> __unresolved__::ref::valueerror (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_parser -> contains -> parse_rfp (-> [[runpresentation-buildproposalhwpx]])
-- rfp_parser -> contains -> parse_rfp_bytes (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_parser -> contains -> parse_rfp_from_url (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_parser -> contains -> download_file_from_url (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_parser -> contains -> parse_rfp_text (-> [[runpresentation-buildproposalhwpx]])
-- session_manager -> contains -> _to_db_payload (-> [[unresolvedrefget-unresolvedreflen]])
-- session_manager -> contains -> _from_db_row (-> [[unresolvedrefget-unresolvedreflen]])
-- session_manager -> contains -> ProposalSessionManager (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalStatus -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- WinResult -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- build_structured_output_schema -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- get_budget -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- trim_feedback_history -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- token_manager -> contains -> check_budget (-> [[testphase6kb-testphase9services]])
-- token_manager -> contains -> truncate_context (-> [[unresolvedrefget-unresolvedreflen]])
-- token_manager -> contains -> _summarize_feedbacks (-> [[unresolvedrefget-unresolvedreflen]])
-- token_manager -> contains -> truncate_kb_results (-> [[unresolvedrefget-unresolvedreflen]])
-- token_manager -> contains -> build_context (-> [[unresolvedrefget-unresolvedreflen]])
-- token_manager -> contains -> estimate_tokens (-> [[unresolvedrefget-unresolvedreflen]])
-- DependencyLevel -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedreflen]])
-- _classify_dependency_level -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedreflen]])
-- _determine_reason -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- _generate_validation_message -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_downstream_nodes -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_node_dependencies -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- version_manager -> contains -> execute_node_and_create_version (-> [[unresolvedrefget-unresolvedreflen]])
+- page_guard -> contains -> check_page_drift (-> [[dailyg2bmonitor-healthcheckrunner]])
+- validate -> contains -> validate_hwpx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- analyze_reference -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- hwpx_service -> contains -> _generate_section_xml (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- hwpx_service -> contains -> build_proposal_hwpx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_service -> contains -> build_proposal_hwpx_async (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_service -> contains -> check_page_drift (-> [[unresolvedrefprint-unresolvedrefpath]])
+- knowledge_manager -> contains -> ClassificationError (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_manager -> contains -> KnowledgeManager (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_manager -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- knowledge_search -> contains -> unified_search (-> [[dailyg2bmonitor-healthcheckrunner]])
+- knowledge_search -> contains -> _apply_hybrid_ranking (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_content (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_clients (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_competitors (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_lessons (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_capabilities (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_qa (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_intranet_docs (-> [[unresolvedrefget-unresolvedrefexecute]])
+- knowledge_search -> contains -> _search_intranet_projects (-> [[unresolvedrefget-unresolvedrefexecute]])
+- master_projects_chat_service -> contains -> MasterProjectsChatService (-> [[edges-claudegenerate]])
+- master_projects_chat_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _now_utc -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migration_service -> contains -> MigrationService (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> _get_user_email_info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> _should_send_email (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> _try_send_email (-> [[dailyg2bmonitor-healthcheckrunner]])
+- notification_service -> contains -> send_teams_notification (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> create_notification (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_approval_request (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_approval_result (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_deadline_alert (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_ai_complete (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_agent_error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_bid_confirmed (-> [[unresolvedrefget-unresolvedrefexecute]])
+- notification_service -> contains -> notify_bid_submitted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- phase_executor -> contains -> PhaseExecutor (-> [[unresolvedrefget-unresolvedrefexecute]])
+- phase_executor -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- pptx_builder -> contains -> build_pptx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- pptx_builder -> contains -> _build_pptx_sync (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _add_title_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _add_toc_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _add_content_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _render_bullets (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _render_body (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> _add_closing_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- pptx_builder -> contains -> build_pptx_legacy (-> [[unresolvedrefprint-unresolvedrefpath]])
+- preflight_check -> contains -> check_prompt (-> [[unresolvedrefget-unresolvedrefexecute]])
+- presentation_generator -> contains -> _build_input (-> [[unresolvedrefget-unresolvedrefexecute]])
+- presentation_generator -> contains -> generate_presentation_slides (-> [[unresolvedrefget-unresolvedrefexecute]])
+- presentation_generator -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- project_archive_service -> contains -> _to_dict (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_rfp_analysis (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_compliance_matrix (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_go_no_go (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_strategy (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_bid_plan (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_plan_section (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_storyline (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_proposal_sections (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_ppt_slides (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_feedback_history (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> _render_json_as_md (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> render_artifact (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> archive_artifact (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> archive_binary_artifact (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> snapshot_from_state (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> contains -> get_project_manifest (-> [[unresolvedrefget-unresolvedrefexecute]])
+- project_archive_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- prompt_simulator -> contains -> check_quota (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> get_quota_info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> run_simulation (-> [[runsimulation-unresolvedrefloadstatedata]])
+- prompt_simulator -> contains -> run_comparison (-> [[runcomparison-unresolvedrefgetpromptbyversion]])
+- prompt_simulator -> contains -> get_simulation_history (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _get_prompt_by_version (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _load_sample_data (-> [[unresolvedrefprint-unresolvedrefpath]])
+- prompt_simulator -> contains -> _load_project_state (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _substitute_variables (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _validate_output_format (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _run_quality_check (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _save_simulation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> contains -> _update_quota (-> [[unresolvedrefget-unresolvedrefexecute]])
+- prompt_simulator -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- qa_service -> contains -> save_qa_records (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> _save_qa_lesson_summary (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> get_proposal_qa (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> update_qa_record (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> delete_qa_record (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> search_qa (-> [[unresolvedrefget-unresolvedrefexecute]])
+- qa_service -> contains -> _keyword_search_qa (-> [[unresolvedrefget-unresolvedrefexecute]])
+- download_file_from_url -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- download_file_from_url -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_rfp_bytes -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- parse_rfp_bytes -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- parse_rfp_from_url -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- parse_rfp_from_url -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- parse_rfp_from_url -> calls -> __unresolved__::ref::path (-> [[unresolvedrefprint-unresolvedrefpath]])
+- rfp_parser -> contains -> _validate_url (-> [[unresolvedrefvalueerror-executefromphase]])
+- rfp_parser -> contains -> parse_rfp (-> [[unresolvedrefget-unresolvedrefexecute]])
+- rfp_parser -> contains -> parse_rfp_text (-> [[unresolvedrefvalueerror-executefromphase]])
+- scheduled_monitor -> contains -> daily_g2b_monitor (-> [[dailyg2bmonitor-healthcheckrunner]])
+- scheduled_monitor -> contains -> _filter_new_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> _record_notified_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> _get_team_leader (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> _format_bid_summary (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> _format_scored_bid_summary (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> send_daily_summary_email (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> check_monthly_intranet_sync (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scheduled_monitor -> contains -> run_scheduled_migration (-> [[runscheduledmigration-runscheduledmigration]])
+- scheduled_monitor -> contains -> setup_scheduler (-> [[unresolvedrefget-unresolvedrefexecute]])
+- vault_bidding_batch -> contains -> VaultBiddingBatchScheduler (-> [[unresolvedrefget-unresolvedrefexecute]])
+- vault_bidding_batch -> contains -> start_batch_scheduler (-> [[scheduler-initscheduler]])
+- section_lock -> contains -> acquire_lock (-> [[unresolvedrefget-unresolvedrefexecute]])
+- section_lock -> contains -> release_lock (-> [[unresolvedrefget-unresolvedrefexecute]])
+- section_lock -> contains -> get_locks (-> [[unresolvedrefget-unresolvedrefexecute]])
+- section_lock -> contains -> force_release (-> [[unresolvedrefget-unresolvedrefexecute]])
+- section_lock -> contains -> _cleanup_expired (-> [[unresolvedrefget-unresolvedrefexecute]])
+- session_manager -> contains -> _to_db_payload (-> [[unresolvedrefget-unresolvedrefexecute]])
+- session_manager -> contains -> _from_db_row (-> [[unresolvedrefget-unresolvedrefexecute]])
+- session_manager -> contains -> ProposalSessionManager (-> [[dailyg2bmonitor-healthcheckrunner]])
+- source_tagger -> contains -> extract_source_tags (-> [[unresolvedrefvalueerror-executefromphase]])
+- source_tagger -> contains -> calculate_grounding_ratio (-> [[unresolvedrefget-unresolvedrefexecute]])
+- source_tagger -> contains -> find_ungrounded_claims (-> [[unresolvedrefget-unresolvedrefexecute]])
+- source_tagger -> contains -> evaluate_trustworthiness (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- source_tagger -> contains -> check_number_consistency (-> [[unresolvedrefget-unresolvedrefexecute]])
+- source_tagger -> contains -> _split_sentences (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- AITaskStatus -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalStatus -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- WinResult -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> initialize_streams (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> update_stream_progress (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> _sync_streams_ready (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> get_streams_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> _check_convergence_logic (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream_orchestrator -> contains -> mark_final_submission (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> extract_checklist_from_rfp (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> _is_template_expired (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> get_checklist (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> add_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> update_document_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> delete_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> upload_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> verify_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> validate_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> recalculate_documents_progress (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> confirm_original_document (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> build_copy_bundle (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- submission_docs_service -> contains -> link_stream1_artifacts (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> check_documents_ready (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- submission_docs_service -> contains -> get_org_templates (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> upsert_org_template (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> contains -> delete_org_template (-> [[unresolvedrefget-unresolvedrefexecute]])
+- submission_docs_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- template_service -> contains -> _read_pdf_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- template_service -> contains -> _read_hwpx_text (-> [[unresolvedrefprint-unresolvedrefpath]])
+- template_service -> contains -> _get_template_files (-> [[unresolvedrefprint-unresolvedrefpath]])
+- template_service -> contains -> _extract_toc_with_claude (-> [[unresolvedrefget-unresolvedrefexecute]])
+- template_service -> contains -> get_template_toc (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- template_service -> contains -> get_available_templates (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- template_service -> contains -> clear_toc_cache (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- template_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- build_structured_output_schema -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_budget -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- trim_feedback_history -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_manager -> contains -> check_budget (-> [[buildcontext-checkbudget]])
+- token_manager -> contains -> truncate_context (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
+- token_manager -> contains -> _summarize_feedbacks (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_manager -> contains -> truncate_kb_results (-> [[unresolvedrefget-unresolvedrefexecute]])
+- token_manager -> contains -> build_context (-> [[buildcontext-checkbudget]])
+- token_manager -> contains -> estimate_tokens (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> create_auth_user (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> reset_user_password (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> parse_xlsx_users (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> bulk_create_users (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> _parse_sheet_rows (-> [[unresolvedrefget-unresolvedrefexecute]])
+- user_account_service -> contains -> parse_xlsx_all (-> [[unresolvedreftenopapierror-init]])
+- user_account_service -> contains -> bulk_setup_org (-> [[unresolvedrefget-unresolvedrefexecute]])
+- vault_cache_service -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- vault_embedding_service -> contains -> EmbeddingService (-> [[unresolvedrefvalueerror-executefromphase]])
+- vault_embedding_service -> imports -> __unresolved__::ref::openai (-> [[unresolvedrefget-unresolvedrefexecute]])
+- vault_query_router -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- DependencyLevel -> extends -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _classify_dependency_level -> calls -> __unresolved__::ref::any (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _determine_reason -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_validation_message -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_downstream_nodes -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_node_dependencies -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- version_manager -> contains -> execute_node_and_create_version (-> [[unresolvedrefget-unresolvedrefexecute]])
 - version_manager -> contains -> validate_move_and_resolve_versions (-> [[validatemoveandresolveversions-unresolvedrefclassifydependencylevel]])
-- version_manager -> contains -> check_node_move_feasibility (-> [[unresolvedrefget-unresolvedreflen]])
-- version_manager -> contains -> _recommend_version (-> [[unresolvedrefget-unresolvedreflen]])
-- version_manager -> contains -> _calculate_checksum (-> [[unresolvedrefget-unresolvedreflen]])
-- version_manager -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
+- version_manager -> contains -> check_node_move_feasibility (-> [[planmerge-unresolvedrefdict]])
+- version_manager -> contains -> _recommend_version (-> [[unresolvedrefget-unresolvedrefexecute]])
+- version_manager -> contains -> _calculate_checksum (-> [[unresolvedrefget-unresolvedrefexecute]])
+- version_manager -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
 - state_machine -> contains -> StateMachine (-> [[statemachine-unresolvedreftransition]])
-- claude_utils -> contains -> extract_json_from_response (-> [[unresolvedrefget-unresolvedreflen]])
-- claude_utils -> contains -> _repair_truncated_json (-> [[unresolvedrefget-unresolvedreflen]])
-- claude_utils -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- edge_functions -> contains -> _call (-> [[unresolvedrefget-unresolvedreflen]])
-- validate_file_size -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> validate_file_type (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_pdf (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_docx (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_hwp (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_pptx (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_xlsx (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> extract_text_from_file (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> sanitize_filename (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> get_extension (-> [[unresolvedrefget-unresolvedreflen]])
-- file_utils -> contains -> validate_extension (-> [[unresolvedrefraises-unresolvedrefmakebid]])
-- file_utils -> contains -> validate_upload (-> [[unresolvedrefraises-unresolvedrefmakebid]])
-- apply -> calls -> __unresolved__::ref::range (-> [[unresolvedrefget-unresolvedreflen]])
-- check_proposals -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- check_storage_files -> contains -> check_files (-> [[unresolvedrefget-unresolvedreflen]])
-- delete_all_proposals -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- delete_test_proposals -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- add_missing_columns -> contains -> print_migration_sql (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_document_ingestion_migration -> contains -> apply_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> get_db_connection (-> [[unresolvedrefget-unresolvedreflen]])
+- create_anthropic_client -> calls -> __unresolved__::ref::asyncanthropic (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
+- claude_utils -> contains -> extract_json_from_response (-> [[extractjsonfromresponse-unresolvedrefasyncanthropic]])
+- claude_utils -> contains -> _repair_truncated_json (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- claude_utils -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _call -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _call -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _call -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_file_size -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> validate_file_type (-> [[unresolvedrefprint-unresolvedrefpath]])
+- file_utils -> contains -> extract_text_from_pdf (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> extract_text_from_docx (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> extract_text_from_hwp (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> extract_text_from_pptx (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> extract_text_from_xlsx (-> [[unresolvedrefget-unresolvedrefexecute]])
+- file_utils -> contains -> extract_text_from_file (-> [[unresolvedrefprint-unresolvedrefpath]])
+- file_utils -> contains -> sanitize_filename (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- file_utils -> contains -> get_extension (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- file_utils -> contains -> validate_extension (-> [[unresolvedrefvalueerror-executefromphase]])
+- file_utils -> contains -> validate_upload (-> [[validateupload-unresolvedrefsanitizefilename]])
+- add_missing_columns -> contains -> print_migration_sql (-> [[unresolvedrefprint-unresolvedrefpath]])
+- apply_document_ingestion_migration -> contains -> apply_migration (-> [[unresolvedrefget-unresolvedrefexecute]])
+- read_migration_file -> calls -> __unresolved__::ref::open (-> [[unresolvedrefprint-unresolvedrefpath]])
+- apply_migrations -> contains -> get_db_connection (-> [[unresolvedrefvalueerror-executefromphase]])
 - apply_migrations -> contains -> get_applied_migrations (-> [[unresolvedrefreact-unresolvedreflibapi]])
-- apply_migrations -> contains -> get_migration_files (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> read_migration_file (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> apply_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> apply_all_migrations (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> show_migration_status (-> [[unresolvedrefget-unresolvedreflen]])
-- apply_migrations -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- apply_migrations -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
+- apply_migrations -> contains -> get_migration_files (-> [[unresolvedrefprint-unresolvedrefpath]])
+- apply_migrations -> contains -> apply_migration (-> [[unresolvedrefprint-unresolvedrefpath]])
+- apply_migrations -> contains -> apply_all_migrations (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migrations -> contains -> show_migration_status (-> [[unresolvedrefprint-unresolvedrefpath]])
+- apply_migrations -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
 - final_review_engine -> contains -> FinalReviewEngine (-> [[finalreviewengine-conductfinalreview]])
-- final_review_engine -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- ProposalModule -> contains -> __init__ (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture -> contains -> RFPReviewModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture -> contains -> StrategyPlanningModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture -> contains -> ParallelWorkModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture -> contains -> FinalReviewModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture -> contains -> ModularProposalWorkflow (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- ProposalModule -> contains -> __init__ (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture_simple -> contains -> RFPReviewModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture_simple -> contains -> StrategyPlanningModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture_simple -> contains -> ParallelWorkModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture_simple -> contains -> FinalReviewModule (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- modular_architecture_simple -> contains -> ModularProposalWorkflow (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- parallel_work_engine -> contains -> ParallelWorkEngine (-> [[parallelworkengine-createagenttasks]])
-- parallel_work_engine -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- rfp_review_engine -> contains -> RFPReviewEngine (-> [[rfpreviewengine-unresolvedreftenopapierror]])
-- rfp_review_engine -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- strategy_planning_engine -> contains -> StrategyPlanningEngine (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_assign -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_price -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_schedule -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_story -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- plan_team -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- ppt_slide -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- presentation_strategy -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- self_review_with_auto_improve -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- strategy_generate -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedreflen]])
-- stub_nodes -> contains -> proposal_section (-> [[unresolvedrefget-unresolvedreflen]])
-- test_modular_architecture -> contains -> test_modular_architecture (-> [[unresolvedrefget-unresolvedreflen]])
-- test_workflow -> contains -> test_full_workflow (-> [[unresolvedrefget-unresolvedreflen]])
-- check_bid_status -> contains -> check_status (-> [[unresolvedrefget-unresolvedreflen]])
-- check_columns -> contains -> check_columns (-> [[unresolvedrefget-unresolvedreflen]])
-- check_data -> contains -> check_data (-> [[unresolvedrefget-unresolvedreflen]])
-- check_schema -> contains -> check_schema (-> [[unresolvedrefget-unresolvedreflen]])
-- collect_market_data -> contains -> collect (-> [[unresolvedrefget-unresolvedreflen]])
-- collect_market_data -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- create_e2e_user -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- create_excel_template -> contains -> setup_sheet (-> [[unresolvedrefinches-rendersplitpanel]])
-- create_excel_template -> imports -> __unresolved__::ref::utils (-> [[unresolvedrefget-unresolvedreflen]])
-- create_supabase_tables -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- _get_recommender -> calls -> __unresolved__::ref::exists (-> [[unresolvedrefget-unresolvedreflen]])
-- enrich_with_team -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> load_pipeline (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> save_pipeline (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> cleanup_expired (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> scan (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> select_bid (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> print_active (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- daily_bid_scan -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- diagnose_supabase -> contains -> diagnose (-> [[unresolvedrefget-unresolvedreflen]])
-- exec_migration -> contains -> run_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> contains -> extract_hwpx_text (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> contains -> call_claude (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> contains -> generate_storyboard (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> contains -> add_bg (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> rect (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> txb (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> header_bar (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> key_msg_bar (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> bullet_list (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_cover (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_section_header (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_agenda (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_content (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_two_column (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_numbers_callout (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_process_flow (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_timeline (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_quote_highlight (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_closing (-> [[unresolvedrefinches-rendersplitpanel]])
-- hwpx_to_pptx -> contains -> build_pptx (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> imports -> __unresolved__::ref::zipfile (-> [[unresolvedrefget-unresolvedreflen]])
-- hwpx_to_pptx -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- init_storage_buckets -> contains -> init_buckets (-> [[unresolvedrefget-unresolvedreflen]])
-- init_storage_buckets -> imports -> __unresolved__::ref::httpx (-> [[unresolvedrefget-unresolvedreflen]])
-- insert_test_bid -> contains -> insert_test_bid (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> MigrateConfig (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> extract_keywords (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> IntranetMigrator (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> load_dept_mapping (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_intranet -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- migrate_intranet -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_legacy_documents -> contains -> main (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- migrate_states_unified -> contains -> run_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- migrate_states_unified -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- parse_date -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> extract_keywords (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> MSSQLMigrator (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> SupabaseMigrator (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> test_vector_search (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_10projects -> imports -> __unresolved__::ref::re (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_demo -> contains -> SupabaseMigrator (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_demo -> contains -> test_vector_search (-> [[unresolvedrefget-unresolvedreflen]])
-- pilot_migration_demo -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- provision_users -> contains -> provision (-> [[unresolvedrefget-unresolvedreflen]])
-- provision_users -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- provision_users -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- run_migration -> contains -> run_migration (-> [[unresolvedrefget-unresolvedreflen]])
-- run_migration -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- search_matching_bids -> contains -> search_and_score (-> [[unresolvedrefget-unresolvedreflen]])
-- search_matching_bids -> contains -> print_results (-> [[unresolvedrefget-unresolvedreflen]])
-- search_matching_bids -> contains -> main (-> [[toolbar-unresolvedrefparseargs]])
-- seed_data -> contains -> seed (-> [[unresolvedrefget-unresolvedreflen]])
-- seed_org_structure -> contains -> parse_xlsx (-> [[unresolvedrefget-unresolvedreflen]])
-- seed_org_structure -> contains -> seed (-> [[unresolvedrefget-unresolvedreflen]])
-- seed_org_structure -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- team_recommender -> contains -> TeamRecommender (-> [[unresolvedrefget-unresolvedreflen]])
-- team_recommender -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- team_recommender -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- test_g2b_search -> contains -> test_search (-> [[unresolvedrefget-unresolvedreflen]])
-- test_presentation_sample -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- test_presentation_sample -> imports -> __unresolved__::ref::json (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::print (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedreflen]])
-- main -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedreflen]])
-- test_search_flow -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedreflen]])
-- test_search_flow -> contains -> test_with_live_g2b (-> [[unresolvedrefget-unresolvedreflen]])
-- test_search_flow -> contains -> test_ai_recommendation (-> [[unresolvedrefget-unresolvedreflen]])
-- test_search_strategy -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedreflen]])
-- test_search_strategy -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- test_analysis -> contains -> test (-> [[unresolvedrefget-unresolvedreflen]])
-- test_api2 -> contains -> test_api (-> [[unresolvedrefget-unresolvedreflen]])
-- test_api -> contains -> test_api (-> [[unresolvedrefget-unresolvedreflen]])
-- test_background_analysis -> contains -> test (-> [[unresolvedrefget-unresolvedreflen]])
-- test_imports -> calls -> __unresolved__::ref::print (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_ingestion -> contains -> test_schemas (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_document_ingestion -> contains -> test_chunker (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_ingestion -> contains -> test_file_extraction (-> [[unresolvedrefraises-unresolvedrefmakebid]])
-- test_document_ingestion -> contains -> test_doc_type_validation (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_ingestion -> contains -> test_doc_type_mapping (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_ingestion -> contains -> main (-> [[main-unresolvedreftestchunker]])
-- test_step8_imports -> contains -> test_all_imports (-> [[unresolvedrefget-unresolvedreflen]])
-- test_syntax_only -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
-- test_documents -> contains -> TestDocumentUpload (-> [[unresolvedrefget-unresolvedreflen]])
-- test_documents -> contains -> TestDocumentList (-> [[unresolvedrefget-unresolvedreflen]])
-- test_documents -> contains -> TestDocumentDetail (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_documents -> contains -> TestDocumentProcess (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_documents -> contains -> TestDocumentChunks (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_documents -> contains -> TestDocumentDelete (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_documents -> contains -> TestDocumentErrorHandling (-> [[unresolvedrefget-unresolvedreflen]])
-- test_documents -> contains -> TestDocumentAuthAndOrgIsolation (-> [[unresolvedrefget-unresolvedreflen]])
-- test_documents -> contains -> TestDocumentIntegration (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_documents -> imports -> __unresolved__::ref::httpx (-> [[unresolvedrefget-unresolvedreflen]])
-- conftest -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_flow -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- conftest -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_workflow_live_db -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_agent_pipeline -> contains -> test_full_pipeline (-> [[unresolvedrefget-unresolvedreflen]])
-- test_db_fallback -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_routes_documents -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_routes_documents -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_routes_documents -> imports -> __unresolved__::ref::httpx (-> [[unresolvedrefget-unresolvedreflen]])
-- test_workflow_error_recovery -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_workflow_error_recovery -> imports -> __unresolved__::ref::conftest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_artifact_versioning -> contains -> TestChecksumCalculation (-> [[unresolvedrefcalculatechecksum-testchecksumcalculation]])
-- test_artifact_versioning -> contains -> TestReasonDetermination (-> [[unresolvedrefdeterminereason-testreasondetermination]])
-- test_artifact_versioning -> contains -> TestNodeDependencies (-> [[validatemoveandresolveversions-unresolvedrefclassifydependencylevel]])
-- test_artifact_versioning -> contains -> TestDependencyClassification (-> [[validatemoveandresolveversions-unresolvedrefclassifydependencylevel]])
-- test_artifact_versioning -> contains -> TestVersionRecommendation (-> [[testversionrecommendation-unresolvedrefrecommendversion]])
-- test_artifact_versioning -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_api -> contains -> TestMigrationAPI (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_api -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_script -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_script -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_service -> contains -> TestMigrationServiceBasic (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestDetectChangedDocuments (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestProcessDocuments (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestExponentialBackoffRetry (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestBatchProgressUpdate (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestScheduleManagement (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestErrorHandling (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> contains -> TestBatchImportIntegration (-> [[unresolvedrefuuid4-unresolvedrefutcnow]])
-- test_migration_service -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_migration_service -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- StepMetrics -> contains -> print_summary (-> [[unresolvedrefget-unresolvedreflen]])
-- record -> calls -> __unresolved__::ref::isoformat (-> [[unresolvedrefget-unresolvedreflen]])
-- record -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8_e2e -> imports -> __unresolved__::ref::time (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8_e2e -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8a_customer_analysis -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8a_customer_analysis -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8a_nodes -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8a_nodes -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8a_nodes -> imports -> __unresolved__::ref::step8_schemas (-> [[unresolvedrefraises-unresolvedrefmakebid]])
-- test_step8b_section_validator -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8b_section_validator -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8c_consolidation -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8c_consolidation -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- test_step8d_8e_8f_nodes -> imports -> __unresolved__::ref::mock (-> [[unresolvedrefget-unresolvedreflen]])
-- test_document_builders -> contains -> test_document_builders (-> [[unresolvedrefget-unresolvedreflen]])
-- test_extract_text_from_pdf_nonexistent -> calls -> __unresolved__::ref::path (-> [[unresolvedrefget-unresolvedreflen]])
-- _resume_approved -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedreflen]])
-- _resume_go -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedreflen]])
-- _resume_rejected -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedreflen]])
-- test_graph_branching -> contains -> _advance_to_step (-> [[testphase6kb-testphase9services]])
-- test_graph_branching -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- _resume_approved -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedreflen]])
-- _resume_go -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedreflen]])
-- test_graph_happy_path -> contains -> _build_graph_with_mocks (-> [[testphase6kb-testphase9services]])
-- test_graph_happy_path -> contains -> _get_interrupt_ids (-> [[unresolvedrefget-unresolvedreflen]])
-- test_graph_happy_path -> contains -> _resume_all_pending (-> [[testphase6kb-testphase9services]])
-- test_graph_happy_path -> imports -> __unresolved__::ref::pytest (-> [[unresolvedrefget-unresolvedreflen]])
-- truncate_proposals -> contains -> main (-> [[unresolvedrefget-unresolvedreflen]])
+- final_review_engine -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- ProposalModule -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture -> contains -> RFPReviewModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture -> contains -> StrategyPlanningModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture -> contains -> ParallelWorkModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture -> contains -> FinalReviewModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture -> contains -> ModularProposalWorkflow (-> [[unresolvedrefvalueerror-executefromphase]])
+- ProposalModule -> contains -> __init__ (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture_simple -> contains -> RFPReviewModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture_simple -> contains -> StrategyPlanningModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture_simple -> contains -> ParallelWorkModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture_simple -> contains -> FinalReviewModule (-> [[unresolvedreftenopapierror-init]])
+- modular_architecture_simple -> contains -> ModularProposalWorkflow (-> [[unresolvedreftenopapierror-init]])
+- parallel_work_engine -> contains -> ParallelWorkEngine (-> [[parallelworkengine-reviewnode]])
+- parallel_work_engine -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- rfp_review_engine -> contains -> RFPReviewEngine (-> [[rfpreviewengine-reviewrfp]])
+- strategy_planning_engine -> contains -> StrategyPlanningEngine (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_modular_architecture -> contains -> test_modular_architecture (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_workflow -> contains -> test_full_workflow (-> [[unresolvedrefprint-unresolvedrefpath]])
+- bid_scoring -> contains -> load_profile (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring -> contains -> days_until_deadline (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring -> contains -> score_bid (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring -> contains -> search_by_keywords (-> [[unresolvedrefget-unresolvedrefexecute]])
+- bid_scoring -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- check_bid_status -> contains -> check_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_columns -> contains -> check_columns (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_data -> contains -> check_data (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_schema -> contains -> check_schema (-> [[unresolvedrefget-unresolvedrefexecute]])
+- collect_market_data -> contains -> collect (-> [[unresolvedrefget-unresolvedrefexecute]])
+- collect_market_data -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- create_e2e_user -> contains -> main (-> [[unresolvedrefget-unresolvedrefexecute]])
+- create_excel_template -> contains -> setup_sheet (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- create_supabase_tables -> contains -> main (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_bid_scan -> contains -> _get_recommender (-> [[unresolvedrefprint-unresolvedrefpath]])
+- daily_bid_scan -> contains -> enrich_with_team (-> [[unresolvedrefprint-unresolvedrefpath]])
+- daily_bid_scan -> contains -> load_pipeline (-> [[unresolvedrefprint-unresolvedrefpath]])
+- daily_bid_scan -> contains -> save_pipeline (-> [[unresolvedrefprint-unresolvedrefpath]])
+- daily_bid_scan -> contains -> cleanup_expired (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_bid_scan -> contains -> scan (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_bid_scan -> contains -> select_bid (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_bid_scan -> contains -> print_active (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_bid_scan -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- daily_bid_scan -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- diagnose_supabase -> contains -> diagnose (-> [[unresolvedrefget-unresolvedrefexecute]])
+- e2e_interrupt_test -> contains -> _check (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> contains -> _skip_test (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> contains -> _get_token (-> [[unresolvedrefcreateclient-gettoken]])
+- e2e_interrupt_test -> contains -> _create_proposal (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- e2e_interrupt_test -> contains -> _start_workflow (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- e2e_interrupt_test -> contains -> scenario_1_no_go (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> contains -> scenario_2_abort_retry (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> contains -> scenario_3_time_travel (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- e2e_interrupt_test -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- e2e_workflow_test -> contains -> _get_token (-> [[unresolvedrefcreateclient-gettoken]])
+- e2e_workflow_test -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- exec_migration -> contains -> run_migration (-> [[unresolvedrefget-unresolvedrefexecute]])
+- call_claude -> calls -> __unresolved__::ref::getenv (-> [[unresolvedrefget-unresolvedrefexecute]])
+- call_claude -> calls -> __unresolved__::ref::create (-> [[unresolvedrefget-unresolvedrefexecute]])
+- call_claude -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- call_claude -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- extract_hwpx_text -> calls -> __unresolved__::ref::fromstring (-> [[unresolvedrefprint-unresolvedrefpath]])
+- extract_hwpx_text -> calls -> __unresolved__::ref::iter (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- extract_hwpx_text -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- hwpx_to_pptx -> contains -> generate_storyboard (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_to_pptx -> contains -> add_bg (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> rect (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> txb (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> header_bar (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> key_msg_bar (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> bullet_list (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_cover (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_section_header (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_agenda (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_content (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_two_column (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_numbers_callout (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_process_flow (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_timeline (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_quote_highlight (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_closing (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- hwpx_to_pptx -> contains -> build_pptx (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_to_pptx -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- hwpx_to_pptx -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- hwpx_to_pptx -> imports -> __unresolved__::ref::color (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_search_keywords -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_project_history -> contains -> parse_excel (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_project_history -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- import_project_history -> contains -> build_keyword_index (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_project_history -> contains -> build_profile (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_project_history -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- import_project_history -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- import_team_structure -> contains -> _cell (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_team_structure -> contains -> _find_col (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_team_structure -> contains -> import_from_excel (-> [[unresolvedrefget-unresolvedrefexecute]])
+- import_team_structure -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- import_team_structure -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- init_storage_buckets -> contains -> init_buckets (-> [[unresolvedrefprint-unresolvedrefpath]])
+- insert_test_bid -> contains -> insert_test_bid (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migrate_intranet -> contains -> MigrateConfig (-> [[unresolvedrefprint-unresolvedrefpath]])
+- migrate_intranet -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- migrate_intranet -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migrate_intranet -> contains -> IntranetMigrator (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migrate_intranet -> contains -> load_dept_mapping (-> [[unresolvedrefprint-unresolvedrefpath]])
+- migrate_intranet -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- migrate_legacy_documents -> contains -> main (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migrate_states_unified -> contains -> run_migration (-> [[unresolvedrefget-unresolvedrefexecute]])
+- migrate_states_unified -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- format_report_json -> calls -> __unresolved__::ref::dumps (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> check_search_exists (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> _parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> _parse_deadline (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> check_result_accuracy (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> check_ai_quality (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> check_e2e_pipeline (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> format_report_console (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> notify_teams (-> [[unresolvedrefget-unresolvedrefexecute]])
+- monitor_g2b_pipeline -> contains -> parse_args (-> [[unresolvedrefprint-unresolvedrefpath]])
+- monitor_g2b_pipeline -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- monitor_g2b_pipeline -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- parse_date -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_10projects -> contains -> extract_keywords (-> [[collectmetrics-unresolvedreffindall]])
+- pilot_migration_10projects -> contains -> parse_budget (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_10projects -> contains -> MSSQLMigrator (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_10projects -> contains -> SupabaseMigrator (-> [[unresolvedrefprint-unresolvedrefpath]])
+- pilot_migration_10projects -> contains -> test_vector_search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_10projects -> contains -> main (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_demo -> contains -> SupabaseMigrator (-> [[unresolvedrefprint-unresolvedrefpath]])
+- pilot_migration_demo -> contains -> test_vector_search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- pilot_migration_demo -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- provision_users -> contains -> provision (-> [[unresolvedrefget-unresolvedrefexecute]])
+- provision_users -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- provision_users -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- run_master_projects_migration -> contains -> run_migration (-> [[runmigration-unresolvedrefbegin]])
+- run_master_projects_migration -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- run_migration -> contains -> run_migration (-> [[unresolvedrefprint-unresolvedrefpath]])
+- run_migration -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- search_matching_bids -> contains -> search_and_score (-> [[unresolvedrefget-unresolvedrefexecute]])
+- search_matching_bids -> contains -> print_results (-> [[unresolvedrefget-unresolvedrefexecute]])
+- search_matching_bids -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- seed_data -> contains -> seed (-> [[unresolvedrefget-unresolvedrefexecute]])
+- seed_org_structure -> contains -> parse_xlsx (-> [[unresolvedrefget-unresolvedrefexecute]])
+- seed_org_structure -> contains -> seed (-> [[unresolvedrefget-unresolvedrefexecute]])
+- seed_org_structure -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- team_recommender -> contains -> TeamRecommender (-> [[recommend-teamrecommender]])
+- team_recommender -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- team_recommender -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- test_g2b -> contains -> test_bid_search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_g2b -> contains -> test_bid_results (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_g2b -> contains -> test_standalone_wrapper (-> [[dailyg2bmonitor-healthcheckrunner]])
+- test_g2b -> contains -> test_bid_detail (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_g2b -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_g2b_search -> contains -> test_search (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_presentation_sample -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_presentation_sample -> imports -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- test_search_flow -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_search_flow -> contains -> test_with_live_g2b (-> [[dailyg2bmonitor-healthcheckrunner]])
+- test_search_flow -> contains -> test_ai_recommendation (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_search_flow -> contains -> main (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_search_strategy -> contains -> _format_bids (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_search_strategy -> contains -> main (-> [[unresolvedrefget-unresolvedrefexecute]])
 
 ## Context
-이 커뮤니티는 __unresolved__::ref::basemodel, __unresolved__::ref::logging, __unresolved__::ref::datetime를 중심으로 imports 관계로 연결되어 있다. 주요 소스 파일은 __init__.py, _constants.py, add_missing_columns.py, admin_schemas.py, ai_status_manager.py이다.
+이 커뮤니티는 __unresolved__::ref::basemodel, __unresolved__::ref::logging, __unresolved__::ref::typing를 중심으로 imports 관계로 연결되어 있다. 주요 소스 파일은 _constants.py, add_missing_columns.py, admin_schemas.py, ai_status_manager.py, alert_manager.py이다.
 
 ### Key Facts
-- await _safe_startup_task("공고 자동 정리", _cleanup_bids())
 - """ LangGraph State 스키마 (§3)
 - 사용법: uv run python scripts/hwpx_to_pptx.py [hwpx_file] """ import zipfile import json import sys import os from pathlib import Path from lxml import etree from pptx import Presentation from pptx.util import Inches, Pt from pptx.dml.color import RGBColor from pptx.enum.text import PP_ALIGN import…
+- 실행: uv run python scripts/monitor_g2b_pipeline.py               # 전체 L1~L4 uv run python scripts/monitor_g2b_pipeline.py --level 1,2    # L1+L2만 uv run python scripts/monitor_g2b_pipeline.py --notify        # Teams 알림 포함 uv run python scripts/monitor_g2b_pipeline.py --json          # JSON 출력
 - 사용법: uv run python scripts/daily_bid_scan.py              # 일일 증분 스캔 uv run python scripts/daily_bid_scan.py --init        # 최초 14일 전수 조회 uv run python scripts/daily_bid_scan.py --select R26BK01363113 --by 홍길동 uv run python scripts/daily_bid_scan.py --list        # 현재 활성 공고 uv run python…
 - 사용법: python scripts/pilot_migration_10projects.py --dry-run           # 데이터 조회만 python scripts/pilot_migration_10projects.py --execute          # 실제 마이그레이션 실행 """

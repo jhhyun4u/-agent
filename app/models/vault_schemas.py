@@ -111,13 +111,6 @@ class VaultChatResponse(BaseModel):
 # Conversation Models
 # ============================================================================
 
-class VaultRegenerateRequest(BaseModel):
-    """Request to regenerate an assistant response"""
-
-    conversation_id: str = Field(..., description="Conversation containing the message")
-    variation: Optional[float] = Field(0.1, ge=0, le=0.5, description="Temperature offset for variation (0-0.5)")
-
-
 class ConversationCreate(BaseModel):
     """Create new conversation"""
     title: Optional[str] = None
@@ -147,6 +140,25 @@ class ConversationSummary(BaseModel):
     message_count: int
 
 
+class ConversationUpdate(BaseModel):
+    """Update conversation (e.g., title)
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    title: Optional[str] = Field(None, description="New conversation title")
+
+
+class ConversationShareResponse(BaseModel):
+    """Response for conversation sharing request
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    share_url: str = Field(..., description="Public share URL (e.g., /vault/shared/{token})")
+    share_token: str = Field(..., description="Unique share token")
+    is_public: bool = Field(True, description="Whether conversation is now public")
+    expires_at: Optional[datetime] = Field(None, description="Token expiration time (if applicable)")
+
+
 class VaultRegenerateRequest(BaseModel):
     """Request to regenerate a message response (A.2)
 
@@ -159,6 +171,34 @@ class VaultRegenerateRequest(BaseModel):
         le=1.0,
         description="Temperature offset (added to base 0.7)"
     )
+
+
+# ============================================================================
+# Bookmark Models (C.3)
+# ============================================================================
+
+class BookmarkCreate(BaseModel):
+    """Request to create a bookmark
+
+    Design Ref: §C.3 — Bookmarks
+    """
+    bookmark_type: Literal["message", "document", "conversation"] = Field(
+        ..., description="Type of item to bookmark"
+    )
+    target_id: str = Field(..., description="ID of the item (message/document/conversation UUID)")
+    note: Optional[str] = Field(None, description="Optional note or tag")
+
+
+class BookmarkResponse(BaseModel):
+    """Bookmark item response
+
+    Design Ref: §C.3 — Bookmarks
+    """
+    id: str = Field(..., description="Bookmark ID")
+    bookmark_type: str = Field(..., description="Type of bookmarked item")
+    target_id: str = Field(..., description="ID of the bookmarked item")
+    note: Optional[str] = Field(None, description="Optional user note")
+    created_at: datetime = Field(..., description="When bookmark was created")
 
 
 # ============================================================================

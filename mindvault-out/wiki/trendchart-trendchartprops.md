@@ -2,12 +2,12 @@
 Cohesion: 0.67 | Nodes: 3
 
 ## Key Nodes
-- **TrendChart** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\TrendChart.tsx) -- 2 connections
+- **TrendChart** (C:\project\tenopa proposer\frontend\components\prompt\TrendChart.tsx) -- 2 connections
   - -> contains -> [[trendpoint]]
   - -> contains -> [[trendchartprops]]
-- **TrendChartProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\TrendChart.tsx) -- 1 connections
+- **TrendChartProps** (C:\project\tenopa proposer\frontend\components\prompt\TrendChart.tsx) -- 1 connections
   - <- contains <- [[trendchart]]
-- **TrendPoint** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\TrendChart.tsx) -- 1 connections
+- **TrendPoint** (C:\project\tenopa proposer\frontend\components\prompt\TrendChart.tsx) -- 1 connections
   - <- contains <- [[trendchart]]
 
 ## Internal Relationships

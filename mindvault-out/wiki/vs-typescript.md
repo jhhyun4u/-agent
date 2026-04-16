@@ -2,7 +2,7 @@
 Cohesion: 0.21 | Nodes: 14
 
 ## Key Nodes
-- **사용자 요청 vs 현재 상태** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 11 connections
+- **사용자 요청 vs 현재 상태** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 11 connections
   - -> contains -> [[1]]
   - -> contains -> [[2-settings]]
   - -> contains -> [[1-dashboard]]
@@ -14,7 +14,7 @@ Cohesion: 0.21 | Nodes: 14
   - -> contains -> [[priority-1]]
   - -> contains -> [[priority-2-settings]]
   - <- contains <- [[appsidebar]]
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 7 connections
+- **typescript** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 7 connections
   - <- has_code_example <- [[1-dashboard]]
   - <- has_code_example <- [[2-recent-proposals]]
   - <- has_code_example <- [[3-navrest]]
@@ -22,37 +22,37 @@ Cohesion: 0.21 | Nodes: 14
   - <- has_code_example <- [[5]]
   - <- has_code_example <- [[expand]]
   - <- has_code_example <- [[priority-2-settings]]
-- **1️⃣ DASHBOARD (항상 표시)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **1️⃣ DASHBOARD (항상 표시)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **2️⃣ RECENT PROPOSALS (동적 표시)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **2️⃣ RECENT PROPOSALS (동적 표시)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **3️⃣ NAV_REST (공고~지식베이스)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **3️⃣ NAV_REST (공고~지식베이스)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **4️⃣ ADMIN_GROUP (관리자만)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **4️⃣ ADMIN_GROUP (관리자만)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **5️⃣ 하단 섹션 (항상 표시)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **5️⃣ 하단 섹션 (항상 표시)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **자식 항목 (expand 내)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **자식 항목 (expand 내)** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **👉 Priority 1: 메뉴 순서 변경** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **👉 Priority 1: 메뉴 순서 변경** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[javascript]]
   - <- contains <- [[vs]]
-- **👉 Priority 2: Settings 메뉴 추가** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
+- **👉 Priority 2: Settings 메뉴 추가** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[vs]]
-- **javascript** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
+- **javascript** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
   - <- has_code_example <- [[priority-1]]
-- **❌ 문제점 1: 메뉴 순서** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
+- **❌ 문제점 1: 메뉴 순서** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
   - <- contains <- [[vs]]
-- **❌ 문제점 2: Settings 메뉴** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
+- **❌ 문제점 2: Settings 메뉴** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
   - <- contains <- [[vs]]
-- **AppSidebar 메뉴 구조 및 설계** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
+- **AppSidebar 메뉴 구조 및 설계** (C:\project\tenopa proposer\frontend\SIDEBAR_STRUCTURE.md) -- 1 connections
   - -> contains -> [[vs]]
 
 ## Internal Relationships

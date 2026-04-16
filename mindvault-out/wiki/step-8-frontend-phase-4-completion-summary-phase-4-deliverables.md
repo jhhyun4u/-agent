@@ -2,7 +2,7 @@
 Cohesion: 0.03 | Nodes: 60
 
 ## Key Nodes
-- **STEP 8 Frontend Phase 4 Completion Summary** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 11 connections
+- **STEP 8 Frontend Phase 4 Completion Summary** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 11 connections
   - -> contains -> [[project-status-phase-4-complete]]
   - -> contains -> [[phase-4-deliverables]]
   - -> contains -> [[file-inventory]]
@@ -14,7 +14,7 @@ Cohesion: 0.03 | Nodes: 60
   - -> contains -> [[quality-metrics]]
   - -> contains -> [[next-steps]]
   - -> contains -> [[summary]]
-- **Phase 4 Deliverables** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 7 connections
+- **Phase 4 Deliverables** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 7 connections
   - -> contains -> [[1-page-embedding-integration]]
   - -> contains -> [[2-custom-data-hook-usestep8data]]
   - -> contains -> [[3-component-embedding]]
@@ -22,165 +22,165 @@ Cohesion: 0.03 | Nodes: 60
   - -> contains -> [[5-msw-mock-setup]]
   - -> contains -> [[6-documentation-guides]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Architecture Benefits** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 6 connections
+- **Architecture Benefits** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 6 connections
   - -> contains -> [[1-modularity]]
   - -> contains -> [[2-testability]]
   - -> contains -> [[3-scalability]]
   - -> contains -> [[4-performance]]
   - -> contains -> [[5-user-experience]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **✅ 3. Component Embedding** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 5 connections
+- **✅ 3. Component Embedding** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 5 connections
   - -> contains -> [[nodestatusdashboardtsx-291-lines]]
   - -> contains -> [[reviewpanelenhancedtsx-313-lines]]
   - -> contains -> [[versionhistoryviewertsx-346-lines]]
   - -> contains -> [[feedbacksummarycardtsx-254-lines]]
   - <- contains <- [[phase-4-deliverables]]
-- **✅ 1. Page Embedding & Integration** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **✅ 1. Page Embedding & Integration** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[created-step-8-review-page]]
   - -> contains -> [[page-components-integration]]
   - -> contains -> [[key-features-implemented]]
   - <- contains <- [[phase-4-deliverables]]
-- **✅ 2. Custom Data Hook: useStep8Data** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **✅ 2. Custom Data Hook: useStep8Data** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[hook-api]]
   - -> contains -> [[return-values]]
   - -> contains -> [[key-capabilities]]
   - <- contains <- [[phase-4-deliverables]]
-- **File Inventory** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **File Inventory** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[new-files-created-6]]
   - -> contains -> [[updated-files-1]]
   - -> contains -> [[documentation-files-2]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Integration Checklist** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **Integration Checklist** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[backend-requirements]]
   - -> contains -> [[frontend-integration]]
   - -> contains -> [[testing-integration]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Next Steps** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **Next Steps** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[immediate-phase-5]]
   - -> contains -> [[short-term-2-4-weeks]]
   - -> contains -> [[long-term-1-3-months]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Performance Metrics** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **Performance Metrics** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[load-times]]
   - -> contains -> [[memory-usage]]
   - -> contains -> [[api-efficiency]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Quality Metrics** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
+- **Quality Metrics** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 4 connections
   - -> contains -> [[code-quality]]
   - -> contains -> [[test-quality]]
   - -> contains -> [[documentation-quality]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **✅ 4. Integration Testing Suite** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
+- **✅ 4. Integration Testing Suite** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
   - -> contains -> [[file-1-testsstep8-integrationtestts-656-lines]]
   - -> contains -> [[file-2-testsstep8-page-integrationtesttsx-486-lines]]
   - <- contains <- [[phase-4-deliverables]]
-- **✅ 5. MSW Mock Setup** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
+- **✅ 5. MSW Mock Setup** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
   - -> contains -> [[mock-endpoints]]
   - -> contains -> [[mock-data]]
   - <- contains <- [[phase-4-deliverables]]
-- **Known Limitations & Future Work** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
+- **Known Limitations & Future Work** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
   - -> contains -> [[current-limitations]]
   - -> contains -> [[future-enhancements-phase-5]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Test Execution** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
+- **Test Execution** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 3 connections
   - -> contains -> [[running-tests]]
   - -> contains -> [[expected-results]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **typescript** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - <- has_code_example <- [[hook-api]]
   - <- has_code_example <- [[return-values]]
-- **✅ 6. Documentation & Guides** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **✅ 6. Documentation & Guides** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - -> contains -> [[step8integrationmd-420-lines]]
   - <- contains <- [[phase-4-deliverables]]
-- **Hook API** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **Hook API** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[2-custom-data-hook-usestep8data]]
-- **Project Status: Phase 4 ✅ COMPLETE** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **Project Status: Phase 4 ✅ COMPLETE** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - -> contains -> [[overview]]
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Return Values** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **Return Values** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[2-custom-data-hook-usestep8data]]
-- **Running Tests** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
+- **Running Tests** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[test-execution]]
-- **bash** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **bash** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- has_code_example <- [[running-tests]]
-- **1. **Modularity**** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **1. **Modularity**** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[architecture-benefits]]
-- **2. **Testability**** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **2. **Testability**** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[architecture-benefits]]
-- **3. **Scalability**** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **3. **Scalability**** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[architecture-benefits]]
-- **4. **Performance**** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **4. **Performance**** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[architecture-benefits]]
-- **5. **User Experience**** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **5. **User Experience**** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[architecture-benefits]]
-- **API Efficiency** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **API Efficiency** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[performance-metrics]]
-- **Backend Requirements** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Backend Requirements** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[integration-checklist]]
-- **Code Quality** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Code Quality** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[quality-metrics]]
-- **Created: STEP 8 Review Page** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Created: STEP 8 Review Page** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[1-page-embedding-integration]]
-- **Current Limitations** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Current Limitations** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[known-limitations-future-work]]
-- **Documentation Files (2)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Documentation Files (2)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[file-inventory]]
-- **Documentation Quality** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Documentation Quality** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[quality-metrics]]
-- **Expected Results** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Expected Results** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[test-execution]]
-- **FeedbackSummaryCard.tsx (254 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **FeedbackSummaryCard.tsx (254 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[3-component-embedding]]
-- **File 1: `__tests__/step8-integration.test.ts` (656 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **File 1: `__tests__/step8-integration.test.ts` (656 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[4-integration-testing-suite]]
-- **File 2: `__tests__/step8-page-integration.test.tsx` (486 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **File 2: `__tests__/step8-page-integration.test.tsx` (486 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[4-integration-testing-suite]]
-- **Frontend Integration** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Frontend Integration** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[integration-checklist]]
-- **Future Enhancements (Phase 5+)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Future Enhancements (Phase 5+)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[known-limitations-future-work]]
-- **Immediate (Phase 5)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Immediate (Phase 5)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[next-steps]]
-- **Key Capabilities** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Key Capabilities** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[2-custom-data-hook-usestep8data]]
-- **Key Features Implemented** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Key Features Implemented** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[1-page-embedding-integration]]
-- **Load Times** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Load Times** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[performance-metrics]]
-- **Long-term (1-3 months)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Long-term (1-3 months)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[next-steps]]
-- **Memory Usage** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Memory Usage** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[performance-metrics]]
-- **Mock Data** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Mock Data** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[5-msw-mock-setup]]
-- **Mock Endpoints** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Mock Endpoints** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[5-msw-mock-setup]]
-- **New Files Created (6)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **New Files Created (6)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[file-inventory]]
-- **NodeStatusDashboard.tsx (291 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **NodeStatusDashboard.tsx (291 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[3-component-embedding]]
-- **Overview** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Overview** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[project-status-phase-4-complete]]
-- **Page Components Integration** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Page Components Integration** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[1-page-embedding-integration]]
-- **ReviewPanelEnhanced.tsx (313 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **ReviewPanelEnhanced.tsx (313 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[3-component-embedding]]
-- **Short-term (2-4 weeks)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Short-term (2-4 weeks)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[next-steps]]
-- **STEP8_INTEGRATION.md (420 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **STEP8_INTEGRATION.md (420 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[6-documentation-guides]]
-- **Summary** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Summary** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[step-8-frontend-phase-4-completion-summary]]
-- **Test Quality** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Test Quality** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[quality-metrics]]
-- **Testing Integration** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Testing Integration** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[integration-checklist]]
-- **Updated Files (1)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **Updated Files (1)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[file-inventory]]
-- **VersionHistoryViewer.tsx (346 lines)** (C:\project\tenopa proposer\-agent-master\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
+- **VersionHistoryViewer.tsx (346 lines)** (C:\project\tenopa proposer\frontend\PHASE4_COMPLETION_SUMMARY.md) -- 1 connections
   - <- contains <- [[3-component-embedding]]
 
 ## Internal Relationships

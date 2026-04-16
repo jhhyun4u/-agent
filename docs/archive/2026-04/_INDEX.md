@@ -1,48 +1,61 @@
-# 2026-04 PDCA Archive Index
+# Archive Index — 2026-04
 
-**Archive Period**: April 2026  
-**Last Updated**: 2026-04-10
+## Completed PDCA Cycles
 
----
-
-## Completed Features
-
-### document_ingestion
-
-| Attribute | Value |
-|-----------|-------|
-| **Status** | Completed ✅ (Phase 7 — Archive) |
-| **Match Rate** | **95%+** ✅ |
-| **Test Coverage** | 100% (34/34 tests passing) |
-| **Success Criteria** | 6/6 Met (100%) |
-| **Duration** | 12 days (2026-03-29 → 2026-04-10) |
-| **Iterations** | 1 (Act phase: 2/3 gaps fixed + 1 documented) |
-| **Archived** | 2026-04-10 |
-
-**Description**:  
-Automatic document ingestion pipeline for organizational assets. Implements 6 REST API endpoints (POST/GET/DELETE) for upload→extract→chunk→embed→store workflow. Integrates with Supabase Storage + PostgreSQL + pgvector. Supports 3 project meta auto-seeding datasets: capabilities, client_intelligence, market_price.
-
-**Key Outcomes**:
-- ✅ All 6 API endpoints implemented and tested
-- ✅ 22/22 error scenarios handled
-- ✅ Async document processing pipeline (asyncio.create_task)
-- ✅ 3 project meta datasets auto-generated
-- ✅ Role-based access (org_id isolation)
-- ✅ 34/34 tests passing (100% coverage)
+### unified-state-system
+**Status**: ✅ Completed  
+**Date**: 2026-04-15  
+**Match Rate**: 98.75%  
+**Success Criteria**: 10/10 Met
 
 **Documents**:
-- `document_ingestion.plan.md` (Requirements & success criteria)
-- `document_ingestion.design.md` (API spec & architecture)
-- `document_ingestion.analysis.md` (Gap analysis — 95%+ match rate)
-- `document_ingestion.report.md` (PDCA completion report)
+- [Plan](unified-state-system/unified-state-system.plan.md) — Problem analysis, solution scope, phase breakdown
+- [Design](unified-state-system/unified-state-system.design.md) — 4-phase architecture (DB schema, backend services, API, testing)
+- [Analysis](unified-state-system/unified-state-system.analysis.md) — Gap analysis with 52% initial match rate, resolved in Act phase
+- [Report](unified-state-system/unified-state-system.report.md) — Final completion report, 98.75% match rate achieved
+
+**Summary**:
+The Unified State System PDCA cycle successfully consolidated 16 scattered proposal states into a **10-unified-status architecture** with **3-layer separation** (business status ↔ workflow phase ↔ AI runtime state) and a **5-value WinResult enum** for outcome tracking.
+
+**Key Deliverables**:
+- Backend: StateValidator + StateMachine classes, 10-unified ProposalStatus enum, 5-value WinResult enum
+- Database: proposal_timelines table with audit trail, 8 timestamp columns, CHECK constraints
+- Frontend: Synchronized TypeScript types, 3 component updates, E2E test attributes
+- Testing: 11/11 integration tests passing, 100% success criteria met
+
+**Deployment Status**: Ready for production (deployment checklist: `DEPLOYMENT-CHECKLIST-unified-state-system.md`)
 
 ---
 
-**Archive Stats**:
-- Total Features Archived: 1
-- Total Size: 48.5 KB
-- Overall Match Rate: 95%+
-- Overall Success Rate: 100%
+## Archive Structure
 
-**Archive Created**: 2026-04-10  
-**Total Features in April 2026**: 1
+```
+2026-04/
+├── _INDEX.md (this file)
+└── unified-state-system/
+    ├── unified-state-system.plan.md
+    ├── unified-state-system.design.md
+    ├── unified-state-system.analysis.md
+    └── unified-state-system.report.md
+```
+
+## Quick Reference
+
+**To reference archived documents**:
+```
+docs/archive/2026-04/unified-state-system/unified-state-system.report.md
+```
+
+**Key Metrics**:
+| Metric | Value |
+|--------|:-----:|
+| PDCA Cycle Duration | 16 days (2026-03-30 to 2026-04-15) |
+| Match Rate | 98.75% |
+| Success Criteria Met | 10/10 |
+| Integration Tests | 11/11 passing |
+| Critical Issues | 0 |
+| Ready for Production | Yes ✅ |
+
+---
+
+*Archive created: 2026-04-15*

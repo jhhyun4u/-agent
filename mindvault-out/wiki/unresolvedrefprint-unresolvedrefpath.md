@@ -1,0 +1,2055 @@
+# __unresolved__::ref::print & __unresolved__::ref::path
+Cohesion: 0.01 | Nodes: 263
+
+## Key Nodes
+- **__unresolved__::ref::print** () -- 81 connections
+  - <- calls <- [[executenodeandcreateversion]]
+  - <- calls <- [[printmigrationsql]]
+  - <- calls <- [[applymigration]]
+  - <- calls <- [[getdbconnection]]
+  - <- calls <- [[applymigration]]
+  - <- calls <- [[applyallmigrations]]
+  - <- calls <- [[showmigrationstatus]]
+  - <- calls <- [[main]]
+  - <- calls <- [[checkstatus]]
+  - <- calls <- [[checkcolumns]]
+  - <- calls <- [[checkdata]]
+  - <- calls <- [[checkschema]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[scan]]
+  - <- calls <- [[printactive]]
+  - <- calls <- [[main]]
+  - <- calls <- [[diagnose]]
+  - <- calls <- [[check]]
+  - <- calls <- [[skiptest]]
+  - <- calls <- [[scenario1nogo]]
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[generatestoryboard]]
+  - <- calls <- [[buildpptx]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[importfromexcel]]
+  - <- calls <- [[main]]
+  - <- calls <- [[initbuckets]]
+  - <- calls <- [[inserttestbid]]
+  - <- calls <- [[run]]
+  - <- calls <- [[printsummary]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[printsummary]]
+  - <- calls <- [[testvectorsearch]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[printsummary]]
+  - <- calls <- [[testvectorsearch]]
+  - <- calls <- [[main]]
+  - <- calls <- [[provision]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[searchandscore]]
+  - <- calls <- [[printresults]]
+  - <- calls <- [[main]]
+  - <- calls <- [[seed]]
+  - <- calls <- [[seed]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testbidsearch]]
+  - <- calls <- [[testbidresults]]
+  - <- calls <- [[teststandalonewrapper]]
+  - <- calls <- [[testbiddetail]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testsearch]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testwithliveg2b]]
+  - <- calls <- [[testairecommendation]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[createpptfile]]
+  - <- calls <- [[createproposaldocument]]
+  - <- calls <- [[analyzecurrentvsrequired]]
+  - <- calls <- [[searchg2bcompetitors]]
+  - <- calls <- [[testmodulararchitecture]]
+  - <- calls <- [[testtechnicaloptimization]]
+  - <- calls <- [[testfullworkflow]]
+  - <- calls <- [[testembeddingbatchsizeconfiguration]]
+  - <- calls <- [[testinsertbatchsizeconfiguration]]
+  - <- calls <- [[testbatchcountreduction]]
+  - <- calls <- [[testconcurrentdocumentslimit]]
+  - <- calls <- [[testconcurrentclassificationslimit]]
+  - <- calls <- [[testgarbagecollectionimported]]
+  - <- calls <- [[testperformancesummary]]
+- **__unresolved__::ref::path** () -- 36 connections
+  - <- calls <- [[enrichmonitordata]]
+  - <- calls <- [[loadteamsinfo]]
+  - <- calls <- [[resolvetemplatepath]]
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[runanalysisifneeded]]
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[checkcachedbsync]]
+  - <- calls <- [[buildproposalhwpx]]
+  - <- calls <- [[phase5test]]
+  - <- calls <- [[buildpptxlegacy]]
+  - <- calls <- [[parserfpbytes]]
+  - <- calls <- [[parserfpfromurl]]
+  - <- calls <- [[gettemplatefiles]]
+  - <- calls <- [[cleanupexpiredbids]]
+  - <- calls <- [[cleancache]]
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[extractheaderxml]]
+  - <- calls <- [[extractsectionxml]]
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[collectmetrics]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[validatefiletype]]
+  - <- calls <- [[extracttextfromhwp]]
+  - <- calls <- [[extracttextfromfile]]
+  - <- calls <- [[printmigrationsql]]
+  - <- calls <- [[getmigrationfiles]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[init]]
+  - <- calls <- [[loaddeptmapping]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[init]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testfullworkflow]]
+- **__unresolved__::ref::exists** () -- 31 connections
+  - <- calls <- [[loadfilecache]]
+  - <- calls <- [[enrichmonitordata]]
+  - <- calls <- [[checkanalysiscache]]
+  - <- calls <- [[loadteamsinfo]]
+  - <- calls <- [[resolvetemplatepath]]
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[downloadbidattachments]]
+  - <- calls <- [[runanalysisifneeded]]
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[checkcachedbsync]]
+  - <- calls <- [[uploadtostorage]]
+  - <- calls <- [[initpresentation]]
+  - <- calls <- [[gettemplatefiles]]
+  - <- calls <- [[cleanupexpiredbids]]
+  - <- calls <- [[cleancache]]
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[extracttextfromhwp]]
+  - <- calls <- [[extracttextfromfile]]
+  - <- calls <- [[printmigrationsql]]
+  - <- calls <- [[getrecommender]]
+  - <- calls <- [[loadpipeline]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[findfile]]
+  - <- calls <- [[loaddeptmapping]]
+  - <- calls <- [[provision]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **main** (C:\project\tenopa proposer\scripts\monitor_g2b_pipeline.py) -- 23 connections
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefbasicconfig]]
+  - -> calls -> [[unresolvedrefmonitorreport]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefwaitfor]]
+  - -> calls -> [[unresolvedrefchecksearchexists]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefg2bservice]]
+  - -> calls -> [[unresolvedrefsearchbidannouncements]]
+  - -> calls -> [[unresolvedrefcheckresult]]
+  - -> calls -> [[unresolvedrefcheckresultaccuracy]]
+  - -> calls -> [[unresolvedrefcheckaiquality]]
+  - -> calls -> [[unresolvedrefchecke2epipeline]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefformatreportjson]]
+  - -> calls -> [[unresolvedrefformatreportconsole]]
+  - -> calls -> [[unresolvedrefnotifyteams]]
+  - -> calls -> [[unresolvedrefexit]]
+  - <- contains <- [[monitorg2bpipeline]]
+- **main** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 21 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefloadprofile]]
+  - -> calls -> [[unresolvedrefloadpipeline]]
+  - -> calls -> [[unresolvedrefgetrecommender]]
+  - -> calls -> [[unresolvedrefenrichwithteam]]
+  - -> calls -> [[unresolvedrefsavepipeline]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefprintactive]]
+  - -> calls -> [[unresolvedrefselectbid]]
+  - -> calls -> [[unresolvedrefcleanupexpired]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefrun]]
+  - -> calls -> [[unresolvedrefscan]]
+  - <- contains <- [[dailybidscan]]
+- **analyze_template** (C:\project\tenopa proposer\app\services\hwpx\analyze_template.py) -- 19 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefmkdtemp]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefextractall]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedrefgetroot]]
+  - -> calls -> [[unresolvedrefparse]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefanalyzefonts]]
+  - -> calls -> [[unresolvedrefanalyzecharstyles]]
+  - -> calls -> [[unresolvedrefanalyzeparastyles]]
+  - -> calls -> [[unresolvedrefanalyzepagesetup]]
+  - -> calls -> [[unresolvedrefanalyzetables]]
+  - -> calls -> [[unresolvedrefxpath]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedreftemplateanalysis]]
+  - -> calls -> [[unresolvedrefrmtree]]
+  - <- contains <- [[analyzetemplate]]
+- **_run_presentation** (C:\project\tenopa proposer\app\api\routes_presentation.py) -- 18 connections
+  - -> calls -> [[unresolvedrefagetsession]]
+  - -> calls -> [[unresolvedrefphase2artifact]]
+  - -> calls -> [[unresolvedrefphase3artifact]]
+  - -> calls -> [[unresolvedrefphase4artifact]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefrfpdata]]
+  - -> calls -> [[unresolvedrefgeneratepresentationslides]]
+  - -> calls -> [[unresolvedrefdownloadsampletemplate]]
+  - -> calls -> [[unresolvedrefresolvetemplatepath]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - -> calls -> [[unresolvedrefbuildpresentationpptx]]
+  - -> calls -> [[unresolvedrefuploadpresentation]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefupdatesession]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[routespresentation]]
+- **main** (C:\project\tenopa proposer\scripts\import_team_structure.py) -- 18 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefimportfromexcel]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefload]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefdump]]
+  - -> calls -> [[unresolvedrefsum]]
+  - <- contains <- [[importteamstructure]]
+- **__unresolved__::ref::open** () -- 16 connections
+  - <- calls <- [[uploadpresentation]]
+  - <- calls <- [[uploadtostorage]]
+  - <- calls <- [[loadsampledata]]
+  - <- calls <- [[readpdftext]]
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[biddetailcontent]]
+  - <- calls <- [[readmigrationfile]]
+  - <- calls <- [[loadprofile]]
+  - <- calls <- [[checkschema]]
+  - <- calls <- [[loadpipeline]]
+  - <- calls <- [[savepipeline]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[run]]
+  - <- calls <- [[loaddeptmapping]]
+  - <- calls <- [[provision]]
+- **build_pptx_legacy** (C:\project\tenopa proposer\app\services\pptx_builder.py) -- 15 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefpresentation]]
+  - -> calls -> [[unresolvedrefaddslide]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefclear]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefaddparagraph]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefsave]]
+  - -> calls -> [[unresolvedrefstr]]
+  - <- contains <- [[pptxbuilder]]
+- **_read_hwpx_text** (C:\project\tenopa proposer\app\services\template_service.py) -- 15 connections
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - -> calls -> [[unresolvedrefnamelist]]
+  - -> calls -> [[unresolvedreflower]]
+  - -> calls -> [[unresolvedrefendswith]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefdecode]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedreffromstring]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefitertext]]
+  - -> calls -> [[unresolvedrefsub]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[templateservice]]
+- **__unresolved__::ref::mkdir** () -- 14 connections
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[downloadbidattachments]]
+  - <- calls <- [[runanalysisifneeded]]
+  - <- calls <- [[builddocxlegacy]]
+  - <- calls <- [[buildhwpx]]
+  - <- calls <- [[buildpptxlegacy]]
+  - <- calls <- [[buildpresentationpptx]]
+  - <- calls <- [[extractheaderxml]]
+  - <- calls <- [[extractsectionxml]]
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[savepipeline]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[testfullworkflow]]
+- **_download_sample_template** (C:\project\tenopa proposer\app\api\routes_presentation.py) -- 14 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedreflstrip]]
+  - -> calls -> [[unresolvedreftothread]]
+  - -> calls -> [[unresolvedrefdownload]]
+  - -> calls -> [[unresolvedreffrom]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefwritebytes]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[routespresentation]]
+- **build_from_template** (C:\project\tenopa proposer\app\services\hwpx\build_hwpx.py) -- 14 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefisdir]]
+  - -> calls -> [[unresolvedreffilenotfounderror]]
+  - -> calls -> [[unresolvedreftemporarydirectory]]
+  - -> calls -> [[unresolvedrefcopytree]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefiterdir]]
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedrefcopy2]]
+  - -> calls -> [[unresolvedrefupdatemetadata]]
+  - -> calls -> [[unresolvedrefrglob]]
+  - -> calls -> [[unresolvedrefvalidatexml]]
+  - -> calls -> [[unresolvedrefpackhwpx]]
+  - <- contains <- [[buildhwpx]]
+- **build_pptx** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 14 connections
+  - -> calls -> [[unresolvedrefpresentation]]
+  - -> calls -> [[unresolvedrefbuildcover]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefbuildagenda]]
+  - -> calls -> [[unresolvedrefbuildsectionheader]]
+  - -> calls -> [[unresolvedrefbuildclosing]]
+  - -> calls -> [[unresolvedrefbuilder]]
+  - -> calls -> [[unresolvedrefsetspeakernotes]]
+  - -> calls -> [[unresolvedrefsave]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[hwpxtopptx]]
+- **__unresolved__::ref::parse_args** () -- 13 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[parseargs]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **validate_hwpx** (C:\project\tenopa proposer\app\services\hwpx\validate.py) -- 13 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedrefzipfile]]
+  - -> calls -> [[unresolvedrefnamelist]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefdecode]]
+  - -> calls -> [[unresolvedrefread]]
+  - -> calls -> [[unresolvedrefindex]]
+  - -> calls -> [[unresolvedrefgetinfo]]
+  - -> calls -> [[unresolvedrefendswith]]
+  - -> calls -> [[unresolvedreffromstring]]
+  - <- contains <- [[validate]]
+- **extract_text_from_file** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 13 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedreffileprocessingerror]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedreflower]]
+  - -> calls -> [[unresolvedrefextracttextfrompdf]]
+  - -> calls -> [[unresolvedrefextracttextfromdocx]]
+  - -> calls -> [[unresolvedrefextracttextfromhwp]]
+  - -> calls -> [[unresolvedrefextracttextfrompptx]]
+  - -> calls -> [[unresolvedrefextracttextfromxlsx]]
+  - -> calls -> [[unresolvedrefreadtext]]
+  - -> calls -> [[unresolvedreferror]]
+  - <- contains <- [[fileutils]]
+- **main** (C:\project\tenopa proposer\scripts\import_project_history.py) -- 13 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefparseexcel]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefbuildprofile]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefdump]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedreflist]]
+  - -> calls -> [[unresolvedrefkeys]]
+  - <- contains <- [[importprojecthistory]]
+- **__unresolved__::ref::add_argument** () -- 12 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[parseargs]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::argumentparser** () -- 12 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[parseargs]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::exit** () -- 12 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[importfromexcel]]
+  - <- calls <- [[main]]
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[main]]
+  - <- calls <- [[provision]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **build_hwpx** (C:\project\tenopa proposer\app\services\hwpx_builder.py) -- 12 connections
+  - -> calls -> [[unresolvedrefnew]]
+  - -> calls -> [[unresolvedrefsetupstyles]]
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedrefaddcover]]
+  - -> calls -> [[unresolvedrefaddevaluationtable]]
+  - -> calls -> [[unresolvedrefaddtoc]]
+  - -> calls -> [[unresolvedrefaddbody]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefsavetopath]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[hwpxbuilder]]
+- **build_proposal_hwpx** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 12 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgeneratesectionxml]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - -> calls -> [[unresolvedrefwritetext]]
+  - -> calls -> [[unresolvedrefextractheaderxml]]
+  - -> calls -> [[unresolvedrefbuildfromtemplate]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefvalidate]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefcheckpagedrift]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[hwpxservice]]
+- **scenario_3_time_travel** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 12 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefcreateproposal]]
+  - -> calls -> [[unresolvedrefstartworkflow]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefcheck]]
+  - -> calls -> [[unresolvedrefbool]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefskiptest]]
+  - <- contains <- [[e2einterrupttest]]
+- **main** (C:\project\tenopa proposer\scripts\search_matching_bids.py) -- 12 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefloadprofile]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefrun]]
+  - -> calls -> [[unresolvedrefsearchandscore]]
+  - -> calls -> [[unresolvedrefprintresults]]
+  - <- contains <- [[searchmatchingbids]]
+- **_process_single** (C:\project\tenopa proposer\app\services\bid_pipeline.py) -- 11 connections
+  - -> calls -> [[unresolvedrefisoformat]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefwaitfor]]
+  - -> calls -> [[unresolvedrefrunallsteps]]
+  - -> calls -> [[unresolvedrefupdatestatus]]
+  - -> calls -> [[unresolvedreferror]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefgeteventloop]]
+  - -> calls -> [[unresolvedrefcalllater]]
+  - -> calls -> [[unresolvedrefpop]]
+  - <- contains <- [[bidpipeline]]
+- **apply_migration** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 11 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedreftransaction]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedrefstr]]
+  - <- contains <- [[applymigrations]]
+- **test_full_workflow** (C:\project\tenopa proposer\scripts\archive\test_workflow.py) -- 11 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefprojectinput]]
+  - -> calls -> [[unresolvedrefgenerateproposalfrominput]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefbuilddocx]]
+  - -> calls -> [[unresolvedrefbuildpptx]]
+  - <- contains <- [[testworkflow]]
+- **scenario_2_abort_retry** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 11 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefcreateproposal]]
+  - -> calls -> [[unresolvedrefstartworkflow]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefcheck]]
+  - -> calls -> [[unresolvedrefjson]]
+  - -> calls -> [[unresolvedrefdumps]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefskiptest]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[e2einterrupttest]]
+- **main** (C:\project\tenopa proposer\scripts\e2e_workflow_test.py) -- 11 connections
+  - -> calls -> [[unresolvedrefgettoken]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefasgitransport]]
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - -> calls -> [[unresolvedreflog]]
+  - -> calls -> [[unresolvedrefrange]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[e2eworkflowtest]]
+- **main** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 11 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefprinthelp]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefsupabasemigrator]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefrunmigration]]
+  - -> calls -> [[unresolvedrefprintsummary]]
+  - -> calls -> [[unresolvedreftestvectorsearch]]
+  - <- contains <- [[pilotmigrationdemo]]
+- **main** (C:\project\tenopa proposer\scripts\test_presentation_sample.py) -- 11 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefgeneratepresentationslides]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefdumps]]
+  - -> calls -> [[unresolvedrefdecode]]
+  - -> calls -> [[unresolvedrefencode]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefbuildpresentationpptx]]
+  - -> calls -> [[unresolvedrefstat]]
+  - -> calls -> [[unresolvedrefwritetext]]
+  - <- contains <- [[testpresentationsample]]
+- **__unresolved__::ref::asyncclient** () -- 10 connections
+  - <- calls <- [[getgraphtoken]]
+  - <- calls <- [[sendemail]]
+  - <- calls <- [[sendemailbatch]]
+  - <- calls <- [[checkteamswebhook]]
+  - <- calls <- [[sendteamsnotification]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[initbuckets]]
+  - <- calls <- [[run]]
+  - <- calls <- [[notifyteams]]
+- **__unresolved__::ref::endswith** () -- 10 connections
+  - <- calls <- [[isinterrupted]]
+  - <- calls <- [[seedcapability]]
+  - <- calls <- [[rendermarkdowncontent]]
+  - <- calls <- [[fallbackfrompython]]
+  - <- calls <- [[buildcopybundle]]
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[renderinline]]
+  - <- calls <- [[highlightjson]]
+  - <- calls <- [[cell]]
+- **main** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 10 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefgettoken]]
+  - -> calls -> [[unresolvedrefbasicconfig]]
+  - -> calls -> [[unresolvedrefasgitransport]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedrefscenario1nogo]]
+  - -> calls -> [[unresolvedrefscenario2abortretry]]
+  - -> calls -> [[unresolvedrefscenario3timetravel]]
+  - <- contains <- [[e2einterrupttest]]
+- **test_performance_optimization** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 10 connections
+  - -> contains -> [[testbatchsizeoptimization]]
+  - -> contains -> [[testconcurrencyconfiguration]]
+  - -> contains -> [[testparallelclassification]]
+  - -> contains -> [[testmemoryoptimization]]
+  - -> contains -> [[testperformancesummary]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreftime]]
+  - -> imports -> [[unresolvedrefpytest]]
+  - -> imports -> [[unresolvedrefmock]]
+  - -> imports -> [[unresolvedrefdocumentingestion]]
+- **main** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 9 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefshowmigrationstatus]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefapplyallmigrations]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefprintexc]]
+  - <- contains <- [[applymigrations]]
+- **show_migration_status** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 9 connections
+  - -> calls -> [[unresolvedrefgetdbconnection]]
+  - -> calls -> [[unresolvedrefgetmigrationfiles]]
+  - -> calls -> [[unresolvedrefgetappliedmigrations]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedreffetchrow]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefclose]]
+  - <- contains <- [[applymigrations]]
+- **test_modular_architecture** (C:\project\tenopa proposer\scripts\archive\test_modular_architecture.py) -- 9 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefmodularproposalworkflow]]
+  - -> calls -> [[unresolvedrefexecuteworkflow]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefhasattr]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefprintexc]]
+  - <- contains <- [[testmodulararchitecture]]
+- **main** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 9 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefextracthwpxtext]]
+  - -> calls -> [[unresolvedrefgeneratestoryboard]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefsum]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefbuildpptx]]
+  - <- contains <- [[hwpxtopptx]]
+- **load_dept_mapping** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 9 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefdictreader]]
+  - -> calls -> [[unresolvedrefstrip]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[migrateintranet]]
+- **run_migration** (C:\project\tenopa proposer\scripts\pilot_migration_10projects.py) -- 9 connections
+  - -> calls -> [[unresolvedrefinitclient]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefinsertproject]]
+  - -> calls -> [[unresolvedrefcreateembedding]]
+  - <- contains <- [[supabasemigrator]]
+- **run_migration** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 9 connections
+  - -> calls -> [[unresolvedrefinitclient]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefinsertproject]]
+  - -> calls -> [[unresolvedrefcreateembedding]]
+  - <- contains <- [[supabasemigrator]]
+- **main** (C:\project\tenopa proposer\scripts\test_g2b.py) -- 9 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedreftestbidsearch]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedreftestbidresults]]
+  - -> calls -> [[unresolvedrefteststandalonewrapper]]
+  - -> calls -> [[unresolvedreftestbiddetail]]
+  - <- contains <- [[testg2b]]
+- **__unresolved__::ref::run** () -- 8 connections
+  - <- calls <- [[toolbar]]
+  - <- calls <- [[loadprofile]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::to_thread** () -- 8 connections
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[uploadpresentation]]
+  - <- calls <- [[builddocx]]
+  - <- calls <- [[buildhwpxasync]]
+  - <- calls <- [[buildproposalhwpxasync]]
+  - <- calls <- [[uploadtostorage]]
+  - <- calls <- [[phase5test]]
+  - <- calls <- [[buildpptx]]
+- **scenario_1_no_go** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 8 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefcreateproposal]]
+  - -> calls -> [[unresolvedrefstartworkflow]]
+  - -> calls -> [[unresolvedrefcheck]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - <- contains <- [[e2einterrupttest]]
+- **init_buckets** (C:\project\tenopa proposer\scripts\init_storage_buckets.py) -- 8 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefjson]]
+  - -> calls -> [[unresolvedreflower]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedreftype]]
+  - <- contains <- [[initstoragebuckets]]
+- **main** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 8 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefmigrateconfig]]
+  - -> calls -> [[unresolvedrefloaddeptmapping]]
+  - -> calls -> [[unresolvedrefintranetmigrator]]
+  - -> calls -> [[unresolvedrefrun]]
+  - <- contains <- [[migrateintranet]]
+- **find_file** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 8 connections
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefiterdir]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefisfile]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[intranetmigrator]]
+- **main** (C:\project\tenopa proposer\scripts\run_master_projects_migration.py) -- 8 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefprinthelp]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefrunmigration]]
+  - <- contains <- [[runmasterprojectsmigration]]
+- **run_migration** (C:\project\tenopa proposer\scripts\run_migration.py) -- 8 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefreadtext]]
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefrpc]]
+  - <- contains <- [[runmigration]]
+- **main** (C:\project\tenopa proposer\scripts\team_recommender.py) -- 8 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefteamrecommender]]
+  - -> calls -> [[unresolvedrefrecommend]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - <- contains <- [[teamrecommender]]
+- **_load_sample_data** (C:\project\tenopa proposer\app\services\prompt_simulator.py) -- 7 connections
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefdirname]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefload]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefdefaultsamplestate]]
+  - <- contains <- [[promptsimulator]]
+- **get_migration_files** (C:\project\tenopa proposer\scripts\apply_migrations.py) -- 7 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - -> calls -> [[unresolvedrefglob]]
+  - -> calls -> [[unresolvedrefsplit]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefstat]]
+  - <- contains <- [[applymigrations]]
+- **SupabaseMigrator** (C:\project\tenopa proposer\scripts\pilot_migration_10projects.py) -- 7 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[initclient]]
+  - -> contains -> [[insertproject]]
+  - -> contains -> [[createembedding]]
+  - -> contains -> [[runmigration]]
+  - -> contains -> [[printsummary]]
+  - <- contains <- [[pilotmigration10projects]]
+- **SupabaseMigrator** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 7 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[initclient]]
+  - -> contains -> [[insertproject]]
+  - -> contains -> [[createembedding]]
+  - -> contains -> [[runmigration]]
+  - -> contains -> [[printsummary]]
+  - <- contains <- [[pilotmigrationdemo]]
+- **main** (C:\project\tenopa proposer\scripts\seed_org_structure.py) -- 7 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefexit]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefparsexlsx]]
+  - -> calls -> [[unresolvedrefseed]]
+  - <- contains <- [[seedorgstructure]]
+- **__unresolved__::ref::decode** () -- 6 connections
+  - <- calls <- [[extracttextfrombytes]]
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[fetchdocumentcontent]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[extracttextfromhwp]]
+  - <- calls <- [[main]]
+- **send_email** (C:\project\tenopa proposer\app\services\email_service.py) -- 6 connections
+  - -> calls -> [[unresolvedrefgetgraphtoken]]
+  - -> calls -> [[unresolvedrefpost]]
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[emailservice]]
+- **_get_template_files** (C:\project\tenopa proposer\app\services\template_service.py) -- 6 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefextend]]
+  - -> calls -> [[unresolvedrefglob]]
+  - -> calls -> [[unresolvedrefsorted]]
+  - <- contains <- [[templateservice]]
+- **test_technical_optimization** (C:\project\tenopa proposer\scripts\archive\test_technical_optimization.py) -- 6 connections
+  - -> calls -> [[unresolvedrefrfpreviewengine]]
+  - -> calls -> [[unresolvedrefanalyzetechnicalscoringoptimization]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefprintexc]]
+  - <- contains <- [[testtechnicaloptimization]]
+- **main** (C:\project\tenopa proposer\scripts\collect_market_data.py) -- 6 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefrun]]
+  - -> calls -> [[unresolvedrefcollect]]
+  - <- contains <- [[collectmarketdata]]
+- **generate_storyboard** (C:\project\tenopa proposer\scripts\hwpx_to_pptx.py) -- 6 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefcallclaude]]
+  - -> calls -> [[unresolvedrefformat]]
+  - -> calls -> [[unresolvedrefloads]]
+  - -> calls -> [[unresolvedrefdumps]]
+  - <- contains <- [[hwpxtopptx]]
+- **main** (C:\project\tenopa proposer\scripts\migrate_states_unified.py) -- 6 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefrun]]
+  - -> calls -> [[unresolvedrefrunmigration]]
+  - <- contains <- [[migratestatesunified]]
+- **main** (C:\project\tenopa proposer\scripts\provision_users.py) -- 6 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - -> calls -> [[unresolvedrefrun]]
+  - -> calls -> [[unresolvedrefprovision]]
+  - <- contains <- [[provisionusers]]
+- **main** (C:\project\tenopa proposer\scripts\test_search_flow.py) -- 6 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedreftestwithliveg2b]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedreftestairecommendation]]
+  - <- contains <- [[testsearchflow]]
+- **__unresolved__::ref::presentation** () -- 5 connections
+  - <- calls <- [[buildpptxsync]]
+  - <- calls <- [[buildpptxlegacy]]
+  - <- calls <- [[initpresentation]]
+  - <- calls <- [[extracttextfrompptx]]
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::run_migration** () -- 5 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::write_text** () -- 5 connections
+  - <- calls <- [[savefilecache]]
+  - <- calls <- [[runanalysisifneeded]]
+  - <- calls <- [[checkcachedbsync]]
+  - <- calls <- [[buildproposalhwpx]]
+  - <- calls <- [[main]]
+- **_resolve_template_path** (C:\project\tenopa proposer\app\api\routes_presentation.py) -- 5 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefgettempdir]]
+  - <- contains <- [[routespresentation]]
+- **print_migration_sql** (C:\project\tenopa proposer\scripts\add_missing_columns.py) -- 5 connections
+  - -> calls -> [[unresolvedrefpath]]
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefreadtext]]
+  - <- contains <- [[addmissingcolumns]]
+- **analyze_current_vs_required** (C:\project\tenopa proposer\scripts\archive\modular_analysis.py) -- 5 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - <- contains <- [[modularanalysis]]
+- **load_pipeline** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 5 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefload]]
+  - -> calls -> [[unresolvedrefemptypipeline]]
+  - <- contains <- [[dailybidscan]]
+- **__unresolved__::ref::_check** () -- 4 connections
+  - <- calls <- [[checkpagedrift]]
+  - <- calls <- [[scenario1nogo]]
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+- **__unresolved__::ref::download** () -- 4 connections
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[copybidattachmentstoproposal]]
+  - <- calls <- [[extractfromstorage]]
+  - <- calls <- [[buildcopybundle]]
+- **__unresolved__::ref::gettempdir** () -- 4 connections
+  - <- calls <- [[resolvetemplatepath]]
+  - <- calls <- [[downloadsampletemplate]]
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::glob** () -- 4 connections
+  - <- calls <- [[checkcachedbsync]]
+  - <- calls <- [[gettemplatefiles]]
+  - <- calls <- [[cleanupexpiredbids]]
+  - <- calls <- [[getmigrationfiles]]
+- **__unresolved__::ref::is_file** () -- 4 connections
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[findfile]]
+- **__unresolved__::ref::print_exc** () -- 4 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[checkdata]]
+  - <- calls <- [[testmodulararchitecture]]
+  - <- calls <- [[testtechnicaloptimization]]
+- **_load_file_cache** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 4 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefloads]]
+  - -> calls -> [[unresolvedrefreadtext]]
+  - <- contains <- [[routesbids]]
+- **_save_file_cache** (C:\project\tenopa proposer\app\api\routes_bids.py) -- 4 connections
+  - -> calls -> [[unresolvedrefwritetext]]
+  - -> calls -> [[unresolvedrefdumps]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[routesbids]]
+- **_extract_text_from_bytes** (C:\project\tenopa proposer\app\services\asset_extractor.py) -- 4 connections
+  - -> calls -> [[unresolvedrefextracttextfrompdfbytes]]
+  - -> calls -> [[unresolvedrefextracttextfromdocxbytes]]
+  - -> calls -> [[unresolvedrefdecode]]
+  - <- contains <- [[assetextractor]]
+- **enrich_with_team** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 4 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefrecommend]]
+  - -> calls -> [[unresolvedreftopipelinedict]]
+  - <- contains <- [[dailybidscan]]
+- **save_pipeline** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 4 connections
+  - -> calls -> [[unresolvedrefmkdir]]
+  - -> calls -> [[unresolvedrefopen]]
+  - -> calls -> [[unresolvedrefdump]]
+  - <- contains <- [[dailybidscan]]
+- **__init__** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 4 connections
+  - -> calls -> [[unresolvedrefgetenv]]
+  - -> calls -> [[unresolvedrefpath]]
+  - <- contains <- [[migrateconfig]]
+  - <- contains <- [[intranetmigrator]]
+- **parse_args** (C:\project\tenopa proposer\scripts\monitor_g2b_pipeline.py) -- 4 connections
+  - -> calls -> [[unresolvedrefargumentparser]]
+  - -> calls -> [[unresolvedrefaddargument]]
+  - -> calls -> [[unresolvedrefparseargs]]
+  - <- contains <- [[monitorg2bpipeline]]
+- **TestBatchSizeOptimization** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 4 connections
+  - -> contains -> [[testembeddingbatchsizeconfiguration]]
+  - -> contains -> [[testinsertbatchsizeconfiguration]]
+  - -> contains -> [[testbatchcountreduction]]
+  - <- contains <- [[testperformanceoptimization]]
+- **__unresolved__::ref::_create_proposal** () -- 3 connections
+  - <- calls <- [[scenario1nogo]]
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+- **__unresolved__::ref::_start_workflow** () -- 3 connections
+  - <- calls <- [[scenario1nogo]]
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+- **__unresolved__::ref::dump** () -- 3 connections
+  - <- calls <- [[savepipeline]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::filenotfounderror** () -- 3 connections
+  - <- calls <- [[analyzetemplate]]
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::fromstring** () -- 3 connections
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[validatehwpx]]
+  - <- calls <- [[extracthwpxtext]]
+- **__unresolved__::ref::print_help** () -- 3 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::stat** () -- 3 connections
+  - <- calls <- [[cleanupexpiredbids]]
+  - <- calls <- [[getmigrationfiles]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::wait_for** () -- 3 connections
+  - <- calls <- [[rununifiedanalysis]]
+  - <- calls <- [[processsingle]]
+  - <- calls <- [[main]]
+- **_is_interrupted** (C:\project\tenopa proposer\app\api\routes_workflow.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefendswith]]
+  - <- contains <- [[routesworkflow]]
+- **_text_of_t_node** (C:\project\tenopa proposer\app\services\hwpx\page_guard.py) -- 3 connections
+  - -> calls -> [[unresolvedrefjoin]]
+  - -> calls -> [[unresolvedrefitertext]]
+  - <- contains <- [[pageguard]]
+- **validate_file_type** (C:\project\tenopa proposer\app\utils\file_utils.py) -- 3 connections
+  - -> calls -> [[unresolvedreflower]]
+  - -> calls -> [[unresolvedrefpath]]
+  - <- contains <- [[fileutils]]
+- **test_technical_optimization** (C:\project\tenopa proposer\scripts\archive\test_technical_optimization.py) -- 3 connections
+  - -> contains -> [[testtechnicaloptimization]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedrefrfpreviewengine]]
+- **_get_recommender** (C:\project\tenopa proposer\scripts\daily_bid_scan.py) -- 3 connections
+  - -> calls -> [[unresolvedrefexists]]
+  - -> calls -> [[unresolvedrefteamrecommender]]
+  - <- contains <- [[dailybidscan]]
+- **print_summary** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 3 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefcenter]]
+  - <- contains <- [[supabasemigrator]]
+- **main** (C:\project\tenopa proposer\scripts\run_migration.py) -- 3 connections
+  - -> calls -> [[unresolvedrefrunmigration]]
+  - -> calls -> [[unresolvedrefexit]]
+  - <- contains <- [[runmigration]]
+- **TestConcurrencyConfiguration** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 3 connections
+  - -> contains -> [[testconcurrentdocumentslimit]]
+  - -> contains -> [[testconcurrentclassificationslimit]]
+  - <- contains <- [[testperformanceoptimization]]
+- **test_garbage_collection_imported** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 3 connections
+  - -> calls -> [[unresolvedrefhasattr]]
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testmemoryoptimization]]
+- **test_performance_summary** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 3 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefitems]]
+  - <- contains <- [[testperformancesummary]]
+- **__unresolved__::ref::_default_sample_state** () -- 2 connections
+  - <- calls <- [[loadsampledata]]
+  - <- calls <- [[loadprojectstate]]
+- **__unresolved__::ref::_get_token** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::_skip_test** () -- 2 connections
+  - <- calls <- [[scenario2abortretry]]
+  - <- calls <- [[scenario3timetravel]]
+- **__unresolved__::ref::asgitransport** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::basicconfig** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::build_pptx** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[testfullworkflow]]
+- **__unresolved__::ref::build_presentation_pptx** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::center** () -- 2 connections
+  - <- calls <- [[printsummary]]
+  - <- calls <- [[testvectorsearch]]
+- **__unresolved__::ref::collect** () -- 2 connections
+  - <- calls <- [[processdocument]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::create_embedding** () -- 2 connections
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[runmigration]]
+- **__unresolved__::ref::enrich_with_team** () -- 2 connections
+  - <- calls <- [[scan]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::generate_presentation_slides** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::get_applied_migrations** () -- 2 connections
+  - <- calls <- [[applyallmigrations]]
+  - <- calls <- [[showmigrationstatus]]
+- **__unresolved__::ref::get_db_connection** () -- 2 connections
+  - <- calls <- [[applyallmigrations]]
+  - <- calls <- [[showmigrationstatus]]
+- **__unresolved__::ref::get_migration_files** () -- 2 connections
+  - <- calls <- [[applyallmigrations]]
+  - <- calls <- [[showmigrationstatus]]
+- **__unresolved__::ref::init_client** () -- 2 connections
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[runmigration]]
+- **__unresolved__::ref::insert_project** () -- 2 connections
+  - <- calls <- [[runmigration]]
+  - <- calls <- [[runmigration]]
+- **__unresolved__::ref::iterdir** () -- 2 connections
+  - <- calls <- [[buildfromtemplate]]
+  - <- calls <- [[findfile]]
+- **__unresolved__::ref::itertext** () -- 2 connections
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[textoftnode]]
+- **__unresolved__::ref::load_profile** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::namelist** () -- 2 connections
+  - <- calls <- [[readhwpxtext]]
+  - <- calls <- [[validatehwpx]]
+- **__unresolved__::ref::phase2artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase2analysis]]
+- **__unresolved__::ref::phase3artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase3plan]]
+- **__unresolved__::ref::phase4artifact** () -- 2 connections
+  - <- calls <- [[runpresentation]]
+  - <- calls <- [[phase4implement]]
+- **__unresolved__::ref::print_summary** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::recommend** () -- 2 connections
+  - <- calls <- [[enrichwithteam]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::rglob** () -- 2 connections
+  - <- calls <- [[packhwpx]]
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::supabasemigrator** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::teamrecommender** () -- 2 connections
+  - <- calls <- [[getrecommender]]
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_vector_search** () -- 2 connections
+  - <- calls <- [[main]]
+  - <- calls <- [[main]]
+- **build_hwpx_async** (C:\project\tenopa proposer\app\services\hwpx_builder.py) -- 2 connections
+  - -> calls -> [[unresolvedreftothread]]
+  - <- contains <- [[hwpxbuilder]]
+- **build_proposal_hwpx_async** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 2 connections
+  - -> calls -> [[unresolvedreftothread]]
+  - <- contains <- [[hwpxservice]]
+- **check_page_drift** (C:\project\tenopa proposer\app\services\hwpx_service.py) -- 2 connections
+  - -> calls -> [[unresolvedrefcheck]]
+  - <- contains <- [[hwpxservice]]
+- **build_pptx** (C:\project\tenopa proposer\app\services\pptx_builder.py) -- 2 connections
+  - -> calls -> [[unresolvedreftothread]]
+  - <- contains <- [[pptxbuilder]]
+- **_check** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[e2einterrupttest]]
+- **_skip_test** (C:\project\tenopa proposer\scripts\e2e_interrupt_test.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[e2einterrupttest]]
+- **MigrateConfig** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 2 connections
+  - -> contains -> [[init]]
+  - <- contains <- [[migrateintranet]]
+- **_print_summary** (C:\project\tenopa proposer\scripts\migrate_intranet.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[intranetmigrator]]
+- **print_summary** (C:\project\tenopa proposer\scripts\pilot_migration_10projects.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[supabasemigrator]]
+- **__init__** (C:\project\tenopa proposer\scripts\pilot_migration_demo.py) -- 2 connections
+  - -> calls -> [[unresolvedrefgetenv]]
+  - <- contains <- [[supabasemigrator]]
+- **TestMemoryOptimization** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> contains -> [[testgarbagecollectionimported]]
+  - <- contains <- [[testperformanceoptimization]]
+- **TestPerformanceSummary** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> contains -> [[testperformancesummary]]
+  - <- contains <- [[testperformanceoptimization]]
+- **test_batch_count_reduction** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testbatchsizeoptimization]]
+- **test_concurrent_classifications_limit** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testconcurrencyconfiguration]]
+- **test_concurrent_documents_limit** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testconcurrencyconfiguration]]
+- **test_embedding_batch_size_configuration** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testbatchsizeoptimization]]
+- **test_insert_batch_size_configuration** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 2 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - <- contains <- [[testbatchsizeoptimization]]
+- **__unresolved__::ref::_add_body** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::_add_cover** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::_add_evaluation_table** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::_add_toc** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::_analyze_char_styles** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_fonts** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_page_setup** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_para_styles** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_analyze_tables** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::_download_sample_template** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::_empty_pipeline** () -- 1 connections
+  - <- calls <- [[loadpipeline]]
+- **__unresolved__::ref::_extract_text_from_docx_bytes** () -- 1 connections
+  - <- calls <- [[extracttextfrombytes]]
+- **__unresolved__::ref::_extract_text_from_pdf_bytes** () -- 1 connections
+  - <- calls <- [[extracttextfrombytes]]
+- **__unresolved__::ref::_generate_section_xml** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::_get_graph_token** () -- 1 connections
+  - <- calls <- [[sendemail]]
+- **__unresolved__::ref::_get_recommender** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::_pack_hwpx** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::_resolve_template_path** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::_run_all_steps** () -- 1 connections
+  - <- calls <- [[processsingle]]
+- **__unresolved__::ref::_setup_styles** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::_update_metadata** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::_upload_presentation** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::_validate_xml** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::aget_session** () -- 1 connections
+  - <- calls <- [[runpresentation]]
+- **__unresolved__::ref::analyze_technical_scoring_optimization** () -- 1 connections
+  - <- calls <- [[testtechnicaloptimization]]
+- **__unresolved__::ref::apply_all_migrations** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::build_agenda** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::build_closing** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::build_cover** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::build_docx** () -- 1 connections
+  - <- calls <- [[testfullworkflow]]
+- **__unresolved__::ref::build_from_template** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::build_profile** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::build_section_header** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::builder** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::call_claude** () -- 1 connections
+  - <- calls <- [[generatestoryboard]]
+- **__unresolved__::ref::call_later** () -- 1 connections
+  - <- calls <- [[processsingle]]
+- **__unresolved__::ref::check_ai_quality** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::check_e2e_pipeline** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::check_page_drift** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::check_result_accuracy** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::check_search_exists** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::cleanup_expired** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::copy2** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::copytree** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::dictreader** () -- 1 connections
+  - <- calls <- [[loaddeptmapping]]
+- **__unresolved__::ref::dirname** () -- 1 connections
+  - <- calls <- [[loadsampledata]]
+- **__unresolved__::ref::execute_workflow** () -- 1 connections
+  - <- calls <- [[testmodulararchitecture]]
+- **__unresolved__::ref::extract_header_xml** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **__unresolved__::ref::extract_hwpx_text** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::extract_text_from_docx** () -- 1 connections
+  - <- calls <- [[extracttextfromfile]]
+- **__unresolved__::ref::extract_text_from_hwp** () -- 1 connections
+  - <- calls <- [[extracttextfromfile]]
+- **__unresolved__::ref::extract_text_from_pdf** () -- 1 connections
+  - <- calls <- [[extracttextfromfile]]
+- **__unresolved__::ref::extract_text_from_pptx** () -- 1 connections
+  - <- calls <- [[extracttextfromfile]]
+- **__unresolved__::ref::extract_text_from_xlsx** () -- 1 connections
+  - <- calls <- [[extracttextfromfile]]
+- **__unresolved__::ref::extractall** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::fetchrow** () -- 1 connections
+  - <- calls <- [[showmigrationstatus]]
+- **__unresolved__::ref::format_report_console** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::format_report_json** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::generate_proposal_from_input** () -- 1 connections
+  - <- calls <- [[testfullworkflow]]
+- **__unresolved__::ref::generate_storyboard** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::get_event_loop** () -- 1 connections
+  - <- calls <- [[processsingle]]
+- **__unresolved__::ref::getinfo** () -- 1 connections
+  - <- calls <- [[validatehwpx]]
+- **__unresolved__::ref::import_from_excel** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::index** () -- 1 connections
+  - <- calls <- [[validatehwpx]]
+- **__unresolved__::ref::intranetmigrator** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::is_dir** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::load_dept_mapping** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::load_pipeline** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::migrateconfig** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::mkdtemp** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::mock** () -- 1 connections
+  - <- imports <- [[testperformanceoptimization]]
+- **__unresolved__::ref::modularproposalworkflow** () -- 1 connections
+  - <- calls <- [[testmodulararchitecture]]
+- **__unresolved__::ref::monitorreport** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::new** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::notify_teams** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::parse_excel** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::parse_xlsx** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::print_active** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::print_results** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::projectinput** () -- 1 connections
+  - <- calls <- [[testfullworkflow]]
+- **__unresolved__::ref::provision** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::pytest** () -- 1 connections
+  - <- imports <- [[testperformanceoptimization]]
+- **__unresolved__::ref::rfp_review_engine** () -- 1 connections
+  - <- imports <- [[testtechnicaloptimization]]
+- **__unresolved__::ref::rfpreviewengine** () -- 1 connections
+  - <- calls <- [[testtechnicaloptimization]]
+- **__unresolved__::ref::rmtree** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::save_pipeline** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::save_to_path** () -- 1 connections
+  - <- calls <- [[buildhwpx]]
+- **__unresolved__::ref::scan** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::scenario_1_no_go** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::scenario_2_abort_retry** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::scenario_3_time_travel** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::search_and_score** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::seed** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::select_bid** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::set_speaker_notes** () -- 1 connections
+  - <- calls <- [[buildpptx]]
+- **__unresolved__::ref::show_migration_status** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::templateanalysis** () -- 1 connections
+  - <- calls <- [[analyzetemplate]]
+- **__unresolved__::ref::temporarydirectory** () -- 1 connections
+  - <- calls <- [[buildfromtemplate]]
+- **__unresolved__::ref::test_ai_recommendation** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_bid_detail** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_bid_results** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_bid_search** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_standalone_wrapper** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::test_with_live_g2b** () -- 1 connections
+  - <- calls <- [[main]]
+- **__unresolved__::ref::to_pipeline_dict** () -- 1 connections
+  - <- calls <- [[enrichwithteam]]
+- **__unresolved__::ref::transaction** () -- 1 connections
+  - <- calls <- [[applymigration]]
+- **__unresolved__::ref::validate** () -- 1 connections
+  - <- calls <- [[buildproposalhwpx]]
+- **modular_analysis** (C:\project\tenopa proposer\scripts\archive\modular_analysis.py) -- 1 connections
+  - -> contains -> [[analyzecurrentvsrequired]]
+- **TestParallelClassification** (C:\project\tenopa proposer\tests\test_performance_optimization.py) -- 1 connections
+  - <- contains <- [[testperformanceoptimization]]
+
+## Internal Relationships
+- _load_file_cache -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- _save_file_cache -> calls -> __unresolved__::ref::write_text [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::path [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::to_thread [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::download [EXTRACTED]
+- _download_sample_template -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- _resolve_template_path -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- _resolve_template_path -> calls -> __unresolved__::ref::path [EXTRACTED]
+- _resolve_template_path -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::aget_session [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase2artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase3artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::phase4artifact [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::generate_presentation_slides [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_download_sample_template [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_resolve_template_path [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::path [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::build_presentation_pptx [EXTRACTED]
+- _run_presentation -> calls -> __unresolved__::ref::_upload_presentation [EXTRACTED]
+- _is_interrupted -> calls -> __unresolved__::ref::endswith [EXTRACTED]
+- _extract_text_from_bytes -> calls -> __unresolved__::ref::_extract_text_from_pdf_bytes [EXTRACTED]
+- _extract_text_from_bytes -> calls -> __unresolved__::ref::_extract_text_from_docx_bytes [EXTRACTED]
+- _extract_text_from_bytes -> calls -> __unresolved__::ref::decode [EXTRACTED]
+- _process_single -> calls -> __unresolved__::ref::wait_for [EXTRACTED]
+- _process_single -> calls -> __unresolved__::ref::_run_all_steps [EXTRACTED]
+- _process_single -> calls -> __unresolved__::ref::get_event_loop [EXTRACTED]
+- _process_single -> calls -> __unresolved__::ref::call_later [EXTRACTED]
+- send_email -> calls -> __unresolved__::ref::_get_graph_token [EXTRACTED]
+- send_email -> calls -> __unresolved__::ref::asyncclient [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::path [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::mkdtemp [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::extractall [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::filenotfounderror [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_fonts [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_char_styles [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_para_styles [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_page_setup [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::_analyze_tables [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::templateanalysis [EXTRACTED]
+- analyze_template -> calls -> __unresolved__::ref::rmtree [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::path [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::is_dir [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::filenotfounderror [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::temporarydirectory [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::copytree [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::iterdir [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::is_file [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::copy2 [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_update_metadata [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::rglob [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_validate_xml [EXTRACTED]
+- build_from_template -> calls -> __unresolved__::ref::_pack_hwpx [EXTRACTED]
+- _text_of_t_node -> calls -> __unresolved__::ref::itertext [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::path [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::is_file [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::namelist [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::decode [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::index [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::getinfo [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::endswith [EXTRACTED]
+- validate_hwpx -> calls -> __unresolved__::ref::fromstring [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::new [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::_setup_styles [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::_add_cover [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::_add_evaluation_table [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::_add_toc [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::_add_body [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- build_hwpx -> calls -> __unresolved__::ref::save_to_path [EXTRACTED]
+- build_hwpx_async -> calls -> __unresolved__::ref::to_thread [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::path [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::_generate_section_xml [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::gettempdir [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::write_text [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::extract_header_xml [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::build_from_template [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::validate [EXTRACTED]
+- build_proposal_hwpx -> calls -> __unresolved__::ref::check_page_drift [EXTRACTED]
+- build_proposal_hwpx_async -> calls -> __unresolved__::ref::to_thread [EXTRACTED]
+- check_page_drift -> calls -> __unresolved__::ref::_check [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::to_thread [EXTRACTED]
+- build_pptx_legacy -> calls -> __unresolved__::ref::path [EXTRACTED]
+- build_pptx_legacy -> calls -> __unresolved__::ref::presentation [EXTRACTED]
+- build_pptx_legacy -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- _load_sample_data -> calls -> __unresolved__::ref::dirname [EXTRACTED]
+- _load_sample_data -> calls -> __unresolved__::ref::open [EXTRACTED]
+- _load_sample_data -> calls -> __unresolved__::ref::_default_sample_state [EXTRACTED]
+- _get_template_files -> calls -> __unresolved__::ref::path [EXTRACTED]
+- _get_template_files -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- _get_template_files -> calls -> __unresolved__::ref::glob [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::namelist [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::endswith [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::open [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::decode [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::fromstring [EXTRACTED]
+- _read_hwpx_text -> calls -> __unresolved__::ref::itertext [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::path [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::extract_text_from_pdf [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::extract_text_from_docx [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::extract_text_from_hwp [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::extract_text_from_pptx [EXTRACTED]
+- extract_text_from_file -> calls -> __unresolved__::ref::extract_text_from_xlsx [EXTRACTED]
+- validate_file_type -> calls -> __unresolved__::ref::path [EXTRACTED]
+- print_migration_sql -> calls -> __unresolved__::ref::path [EXTRACTED]
+- print_migration_sql -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- print_migration_sql -> calls -> __unresolved__::ref::print [EXTRACTED]
+- apply_migration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- apply_migration -> calls -> __unresolved__::ref::transaction [EXTRACTED]
+- get_migration_files -> calls -> __unresolved__::ref::path [EXTRACTED]
+- get_migration_files -> calls -> __unresolved__::ref::glob [EXTRACTED]
+- get_migration_files -> calls -> __unresolved__::ref::stat [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::show_migration_status [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::apply_all_migrations [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_exc [EXTRACTED]
+- show_migration_status -> calls -> __unresolved__::ref::get_db_connection [EXTRACTED]
+- show_migration_status -> calls -> __unresolved__::ref::get_migration_files [EXTRACTED]
+- show_migration_status -> calls -> __unresolved__::ref::get_applied_migrations [EXTRACTED]
+- show_migration_status -> calls -> __unresolved__::ref::print [EXTRACTED]
+- show_migration_status -> calls -> __unresolved__::ref::fetchrow [EXTRACTED]
+- analyze_current_vs_required -> calls -> __unresolved__::ref::print [EXTRACTED]
+- modular_analysis -> contains -> analyze_current_vs_required [EXTRACTED]
+- test_modular_architecture -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_modular_architecture -> calls -> __unresolved__::ref::modularproposalworkflow [EXTRACTED]
+- test_modular_architecture -> calls -> __unresolved__::ref::execute_workflow [EXTRACTED]
+- test_modular_architecture -> calls -> __unresolved__::ref::print_exc [EXTRACTED]
+- test_technical_optimization -> calls -> __unresolved__::ref::rfpreviewengine [EXTRACTED]
+- test_technical_optimization -> calls -> __unresolved__::ref::analyze_technical_scoring_optimization [EXTRACTED]
+- test_technical_optimization -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_technical_optimization -> calls -> __unresolved__::ref::print_exc [EXTRACTED]
+- test_technical_optimization -> contains -> test_technical_optimization [EXTRACTED]
+- test_technical_optimization -> imports -> __unresolved__::ref::rfp_review_engine [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::projectinput [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::generate_proposal_from_input [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::path [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::build_docx [EXTRACTED]
+- test_full_workflow -> calls -> __unresolved__::ref::build_pptx [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- main -> calls -> __unresolved__::ref::collect [EXTRACTED]
+- _get_recommender -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- _get_recommender -> calls -> __unresolved__::ref::teamrecommender [EXTRACTED]
+- enrich_with_team -> calls -> __unresolved__::ref::recommend [EXTRACTED]
+- enrich_with_team -> calls -> __unresolved__::ref::to_pipeline_dict [EXTRACTED]
+- load_pipeline -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- load_pipeline -> calls -> __unresolved__::ref::open [EXTRACTED]
+- load_pipeline -> calls -> __unresolved__::ref::_empty_pipeline [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::load_profile [EXTRACTED]
+- main -> calls -> __unresolved__::ref::load_pipeline [EXTRACTED]
+- main -> calls -> __unresolved__::ref::_get_recommender [EXTRACTED]
+- main -> calls -> __unresolved__::ref::enrich_with_team [EXTRACTED]
+- main -> calls -> __unresolved__::ref::save_pipeline [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_active [EXTRACTED]
+- main -> calls -> __unresolved__::ref::select_bid [EXTRACTED]
+- main -> calls -> __unresolved__::ref::cleanup_expired [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- main -> calls -> __unresolved__::ref::scan [EXTRACTED]
+- save_pipeline -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- save_pipeline -> calls -> __unresolved__::ref::open [EXTRACTED]
+- save_pipeline -> calls -> __unresolved__::ref::dump [EXTRACTED]
+- _check -> calls -> __unresolved__::ref::print [EXTRACTED]
+- _skip_test -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::_get_token [EXTRACTED]
+- main -> calls -> __unresolved__::ref::basicconfig [EXTRACTED]
+- main -> calls -> __unresolved__::ref::asgitransport [EXTRACTED]
+- main -> calls -> __unresolved__::ref::asyncclient [EXTRACTED]
+- main -> calls -> __unresolved__::ref::scenario_1_no_go [EXTRACTED]
+- main -> calls -> __unresolved__::ref::scenario_2_abort_retry [EXTRACTED]
+- main -> calls -> __unresolved__::ref::scenario_3_time_travel [EXTRACTED]
+- scenario_1_no_go -> calls -> __unresolved__::ref::print [EXTRACTED]
+- scenario_1_no_go -> calls -> __unresolved__::ref::_create_proposal [EXTRACTED]
+- scenario_1_no_go -> calls -> __unresolved__::ref::_start_workflow [EXTRACTED]
+- scenario_1_no_go -> calls -> __unresolved__::ref::_check [EXTRACTED]
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::print [EXTRACTED]
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::_create_proposal [EXTRACTED]
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::_start_workflow [EXTRACTED]
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::_check [EXTRACTED]
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::_skip_test [EXTRACTED]
+- scenario_3_time_travel -> calls -> __unresolved__::ref::print [EXTRACTED]
+- scenario_3_time_travel -> calls -> __unresolved__::ref::_create_proposal [EXTRACTED]
+- scenario_3_time_travel -> calls -> __unresolved__::ref::_start_workflow [EXTRACTED]
+- scenario_3_time_travel -> calls -> __unresolved__::ref::_check [EXTRACTED]
+- scenario_3_time_travel -> calls -> __unresolved__::ref::_skip_test [EXTRACTED]
+- main -> calls -> __unresolved__::ref::_get_token [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::asgitransport [EXTRACTED]
+- main -> calls -> __unresolved__::ref::asyncclient [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::presentation [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::build_cover [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::build_agenda [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::build_section_header [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::build_closing [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::builder [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::set_speaker_notes [EXTRACTED]
+- build_pptx -> calls -> __unresolved__::ref::print [EXTRACTED]
+- generate_storyboard -> calls -> __unresolved__::ref::print [EXTRACTED]
+- generate_storyboard -> calls -> __unresolved__::ref::call_claude [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::extract_hwpx_text [EXTRACTED]
+- main -> calls -> __unresolved__::ref::generate_storyboard [EXTRACTED]
+- main -> calls -> __unresolved__::ref::path [EXTRACTED]
+- main -> calls -> __unresolved__::ref::build_pptx [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_excel [EXTRACTED]
+- main -> calls -> __unresolved__::ref::build_profile [EXTRACTED]
+- main -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- main -> calls -> __unresolved__::ref::open [EXTRACTED]
+- main -> calls -> __unresolved__::ref::dump [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::path [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::import_from_excel [EXTRACTED]
+- main -> calls -> __unresolved__::ref::open [EXTRACTED]
+- main -> calls -> __unresolved__::ref::mkdir [EXTRACTED]
+- main -> calls -> __unresolved__::ref::dump [EXTRACTED]
+- init_buckets -> calls -> __unresolved__::ref::print [EXTRACTED]
+- init_buckets -> calls -> __unresolved__::ref::asyncclient [EXTRACTED]
+- MigrateConfig -> contains -> __init__ [EXTRACTED]
+- load_dept_mapping -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- load_dept_mapping -> calls -> __unresolved__::ref::path [EXTRACTED]
+- load_dept_mapping -> calls -> __unresolved__::ref::open [EXTRACTED]
+- load_dept_mapping -> calls -> __unresolved__::ref::dictreader [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::migrateconfig [EXTRACTED]
+- main -> calls -> __unresolved__::ref::load_dept_mapping [EXTRACTED]
+- main -> calls -> __unresolved__::ref::intranetmigrator [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::path [EXTRACTED]
+- _print_summary -> calls -> __unresolved__::ref::print [EXTRACTED]
+- find_file -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- find_file -> calls -> __unresolved__::ref::iterdir [EXTRACTED]
+- find_file -> calls -> __unresolved__::ref::is_file [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run_migration [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::basicconfig [EXTRACTED]
+- main -> calls -> __unresolved__::ref::monitorreport [EXTRACTED]
+- main -> calls -> __unresolved__::ref::wait_for [EXTRACTED]
+- main -> calls -> __unresolved__::ref::check_search_exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::check_result_accuracy [EXTRACTED]
+- main -> calls -> __unresolved__::ref::check_ai_quality [EXTRACTED]
+- main -> calls -> __unresolved__::ref::check_e2e_pipeline [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::format_report_json [EXTRACTED]
+- main -> calls -> __unresolved__::ref::format_report_console [EXTRACTED]
+- main -> calls -> __unresolved__::ref::notify_teams [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- parse_args -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- parse_args -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- parse_args -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- SupabaseMigrator -> contains -> run_migration [EXTRACTED]
+- SupabaseMigrator -> contains -> print_summary [EXTRACTED]
+- print_summary -> calls -> __unresolved__::ref::print [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::init_client [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::insert_project [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::create_embedding [EXTRACTED]
+- SupabaseMigrator -> contains -> __init__ [EXTRACTED]
+- SupabaseMigrator -> contains -> run_migration [EXTRACTED]
+- SupabaseMigrator -> contains -> print_summary [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_help [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::supabasemigrator [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run_migration [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_summary [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_vector_search [EXTRACTED]
+- print_summary -> calls -> __unresolved__::ref::print [EXTRACTED]
+- print_summary -> calls -> __unresolved__::ref::center [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::init_client [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::insert_project [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::create_embedding [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- main -> calls -> __unresolved__::ref::provision [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_help [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run_migration [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run_migration [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::path [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- run_migration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::argumentparser [EXTRACTED]
+- main -> calls -> __unresolved__::ref::add_argument [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_args [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::load_profile [EXTRACTED]
+- main -> calls -> __unresolved__::ref::run [EXTRACTED]
+- main -> calls -> __unresolved__::ref::search_and_score [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print_results [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exists [EXTRACTED]
+- main -> calls -> __unresolved__::ref::parse_xlsx [EXTRACTED]
+- main -> calls -> __unresolved__::ref::seed [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::exit [EXTRACTED]
+- main -> calls -> __unresolved__::ref::teamrecommender [EXTRACTED]
+- main -> calls -> __unresolved__::ref::recommend [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_bid_search [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_bid_results [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_standalone_wrapper [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_bid_detail [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::generate_presentation_slides [EXTRACTED]
+- main -> calls -> __unresolved__::ref::decode [EXTRACTED]
+- main -> calls -> __unresolved__::ref::path [EXTRACTED]
+- main -> calls -> __unresolved__::ref::build_presentation_pptx [EXTRACTED]
+- main -> calls -> __unresolved__::ref::stat [EXTRACTED]
+- main -> calls -> __unresolved__::ref::write_text [EXTRACTED]
+- main -> calls -> __unresolved__::ref::print [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_with_live_g2b [EXTRACTED]
+- main -> calls -> __unresolved__::ref::test_ai_recommendation [EXTRACTED]
+- TestBatchSizeOptimization -> contains -> test_embedding_batch_size_configuration [EXTRACTED]
+- TestBatchSizeOptimization -> contains -> test_insert_batch_size_configuration [EXTRACTED]
+- TestBatchSizeOptimization -> contains -> test_batch_count_reduction [EXTRACTED]
+- TestConcurrencyConfiguration -> contains -> test_concurrent_documents_limit [EXTRACTED]
+- TestConcurrencyConfiguration -> contains -> test_concurrent_classifications_limit [EXTRACTED]
+- TestMemoryOptimization -> contains -> test_garbage_collection_imported [EXTRACTED]
+- TestPerformanceSummary -> contains -> test_performance_summary [EXTRACTED]
+- test_batch_count_reduction -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_concurrent_classifications_limit -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_concurrent_documents_limit -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_embedding_batch_size_configuration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_garbage_collection_imported -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_insert_batch_size_configuration -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_performance_summary -> calls -> __unresolved__::ref::print [EXTRACTED]
+- test_performance_optimization -> contains -> TestBatchSizeOptimization [EXTRACTED]
+- test_performance_optimization -> contains -> TestConcurrencyConfiguration [EXTRACTED]
+- test_performance_optimization -> contains -> TestParallelClassification [EXTRACTED]
+- test_performance_optimization -> contains -> TestMemoryOptimization [EXTRACTED]
+- test_performance_optimization -> contains -> TestPerformanceSummary [EXTRACTED]
+- test_performance_optimization -> imports -> __unresolved__::ref::pytest [EXTRACTED]
+- test_performance_optimization -> imports -> __unresolved__::ref::mock [EXTRACTED]
+
+## Cross-Community Connections
+- _load_file_cache -> calls -> __unresolved__::ref::loads (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _load_file_cache -> calls -> __unresolved__::ref::read_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _save_file_cache -> calls -> __unresolved__::ref::dumps (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _save_file_cache -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_sample_template -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_sample_template -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _download_sample_template -> calls -> __unresolved__::ref::lstrip (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _download_sample_template -> calls -> __unresolved__::ref::from_ (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_sample_template -> calls -> __unresolved__::ref::write_bytes (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- _download_sample_template -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _download_sample_template -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _resolve_template_path -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_presentation -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_presentation -> calls -> __unresolved__::ref::rfpdata (-> [[unresolvedrefvalueerror-executefromphase]])
+- _run_presentation -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_presentation -> calls -> __unresolved__::ref::update_session (-> [[unresolvedrefvalueerror-executefromphase]])
+- _run_presentation -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_presentation -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _is_interrupted -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::isoformat (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::_update_status (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _process_single -> calls -> __unresolved__::ref::pop (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- send_email -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- send_email -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- send_email -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- analyze_template -> calls -> __unresolved__::ref::zipfile (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- analyze_template -> calls -> __unresolved__::ref::getroot (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> calls -> __unresolved__::ref::parse (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- analyze_template -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- analyze_template -> calls -> __unresolved__::ref::xpath (-> [[collectmetrics-unresolvedreffindall]])
+- analyze_template -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_from_template -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _text_of_t_node -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_hwpx -> calls -> __unresolved__::ref::zipfile (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- validate_hwpx -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_hwpx -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_hwpx -> calls -> __unresolved__::ref::read (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- build_hwpx -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_hwpx -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_hwpx -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_proposal_hwpx -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::add_slide (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::clear (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::add_paragraph (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::save (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_pptx_legacy -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _load_sample_data -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _load_sample_data -> calls -> __unresolved__::ref::load (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- _load_sample_data -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_template_files -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _get_template_files -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::zipfile (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::read (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::sub (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _read_hwpx_text -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_text_from_file -> calls -> __unresolved__::ref::fileprocessingerror (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_text_from_file -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_text_from_file -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_text_from_file -> calls -> __unresolved__::ref::read_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- extract_text_from_file -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- validate_file_type -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- print_migration_sql -> calls -> __unresolved__::ref::read_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migration -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- apply_migration -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migration -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- apply_migration -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- apply_migration -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migration -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migration -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- apply_migration -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_migration_files -> calls -> __unresolved__::ref::sorted (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_migration_files -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- get_migration_files -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- show_migration_status -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- show_migration_status -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- show_migration_status -> calls -> __unresolved__::ref::close (-> [[unresolvedrefget-unresolvedrefexecute]])
+- analyze_current_vs_required -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- analyze_current_vs_required -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- analyze_current_vs_required -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_modular_architecture -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_modular_architecture -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_modular_architecture -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_modular_architecture -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_technical_optimization -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_technical_optimization -> imports -> __unresolved__::ref::asyncio (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_full_workflow -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_full_workflow -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_full_workflow -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- enrich_with_team -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- load_pipeline -> calls -> __unresolved__::ref::load (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- main -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- scenario_1_no_go -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_1_no_go -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_1_no_go -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::dumps (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_2_abort_retry -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::bool (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- scenario_3_time_travel -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- main -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- main -> calls -> __unresolved__::ref::log (-> [[unresolvedrefplaywrighttest-main]])
+- main -> calls -> __unresolved__::ref::range (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- build_pptx -> calls -> __unresolved__::ref::save (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- build_pptx -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- generate_storyboard -> calls -> __unresolved__::ref::format (-> [[unresolvedrefget-unresolvedrefexecute]])
+- generate_storyboard -> calls -> __unresolved__::ref::loads (-> [[unresolvedrefget-unresolvedrefexecute]])
+- generate_storyboard -> calls -> __unresolved__::ref::dumps (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::sum (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::keys (-> [[dailyg2bmonitor-healthcheckrunner]])
+- main -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::load (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::sum (-> [[unresolvedrefget-unresolvedrefexecute]])
+- init_buckets -> calls -> __unresolved__::ref::post (-> [[unresolvedrefget-unresolvedrefexecute]])
+- init_buckets -> calls -> __unresolved__::ref::json (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- init_buckets -> calls -> __unresolved__::ref::lower (-> [[unresolvedrefget-unresolvedrefexecute]])
+- init_buckets -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- init_buckets -> calls -> __unresolved__::ref::type (-> [[unresolvedrefget-unresolvedrefexecute]])
+- load_dept_mapping -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- load_dept_mapping -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- load_dept_mapping -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- load_dept_mapping -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- __init__ -> calls -> __unresolved__::ref::getenv (-> [[unresolvedrefget-unresolvedrefexecute]])
+- find_file -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- find_file -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- find_file -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- find_file -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::strip (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::split (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- main -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::g2bservice (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::search_bid_announcements (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::checkresult (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> __init__ (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> init_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> insert_project (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> create_embedding (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> init_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> insert_project (-> [[unresolvedrefget-unresolvedrefexecute]])
+- SupabaseMigrator -> contains -> create_embedding (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- __init__ -> calls -> __unresolved__::ref::getenv (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::read_text (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_migration -> calls -> __unresolved__::ref::rpc (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::dumps (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::encode (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- main -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_garbage_collection_imported -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_performance_summary -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_performance_optimization -> imports -> __unresolved__::ref::asyncio (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_performance_optimization -> imports -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- test_performance_optimization -> imports -> __unresolved__::ref::document_ingestion (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+
+## Context
+이 커뮤니티는 __unresolved__::ref::print, __unresolved__::ref::path, __unresolved__::ref::exists를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 add_missing_columns.py, analyze_template.py, apply_migrations.py, asset_extractor.py, bid_pipeline.py이다.
+
+### Key Facts
+- async def main(): args = parse_args() levels = {int(x.strip()) for x in args.level.split(",")}
+- title = bid.get("title", "") client = bid.get("client", "") results, domain = recommender.recommend(title, client, top_n=3)
+- 원본: Canine89/hwpxskill/scripts/analyze_template.py 서비스 모듈로 래핑 — CLI argparse 제거, 함수 API만 노출.
+- async def _run_presentation( proposal_id: str, template_mode: str = "standard", template_id: str = "government_blue", sample_storage_path: Optional[str] = None, ): """발표 자료 PPTX 생성 백그라운드 태스크""" try: session = await session_manager.aget_session(proposal_id)
+- def main(): parser = argparse.ArgumentParser(description="엑셀 팀 구조 → JSON 변환") parser.add_argument("excel_path", nargs="?", default=None, help="엑셀 파일 경로") args = parser.parse_args()

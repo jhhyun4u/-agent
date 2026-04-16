@@ -16,7 +16,6 @@ and AI runtime state (Layer 3: ai_task_status).
 
 from typing import Optional
 from app.services.state_validator import StateValidator, ProposalStatus, WinResult
-from app.exceptions import TenopAPIError
 
 
 class StateMachine:

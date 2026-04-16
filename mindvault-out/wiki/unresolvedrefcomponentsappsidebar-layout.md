@@ -4,7 +4,7 @@ Cohesion: 1.00 | Nodes: 2
 ## Key Nodes
 - **__unresolved__::ref::___components_appsidebar_** () -- 1 connections
   - <- imports <- [[layout]]
-- **layout** (C:\project\tenopa proposer\-agent-master\frontend\app\(app)\layout.tsx) -- 1 connections
+- **layout** (C:\project\tenopa proposer\frontend\app\(app)\layout.tsx) -- 1 connections
   - -> imports -> [[unresolvedrefcomponentsappsidebar]]
 
 ## Internal Relationships

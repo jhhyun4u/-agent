@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **cost_estimator** (C:\project\tenopa proposer\-agent-master\app\services\pricing\cost_estimator.py) -- 0 connections
+- **cost_estimator** (C:\project\tenopa proposer\app\services\pricing\cost_estimator.py) -- 0 connections
 
 ## Internal Relationships
 

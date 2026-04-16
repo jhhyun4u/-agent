@@ -4,7 +4,7 @@ Cohesion: 1.00 | Nodes: 2
 ## Key Nodes
 - **__unresolved__::ref::cost_sheet_builder** () -- 1 connections
   - <- imports <- [[init]]
-- **__init__** (C:\project\tenopa proposer\-agent-master\app\services\bidding\artifacts\__init__.py) -- 1 connections
+- **__init__** (C:\project\tenopa proposer\app\services\bidding\artifacts\__init__.py) -- 1 connections
   - -> imports -> [[unresolvedrefcostsheetbuilder]]
 
 ## Internal Relationships

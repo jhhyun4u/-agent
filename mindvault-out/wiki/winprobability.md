@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **win_probability** (C:\project\tenopa proposer\-agent-master\app\services\pricing\win_probability.py) -- 0 connections
+- **win_probability** (C:\project\tenopa proposer\app\services\pricing\win_probability.py) -- 0 connections
 
 ## Internal Relationships
 

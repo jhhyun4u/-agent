@@ -2,12 +2,12 @@
 Cohesion: 0.67 | Nodes: 3
 
 ## Key Nodes
-- **StreamTabBar** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamTabBar.tsx) -- 2 connections
+- **StreamTabBar** (C:\project\tenopa proposer\frontend\components\StreamTabBar.tsx) -- 2 connections
   - -> contains -> [[streaminfo]]
   - -> contains -> [[props]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamTabBar.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\StreamTabBar.tsx) -- 1 connections
   - <- contains <- [[streamtabbar]]
-- **StreamInfo** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamTabBar.tsx) -- 1 connections
+- **StreamInfo** (C:\project\tenopa proposer\frontend\components\StreamTabBar.tsx) -- 1 connections
   - <- contains <- [[streamtabbar]]
 
 ## Internal Relationships

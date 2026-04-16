@@ -291,7 +291,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.error(traceback.format_exc())
     response = JSONResponse(
         status_code=500,
-        content={"error": str(exc), "path": str(request.url.path)},
+        content={"error": "Internal server error", "path": str(request.url.path)},
     )
     return _add_cors_headers(response, request)
 

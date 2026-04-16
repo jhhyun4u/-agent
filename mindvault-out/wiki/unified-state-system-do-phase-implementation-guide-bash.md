@@ -1,0 +1,211 @@
+# Unified State System - Do Phase (Implementation Guide) & bash
+Cohesion: 0.06 | Nodes: 43
+
+## Key Nodes
+- **Unified State System - Do Phase (Implementation Guide)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 14 connections
+  - -> contains -> [[overview]]
+  - -> contains -> [[phase-1-database-schema-migration-1-2-days]]
+  - -> contains -> [[phase-2-backend-code-refactoring-2-days-pending]]
+  - -> contains -> [[phase-3-api-and-service-updates-2-days-pending]]
+  - -> contains -> [[phase-4-testing-and-deployment-1-day-pending]]
+  - -> contains -> [[implementation-order]]
+  - -> contains -> [[key-files-summary]]
+  - -> contains -> [[dependencies]]
+  - -> contains -> [[success-criteria-per-phase]]
+  - -> contains -> [[rollback-procedure-if-issues-found]]
+  - -> contains -> [[testing-commands-reference]]
+  - -> contains -> [[estimated-effort]]
+  - -> contains -> [[communication-checklist]]
+  - -> contains -> [[next-steps-after-phase-1]]
+- **bash** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 9 connections
+  - <- has_code_example <- [[11-create-migration-sql-file]]
+  - <- has_code_example <- [[13-deploy-migration]]
+  - <- has_code_example <- [[21-create-state-validator-service]]
+  - <- has_code_example <- [[23-update-workflow-nodes]]
+  - <- has_code_example <- [[41-unit-tests]]
+  - <- has_code_example <- [[42-integration-tests]]
+  - <- has_code_example <- [[43-pre-deployment-verification]]
+  - <- has_code_example <- [[rollback-procedure-if-issues-found]]
+  - <- has_code_example <- [[testing-commands-reference]]
+- **Implementation Order** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 5 connections
+  - -> contains -> [[week-1-phase-1-database]]
+  - -> contains -> [[week-2-phase-2-backend-services]]
+  - -> contains -> [[week-3-phase-3-api]]
+  - -> contains -> [[week-4-phase-4-testing-deployment]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Success Criteria per Phase** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 5 connections
+  - -> contains -> [[phase-1-after-completion]]
+  - -> contains -> [[phase-2-after-completion]]
+  - -> contains -> [[phase-3-after-completion]]
+  - -> contains -> [[phase-4-after-completion]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Key Files Summary** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 4 connections
+  - -> contains -> [[files-to-create]]
+  - -> contains -> [[files-to-modify]]
+  - -> contains -> [[no-changes-needed]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Phase 1: Database Schema Migration (1-2 Days)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 4 connections
+  - -> contains -> [[11-create-migration-sql-file]]
+  - -> contains -> [[12-create-rollback-script]]
+  - -> contains -> [[13-deploy-migration]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Phase 2: Backend Code Refactoring (2 Days) — PENDING** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 4 connections
+  - -> contains -> [[21-create-state-validator-service]]
+  - -> contains -> [[22-create-state-machine-class]]
+  - -> contains -> [[23-update-workflow-nodes]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Phase 3: API and Service Updates (2 Days) — PENDING** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 4 connections
+  - -> contains -> [[31-enhance-workflow-state-endpoint]]
+  - -> contains -> [[32-add-state-history-endpoint]]
+  - -> contains -> [[33-update-notification-service]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Phase 4: Testing and Deployment (1 Day) — PENDING** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 4 connections
+  - -> contains -> [[41-unit-tests]]
+  - -> contains -> [[42-integration-tests]]
+  - -> contains -> [[43-pre-deployment-verification]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **2.3 Update Workflow Nodes** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 3 connections
+  - -> has_code_example -> [[python]]
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-2-backend-code-refactoring-2-days-pending]]
+- **Dependencies** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 3 connections
+  - -> contains -> [[new-packages]]
+  - -> contains -> [[existing-packages]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **1.1 Create Migration SQL File** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-1-database-schema-migration-1-2-days]]
+- **1.2 Create Rollback Script** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[phase-1-database-schema-migration-1-2-days]]
+- **1.3 Deploy Migration** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-1-database-schema-migration-1-2-days]]
+- **2.1 Create State Validator Service** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-2-backend-code-refactoring-2-days-pending]]
+- **4.1 Unit Tests** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-4-testing-and-deployment-1-day-pending]]
+- **4.2 Integration Tests** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-4-testing-and-deployment-1-day-pending]]
+- **4.3 Pre-Deployment Verification** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[phase-4-testing-and-deployment-1-day-pending]]
+- **Rollback Procedure (If Issues Found)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Testing Commands Reference** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **python** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- has_code_example <- [[23-update-workflow-nodes]]
+- **sql** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- has_code_example <- [[12-create-rollback-script]]
+- **2.2 Create State Machine Class** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[phase-2-backend-code-refactoring-2-days-pending]]
+- **3.1 Enhance Workflow State Endpoint** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[phase-3-api-and-service-updates-2-days-pending]]
+- **3.2 Add State History Endpoint** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[phase-3-api-and-service-updates-2-days-pending]]
+- **3.3 Update Notification Service** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[phase-3-api-and-service-updates-2-days-pending]]
+- **Communication Checklist** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Estimated Effort** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Existing Packages** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[dependencies]]
+- **Files to Create** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[key-files-summary]]
+- **Files to Modify** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[key-files-summary]]
+- **New Packages** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[dependencies]]
+- **Next Steps After Phase 1** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **No Changes Needed** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[key-files-summary]]
+- **Overview** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[unified-state-system-do-phase-implementation-guide]]
+- **Phase 1 ✅ (After Completion)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[success-criteria-per-phase]]
+- **Phase 2 ✅ (After Completion)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[success-criteria-per-phase]]
+- **Phase 3 ✅ (After Completion)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[success-criteria-per-phase]]
+- **Phase 4 ✅ (After Completion)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[success-criteria-per-phase]]
+- **Week 1: Phase 1 (Database)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Week 2: Phase 2 (Backend Services)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Week 3: Phase 3 (API)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+- **Week 4: Phase 4 (Testing & Deployment)** (C:\project\tenopa proposer\docs\03-implementation\features\unified-state-system.do.md) -- 1 connections
+  - <- contains <- [[implementation-order]]
+
+## Internal Relationships
+- 1.1 Create Migration SQL File -> has_code_example -> bash [EXTRACTED]
+- 1.2 Create Rollback Script -> has_code_example -> sql [EXTRACTED]
+- 1.3 Deploy Migration -> has_code_example -> bash [EXTRACTED]
+- 2.1 Create State Validator Service -> has_code_example -> bash [EXTRACTED]
+- 2.3 Update Workflow Nodes -> has_code_example -> python [EXTRACTED]
+- 2.3 Update Workflow Nodes -> has_code_example -> bash [EXTRACTED]
+- 4.1 Unit Tests -> has_code_example -> bash [EXTRACTED]
+- 4.2 Integration Tests -> has_code_example -> bash [EXTRACTED]
+- 4.3 Pre-Deployment Verification -> has_code_example -> bash [EXTRACTED]
+- Dependencies -> contains -> New Packages [EXTRACTED]
+- Dependencies -> contains -> Existing Packages [EXTRACTED]
+- Implementation Order -> contains -> Week 1: Phase 1 (Database) [EXTRACTED]
+- Implementation Order -> contains -> Week 2: Phase 2 (Backend Services) [EXTRACTED]
+- Implementation Order -> contains -> Week 3: Phase 3 (API) [EXTRACTED]
+- Implementation Order -> contains -> Week 4: Phase 4 (Testing & Deployment) [EXTRACTED]
+- Key Files Summary -> contains -> Files to Create [EXTRACTED]
+- Key Files Summary -> contains -> Files to Modify [EXTRACTED]
+- Key Files Summary -> contains -> No Changes Needed [EXTRACTED]
+- Phase 1: Database Schema Migration (1-2 Days) -> contains -> 1.1 Create Migration SQL File [EXTRACTED]
+- Phase 1: Database Schema Migration (1-2 Days) -> contains -> 1.2 Create Rollback Script [EXTRACTED]
+- Phase 1: Database Schema Migration (1-2 Days) -> contains -> 1.3 Deploy Migration [EXTRACTED]
+- Phase 2: Backend Code Refactoring (2 Days) — PENDING -> contains -> 2.1 Create State Validator Service [EXTRACTED]
+- Phase 2: Backend Code Refactoring (2 Days) — PENDING -> contains -> 2.2 Create State Machine Class [EXTRACTED]
+- Phase 2: Backend Code Refactoring (2 Days) — PENDING -> contains -> 2.3 Update Workflow Nodes [EXTRACTED]
+- Phase 3: API and Service Updates (2 Days) — PENDING -> contains -> 3.1 Enhance Workflow State Endpoint [EXTRACTED]
+- Phase 3: API and Service Updates (2 Days) — PENDING -> contains -> 3.2 Add State History Endpoint [EXTRACTED]
+- Phase 3: API and Service Updates (2 Days) — PENDING -> contains -> 3.3 Update Notification Service [EXTRACTED]
+- Phase 4: Testing and Deployment (1 Day) — PENDING -> contains -> 4.1 Unit Tests [EXTRACTED]
+- Phase 4: Testing and Deployment (1 Day) — PENDING -> contains -> 4.2 Integration Tests [EXTRACTED]
+- Phase 4: Testing and Deployment (1 Day) — PENDING -> contains -> 4.3 Pre-Deployment Verification [EXTRACTED]
+- Rollback Procedure (If Issues Found) -> has_code_example -> bash [EXTRACTED]
+- Success Criteria per Phase -> contains -> Phase 1 ✅ (After Completion) [EXTRACTED]
+- Success Criteria per Phase -> contains -> Phase 2 ✅ (After Completion) [EXTRACTED]
+- Success Criteria per Phase -> contains -> Phase 3 ✅ (After Completion) [EXTRACTED]
+- Success Criteria per Phase -> contains -> Phase 4 ✅ (After Completion) [EXTRACTED]
+- Testing Commands Reference -> has_code_example -> bash [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Overview [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Phase 1: Database Schema Migration (1-2 Days) [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Phase 2: Backend Code Refactoring (2 Days) — PENDING [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Phase 3: API and Service Updates (2 Days) — PENDING [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Phase 4: Testing and Deployment (1 Day) — PENDING [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Implementation Order [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Key Files Summary [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Dependencies [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Success Criteria per Phase [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Rollback Procedure (If Issues Found) [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Testing Commands Reference [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Estimated Effort [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Communication Checklist [EXTRACTED]
+- Unified State System - Do Phase (Implementation Guide) -> contains -> Next Steps After Phase 1 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Unified State System - Do Phase (Implementation Guide), bash, Implementation Order를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 unified-state-system.do.md이다.
+
+### Key Facts
+- Overview Implementation of unified state system in 4 sequential phases. This guide covers Phase 1 (Database Schema Migration) with references to Phases 2-4.
+- **Verification Command**: ```bash Run migration on local test database psql -d tenopa_test -f database/migrations/012_unified_state_system.sql
+- Week 1: Phase 1 (Database) - **Mon-Tue**: Create migration script, test locally - **Wed**: Deploy to staging - **Thu**: Deploy to production (with backup) - **Fri**: Verify, monitor logs
+- Phase 1 ✅ (After Completion) - [ ] proposal_timelines table exists with correct indexes - [ ] Timestamp columns added to proposals - [ ] Migration runs without errors - [ ] Rollback script tested and verified - [ ] Data integrity check: no lost proposals or timestamps
+- Files to Create ``` database/migrations/012_unified_state_system.sql database/rollback_migration_012.sql app/services/state_validator.py app/state_machine.py tests/services/test_state_validator.py tests/services/test_state_machine.py tests/api/test_workflow_state.py ```

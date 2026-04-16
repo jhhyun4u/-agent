@@ -2,27 +2,27 @@
 Cohesion: 0.25 | Nodes: 8
 
 ## Key Nodes
-- **백엔드 구조 (app/)** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 5 connections
+- **백엔드 구조 (app/)** (C:\project\tenopa proposer\CLAUDE.md) -- 5 connections
   - -> contains -> [[api]]
   - -> contains -> [[langgraph-appgraph]]
   - -> contains -> [[appprompts]]
   - -> contains -> [[phase-ce]]
   - <- contains <- [[coworker-ai-coworker]]
-- **용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 3 connections
+- **용역제안 Coworker — 프로젝트 수주 성공률을 높이는 AI Coworker** (C:\project\tenopa proposer\CLAUDE.md) -- 3 connections
   - -> has_code_example -> [[bash]]
   - -> contains -> [[app]]
   - -> contains -> [[db]]
-- **bash** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **bash** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- has_code_example <- [[coworker-ai-coworker]]
-- **API 라우트** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **API 라우트** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- contains <- [[app]]
-- **프롬프트 (app/prompts/)** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **프롬프트 (app/prompts/)** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- contains <- [[app]]
-- **DB 스키마** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **DB 스키마** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- contains <- [[coworker-ai-coworker]]
-- **LangGraph (app/graph/)** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **LangGraph (app/graph/)** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- contains <- [[app]]
-- **추가 서비스 (Phase C~E / 레거시)** (C:\project\tenopa proposer\-agent-master\CLAUDE.md) -- 1 connections
+- **추가 서비스 (Phase C~E / 레거시)** (C:\project\tenopa proposer\CLAUDE.md) -- 1 connections
   - <- contains <- [[app]]
 
 ## Internal Relationships

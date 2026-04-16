@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **1. `lib/proposals-utils.ts`** (C:\project\tenopa proposer\-agent-master\frontend\OPTIMIZATION_SUMMARY.md) -- 0 connections
+- **1. `lib/proposals-utils.ts`** (C:\project\tenopa proposer\frontend\OPTIMIZATION_SUMMARY.md) -- 0 connections
 
 ## Internal Relationships
 

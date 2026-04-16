@@ -82,9 +82,7 @@ async def _get_dev_user() -> CurrentUser:
     if not all([settings.dev_user_id, settings.dev_user_email, settings.dev_user_org_id]):
         raise AuthTokenExpiredError({"reason": "DEV_MODE 설정 불완전"})
 
-    # DEBUG: 실제로 어떤 값이 사용되는지 확인
-    print(f"\n[_get_dev_user] Loading user: id={settings.dev_user_id}, email={settings.dev_user_email}, org={settings.dev_user_org_id}, team={settings.dev_user_team_id}")
-    logger.warning(f"[_get_dev_user] Loading user: id={settings.dev_user_id}")
+    logger.debug("[_get_dev_user] Loading dev user from config")
 
     user = CurrentUser(
         id=settings.dev_user_id,
@@ -96,7 +94,6 @@ async def _get_dev_user() -> CurrentUser:
         division_id=None,
         status="active",
     )
-    print(f"[_get_dev_user] Returning user: id={user.id}")
     return user
 
 

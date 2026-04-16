@@ -2,53 +2,53 @@
 Cohesion: 0.13 | Nodes: 16
 
 ## Key Nodes
-- **사이드바(AppSidebar) 메뉴 구조** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 6 connections
+- **사이드바(AppSidebar) 메뉴 구조** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 6 connections
   - -> contains -> [[navrest]]
   - -> contains -> [[knowledge-base]]
   - -> contains -> [[admin]]
   - -> contains -> [[ui]]
   - -> contains -> [[localstorage]]
   - -> contains -> [[footer]]
-- **1단계 메뉴** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 4 connections
+- **1단계 메뉴** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 4 connections
   - -> contains -> [[dashboard]]
   - -> contains -> [[bid-monitoring]]
   - -> contains -> [[proposals]]
   - <- contains <- [[navrest]]
-- **🔧 하단 섹션 (Footer)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 4 connections
+- **🔧 하단 섹션 (Footer)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 4 connections
   - -> has_code_example -> [[typescript]]
   - -> contains -> [[desktop-lg]]
   - -> contains -> [[tablet-mobile-lg]]
   - <- contains <- [[appsidebar]]
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
+- **typescript** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
   - <- has_code_example <- [[footer]]
   - <- has_code_example <- [[tablet-mobile-lg]]
-- **👨‍💼 Admin (관리자 전용) - 그룹** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
+- **👨‍💼 Admin (관리자 전용) - 그룹** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
   - -> contains -> [[recent-proposals]]
   - <- contains <- [[appsidebar]]
-- **🎯 메뉴 항목 (NAV_REST)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
+- **🎯 메뉴 항목 (NAV_REST)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
   - -> contains -> [[1]]
   - <- contains <- [[appsidebar]]
-- **Tablet / Mobile (lg 미만)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
+- **Tablet / Mobile (lg 미만)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
   - -> has_code_example -> [[typescript]]
   - <- contains <- [[footer]]
-- **🎨 UI 상태** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
+- **🎨 UI 상태** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 2 connections
   - -> contains -> [[active]]
   - <- contains <- [[appsidebar]]
-- **활성 상태 (Active)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **활성 상태 (Active)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[ui]]
-- **공고 모니터링 (Bid Monitoring)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **공고 모니터링 (Bid Monitoring)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[1]]
-- **대시보드 (Dashboard)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **대시보드 (Dashboard)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[1]]
-- **Desktop (lg 이상)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **Desktop (lg 이상)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[footer]]
-- **📚 지식 베이스 (Knowledge Base) - 그룹** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **📚 지식 베이스 (Knowledge Base) - 그룹** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **💾 상태 관리 (localStorage)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **💾 상태 관리 (localStorage)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[appsidebar]]
-- **제안 프로젝트 (Proposals)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **제안 프로젝트 (Proposals)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[1]]
-- **최근 작업 (Recent Proposals)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
+- **최근 작업 (Recent Proposals)** (C:\project\tenopa proposer\frontend\SIDEBAR_MENU_STRUCTURE.md) -- 1 connections
   - <- contains <- [[admin]]
 
 ## Internal Relationships

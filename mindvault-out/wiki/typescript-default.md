@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
+- **typescript** (C:\project\tenopa proposer\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
   - <- has_code_example <- [[default]]
-- **기본 (Default)** (C:\project\tenopa proposer\-agent-master\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
+- **기본 (Default)** (C:\project\tenopa proposer\frontend\SIDEBAR_VISUAL_GUIDE.md) -- 1 connections
   - -> has_code_example -> [[typescript]]
 
 ## Internal Relationships

@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **BadgeProps** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Badge.tsx) -- 1 connections
+- **BadgeProps** (C:\project\tenopa proposer\frontend\components\ui\Badge.tsx) -- 1 connections
   - <- contains <- [[badge]]
-- **Badge** (C:\project\tenopa proposer\-agent-master\frontend\components\ui\Badge.tsx) -- 1 connections
+- **Badge** (C:\project\tenopa proposer\frontend\components\ui\Badge.tsx) -- 1 connections
   - -> contains -> [[badgeprops]]
 
 ## Internal Relationships

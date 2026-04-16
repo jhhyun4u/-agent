@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **typescript** (C:\project\tenopa proposer\-agent-master\frontend\OPTIMIZATION_SUMMARY.md) -- 1 connections
+- **typescript** (C:\project\tenopa proposer\frontend\OPTIMIZATION_SUMMARY.md) -- 1 connections
   - <- has_code_example <- [[appappproposalspagetsx]]
-- **`app/(app)/proposals/page.tsx`** (C:\project\tenopa proposer\-agent-master\frontend\OPTIMIZATION_SUMMARY.md) -- 1 connections
+- **`app/(app)/proposals/page.tsx`** (C:\project\tenopa proposer\frontend\OPTIMIZATION_SUMMARY.md) -- 1 connections
   - -> has_code_example -> [[typescript]]
 
 ## Internal Relationships

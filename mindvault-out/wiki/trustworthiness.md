@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **trustworthiness** (C:\project\tenopa proposer\-agent-master\app\prompts\trustworthiness.py) -- 0 connections
+- **trustworthiness** (C:\project\tenopa proposer\app\prompts\trustworthiness.py) -- 0 connections
 
 ## Internal Relationships
 

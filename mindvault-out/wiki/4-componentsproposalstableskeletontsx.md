@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **4. `components/ProposalsTableSkeleton.tsx`** (C:\project\tenopa proposer\-agent-master\frontend\OPTIMIZATION_SUMMARY.md) -- 0 connections
+- **4. `components/ProposalsTableSkeleton.tsx`** (C:\project\tenopa proposer\frontend\OPTIMIZATION_SUMMARY.md) -- 0 connections
 
 ## Internal Relationships
 

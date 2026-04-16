@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **bid_handoff** (C:\project\tenopa proposer\-agent-master\app\services\bid_handoff.py) -- 0 connections
+- **bid_handoff** (C:\project\tenopa proposer\app\services\bid_handoff.py) -- 0 connections
 
 ## Internal Relationships
 

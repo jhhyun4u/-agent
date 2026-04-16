@@ -1,0 +1,744 @@
+# daily_g2b_monitor & HealthCheckRunner
+Cohesion: 0.02 | Nodes: 102
+
+## Key Nodes
+- **daily_g2b_monitor** (C:\project\tenopa proposer\app\services\scheduled_monitor.py) -- 33 connections
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefzoneinfo]]
+  - -> calls -> [[unresolvedrefiskoreanholiday]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefstrftime]]
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedrefexecute]]
+  - -> calls -> [[unresolvedrefselect]]
+  - -> calls -> [[unresolvedreftable]]
+  - -> calls -> [[unresolvedreferror]]
+  - -> calls -> [[unresolvedrefg2bservice]]
+  - -> calls -> [[unresolvedreffetchallbids]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefscoreandrankbids]]
+  - -> calls -> [[unresolvedrefdate]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefstr]]
+  - -> calls -> [[unresolvedreffilternewbids]]
+  - -> calls -> [[unresolvedrefformatscoredbidsummary]]
+  - -> calls -> [[unresolvedrefsendteamsnotification]]
+  - -> calls -> [[unresolvedrefgetteamleader]]
+  - -> calls -> [[unresolvedrefcreatenotification]]
+  - -> calls -> [[unresolvedrefeq]]
+  - -> calls -> [[unresolvedrefgetuseremailinfo]]
+  - -> calls -> [[unresolvedrefshouldsendemail]]
+  - -> calls -> [[unresolvedrefbuildemailhtml]]
+  - -> calls -> [[unresolvedrefsendemail]]
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedrefrecordnotifiedbids]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefrunpipeline]]
+  - <- contains <- [[scheduledmonitor]]
+- **HealthCheckRunner** (C:\project\tenopa proposer\app\services\health_checker.py) -- 24 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[registerall]]
+  - -> contains -> [[reg]]
+  - -> contains -> [[runcategory]]
+  - -> contains -> [[runall]]
+  - -> contains -> [[runsingle]]
+  - -> contains -> [[runmany]]
+  - -> contains -> [[runone]]
+  - -> contains -> [[checkdbconnection]]
+  - -> contains -> [[checkstorage]]
+  - -> contains -> [[checkresources]]
+  - -> contains -> [[checkstaledaysremaining]]
+  - -> contains -> [[checkorphanrecommendations]]
+  - -> contains -> [[checkstalesessions]]
+  - -> contains -> [[checkmvfreshness]]
+  - -> contains -> [[checkcachedbsync]]
+  - -> contains -> [[checkg2bapi]]
+  - -> contains -> [[checkclaudeapi]]
+  - -> contains -> [[checkteamswebhook]]
+  - -> contains -> [[checkhealthendpoint]]
+  - -> contains -> [[checkmonitorendpoint]]
+  - -> contains -> [[checkscoredendpoint]]
+  - -> contains -> [[checkproposalsendpoint]]
+  - <- contains <- [[healthchecker]]
+- **unified_search** (C:\project\tenopa proposer\app\services\knowledge_search.py) -- 18 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefgenerateembedding]]
+  - -> calls -> [[unresolvedrefsearchcontent]]
+  - -> calls -> [[unresolvedrefsearchclients]]
+  - -> calls -> [[unresolvedrefsearchcompetitors]]
+  - -> calls -> [[unresolvedrefsearchlessons]]
+  - -> calls -> [[unresolvedrefsearchcapabilities]]
+  - -> calls -> [[unresolvedrefsearchqa]]
+  - -> calls -> [[unresolvedrefsearchintranetdocs]]
+  - -> calls -> [[unresolvedrefsearchintranetprojects]]
+  - -> calls -> [[unresolvedrefgather]]
+  - -> calls -> [[unresolvedrefvalues]]
+  - -> calls -> [[unresolvedrefzip]]
+  - -> calls -> [[unresolvedrefkeys]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefapplyhybridranking]]
+  - <- contains <- [[knowledgesearch]]
+- **__unresolved__::ref::healthresult** () -- 17 connections
+  - <- calls <- [[runsingle]]
+  - <- calls <- [[runone]]
+  - <- calls <- [[checkdbconnection]]
+  - <- calls <- [[checkstorage]]
+  - <- calls <- [[checkresources]]
+  - <- calls <- [[checkstaledaysremaining]]
+  - <- calls <- [[checkorphanrecommendations]]
+  - <- calls <- [[checkstalesessions]]
+  - <- calls <- [[checkmvfreshness]]
+  - <- calls <- [[checkcachedbsync]]
+  - <- calls <- [[checkg2bapi]]
+  - <- calls <- [[checkclaudeapi]]
+  - <- calls <- [[checkteamswebhook]]
+  - <- calls <- [[checkhealthendpoint]]
+  - <- calls <- [[checkmonitorendpoint]]
+  - <- calls <- [[checkscoredendpoint]]
+  - <- calls <- [[checkproposalsendpoint]]
+- **ProposalSessionManager** (C:\project\tenopa proposer\app\services\session_manager.py) -- 16 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[createsession]]
+  - -> contains -> [[acreatesession]]
+  - -> contains -> [[getsession]]
+  - -> contains -> [[updatesession]]
+  - -> contains -> [[deletesession]]
+  - -> contains -> [[listsessions]]
+  - -> contains -> [[sessionexists]]
+  - -> contains -> [[getsessioncount]]
+  - -> contains -> [[agetsession]]
+  - -> contains -> [[markexpiredproposals]]
+  - -> contains -> [[startupload]]
+  - -> contains -> [[dbcreate]]
+  - -> contains -> [[dbupdate]]
+  - -> contains -> [[dbloadsession]]
+  - <- contains <- [[sessionmanager]]
+- **__unresolved__::ref::create_task** () -- 12 connections
+  - <- calls <- [[runfetchandanalyze]]
+  - <- calls <- [[firekbupdate]]
+  - <- calls <- [[firestatusupdate]]
+  - <- calls <- [[stream1completehook]]
+  - <- calls <- [[autoregistertocontentlibrary]]
+  - <- calls <- [[firebidconfirmation]]
+  - <- calls <- [[firestreaminitialization]]
+  - <- calls <- [[rfpanalyze]]
+  - <- calls <- [[bgtask]]
+  - <- calls <- [[dailyg2bmonitor]]
+  - <- calls <- [[createsession]]
+  - <- calls <- [[updatesession]]
+- **_fire_bid_confirmation** (C:\project\tenopa proposer\app\graph\nodes\review_node.py) -- 12 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefmodeldump]]
+  - -> calls -> [[unresolvedrefhasattr]]
+  - -> calls -> [[unresolvedrefisinstance]]
+  - -> calls -> [[unresolvedrefpersistbidconfirmation]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefgetlogger]]
+  - -> calls -> [[unresolvedrefnotifybidconfirmed]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefpersist]]
+  - <- contains <- [[reviewnode]]
+- **__unresolved__::ref::keys** () -- 11 connections
+  - <- calls <- [[pptstoryboardnode]]
+  - <- calls <- [[rfpanalyze]]
+  - <- calls <- [[checkmonitorendpoint]]
+  - <- calls <- [[unifiedsearch]]
+  - <- calls <- [[updateschedule]]
+  - <- calls <- [[generatepresentationslides]]
+  - <- calls <- [[updatesession]]
+  - <- calls <- [[scoredbidsview]]
+  - <- calls <- [[evaluatorcard]]
+  - <- calls <- [[checkschema]]
+  - <- calls <- [[main]]
+- **gate_nodes** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 10 connections
+  - -> contains -> [[passthrough]]
+  - -> contains -> [[proposalstartgate]]
+  - -> contains -> [[convergencegate]]
+  - -> contains -> [[forktobranches]]
+  - -> contains -> [[planselectivefanout]]
+  - -> contains -> [[stream1completehook]]
+  - -> imports -> [[unresolvedrefasyncio]]
+  - -> imports -> [[unresolvedreflogging]]
+  - -> imports -> [[unresolvedreftypes]]
+  - -> imports -> [[unresolvedrefstate]]
+- **update_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 10 connections
+  - -> calls -> [[unresolvedrefgetsession]]
+  - -> calls -> [[unresolvedrefupdate]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefdbupdate]]
+  - -> calls -> [[unresolvedrefdebug]]
+  - -> calls -> [[unresolvedreflist]]
+  - -> calls -> [[unresolvedrefkeys]]
+  - <- contains <- [[proposalsessionmanager]]
+- **__unresolved__::ref::get_running_loop** () -- 9 connections
+  - <- calls <- [[firekbupdate]]
+  - <- calls <- [[firestatusupdate]]
+  - <- calls <- [[stream1completehook]]
+  - <- calls <- [[autoregistertocontentlibrary]]
+  - <- calls <- [[firebidconfirmation]]
+  - <- calls <- [[firestreaminitialization]]
+  - <- calls <- [[rfpanalyze]]
+  - <- calls <- [[createsession]]
+  - <- calls <- [[updatesession]]
+- **stream1_complete_hook** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 9 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefupdatestreamprogress]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedreflinkstream1artifacts]]
+  - -> calls -> [[unresolvedrefsnapshotfromstate]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefmark]]
+  - <- contains <- [[gatenodes]]
+- **_fire_status_update** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 8 connections
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefstatemachine]]
+  - -> calls -> [[unresolvedrefcloseproposal]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefupdate]]
+  - <- contains <- [[evaluationnodes]]
+- **_check_monitor_endpoint** (C:\project\tenopa proposer\app\services\health_checker.py) -- 7 connections
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedrefmonitorcompany]]
+  - -> calls -> [[unresolvedrefenrichmonitordata]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefset]]
+  - -> calls -> [[unresolvedrefkeys]]
+  - <- contains <- [[healthcheckrunner]]
+- **_check_storage** (C:\project\tenopa proposer\app\services\health_checker.py) -- 7 connections
+  - -> calls -> [[unresolvedrefgetasyncclient]]
+  - -> calls -> [[unresolvedreflistbuckets]]
+  - -> calls -> [[unresolvedrefset]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedreflist]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[healthcheckrunner]]
+- **_run_one** (C:\project\tenopa proposer\app\services\health_checker.py) -- 7 connections
+  - -> calls -> [[unresolvedrefmonotonic]]
+  - -> calls -> [[unresolvedreffunc]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedreftype]]
+  - -> calls -> [[unresolvedrefround]]
+  - <- contains <- [[healthcheckrunner]]
+- **check_page_drift** (C:\project\tenopa proposer\app\services\hwpx\page_guard.py) -- 7 connections
+  - -> calls -> [[unresolvedrefcollectmetrics]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefratiodelta]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefzip]]
+  - <- contains <- [[pageguard]]
+- **_fire_kb_update** (C:\project\tenopa proposer\app\graph\nodes\evaluation_nodes.py) -- 6 connections
+  - -> calls -> [[unresolvedrefupdatefromresult]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefupdate]]
+  - <- contains <- [[evaluationnodes]]
+- **create_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 6 connections
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefgetrunningloop]]
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefdbcreate]]
+  - <- contains <- [[proposalsessionmanager]]
+- **test_standalone_wrapper** (C:\project\tenopa proposer\scripts\test_g2b.py) -- 6 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefsearchbids]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefenumerate]]
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[testg2b]]
+- **_check_scored_endpoint** (C:\project\tenopa proposer\app\services\health_checker.py) -- 5 connections
+  - -> calls -> [[unresolvedrefscoreandrankbids]]
+  - -> calls -> [[unresolvedrefdate]]
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - <- contains <- [[healthcheckrunner]]
+- **_try_send_email** (C:\project\tenopa proposer\app\services\notification_service.py) -- 5 connections
+  - -> calls -> [[unresolvedrefgetuseremailinfo]]
+  - -> calls -> [[unresolvedrefshouldsendemail]]
+  - -> calls -> [[unresolvedrefbuildemailhtml]]
+  - -> calls -> [[unresolvedrefsendemail]]
+  - <- contains <- [[notificationservice]]
+- **__unresolved__::ref::score_and_rank_bids** () -- 4 connections
+  - <- calls <- [[checkscoredendpoint]]
+  - <- calls <- [[dailyg2bmonitor]]
+  - <- calls <- [[fetchbidsscored]]
+  - <- calls <- [[fetchbidsbypreset]]
+- **__unresolved__::ref::search_bids** () -- 4 connections
+  - <- calls <- [[rfpsearch]]
+  - <- calls <- [[checkg2bapi]]
+  - <- calls <- [[teststandalonewrapper]]
+  - <- calls <- [[testwithliveg2b]]
+- **__unresolved__::ref::zip** () -- 4 connections
+  - <- calls <- [[processdocument]]
+  - <- calls <- [[batchreindex]]
+  - <- calls <- [[unifiedsearch]]
+  - <- calls <- [[checkpagedrift]]
+- **_check_g2b_api** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefg2bservice]]
+  - -> calls -> [[unresolvedrefsearchbids]]
+  - <- contains <- [[healthcheckrunner]]
+- **_check_health_endpoint** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefhealthcheck]]
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - <- contains <- [[healthcheckrunner]]
+- **_check_resources** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefvirtualmemory]]
+  - -> calls -> [[unresolvedrefcpupercent]]
+  - <- contains <- [[healthcheckrunner]]
+- **_check_teams_webhook** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedrefhead]]
+  - <- contains <- [[healthcheckrunner]]
+- **_run_many** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefrunone]]
+  - <- contains <- [[healthcheckrunner]]
+- **run_category** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefitems]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - -> calls -> [[unresolvedrefrunmany]]
+  - <- contains <- [[healthcheckrunner]]
+- **run_single** (C:\project\tenopa proposer\app\services\health_checker.py) -- 4 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefrunone]]
+  - <- contains <- [[healthcheckrunner]]
+- **_bg_task** (C:\project\tenopa proposer\app\services\phase_executor.py) -- 4 connections
+  - -> calls -> [[unresolvedrefcreatetask]]
+  - -> calls -> [[unresolvedrefadd]]
+  - -> calls -> [[unresolvedrefadddonecallback]]
+  - <- contains <- [[phaseexecutor]]
+- **acreate_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedrefnow]]
+  - -> calls -> [[unresolvedrefdbcreate]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[proposalsessionmanager]]
+- **aget_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedrefdbloadsession]]
+  - -> calls -> [[unresolvedrefsessionnotfounderror]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[proposalsessionmanager]]
+- **test_with_live_g2b** (C:\project\tenopa proposer\scripts\test_search_flow.py) -- 4 connections
+  - -> calls -> [[unresolvedrefprint]]
+  - -> calls -> [[unresolvedrefsearchbids]]
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[testsearchflow]]
+- **__unresolved__::ref::build_email_html** () -- 3 connections
+  - <- calls <- [[trysendemail]]
+  - <- calls <- [[dailyg2bmonitor]]
+  - <- calls <- [[senddailysummaryemail]]
+- **__unresolved__::ref::fetch_all_bids** () -- 3 connections
+  - <- calls <- [[dailyg2bmonitor]]
+  - <- calls <- [[fetchbidsscored]]
+  - <- calls <- [[fetchbidsbypreset]]
+- **__unresolved__::ref::send_email** () -- 3 connections
+  - <- calls <- [[sendemailbatch]]
+  - <- calls <- [[trysendemail]]
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::sessionnotfounderror** () -- 3 connections
+  - <- calls <- [[getsession]]
+  - <- calls <- [[deletesession]]
+  - <- calls <- [[agetsession]]
+- **plan_selective_fan_out** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefsend]]
+  - <- contains <- [[gatenodes]]
+- **send_email_batch** (C:\project\tenopa proposer\app\services\email_service.py) -- 3 connections
+  - -> calls -> [[unresolvedrefasyncclient]]
+  - -> calls -> [[unresolvedrefsendemail]]
+  - <- contains <- [[emailservice]]
+- **_check_claude_api** (C:\project\tenopa proposer\app\services\health_checker.py) -- 3 connections
+  - -> calls -> [[unresolvedrefhealthresult]]
+  - -> calls -> [[unresolvedrefstartswith]]
+  - <- contains <- [[healthcheckrunner]]
+- **delete_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 3 connections
+  - -> calls -> [[unresolvedrefsessionnotfounderror]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - <- contains <- [[proposalsessionmanager]]
+- **get_session** (C:\project\tenopa proposer\app\services\session_manager.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefsessionnotfounderror]]
+  - <- contains <- [[proposalsessionmanager]]
+- **__unresolved__::ref::_db_create** () -- 2 connections
+  - <- calls <- [[createsession]]
+  - <- calls <- [[acreatesession]]
+- **__unresolved__::ref::_get_user_email_info** () -- 2 connections
+  - <- calls <- [[trysendemail]]
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_run_many** () -- 2 connections
+  - <- calls <- [[runcategory]]
+  - <- calls <- [[runall]]
+- **__unresolved__::ref::_run_one** () -- 2 connections
+  - <- calls <- [[runsingle]]
+  - <- calls <- [[runmany]]
+- **__unresolved__::ref::_should_send_email** () -- 2 connections
+  - <- calls <- [[trysendemail]]
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_update** () -- 2 connections
+  - <- calls <- [[firekbupdate]]
+  - <- calls <- [[firestatusupdate]]
+- **__unresolved__::ref::send** () -- 2 connections
+  - <- calls <- [[forktobranches]]
+  - <- calls <- [[planselectivefanout]]
+- **__unresolved__::ref::statemachine** () -- 2 connections
+  - <- calls <- [[firestatusupdate]]
+  - <- calls <- [[markexpiredproposals]]
+- **__unresolved__::ref::zoneinfo** () -- 2 connections
+  - <- calls <- [[dailyg2bmonitor]]
+  - <- calls <- [[setupscheduler]]
+- **fork_to_branches** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 2 connections
+  - -> calls -> [[unresolvedrefsend]]
+  - <- contains <- [[gatenodes]]
+- **__init__** (C:\project\tenopa proposer\app\services\health_checker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefregisterall]]
+  - <- contains <- [[healthcheckrunner]]
+- **_register_all** (C:\project\tenopa proposer\app\services\health_checker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefreg]]
+  - <- contains <- [[healthcheckrunner]]
+- **run_all** (C:\project\tenopa proposer\app\services\health_checker.py) -- 2 connections
+  - -> calls -> [[unresolvedrefrunmany]]
+  - <- contains <- [[healthcheckrunner]]
+- **__unresolved__::ref::_apply_hybrid_ranking** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_db_load_session** () -- 1 connections
+  - <- calls <- [[agetsession]]
+- **__unresolved__::ref::_db_update** () -- 1 connections
+  - <- calls <- [[updatesession]]
+- **__unresolved__::ref::_enrich_monitor_data** () -- 1 connections
+  - <- calls <- [[checkmonitorendpoint]]
+- **__unresolved__::ref::_filter_new_bids** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_format_scored_bid_summary** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_get_team_leader** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_is_korean_holiday** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_mark** () -- 1 connections
+  - <- calls <- [[stream1completehook]]
+- **__unresolved__::ref::_monitor_company** () -- 1 connections
+  - <- calls <- [[checkmonitorendpoint]]
+- **__unresolved__::ref::_persist** () -- 1 connections
+  - <- calls <- [[firebidconfirmation]]
+- **__unresolved__::ref::_ratio_delta** () -- 1 connections
+  - <- calls <- [[checkpagedrift]]
+- **__unresolved__::ref::_record_notified_bids** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::_reg** () -- 1 connections
+  - <- calls <- [[registerall]]
+- **__unresolved__::ref::_register_all** () -- 1 connections
+  - <- calls <- [[init]]
+- **__unresolved__::ref::_search_capabilities** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_clients** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_competitors** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_content** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_intranet_docs** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_intranet_projects** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_lessons** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::_search_qa** () -- 1 connections
+  - <- calls <- [[unifiedsearch]]
+- **__unresolved__::ref::add_done_callback** () -- 1 connections
+  - <- calls <- [[bgtask]]
+- **__unresolved__::ref::close_proposal** () -- 1 connections
+  - <- calls <- [[firestatusupdate]]
+- **__unresolved__::ref::collect_metrics** () -- 1 connections
+  - <- calls <- [[checkpagedrift]]
+- **__unresolved__::ref::cpu_percent** () -- 1 connections
+  - <- calls <- [[checkresources]]
+- **__unresolved__::ref::func** () -- 1 connections
+  - <- calls <- [[runone]]
+- **__unresolved__::ref::head** () -- 1 connections
+  - <- calls <- [[checkteamswebhook]]
+- **__unresolved__::ref::health_check** () -- 1 connections
+  - <- calls <- [[checkhealthendpoint]]
+- **__unresolved__::ref::link_stream1_artifacts** () -- 1 connections
+  - <- calls <- [[stream1completehook]]
+- **__unresolved__::ref::list_buckets** () -- 1 connections
+  - <- calls <- [[checkstorage]]
+- **__unresolved__::ref::notify_bid_confirmed** () -- 1 connections
+  - <- calls <- [[firebidconfirmation]]
+- **__unresolved__::ref::persist_bid_confirmation** () -- 1 connections
+  - <- calls <- [[firebidconfirmation]]
+- **__unresolved__::ref::run_pipeline** () -- 1 connections
+  - <- calls <- [[dailyg2bmonitor]]
+- **__unresolved__::ref::snapshot_from_state** () -- 1 connections
+  - <- calls <- [[stream1completehook]]
+- **__unresolved__::ref::update_from_result** () -- 1 connections
+  - <- calls <- [[firekbupdate]]
+- **__unresolved__::ref::virtual_memory** () -- 1 connections
+  - <- calls <- [[checkresources]]
+- **convergence_gate** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
+- **passthrough** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
+- **proposal_start_gate** (C:\project\tenopa proposer\app\graph\nodes\gate_nodes.py) -- 1 connections
+  - <- contains <- [[gatenodes]]
+- **_reg** (C:\project\tenopa proposer\app\services\health_checker.py) -- 1 connections
+  - <- contains <- [[healthcheckrunner]]
+- **__init__** (C:\project\tenopa proposer\app\services\session_manager.py) -- 1 connections
+  - <- contains <- [[proposalsessionmanager]]
+- **session_exists** (C:\project\tenopa proposer\app\services\session_manager.py) -- 1 connections
+  - <- contains <- [[proposalsessionmanager]]
+
+## Internal Relationships
+- _fire_kb_update -> calls -> __unresolved__::ref::update_from_result [EXTRACTED]
+- _fire_kb_update -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- _fire_kb_update -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- _fire_kb_update -> calls -> __unresolved__::ref::_update [EXTRACTED]
+- _fire_status_update -> calls -> __unresolved__::ref::statemachine [EXTRACTED]
+- _fire_status_update -> calls -> __unresolved__::ref::close_proposal [EXTRACTED]
+- _fire_status_update -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- _fire_status_update -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- _fire_status_update -> calls -> __unresolved__::ref::_update [EXTRACTED]
+- fork_to_branches -> calls -> __unresolved__::ref::send [EXTRACTED]
+- plan_selective_fan_out -> calls -> __unresolved__::ref::send [EXTRACTED]
+- stream1_complete_hook -> calls -> __unresolved__::ref::link_stream1_artifacts [EXTRACTED]
+- stream1_complete_hook -> calls -> __unresolved__::ref::snapshot_from_state [EXTRACTED]
+- stream1_complete_hook -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- stream1_complete_hook -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- stream1_complete_hook -> calls -> __unresolved__::ref::_mark [EXTRACTED]
+- gate_nodes -> contains -> passthrough [EXTRACTED]
+- gate_nodes -> contains -> proposal_start_gate [EXTRACTED]
+- gate_nodes -> contains -> convergence_gate [EXTRACTED]
+- gate_nodes -> contains -> fork_to_branches [EXTRACTED]
+- gate_nodes -> contains -> plan_selective_fan_out [EXTRACTED]
+- gate_nodes -> contains -> stream1_complete_hook [EXTRACTED]
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::persist_bid_confirmation [EXTRACTED]
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::notify_bid_confirmed [EXTRACTED]
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::_persist [EXTRACTED]
+- send_email_batch -> calls -> __unresolved__::ref::send_email [EXTRACTED]
+- HealthCheckRunner -> contains -> __init__ [EXTRACTED]
+- HealthCheckRunner -> contains -> _register_all [EXTRACTED]
+- HealthCheckRunner -> contains -> _reg [EXTRACTED]
+- HealthCheckRunner -> contains -> run_category [EXTRACTED]
+- HealthCheckRunner -> contains -> run_all [EXTRACTED]
+- HealthCheckRunner -> contains -> run_single [EXTRACTED]
+- HealthCheckRunner -> contains -> _run_many [EXTRACTED]
+- HealthCheckRunner -> contains -> _run_one [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_storage [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_resources [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_g2b_api [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_claude_api [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_teams_webhook [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_health_endpoint [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_monitor_endpoint [EXTRACTED]
+- HealthCheckRunner -> contains -> _check_scored_endpoint [EXTRACTED]
+- __init__ -> calls -> __unresolved__::ref::_register_all [EXTRACTED]
+- _check_claude_api -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_g2b_api -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_g2b_api -> calls -> __unresolved__::ref::search_bids [EXTRACTED]
+- _check_health_endpoint -> calls -> __unresolved__::ref::health_check [EXTRACTED]
+- _check_health_endpoint -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::_monitor_company [EXTRACTED]
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::_enrich_monitor_data [EXTRACTED]
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::keys [EXTRACTED]
+- _check_resources -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_resources -> calls -> __unresolved__::ref::virtual_memory [EXTRACTED]
+- _check_resources -> calls -> __unresolved__::ref::cpu_percent [EXTRACTED]
+- _check_scored_endpoint -> calls -> __unresolved__::ref::score_and_rank_bids [EXTRACTED]
+- _check_scored_endpoint -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_storage -> calls -> __unresolved__::ref::list_buckets [EXTRACTED]
+- _check_storage -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_teams_webhook -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- _check_teams_webhook -> calls -> __unresolved__::ref::head [EXTRACTED]
+- _register_all -> calls -> __unresolved__::ref::_reg [EXTRACTED]
+- _run_many -> calls -> __unresolved__::ref::_run_one [EXTRACTED]
+- _run_one -> calls -> __unresolved__::ref::func [EXTRACTED]
+- _run_one -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- run_all -> calls -> __unresolved__::ref::_run_many [EXTRACTED]
+- run_category -> calls -> __unresolved__::ref::_run_many [EXTRACTED]
+- run_single -> calls -> __unresolved__::ref::healthresult [EXTRACTED]
+- run_single -> calls -> __unresolved__::ref::_run_one [EXTRACTED]
+- check_page_drift -> calls -> __unresolved__::ref::collect_metrics [EXTRACTED]
+- check_page_drift -> calls -> __unresolved__::ref::_ratio_delta [EXTRACTED]
+- check_page_drift -> calls -> __unresolved__::ref::zip [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_content [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_clients [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_competitors [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_lessons [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_capabilities [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_qa [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_intranet_docs [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_search_intranet_projects [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::zip [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::keys [EXTRACTED]
+- unified_search -> calls -> __unresolved__::ref::_apply_hybrid_ranking [EXTRACTED]
+- _try_send_email -> calls -> __unresolved__::ref::_get_user_email_info [EXTRACTED]
+- _try_send_email -> calls -> __unresolved__::ref::_should_send_email [EXTRACTED]
+- _try_send_email -> calls -> __unresolved__::ref::build_email_html [EXTRACTED]
+- _try_send_email -> calls -> __unresolved__::ref::send_email [EXTRACTED]
+- _bg_task -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- _bg_task -> calls -> __unresolved__::ref::add_done_callback [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::zoneinfo [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_is_korean_holiday [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::fetch_all_bids [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::score_and_rank_bids [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_filter_new_bids [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_format_scored_bid_summary [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_get_team_leader [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_get_user_email_info [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_should_send_email [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::build_email_html [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::send_email [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::_record_notified_bids [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- daily_g2b_monitor -> calls -> __unresolved__::ref::run_pipeline [EXTRACTED]
+- ProposalSessionManager -> contains -> __init__ [EXTRACTED]
+- ProposalSessionManager -> contains -> create_session [EXTRACTED]
+- ProposalSessionManager -> contains -> acreate_session [EXTRACTED]
+- ProposalSessionManager -> contains -> get_session [EXTRACTED]
+- ProposalSessionManager -> contains -> update_session [EXTRACTED]
+- ProposalSessionManager -> contains -> delete_session [EXTRACTED]
+- ProposalSessionManager -> contains -> session_exists [EXTRACTED]
+- ProposalSessionManager -> contains -> aget_session [EXTRACTED]
+- acreate_session -> calls -> __unresolved__::ref::_db_create [EXTRACTED]
+- aget_session -> calls -> __unresolved__::ref::_db_load_session [EXTRACTED]
+- aget_session -> calls -> __unresolved__::ref::sessionnotfounderror [EXTRACTED]
+- create_session -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- create_session -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- create_session -> calls -> __unresolved__::ref::_db_create [EXTRACTED]
+- delete_session -> calls -> __unresolved__::ref::sessionnotfounderror [EXTRACTED]
+- get_session -> calls -> __unresolved__::ref::sessionnotfounderror [EXTRACTED]
+- update_session -> calls -> __unresolved__::ref::get_running_loop [EXTRACTED]
+- update_session -> calls -> __unresolved__::ref::create_task [EXTRACTED]
+- update_session -> calls -> __unresolved__::ref::_db_update [EXTRACTED]
+- update_session -> calls -> __unresolved__::ref::keys [EXTRACTED]
+- test_standalone_wrapper -> calls -> __unresolved__::ref::search_bids [EXTRACTED]
+- test_with_live_g2b -> calls -> __unresolved__::ref::search_bids [EXTRACTED]
+
+## Cross-Community Connections
+- _fire_kb_update -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_status_update -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_status_update -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- plan_selective_fan_out -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream1_complete_hook -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream1_complete_hook -> calls -> __unresolved__::ref::update_stream_progress (-> [[unresolvedrefget-unresolvedrefexecute]])
+- stream1_complete_hook -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- gate_nodes -> imports -> __unresolved__::ref::asyncio (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- gate_nodes -> imports -> __unresolved__::ref::logging (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- gate_nodes -> imports -> __unresolved__::ref::types (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- gate_nodes -> imports -> __unresolved__::ref::state (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::model_dump (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::hasattr (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _fire_bid_confirmation -> calls -> __unresolved__::ref::getlogger (-> [[unresolvedreftenopapierror-init]])
+- send_email_batch -> calls -> __unresolved__::ref::asyncclient (-> [[unresolvedrefprint-unresolvedrefpath]])
+- HealthCheckRunner -> contains -> _check_db_connection (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_stale_days_remaining (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_orphan_recommendations (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_stale_sessions (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_mv_freshness (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_cache_db_sync (-> [[unresolvedrefget-unresolvedrefexecute]])
+- HealthCheckRunner -> contains -> _check_proposals_endpoint (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_claude_api -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- _check_g2b_api -> calls -> __unresolved__::ref::g2bservice (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_health_endpoint -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_monitor_endpoint -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_scored_endpoint -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_scored_endpoint -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_storage -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_storage -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_storage -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_storage -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _check_teams_webhook -> calls -> __unresolved__::ref::asyncclient (-> [[unresolvedrefprint-unresolvedrefpath]])
+- _run_many -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_many -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_one -> calls -> __unresolved__::ref::monotonic (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_one -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_one -> calls -> __unresolved__::ref::type (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _run_one -> calls -> __unresolved__::ref::round (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_category -> calls -> __unresolved__::ref::items (-> [[unresolvedrefget-unresolvedrefexecute]])
+- run_category -> calls -> __unresolved__::ref::startswith (-> [[unresolvedrefinches-presentationpptxbuilder]])
+- run_single -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_page_drift -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_page_drift -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_page_drift -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::generate_embedding (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::gather (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::values (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::isinstance (-> [[unresolvedrefget-unresolvedrefexecute]])
+- unified_search -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _bg_task -> calls -> __unresolved__::ref::add (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::strftime (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::get_async_client (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::execute (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::select (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::table (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::g2bservice (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::date (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::str (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::send_teams_notification (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::create_notification (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::eq (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- daily_g2b_monitor -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> list_sessions (-> [[parallelworkengine-reviewnode]])
+- ProposalSessionManager -> contains -> get_session_count (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> mark_expired_proposals (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> startup_load (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> _db_create (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> _db_update (-> [[unresolvedrefget-unresolvedrefexecute]])
+- ProposalSessionManager -> contains -> _db_load_session (-> [[unresolvedrefget-unresolvedrefexecute]])
+- acreate_session -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- acreate_session -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- aget_session -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- create_session -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- create_session -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- delete_session -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_session -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_session -> calls -> __unresolved__::ref::get_session (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_session -> calls -> __unresolved__::ref::update (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_session -> calls -> __unresolved__::ref::now (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_session -> calls -> __unresolved__::ref::debug (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_session -> calls -> __unresolved__::ref::list (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_standalone_wrapper -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_standalone_wrapper -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_standalone_wrapper -> calls -> __unresolved__::ref::enumerate (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_standalone_wrapper -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- test_with_live_g2b -> calls -> __unresolved__::ref::print (-> [[unresolvedrefprint-unresolvedrefpath]])
+- test_with_live_g2b -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+
+## Context
+이 커뮤니티는 daily_g2b_monitor, HealthCheckRunner, unified_search를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 email_service.py, evaluation_nodes.py, gate_nodes.py, health_checker.py, knowledge_search.py이다.
+
+### Key Facts
+- async def daily_g2b_monitor() -> dict: """일일 G2B 공고 모니터링 (v2: 전수 수집 + 적합도 스코어링).
+- class HealthCheckRunner: """검증 항목 등록 + 실행 엔진"""
+- async def unified_search( query: str, org_id: str, filters: dict[str, Any] | None = None, top_k: int = KB_TOP_K, max_body_length: int = KB_MAX_BODY_LENGTH, ) -> dict[str, list[dict]]: """ 통합 KB 검색 — 시맨틱 + 키워드 하이브리드. 결과를 영역별로 그룹화하여 반환. """ all_areas = ["content", "client", "competitor", "lesson",…
+- class ProposalSessionManager: """제안서 세션 관리자 (메모리 캐시 + Supabase DB write-through)"""
+- ── DB persist + artifact + 알림 (fire-and-forget) ── _fire_bid_confirmation(state, updates, human_input)

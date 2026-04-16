@@ -1,0 +1,451 @@
+# RFPReviewEngine & review_rfp
+Cohesion: 0.02 | Nodes: 87
+
+## Key Nodes
+- **RFPReviewEngine** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 48 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[reviewrfp]]
+  - -> contains -> [[analyzerfpcontent]]
+  - -> contains -> [[extractbasicinfo]]
+  - -> contains -> [[analyzerequirements]]
+  - -> contains -> [[analyzeconstraints]]
+  - -> contains -> [[analyzeevaluationcriteria]]
+  - -> contains -> [[identifyriskfactors]]
+  - -> contains -> [[evaluateallfactors]]
+  - -> contains -> [[evaluatetechnicalfeasibility]]
+  - -> contains -> [[analyzetechnicalscoringoptimization]]
+  - -> contains -> [[parsedetailedevaluationcriteria]]
+  - -> contains -> [[calculatedetailedtechnicalscore]]
+  - -> contains -> [[identifypriorityimprovements]]
+  - -> contains -> [[identifyevidencerequirements]]
+  - -> contains -> [[estimatewinprobability]]
+  - -> contains -> [[evaluatequalificationcompliance]]
+  - -> contains -> [[evaluatemarketcompetitiveness]]
+  - -> contains -> [[evaluatefinancialviability]]
+  - -> contains -> [[evaluateriskassessment]]
+  - -> contains -> [[calculateweightedscore]]
+  - -> contains -> [[makedecision]]
+  - -> contains -> [[getfeasibilitylevel]]
+  - -> contains -> [[generatereasoning]]
+  - -> contains -> [[createactionplan]]
+  - -> contains -> [[extractpattern]]
+  - -> contains -> [[extractbudget]]
+  - -> contains -> [[extractduration]]
+  - -> contains -> [[classifyprojectcategory]]
+  - -> contains -> [[extracttechnicalreqs]]
+  - -> contains -> [[extractfunctionalreqs]]
+  - -> contains -> [[extractqualificationreqs]]
+  - -> contains -> [[extractcompliancereqs]]
+  - -> contains -> [[extracttimelineconstraints]]
+  - -> contains -> [[extractbudgetconstraints]]
+  - -> contains -> [[extractresourceconstraints]]
+  - -> contains -> [[extracttechnicalconstraints]]
+  - -> contains -> [[extractevaluationcriteria]]
+  - -> contains -> [[extractcriteriaweights]]
+  - -> contains -> [[determinescoringmethod]]
+  - -> contains -> [[calculatetechnologymatch]]
+  - -> contains -> [[findsimilarprojects]]
+  - -> contains -> [[calculatequalificationmatch]]
+  - -> contains -> [[estimatecompetitionlevel]]
+  - -> contains -> [[assessourcompetitiveness]]
+  - -> contains -> [[estimateprojectcost]]
+  - -> contains -> [[assessconstraintrisks]]
+  - <- contains <- [[rfpreviewengine]]
+- **review_rfp** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 9 connections
+  - -> calls -> [[unresolvedrefanalyzerfpcontent]]
+  - -> calls -> [[unresolvedrefevaluateallfactors]]
+  - -> calls -> [[unresolvedrefcalculateweightedscore]]
+  - -> calls -> [[unresolvedrefmakedecision]]
+  - -> calls -> [[unresolvedrefrfpreviewresult]]
+  - -> calls -> [[unresolvedrefgetfeasibilitylevel]]
+  - -> calls -> [[unresolvedrefgeneratereasoning]]
+  - -> calls -> [[unresolvedrefcreateactionplan]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_all_factors** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefevaluatetechnicalfeasibility]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefevaluatequalificationcompliance]]
+  - -> calls -> [[unresolvedrefevaluatemarketcompetitiveness]]
+  - -> calls -> [[unresolvedrefevaluatefinancialviability]]
+  - -> calls -> [[unresolvedrefevaluateriskassessment]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_financial_viability** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefestimateprojectcost]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreffeasibilityfactor]]
+  - -> calls -> [[unresolvedrefmax]]
+  - -> calls -> [[unresolvedrefmin]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_risk_assessment** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefassessconstraintrisks]]
+  - -> calls -> [[unresolvedrefmax]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreffeasibilityfactor]]
+  - <- contains <- [[rfpreviewengine]]
+- **analyze_technical_scoring_optimization** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 7 connections
+  - -> calls -> [[unresolvedrefparsedetailedevaluationcriteria]]
+  - -> calls -> [[unresolvedrefcalculatedetailedtechnicalscore]]
+  - -> calls -> [[unresolvedrefidentifypriorityimprovements]]
+  - -> calls -> [[unresolvedrefidentifyevidencerequirements]]
+  - -> calls -> [[unresolvedrefestimatewinprobability]]
+  - -> calls -> [[unresolvedreftechnicalscoreoptimization]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_feasibility** (C:\project\tenopa proposer\scripts\archive\modular_architecture.py) -- 6 connections
+  - -> calls -> [[unresolvedrefevaluatetechnicalfeasibility]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefevaluatequalification]]
+  - -> calls -> [[unresolvedrefevaluatecompetition]]
+  - -> calls -> [[unresolvedrefevaluaterisks]]
+  - <- contains <- [[rfpreviewmodule]]
+- **_analyze_rfp_content** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 6 connections
+  - -> calls -> [[unresolvedrefextractbasicinfo]]
+  - -> calls -> [[unresolvedrefanalyzerequirements]]
+  - -> calls -> [[unresolvedrefanalyzeconstraints]]
+  - -> calls -> [[unresolvedrefanalyzeevaluationcriteria]]
+  - -> calls -> [[unresolvedrefidentifyriskfactors]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_market_competitiveness** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 6 connections
+  - -> calls -> [[unresolvedrefestimatecompetitionlevel]]
+  - -> calls -> [[unresolvedrefassessourcompetitiveness]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreffeasibilityfactor]]
+  - -> calls -> [[unresolvedrefmin]]
+  - <- contains <- [[rfpreviewengine]]
+- **__unresolved__::ref::feasibilityfactor** () -- 5 connections
+  - <- calls <- [[evaluatetechnicalfeasibility]]
+  - <- calls <- [[evaluatequalificationcompliance]]
+  - <- calls <- [[evaluatemarketcompetitiveness]]
+  - <- calls <- [[evaluatefinancialviability]]
+  - <- calls <- [[evaluateriskassessment]]
+- **_analyze_constraints** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefextracttimelineconstraints]]
+  - -> calls -> [[unresolvedrefextractbudgetconstraints]]
+  - -> calls -> [[unresolvedrefextractresourceconstraints]]
+  - -> calls -> [[unresolvedrefextracttechnicalconstraints]]
+  - <- contains <- [[rfpreviewengine]]
+- **_analyze_requirements** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefextracttechnicalreqs]]
+  - -> calls -> [[unresolvedrefextractfunctionalreqs]]
+  - -> calls -> [[unresolvedrefextractqualificationreqs]]
+  - -> calls -> [[unresolvedrefextractcompliancereqs]]
+  - <- contains <- [[rfpreviewengine]]
+- **_evaluate_qualification_compliance** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefcalculatequalificationmatch]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedreffeasibilityfactor]]
+  - <- contains <- [[rfpreviewengine]]
+- **_parse_detailed_evaluation_criteria** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefevaluationcriteriondetail]]
+  - -> calls -> [[unresolvedrefdetailedevaluationcriteria]]
+  - -> calls -> [[unresolvedrefsum]]
+  - <- contains <- [[rfpreviewengine]]
+- **_analyze_evaluation_criteria** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefextractevaluationcriteria]]
+  - -> calls -> [[unresolvedrefextractcriteriaweights]]
+  - -> calls -> [[unresolvedrefdeterminescoringmethod]]
+  - <- contains <- [[rfpreviewengine]]
+- **_generate_reasoning** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 4 connections
+  - -> calls -> [[unresolvedrefgetfeasibilitylevel]]
+  - -> calls -> [[unresolvedrefappend]]
+  - -> calls -> [[unresolvedrefjoin]]
+  - <- contains <- [[rfpreviewengine]]
+- **_calculate_qualification_match** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefset]]
+  - <- contains <- [[rfpreviewengine]]
+- **_calculate_technology_match** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 3 connections
+  - -> calls -> [[unresolvedreflen]]
+  - -> calls -> [[unresolvedrefset]]
+  - <- contains <- [[rfpreviewengine]]
+- **__unresolved__::ref::_evaluate_technical_feasibility** () -- 2 connections
+  - <- calls <- [[evaluatefeasibility]]
+  - <- calls <- [[evaluateallfactors]]
+- **__unresolved__::ref::_generate_reasoning** () -- 2 connections
+  - <- calls <- [[execute]]
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_get_feasibility_level** () -- 2 connections
+  - <- calls <- [[reviewrfp]]
+  - <- calls <- [[generatereasoning]]
+- **_assess_constraint_risks** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[rfpreviewengine]]
+- **_create_action_plan** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefextend]]
+  - <- contains <- [[rfpreviewengine]]
+- **_estimate_competition_level** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[rfpreviewengine]]
+- **_estimate_project_cost** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefint]]
+  - <- contains <- [[rfpreviewengine]]
+- **_find_similar_projects** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[rfpreviewengine]]
+- **_make_decision** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 2 connections
+  - -> calls -> [[unresolvedreflen]]
+  - <- contains <- [[rfpreviewengine]]
+- **__unresolved__::ref::_analyze_constraints** () -- 1 connections
+  - <- calls <- [[analyzerfpcontent]]
+- **__unresolved__::ref::_analyze_evaluation_criteria** () -- 1 connections
+  - <- calls <- [[analyzerfpcontent]]
+- **__unresolved__::ref::_analyze_requirements** () -- 1 connections
+  - <- calls <- [[analyzerfpcontent]]
+- **__unresolved__::ref::_analyze_rfp_content** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_assess_constraint_risks** () -- 1 connections
+  - <- calls <- [[evaluateriskassessment]]
+- **__unresolved__::ref::_assess_our_competitiveness** () -- 1 connections
+  - <- calls <- [[evaluatemarketcompetitiveness]]
+- **__unresolved__::ref::_calculate_detailed_technical_score** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__unresolved__::ref::_calculate_qualification_match** () -- 1 connections
+  - <- calls <- [[evaluatequalificationcompliance]]
+- **__unresolved__::ref::_calculate_weighted_score** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_create_action_plan** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_determine_scoring_method** () -- 1 connections
+  - <- calls <- [[analyzeevaluationcriteria]]
+- **__unresolved__::ref::_estimate_competition_level** () -- 1 connections
+  - <- calls <- [[evaluatemarketcompetitiveness]]
+- **__unresolved__::ref::_estimate_project_cost** () -- 1 connections
+  - <- calls <- [[evaluatefinancialviability]]
+- **__unresolved__::ref::_estimate_win_probability** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__unresolved__::ref::_evaluate_all_factors** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_evaluate_competition** () -- 1 connections
+  - <- calls <- [[evaluatefeasibility]]
+- **__unresolved__::ref::_evaluate_financial_viability** () -- 1 connections
+  - <- calls <- [[evaluateallfactors]]
+- **__unresolved__::ref::_evaluate_market_competitiveness** () -- 1 connections
+  - <- calls <- [[evaluateallfactors]]
+- **__unresolved__::ref::_evaluate_qualification** () -- 1 connections
+  - <- calls <- [[evaluatefeasibility]]
+- **__unresolved__::ref::_evaluate_qualification_compliance** () -- 1 connections
+  - <- calls <- [[evaluateallfactors]]
+- **__unresolved__::ref::_evaluate_risk_assessment** () -- 1 connections
+  - <- calls <- [[evaluateallfactors]]
+- **__unresolved__::ref::_evaluate_risks** () -- 1 connections
+  - <- calls <- [[evaluatefeasibility]]
+- **__unresolved__::ref::_extract_basic_info** () -- 1 connections
+  - <- calls <- [[analyzerfpcontent]]
+- **__unresolved__::ref::_extract_budget_constraints** () -- 1 connections
+  - <- calls <- [[analyzeconstraints]]
+- **__unresolved__::ref::_extract_compliance_reqs** () -- 1 connections
+  - <- calls <- [[analyzerequirements]]
+- **__unresolved__::ref::_extract_criteria_weights** () -- 1 connections
+  - <- calls <- [[analyzeevaluationcriteria]]
+- **__unresolved__::ref::_extract_evaluation_criteria** () -- 1 connections
+  - <- calls <- [[analyzeevaluationcriteria]]
+- **__unresolved__::ref::_extract_functional_reqs** () -- 1 connections
+  - <- calls <- [[analyzerequirements]]
+- **__unresolved__::ref::_extract_qualification_reqs** () -- 1 connections
+  - <- calls <- [[analyzerequirements]]
+- **__unresolved__::ref::_extract_resource_constraints** () -- 1 connections
+  - <- calls <- [[analyzeconstraints]]
+- **__unresolved__::ref::_extract_technical_constraints** () -- 1 connections
+  - <- calls <- [[analyzeconstraints]]
+- **__unresolved__::ref::_extract_technical_reqs** () -- 1 connections
+  - <- calls <- [[analyzerequirements]]
+- **__unresolved__::ref::_extract_timeline_constraints** () -- 1 connections
+  - <- calls <- [[analyzeconstraints]]
+- **__unresolved__::ref::_identify_evidence_requirements** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__unresolved__::ref::_identify_priority_improvements** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__unresolved__::ref::_identify_risk_factors** () -- 1 connections
+  - <- calls <- [[analyzerfpcontent]]
+- **__unresolved__::ref::_make_decision** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::_parse_detailed_evaluation_criteria** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__unresolved__::ref::detailedevaluationcriteria** () -- 1 connections
+  - <- calls <- [[parsedetailedevaluationcriteria]]
+- **__unresolved__::ref::evaluationcriteriondetail** () -- 1 connections
+  - <- calls <- [[parsedetailedevaluationcriteria]]
+- **__unresolved__::ref::rfpreviewresult** () -- 1 connections
+  - <- calls <- [[reviewrfp]]
+- **__unresolved__::ref::technicalscoreoptimization** () -- 1 connections
+  - <- calls <- [[analyzetechnicalscoringoptimization]]
+- **__init__** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_calculate_weighted_score** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_classify_project_category** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_determine_scoring_method** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_estimate_win_probability** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_budget** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_budget_constraints** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_compliance_reqs** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_criteria_weights** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_duration** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_evaluation_criteria** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_functional_reqs** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_qualification_reqs** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_resource_constraints** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_technical_constraints** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_technical_reqs** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_extract_timeline_constraints** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+- **_get_feasibility_level** (C:\project\tenopa proposer\scripts\archive\rfp_review_engine.py) -- 1 connections
+  - <- contains <- [[rfpreviewengine]]
+
+## Internal Relationships
+- _evaluate_feasibility -> calls -> __unresolved__::ref::_evaluate_technical_feasibility [EXTRACTED]
+- _evaluate_feasibility -> calls -> __unresolved__::ref::_evaluate_qualification [EXTRACTED]
+- _evaluate_feasibility -> calls -> __unresolved__::ref::_evaluate_competition [EXTRACTED]
+- _evaluate_feasibility -> calls -> __unresolved__::ref::_evaluate_risks [EXTRACTED]
+- RFPReviewEngine -> contains -> __init__ [EXTRACTED]
+- RFPReviewEngine -> contains -> review_rfp [EXTRACTED]
+- RFPReviewEngine -> contains -> _analyze_rfp_content [EXTRACTED]
+- RFPReviewEngine -> contains -> _analyze_requirements [EXTRACTED]
+- RFPReviewEngine -> contains -> _analyze_constraints [EXTRACTED]
+- RFPReviewEngine -> contains -> _analyze_evaluation_criteria [EXTRACTED]
+- RFPReviewEngine -> contains -> _evaluate_all_factors [EXTRACTED]
+- RFPReviewEngine -> contains -> analyze_technical_scoring_optimization [EXTRACTED]
+- RFPReviewEngine -> contains -> _parse_detailed_evaluation_criteria [EXTRACTED]
+- RFPReviewEngine -> contains -> _estimate_win_probability [EXTRACTED]
+- RFPReviewEngine -> contains -> _evaluate_qualification_compliance [EXTRACTED]
+- RFPReviewEngine -> contains -> _evaluate_market_competitiveness [EXTRACTED]
+- RFPReviewEngine -> contains -> _evaluate_financial_viability [EXTRACTED]
+- RFPReviewEngine -> contains -> _evaluate_risk_assessment [EXTRACTED]
+- RFPReviewEngine -> contains -> _calculate_weighted_score [EXTRACTED]
+- RFPReviewEngine -> contains -> _make_decision [EXTRACTED]
+- RFPReviewEngine -> contains -> _get_feasibility_level [EXTRACTED]
+- RFPReviewEngine -> contains -> _generate_reasoning [EXTRACTED]
+- RFPReviewEngine -> contains -> _create_action_plan [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_budget [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_duration [EXTRACTED]
+- RFPReviewEngine -> contains -> _classify_project_category [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_technical_reqs [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_functional_reqs [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_qualification_reqs [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_compliance_reqs [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_timeline_constraints [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_budget_constraints [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_resource_constraints [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_technical_constraints [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_evaluation_criteria [EXTRACTED]
+- RFPReviewEngine -> contains -> _extract_criteria_weights [EXTRACTED]
+- RFPReviewEngine -> contains -> _determine_scoring_method [EXTRACTED]
+- RFPReviewEngine -> contains -> _calculate_technology_match [EXTRACTED]
+- RFPReviewEngine -> contains -> _find_similar_projects [EXTRACTED]
+- RFPReviewEngine -> contains -> _calculate_qualification_match [EXTRACTED]
+- RFPReviewEngine -> contains -> _estimate_competition_level [EXTRACTED]
+- RFPReviewEngine -> contains -> _estimate_project_cost [EXTRACTED]
+- RFPReviewEngine -> contains -> _assess_constraint_risks [EXTRACTED]
+- _analyze_constraints -> calls -> __unresolved__::ref::_extract_timeline_constraints [EXTRACTED]
+- _analyze_constraints -> calls -> __unresolved__::ref::_extract_budget_constraints [EXTRACTED]
+- _analyze_constraints -> calls -> __unresolved__::ref::_extract_resource_constraints [EXTRACTED]
+- _analyze_constraints -> calls -> __unresolved__::ref::_extract_technical_constraints [EXTRACTED]
+- _analyze_evaluation_criteria -> calls -> __unresolved__::ref::_extract_evaluation_criteria [EXTRACTED]
+- _analyze_evaluation_criteria -> calls -> __unresolved__::ref::_extract_criteria_weights [EXTRACTED]
+- _analyze_evaluation_criteria -> calls -> __unresolved__::ref::_determine_scoring_method [EXTRACTED]
+- _analyze_requirements -> calls -> __unresolved__::ref::_extract_technical_reqs [EXTRACTED]
+- _analyze_requirements -> calls -> __unresolved__::ref::_extract_functional_reqs [EXTRACTED]
+- _analyze_requirements -> calls -> __unresolved__::ref::_extract_qualification_reqs [EXTRACTED]
+- _analyze_requirements -> calls -> __unresolved__::ref::_extract_compliance_reqs [EXTRACTED]
+- _analyze_rfp_content -> calls -> __unresolved__::ref::_extract_basic_info [EXTRACTED]
+- _analyze_rfp_content -> calls -> __unresolved__::ref::_analyze_requirements [EXTRACTED]
+- _analyze_rfp_content -> calls -> __unresolved__::ref::_analyze_constraints [EXTRACTED]
+- _analyze_rfp_content -> calls -> __unresolved__::ref::_analyze_evaluation_criteria [EXTRACTED]
+- _analyze_rfp_content -> calls -> __unresolved__::ref::_identify_risk_factors [EXTRACTED]
+- _evaluate_all_factors -> calls -> __unresolved__::ref::_evaluate_technical_feasibility [EXTRACTED]
+- _evaluate_all_factors -> calls -> __unresolved__::ref::_evaluate_qualification_compliance [EXTRACTED]
+- _evaluate_all_factors -> calls -> __unresolved__::ref::_evaluate_market_competitiveness [EXTRACTED]
+- _evaluate_all_factors -> calls -> __unresolved__::ref::_evaluate_financial_viability [EXTRACTED]
+- _evaluate_all_factors -> calls -> __unresolved__::ref::_evaluate_risk_assessment [EXTRACTED]
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::_estimate_project_cost [EXTRACTED]
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::feasibilityfactor [EXTRACTED]
+- _evaluate_market_competitiveness -> calls -> __unresolved__::ref::_estimate_competition_level [EXTRACTED]
+- _evaluate_market_competitiveness -> calls -> __unresolved__::ref::_assess_our_competitiveness [EXTRACTED]
+- _evaluate_market_competitiveness -> calls -> __unresolved__::ref::feasibilityfactor [EXTRACTED]
+- _evaluate_qualification_compliance -> calls -> __unresolved__::ref::_calculate_qualification_match [EXTRACTED]
+- _evaluate_qualification_compliance -> calls -> __unresolved__::ref::feasibilityfactor [EXTRACTED]
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::_assess_constraint_risks [EXTRACTED]
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::feasibilityfactor [EXTRACTED]
+- _generate_reasoning -> calls -> __unresolved__::ref::_get_feasibility_level [EXTRACTED]
+- _parse_detailed_evaluation_criteria -> calls -> __unresolved__::ref::evaluationcriteriondetail [EXTRACTED]
+- _parse_detailed_evaluation_criteria -> calls -> __unresolved__::ref::detailedevaluationcriteria [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::_parse_detailed_evaluation_criteria [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::_calculate_detailed_technical_score [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::_identify_priority_improvements [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::_identify_evidence_requirements [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::_estimate_win_probability [EXTRACTED]
+- analyze_technical_scoring_optimization -> calls -> __unresolved__::ref::technicalscoreoptimization [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_analyze_rfp_content [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_evaluate_all_factors [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_calculate_weighted_score [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_make_decision [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::rfpreviewresult [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_get_feasibility_level [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_generate_reasoning [EXTRACTED]
+- review_rfp -> calls -> __unresolved__::ref::_create_action_plan [EXTRACTED]
+
+## Cross-Community Connections
+- _evaluate_feasibility -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _extract_basic_info (-> [[parallelworkengine-reviewnode]])
+- RFPReviewEngine -> contains -> _identify_risk_factors (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _evaluate_technical_feasibility (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _calculate_detailed_technical_score (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _identify_priority_improvements (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _identify_evidence_requirements (-> [[unresolvedrefget-unresolvedrefexecute]])
+- RFPReviewEngine -> contains -> _extract_pattern (-> [[unresolvedrefvalueerror-executefromphase]])
+- RFPReviewEngine -> contains -> _assess_our_competitiveness (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _assess_constraint_risks -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_qualification_match -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_qualification_match -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_technology_match -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _calculate_technology_match -> calls -> __unresolved__::ref::set (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _create_action_plan -> calls -> __unresolved__::ref::extend (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _estimate_competition_level -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _estimate_project_cost -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_all_factors -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_financial_viability -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_market_competitiveness -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_market_competitiveness -> calls -> __unresolved__::ref::min (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_qualification_compliance -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_qualification_compliance -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::max (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _evaluate_risk_assessment -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _find_similar_projects -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_reasoning -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _generate_reasoning -> calls -> __unresolved__::ref::join (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _make_decision -> calls -> __unresolved__::ref::len (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _parse_detailed_evaluation_criteria -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _parse_detailed_evaluation_criteria -> calls -> __unresolved__::ref::sum (-> [[unresolvedrefget-unresolvedrefexecute]])
+
+## Context
+이 커뮤니티는 RFPReviewEngine, review_rfp, _evaluate_all_factors를 중심으로 calls 관계로 연결되어 있다. 주요 소스 파일은 modular_architecture.py, rfp_review_engine.py이다.
+
+### Key Facts
+- class RFPReviewEngine: """RFP 검토 및 GO/STOP 결정 엔진"""
+- async def review_rfp(self, rfp_content: str, company_profile: Dict, past_proposals: List[Dict]) -> RFPReviewResult: """ RFP 종합 검토 및 GO/STOP 결정
+- 각 요소별 수행 가능성 평가 factors = await self._evaluate_all_factors(rfp_analysis, company_profile, past_proposals)
+- 4. 재무적 타당성 financial_factor = await self._evaluate_financial_viability( rfp_analysis, company_profile ) factors.append(financial_factor)
+- 5. 리스크 평가 risk_factor = await self._evaluate_risk_assessment(rfp_analysis) factors.append(risk_factor)

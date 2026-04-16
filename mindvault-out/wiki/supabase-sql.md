@@ -2,7 +2,7 @@
 Cohesion: 0.17 | Nodes: 15
 
 ## Key Nodes
-- **Supabase 데이터베이스 설정 가이드** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 10 connections
+- **Supabase 데이터베이스 설정 가이드** (C:\project\tenopa proposer\database\README.md) -- 10 connections
   - -> contains -> [[1-supabase]]
   - -> contains -> [[2]]
   - -> contains -> [[3-api]]
@@ -13,45 +13,45 @@ Cohesion: 0.17 | Nodes: 15
   - -> contains -> [[references]]
   - -> contains -> [[documents]]
   - -> contains -> [[row-level-security-rls]]
-- **sql** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 5 connections
+- **sql** (C:\project\tenopa proposer\database\README.md) -- 5 connections
   - <- has_code_example <- [[proposals]]
   - <- has_code_example <- [[personnel]]
   - <- has_code_example <- [[references]]
   - <- has_code_example <- [[documents]]
   - <- has_code_example <- [[row-level-security-rls]]
-- **documents 테이블** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 3 connections
+- **documents 테이블** (C:\project\tenopa proposer\database\README.md) -- 3 connections
   - -> has_code_example -> [[sql]]
   - -> has_code_example -> [[python]]
   - <- contains <- [[supabase]]
-- **4. 환경 변수 설정** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **4. 환경 변수 설정** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[env]]
   - <- contains <- [[supabase]]
-- **5. 의존성 설치** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **5. 의존성 설치** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[bash]]
   - <- contains <- [[supabase]]
-- **personnel 테이블** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **personnel 테이블** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[sql]]
   - <- contains <- [[supabase]]
-- **proposals 테이블** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **proposals 테이블** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[sql]]
   - <- contains <- [[supabase]]
-- **references 테이블** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **references 테이블** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[sql]]
   - <- contains <- [[supabase]]
-- **Row Level Security (RLS)** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 2 connections
+- **Row Level Security (RLS)** (C:\project\tenopa proposer\database\README.md) -- 2 connections
   - -> has_code_example -> [[sql]]
   - <- contains <- [[supabase]]
-- **bash** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **bash** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- has_code_example <- [[5]]
-- **env** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **env** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- has_code_example <- [[4]]
-- **python** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **python** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- has_code_example <- [[documents]]
-- **1. Supabase 프로젝트 생성** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **1. Supabase 프로젝트 생성** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- contains <- [[supabase]]
-- **2. 데이터베이스 스키마 적용** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **2. 데이터베이스 스키마 적용** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- contains <- [[supabase]]
-- **3. API 키 확인** (C:\project\tenopa proposer\-agent-master\database\README.md) -- 1 connections
+- **3. API 키 확인** (C:\project\tenopa proposer\database\README.md) -- 1 connections
   - <- contains <- [[supabase]]
 
 ## Internal Relationships

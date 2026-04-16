@@ -1,0 +1,153 @@
+# AiStatusManager & fail_task
+Cohesion: 0.13 | Nodes: 18
+
+## Key Nodes
+- **AiStatusManager** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 16 connections
+  - -> contains -> [[init]]
+  - -> contains -> [[starttask]]
+  - -> contains -> [[updatesubtask]]
+  - -> contains -> [[heartbeat]]
+  - -> contains -> [[checkheartbeat]]
+  - -> contains -> [[completetask]]
+  - -> contains -> [[failtask]]
+  - -> contains -> [[pausetask]]
+  - -> contains -> [[aborttask]]
+  - -> contains -> [[getcompositestatus]]
+  - -> contains -> [[recalculateprogress]]
+  - -> contains -> [[emitstatuschange]]
+  - -> contains -> [[addlistener]]
+  - -> contains -> [[removelistener]]
+  - -> contains -> [[persistlog]]
+  - <- contains <- [[aistatusmanager]]
+- **fail_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 7 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreferror]]
+  - -> calls -> [[unresolvedrefemitstatuschange]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefpersistlog]]
+  - <- contains <- [[aistatusmanager]]
+- **abort_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefvalues]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefemitstatuschange]]
+  - <- contains <- [[aistatusmanager]]
+- **get_composite_status** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefcheckheartbeat]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedreftime]]
+  - <- contains <- [[aistatusmanager]]
+- **update_sub_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 5 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefint]]
+  - -> calls -> [[unresolvedrefrecalculateprogress]]
+  - <- contains <- [[aistatusmanager]]
+- **__unresolved__::ref::_emit_status_change** () -- 4 connections
+  - <- calls <- [[starttask]]
+  - <- calls <- [[completetask]]
+  - <- calls <- [[failtask]]
+  - <- calls <- [[aborttask]]
+- **check_heartbeat** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[aistatusmanager]]
+- **complete_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefemitstatuschange]]
+  - <- contains <- [[aistatusmanager]]
+- **start_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 4 connections
+  - -> calls -> [[unresolvedreftime]]
+  - -> calls -> [[unresolvedrefinfo]]
+  - -> calls -> [[unresolvedrefemitstatuschange]]
+  - <- contains <- [[aistatusmanager]]
+- **_emit_status_change** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 3 connections
+  - -> calls -> [[unresolvedreflistener]]
+  - -> calls -> [[unresolvedrefwarning]]
+  - <- contains <- [[aistatusmanager]]
+- **heartbeat** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 3 connections
+  - -> calls -> [[unresolvedrefget]]
+  - -> calls -> [[unresolvedreftime]]
+  - <- contains <- [[aistatusmanager]]
+- **add_listener** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 2 connections
+  - -> calls -> [[unresolvedrefappend]]
+  - <- contains <- [[aistatusmanager]]
+- **pause_task** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 2 connections
+  - -> calls -> [[unresolvedrefget]]
+  - <- contains <- [[aistatusmanager]]
+- **__unresolved__::ref::_recalculate_progress** () -- 1 connections
+  - <- calls <- [[updatesubtask]]
+- **__unresolved__::ref::check_heartbeat** () -- 1 connections
+  - <- calls <- [[getcompositestatus]]
+- **__unresolved__::ref::listener** () -- 1 connections
+  - <- calls <- [[emitstatuschange]]
+- **__unresolved__::ref::persist_log** () -- 1 connections
+  - <- calls <- [[failtask]]
+- **__init__** (C:\project\tenopa proposer\app\services\ai_status_manager.py) -- 1 connections
+  - <- contains <- [[aistatusmanager]]
+
+## Internal Relationships
+- AiStatusManager -> contains -> __init__ [EXTRACTED]
+- AiStatusManager -> contains -> start_task [EXTRACTED]
+- AiStatusManager -> contains -> update_sub_task [EXTRACTED]
+- AiStatusManager -> contains -> heartbeat [EXTRACTED]
+- AiStatusManager -> contains -> check_heartbeat [EXTRACTED]
+- AiStatusManager -> contains -> complete_task [EXTRACTED]
+- AiStatusManager -> contains -> fail_task [EXTRACTED]
+- AiStatusManager -> contains -> pause_task [EXTRACTED]
+- AiStatusManager -> contains -> abort_task [EXTRACTED]
+- AiStatusManager -> contains -> get_composite_status [EXTRACTED]
+- AiStatusManager -> contains -> _emit_status_change [EXTRACTED]
+- AiStatusManager -> contains -> add_listener [EXTRACTED]
+- _emit_status_change -> calls -> __unresolved__::ref::listener [EXTRACTED]
+- abort_task -> calls -> __unresolved__::ref::_emit_status_change [EXTRACTED]
+- complete_task -> calls -> __unresolved__::ref::_emit_status_change [EXTRACTED]
+- fail_task -> calls -> __unresolved__::ref::_emit_status_change [EXTRACTED]
+- fail_task -> calls -> __unresolved__::ref::persist_log [EXTRACTED]
+- get_composite_status -> calls -> __unresolved__::ref::check_heartbeat [EXTRACTED]
+- start_task -> calls -> __unresolved__::ref::_emit_status_change [EXTRACTED]
+- update_sub_task -> calls -> __unresolved__::ref::_recalculate_progress [EXTRACTED]
+
+## Cross-Community Connections
+- AiStatusManager -> contains -> _recalculate_progress (-> [[unresolvedrefget-unresolvedrefexecute]])
+- AiStatusManager -> contains -> remove_listener (-> [[unresolvedrefreact-unresolvedreflibapi]])
+- AiStatusManager -> contains -> persist_log (-> [[unresolvedrefget-unresolvedrefexecute]])
+- _emit_status_change -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- abort_task -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- abort_task -> calls -> __unresolved__::ref::values (-> [[unresolvedrefget-unresolvedrefexecute]])
+- abort_task -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- add_listener -> calls -> __unresolved__::ref::append (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_heartbeat -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- check_heartbeat -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- check_heartbeat -> calls -> __unresolved__::ref::warning (-> [[unresolvedrefget-unresolvedrefexecute]])
+- complete_task -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- complete_task -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- fail_task -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- fail_task -> calls -> __unresolved__::ref::error (-> [[unresolvedrefget-unresolvedrefexecute]])
+- fail_task -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- fail_task -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- get_composite_status -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_composite_status -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+- get_composite_status -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- heartbeat -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- heartbeat -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- pause_task -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- start_task -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- start_task -> calls -> __unresolved__::ref::info (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_sub_task -> calls -> __unresolved__::ref::get (-> [[unresolvedrefget-unresolvedrefexecute]])
+- update_sub_task -> calls -> __unresolved__::ref::time (-> [[unresolvedrefbasemodel-unresolvedreflogging]])
+- update_sub_task -> calls -> __unresolved__::ref::int (-> [[unresolvedrefget-unresolvedrefexecute]])
+
+## Context
+이 커뮤니티는 AiStatusManager, fail_task, abort_task를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 ai_status_manager.py이다.
+
+### Key Facts
+- class AiStatusManager: """제안서별 AI 작업 상태 추적.
+- async def fail_task( self, proposal_id: str, error_message: str ) -> dict[str, Any] | None: """작업 오류 처리 + DB 자동 기록 (MON-04).""" task = self._statuses.get(proposal_id) if not task: return None task["status"] = "error" task["error"] = error_message logger.error(f"AI 작업 오류:…
+- def abort_task(self, proposal_id: str) -> dict[str, Any] | None: """작업 중단 — 상태를 'paused'로 전환하고 완료된 서브태스크 보존.""" task = self._statuses.get(proposal_id) if not task: return None task["status"] = "paused" # 미완료 서브태스크 중단 표시 (complete/error는 보존) for st in task["sub_tasks"].values(): if st["status"] in…
+- def get_composite_status(self, proposal_id: str) -> dict[str, Any]: """제안서의 전체 AI 상태 조회.""" task = self._statuses.get(proposal_id) if not task: return {"status": "idle", "step": None, "progress_pct": 0}
+- def update_sub_task( self, proposal_id: str, sub_task: str, status: StatusType, ) -> dict[str, Any] | None: """서브태스크 상태 업데이트 + 진행률 자동 재계산.""" task = self._statuses.get(proposal_id) if not task: return None

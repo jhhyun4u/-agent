@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **submission_docs** (C:\project\tenopa proposer\-agent-master\app\prompts\submission_docs.py) -- 0 connections
+- **submission_docs** (C:\project\tenopa proposer\app\prompts\submission_docs.py) -- 0 connections
 
 ## Internal Relationships
 

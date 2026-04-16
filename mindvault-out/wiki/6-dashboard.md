@@ -1,0 +1,171 @@
+# 6. 각 위젯 상세 설계 & 대시보드 설계 문서 (Dashboard)
+Cohesion: 0.05 | Nodes: 39
+
+## Key Nodes
+- **6. 각 위젯 상세 설계** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 12 connections
+  - -> contains -> [[61-scope]]
+  - -> contains -> [[62-scope]]
+  - -> contains -> [[63-scope]]
+  - -> contains -> [[64-widgetconfigaction]]
+  - -> contains -> [[65-widgetconfigpipeline]]
+  - -> contains -> [[66-kpi-widgetconfigkpi]]
+  - -> contains -> [[67-widgetconfigcharts]]
+  - -> contains -> [[68-widgetconfigclient]]
+  - -> contains -> [[69-widgetconfigteam]]
+  - -> contains -> [[610-widgetconfigbids]]
+  - -> contains -> [[611-rfp-widgetconfigcalendar]]
+  - <- contains <- [[dashboard]]
+- **대시보드 설계 문서 (Dashboard)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 12 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10-low-priority]]
+  - -> contains -> [[11]]
+  - -> contains -> [[12]]
+- **11. 구현 체크리스트** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 4 connections
+  - -> contains -> [[111]]
+  - -> contains -> [[112]]
+  - -> contains -> [[113]]
+  - <- contains <- [[dashboard]]
+- **4. 스코프별 데이터 범위** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 4 connections
+  - -> contains -> [[41-scope]]
+  - -> contains -> [[42-scope]]
+  - -> contains -> [[43-scope]]
+  - <- contains <- [[dashboard]]
+- **3. 레이아웃 구조** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 3 connections
+  - -> contains -> [[31-header]]
+  - -> contains -> [[32-main]]
+  - <- contains <- [[dashboard]]
+- **7. 데이터 흐름** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 3 connections
+  - -> contains -> [[71]]
+  - -> contains -> [[72]]
+  - <- contains <- [[dashboard]]
+- **8. 성능 고려사항** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 3 connections
+  - -> contains -> [[81]]
+  - -> contains -> [[82]]
+  - <- contains <- [[dashboard]]
+- **9. 접근성 및 권한** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 3 connections
+  - -> contains -> [[91]]
+  - -> contains -> [[92]]
+  - <- contains <- [[dashboard]]
+- **5. 위젯 명세** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 2 connections
+  - -> contains -> [[51]]
+  - <- contains <- [[dashboard]]
+- **1. 개요** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[dashboard]]
+- **10. 향후 확장 (Low Priority)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[dashboard]]
+- **11.1 백엔드** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[11]]
+- **11.2 프론트엔드** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[11]]
+- **11.3 테스트** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[11]]
+- **12. 참고** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[dashboard]]
+- **2. 설계 원칙** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[dashboard]]
+- **3.1 헤더 (Header)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **3.2 메인 컨텐츠 (Main)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[3]]
+- **4.1 scope = "팀" (팀장용)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 scope = "본부" (본부장용)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.3 scope = "전체" (경영진용)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5.1 위젯 설정 메뉴** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **6.10 공고 모니터링 (widgetConfig.bids)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.11 RFP 캘린더 (widgetConfig.calendar)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.1 결재 대기 (scope=팀만)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.2 마감 임박 경고 (scope=팀만)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.3 본부별 성과 비교 (scope=전체만)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.4 지금 해야 할 것 (widgetConfig.action)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.5 제안 파이프라인 (widgetConfig.pipeline)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.6 제안 분석 KPI (widgetConfig.kpi)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.7 분석 차트 (widgetConfig.charts)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.8 기관별 수주 현황 (widgetConfig.client)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **6.9 팀별 성과 + 포지셔닝별 수주율 (widgetConfig.team)** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **7.1 데이터 소스** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[7]]
+- **7.2 데이터 새로고침** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[7]]
+- **8.1 최적화** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[8]]
+- **8.2 로딩 상태** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[8]]
+- **9.1 권한 검증** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[9]]
+- **9.2 역할별 기본 스코프** (C:\project\tenopa proposer\docs\02-design\features\dashboard.design.md) -- 1 connections
+  - <- contains <- [[9]]
+
+## Internal Relationships
+- 11. 구현 체크리스트 -> contains -> 11.1 백엔드 [EXTRACTED]
+- 11. 구현 체크리스트 -> contains -> 11.2 프론트엔드 [EXTRACTED]
+- 11. 구현 체크리스트 -> contains -> 11.3 테스트 [EXTRACTED]
+- 3. 레이아웃 구조 -> contains -> 3.1 헤더 (Header) [EXTRACTED]
+- 3. 레이아웃 구조 -> contains -> 3.2 메인 컨텐츠 (Main) [EXTRACTED]
+- 4. 스코프별 데이터 범위 -> contains -> 4.1 scope = "팀" (팀장용) [EXTRACTED]
+- 4. 스코프별 데이터 범위 -> contains -> 4.2 scope = "본부" (본부장용) [EXTRACTED]
+- 4. 스코프별 데이터 범위 -> contains -> 4.3 scope = "전체" (경영진용) [EXTRACTED]
+- 5. 위젯 명세 -> contains -> 5.1 위젯 설정 메뉴 [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.1 결재 대기 (scope=팀만) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.2 마감 임박 경고 (scope=팀만) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.3 본부별 성과 비교 (scope=전체만) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.4 지금 해야 할 것 (widgetConfig.action) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.5 제안 파이프라인 (widgetConfig.pipeline) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.6 제안 분석 KPI (widgetConfig.kpi) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.7 분석 차트 (widgetConfig.charts) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.8 기관별 수주 현황 (widgetConfig.client) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.9 팀별 성과 + 포지셔닝별 수주율 (widgetConfig.team) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.10 공고 모니터링 (widgetConfig.bids) [EXTRACTED]
+- 6. 각 위젯 상세 설계 -> contains -> 6.11 RFP 캘린더 (widgetConfig.calendar) [EXTRACTED]
+- 7. 데이터 흐름 -> contains -> 7.1 데이터 소스 [EXTRACTED]
+- 7. 데이터 흐름 -> contains -> 7.2 데이터 새로고침 [EXTRACTED]
+- 8. 성능 고려사항 -> contains -> 8.1 최적화 [EXTRACTED]
+- 8. 성능 고려사항 -> contains -> 8.2 로딩 상태 [EXTRACTED]
+- 9. 접근성 및 권한 -> contains -> 9.1 권한 검증 [EXTRACTED]
+- 9. 접근성 및 권한 -> contains -> 9.2 역할별 기본 스코프 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 1. 개요 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 2. 설계 원칙 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 3. 레이아웃 구조 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 4. 스코프별 데이터 범위 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 5. 위젯 명세 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 6. 각 위젯 상세 설계 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 7. 데이터 흐름 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 8. 성능 고려사항 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 9. 접근성 및 권한 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 10. 향후 확장 (Low Priority) [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 11. 구현 체크리스트 [EXTRACTED]
+- 대시보드 설계 문서 (Dashboard) -> contains -> 12. 참고 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 6. 각 위젯 상세 설계, 대시보드 설계 문서 (Dashboard), 11. 구현 체크리스트를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 dashboard.design.md이다.
+
+### Key Facts
+- **버전**: v1.0 **작성일**: 2026-03-29 **상태**: APPROVED
+- 4.1 scope = "팀" (팀장용)
+- 대시보드는 팀장/본부장/경영진을 위한 **통합 모니터링 및 성과 분석 화면**입니다. 개인 단위 작업 추적은 제안서 상세 페이지와 제안 목록에서 관리하며, 대시보드는 팀/본부/전사 관점의 KPI와 실시간 알림에 집중합니다.
+- - [ ] 추가 필터 (상태별, 기간별, 담당자별) - [ ] 데이터 내보내기 (CSV, PDF) - [ ] 커스텀 대시보드 저장 - [ ] 실시간 알림 (Websocket) - [ ] 차트 드릴다운 상세
+- - [ ] GET `/api/dashboard/team` — 팀 스코프 데이터 - [ ] GET `/api/dashboard/division` — 본부 스코프 데이터 - [ ] GET `/api/dashboard/company` — 전체 스코프 데이터 - [ ] 각 엔드포인트 권한 검증 - [ ] 데이터 캐싱 전략

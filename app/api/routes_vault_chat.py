@@ -6,8 +6,9 @@ Phase 1 implementation
 import logging
 import time
 import json
+import secrets
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from starlette.responses import StreamingResponse
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -20,12 +21,15 @@ from app.models.vault_schemas import (
     VaultChatResponse,
     VaultRegenerateRequest,
     ConversationCreate,
+    ConversationUpdate,
     ConversationSummary,
     ConversationDetail,
+    ConversationShareResponse,
+    BookmarkCreate,
+    BookmarkResponse,
     ChatMessage,
     VaultSection,
     DocumentSource,
-    SearchFilter,
 )
 from app.utils.supabase_client import get_async_client
 from app.services.vault_query_router import vault_router
@@ -563,185 +567,6 @@ async def vault_chat_stream(
 
 
 # ============================================================================
-# Message Management
-# ============================================================================
-
-@router.post("/messages/{message_id}/regenerate")
-async def regenerate_message(
-    message_id: str,
-    request: VaultRegenerateRequest,
-    current_user: CurrentUser = Depends(get_current_user)
-) -> VaultChatResponse:
-    """
-    Regenerate an assistant message response.
-
-    Takes the original user message and conversation context,
-    re-runs search and LLM generation with adjusted temperature.
-    Updates the message content in the database.
-    """
-    start_time = time.monotonic()
-
-    try:
-        client = await get_async_client()
-
-        # Load the message to regenerate
-        message_result = await client.table("vault_messages").select("*").eq(
-            "id", message_id
-        ).single().execute()
-
-        if not message_result.data:
-            raise HTTPException(status_code=404, detail="Message not found")
-
-        original_message = message_result.data
-
-        # Verify user owns this message's conversation
-        conv_result = await client.table("vault_conversations").select("user_id").eq(
-            "id", request.conversation_id
-        ).single().execute()
-
-        if not conv_result.data or conv_result.data["user_id"] != current_user.id:
-            raise HTTPException(status_code=403, detail="Access denied")
-
-        # Find the user message that prompted this assistant response
-        # Get all messages and find the pair
-        messages_result = await client.table("vault_messages").select("*").eq(
-            "conversation_id", request.conversation_id
-        ).order("created_at").execute()
-
-        messages = messages_result.data or []
-
-        # Find the assistant message and its preceding user message
-        user_message_text = None
-        for i, msg in enumerate(messages):
-            if msg["id"] == message_id and msg["role"] == "assistant":
-                if i > 0:
-                    user_message_text = messages[i - 1]["content"]
-                break
-
-        if not user_message_text:
-            raise HTTPException(status_code=400, detail="Could not find user message context")
-
-        # Load conversation context (messages before this exchange)
-        conversation_context: List[ChatMessage] = []
-        for msg in messages:
-            if msg["id"] == message_id:
-                break
-            if msg["role"] in ["user", "assistant"]:
-                conversation_context.append(
-                    ChatMessage(
-                        id=msg.get("id"),
-                        role=msg["role"],
-                        content=msg["content"],
-                        sources=msg.get("sources", []),
-                        confidence=msg.get("confidence"),
-                        created_at=msg.get("created_at"),
-                    )
-                )
-
-        # Route and search again
-        routing_decision = await vault_router.route(
-            query=user_message_text,
-            conversation_context=conversation_context
-        )
-
-        # Get sources (with caching)
-        section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
-        search_cache_key = VaultCacheService._make_cache_key(
-            query=user_message_text,
-            sections=section_names,
-            filters=routing_decision.filters
-        )
-
-        cached_sources = await VaultCacheService.get_search(
-            cache_key=search_cache_key,
-            sections=section_names
-        )
-
-        if cached_sources:
-            sources = cached_sources
-            source_texts = [s.snippet or "" for s in sources if s.snippet]
-        else:
-            sources, source_texts = await _search_sections_parallel(
-                sections=routing_decision.sections,
-                query=user_message_text,
-                filters=routing_decision.filters,
-                limit=5
-            )
-
-            await VaultCacheService.set_search(
-                cache_key=search_cache_key,
-                results=sources,
-                sections=section_names,
-                ttl=VaultCacheService.SEARCH_TTL
-            )
-
-        # Generate new response with adjusted temperature for variation
-        sources_context = _format_numbered_sources(source_texts)
-        system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
-        user_message = _build_user_message(user_message_text, conversation_context)
-
-        # Adjust temperature based on variation parameter
-        base_temperature = 0.7
-        adjusted_temperature = base_temperature + (request.variation or 0.1)
-        adjusted_temperature = min(adjusted_temperature, 1.0)  # Cap at 1.0
-
-        llm_response = await claude_generate(
-            prompt=user_message,
-            system_prompt=system_prompt,
-            model="claude-sonnet-4-20250514",
-            max_tokens=1500,
-            temperature=adjusted_temperature,
-            response_format="text"
-        )
-
-        response_text = llm_response.get("text", "")
-
-        # Validate response
-        initial_confidence = routing_decision.confidence if routing_decision else 0.5
-        validation_result = await HallucinationValidator.validate(
-            response=response_text,
-            sources=sources,
-            confidence=initial_confidence,
-            source_texts=source_texts
-        )
-
-        validation_passed = validation_result.get("passed", False)
-        final_confidence = validation_result.get("confidence", initial_confidence)
-
-        # Update message in database
-        await client.table("vault_messages").update({
-            "content": response_text,
-            "sources": [s.model_dump(mode="json") for s in sources],
-            "confidence": final_confidence,
-            "updated_at": datetime.utcnow().isoformat(),
-        }).eq("id", message_id).execute()
-
-        # Log regeneration
-        response_time_ms = (time.monotonic() - start_time) * 1000
-        asyncio.create_task(_log_analytics(
-            user_id=current_user.id,
-            query=f"regenerate: {user_message_text}",
-            sections=section_names,
-            result_count=len(sources),
-            response_time_ms=response_time_ms,
-        ))
-
-        return VaultChatResponse(
-            response=response_text,
-            confidence=final_confidence,
-            sources=sources,
-            validation_passed=validation_passed,
-            message_id=message_id
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error in regenerate_message: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Regeneration failed: {str(e)}")
-
-
-# ============================================================================
 # Conversation Management
 # ============================================================================
 
@@ -1189,6 +1014,377 @@ async def _save_message(
     except Exception as e:
         logger.error(f"Failed to save message: {str(e)}")
         raise
+
+
+@router.get("/suggestions", response_model=List[str])
+async def get_search_suggestions(
+    q: str = Query(..., min_length=1, max_length=100, description="Search query"),
+    limit: int = Query(5, ge=1, le=10, description="Max suggestions"),
+    current_user: CurrentUser = Depends(get_current_user)
+) -> List[str]:
+    """
+    Get search suggestions based on recent queries and document titles.
+
+    Design Ref: §C.1 — Search suggestions/autocomplete
+
+    Args:
+        q: Search query (1-100 chars)
+        limit: Maximum suggestions to return (1-10, default 5)
+        current_user: Current authenticated user
+
+    Returns:
+        List of unique suggestion strings
+    """
+    try:
+        client = await get_async_client()
+        suggestions = set()
+
+        # Step 1: Get recent queries from audit logs (limit//2)
+        try:
+            recent_queries_result = await client.table("vault_audit_logs").select(
+                "query"
+            ).eq("user_id", current_user.id).ilike(
+                "query", f"%{q}%"
+            ).order("created_at", desc=True).limit(
+                max(1, limit // 2)
+            ).execute()
+
+            if recent_queries_result.data:
+                for row in recent_queries_result.data:
+                    if row.get("query"):
+                        suggestions.add(row["query"])
+        except Exception as e:
+            logger.warning(f"Error fetching recent queries: {str(e)}")
+
+        # Step 2: Get document titles (limit//2)
+        try:
+            docs_result = await client.table("vault_documents").select(
+                "title"
+            ).ilike("title", f"%{q}%").order(
+                "created_at", desc=True
+            ).limit(max(1, limit // 2)).execute()
+
+            if docs_result.data:
+                for row in docs_result.data:
+                    if row.get("title"):
+                        suggestions.add(row["title"])
+        except Exception as e:
+            logger.warning(f"Error fetching document titles: {str(e)}")
+
+        # Return unique suggestions, limited to requested count
+        result = sorted(list(suggestions))[:limit]
+
+        logger.info(f"Returned {len(result)} suggestions for query '{q}'")
+        return result
+
+    except Exception as e:
+        logger.error(f"Error getting suggestions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get suggestions")
+
+
+# ============================================================================
+# Conversation Management — C.2 Sharing
+# ============================================================================
+
+@router.patch("/conversations/{conversation_id}", response_model=ConversationSummary)
+async def update_conversation(
+    conversation_id: str,
+    body: ConversationUpdate,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """Update conversation title
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    try:
+        client = await get_async_client()
+
+        # Verify ownership
+        conv = await client.table("vault_conversations").select("user_id").eq("id", conversation_id).single().execute()
+        if conv.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
+        # Update title
+        update_data = {"updated_at": datetime.utcnow().isoformat()}
+        if body.title is not None:
+            update_data["title"] = body.title
+
+        result = await client.table("vault_conversations").update(update_data).eq("id", conversation_id).execute()
+
+        return ConversationSummary(
+            id=result.data[0]["id"],
+            user_id=result.data[0]["user_id"],
+            title=result.data[0].get("title"),
+            created_at=datetime.fromisoformat(result.data[0]["created_at"]),
+            updated_at=datetime.fromisoformat(result.data[0]["updated_at"]),
+            message_count=result.data[0].get("message_count", 0),
+            last_message=result.data[0].get("last_message")
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update conversation")
+
+
+@router.post("/conversations/{conversation_id}/share", response_model=ConversationShareResponse)
+async def share_conversation(
+    conversation_id: str,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """Generate share token and make conversation public
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    try:
+        client = await get_async_client()
+
+        # Verify ownership
+        conv = await client.table("vault_conversations").select("user_id").eq("id", conversation_id).single().execute()
+        if conv.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
+        # Generate unique share token
+        share_token = secrets.token_urlsafe(16)
+
+        # Update conversation with share token
+        await client.table("vault_conversations").update({
+            "share_token": share_token,
+            "is_public": True,
+            "shared_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.utcnow().isoformat()
+        }).eq("id", conversation_id).execute()
+
+        return ConversationShareResponse(
+            share_url=f"/vault/shared/{share_token}",
+            share_token=share_token,
+            is_public=True
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sharing conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to share conversation")
+
+
+@router.get("/shared/{share_token}", response_model=ConversationDetail)
+async def get_shared_conversation(share_token: str):
+    """Retrieve public shared conversation (no auth required)
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    try:
+        client = await get_async_client()
+
+        # Find public conversation by share token
+        conv = await client.table("vault_conversations").select(
+            "id, user_id, title, created_at, updated_at, message_count"
+        ).eq("share_token", share_token).eq("is_public", True).single().execute()
+
+        if not conv.data:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+
+        # Load messages
+        messages_result = await client.table("vault_messages").select(
+            "id, role, content, created_at"
+        ).eq("conversation_id", conv.data["id"]).order("created_at").execute()
+
+        messages = [
+            ChatMessage(
+                id=m["id"],
+                role=m["role"],
+                content=m["content"],
+                created_at=datetime.fromisoformat(m["created_at"])
+            )
+            for m in messages_result.data
+        ]
+
+        return ConversationDetail(
+            id=conv.data["id"],
+            user_id=conv.data["user_id"],
+            title=conv.data.get("title"),
+            created_at=datetime.fromisoformat(conv.data["created_at"]),
+            updated_at=datetime.fromisoformat(conv.data["updated_at"]),
+            message_count=conv.data.get("message_count", 0),
+            messages=messages
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving shared conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve conversation")
+
+
+@router.get("/conversations/{conversation_id}/export")
+async def export_conversation(
+    conversation_id: str,
+    format: str = Query("markdown", regex="^(markdown|json)$"),
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """Export conversation to markdown or JSON
+
+    Design Ref: §C.2 — Conversation Sharing
+    """
+    try:
+        client = await get_async_client()
+
+        # Verify ownership
+        conv = await client.table("vault_conversations").select("user_id, title").eq("id", conversation_id).single().execute()
+        if conv.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
+        # Load messages
+        messages_result = await client.table("vault_messages").select(
+            "id, role, content, created_at"
+        ).eq("conversation_id", conversation_id).order("created_at").execute()
+
+        if format == "json":
+            # Return as JSON
+            return {
+                "title": conv.data.get("title", "Untitled"),
+                "created_at": datetime.utcnow().isoformat(),
+                "messages": [
+                    {
+                        "id": m["id"],
+                        "role": m["role"],
+                        "content": m["content"],
+                        "created_at": m["created_at"]
+                    }
+                    for m in messages_result.data
+                ]
+            }
+
+        # Default: markdown format
+        markdown = f"# {conv.data.get('title', 'Untitled')}\n\n"
+        markdown += f"*Exported on {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}*\n\n"
+
+        for m in messages_result.data:
+            role_label = "**User**" if m["role"] == "user" else "**Assistant**"
+            markdown += f"{role_label}:\n\n{m['content']}\n\n---\n\n"
+
+        from starlette.responses import Response
+        return Response(
+            content=markdown,
+            media_type="text/markdown",
+            headers={"Content-Disposition": "attachment; filename=conversation.md"}
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error exporting conversation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to export conversation")
+
+
+# ============================================================================
+# Bookmarks — C.3
+# ============================================================================
+
+@router.get("/bookmarks", response_model=List[BookmarkResponse])
+async def list_bookmarks(
+    bookmark_type: Optional[str] = Query(None, regex="^(message|document|conversation)$"),
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """List user's bookmarks with optional type filter
+
+    Design Ref: §C.3 — Bookmarks
+    """
+    try:
+        client = await get_async_client()
+
+        # Build query
+        query = client.table("vault_bookmarks").select(
+            "id, bookmark_type, target_id, note, created_at"
+        ).eq("user_id", current_user.id).order("created_at", desc=True)
+
+        # Optional filter by type
+        if bookmark_type:
+            query = query.eq("bookmark_type", bookmark_type)
+
+        result = await query.execute()
+
+        return [
+            BookmarkResponse(
+                id=b["id"],
+                bookmark_type=b["bookmark_type"],
+                target_id=b["target_id"],
+                note=b.get("note"),
+                created_at=datetime.fromisoformat(b["created_at"])
+            )
+            for b in result.data
+        ]
+    except Exception as e:
+        logger.error(f"Error listing bookmarks: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to list bookmarks")
+
+
+@router.post("/bookmarks", response_model=BookmarkResponse)
+async def create_bookmark(
+    body: BookmarkCreate,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """Create a bookmark
+
+    Design Ref: §C.3 — Bookmarks
+    """
+    try:
+        client = await get_async_client()
+
+        # Create bookmark
+        result = await client.table("vault_bookmarks").insert({
+            "user_id": current_user.id,
+            "bookmark_type": body.bookmark_type,
+            "target_id": body.target_id,
+            "note": body.note,
+            "created_at": datetime.utcnow().isoformat()
+        }).execute()
+
+        if not result.data:
+            raise HTTPException(status_code=400, detail="Failed to create bookmark")
+
+        b = result.data[0]
+        return BookmarkResponse(
+            id=b["id"],
+            bookmark_type=b["bookmark_type"],
+            target_id=b["target_id"],
+            note=b.get("note"),
+            created_at=datetime.fromisoformat(b["created_at"])
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating bookmark: {str(e)}")
+        # Likely a unique constraint violation (duplicate bookmark)
+        if "unique" in str(e).lower():
+            raise HTTPException(status_code=409, detail="Bookmark already exists")
+        raise HTTPException(status_code=500, detail="Failed to create bookmark")
+
+
+@router.delete("/bookmarks/{bookmark_id}")
+async def delete_bookmark(
+    bookmark_id: str,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    """Delete a bookmark
+
+    Design Ref: §C.3 — Bookmarks
+    """
+    try:
+        client = await get_async_client()
+
+        # Verify ownership
+        bookmark = await client.table("vault_bookmarks").select("user_id").eq("id", bookmark_id).single().execute()
+        if bookmark.data["user_id"] != current_user.id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
+        # Delete bookmark
+        await client.table("vault_bookmarks").delete().eq("id", bookmark_id).execute()
+
+        return {"success": True}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting bookmark: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete bookmark")
 
 
 # ============================================================================

@@ -2,7 +2,7 @@
 Cohesion: 0.10 | Nodes: 21
 
 ## Key Nodes
-- **제안 작업 워크플로우 UI 설계 사양** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 7 connections
+- **제안 작업 워크플로우 UI 설계 사양** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 7 connections
   - -> contains -> [[1]]
   - -> contains -> [[2]]
   - -> contains -> [[3]]
@@ -10,58 +10,58 @@ Cohesion: 0.10 | Nodes: 21
   - -> contains -> [[5-ui]]
   - -> contains -> [[6]]
   - -> contains -> [[7]]
-- **중앙: Work Content (HITL 작업 영역)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 5 connections
+- **중앙: Work Content (HITL 작업 영역)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 5 connections
   - -> contains -> [[step-0-rfp]]
   - -> contains -> [[step-1-gono-go]]
   - -> contains -> [[step-2]]
   - -> contains -> [[step-3-4]]
   - <- contains <- [[2]]
-- **2. 제안 작업 진행 (워크플로우)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 4 connections
+- **2. 제안 작업 진행 (워크플로우)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 4 connections
   - -> contains -> [[step-nodes]]
   - -> contains -> [[work-content-hitl]]
   - -> contains -> [[ai-suggestions-ai]]
   - <- contains <- [[ui]]
-- **6. 반응형 디자인** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 4 connections
+- **6. 반응형 디자인** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 4 connections
   - -> contains -> [[1280px]]
   - -> contains -> [[640px1280px]]
   - -> contains -> [[640px]]
   - <- contains <- [[ui]]
-- **4. 기술 구현 방안** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 3 connections
+- **4. 기술 구현 방안** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 3 connections
   - -> contains -> [[hitl]]
   - -> contains -> [[step-node]]
   - <- contains <- [[ui]]
-- **5. UI 컴포넌트** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 2 connections
+- **5. UI 컴포넌트** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 2 connections
   - -> contains -> [[reusable-components]]
   - <- contains <- [[ui]]
-- **1. 제안 프로젝트 목록 (테이블 형식)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **1. 제안 프로젝트 목록 (테이블 형식)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[ui]]
-- **데스크톱 (≥1280px)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **데스크톱 (≥1280px)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[6]]
-- **3. 상태 전환 플로우** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **3. 상태 전환 플로우** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[ui]]
-- **모바일 (<640px)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **모바일 (<640px)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[6]]
-- **태블릿 (640px~1280px)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **태블릿 (640px~1280px)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[6]]
-- **7. 다음 단계** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **7. 다음 단계** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[ui]]
-- **우측: AI Suggestions (AI 제안 패널)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **우측: AI Suggestions (AI 제안 패널)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[2]]
-- **HITL 상호작용** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **HITL 상호작용** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[4]]
-- **Reusable Components** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Reusable Components** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[5-ui]]
-- **Step 0: RFP 분석** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Step 0: RFP 분석** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[work-content-hitl]]
-- **Step 1: Go/No-Go** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Step 1: Go/No-Go** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[work-content-hitl]]
-- **Step 2: 전략 수립** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Step 2: 전략 수립** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[work-content-hitl]]
-- **Step 3-4: 계획/작성** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Step 3-4: 계획/작성** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[work-content-hitl]]
-- **Step Node 상태 관리** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **Step Node 상태 관리** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[4]]
-- **좌측: Step Nodes (단계 노드)** (C:\project\tenopa proposer\-agent-master\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
+- **좌측: Step Nodes (단계 노드)** (C:\project\tenopa proposer\frontend\WORKFLOW_DESIGN_SPEC.md) -- 1 connections
   - <- contains <- [[2]]
 
 ## Internal Relationships

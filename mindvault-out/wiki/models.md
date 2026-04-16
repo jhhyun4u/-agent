@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **models** (C:\project\tenopa proposer\-agent-master\app\services\pricing\models.py) -- 0 connections
+- **models** (C:\project\tenopa proposer\app\services\pricing\models.py) -- 0 connections
 
 ## Internal Relationships
 

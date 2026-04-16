@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **proposal** (C:\project\tenopa proposer\-agent-master\scripts\archive\proposal.py) -- 0 connections
+- **proposal** (C:\project\tenopa proposer\scripts\archive\proposal.py) -- 0 connections
 
 ## Internal Relationships
 

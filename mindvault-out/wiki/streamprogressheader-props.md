@@ -2,15 +2,15 @@
 Cohesion: 0.50 | Nodes: 4
 
 ## Key Nodes
-- **StreamProgressHeader** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamProgressHeader.tsx) -- 3 connections
+- **StreamProgressHeader** (C:\project\tenopa proposer\frontend\components\StreamProgressHeader.tsx) -- 3 connections
   - -> contains -> [[streaminfo]]
   - -> contains -> [[props]]
   - -> contains -> [[getcolors]]
-- **Props** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamProgressHeader.tsx) -- 1 connections
+- **Props** (C:\project\tenopa proposer\frontend\components\StreamProgressHeader.tsx) -- 1 connections
   - <- contains <- [[streamprogressheader]]
-- **StreamInfo** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamProgressHeader.tsx) -- 1 connections
+- **StreamInfo** (C:\project\tenopa proposer\frontend\components\StreamProgressHeader.tsx) -- 1 connections
   - <- contains <- [[streamprogressheader]]
-- **getColors** (C:\project\tenopa proposer\-agent-master\frontend\components\StreamProgressHeader.tsx) -- 1 connections
+- **getColors** (C:\project\tenopa proposer\frontend\components\StreamProgressHeader.tsx) -- 1 connections
   - <- contains <- [[streamprogressheader]]
 
 ## Internal Relationships

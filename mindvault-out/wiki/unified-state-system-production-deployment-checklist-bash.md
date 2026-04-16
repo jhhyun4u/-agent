@@ -1,0 +1,138 @@
+# Unified State System — Production Deployment Checklist & bash
+Cohesion: 0.09 | Nodes: 27
+
+## Key Nodes
+- **Unified State System — Production Deployment Checklist** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 9 connections
+  - -> contains -> [[pre-deployment-1-hour]]
+  - -> contains -> [[deployment-phase-30-minutes]]
+  - -> contains -> [[post-deployment-30-minutes]]
+  - -> contains -> [[rollback-procedure-if-issues-found]]
+  - -> contains -> [[success-metrics-track-for-48-hours]]
+  - -> contains -> [[documentation-updates]]
+  - -> contains -> [[contacts-escalation]]
+  - -> contains -> [[approval-sign-off]]
+  - -> contains -> [[quick-reference]]
+- **bash** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 6 connections
+  - <- has_code_example <- [[step-1-database-migration-5-min]]
+  - <- has_code_example <- [[step-2-backend-deployment-10-min]]
+  - <- has_code_example <- [[step-3-frontend-deployment-10-min]]
+  - <- has_code_example <- [[step-4-health-checks-5-min]]
+  - <- has_code_example <- [[rollback-steps-15-minutes]]
+  - <- has_code_example <- [[quick-reference]]
+- **Deployment Phase (30 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 5 connections
+  - -> contains -> [[step-1-database-migration-5-min]]
+  - -> contains -> [[step-2-backend-deployment-10-min]]
+  - -> contains -> [[step-3-frontend-deployment-10-min]]
+  - -> contains -> [[step-4-health-checks-5-min]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Post-Deployment (30 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
+  - -> contains -> [[validation]]
+  - -> contains -> [[monitoring]]
+  - -> contains -> [[team-communication]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Pre-Deployment (1 hour)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 4 connections
+  - -> contains -> [[environment-verification]]
+  - -> contains -> [[code-verification]]
+  - -> contains -> [[backup-rollback-preparation]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Contacts & Escalation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+  - -> contains -> [[on-call-during-deployment]]
+  - -> contains -> [[escalation-path]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Documentation Updates** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+  - -> contains -> [[code-changes-summary]]
+  - -> contains -> [[knowledge-base-updates]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Rollback Procedure (If Issues Found)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 3 connections
+  - -> contains -> [[trigger-rollback-if]]
+  - -> contains -> [[rollback-steps-15-minutes]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Quick Reference** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Rollback Steps (15 minutes)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[rollback-procedure-if-issues-found]]
+- **Step 1: Database Migration (5 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[deployment-phase-30-minutes]]
+- **Step 2: Backend Deployment (10 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[deployment-phase-30-minutes]]
+- **Step 3: Frontend Deployment (10 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[deployment-phase-30-minutes]]
+- **Step 4: Health Checks (5 min)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 2 connections
+  - -> has_code_example -> [[bash]]
+  - <- contains <- [[deployment-phase-30-minutes]]
+- **Approval Sign-off** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Backup & Rollback Preparation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[pre-deployment-1-hour]]
+- **Code Changes Summary** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[documentation-updates]]
+- **Code Verification** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[pre-deployment-1-hour]]
+- **Environment Verification** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[pre-deployment-1-hour]]
+- **Escalation Path** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[contacts-escalation]]
+- **Knowledge Base Updates** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[documentation-updates]]
+- **Monitoring** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[post-deployment-30-minutes]]
+- **On-Call During Deployment** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[contacts-escalation]]
+- **Success Metrics (Track for 48 hours)** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[unified-state-system-production-deployment-checklist]]
+- **Team Communication** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[post-deployment-30-minutes]]
+- **Trigger Rollback If:** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[rollback-procedure-if-issues-found]]
+- **Validation** (C:\project\tenopa proposer\DEPLOYMENT-CHECKLIST-unified-state-system.md) -- 1 connections
+  - <- contains <- [[post-deployment-30-minutes]]
+
+## Internal Relationships
+- Contacts & Escalation -> contains -> On-Call During Deployment [EXTRACTED]
+- Contacts & Escalation -> contains -> Escalation Path [EXTRACTED]
+- Deployment Phase (30 minutes) -> contains -> Step 1: Database Migration (5 min) [EXTRACTED]
+- Deployment Phase (30 minutes) -> contains -> Step 2: Backend Deployment (10 min) [EXTRACTED]
+- Deployment Phase (30 minutes) -> contains -> Step 3: Frontend Deployment (10 min) [EXTRACTED]
+- Deployment Phase (30 minutes) -> contains -> Step 4: Health Checks (5 min) [EXTRACTED]
+- Documentation Updates -> contains -> Code Changes Summary [EXTRACTED]
+- Documentation Updates -> contains -> Knowledge Base Updates [EXTRACTED]
+- Post-Deployment (30 minutes) -> contains -> Validation [EXTRACTED]
+- Post-Deployment (30 minutes) -> contains -> Monitoring [EXTRACTED]
+- Post-Deployment (30 minutes) -> contains -> Team Communication [EXTRACTED]
+- Pre-Deployment (1 hour) -> contains -> Environment Verification [EXTRACTED]
+- Pre-Deployment (1 hour) -> contains -> Code Verification [EXTRACTED]
+- Pre-Deployment (1 hour) -> contains -> Backup & Rollback Preparation [EXTRACTED]
+- Quick Reference -> has_code_example -> bash [EXTRACTED]
+- Rollback Procedure (If Issues Found) -> contains -> Trigger Rollback If: [EXTRACTED]
+- Rollback Procedure (If Issues Found) -> contains -> Rollback Steps (15 minutes) [EXTRACTED]
+- Rollback Steps (15 minutes) -> has_code_example -> bash [EXTRACTED]
+- Step 1: Database Migration (5 min) -> has_code_example -> bash [EXTRACTED]
+- Step 2: Backend Deployment (10 min) -> has_code_example -> bash [EXTRACTED]
+- Step 3: Frontend Deployment (10 min) -> has_code_example -> bash [EXTRACTED]
+- Step 4: Health Checks (5 min) -> has_code_example -> bash [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Pre-Deployment (1 hour) [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Deployment Phase (30 minutes) [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Post-Deployment (30 minutes) [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Rollback Procedure (If Issues Found) [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Success Metrics (Track for 48 hours) [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Documentation Updates [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Contacts & Escalation [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Approval Sign-off [EXTRACTED]
+- Unified State System — Production Deployment Checklist -> contains -> Quick Reference [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Unified State System — Production Deployment Checklist, bash, Deployment Phase (30 minutes)를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 DEPLOYMENT-CHECKLIST-unified-state-system.md이다.
+
+### Key Facts
+- **Feature**: unified-state-system **Deployment Date**: 2026-04-15 **Status**: Ready for Production **Rollback Available**: Yes (migration 019 rollback script exists)
+- Step 1: Database Migration (5 min) ```bash Run migration in order psql -d production_db -f database/migrations/019_unified_state_system.sql
+- Step 1: Database Migration (5 min) ```bash Run migration in order psql -d production_db -f database/migrations/019_unified_state_system.sql
+- Validation - [ ] Existing proposals are queryable (no 500 errors) - [ ] New proposals can be created (status initializes correctly) - [ ] Workflow transitions work (status changes logged to proposal_timelines) - [ ] Notifications sent on status changes (check Teams channel) - [ ] State history…
+- Environment Verification - [ ] Staging database is replica of production - [ ] All environment variables configured (DB connection, API keys, etc.) - [ ] Supabase project verified (correct URL, key) - [ ] Azure AD app registration confirmed - [ ] Teams webhook URL configured for notifications

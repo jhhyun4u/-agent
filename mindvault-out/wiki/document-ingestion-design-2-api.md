@@ -1,0 +1,155 @@
+# Document Ingestion 설계 문서 (Design) & 2. API 명세
+Cohesion: 0.07 | Nodes: 32
+
+## Key Nodes
+- **Document Ingestion 설계 문서 (Design)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 10 connections
+  - -> contains -> [[1]]
+  - -> contains -> [[2-api]]
+  - -> contains -> [[3]]
+  - -> contains -> [[4]]
+  - -> contains -> [[5]]
+  - -> contains -> [[6]]
+  - -> contains -> [[7]]
+  - -> contains -> [[8]]
+  - -> contains -> [[9]]
+  - -> contains -> [[10]]
+- **2. API 명세** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 6 connections
+  - -> contains -> [[21-post-apidocumentsupload]]
+  - -> contains -> [[22-get-apidocuments]]
+  - -> contains -> [[23-get-apidocumentsid]]
+  - -> contains -> [[24-post-apidocumentsidprocess]]
+  - -> contains -> [[25-get-apidocumentsidchunks]]
+  - <- contains <- [[document-ingestion-design]]
+- **json** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 5 connections
+  - <- has_code_example <- [[21-post-apidocumentsupload]]
+  - <- has_code_example <- [[22-get-apidocuments]]
+  - <- has_code_example <- [[23-get-apidocumentsid]]
+  - <- has_code_example <- [[24-post-apidocumentsidprocess]]
+  - <- has_code_example <- [[25-get-apidocumentsidchunks]]
+- **5. 구현 체크리스트** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 5 connections
+  - -> contains -> [[51]]
+  - -> contains -> [[52]]
+  - -> contains -> [[53]]
+  - -> contains -> [[54]]
+  - <- contains <- [[document-ingestion-design]]
+- **6. 구현 순서** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 5 connections
+  - -> contains -> [[phase-1-api-priority-high]]
+  - -> contains -> [[phase-2-priority-high]]
+  - -> contains -> [[phase-3-priority-medium]]
+  - -> contains -> [[phase-4-priority-medium]]
+  - <- contains <- [[document-ingestion-design]]
+- **4. 비즈니스 로직** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 4 connections
+  - -> contains -> [[41]]
+  - -> contains -> [[42]]
+  - -> contains -> [[43]]
+  - <- contains <- [[document-ingestion-design]]
+- **3. 데이터 모델** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 3 connections
+  - -> contains -> [[31-pydantic]]
+  - -> contains -> [[32-db]]
+  - <- contains <- [[document-ingestion-design]]
+- **2.1 POST /api/documents/upload** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-api]]
+- **2.2 GET /api/documents** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-api]]
+- **2.3 GET /api/documents/{id}** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-api]]
+- **2.4 POST /api/documents/{id}/process** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-api]]
+- **2.5 GET /api/documents/{id}/chunks** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[json]]
+  - <- contains <- [[2-api]]
+- **3.1 Pydantic 스키마** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[python]]
+  - <- contains <- [[3]]
+- **3.2 DB 테이블 (기존)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 2 connections
+  - -> has_code_example -> [[sql]]
+  - <- contains <- [[3]]
+- **python** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- has_code_example <- [[31-pydantic]]
+- **sql** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- has_code_example <- [[32-db]]
+- **1. 아키텍처 개요** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[document-ingestion-design]]
+- **10. 참고** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[document-ingestion-design]]
+- **4.1 문서 처리 파이프라인** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.2 에러 처리** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **4.3 권한 검증** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[4]]
+- **5.1 백엔드** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.2 데이터베이스** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.3 테스트** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **5.4 문서** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[5]]
+- **7. 성능 고려사항** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[document-ingestion-design]]
+- **8. 보안 고려사항** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[document-ingestion-design]]
+- **9. 의존성 확인** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[document-ingestion-design]]
+- **Phase 1: 코어 API (Priority: HIGH)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **Phase 2: 목록 조회 (Priority: HIGH)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **Phase 3: 재처리 (Priority: MEDIUM)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[6]]
+- **Phase 4: 테스트 (Priority: MEDIUM)** (C:\project\tenopa proposer\docs\archive\2026-03\document_ingestion\document_ingestion.design.md) -- 1 connections
+  - <- contains <- [[6]]
+
+## Internal Relationships
+- 2.1 POST /api/documents/upload -> has_code_example -> json [EXTRACTED]
+- 2.2 GET /api/documents -> has_code_example -> json [EXTRACTED]
+- 2.3 GET /api/documents/{id} -> has_code_example -> json [EXTRACTED]
+- 2.4 POST /api/documents/{id}/process -> has_code_example -> json [EXTRACTED]
+- 2.5 GET /api/documents/{id}/chunks -> has_code_example -> json [EXTRACTED]
+- 2. API 명세 -> contains -> 2.1 POST /api/documents/upload [EXTRACTED]
+- 2. API 명세 -> contains -> 2.2 GET /api/documents [EXTRACTED]
+- 2. API 명세 -> contains -> 2.3 GET /api/documents/{id} [EXTRACTED]
+- 2. API 명세 -> contains -> 2.4 POST /api/documents/{id}/process [EXTRACTED]
+- 2. API 명세 -> contains -> 2.5 GET /api/documents/{id}/chunks [EXTRACTED]
+- 3. 데이터 모델 -> contains -> 3.1 Pydantic 스키마 [EXTRACTED]
+- 3. 데이터 모델 -> contains -> 3.2 DB 테이블 (기존) [EXTRACTED]
+- 3.1 Pydantic 스키마 -> has_code_example -> python [EXTRACTED]
+- 3.2 DB 테이블 (기존) -> has_code_example -> sql [EXTRACTED]
+- 4. 비즈니스 로직 -> contains -> 4.1 문서 처리 파이프라인 [EXTRACTED]
+- 4. 비즈니스 로직 -> contains -> 4.2 에러 처리 [EXTRACTED]
+- 4. 비즈니스 로직 -> contains -> 4.3 권한 검증 [EXTRACTED]
+- 5. 구현 체크리스트 -> contains -> 5.1 백엔드 [EXTRACTED]
+- 5. 구현 체크리스트 -> contains -> 5.2 데이터베이스 [EXTRACTED]
+- 5. 구현 체크리스트 -> contains -> 5.3 테스트 [EXTRACTED]
+- 5. 구현 체크리스트 -> contains -> 5.4 문서 [EXTRACTED]
+- 6. 구현 순서 -> contains -> Phase 1: 코어 API (Priority: HIGH) [EXTRACTED]
+- 6. 구현 순서 -> contains -> Phase 2: 목록 조회 (Priority: HIGH) [EXTRACTED]
+- 6. 구현 순서 -> contains -> Phase 3: 재처리 (Priority: MEDIUM) [EXTRACTED]
+- 6. 구현 순서 -> contains -> Phase 4: 테스트 (Priority: MEDIUM) [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 1. 아키텍처 개요 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 2. API 명세 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 3. 데이터 모델 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 4. 비즈니스 로직 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 5. 구현 체크리스트 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 6. 구현 순서 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 7. 성능 고려사항 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 8. 보안 고려사항 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 9. 의존성 확인 [EXTRACTED]
+- Document Ingestion 설계 문서 (Design) -> contains -> 10. 참고 [EXTRACTED]
+
+## Cross-Community Connections
+
+## Context
+이 커뮤니티는 Document Ingestion 설계 문서 (Design), 2. API 명세, json를 중심으로 contains 관계로 연결되어 있다. 주요 소스 파일은 document_ingestion.design.md이다.
+
+### Key Facts
+- **버전**: v1.0 **작성일**: 2026-03-29 **상태**: APPROVED
+- 2.1 POST /api/documents/upload
+- **요청:** ```json { "file": "<binary file>", "doc_type": "보고서|제안서|실적|기타", "doc_subtype": "string (optional)", "project_id": "string (optional)" } ```
+- Phase 1: 코어 API (Priority: HIGH) 1. `routes_documents.py` — POST /api/documents/upload 2. `routes_documents.py` — GET /api/documents/{id} 3. `document_schemas.py` — Pydantic 스키마
+- **목적**: 문서 파일 업로드 및 처리 시작

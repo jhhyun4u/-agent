@@ -4,7 +4,7 @@ Cohesion: 1.00 | Nodes: 2
 ## Key Nodes
 - **__unresolved__::ref::_tailwindcss_** () -- 1 connections
   - <- imports <- [[tailwindconfig]]
-- **tailwind.config** (C:\project\tenopa proposer\-agent-master\frontend\tailwind.config.ts) -- 1 connections
+- **tailwind.config** (C:\project\tenopa proposer\frontend\tailwind.config.ts) -- 1 connections
   - -> imports -> [[unresolvedreftailwindcss]]
 
 ## Internal Relationships

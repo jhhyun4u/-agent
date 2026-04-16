@@ -2,7 +2,7 @@
 Cohesion: 1.00 | Nodes: 1
 
 ## Key Nodes
-- **competitor_pricing** (C:\project\tenopa proposer\-agent-master\app\services\pricing\competitor_pricing.py) -- 0 connections
+- **competitor_pricing** (C:\project\tenopa proposer\app\services\pricing\competitor_pricing.py) -- 0 connections
 
 ## Internal Relationships
 

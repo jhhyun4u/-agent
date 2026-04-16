@@ -2,9 +2,9 @@
 Cohesion: 1.00 | Nodes: 2
 
 ## Key Nodes
-- **three_streams_completion** (C:\project\tenopa proposer\-agent-master\frontend\.claude\agent-memory\bkit-report-generator\three_streams_completion.md) -- 1 connections
+- **three_streams_completion** (C:\project\tenopa proposer\frontend\.claude\agent-memory\bkit-report-generator\three_streams_completion.md) -- 1 connections
   - -> contains -> [[three-streams-2026-03-21]]
-- **Three-Streams 병행 업무 완료 (2026-03-21)** (C:\project\tenopa proposer\-agent-master\frontend\.claude\agent-memory\bkit-report-generator\three_streams_completion.md) -- 1 connections
+- **Three-Streams 병행 업무 완료 (2026-03-21)** (C:\project\tenopa proposer\frontend\.claude\agent-memory\bkit-report-generator\three_streams_completion.md) -- 1 connections
   - <- contains <- [[threestreamscompletion]]
 
 ## Internal Relationships

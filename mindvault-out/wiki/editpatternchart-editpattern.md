@@ -2,12 +2,12 @@
 Cohesion: 0.67 | Nodes: 3
 
 ## Key Nodes
-- **EditPatternChart** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\EditPatternChart.tsx) -- 2 connections
+- **EditPatternChart** (C:\project\tenopa proposer\frontend\components\prompt\EditPatternChart.tsx) -- 2 connections
   - -> contains -> [[editpattern]]
   - -> contains -> [[editpatternchartprops]]
-- **EditPattern** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\EditPatternChart.tsx) -- 1 connections
+- **EditPattern** (C:\project\tenopa proposer\frontend\components\prompt\EditPatternChart.tsx) -- 1 connections
   - <- contains <- [[editpatternchart]]
-- **EditPatternChartProps** (C:\project\tenopa proposer\-agent-master\frontend\components\prompt\EditPatternChart.tsx) -- 1 connections
+- **EditPatternChartProps** (C:\project\tenopa proposer\frontend\components\prompt\EditPatternChart.tsx) -- 1 connections
   - <- contains <- [[editpatternchart]]
 
 ## Internal Relationships

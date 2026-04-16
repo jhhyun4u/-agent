@@ -6,17 +6,17 @@ Cohesion: 0.33 | Nodes: 6
   - <- imports <- [[middleware]]
   - <- imports <- [[client]]
   - <- imports <- [[server]]
-- **server** (C:\project\tenopa proposer\-agent-master\frontend\lib\supabase\server.ts) -- 2 connections
+- **server** (C:\project\tenopa proposer\frontend\lib\supabase\server.ts) -- 2 connections
   - -> imports -> [[unresolvedrefsupabasessr]]
   - -> imports -> [[unresolvedrefnextheaders]]
-- **middleware** (C:\project\tenopa proposer\-agent-master\frontend\middleware.ts) -- 2 connections
+- **middleware** (C:\project\tenopa proposer\frontend\middleware.ts) -- 2 connections
   - -> imports -> [[unresolvedrefsupabasessr]]
   - -> imports -> [[unresolvedrefnextserver]]
 - **__unresolved__::ref::_next_headers_** () -- 1 connections
   - <- imports <- [[server]]
 - **__unresolved__::ref::_next_server_** () -- 1 connections
   - <- imports <- [[middleware]]
-- **client** (C:\project\tenopa proposer\-agent-master\frontend\lib\supabase\client.ts) -- 1 connections
+- **client** (C:\project\tenopa proposer\frontend\lib\supabase\client.ts) -- 1 connections
   - -> imports -> [[unresolvedrefsupabasessr]]
 
 ## Internal Relationships

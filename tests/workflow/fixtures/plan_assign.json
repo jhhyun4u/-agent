@@ -1,7 +1,0 @@
-{
-  "deliverables": [
-    {"name": "요구사항 정의서", "responsible_role": "설계 리더", "due_phase": "1단계", "quality_criteria": "요구사항 100% 추적"},
-    {"name": "시스템 설계서", "responsible_role": "설계 리더", "due_phase": "2단계", "quality_criteria": "아키텍처 리뷰 통과"},
-    {"name": "테스트 결과서", "responsible_role": "개발자", "due_phase": "3단계", "quality_criteria": "커버리지 80% 이상"}
-  ]
-}
