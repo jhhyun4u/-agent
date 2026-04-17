@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-17T00:53:23.416Z",
+  "lastUpdated": "2026-04-17T01:22:06.315Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -114,9 +114,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-17T00:52:37.084Z"
+        "lastUpdated": "2026-04-17T01:22:06.300Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_proposal.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_proposal.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -12771,6 +12771,12 @@
     {
       "timestamp": "2026-04-17T00:53:23.413Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T01:22:06.314Z",
+      "feature": "api",
       "phase": "do",
       "action": "updated"
     }

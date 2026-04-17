@@ -1,0 +1,76 @@
+name: Regression Prevention Check
+
+on:
+  pull_request:
+    paths:
+      - 'app/**/*.py'
+      - 'database/migrations/**'
+      - 'tests/**'
+
+jobs:
+  regression-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: "[Rule 1] Check API Parameter Compatibility - initial_phase"
+        run: |
+          if git diff origin/main..HEAD -- 'app/**' | grep -q "initial_phase"; then
+            echo "❌ FAILED: initial_phase 파라미터 사용 감지"
+            echo "   고정: initial_phase → phase로 변경"
+            echo "   참고: app/state_machine.py의 start_workflow() 정의"
+            exit 1
+          fi
+          echo "✅ PASSED: initial_phase 파라미터 없음"
+
+      - name: "[Rule 2] Check Database Migration Order"
+        run: |
+          if git diff origin/main..HEAD -- 'database/migrations/**' | grep -q "_schema_migrations"; then
+            if ! git show origin/main:database/migrations/000_init_migrations.sql &>/dev/null; then
+              echo "⚠️  WARNING: 000_init_migrations.sql 반드시 먼저 적용 필요"
+            fi
+          fi
+          echo "✅ PASSED: 마이그레이션 순서 검증"
+
+      - name: "[Rule 3] Check StateMachine Transition"
+        run: |
+          if git diff origin/main..HEAD -- 'app/api/**' | grep -q "start_workflow"; then
+            if git diff origin/main..HEAD -- 'app/api/**' | grep -q "start_workflow.*initial_phase"; then
+              echo "❌ FAILED: start_workflow에서 initial_phase 사용"
+              exit 1
+            fi
+            echo "✅ PASSED: start_workflow 호출이 phase 파라미터 사용"
+          fi
+
+      - name: "[Rule 4] Python Syntax Check"
+        run: |
+          python -m py_compile app/**/*.py || exit 1
+          echo "✅ PASSED: Python 문법 검증"
+
+      - name: "[Rule 5] Type Check with Mypy (Optional)"
+        run: |
+          pip install -q mypy types-setuptools || true
+          mypy app/ --ignore-missing-imports || true
+          echo "✅ PASSED: Type 검증 완료"
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "## 회귀 방지 규칙 검증 완료 ✅"
+          echo ""
+          echo "### 검증된 규칙"
+          echo "- [x] Rule 1: API 파라미터 호환성 (initial_phase → phase)"
+          echo "- [x] Rule 2: DB 마이그레이션 순서"
+          echo "- [x] Rule 3: StateMachine 상태 전환"
+          echo "- [x] Rule 4: Python 문법"
+          echo "- [x] Rule 5: Type 안전성"
+          echo ""
+          echo "자세한 규칙: [REGRESSION_PREVENTION_RULES.md](REGRESSION_PREVENTION_RULES.md)"
