@@ -38,6 +38,18 @@ E2E_BID_NO = os.getenv("E2E_BID_NO", "")
 
 
 # ─────────────────────────────────────────────
+# 테스트 데이터 상수 (seed_test_data.py에서 생성)
+# ─────────────────────────────────────────────
+
+TEST_BIDS = {
+    "standard": "E26BK00000001",      # 50M, 30일 (기준 충족)
+    "high_budget": "E26BK00000002",   # 80M, 45일 (기준 초과)
+    "low_budget": "E26BK00000003",    # 20M, 7일 (기준 미달)
+    "expired": "E26BK00000004",       # 30M, 마감됨
+}
+
+
+# ─────────────────────────────────────────────
 # 타임아웃 상수
 # ─────────────────────────────────────────────
 
@@ -104,32 +116,47 @@ async def test_team_id(staging_api_client: httpx.AsyncClient) -> str:
 
 
 # ─────────────────────────────────────────────
-# 공고번호 fixture
+# 공고번호 fixture (다양한 시나리오)
 # ─────────────────────────────────────────────
 
 @pytest.fixture
 async def real_bid_no(staging_api_client: httpx.AsyncClient, test_team_id: str) -> str:
-    """실제 공고번호 확보."""
+    """실제 공고번호 확보 (폴백: 테스트 데이터 사용)."""
+    # 1. 명시적으로 설정된 E2E_BID_NO 사용
     if E2E_BID_NO:
         return E2E_BID_NO
 
-    response = await staging_api_client.get(
-        "/api/bids/monitor",
-        params={"scope": "company", "page": 1, "per_page": 5},
-    )
+    # 2. API에서 실제 공고 조회 시도
+    try:
+        response = await staging_api_client.get(
+            "/api/bids/monitor",
+            params={"scope": "company", "page": 1, "per_page": 5},
+        )
 
-    if response.status_code not in (200, 401, 403):
-        pytest.skip(f"공고 조회 실패: {response.status_code}")
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("data", [])
+            if items:
+                return items[0]["bid_no"]
+    except Exception:
+        # API 호출 실패 → 폴백 데이터 사용
+        pass
 
-    if response.status_code in (401, 403):
-        pytest.skip("공고 조회 권한 없음")
+    # 3. 폴백: 테스트 데이터 반환 (seed_test_data.py에서 생성됨)
+    return TEST_BIDS["standard"]  # E2E_TEST_001 (50M, 기준 충족)
 
-    data = response.json()
-    items = data.get("data", [])
-    if not items:
-        pytest.skip("테스트용 공고 없음")
 
-    return items[0]["bid_no"]
+@pytest.fixture
+def bid_no_by_scenario(request) -> str:
+    """
+    시나리오별 공고번호 반환.
+
+    사용법:
+      def test_something(bid_no_by_scenario):
+          bid_no = bid_no_by_scenario  # E2E_TEST_001
+    """
+    scenario = request.param if hasattr(request, 'param') else "standard"
+    return TEST_BIDS.get(scenario, TEST_BIDS["standard"])
 
 
 # ─────────────────────────────────────────────
