@@ -1,1 +1,161 @@
-/**\n * useDashboardWs — 실시간 대시보드 WebSocket Hook\n *\n * 컴포넌트에서 WebSocket 연결·구독·메시지 수신을 간편하게 관리\n * 자동 토큰 인증, 마운트시 연결, 언마운트시 정리\n */\n\n\"use client\";\n\nimport { useEffect, useCallback, useRef } from \"react\";\nimport { useAuth } from \"@/lib/hooks/useAuth\";\nimport {\n  useDashboardWsStore,\n  selectIsConnected,\n  selectConnectionState,\n  selectChannels,\n  selectProposalStatusMessages,\n  selectNotificationMessages,\n  selectTeamPerformanceMessages,\n} from \"@/lib/stores/dashboardWsStore\";\nimport { MessageType } from \"@/lib/ws-client\";\n\n/**\n * Hook return type\n */\nexport interface UseDashboardWsReturn {\n  // State\n  isConnected: boolean;\n  connectionState: \"connecting\" | \"connected\" | \"disconnected\" | \"error\";\n  channels: string[];\n  messageCount: number;\n\n  // Subscription management\n  subscribe: (channel: string) => void;\n  unsubscribe: (channel: string) => void;\n  unsubscribeAll: () => void;\n\n  // Message access\n  getLatestProposalStatus: () => any;\n  getProposalStatusUpdates: () => any[];\n  getLatestNotification: () => any;\n  getNotifications: () => any[];\n  getLatestTeamPerformance: () => any;\n  clearMessages: (type?: MessageType) => void;\n\n  // Connection management\n  reconnect: () => Promise<void>;\n  disconnect: () => void;\n\n  // Status\n  isInitialized: boolean;\n  error: Error | null;\n}\n\n/**\n * Initialize WebSocket connection and provide dashboard updates\n *\n * Usage:\n * ```tsx\n * const {\n *   isConnected,\n *   subscribe,\n *   getLatestProposalStatus,\n *   getNotifications,\n * } = useDashboardWs();\n *\n * useEffect(() => {\n *   if (isConnected) {\n *     subscribe(`team:${teamId}`);\n *     subscribe(`division:${divisionId}`);\n *   }\n * }, [isConnected, teamId, divisionId, subscribe]);\n * ```\n */\nexport function useDashboardWs(): UseDashboardWsReturn {\n  const { user, token } = useAuth();\n  const isInitializedRef = useRef(false);\n  const errorRef = useRef<Error | null>(null);\n\n  // Selectors for optimized re-renders\n  const isConnected = useDashboardWsStore(selectIsConnected);\n  const connectionState = useDashboardWsStore(selectConnectionState);\n  const channels = useDashboardWsStore(selectChannels);\n  const proposalMessages = useDashboardWsStore(selectProposalStatusMessages);\n  const notificationMessages = useDashboardWsStore(selectNotificationMessages);\n\n  // Store methods\n  const storeSubscribe = useDashboardWsStore((s) => s.subscribe);\n  const storeUnsubscribe = useDashboardWsStore((s) => s.unsubscribe);\n  const storeGetLatestProposalStatus = useDashboardWsStore(\n    (s) => s.getLatestProposalStatus\n  );\n  const storeGetProposalStatusUpdates = useDashboardWsStore(\n    (s) => s.getProposalStatusUpdates\n  );\n  const storeGetLatestNotification = useDashboardWsStore(\n    (s) => s.getLatestNotification\n  );\n  const storeGetNotifications = useDashboardWsStore((s) => s.getNotifications);\n  const storeGetLatestTeamPerformance = useDashboardWsStore(\n    (s) => s.getLatestTeamPerformance\n  );\n  const storeClearMessages = useDashboardWsStore((s) => s.clearMessages);\n  const storeDisconnect = useDashboardWsStore((s) => s._disconnect);\n  const storeInitialize = useDashboardWsStore((s) => s._initialize);\n\n  // Initialize WebSocket on mount\n  useEffect(() => {\n    const initialize = async () => {\n      try {\n        // Only initialize once per component mount\n        if (isInitializedRef.current) {\n          return;\n        }\n\n        if (!user || !token) {\n          console.warn(\"[useDashboardWs] User or token not available\");\n          return;\n        }\n\n        isInitializedRef.current = true;\n        await storeInitialize(token);\n        errorRef.current = null;\n      } catch (error) {\n        const err = error instanceof Error ? error : new Error(String(error));\n        errorRef.current = err;\n        console.error(\"[useDashboardWs] Initialization error:\", err);\n        isInitializedRef.current = false;\n      }\n    };\n\n    initialize();\n\n    // Cleanup on unmount\n    return () => {\n      storeDisconnect();\n      isInitializedRef.current = false;\n    };\n  }, [user, token, storeInitialize, storeDisconnect]);\n\n  // Subscribe callback\n  const subscribe = useCallback(\n    (channel: string) => {\n      if (!isConnected && connectionState !== \"connecting\") {\n        console.warn(\n          `[useDashboardWs] Cannot subscribe to ${channel}: not connected`\n        );\n        return;\n      }\n      storeSubscribe(channel);\n    },\n    [isConnected, connectionState, storeSubscribe]\n  );\n\n  // Unsubscribe callback\n  const unsubscribe = useCallback(\n    (channel: string) => {\n      storeUnsubscribe(channel);\n    },\n    [storeUnsubscribe]\n  );\n\n  // Unsubscribe from all channels\n  const unsubscribeAll = useCallback(() => {\n    const currentChannels = channels;\n    for (const channel of currentChannels) {\n      storeUnsubscribe(channel);\n    }\n  }, [channels, storeUnsubscribe]);\n\n  // Reconnect callback\n  const reconnect = useCallback(async () => {\n    try {\n      if (!token) {\n        throw new Error(\"Token not available\");\n      }\n      await storeInitialize(token);\n      errorRef.current = null;\n    } catch (error) {\n      const err = error instanceof Error ? error : new Error(String(error));\n      errorRef.current = err;\n      console.error(\"[useDashboardWs] Reconnect error:\", err);\n      throw err;\n    }\n  }, [token, storeInitialize]);\n\n  // Disconnect callback\n  const disconnect = useCallback(() => {\n    storeDisconnect();\n    isInitializedRef.current = false;\n  }, [storeDisconnect]);\n\n  // Clear messages callback\n  const clearMessages = useCallback(\n    (type?: MessageType) => {\n      storeClearMessages(type);\n    },\n    [storeClearMessages]\n  );\n\n  // Calculate total message count\n  const messageCount =\n    proposalMessages.length + notificationMessages.length;\n\n  return {\n    // State\n    isConnected,\n    connectionState,\n    channels,\n    messageCount,\n\n    // Subscription management\n    subscribe,\n    unsubscribe,\n    unsubscribeAll,\n\n    // Message access\n    getLatestProposalStatus: storeGetLatestProposalStatus,\n    getProposalStatusUpdates: storeGetProposalStatusUpdates,\n    getLatestNotification: storeGetLatestNotification,\n    getNotifications: storeGetNotifications,\n    getLatestTeamPerformance: storeGetLatestTeamPerformance,\n    clearMessages,\n\n    // Connection management\n    reconnect,\n    disconnect,\n\n    // Status\n    isInitialized: isInitializedRef.current,\n    error: errorRef.current,\n  };\n}\n\n/**\n * Advanced: Direct selector for custom re-render optimization\n *\n * Use when you need fine-grained control over re-renders\n *\n * Example:\n * ```tsx\n * // Only re-render when proposal status messages change\n * const proposalMessages = useDashboardWsSelector(selectProposalStatusMessages);\n * ```\n */\nexport function useDashboardWsSelector<T>(\n  selector: (state: any) => T\n): T {\n  return useDashboardWsStore(selector);\n}\n"
+"use client";
+
+import { useEffect, useCallback, useRef } from "react";
+import { useAuth } from "@/lib/hooks/useAuth";
+import {
+  useDashboardWsStore,
+  selectIsConnected,
+  selectConnectionState,
+  selectChannels,
+  selectProposalStatusMessages,
+  selectNotificationMessages,
+} from "@/lib/stores/dashboardWsStore";
+import type { MessageType } from "@/lib/ws-client";
+
+export interface UseDashboardWsReturn {
+  isConnected: boolean;
+  connectionState: "connecting" | "connected" | "disconnected" | "error";
+  channels: string[];
+  messageCount: number;
+  subscribe: (channel: string) => void;
+  unsubscribe: (channel: string) => void;
+  unsubscribeAll: () => void;
+  getLatestProposalStatus: () => any;
+  getProposalStatusUpdates: () => any[];
+  getLatestNotification: () => any;
+  getNotifications: () => any[];
+  getLatestTeamPerformance: () => any;
+  clearMessages: (type?: MessageType) => void;
+  reconnect: () => Promise<void>;
+  disconnect: () => void;
+  isInitialized: boolean;
+  error: Error | null;
+}
+
+export function useDashboardWs(): UseDashboardWsReturn {
+  const { user, token } = useAuth();
+  const isInitializedRef = useRef(false);
+  const errorRef = useRef<Error | null>(null);
+
+  const isConnected = useDashboardWsStore(selectIsConnected);
+  const connectionState = useDashboardWsStore(selectConnectionState);
+  const channels = useDashboardWsStore(selectChannels);
+  const proposalMessages = useDashboardWsStore(selectProposalStatusMessages);
+  const notificationMessages = useDashboardWsStore(selectNotificationMessages);
+
+  const storeSubscribe = useDashboardWsStore((s) => s.subscribe);
+  const storeUnsubscribe = useDashboardWsStore((s) => s.unsubscribe);
+  const storeGetLatestProposalStatus = useDashboardWsStore(
+    (s) => s.getLatestProposalStatus
+  );
+  const storeGetProposalStatusUpdates = useDashboardWsStore(
+    (s) => s.getProposalStatusUpdates
+  );
+  const storeGetLatestNotification = useDashboardWsStore(
+    (s) => s.getLatestNotification
+  );
+  const storeGetNotifications = useDashboardWsStore((s) => s.getNotifications);
+  const storeGetLatestTeamPerformance = useDashboardWsStore(
+    (s) => s.getLatestTeamPerformance
+  );
+  const storeClearMessages = useDashboardWsStore((s) => s.clearMessages);
+  const storeDisconnect = useDashboardWsStore((s) => s._disconnect);
+  const storeInitialize = useDashboardWsStore((s) => s._initialize);
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        if (isInitializedRef.current) return;
+        if (!user || !token) return;
+
+        isInitializedRef.current = true;
+        await storeInitialize(token);
+        errorRef.current = null;
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        errorRef.current = err;
+        isInitializedRef.current = false;
+      }
+    };
+
+    initialize();
+
+    return () => {
+      storeDisconnect();
+      isInitializedRef.current = false;
+    };
+  }, [user, token, storeInitialize, storeDisconnect]);
+
+  const subscribe = useCallback(
+    (channel: string) => {
+      if (!isConnected && connectionState !== "connecting") return;
+      storeSubscribe(channel);
+    },
+    [isConnected, connectionState, storeSubscribe]
+  );
+
+  const unsubscribe = useCallback(
+    (channel: string) => {
+      storeUnsubscribe(channel);
+    },
+    [storeUnsubscribe]
+  );
+
+  const unsubscribeAll = useCallback(() => {
+    for (const channel of channels) {
+      storeUnsubscribe(channel);
+    }
+  }, [channels, storeUnsubscribe]);
+
+  const reconnect = useCallback(async () => {
+    try {
+      if (!token) throw new Error("Token not available");
+      await storeInitialize(token);
+      errorRef.current = null;
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      errorRef.current = err;
+      throw err;
+    }
+  }, [token, storeInitialize]);
+
+  const disconnect = useCallback(() => {
+    storeDisconnect();
+    isInitializedRef.current = false;
+  }, [storeDisconnect]);
+
+  const clearMessages = useCallback(
+    (type?: MessageType) => {
+      storeClearMessages(type);
+    },
+    [storeClearMessages]
+  );
+
+  const messageCount = proposalMessages.length + notificationMessages.length;
+
+  return {
+    isConnected,
+    connectionState,
+    channels,
+    messageCount,
+    subscribe,
+    unsubscribe,
+    unsubscribeAll,
+    getLatestProposalStatus: storeGetLatestProposalStatus,
+    getProposalStatusUpdates: storeGetProposalStatusUpdates,
+    getLatestNotification: storeGetLatestNotification,
+    getNotifications: storeGetNotifications,
+    getLatestTeamPerformance: storeGetLatestTeamPerformance,
+    clearMessages,
+    reconnect,
+    disconnect,
+    isInitialized: isInitializedRef.current,
+    error: errorRef.current,
+  };
+}
+
+export function useDashboardWsSelector<T>(
+  selector: (state: any) => T
+): T {
+  return useDashboardWsStore(selector);
+}

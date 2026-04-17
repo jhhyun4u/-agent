@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-16T11:45:48.601Z",
+  "lastUpdated": "2026-04-17T00:53:23.416Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -43,7 +43,10 @@
     "pricing",
     "hwpx",
     "scheduler",
-    "tenopa proposer"
+    "tenopa proposer",
+    "stores",
+    "tmp",
+    "live"
   ],
   "primaryFeature": "document_ingestion.py",
   "features": {
@@ -111,9 +114,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-16T08:20:35.598Z"
+        "lastUpdated": "2026-04-17T00:52:37.084Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_vault_chat.py",
+      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_proposal.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -141,9 +144,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-16T08:24:20.863Z"
+        "lastUpdated": "2026-04-16T23:59:06.644Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\scripts\\deploy-production.sh",
+      "lastFile": "c:\\project\\tenopa proposer\\scripts\\run-e2e-tests.sh",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -231,9 +234,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-28T11:02:59.640Z",
-        "lastUpdated": "2026-04-16T07:06:33.805Z"
+        "lastUpdated": "2026-04-17T00:39:01.458Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\tests\\test_g2b_bidding_automation.py",
+      "lastFile": "c:\\project\\tenopa proposer\\tests\\conftest.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -321,9 +324,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T04:44:33.723Z",
-        "lastUpdated": "2026-04-16T07:11:53.147Z"
+        "lastUpdated": "2026-04-16T23:54:26.949Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\tests\\e2e\\vault-step-ui.spec.ts",
+      "lastFile": "c:\\project\\tenopa proposer\\frontend\\e2e\\bid-monitoring-flow.spec.ts",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -351,9 +354,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T08:05:36.810Z",
-        "lastUpdated": "2026-04-16T07:11:19.940Z"
+        "lastUpdated": "2026-04-16T13:26:53.536Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\frontend\\hooks\\useVaultStep.ts",
+      "lastFile": "C:\\project\\tenopa proposer\\frontend\\run-load-tests.js",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -893,9 +896,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-16T06:55:01.546Z"
+        "lastUpdated": "2026-04-16T23:53:53.102Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\tests\\integration\\test_vault_step5_e2e.py"
+      "lastFile": "c:\\project\\tenopa proposer\\tests\\integration\\test_bid_to_proposal_workflow.py"
     },
     "monitoring": {
       "phase": "do",
@@ -1075,9 +1078,48 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-16T11:45:48.587Z"
+        "lastUpdated": "2026-04-17T00:53:23.400Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\app\\services\\harness_evaluator.py"
+      "lastFile": "c:\\project\\tenopa proposer\\apply_migration.py"
+    },
+    "stores": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-16T12:57:01.623Z",
+        "lastUpdated": "2026-04-16T12:57:01.638Z"
+      },
+      "lastFile": "C:\\project\\tenopa proposer\\frontend\\lib\\stores\\dashboardWsStore.ts"
+    },
+    "tmp": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-16T13:16:58.770Z",
+        "lastUpdated": "2026-04-16T13:16:58.770Z"
+      },
+      "lastFile": "\\tmp\\run-tests.js"
+    },
+    "live": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-16T23:52:40.978Z",
+        "lastUpdated": "2026-04-16T23:53:15.083Z"
+      },
+      "lastFile": "c:\\project\\tenopa proposer\\tests\\integration\\live\\test_g2b_monitoring.py"
     }
   },
   "meta": {
@@ -12524,6 +12566,210 @@
     },
     {
       "timestamp": "2026-04-16T11:45:48.599Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:46:12.773Z",
+      "feature": "e2e",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:56:25.606Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:56:43.658Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:57:01.659Z",
+      "feature": "stores",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:57:20.686Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:57:48.147Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T12:58:09.025Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:01:08.239Z",
+      "feature": "e2e",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:16:58.787Z",
+      "feature": "tmp",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:18:46.528Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:19:49.671Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:21:46.968Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:25:19.619Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T13:26:53.552Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:52:28.634Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:52:37.073Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:52:40.990Z",
+      "feature": "live",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:53:15.093Z",
+      "feature": "live",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:53:53.110Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:54:26.952Z",
+      "feature": "e2e",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-16T23:59:06.647Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:05:21.283Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:05:27.913Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:05:37.129Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:05:44.946Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:33:38.922Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:33:54.158Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:34:10.876Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:35:53.776Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:37:09.410Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:38:05.647Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:39:01.465Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:52:37.091Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-17T00:53:23.413Z",
       "feature": "tenopa proposer",
       "phase": "do",
       "action": "updated"

@@ -1,1 +1,203 @@
-/**\n * DashboardWithRealtime — WebSocket 실시간 업데이트 통합 예제\n *\n * 대시보드 컴포넌트에 useDashboardWs 훅을 통합하는 패턴을 보여줌.\n * 제안 상태, 팀 성과, 알림을 실시간으로 업데이트.\n */\n\n\"use client\";\n\nimport { useEffect, useCallback, useRef, useState } from \"react\";\nimport { useDashboardWs } from \"@/lib/hooks/useDashboardWs\";\nimport type { ProposalStatusData, TeamPerformanceData } from \"@/lib/ws-client\";\n\n/**\n * Props for real-time dashboard integration\n */\nexport interface DashboardWithRealtimeProps {\n  teamId?: string;\n  divisionId?: string;\n  scope?: \"team\" | \"division\" | \"company\";\n  onProposalStatusChange?: (update: ProposalStatusData) => void;\n  onTeamPerformanceUpdate?: (update: TeamPerformanceData) => void;\n  onNotificationReceived?: (message: string) => void;\n}\n\n/**\n * Example: Proposal status updater hook\n *\n * Integrates useDashboardWs into proposal list state management.\n * Automatically updates proposal status when WebSocket messages arrive.\n */\nexport function useProposalListWithRealtime(\n  proposals: any[],\n  setProposals: (proposals: any[]) => void,\n  teamId?: string,\n  divisionId?: string\n) {\n  const { isConnected, subscribe, getProposalStatusUpdates } = useDashboardWs();\n  const lastUpdateRef = useRef<Set<string>>(new Set());\n\n  // Subscribe to appropriate channels when connected\n  useEffect(() => {\n    if (!isConnected) return;\n\n    const channels: string[] = [];\n    if (teamId) channels.push(`team:${teamId}`);\n    if (divisionId) channels.push(`division:${divisionId}`);\n    if (channels.length === 0) channels.push(\"company:default\");\n\n    for (const channel of channels) {\n      subscribe(channel);\n    }\n  }, [isConnected, teamId, divisionId, subscribe]);\n\n  // Update proposals when status changes arrive\n  useEffect(() => {\n    const updates = getProposalStatusUpdates();\n    const updateIds = new Set(updates.map((u) => u.proposal_id));\n\n    // Only update if there are new updates since last check\n    if (updateIds.size === lastUpdateRef.current.size) return;\n\n    setProposals(\n      proposals.map((proposal) => {\n        // Check if this proposal has a recent status update\n        const update = updates.find((u) => u.proposal_id === proposal.id);\n        if (update) {\n          return {\n            ...proposal,\n            status: update.new_status,\n            updated_at: update.timestamp,\n            _realtimeUpdate: true, // Flag for UI indication\n          };\n        }\n        return proposal;\n      })\n    );\n\n    lastUpdateRef.current = updateIds;\n  }, [getProposalStatusUpdates, proposals, setProposals]);\n}\n\n/**\n * Example: Team performance updater hook\n *\n * Listens to team performance metrics and provides callbacks.\n */\nexport function useTeamPerformanceRealtime(\n  onUpdate?: (data: TeamPerformanceData) => void\n) {\n  const { isConnected, subscribe } = useDashboardWs();\n  const store = useDashboardWs();\n\n  useEffect(() => {\n    if (!isConnected) return;\n    subscribe(\"company:default\");\n  }, [isConnected, subscribe]);\n\n  useEffect(() => {\n    const latestPerformance = store.getLatestTeamPerformance?.();\n    if (latestPerformance && onUpdate) {\n      onUpdate(latestPerformance);\n    }\n  }, [store.getLatestTeamPerformance, onUpdate]);\n}\n\n/**\n * Example: Notification listener hook\n *\n * Listens to notifications and triggers callbacks (e.g., toast, sound).\n */\nexport function useNotificationListener(\n  onNotification?: (title: string, message: string, type: string) => void\n) {\n  const { isConnected, subscribe, getNotifications } = useDashboardWs();\n  const processedRef = useRef<Set<string>>(new Set());\n\n  useEffect(() => {\n    if (!isConnected) return;\n    subscribe(\"company:default\");\n  }, [isConnected, subscribe]);\n\n  useEffect(() => {\n    const notifications = getNotifications();\n    for (const notif of notifications) {\n      if (!processedRef.current.has(notif.notification_id)) {\n        processedRef.current.add(notif.notification_id);\n        if (onNotification) {\n          onNotification(notif.title, notif.message, notif.type);\n        }\n      }\n    }\n  }, [getNotifications, onNotification]);\n}\n\n/**\n * Example Dashboard Component with Real-time Updates\n *\n * Usage:\n * ```tsx\n * <DashboardWithRealtime\n *   teamId={currentTeam.id}\n *   divisionId={currentDivision.id}\n *   scope=\"team\"\n *   onProposalStatusChange={(update) => {\n *     console.log(`Proposal ${update.proposal_id} changed to ${update.new_status}`);\n *   }}\n *   onNotificationReceived={(msg) => {\n *     toast.info(msg);\n *   }}\n * />\n * ```\n */\nexport function DashboardWithRealtime({\n  teamId,\n  divisionId,\n  scope = \"team\",\n  onProposalStatusChange,\n  onTeamPerformanceUpdate,\n  onNotificationReceived,\n}: DashboardWithRealtimeProps) {\n  const {\n    isConnected,\n    connectionState,\n    messageCount,\n    subscribe,\n    getProposalStatusUpdates,\n  } = useDashboardWs();\n\n  const [recentUpdates, setRecentUpdates] = useState<ProposalStatusData[]>([]);\n\n  // Subscribe to channels on connection\n  useEffect(() => {\n    if (!isConnected) return;\n\n    const channels = [\n      ...(teamId ? [`team:${teamId}`] : []),\n      ...(divisionId ? [`division:${divisionId}`] : []),\n      \"company:default\",\n    ];\n\n    for (const channel of channels) {\n      subscribe(channel);\n    }\n  }, [isConnected, teamId, divisionId, subscribe]);\n\n  // Update when proposal status changes\n  useEffect(() => {\n    const updates = getProposalStatusUpdates();\n    if (updates.length > 0) {\n      setRecentUpdates(updates.slice(-5)); // Keep last 5\n      const latest = updates[updates.length - 1];\n      onProposalStatusChange?.(latest);\n    }\n  }, [getProposalStatusUpdates, onProposalStatusChange]);\n\n  return (\n    <div className=\"space-y-6\">\n      {/* Connection Status Indicator */}\n      <div className=\"flex items-center gap-2 p-2 bg-[#1c1c1c] rounded-lg border border-[#262626]\">\n        <div\n          className={`w-2 h-2 rounded-full transition-colors ${\n            isConnected ? \"bg-green-500\" : \"bg-yellow-500\"\n          }`}\n        />\n        <span className=\"text-xs text-[#8c8c8c]\">\n          {connectionState === \"connected\"\n            ? \"실시간 업데이트 활성화\"\n            : connectionState === \"connecting\"\n              ? \"연결 중...\"\n              : \"연결 끊김\"}\n        </span>\n        {messageCount > 0 && (\n          <span className=\"ml-auto text-xs text-[#3ecf8e] font-semibold\">\n            {messageCount} 업데이트\n          </span>\n        )}\n      </div>\n\n      {/* Recent Updates Feed */}\n      {recentUpdates.length > 0 && (\n        <div className=\"p-4 bg-[#141414] rounded-lg border border-[#262626] space-y-2\">\n          <p className=\"text-xs font-semibold text-[#8c8c8c] uppercase tracking-wider\">\n            실시간 업데이트\n          </p>\n          <div className=\"space-y-1\">\n            {recentUpdates.map((update) => (\n              <div\n                key={update.proposal_id}\n                className=\"flex items-center gap-3 p-2 rounded-lg bg-[#1c1c1c] text-xs\"\n              >\n                <div className=\"w-2 h-2 rounded-full bg-[#3ecf8e] shrink-0\" />\n                <div className=\"flex-1 min-w-0\">\n                  <p className=\"text-[#ededed] truncate\">{update.title}</p>\n                  <p className=\"text-[#5c5c5c]\">\n                    {update.old_status} → {update.new_status}\n                  </p>\n                </div>\n                <span className=\"text-[#5c5c5c] text-[10px] shrink-0\">\n                  방금 전\n                </span>\n              </div>\n            ))}\n          </div>\n        </div>\n      )}\n\n      {/* Integration Guide */}\n      <div className=\"p-4 bg-blue-950/20 rounded-lg border border-blue-900/40 text-xs text-blue-300\">\n        <p className=\"font-semibold mb-1\">💡 실시간 통합 가이드</p>\n        <p className=\"text-blue-400/80\">\n          다른 컴포넌트에서도 useDashboardWs 훅을 사용하여 실시간 업데이트를 받을 수\n          있습니다. 예: useProposalListWithRealtime, useTeamPerformanceRealtime,\n          useNotificationListener\n        </p>\n      </div>\n    </div>\n  );\n}\n\n/**\n * Integration checklist for dashboard components:\n *\n * □ Import useDashboardWs in component\n * □ Call hook in component body\n * □ Subscribe to relevant channels based on scope/team/division\n * □ Listen to specific message types (proposal_status, team_performance, notification)\n * □ Update local state when messages arrive\n * □ Add visual indicator for real-time data (animated icon, timestamp)\n * □ Handle connection state changes (show spinner/retry during disconnection)\n * □ Unsubscribe from channels on component unmount (automatic via hook cleanup)\n *\n * Example usage in ProposalsPage:\n * ```tsx\n * const { isConnected, subscribe, getProposalStatusUpdates } = useDashboardWs();\n *\n * useEffect(() => {\n *   if (!isConnected) return;\n *   subscribe(`team:${currentTeamId}`);\n * }, [isConnected, currentTeamId, subscribe]);\n *\n * useEffect(() => {\n *   const updates = getProposalStatusUpdates();\n *   setProposals(prev => prev.map(p => {\n *     const update = updates.find(u => u.proposal_id === p.id);\n *     return update ? { ...p, status: update.new_status } : p;\n *   }));\n * }, [getProposalStatusUpdates]);\n * ```\n */\n"
+"use client";
+
+import { useEffect, useCallback, useRef, useState } from "react";
+import { useDashboardWs } from "@/lib/hooks/useDashboardWs";
+import type { ProposalStatusData, TeamPerformanceData } from "@/lib/ws-client";
+
+export interface DashboardWithRealtimeProps {
+  teamId?: string;
+  divisionId?: string;
+  scope?: "team" | "division" | "company";
+  onProposalStatusChange?: (update: ProposalStatusData) => void;
+  onTeamPerformanceUpdate?: (update: TeamPerformanceData) => void;
+  onNotificationReceived?: (message: string) => void;
+}
+
+export function useProposalListWithRealtime(
+  proposals: any[],
+  setProposals: (proposals: any[]) => void,
+  teamId?: string,
+  divisionId?: string
+) {
+  const { isConnected, subscribe, getProposalStatusUpdates } = useDashboardWs();
+  const lastUpdateRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const channels: string[] = [];
+    if (teamId) channels.push(`team:${teamId}`);
+    if (divisionId) channels.push(`division:${divisionId}`);
+    if (channels.length === 0) channels.push("company:default");
+
+    for (const channel of channels) {
+      subscribe(channel);
+    }
+  }, [isConnected, teamId, divisionId, subscribe]);
+
+  useEffect(() => {
+    const updates = getProposalStatusUpdates();
+    const updateIds = new Set(updates.map((u) => u.proposal_id));
+
+    if (updateIds.size === lastUpdateRef.current.size) return;
+
+    setProposals(
+      proposals.map((proposal) => {
+        const update = updates.find((u) => u.proposal_id === proposal.id);
+        if (update) {
+          return {
+            ...proposal,
+            status: update.new_status,
+            updated_at: update.timestamp,
+          };
+        }
+        return proposal;
+      })
+    );
+
+    lastUpdateRef.current = updateIds;
+  }, [getProposalStatusUpdates, proposals, setProposals]);
+}
+
+export function useTeamPerformanceRealtime(
+  onUpdate?: (data: TeamPerformanceData) => void
+) {
+  const { isConnected, subscribe, getLatestTeamPerformance } = useDashboardWs();
+
+  useEffect(() => {
+    if (!isConnected) return;
+    subscribe("company:default");
+  }, [isConnected, subscribe]);
+
+  useEffect(() => {
+    const latestPerformance = getLatestTeamPerformance();
+    if (latestPerformance && onUpdate) {
+      onUpdate(latestPerformance);
+    }
+  }, [getLatestTeamPerformance, onUpdate]);
+}
+
+export function useNotificationListener(
+  onNotification?: (title: string, message: string, type: string) => void
+) {
+  const { isConnected, subscribe, getNotifications } = useDashboardWs();
+  const processedRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!isConnected) return;
+    subscribe("company:default");
+  }, [isConnected, subscribe]);
+
+  useEffect(() => {
+    const notifications = getNotifications();
+    for (const notif of notifications) {
+      if (!processedRef.current.has(notif.notification_id)) {
+        processedRef.current.add(notif.notification_id);
+        if (onNotification) {
+          onNotification(notif.title, notif.message, notif.type);
+        }
+      }
+    }
+  }, [getNotifications, onNotification]);
+}
+
+export function DashboardWithRealtime({
+  teamId,
+  divisionId,
+  scope = "team",
+  onProposalStatusChange,
+  onTeamPerformanceUpdate,
+  onNotificationReceived,
+}: DashboardWithRealtimeProps) {
+  const {
+    isConnected,
+    connectionState,
+    messageCount,
+    subscribe,
+    getProposalStatusUpdates,
+  } = useDashboardWs();
+
+  const [recentUpdates, setRecentUpdates] = useState<ProposalStatusData[]>([]);
+
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const channels = [
+      ...(teamId ? [`team:${teamId}`] : []),
+      ...(divisionId ? [`division:${divisionId}`] : []),
+      "company:default",
+    ];
+
+    for (const channel of channels) {
+      subscribe(channel);
+    }
+  }, [isConnected, teamId, divisionId, subscribe]);
+
+  useEffect(() => {
+    const updates = getProposalStatusUpdates();
+    if (updates.length > 0) {
+      setRecentUpdates(updates.slice(-5));
+      const latest = updates[updates.length - 1];
+      onProposalStatusChange?.(latest);
+    }
+  }, [getProposalStatusUpdates, onProposalStatusChange]);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-2 p-2 bg-[#1c1c1c] rounded-lg border border-[#262626]">
+        <div
+          className={`w-2 h-2 rounded-full transition-colors ${
+            isConnected ? "bg-green-500" : "bg-yellow-500"
+          }`}
+        />
+        <span className="text-xs text-[#8c8c8c]">
+          {connectionState === "connected"
+            ? "실시간 업데이트 활성화"
+            : connectionState === "connecting"
+              ? "연결 중..."
+              : "연결 끊김"}
+        </span>
+        {messageCount > 0 && (
+          <span className="ml-auto text-xs text-[#3ecf8e] font-semibold">
+            {messageCount} 업데이트
+          </span>
+        )}
+      </div>
+
+      {recentUpdates.length > 0 && (
+        <div className="p-4 bg-[#141414] rounded-lg border border-[#262626] space-y-2">
+          <p className="text-xs font-semibold text-[#8c8c8c] uppercase tracking-wider">
+            실시간 업데이트
+          </p>
+          <div className="space-y-1">
+            {recentUpdates.map((update) => (
+              <div
+                key={update.proposal_id}
+                className="flex items-center gap-3 p-2 rounded-lg bg-[#1c1c1c] text-xs"
+              >
+                <div className="w-2 h-2 rounded-full bg-[#3ecf8e] shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#ededed] truncate">{update.title}</p>
+                  <p className="text-[#5c5c5c]">
+                    {update.old_status} → {update.new_status}
+                  </p>
+                </div>
+                <span className="text-[#5c5c5c] text-[10px] shrink-0">
+                  방금 전
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="p-4 bg-blue-950/20 rounded-lg border border-blue-900/40 text-xs text-blue-300">
+        <p className="font-semibold mb-1">💡 실시간 통합 가이드</p>
+        <p className="text-blue-400/80">
+          다른 컴포넌트에서도 useDashboardWs 훅을 사용하여 실시간 업데이트를 받을 수
+          있습니다.
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -369,7 +369,7 @@ async def create_from_bid(
     # ✅ Step 6: StateMachine으로 상태 전환 (initialized → in_progress)
     try:
         sm = StateMachine(proposal_id)
-        await sm.start_workflow(user_id=owner_id, initial_phase="rfp_analyze")
+        await sm.start_workflow(user_id=owner_id, phase="rfp_analyze")
         logger.info("[from-bid] StateMachine 상태 전환 완료: initialized → in_progress")
     except Exception as sm_e:
         # [CRITICAL] 상태 전환 실패 시 워크플로우 시작 중단 (DB 상태 불일치 방지)

@@ -1,1 +1,87 @@
-/**\n * useAuth — 인증 상태 및 토큰 제공\n *\n * Supabase session 기반 현재 사용자·JWT 토큰 제공\n */\n\n\"use client\";\n\nimport { useEffect, useState } from \"react\";\nimport { createClient } from \"@/lib/supabase/client\";\nimport type { User } from \"@supabase/supabase-js\";\n\nexport interface UseAuthReturn {\n  user: User | null;\n  token: string | null;\n  isLoading: boolean;\n  error: Error | null;\n  isAuthenticated: boolean;\n}\n\n/**\n * Get current authenticated user and JWT token from Supabase session\n *\n * Returns null for both user and token if not authenticated.\n * Token is JWT from Supabase auth (access_token).\n */\nexport function useAuth(): UseAuthReturn {\n  const [user, setUser] = useState<User | null>(null);\n  const [token, setToken] = useState<string | null>(null);\n  const [isLoading, setIsLoading] = useState(true);\n  const [error, setError] = useState<Error | null>(null);\n\n  useEffect(() => {\n    const supabase = createClient();\n\n    // Get initial session\n    const getSession = async () => {\n      try {\n        setIsLoading(true);\n        const {\n          data: { session },\n          error: err,\n        } = await supabase.auth.getSession();\n\n        if (err) {\n          setError(err as Error);\n          setUser(null);\n          setToken(null);\n          return;\n        }\n\n        if (session?.user) {\n          setUser(session.user);\n          setToken(session.access_token || null);\n          setError(null);\n        } else {\n          setUser(null);\n          setToken(null);\n        }\n      } catch (err) {\n        const error = err instanceof Error ? err : new Error(String(err));\n        setError(error);\n        setUser(null);\n        setToken(null);\n      } finally {\n        setIsLoading(false);\n      }\n    };\n\n    getSession();\n\n    // Listen for auth changes\n    const {\n      data: { subscription },\n    } = supabase.auth.onAuthStateChange(async (event, session) => {\n      if (session?.user) {\n        setUser(session.user);\n        setToken(session.access_token || null);\n        setError(null);\n      } else {\n        setUser(null);\n        setToken(null);\n      }\n    });\n\n    // Cleanup subscription\n    return () => {\n      subscription?.unsubscribe();\n    };\n  }, []);\n\n  return {\n    user,\n    token,\n    isLoading,\n    error,\n    isAuthenticated: user !== null && token !== null,\n  };\n}\n"
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
+
+export interface UseAuthReturn {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  error: Error | null;
+  isAuthenticated: boolean;
+}
+
+/**
+ * Get current authenticated user and JWT token from Supabase session
+ */
+export function useAuth(): UseAuthReturn {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const getSession = async () => {
+      try {
+        setIsLoading(true);
+        const {
+          data: { session },
+          error: err,
+        } = await supabase.auth.getSession();
+
+        if (err) {
+          setError(err as Error);
+          setUser(null);
+          setToken(null);
+          return;
+        }
+
+        if (session?.user) {
+          setUser(session.user);
+          setToken(session.access_token || null);
+          setError(null);
+        } else {
+          setUser(null);
+          setToken(null);
+        }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        setError(error);
+        setUser(null);
+        setToken(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setToken(session.access_token || null);
+        setError(null);
+      } else {
+        setUser(null);
+        setToken(null);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
+
+  return {
+    user,
+    token,
+    isLoading,
+    error,
+    isAuthenticated: user !== null && token !== null,
+  };
+}

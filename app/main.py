@@ -60,6 +60,7 @@ from app.api.routes_step8_review import router as step8_review_router
 from app.api.routes_knowledge import router as knowledge_router
 from app.api.routes_vault_chat import router as vault_chat_router
 from app.api.routes_vault_embeddings import router as vault_embeddings_router
+from app.api.routes_comments import router as comments_router
 from app.api.routes_ws import router as ws_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
@@ -280,6 +281,10 @@ app.add_middleware(
 # ── 보안 헤더 미들웨어 (L-1, L-2) ──
 app.add_middleware(SecurityHeadersMiddleware)
 
+# ── 메모리 모니터링 미들웨어 (M-1, Beta Testing) ──
+from app.middleware.memory_monitor import MemoryMonitorMiddleware
+app.add_middleware(MemoryMonitorMiddleware)
+
 # ── Rate Limiting ──
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
@@ -422,6 +427,10 @@ app.include_router(vault_chat_router)
 
 # Vault Embeddings: /api/vault/embeddings/*
 app.include_router(vault_embeddings_router)
+
+# Sprint 1 Phase 2: Team Comments & Feedback
+# Comments: /api/proposals/{proposal_id}/comments, /api/comments/{comment_id}/reactions
+app.include_router(comments_router)
 
 # Phase 3.1: WebSocket 실시간 업데이트: /api/ws/dashboard
 app.include_router(ws_router)
