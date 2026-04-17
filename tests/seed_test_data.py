@@ -14,7 +14,6 @@ import sys
 import io
 import argparse
 from datetime import datetime, timedelta, timezone
-from uuid import uuid4
 import logging
 
 from dotenv import load_dotenv
@@ -130,7 +129,7 @@ async def create_test_data():
                 if existing and existing.data:
                     print(f"⊘ {bid['bid_no']:<25} (이미 존재, 스킵)")
                     continue
-            except:
+            except Exception:
                 # If check fails, continue with insert
                 pass
 
@@ -184,7 +183,7 @@ async def cleanup_test_data():
     bid_nos = [b["bid_no"] for b in TEST_BIDS]
 
     try:
-        result = await client.table("bid_announcements").delete().in_(
+        await client.table("bid_announcements").delete().in_(
             "bid_no", bid_nos
         ).execute()
 
