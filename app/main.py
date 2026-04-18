@@ -64,6 +64,7 @@ from app.api.routes_vault_chat import router as vault_chat_router
 from app.api.routes_vault_embeddings import router as vault_embeddings_router
 from app.api.routes_comments import router as comments_router
 from app.api.routes_ws import router as ws_router
+from app.api.routes_phase2_optimization import router as phase2_optimization_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -231,6 +232,17 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"DB 마이그레이션 초기화 경고 (무시): {e}")
 
+    # Phase 2 Week 2: Performance Optimization - 정기 최적화 스케줄러 (5분 간격)
+    optimization_task = None
+    try:
+        from app.services.optimization_scheduler import start_optimization_scheduler
+        optimization_task = asyncio.create_task(start_optimization_scheduler())
+        logger.info("[Phase 2] 성능 최적화 스케줄러 시작 (5분 간격)")
+    except ImportError as e:
+        logger.warning(f"[Phase 2] 최적화 스케줄러 모듈 미발견 (무시): {e}")
+    except Exception as e:
+        logger.warning(f"[Phase 2] 최적화 스케줄러 시작 실패 (무시): {e}")
+
     # §26: WebSocket 실시간 업데이트 - 하트비트 루프 시작
     from app.services.ws_manager import ws_manager
     import asyncio
@@ -243,6 +255,15 @@ async def lifespan(app: FastAPI):
         logger.error(f"[WS] 하트비트 루프 시작 실패: {e}")
 
     yield
+
+    # Shutdown: 최적화 스케줄러 취소
+    if optimization_task:
+        optimization_task.cancel()
+        try:
+            await optimization_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("[Phase 2] 성능 최적화 스케줄러 종료")
 
     # Shutdown: 하트비트 태스크 취소
     if heartbeat_task:
@@ -436,6 +457,10 @@ app.include_router(comments_router)
 
 # Phase 3.1: WebSocket 실시간 업데이트: /api/ws/dashboard
 app.include_router(ws_router)
+
+# Phase 2: Performance Optimization (Week 2) — Data-Driven Optimization
+# Endpoints: /api/phase2/analyze/*, /api/phase2/cache/*, /api/phase2/optimize/*
+app.include_router(phase2_optimization_router)
 
 
 # ── 헬스체크 ──

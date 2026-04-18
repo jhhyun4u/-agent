@@ -56,13 +56,14 @@ class MemoryMonitorMiddleware(BaseHTTPMiddleware):
         mem_before_mb = mem_before_bytes / 1024 / 1024
 
         # 요청 처리
+        response = None
         try:
             response = await call_next(request)
         except Exception as e:
             logger.error(f"요청 처리 오류: {e}")
             raise
         finally:
-            # 메모리 측정 (After)
+            # 메모리 측정 (After) — 예외 발생 시에도 기록
             mem_after_bytes = process.memory_info().rss
             mem_after_mb = mem_after_bytes / 1024 / 1024
             mem_delta_mb = mem_after_mb - mem_before_mb
@@ -70,11 +71,12 @@ class MemoryMonitorMiddleware(BaseHTTPMiddleware):
             # 통계 기록
             memory_stats.record(mem_after_mb)
 
-            # 응답 헤더에 추가
-            response.headers["X-Memory-Before"] = f"{mem_before_mb:.2f}MB"
-            response.headers["X-Memory-After"] = f"{mem_after_mb:.2f}MB"
-            response.headers["X-Memory-Delta"] = f"{mem_delta_mb:+.2f}MB"
-            response.headers["X-Memory-Peak"] = f"{memory_stats.peak_mb:.2f}MB"
+            # 응답 헤더에 추가 (응답이 있는 경우만)
+            if response is not None:
+                response.headers["X-Memory-Before"] = f"{mem_before_mb:.2f}MB"
+                response.headers["X-Memory-After"] = f"{mem_after_mb:.2f}MB"
+                response.headers["X-Memory-Delta"] = f"{mem_delta_mb:+.2f}MB"
+                response.headers["X-Memory-Peak"] = f"{memory_stats.peak_mb:.2f}MB"
 
             # 경고 로그 (메모리 > 800MB 또는 증가량 > 100MB)
             if mem_after_mb > 800 or mem_delta_mb > 100:

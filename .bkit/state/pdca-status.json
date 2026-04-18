@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-17T02:09:09.313Z",
+  "lastUpdated": "2026-04-18T06:09:48.855Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -46,7 +46,8 @@
     "tenopa proposer",
     "stores",
     "tmp",
-    "live"
+    "live",
+    "middleware"
   ],
   "primaryFeature": "document_ingestion.py",
   "features": {
@@ -896,9 +897,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-16T23:53:53.102Z"
+        "lastUpdated": "2026-04-18T05:20:49.585Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\tests\\integration\\test_bid_to_proposal_workflow.py"
+      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_phase2_optimization.py"
     },
     "monitoring": {
       "phase": "do",
@@ -1078,9 +1079,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-17T00:53:23.400Z"
+        "lastUpdated": "2026-04-18T06:09:48.851Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\apply_migration.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\main.py"
     },
     "stores": {
       "phase": "do",
@@ -1120,6 +1121,19 @@
         "lastUpdated": "2026-04-16T23:53:15.083Z"
       },
       "lastFile": "c:\\project\\tenopa proposer\\tests\\integration\\live\\test_g2b_monitoring.py"
+    },
+    "middleware": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-18T05:31:23.314Z",
+        "lastUpdated": "2026-04-18T05:31:23.314Z"
+      },
+      "lastFile": "C:\\project\\tenopa proposer\\app\\middleware\\memory_monitor.py"
     }
   },
   "meta": {
@@ -12903,6 +12917,36 @@
     {
       "timestamp": "2026-04-17T02:09:09.311Z",
       "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T05:19:30.311Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T05:20:49.601Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T05:31:23.325Z",
+      "feature": "middleware",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T05:41:31.138Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T06:09:48.854Z",
+      "feature": "tenopa proposer",
       "phase": "do",
       "action": "updated"
     }
