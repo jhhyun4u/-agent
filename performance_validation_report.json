@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-04-18",
+  "test_sections_count": 50,
+  "processed_sections": 50,
+  "argmax_baseline": {
+    "mean_score": 0.8984,
+    "stdev": 0.1112,
+    "min": 0.5817,
+    "max": 1.0
+  },
+  "ensemble_new": {
+    "mean_score": 0.8369,
+    "stdev": 0.0755,
+    "min": 0.641,
+    "max": 0.932
+  },
+  "improvement": {
+    "mean_improvement": -0.0615,
+    "improvement_percentage": -6.84,
+    "min_improvement": -0.1304,
+    "max_improvement": 0.0593,
+    "stability_improvement_pct": 32.08
+  },
+  "conclusions": {
+    "ensemble_more_stable": true,
+    "ensemble_higher_mean": false,
+    "recommendation": "\u274c REVERT \u2014 ensemble performs worse than argmax"
+  }
+}
