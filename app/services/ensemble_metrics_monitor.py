@@ -92,6 +92,23 @@ class EnsembleApplicationMetrics:
 
 
 @dataclass
+class LatencyMetrics:
+    """섹션 생성 레이턴시 추적"""
+    variant_generation_ms: float = 0.0    # 3변형 생성 시간
+    ensemble_voting_ms: float = 0.0       # 앙상블 투표 시간
+    feedback_loop_ms: float = 0.0         # 피드백 루프 시간
+    total_section_ms: float = 0.0         # 전체 섹션 생성 시간
+
+    def to_dict(self) -> Dict:
+        return {
+            "variant_generation_ms": round(self.variant_generation_ms, 2),
+            "ensemble_voting_ms": round(self.ensemble_voting_ms, 2),
+            "feedback_loop_ms": round(self.feedback_loop_ms, 2),
+            "total_section_ms": round(self.total_section_ms, 2),
+        }
+
+
+@dataclass
 class ProposalMetrics:
     """제안 별 메트릭"""
     proposal_id: str
@@ -102,6 +119,7 @@ class ProposalMetrics:
     ensemble_applied: bool             # 앙상블 사용 여부
     feedback_triggered: bool           # 피드백 루프 트리거 여부
     feedback_improved: bool            # 피드백으로 개선 여부
+    avg_latency_ms: float = 0.0        # 평균 레이턴시 (ms)
 
     def to_dict(self) -> Dict:
         return {
@@ -113,6 +131,7 @@ class ProposalMetrics:
             "ensemble_applied": self.ensemble_applied,
             "feedback_triggered": self.feedback_triggered,
             "feedback_improved": self.feedback_improved,
+            "avg_latency_ms": round(self.avg_latency_ms, 2),
         }
 
 
@@ -127,6 +146,7 @@ class EnsembleMetricsMonitor:
     ensemble_metrics: EnsembleApplicationMetrics = field(default_factory=EnsembleApplicationMetrics)
     proposal_history: List[ProposalMetrics] = field(default_factory=list)
     section_metrics: List[Dict] = field(default_factory=list)
+    latency_history: List[Dict] = field(default_factory=list)  # 레이턴시 이력
 
     def record_section(
         self,
@@ -232,6 +252,82 @@ class EnsembleMetricsMonitor:
             f"ensemble={ensemble_applied}, feedback_triggered={feedback_triggered_count}"
         )
 
+    def record_latency(
+        self,
+        proposal_id: str,
+        section_id: str,
+        variant_generation_ms: float = 0.0,
+        ensemble_voting_ms: float = 0.0,
+        feedback_loop_ms: float = 0.0,
+        total_section_ms: float = 0.0,
+    ):
+        """
+        섹션 생성 레이턴시 기록.
+
+        Args:
+            proposal_id: 제안 ID
+            section_id: 섹션 ID
+            variant_generation_ms: 변형 생성 시간 (ms)
+            ensemble_voting_ms: 앙상블 투표 시간 (ms)
+            feedback_loop_ms: 피드백 루프 시간 (ms)
+            total_section_ms: 전체 섹션 생성 시간 (ms)
+        """
+        latency_metric = {
+            "proposal_id": proposal_id,
+            "section_id": section_id,
+            "timestamp": datetime.now().isoformat(),
+            "variant_generation_ms": round(variant_generation_ms, 2),
+            "ensemble_voting_ms": round(ensemble_voting_ms, 2),
+            "feedback_loop_ms": round(feedback_loop_ms, 2),
+            "total_section_ms": round(total_section_ms, 2),
+        }
+        self.latency_history.append(latency_metric)
+
+        # 알림: >25초 (25,000ms) 레이턴시
+        if total_section_ms > 25000:
+            logger.warning(
+                f"⚠️  높은 레이턴시 감지: {section_id} = {total_section_ms/1000:.1f}초 "
+                f"(target: <21s)"
+            )
+
+    def get_latency_statistics(self) -> Dict:
+        """
+        레이턴시 통계 반환.
+        """
+        if not self.latency_history:
+            return {
+                "message": "No latency data yet",
+                "total_sections": 0,
+                "avg_total_ms": 0.0,
+                "max_total_ms": 0.0,
+                "min_total_ms": 0.0,
+                "p95_total_ms": 0.0,
+                "sections_over_25s": 0,
+            }
+
+        total_latencies = [m["total_section_ms"] for m in self.latency_history]
+        variant_latencies = [m["variant_generation_ms"] for m in self.latency_history]
+        ensemble_latencies = [m["ensemble_voting_ms"] for m in self.latency_history]
+
+        # 상위 5% 레이턴시 계산
+        sorted_total = sorted(total_latencies)
+        p95_index = max(0, int(len(sorted_total) * 0.95) - 1)
+        p95_latency = sorted_total[p95_index] if sorted_total else 0.0
+
+        over_25s = sum(1 for l in total_latencies if l > 25000)
+
+        return {
+            "total_sections": len(self.latency_history),
+            "avg_total_ms": round(sum(total_latencies) / len(total_latencies), 2),
+            "max_total_ms": round(max(total_latencies), 2),
+            "min_total_ms": round(min(total_latencies), 2),
+            "p95_total_ms": round(p95_latency, 2),
+            "avg_variant_generation_ms": round(sum(variant_latencies) / len(variant_latencies) if variant_latencies else 0, 2),
+            "avg_ensemble_voting_ms": round(sum(ensemble_latencies) / len(ensemble_latencies) if ensemble_latencies else 0, 2),
+            "sections_over_25s": over_25s,
+            "target_under_21s": f"{len([l for l in total_latencies if l < 21000])} / {len(total_latencies)}",
+        }
+
     def get_summary(self) -> Dict:
         """
         현재 메트릭 요약 반환.
@@ -243,6 +339,7 @@ class EnsembleMetricsMonitor:
             "ensemble_application": self.ensemble_metrics.to_dict(),
             "proposal_count": len(self.proposal_history),
             "section_count": len(self.section_metrics),
+            "latency_statistics": self.get_latency_statistics(),
         }
 
     def get_proposal_details(self, proposal_id: str) -> Optional[Dict]:

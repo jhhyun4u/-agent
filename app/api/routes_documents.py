@@ -407,12 +407,18 @@ async def reprocess_document(
 
         doc = doc_result.data
 
-        # 진행 중인 상태 확인 (재처리 불가)
+        # 상태 검증: 진행 중이거나 완료된 문서는 재처리 불가 (설계: 실패한 문서만 재시도)
         current_status = doc.get("processing_status")
         if current_status in ("extracting", "chunking", "embedding"):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"문서가 현재 처리 중입니다 (상태: {current_status}). 처리 완료 후 재시도하세요.",
+            )
+        # GAP-2 개선: 완료된 상태도 재처리 불가 (failed 상태만 허용)
+        if current_status == "completed":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="이미 완료된 문서는 재처리할 수 없습니다.",
             )
 
         # 상태 리셋
@@ -457,7 +463,7 @@ async def get_document_chunks(
         "chunk_index", description="정렬 기준"
     ),
     order: Optional[Literal["asc", "desc"]] = Query("asc", description="정렬 순서"),
-    limit: int = Query(20, ge=1, le=100),
+    limit: int = Query(10, ge=1, le=100),  # GAP-3: 설계 예제와 일치 (기본값 10)
     offset: int = Query(0, ge=0),
     current_user: CurrentUser = Depends(get_current_user),
 ) -> ChunkListResponse:

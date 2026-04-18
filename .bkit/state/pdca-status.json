@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-18T13:05:45.021Z",
+  "lastUpdated": "2026-04-18T13:26:45.097Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -115,9 +115,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-18T08:39:20.000Z"
+        "lastUpdated": "2026-04-18T13:26:45.055Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_harness_metrics.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_documents.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -476,9 +476,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T09:30:04.149Z",
-        "lastUpdated": "2026-04-18T13:05:19.072Z"
+        "lastUpdated": "2026-04-18T13:22:09.524Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\nodes\\metrics_recorder.py",
+      "lastFile": "c:\\project\\tenopa proposer\\app\\graph\\nodes\\harness_proposal_write.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -1079,9 +1079,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-18T12:41:54.201Z"
+        "lastUpdated": "2026-04-18T13:18:40.517Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\metrics_dashboard.py"
+      "lastFile": "c:\\project\\tenopa proposer\\app\\services\\ensemble_metrics_monitor.py"
     },
     "stores": {
       "phase": "do",
@@ -13781,6 +13781,72 @@
     {
       "timestamp": "2026-04-18T13:05:45.021Z",
       "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:17:02.710Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:18:22.125Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:18:40.539Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:19:00.544Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:19:59.407Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:20:22.884Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:20:53.979Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:22:09.632Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:22:45.247Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:23:10.904Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:26:45.067Z",
+      "feature": "api",
       "phase": "do",
       "action": "updated"
     }

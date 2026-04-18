@@ -15,6 +15,7 @@
 """
 
 import logging
+import time
 from uuid import UUID
 
 from app.graph.context_helpers import PREV_SECTIONS_CONTENT_CHARS
@@ -125,6 +126,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
     2. 자동 평가 및 최고 점수 선택
     3. 선택적 피드백 루프 (score < 0.75)
     4. 상세 결과 기록
+    5. 레이턴시 추적
 
     Args:
         state: ProposalState
@@ -137,6 +139,12 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             "harness_results": {...},  # 하네스 상세 결과
         }
     """
+    # ── 레이턴시 추적 시작 ──
+    section_start_time = time.time()
+    variant_generation_time = 0.0
+    ensemble_voting_time = 0.0
+    feedback_loop_time = 0.0
+
     index = state.get("current_section_index", 0)
     sections_to_write = _get_sections_to_write(state)
 
@@ -199,6 +207,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
 
     # ── 하네스 생성 (3변형 → 평가 → 선택) ──
     harness = HarnessProposalGenerator()
+    variant_start = time.time()
 
     try:
         harness_result = await harness.generate_section(
@@ -212,9 +221,11 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             system_prompt="한국 정부 공고 제안서 작성 전문가",
         )
 
+        variant_generation_time = (time.time() - variant_start) * 1000  # ms로 변환
+
         logger.info(
             f"✅ 섹션 생성 완료: {harness_result['selected_variant']} "
-            f"({harness_result['score']:.1%}) - {section_id}"
+            f"({harness_result['score']:.1%}) - {section_id} ({variant_generation_time:.1f}ms)"
         )
 
     except Exception as e:
@@ -228,7 +239,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
     # 1. 변형 점수 및 상세 정보 추출
     variant_scores = harness_result.get("scores", {})  # {conservative, balanced, creative}
     variant_details_raw = harness_result.get("details", {})  # {variant: {overall, hallucination, ...}}
-    
+
     # 2. variant_details_raw → Dict[str, EvaluationMetrics] 변환
     variant_details = {}
     for variant_name, detail in variant_details_raw.items():
@@ -247,6 +258,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
     # 3. 앙상블 투표 적용 (3개 변형 모두 있을 경우)
     ensemble_applied = False
     ensemble_result = None
+    ensemble_start = time.time()
     confidence_result = None
 
     if variant_scores and len(variant_scores) == 3 and variant_details:
@@ -262,19 +274,23 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             # 앙상블 점수 사용
             best_score = ensemble_result.aggregated_score
             ensemble_applied = True
+            ensemble_voting_time = (time.time() - ensemble_start) * 1000  # ms로 변환
 
             logger.info(
                 f"✅ 앙상블 투표 적용: {best_score:.1%} "
                 f"(신뢰: {confidence_result.confidence:.2f}, "
-                f"합의: {confidence_result.agreement_level})"
+                f"합의: {confidence_result.agreement_level}, "
+                f"시간: {ensemble_voting_time:.1f}ms)"
             )
         except Exception as e:
             logger.warning(f"앙상블 투표 실패, 초기 점수 사용: {e}")
             best_score = harness_result.get("score", 0.0)
+            ensemble_voting_time = (time.time() - ensemble_start) * 1000
     else:
         # Fallback: 기존 argmax 로직
         logger.debug(f"변형 데이터 불완전 (scores={len(variant_scores)}, details={len(variant_details)}), argmax 사용")
         best_score = harness_result.get("score", 0.0)
+        ensemble_voting_time = (time.time() - ensemble_start) * 1000
 
     # ── 선택적 피드백 루프 (신뢰도 기반 트리거 개선) ──
     best_content = harness_result.get("content", "")
@@ -292,6 +308,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
         logger.info(f"⚠️  피드백 루프 실행: 점수={best_score:.1%}, 신뢰={confidence_val}")
 
         feedback_loop = HarnessFeedbackLoop()
+        feedback_start = time.time()
 
         try:
             feedback_result = await feedback_loop.iterate(
@@ -331,8 +348,11 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             else:
                 logger.info("➜ 피드백 루프 완료, 계속 진행")
 
+            feedback_loop_time = (time.time() - feedback_start) * 1000  # ms로 변환
+
         except Exception as e:
             logger.warning(f"피드백 루프 실패 (초안 유지): {e}")
+            feedback_loop_time = (time.time() - feedback_start) * 1000
 
     # ── 빈 content 감지 및 fallback ──
     if not best_content or not best_content.strip():
@@ -352,6 +372,9 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             best_content = f"[섹션 생성 실패] {section_id}\n\n생성 중 오류가 발생했습니다. 수동으로 작성해주세요."
 
     # ── Phase 4: 메트릭 모니터링 기록 ──
+    # 총 섹션 생성 시간 계산
+    total_section_time = (time.time() - section_start_time) * 1000  # ms로 변환
+
     try:
         monitor = get_global_monitor()
         proposal_id = state.get("project_id", "unknown")
@@ -366,10 +389,21 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             feedback_improved=improved,
         )
 
+        # 레이턴시 기록
+        monitor.record_latency(
+            proposal_id=proposal_id,
+            section_id=section_id,
+            variant_generation_ms=variant_generation_time,
+            ensemble_voting_ms=ensemble_voting_time,
+            feedback_loop_ms=feedback_loop_time,
+            total_section_ms=total_section_time,
+        )
+
         logger.debug(
             f"📊 모니터링 기록: {section_id} "
             f"(신뢰: {confidence_result.confidence:.2f if confidence_result else 'N/A'}, "
-            f"점수: {final_score:.1%}, 앙상블: {ensemble_applied})"
+            f"점수: {final_score:.1%}, 앙상블: {ensemble_applied}, "
+            f"시간: {total_section_time:.1f}ms)"
         )
     except Exception as e:
         logger.warning(f"모니터링 기록 실패 (계속 진행): {e}")

@@ -226,44 +226,67 @@ GET /api/documents/{document_id}?chunk_type=body&limit=10
 
 ## 3. 데이터 모델
 
-### 3.1 Pydantic 스키마
+### 3.1 Pydantic 스키마 (8개)
 
 ```python
-# DocumentUploadRequest
+# 1. DocumentUploadRequest — 문서 업로드 요청
 class DocumentUploadRequest(BaseModel):
     doc_type: Literal["보고서", "제안서", "실적", "기타"]
     doc_subtype: Optional[str] = None
     project_id: Optional[str] = None
 
-# DocumentResponse
+# 2. DocumentResponse — 문서 목록/기본 조회 응답
 class DocumentResponse(BaseModel):
     id: str
     filename: str
-    doc_type: str
+    file_size_bytes: int
+    doc_type: Literal["보고서", "제안서", "실적", "기타"]
+    doc_subtype: Optional[str]
     storage_path: str
-    processing_status: str
+    processing_status: Literal["extracting", "chunking", "embedding", "classifying", "completed", "failed"]
     total_chars: int
     chunk_count: int
     error_message: Optional[str]
     created_at: datetime
     updated_at: datetime
 
-# DocumentListResponse
+# 3. DocumentDetailResponse — 문서 상세 조회 응답 (extracted_text 포함)
+class DocumentDetailResponse(DocumentResponse):
+    extracted_text: Optional[str]  # 첫 1000자만 반환
+
+# 4. DocumentListResponse — 문서 목록 조회 응답 (페이지네이션)
 class DocumentListResponse(BaseModel):
     items: List[DocumentResponse]
     total: int
     limit: int
     offset: int
 
-# ChunkResponse
+# 5. ChunkResponse — 청크 조회 응답
 class ChunkResponse(BaseModel):
     id: str
     chunk_index: int
-    chunk_type: str
+    chunk_type: Literal["section", "slide", "article", "window"]
     section_title: Optional[str]
     content: str
     char_count: int
     created_at: datetime
+
+# 6. ChunkListResponse — 청크 목록 조회 응답 (페이지네이션)
+class ChunkListResponse(BaseModel):
+    items: List[ChunkResponse]
+    total: int
+    limit: int
+    offset: int
+
+# 7. DocumentProcessRequest — 문서 재처리 요청
+class DocumentProcessRequest(BaseModel):
+    pass  # 별도 파라미터 없음
+
+# 8. DocumentProcessResponse — 문서 재처리 응답
+class DocumentProcessResponse(BaseModel):
+    id: str
+    processing_status: Literal["extracting", "chunking", "embedding", "classifying", "completed", "failed"]
+    message: str
 ```
 
 ### 3.2 DB 테이블 (기존)

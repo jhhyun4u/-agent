@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException
 import logging
 
+from app.services.ensemble_metrics_monitor import get_global_monitor
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/metrics", tags=["harness-metrics"])
@@ -194,3 +196,81 @@ async def check_deployment_readiness() -> Dict:
     except Exception as e:
         logger.error(f"Error checking readiness: {e}")
         raise HTTPException(status_code=500, detail="Failed to check readiness")
+
+
+@router.get("/harness-latency")
+async def get_harness_latency_metrics() -> Dict:
+    """
+    Harness 진단 레이턴시 메트릭 조회
+
+    - 변형 생성 시간
+    - 앙상블 투표 시간
+    - 피드백 루프 시간
+    - 전체 섹션 생성 시간
+    - p95 레이턴시 및 경고
+
+    Returns:
+    {
+        "total_sections": 45,
+        "avg_total_ms": 18500,
+        "max_total_ms": 24800,
+        "p95_total_ms": 22100,
+        "sections_over_25s": 2,
+        "target_under_21s": "38 / 45",
+        "recommendations": [...]
+    }
+    """
+    try:
+        monitor = get_global_monitor()
+        latency_stats = monitor.get_latency_statistics()
+
+        recommendations = []
+        if latency_stats.get("avg_total_ms", 0) > 20000:
+            recommendations.append("Average latency approaching 20s limit - consider optimization")
+        if latency_stats.get("sections_over_25s", 0) > 0:
+            recommendations.append(f"Alert: {latency_stats['sections_over_25s']} sections exceeded 25s")
+
+        return {
+            **latency_stats,
+            "recommendations": recommendations,
+            "target": "<21s per section",
+            "alert_threshold": "25s",
+        }
+    except Exception as e:
+        logger.error(f"Error fetching latency metrics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch latency metrics")
+
+
+@router.get("/harness-latency-history")
+async def get_harness_latency_history(limit: int = 100) -> Dict:
+    """
+    레이턴시 상세 이력 조회 (최근 N개)
+
+    Returns:
+    {
+        "total_records": 45,
+        "records": [
+            {
+                "section_id": "executive_summary",
+                "timestamp": "2026-04-18T10:30:00",
+                "variant_generation_ms": 8500,
+                "ensemble_voting_ms": 2300,
+                "feedback_loop_ms": 0,
+                "total_section_ms": 10800
+            },
+            ...
+        ]
+    }
+    """
+    try:
+        monitor = get_global_monitor()
+        all_records = monitor.latency_history[-limit:] if monitor.latency_history else []
+
+        return {
+            "total_records": len(monitor.latency_history),
+            "returned_records": len(all_records),
+            "records": all_records,
+        }
+    except Exception as e:
+        logger.error(f"Error fetching latency history: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch latency history")
