@@ -133,7 +133,7 @@ async def create_notification(
             "is_read": False,
             "teams_sent": False,
         }).execute()
-        
+
         # WebSocket 브로드캐스트 (fire-and-forget)
         if result.data and len(result.data) > 0:
             notification_id = result.data[0].get("id")

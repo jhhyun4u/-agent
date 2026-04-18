@@ -34,7 +34,7 @@ from app.models.performance_schemas import (
     CompanyPerformance, PerformanceTrends, MyProjectsDashboard, TeamDashboard,
 )
 from app.models.schemas import ProposalResultCreate, ProposalResultUpdate, LessonCreate
-from app.services.ws_events import broadcast_result_update, broadcast_team_performance
+from app.services.ws_events import broadcast_result_update
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -159,7 +159,7 @@ async def register_proposal_result(
         proposal = await client.table("proposals").select(
             "title, team_id, division_id, org_id"
         ).eq("id", proposal_id).single().execute()
-        
+
         if proposal.data:
             data = proposal.data
             asyncio.create_task(
@@ -223,7 +223,7 @@ async def update_proposal_result(
         proposal = await client.table("proposals").select(
             "title, team_id, division_id, org_id"
         ).eq("id", proposal_id).single().execute()
-        
+
         if proposal.data:
             data = proposal.data
             asyncio.create_task(
@@ -622,7 +622,7 @@ async def dashboard_team(user: CurrentUser = Depends(get_current_user)):
     """
     client = await get_async_client()
     team_id = user.team_id or ""
-    
+
     if not team_id:
         return ok({
             "scope": "team",
@@ -630,15 +630,15 @@ async def dashboard_team(user: CurrentUser = Depends(get_current_user)):
             "performance": None,
             "pipeline": {"registered": 0, "inProgress": 0, "completed": 0, "pending": 0, "won": 0, "lost": 0},
         })
-    
+
     # 팀 성과
     performance = await get_team_performance(team_id, user)
-    
+
     # 팀의 제안서 통계
     proposals = await client.table("proposals").select(
         "id, status, win_result, created_at"
     ).eq("team_id", team_id).execute()
-    
+
     data = proposals.data or []
     pipeline = {
         "registered": len([p for p in data if p["status"] == "initialized"]),
@@ -648,7 +648,7 @@ async def dashboard_team(user: CurrentUser = Depends(get_current_user)):
         "won": len([p for p in data if p["win_result"] == "won"]),
         "lost": len([p for p in data if p["win_result"] == "lost"]),
     }
-    
+
     return ok({
         "scope": "team",
         "performance": performance.model_dump() if performance else None,
@@ -668,26 +668,26 @@ async def dashboard_division(user: CurrentUser = Depends(require_role("director"
             "teams": [],
             "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
         })
-    
+
     client = await get_async_client()
-    
+
     # 본부 내 팀 목록
     teams_res = await client.table("teams").select("id, name").eq("division_id", user.division_id).execute()
     teams_data = teams_res.data or []
     team_ids = [t["id"] for t in teams_data]
-    
+
     if not team_ids:
         return ok({
             "scope": "division",
             "teams": [],
             "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
         })
-    
+
     # 팀별 성과
     proposals = await client.table("proposals").select(
         "team_id, win_result, created_at"
     ).in_("team_id", team_ids).execute()
-    
+
     data = proposals.data or []
     teams_perf = []
     for team in teams_data:
@@ -703,7 +703,7 @@ async def dashboard_division(user: CurrentUser = Depends(require_role("director"
                 "won": won,
                 "win_rate": round(won / total * 100, 1) if total else 0,
             })
-    
+
     return ok({
         "scope": "division",
         "teams": teams_perf,
@@ -717,22 +717,22 @@ async def dashboard_company(user: CurrentUser = Depends(require_role("executive"
     권한: 경영진(executive) 이상
     """
     client = await get_async_client()
-    
+
     # 전사 제안서 통계
     proposals = await client.table("proposals").select(
         "id, team_id, win_result, created_at"
     ).in_("win_result", ["won", "lost"]).execute()
-    
+
     data = proposals.data or []
     if not data:
         return ok({
             "scope": "company",
             "stats": {"overall": {"total": 0, "won": 0, "lost": 0, "rate": 0.0}, "by_month": [], "by_agency": []},
         })
-    
+
     won = len([p for p in data if p["win_result"] == "won"])
     total = len(data)
-    
+
     # 월별 통계
     by_month = {}
     for p in data:
@@ -742,7 +742,7 @@ async def dashboard_company(user: CurrentUser = Depends(require_role("executive"
         by_month[month]["total"] += 1
         if p["win_result"] == "won":
             by_month[month]["won"] += 1
-    
+
     by_month_data = [
         {
             "month": k,
@@ -752,7 +752,7 @@ async def dashboard_company(user: CurrentUser = Depends(require_role("executive"
         }
         for k, v in sorted(by_month.items())
     ]
-    
+
     return ok({
         "scope": "company",
         "stats": {

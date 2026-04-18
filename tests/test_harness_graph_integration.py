@@ -1,8 +1,7 @@
 """Integration tests for Harness Engineering in LangGraph workflow."""
 
-import asyncio
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 from app.graph.state import ProposalState
@@ -38,16 +37,16 @@ class TestHarnessGraphIntegration:
     def test_graph_compiles_with_harness(self):
         """Verify graph compiles with harness node."""
         g = build_graph()
-        
+
         assert g is not None
         assert len(g.nodes) == 45, f"Expected 45 nodes, got {len(g.nodes)}"
         assert "proposal_write_next" in g.nodes
-        
+
     def test_harness_node_exists_in_graph(self):
         """Verify harness_proposal_write_next is the proposal_write_next node."""
         g = build_graph()
         node_fn = g.nodes.get("proposal_write_next")
-        
+
         assert node_fn is not None, "proposal_write_next node not found"
         # Node is wrapped in PregelNode by LangGraph
         assert str(type(node_fn).__name__) == "PregelNode"
@@ -55,7 +54,7 @@ class TestHarnessGraphIntegration:
     def test_step_4a_routing_intact(self):
         """Verify STEP 4A routing edges are intact after integration."""
         g = build_graph()
-        
+
         # Check all STEP 4A nodes exist
         step_4a_nodes = [
             "proposal_start_gate",
@@ -67,7 +66,7 @@ class TestHarnessGraphIntegration:
             "review_gap_analysis",
             "review_proposal",
         ]
-        
+
         for node_name in step_4a_nodes:
             assert node_name in g.nodes, f"Node {node_name} missing from graph"
 
@@ -78,7 +77,7 @@ class TestHarnessGraphIntegration:
         with patch('app.graph.nodes.harness_proposal_write.HarnessProposalGenerator') as MockGenerator:
             mock_generator = AsyncMock()
             MockGenerator.return_value = mock_generator
-            
+
             # Mock generate_section to return evaluation result
             mock_generator.generate_section = AsyncMock(return_value={
                 "section_type": "executive_summary",
@@ -92,10 +91,10 @@ class TestHarnessGraphIntegration:
                 },
                 "details": {}
             })
-            
+
             # Call the node function
             result = await harness_proposal_write_next(sample_state)
-            
+
             # Verify result structure - should return current_step status
             assert isinstance(result, dict)
             assert "current_step" in result or "proposal_sections" in result
@@ -112,7 +111,7 @@ class TestHarnessGraphIntegration:
             "project_organization": "Org",
         }
         sample_state["current_section_index"] = 2  # Last section
-        
+
         with patch('app.graph.nodes.harness_proposal_write.HarnessProposalGenerator') as MockGenerator:
             mock_generator = AsyncMock()
             MockGenerator.return_value = mock_generator
@@ -124,9 +123,9 @@ class TestHarnessGraphIntegration:
                 "scores": {},
                 "details": {}
             })
-            
+
             result = await harness_proposal_write_next(sample_state)
-            
+
             # When all sections complete, transitions to self_review
             assert result is not None
             assert result.get("current_step") == "sections_complete"
@@ -134,21 +133,21 @@ class TestHarnessGraphIntegration:
     def test_graph_all_nodes_reachable(self):
         """Verify all graph nodes are reachable from START."""
         g = build_graph()
-        
+
         # Basic connectivity check - graph should have a continuous path
         assert "rfp_analyze" in g.nodes, "Entry point rfp_analyze missing"
         assert "project_closing" in g.nodes, "Exit point project_closing missing"
-        
+
         # Verify key decision points exist
         decision_nodes = [
             "review_rfp",
-            "review_gng", 
+            "review_gng",
             "review_strategy",
             "fork_gate",
             "review_section",
             "mock_evaluation",
         ]
-        
+
         for node_name in decision_nodes:
             assert node_name in g.nodes, f"Decision node {node_name} missing"
 
@@ -156,10 +155,10 @@ class TestHarnessGraphIntegration:
     async def test_harness_handles_empty_story(self, sample_state):
         """Test harness handles empty proposal story gracefully."""
         sample_state["proposal_story"] = {}
-        
+
         with patch('app.graph.nodes.harness_proposal_write.HarnessProposalGenerator'):
             result = await harness_proposal_write_next(sample_state)
-            
+
             # Should not crash, should return valid state
             assert isinstance(result, dict)
             # Empty story should complete immediately
@@ -168,13 +167,13 @@ class TestHarnessGraphIntegration:
     def test_graph_preserves_state_transitions(self):
         """Verify graph preserves A/B path transitions."""
         g = build_graph()
-        
+
         # Verify fork gate exists (splits into A and B)
         assert "fork_gate" in g.nodes
-        
+
         # Verify convergence point exists
         assert "convergence_gate" in g.nodes
-        
+
         # Both paths should exist
         path_a_nodes = {
             "plan_team", "proposal_write_next", "presentation_strategy",
@@ -184,10 +183,10 @@ class TestHarnessGraphIntegration:
             "submission_plan", "bid_plan", "cost_sheet_generate",
             "submission_checklist"
         }
-        
+
         for node in path_a_nodes:
             assert node in g.nodes, f"Path A node {node} missing"
-        
+
         for node in path_b_nodes:
             assert node in g.nodes, f"Path B node {node} missing"
 

@@ -158,16 +158,16 @@ def route_after_gap_analysis_review(state: ProposalState) -> str:
     approval = state.get("approval", {}).get("gap_analysis")
     if approval and approval.status == "approved":
         return "approved"
-    
+
     # 피드백에서 재작업 대상 확인
     feedback = state.get("feedback_history", [])
     latest = feedback[-1] if feedback else {}
-    
+
     if latest.get("rework_strategy"):
         return "rework_strategy"
     if latest.get("rework_targets"):
         return "rework_section"
-    
+
     return "approved"
 
 

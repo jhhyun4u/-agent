@@ -52,10 +52,10 @@ async def get_node_status(
             "8e_feedback_processor",
             "8f_write_next_v2",
         ]
-        
+
         if node_name not in valid_nodes:
             raise HTTPException(status_code=400, detail=f"Invalid node: {node_name}")
-        
+
         output_keys = {
             "8a_customer_analysis": "customer_profile",
             "8b_section_validator": "validation_report",
@@ -64,9 +64,9 @@ async def get_node_status(
             "8e_feedback_processor": "feedback_summary",
             "8f_write_next_v2": "rewritten_section",
         }
-        
+
         output_key = output_keys.get(node_name, "")
-        
+
         return NodeStatusResponse(
             node_name=node_name,
             status="ready",
@@ -75,7 +75,7 @@ async def get_node_status(
             version_count=0,
             active_version=None,
         )
-    
+
     except Exception as e:
         logger.exception(f"Error getting node status: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -103,7 +103,7 @@ async def validate_node_output(
             "issues": [],
             "warnings": [],
         }
-    
+
     except Exception as e:
         logger.exception(f"Error validating node: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -136,10 +136,10 @@ async def get_artifact_versions(
             "feedback_summary",
             "rewritten_section",
         ]
-        
+
         if output_key not in valid_keys:
             raise HTTPException(status_code=400, detail=f"Invalid output_key: {output_key}")
-        
+
         return {
             "proposal_id": proposal_id,
             "output_key": output_key,
@@ -148,7 +148,7 @@ async def get_artifact_versions(
             "limit": limit,
             "offset": offset,
         }
-    
+
     except Exception as e:
         logger.exception(f"Error getting versions: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -174,7 +174,7 @@ async def get_step8_pipeline_status(
             ],
             "progress_percentage": 0,
         }
-    
+
     except Exception as e:
         logger.exception(f"Error getting STEP 8 status: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

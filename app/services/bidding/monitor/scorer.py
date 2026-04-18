@@ -421,14 +421,14 @@ def score_bid(raw: Dict[str, Any], reference_date: Optional[date] = None) -> Bid
 
     # ── 3단계: 도메인 키워드 가산 (발주기관명 우선, 제목 보조) ────────────────────
     agency_lower = agency.lower()
-    
+
     # 1) 발주기관명 기반 도메인 추출 (높은 정확도, PRIMARY)
     for agency_pattern, domains in AGENCY_DOMAIN_MAP.items():
         if agency_pattern.lower() in agency_lower:
             for domain in domains:
                 if domain not in result.domain_keywords_matched:
                     result.domain_keywords_matched.append(domain)
-    
+
     # 2) 제목 기반 도메인 추출 (보조, SUPPLEMENTARY)
     for kw in DOMAIN_KEYWORDS:
         if kw.lower() in title_lower:

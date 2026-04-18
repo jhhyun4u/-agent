@@ -29,14 +29,14 @@ class MemoryStats:
         self.peak_mb = 0.0
         self.total_requests = 0
         self.high_memory_requests = []  # 메모리 > 800MB 요청 추적
-    
+
     def record(self, current_mb: float):
         """현재 메모리 기록"""
         if current_mb > self.peak_mb:
             self.peak_mb = current_mb
-        
+
         self.total_requests += 1
-        
+
         if current_mb > 800:  # 경고 기준
             self.high_memory_requests.append({
                 "timestamp": datetime.now(),
@@ -48,13 +48,13 @@ memory_stats = MemoryStats()
 
 class MemoryMonitorMiddleware(BaseHTTPMiddleware):
     """메모리 사용량 모니터링 미들웨어"""
-    
+
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         # 메모리 측정 (Before)
         process = psutil.Process()
         mem_before_bytes = process.memory_info().rss
         mem_before_mb = mem_before_bytes / 1024 / 1024
-        
+
         # 요청 처리
         try:
             response = await call_next(request)
@@ -66,16 +66,16 @@ class MemoryMonitorMiddleware(BaseHTTPMiddleware):
             mem_after_bytes = process.memory_info().rss
             mem_after_mb = mem_after_bytes / 1024 / 1024
             mem_delta_mb = mem_after_mb - mem_before_mb
-            
+
             # 통계 기록
             memory_stats.record(mem_after_mb)
-            
+
             # 응답 헤더에 추가
             response.headers["X-Memory-Before"] = f"{mem_before_mb:.2f}MB"
             response.headers["X-Memory-After"] = f"{mem_after_mb:.2f}MB"
             response.headers["X-Memory-Delta"] = f"{mem_delta_mb:+.2f}MB"
             response.headers["X-Memory-Peak"] = f"{memory_stats.peak_mb:.2f}MB"
-            
+
             # 경고 로그 (메모리 > 800MB 또는 증가량 > 100MB)
             if mem_after_mb > 800 or mem_delta_mb > 100:
                 logger.warning(
@@ -85,7 +85,7 @@ class MemoryMonitorMiddleware(BaseHTTPMiddleware):
                     f"현재={mem_after_mb:.2f}MB "
                     f"증가={mem_delta_mb:+.2f}MB"
                 )
-            
+
             # DEBUG 로그
             logger.debug(
                 f"[Memory] {request.method} {request.url.path} | "
@@ -93,7 +93,7 @@ class MemoryMonitorMiddleware(BaseHTTPMiddleware):
                 f"After: {mem_after_mb:.2f}MB | "
                 f"Delta: {mem_delta_mb:+.2f}MB"
             )
-        
+
         return response
 
 
@@ -101,7 +101,7 @@ async def get_memory_stats() -> dict:
     """현재 메모리 통계 반환"""
     process = psutil.Process()
     current_mb = process.memory_info().rss / 1024 / 1024
-    
+
     return {
         "current_mb": round(current_mb, 2),
         "peak_mb": round(memory_stats.peak_mb, 2),

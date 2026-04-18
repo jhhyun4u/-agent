@@ -187,16 +187,16 @@ class BidFetcher:
         today = date.today()
         date_from = today.strftime("%Y%m%d") + "0000"
         date_to = today.strftime("%Y%m%d") + "2359"
-        
+
         # Step 1: 기존 bid_no 목록 조회 (중복 방지)
         existing_bid_nos = await self._get_existing_bid_nos()
         logger.info(f"기존 공고 {len(existing_bid_nos)}건 로드 (중복 제거 준비)")
-        
+
         logger.info(f"당일 전수 수집: {date_from} ~ {date_to}")
 
         # Step 2: 전수 수집
         all_raw = await self.g2b.fetch_all_bids(date_from, date_to)
-        
+
         # Step 3: 기존 공고 필터링 (새로운 것만 선택)
         new_raw = [bid for bid in all_raw if bid.get("bidNtceNo", "").strip() not in existing_bid_nos]
         logger.info(
@@ -246,60 +246,60 @@ class BidFetcher:
 
         # Step 6: 공고 상세(자격요건) + 첨부파일 수집 — 병렬 처리
         logger.info(f"병렬 처리 시작: {len(filtered)}건 공고 상세 및 첨부파일 수집")
-        
+
         # Semaphore로 동시 요청 제한 (G2B 서버 부하 방지)
         semaphore = asyncio.Semaphore(ENRICH_SEMAPHORE_COUNT)
-        
+
         async def enrich_and_download(bid: BidAnnouncement) -> BidAnnouncement:
             """공고 상세 수집 + 첨부파일 다운로드 (Semaphore 제한)"""
             async with semaphore:
                 try:
                     # 상세내용 수집
                     bid = await self._enrich_detail(bid)
-                    
+
                     # 신규 공고에 대해서만 첨부파일 다운로드
                     if bid.bid_no not in existing_bid_nos:
                         try:
                             detail = await self.g2b.get_bid_detail(bid.bid_no)
                             attachments = await self._download_bid_attachments(bid.bid_no, detail)
-                            
+
                             # 첨부파일 내용을 content_text에 추가 (길이 제한)
                             if attachments:
                                 doc_content = bid.content_text or ""
-                                
+
                                 if attachments.get("rfp_content"):
                                     rfp_text = attachments["rfp_content"][:5000]
                                     doc_content += f"\n\n=== [RFP 분석] ({len(rfp_text)}자) ===\n{rfp_text}"
-                                
+
                                 if attachments.get("notice_content"):
                                     notice_text = attachments["notice_content"][:3000]
                                     doc_content += f"\n\n=== [공고문] ({len(notice_text)}자) ===\n{notice_text}"
-                                
+
                                 if attachments.get("instruction_content"):
                                     instruction_text = attachments["instruction_content"][:3000]
                                     doc_content += f"\n\n=== [과업지시서] ({len(instruction_text)}자) ===\n{instruction_text}"
-                                
+
                                 # HIGH #5: DB 컬럼 오버플로우 방지
                                 bid.content_text = doc_content[:MAX_CONTENT_TEXT]
                                 logger.info(f"[{bid.bid_no}] 첨부파일 다운로드 완료 ({len(bid.content_text)}자)")
                         except Exception as e:
                             logger.warning(f"[{bid.bid_no}] 첨부파일 수집 실패 (계속 진행): {e}")
-                    
+
                     return bid
-                    
+
                 except Exception as e:
                     logger.error(f"[{bid.bid_no}] 상세 수집 실패: {e}")
                     return bid
-        
+
         # 모든 공고를 병렬로 처리
         enriched_bids = await asyncio.gather(
             *[enrich_and_download(bid) for bid in filtered],
             return_exceptions=False
         )
-        
+
         # 실패한 항목 필터링
         enriched_bids = [bid for bid in enriched_bids if isinstance(bid, BidAnnouncement)]
-        
+
         logger.info(f"병렬 처리 완료: {len(enriched_bids)}건 완료")
 
         # Step 7: Supabase upsert
@@ -322,7 +322,7 @@ class BidFetcher:
         # Step 1: 기존 bid_no 목록 조회
         existing_bid_nos = await self._get_existing_bid_nos()
         logger.info(f"사전규격 수집: 기존 {len(existing_bid_nos)}건 제외")
-        
+
         raw_bids: dict[str, dict] = {}
 
         for keyword in preset.keywords:
@@ -336,7 +336,7 @@ class BidFetcher:
                         or item.get("prcSpcfNo")
                         or ""
                     ).strip()
-                    
+
                     # NEW: 기존 bid_no는 스킵
                     if bid_no and bid_no not in existing_bid_nos and bid_no not in raw_bids:
                         raw_bids[bid_no] = item
@@ -583,9 +583,9 @@ class BidFetcher:
                 "instruction_content": "..." # 과업지시서 내용
             }
         """
-        
+
         attachments = {}
-        
+
         try:
             # G2B API 응답에서 첨부파일 URL 추출
             # ntceSpecDocUrl1-5: 규격서, 공고문 등
@@ -593,21 +593,21 @@ class BidFetcher:
                 url = detail.get(f"ntceSpecDocUrl{i}", "")
                 if not url:
                     continue
-                    
+
                 try:
                     # 파일명 추출 및 분류
                     filename = self._extract_and_classify_filename(url)
-                    
+
                     if not filename or not filename.get("type"):
                         logger.debug(f"[{bid_no}] 파일 {i} 분류 실패: {url[:50]}")
                         continue
-                    
+
                     content = await self._fetch_document_content(url)
-                    
+
                     if not content:
                         logger.debug(f"[{bid_no}] 파일 {i} 다운로드 실패: {url[:50]}")
                         continue
-                    
+
                     # 파일 타입별로 저장 (중복 방지)
                     file_type = filename["type"]
                     if file_type not in attachments:
@@ -615,14 +615,14 @@ class BidFetcher:
                         logger.debug(f"[{bid_no}] 파일 다운로드 완료: {filename['name']} ({file_type})")
                     else:
                         logger.debug(f"[{bid_no}] {file_type} 이미 존재, 스킵: {filename['name']}")
-                            
+
                 except Exception as e:
                     logger.debug(f"[{bid_no}] 첨부파일 {i} 처리 실패: {e}")
                     continue
-                    
+
         except Exception as e:
             logger.warning(f"[{bid_no}] 첨부파일 수집 실패 ({type(e).__name__}): {e}")
-        
+
         return attachments
 
     def _extract_and_classify_filename(self, url: str) -> Optional[dict]:
@@ -639,34 +639,34 @@ class BidFetcher:
             또는 None (분류 불가)
         """
         from urllib.parse import unquote
-        
+
         try:
             # URL에서 파일명 추출 및 디코딩
             encoded_filename = url.split("/")[-1]
             filename = unquote(encoded_filename).lower()
-            
+
             if not filename:
                 return None
-            
+
             # RFP 문서 분류
             rfp_keywords = ["rfp", "제안", "입찰", "요청서", "공동", "proposal"]
             if any(kw in filename for kw in rfp_keywords):
                 return {"name": filename, "type": "rfp_content"}
-            
+
             # 공고문 분류
             notice_keywords = ["공고", "notice", "announcement", "bid"]
             if any(kw in filename for kw in notice_keywords):
                 return {"name": filename, "type": "notice_content"}
-            
+
             # 과업지시서 분류
             instruction_keywords = ["지시", "instruction", "task", "job", "과업", "업무"]
             if any(kw in filename for kw in instruction_keywords):
                 return {"name": filename, "type": "instruction_content"}
-            
+
             # 기본값: 첫 파일은 RFP로 간주 (대부분의 경우)
             logger.debug(f"파일명 분류 불확실, RFP로 간주: {filename}")
             return {"name": filename, "type": "rfp_content"}
-            
+
         except Exception as e:
             logger.debug(f"파일명 분류 실패: {e}")
             return None
@@ -687,70 +687,70 @@ class BidFetcher:
             문서 텍스트 내용 또는 None
         """
         from urllib.parse import urlparse
-        
+
         try:
             # Step 1: URL 검증 (SSRF 방지)
             parsed = urlparse(url)
-            
+
             # 프로토콜 검증
             if parsed.scheme not in ('http', 'https'):
                 logger.warning(f"유효하지 않은 URL 스키마: {parsed.scheme} | {url}")
                 return None
-            
+
             # 호스트명 검증
             hostname = parsed.hostname
             if not hostname:
                 logger.warning(f"호스트명 추출 실패: {url}")
                 return None
-            
+
             # 내부 IP 차단
             if any(hostname.startswith(pattern) for pattern in BLOCKED_IP_PATTERNS):
                 logger.warning(f"내부 IP 접근 차단: {hostname} | {url}")
                 return None
-            
+
             # Step 2: 문서 다운로드 (타임아웃 + 크기 제한)
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, timeout=DOCUMENT_DOWNLOAD_TIMEOUT) as resp:
                     if resp.status != 200:
                         logger.warning(f"문서 다운로드 실패: {url} (상태: {resp.status})")
                         return None
-                    
+
                     # Content-Length 확인 (DoS 방지)
                     content_length = int(resp.headers.get('content-length', 0))
                     if content_length > MAX_DOCUMENT_SIZE:
                         logger.warning(f"파일 크기 초과: {content_length} bytes > {MAX_DOCUMENT_SIZE} | {url}")
                         return None
-                    
+
                     # 청크 단위 읽기 (메모리 효율)
                     chunks = []
                     total_size = 0
                     chunk_size = 1024 * 1024  # 1MB
-                    
+
                     async for chunk in resp.content.iter_chunked(chunk_size):
                         total_size += len(chunk)
                         if total_size > MAX_DOCUMENT_SIZE:
                             logger.warning(f"파일 크기 초과 중단: {total_size} bytes > {MAX_DOCUMENT_SIZE}")
                             return None
                         chunks.append(chunk)
-                    
+
                     content = b''.join(chunks)
-                    
+
                     # Step 3: PDF 또는 텍스트 파일 처리
                     if content.startswith(b"%PDF"):
                         # PDF → 텍스트 추출
                         try:
                             import PyPDF2
                             from io import BytesIO
-                            
+
                             pdf = PyPDF2.PdfReader(BytesIO(content))
                             text = ""
-                            
+
                             # 메모리 누수 방지: 텍스트 길이 제한
                             for page in pdf.pages:
                                 if len(text) >= MAX_TEXT_LENGTH:
                                     logger.info(f"PDF 텍스트 길이 초과: {len(text)} chars에서 중단 | {url}")
                                     break
-                                
+
                                 try:
                                     page_text = page.extract_text()
                                     if page_text:
@@ -758,9 +758,9 @@ class BidFetcher:
                                 except Exception as e:
                                     logger.debug(f"PDF 페이지 추출 실패: {e}")
                                     continue
-                            
+
                             return text[:MAX_TEXT_LENGTH] if text.strip() else None
-                            
+
                         except ImportError:
                             logger.warning(f"PyPDF2 미설치 - PDF 파싱 불가: {url}")
                             return None
@@ -775,7 +775,7 @@ class BidFetcher:
                         except Exception as e:
                             logger.debug(f"텍스트 디코딩 실패: {e}")
                             return None
-                            
+
         except asyncio.TimeoutError:
             logger.warning(f"문서 다운로드 타임아웃: {url}")
             return None

@@ -8,7 +8,7 @@ import logging
 import json
 from typing import List, Dict, Optional, Any
 from app.models.vault_schemas import (
-    VaultSection, 
+    VaultSection,
     QueryType,
     RoutingDecision,
     ChatMessage
@@ -23,7 +23,7 @@ class VaultQueryRouter:
     Routes user queries to appropriate Vault sections
     Uses Claude Haiku for intent detection
     """
-    
+
     # System prompt for intent detection
     ROUTING_PROMPT = """
     You are a query router for TENOPA Vault - a knowledge management system with 8 sections:
@@ -63,7 +63,7 @@ class VaultQueryRouter:
     - Be specific about filters (client name, date range, keywords)
     - Confidence should reflect how clear the intent is
     """
-    
+
     @staticmethod
     async def route(
         query: str,
@@ -79,7 +79,7 @@ class VaultQueryRouter:
         Returns:
             RoutingDecision with sections, query_type, confidence, filters
         """
-        
+
         try:
             # Build context from conversation if provided
             context_text = ""
@@ -87,7 +87,7 @@ class VaultQueryRouter:
                 context_text = "\n\nConversation context:\n"
                 for msg in conversation_context[-5:]:  # Last 5 messages
                     context_text += f"{msg.role}: {msg.content}\n"
-            
+
             # Call Claude Haiku for routing
             user_message = f"""
 {context_text}
@@ -96,7 +96,7 @@ Current query: {query}
 
 Analyze this query and provide routing decision in valid JSON format.
 """
-            
+
             response = await claude_generate(
                 prompt=user_message,
                 system_prompt=VaultQueryRouter.ROUTING_PROMPT,
@@ -105,22 +105,22 @@ Analyze this query and provide routing decision in valid JSON format.
                 temperature=0.3,  # Lower temperature for consistent routing
                 response_format="json"
             )
-            
+
             # Parse response
             response_text = response.get("text", "") or json.dumps(response)
-            
+
             # Extract JSON from response
             try:
                 # Try to find JSON in response
                 start_idx = response_text.find("{")
                 end_idx = response_text.rfind("}") + 1
-                
+
                 if start_idx >= 0 and end_idx > start_idx:
                     json_str = response_text[start_idx:end_idx]
                     routing_json = json.loads(json_str)
                 else:
                     raise ValueError("No JSON found in response")
-                
+
             except (json.JSONDecodeError, ValueError) as e:
                 logger.warning(f"Failed to parse routing response: {str(e)}")
                 # Fallback to completed_projects
@@ -131,7 +131,7 @@ Analyze this query and provide routing decision in valid JSON format.
                     "filters": {},
                     "reasoning": "Fallback routing"
                 }
-            
+
             # Convert section strings to enum
             sections = []
             for section_str in routing_json.get("sections", ["completed_projects"]):
@@ -140,13 +140,13 @@ Analyze this query and provide routing decision in valid JSON format.
                 except ValueError:
                     logger.warning(f"Invalid section: {section_str}")
                     sections.append(VaultSection.COMPLETED_PROJECTS)
-            
+
             # Convert query type
             try:
                 query_type = QueryType(routing_json.get("query_type", "other"))
             except ValueError:
                 query_type = QueryType.OTHER
-            
+
             return RoutingDecision(
                 sections=sections or [VaultSection.COMPLETED_PROJECTS],
                 query_type=query_type,
@@ -154,7 +154,7 @@ Analyze this query and provide routing decision in valid JSON format.
                 filters=routing_json.get("filters", {}),
                 reasoning=routing_json.get("reasoning")
             )
-            
+
         except Exception as e:
             logger.error(f"Error in query routing: {str(e)}")
             # Fallback to safe default
@@ -165,7 +165,7 @@ Analyze this query and provide routing decision in valid JSON format.
                 filters={},
                 reasoning="Routing error - using fallback"
             )
-    
+
     @staticmethod
     async def extract_filters(
         query: str,
@@ -180,7 +180,7 @@ Analyze this query and provide routing decision in valid JSON format.
         - "Samsung's projects" → {"client": "Samsung"}
         - "projects over 500만원" → {"budget_min": 5000000}
         """
-        
+
         try:
             prompt = f"""
 Extract specific search filters from this query:
@@ -202,7 +202,7 @@ Return valid JSON with these fields (only include if mentioned):
 
 Only return JSON, no explanation.
 """
-            
+
             response = await claude_generate(
                 prompt=prompt,
                 model="claude-haiku-4-5-20251001",
@@ -210,23 +210,23 @@ Only return JSON, no explanation.
                 temperature=0.2,
                 response_format="json"
             )
-            
+
             response_text = response.get("text", "") or json.dumps(response)
-            
+
             # Extract JSON
             start_idx = response_text.find("{")
             end_idx = response_text.rfind("}") + 1
-            
+
             if start_idx >= 0 and end_idx > start_idx:
                 json_str = response_text[start_idx:end_idx]
                 return json.loads(json_str)
-            
+
             return {}
-            
+
         except Exception as e:
             logger.warning(f"Error extracting filters: {str(e)}")
             return {}
-    
+
     @staticmethod
     def suggest_follow_up(
         query: str,
@@ -236,34 +236,34 @@ Only return JSON, no explanation.
         Suggest follow-up questions for the user
         Helps guide Vault exploration
         """
-        
+
         suggestions = []
-        
+
         # Based on query type
         if routing.query_type == QueryType.BUDGET_ESTIMATE:
             suggestions.extend([
                 "유사한 프로젝트의 실제 예산은?",
                 "예산별 프로젝트 분포는?"
             ])
-        
+
         elif routing.query_type == QueryType.CLIENT_HISTORY:
             suggestions.extend([
                 "이 클라이언트와의 성공률은?",
                 "최근 이 클라이언트의 프로젝트는?"
             ])
-        
+
         elif routing.query_type == QueryType.TEAM_PERFORMANCE:
             suggestions.extend([
                 "이 팀이 수행한 대형 프로젝트는?",
                 "팀별 성공률 비교"
             ])
-        
+
         elif routing.query_type == QueryType.COMPETITIVE_ANALYSIS:
             suggestions.extend([
                 "경쟁사 대비 우리의 강점은?",
                 "유사 시장에서 우리의 입찰 기록은?"
             ])
-        
+
         return suggestions[:3]  # Return top 3
 
 

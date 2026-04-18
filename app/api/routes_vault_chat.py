@@ -52,29 +52,29 @@ router = APIRouter(prefix="/api/vault", tags=["vault-chat"])
 
 class RateLimiter:
     """Simple in-memory rate limiter for API endpoints"""
-    
+
     def __init__(self, max_requests: int = 30, window_seconds: int = 60):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: dict = defaultdict(list)  # user_id -> list of timestamps
         self._cleanup_lock = asyncio.Lock()
-    
+
     async def is_allowed(self, user_id: str) -> bool:
         """Check if user has requests remaining"""
         now = datetime.now()
         window_start = now - timedelta(seconds=self.window_seconds)
-        
+
         # Clean old requests
         async with self._cleanup_lock:
             self.requests[user_id] = [
-                ts for ts in self.requests[user_id] 
+                ts for ts in self.requests[user_id]
                 if ts > window_start
             ]
-        
+
         # Check limit
         if len(self.requests[user_id]) >= self.max_requests:
             return False
-        
+
         # Add current request
         self.requests[user_id].append(now)
         return True
@@ -261,7 +261,7 @@ async def vault_chat(
     7. Save to conversation history
     8. Return response with metadata
     """
-    
+
     start_time = time.monotonic()
     try:
         # Step 0: Check rate limit
@@ -273,19 +273,19 @@ async def vault_chat(
         # Step 1: Load conversation context
         conversation_id = request.conversation_id
         conversation_context: List[ChatMessage] = []
-        
+
         if conversation_id:
             conversation_context = await _load_conversation_context(
-                conversation_id, 
+                conversation_id,
                 current_user.id
             )
-        
+
         # Step 2: Detect intent and route using vault_router
         routing_decision = await vault_router.route(
             query=request.message,
             conversation_context=conversation_context
         )
-        
+
         # Step 3: Retrieve sources from all sections (with caching)
         # Generate cache key for this search
         section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
@@ -326,7 +326,7 @@ async def vault_chat(
         sources_context = _format_numbered_sources(source_texts)
         system_prompt = _build_system_prompt(sources_context, source_count=len(sources))
         user_message = _build_user_message(request.message, conversation_context)
-        
+
         llm_response = await claude_generate(
             prompt=user_message,
             system_prompt=system_prompt,
@@ -335,10 +335,10 @@ async def vault_chat(
             temperature=0.7,
             response_format="text"
         )
-        
+
         response_text = llm_response.get("text", "")
         initial_confidence = routing_decision.confidence if routing_decision else 0.5
-        
+
         # Step 5: Validate response using 3-point gate
         validation_result = await HallucinationValidator.validate(
             response=response_text,
@@ -346,21 +346,21 @@ async def vault_chat(
             confidence=initial_confidence,
             source_texts=source_texts
         )
-        
+
         validation_passed = validation_result.get("passed", False)
         final_confidence = validation_result.get("confidence", initial_confidence)
-        
+
         # Step 6: Save to conversation
         if not conversation_id:
             conversation_id = await _create_conversation(current_user.id)
-        
+
         await _save_message(
             conversation_id,
             role="user",
             content=request.message,
             user_id=current_user.id
         )
-        
+
         response_id = await _save_message(
             conversation_id,
             role="assistant",
@@ -369,7 +369,7 @@ async def vault_chat(
             confidence=final_confidence,
             user_id=current_user.id
         )
-        
+
         # Step 7: Log analytics (fire-and-forget)
         response_time_ms = (time.monotonic() - start_time) * 1000
         section_names = [s.value if hasattr(s, 'value') else str(s) for s in routing_decision.sections]
@@ -581,13 +581,13 @@ async def list_conversations(
     """
     try:
         client = await get_async_client()
-        
+
         conversations = await client.table("vault_conversations").select(
             "id, title, created_at, updated_at"
         ).eq("user_id", current_user.id).order(
             "updated_at", desc=True
         ).range(offset, offset + limit).execute()
-        
+
         results = []
         for conv in conversations.data:
             # Get last message
@@ -596,14 +596,14 @@ async def list_conversations(
             ).eq("conversation_id", conv["id"]).order(
                 "created_at", desc=True
             ).limit(1).execute()
-            
+
             last_message = messages.data[0]["content"] if messages.data else None
-            
+
             # Count messages
             count_result = await client.table("vault_messages").select(
                 "id", count="exact"
             ).eq("conversation_id", conv["id"]).execute()
-            
+
             results.append(ConversationSummary(
                 id=conv["id"],
                 user_id=current_user.id,
@@ -613,9 +613,9 @@ async def list_conversations(
                 last_message=last_message,
                 message_count=count_result.count or 0
             ))
-        
+
         return results
-        
+
     except Exception as e:
         logger.error(f"Error listing conversations: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to load conversations")
@@ -669,22 +669,22 @@ async def get_conversation_messages(
     """
     try:
         client = await get_async_client()
-        
+
         # Verify conversation ownership
         conv_result = await client.table("vault_conversations").select(
             "user_id"
         ).eq("id", conversation_id).single().execute()
-        
+
         if not conv_result.data or conv_result.data["user_id"] != current_user.id:
             raise HTTPException(status_code=403, detail="Not authorized")
-        
+
         # Get messages
         messages_result = await client.table("vault_messages").select(
             "id, role, content, sources, confidence, created_at"
         ).eq("conversation_id", conversation_id).order(
             "created_at", asc=True
         ).range(offset, offset + limit).execute()
-        
+
         messages = []
         for msg in messages_result.data:
             messages.append(ChatMessage(
@@ -694,9 +694,9 @@ async def get_conversation_messages(
                 confidence=msg.get("confidence"),
                 created_at=datetime.fromisoformat(msg["created_at"])
             ))
-        
+
         return messages
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -714,18 +714,18 @@ async def create_conversation(
     """
     try:
         client = await get_async_client()
-        
+
         now = datetime.now().isoformat()
-        
+
         result = await client.table("vault_conversations").insert({
             "user_id": current_user.id,
             "title": body.title,
             "created_at": now,
             "updated_at": now
         }).execute()
-        
+
         conv = result.data[0]
-        
+
         return ConversationSummary(
             id=conv["id"],
             user_id=conv["user_id"],
@@ -734,7 +734,7 @@ async def create_conversation(
             updated_at=datetime.fromisoformat(conv["updated_at"]),
             message_count=0
         )
-        
+
     except Exception as e:
         logger.error(f"Error creating conversation: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create conversation")
@@ -750,27 +750,27 @@ async def delete_conversation(
     """
     try:
         client = await get_async_client()
-        
+
         # Verify ownership
         conv_result = await client.table("vault_conversations").select(
             "user_id"
         ).eq("id", conversation_id).single().execute()
-        
+
         if not conv_result.data or conv_result.data["user_id"] != current_user.id:
             raise HTTPException(status_code=403, detail="Not authorized")
-        
+
         # Delete messages first
         await client.table("vault_messages").delete().eq(
             "conversation_id", conversation_id
         ).execute()
-        
+
         # Delete conversation
         await client.table("vault_conversations").delete().eq(
             "id", conversation_id
         ).execute()
-        
+
         return {"success": True}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -944,13 +944,13 @@ async def _load_conversation_context(
     """Load recent messages from conversation for context"""
     try:
         client = await get_async_client()
-        
+
         messages_result = await client.table("vault_messages").select(
             "id, role, content, created_at"
         ).eq("conversation_id", conversation_id).order(
             "created_at", desc=True
         ).limit(limit).execute()
-        
+
         messages = []
         for msg in reversed(messages_result.data):  # Reverse to chronological order
             messages.append(ChatMessage(
@@ -959,9 +959,9 @@ async def _load_conversation_context(
                 content=msg["content"],
                 created_at=datetime.fromisoformat(msg["created_at"])
             ))
-        
+
         return messages
-        
+
     except Exception as e:
         logger.warning(f"Failed to load conversation context: {str(e)}")
         return []
@@ -971,18 +971,18 @@ async def _create_conversation(user_id: str) -> str:
     """Create new conversation and return ID"""
     try:
         client = await get_async_client()
-        
+
         now = datetime.now().isoformat()
-        
+
         result = await client.table("vault_conversations").insert({
             "user_id": user_id,
             "title": None,
             "created_at": now,
             "updated_at": now
         }).execute()
-        
+
         return result.data[0]["id"]
-        
+
     except Exception as e:
         logger.error(f"Failed to create conversation: {str(e)}")
         raise
@@ -999,7 +999,7 @@ async def _save_message(
     """Save message to conversation and return message ID"""
     try:
         client = await get_async_client()
-        
+
         result = await client.table("vault_messages").insert({
             "conversation_id": conversation_id,
             "role": role,
@@ -1008,9 +1008,9 @@ async def _save_message(
             "confidence": confidence,
             "created_at": datetime.now().isoformat()
         }).execute()
-        
+
         return result.data[0]["id"]
-        
+
     except Exception as e:
         logger.error(f"Failed to save message: {str(e)}")
         raise

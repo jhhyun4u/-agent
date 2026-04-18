@@ -50,19 +50,19 @@ class MessageRole(str, Enum):
 
 class VaultChatRequest(BaseModel):
     """Request for Vault AI Chat endpoint"""
-    
+
     message: str = Field(..., description="User query message", min_length=1, max_length=2000)
     conversation_id: Optional[str] = Field(None, description="Existing conversation ID (for context)")
     scope: Optional[List[VaultSection]] = Field(None, description="Which sections to search")
     filters: Optional[Dict[str, Any]] = Field(None, description="Additional filters (date, team, etc.)")
-    
+
     class Config:
         use_enum_values = True
 
 
 class RoutingDecision(BaseModel):
     """Result of query routing/intent detection"""
-    
+
     sections: List[VaultSection]
     query_type: QueryType
     confidence: float = Field(..., ge=0, le=1)
@@ -84,7 +84,7 @@ class DocumentSource(BaseModel):
 
 class ChatMessage(BaseModel):
     """Single message in conversation"""
-    
+
     id: Optional[str] = None
     role: MessageRole
     content: str
@@ -95,14 +95,14 @@ class ChatMessage(BaseModel):
 
 class VaultChatResponse(BaseModel):
     """Response from Vault AI Chat endpoint"""
-    
+
     response: str = Field(..., description="AI response text")
     confidence: float = Field(..., ge=0, le=1, description="Confidence in response (0-1)")
     sources: List[DocumentSource] = Field(default_factory=list, description="Source documents")
     validation_passed: bool = Field(True, description="Whether response passed 3-point validation")
     warnings: List[str] = Field(default_factory=list)
     message_id: Optional[str] = None
-    
+
     class Config:
         use_enum_values = True
 
@@ -118,7 +118,7 @@ class ConversationCreate(BaseModel):
 
 class ConversationDetail(BaseModel):
     """Conversation with full message history"""
-    
+
     id: str
     user_id: str
     title: Optional[str] = None
@@ -207,7 +207,7 @@ class BookmarkResponse(BaseModel):
 
 class VaultDocument(BaseModel):
     """Vault document (for any section)"""
-    
+
     id: str
     section: VaultSection
     title: str
@@ -216,14 +216,14 @@ class VaultDocument(BaseModel):
     created_at: datetime
     updated_at: Optional[datetime] = None
     embedding_id: Optional[str] = None
-    
+
     class Config:
         use_enum_values = True
 
 
 class ProjectMeta(BaseModel):
     """Metadata for completed project"""
-    
+
     proposal_id: str
     client: str
     budget: Optional[float] = None
@@ -239,7 +239,7 @@ class ProjectMeta(BaseModel):
 
 class GovernmentGuideline(BaseModel):
     """Government guideline document"""
-    
+
     guideline_id: str
     category: str
     title: str
@@ -277,7 +277,7 @@ class SearchFilter(BaseModel):
 
 class SearchResult(BaseModel):
     """Single search result"""
-    
+
     document: VaultDocument
     relevance_score: float = Field(..., ge=0, le=1)
     match_type: str  # Can be "exact", "semantic", "metadata", or combined like "exact+semantic"
@@ -286,7 +286,7 @@ class SearchResult(BaseModel):
 
 class SearchResults(BaseModel):
     """Batch search results"""
-    
+
     section: VaultSection
     query: str
     results: List[SearchResult]
@@ -336,7 +336,7 @@ class VaultChatStreamError(BaseModel):
 
 class ValidationReport(BaseModel):
     """Validation report for response"""
-    
+
     passed: bool
     confidence: float = Field(..., ge=0, le=1)
     source_coherence_score: float
@@ -348,7 +348,7 @@ class ValidationReport(BaseModel):
 
 class Contradiction(BaseModel):
     """Detected contradiction in response"""
-    
+
     claim: str
     source_statement: str
     severity: Literal["critical", "major", "minor"]
@@ -360,7 +360,7 @@ class Contradiction(BaseModel):
 
 class ExportRequest(BaseModel):
     """Request to export documents"""
-    
+
     document_ids: List[str]
     format: Literal["pdf", "word", "markdown"] = "pdf"
     include_metadata: bool = True
@@ -368,7 +368,7 @@ class ExportRequest(BaseModel):
 
 class ExportResponse(BaseModel):
     """Response for export request"""
-    
+
     file_url: str
     file_name: str
     file_size: int
@@ -382,7 +382,7 @@ class ExportResponse(BaseModel):
 
 class ChatMetrics(BaseModel):
     """Metrics for chat session"""
-    
+
     total_messages: int
     average_response_time_ms: float
     sources_cited: int
@@ -392,7 +392,7 @@ class ChatMetrics(BaseModel):
 
 class VaultStats(BaseModel):
     """Overall Vault statistics"""
-    
+
     total_documents: int
     total_conversations: int
     total_messages: int

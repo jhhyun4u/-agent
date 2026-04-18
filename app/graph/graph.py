@@ -62,7 +62,7 @@ from app.graph.nodes.plan_nodes import (
     plan_assign, plan_schedule, plan_story, plan_team, proposal_customer_analysis,
 )
 from app.graph.nodes.proposal_nodes import (
-    self_review_with_auto_improve, 
+    self_review_with_auto_improve,
     section_quality_check, storyline_gap_analysis,
 )
 from app.graph.nodes.harness_proposal_write import harness_proposal_write_next
@@ -236,7 +236,7 @@ def build_graph(checkpointer=None):
         "all_done": "self_review",  # 모든 섹션 완성 → 자가진단
         "rewrite": "proposal_write_next",  # 현재 섹션 재작성
     })
-    
+
     # STEP 4A: 전체 자가진단 → 갭 분석 (v4.0)
     g.add_conditional_edges("self_review", route_after_self_review, {
         "pass": "storyline_gap_analysis",  # 갭 분석으로
@@ -245,7 +245,7 @@ def build_graph(checkpointer=None):
         "retry_sections": "proposal_start_gate",
         "force_review": "storyline_gap_analysis",  # 강제 리뷰도 갭 분석 진행
     })
-    
+
     # STEP 4A: 스토리라인 갭 분석 → 갭 리뷰 (v4.0)
     g.add_edge("storyline_gap_analysis", "review_gap_analysis")  # 자동 분석 → HITL 리뷰
     g.add_conditional_edges("review_gap_analysis", route_after_gap_analysis_review, {
@@ -253,7 +253,7 @@ def build_graph(checkpointer=None):
         "rework_section": "proposal_start_gate",  # 섹션 수정 → 루프백
         "rework_strategy": "strategy_generate",  # 전략 재수립 필요
     })
-    
+
     g.add_conditional_edges("review_proposal", route_after_proposal_review, {
         "approved": "presentation_strategy",  # → STEP 5A (v4.0: removed old 8A-8F pipeline)
         "rework": "proposal_start_gate",  # → STEP 4A 재시작
@@ -263,7 +263,7 @@ def build_graph(checkpointer=None):
     # STEP 8A-8F 노드 제거됨 (v4.0)
     # 이전 8A-8F 파이프라인은 더이상 사용되지 않음:
     # - 8A (customer_analysis) → STEP 3A로 이동
-    # - 8B (section_validator) → section_quality_check (STEP 4A)로 대체  
+    # - 8B (section_validator) → section_quality_check (STEP 4A)로 대체
     # - 8C (consolidation) → storyline_gap_analysis (STEP 4A)로 대체
     # - 8D/8E/8F (evaluation/feedback/rewrite) → STEP 6A 모의평가로 통합
 

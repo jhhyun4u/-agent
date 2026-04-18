@@ -362,12 +362,12 @@ async def resume_workflow(
                 sm = StateMachine(proposal_id)
                 win_result = "no_go" if current_step == "go_no_go_no_go" else "abandoned"
                 reason = f"워크플로우 미진행: {current_step}"
-                
+
                 if win_result == "no_go":
                     await sm.decide_no_go(user_id=user.id, reason=reason)
                 else:  # abandoned
                     await sm.abandon(user_id=user.id, reason=reason)
-                
+
                 logger.info(f"[WF_CLOSED] proposal={proposal_id}, reason={current_step}, win_result={win_result}", extra={
                     "request_id": rid,
                     "data": {"event": "workflow_closed", "proposal_id": proposal_id, "final_step": current_step, "win_result": win_result},

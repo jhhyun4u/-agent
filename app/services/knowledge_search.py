@@ -82,7 +82,7 @@ async def unified_search(
     all_areas = ["content", "client", "competitor", "lesson", "capability", "qa",
                   "intranet_doc", "intranet_project"]
     areas = (filters or {}).get("areas", all_areas)
-    
+
     # Task #2: 캐시 키 확인
     cache_key = _make_cache_key(query, org_id, areas)
     cached_results = _get_search_cache(cache_key)
@@ -133,7 +133,7 @@ async def unified_search(
 
     # Task #2: 검색 결과 캐시 저장
     _set_search_cache(cache_key, grouped)
-    
+
     return grouped
 
 

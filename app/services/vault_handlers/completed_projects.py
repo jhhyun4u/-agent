@@ -24,7 +24,7 @@ class CompletedProjectsHandler:
         - Vector match: depends on similarity score
         - Synthesis: average of multiple sources
     """
-    
+
     # SQL where conditions for different query intents
     SQL_FILTERS = {
         "by_client": "LOWER(client_name) LIKE LOWER('%{client}%')",
@@ -33,7 +33,7 @@ class CompletedProjectsHandler:
         "by_date_range": "end_date >= '{start}' AND end_date <= '{end}'",
         "by_team_member": "team_members @> '[{member}]'",  # JSONB array contains
     }
-    
+
     @staticmethod
     async def search(
         query: str,
@@ -51,7 +51,7 @@ class CompletedProjectsHandler:
         Returns:
             List of SearchResult objects with sources and relevance scores
         """
-        
+
         try:
             results = []
 
@@ -91,7 +91,7 @@ class CompletedProjectsHandler:
         except Exception as e:
             logger.error(f"Error searching completed projects: {str(e)}")
             raise
-    
+
     @staticmethod
     async def _sql_search(
         query: str,
@@ -102,10 +102,10 @@ class CompletedProjectsHandler:
         SQL-based search for exact matches
         Queries proposals table for completed projects
         """
-        
+
         try:
             supabase = await get_async_client()
-            
+
             # Build base query
             select_clause = """
                 id, 
@@ -121,35 +121,35 @@ class CompletedProjectsHandler:
                 key_outcomes,
                 win_result
             """
-            
+
             # Base filter: only closed proposals
             base_query = supabase.table("proposals").select(select_clause).eq(
                 "status", "closed"
             )
-            
+
             # Apply optional filters
             if filters:
                 if "client" in filters:
                     base_query = base_query.ilike("client_name", f"%{filters['client']}%")
-                
+
                 if "status" in filters:
                     base_query = base_query.in_("win_result", filters["status"])
-                
+
                 if "budget_min" in filters:
                     base_query = base_query.gte("budget", filters["budget_min"])
-                
+
                 if "budget_max" in filters:
                     base_query = base_query.lte("budget", filters["budget_max"])
-                
+
                 if "date_from" in filters:
                     base_query = base_query.gte("start_date", filters["date_from"])
-                
+
                 if "date_to" in filters:
                     base_query = base_query.lte("end_date", filters["date_to"])
-            
+
             # Execute query
             query_result = base_query.order("end_date", desc=True).limit(limit).execute()
-            
+
             results = []
             for project in query_result.data or []:
                 # Convert to SearchResult
@@ -160,13 +160,13 @@ class CompletedProjectsHandler:
                     preview=CompletedProjectsHandler._create_preview(project)
                 )
                 results.append(result)
-            
+
             return results
-            
+
         except Exception as e:
             logger.error(f"Error in SQL search: {str(e)}")
             return []
-    
+
     @staticmethod
     async def _vector_search(
         query: str,
@@ -187,12 +187,12 @@ class CompletedProjectsHandler:
         Returns:
             List of SearchResult objects ordered by similarity score
         """
-        
+
         try:
             from app.services.vault_embedding_service import EmbeddingService
-            
+
             embedding_service = EmbeddingService()
-            
+
             # Search vault_documents for completed projects using semantic similarity
             vector_results = await embedding_service.search_similar(
                 query=query,
@@ -200,24 +200,24 @@ class CompletedProjectsHandler:
                 limit=limit,
                 threshold=threshold
             )
-            
+
             results = []
             supabase = await get_async_client()
-            
+
             for search_result in vector_results:
                 doc_id = search_result.get("document_id")
                 similarity_score = search_result.get("similarity", 0.0)
-                
+
                 # Fetch full document metadata from vault_documents
                 doc_result = await supabase.table("vault_documents").select(
                     "id, title, content, metadata, created_at"
                 ).eq("id", doc_id).single().execute()
-                
+
                 if not doc_result.data:
                     continue
-                
+
                 doc = doc_result.data
-                
+
                 # Apply metadata filters if provided
                 if filters:
                     doc_metadata = doc.get("metadata", {})
@@ -270,7 +270,7 @@ class CompletedProjectsHandler:
                         duration = doc_metadata.get("duration_months")
                         if duration is not None and int(duration) > filters["duration_months_max"]:
                             continue
-                
+
                 # Convert to SearchResult
                 result = SearchResult(
                     document=CompletedProjectsHandler._format_document(doc),
@@ -279,9 +279,9 @@ class CompletedProjectsHandler:
                     preview=CompletedProjectsHandler._create_preview(doc)
                 )
                 results.append(result)
-            
+
             return results
-            
+
         except ImportError:
             logger.warning("EmbeddingService not available, skipping vector search")
             return []
@@ -367,10 +367,10 @@ class CompletedProjectsHandler:
         
         Handles both vault_documents and proposal table formats
         """
-        
+
         from app.models.vault_schemas import VaultDocument
         from datetime import datetime as dt
-        
+
         # Check if this is a vault_documents row (has 'section' field)
         if "section" in project:
             # Direct vault_documents format
@@ -379,7 +379,7 @@ class CompletedProjectsHandler:
                 created_at = dt.fromisoformat(created_at.replace('Z', '+00:00'))
             elif created_at is None:
                 created_at = dt.now()
-            
+
             return VaultDocument(
                 id=project.get("id"),
                 section=project.get("section", VaultSection.COMPLETED_PROJECTS),
@@ -409,16 +409,16 @@ class CompletedProjectsHandler:
                 },
                 created_at=datetime.now()
             )
-    
+
     @staticmethod
     def _create_preview(project: Dict[str, Any]) -> str:
         """Create human-readable preview of project
         
         Handles both vault_documents and proposal table formats
         """
-        
+
         title = project.get('title', 'Untitled')
-        
+
         # Check if this is a vault_documents row
         if "section" in project:
             # vault_documents format
@@ -430,7 +430,7 @@ class CompletedProjectsHandler:
             start_date = metadata.get('start_date', 'N/A')
             end_date = metadata.get('end_date', 'N/A')
             team_count = len(metadata.get('team_members', []))
-            
+
             budget_str = f"{budget:,}" if budget is not None else "N/A"
             return f"""
 **{title}**
@@ -445,7 +445,7 @@ class CompletedProjectsHandler:
             budget = project.get('budget')
             currency = project.get('currency', 'KRW')
             budget_str = f"{budget:,}" if budget is not None else "N/A"
-            
+
             return f"""
 **{title}** ({project.get('win_result', 'unknown')})
 - Client: {project.get('client_name', 'Unknown')}
@@ -454,7 +454,7 @@ class CompletedProjectsHandler:
 - Team: {len(project.get('team_members', []))} people
 """.strip()
 
-    
+
     @staticmethod
     def _deduplicate_results(results: List[SearchResult]) -> List[SearchResult]:
         """
@@ -469,27 +469,27 @@ class CompletedProjectsHandler:
         Returns:
             List of deduplicated SearchResult objects with merged scores
         """
-        
+
         seen = {}  # Map of document_id -> SearchResult
-        
+
         for result in results:
             doc_id = result.document.id
-            
+
             if doc_id not in seen:
                 seen[doc_id] = result
             else:
                 # Merge scores from duplicate results
                 existing = seen[doc_id]
-                
+
                 # Average the relevance scores
                 merged_score = (existing.relevance_score + result.relevance_score) / 2
-                
+
                 # Update match_type to reflect both sources
                 if existing.match_type != result.match_type:
                     merged_type = f"{existing.match_type}+{result.match_type}"
                 else:
                     merged_type = existing.match_type
-                
+
                 # Create merged result
                 merged_result = SearchResult(
                     document=existing.document,
@@ -498,9 +498,9 @@ class CompletedProjectsHandler:
                     preview=existing.preview
                 )
                 seen[doc_id] = merged_result
-        
+
         return list(seen.values())
-    
+
     @staticmethod
     async def validate_facts(
         project_id: str,
@@ -516,24 +516,24 @@ class CompletedProjectsHandler:
         Returns:
             Validation report with verified/unverified claims
         """
-        
+
         try:
             supabase = await get_async_client()
-            
+
             # Fetch actual project data
             project_result = await supabase.table("proposals").select(
                 "id, title, budget, team_members, key_outcomes"
             ).eq("id", project_id).single().execute()
-            
+
             if not project_result.data:
                 return {"verified": False, "reason": "Project not found"}
-            
+
             project = project_result.data
-            
+
             # Validate each claim
             verified_claims = []
             unverified_claims = []
-            
+
             for claim in claims:
                 # Simple verification logic (can be enhanced with NLP)
                 if "budget" in claim.lower() and project.get("budget"):
@@ -543,13 +543,13 @@ class CompletedProjectsHandler:
                     verified_claims.append(f"Team size confirmed: {team_size}")
                 else:
                     unverified_claims.append(claim)
-            
+
             return {
                 "verified": len(unverified_claims) == 0,
                 "verified_claims": verified_claims,
                 "unverified_claims": unverified_claims,
             }
-            
+
         except Exception as e:
             logger.error(f"Error validating facts: {str(e)}")
             return {"verified": False, "error": str(e)}

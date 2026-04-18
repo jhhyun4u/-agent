@@ -412,7 +412,7 @@ async def proposal_write_next(state: ProposalState) -> dict:
     # Phase 1: Create artifact version for proposal_sections
     try:
         from app.services.version_manager import execute_node_and_create_version
-        
+
         sections_data = [
             s.model_dump() if hasattr(s, "model_dump") else s
             for s in existing_sections
@@ -635,20 +635,20 @@ async def section_quality_check(state: ProposalState) -> dict:
     # 현재 섹션 가져오기
     sections = state.get("proposal_sections", [])
     index = state.get("current_section_index", 0)
-    
+
     if not sections or index >= len(sections):
         return {"diagnosis_result": None}
-    
+
     current_section = sections[index]
     if hasattr(current_section, "model_dump"):
         section_dict = current_section.model_dump()
     else:
         section_dict = current_section if isinstance(current_section, dict) else {}
-    
+
     section_id = section_dict.get("section_id", "")
     section_content = section_dict.get("content", "")
     section_title = section_dict.get("title", "")
-    
+
     # 스토리라인 컨텍스트 추출
     plan = state.get("plan")
     storyline_for_section = ""
@@ -665,11 +665,11 @@ async def section_quality_check(state: ProposalState) -> dict:
 - Win Theme 연결: {s.get('win_theme_connection', '')}
 """
                     break
-    
+
     # RFP 요구사항
     rfp = state.get("rfp_analysis")
     rfp_dict = rfp_to_dict(rfp)
-    
+
     # Compliance Matrix (해당 섹션의 요구사항)
     compliance = state.get("compliance_matrix", [])
     relevant_compliance = ""
@@ -678,11 +678,11 @@ async def section_quality_check(state: ProposalState) -> dict:
         status = cd.get("status", "미확인")
         if status != "충족":  # 미확인, 미충족 항목만
             relevant_compliance += f"- [{cd.get('req_id', '')}] {cd.get('content', '')}\\n"
-    
+
     # 전략 컨텍스트
     strategy = state.get("strategy")
     s_dict = get_strategy_dict(strategy)
-    
+
     # 프롬프트 조립
     prompt = f"""## 섹션 품질 진단 (4축 평가)
 
@@ -760,12 +760,12 @@ async def section_quality_check(state: ProposalState) -> dict:
 - 실제 문제점을 정확히 파악
 - 개선 방안은 구체적으로
 """
-    
+
     diagnosis = await claude_generate(prompt, max_tokens=3000, step_name="section_quality_check")
-    
+
     # DiagnosisResult 모델로 변환
     from app.graph.state import DiagnosisResult
-    
+
     result = DiagnosisResult(
         compliance_ok=diagnosis.get("compliance_ok", False),
         storyline_gap=diagnosis.get("storyline_gap", ""),
@@ -775,7 +775,7 @@ async def section_quality_check(state: ProposalState) -> dict:
         issues=diagnosis.get("issues", []),
         recommendation=diagnosis.get("recommendation", "rework"),
     )
-    
+
     # DB 저장: section_diagnostics 테이블에 진단 결과 기록
     await _persist_node_result(
         table="section_diagnostics",
@@ -797,7 +797,7 @@ async def section_quality_check(state: ProposalState) -> dict:
         },
         log_msg=f"Section diagnosis saved: {state.get('project_id')}/{section_id} (score: {result.overall_score})",
     )
-    
+
     return {"diagnosis_result": result}
 
 
@@ -813,36 +813,36 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
     출력: GapReport (갭 목록, 권장 조치)
     """
     from app.graph.state import GapReport
-    
+
     # 계획 스토리라인
     plan = state.get("plan")
     if not plan:
         return {"gap_report": None}
-    
+
     plan_dict = plan.model_dump() if hasattr(plan, "model_dump") else (plan if isinstance(plan, dict) else {})
     storylines = plan_dict.get("storylines", {})
-    
+
     if not storylines:
         return {"gap_report": None}
-    
+
     # 실제 작성된 섹션들
     sections = state.get("proposal_sections", [])
     sections_text = ""
     section_summaries = []
-    
+
     for i, s in enumerate(sections):
         if hasattr(s, "model_dump"):
             sd = s.model_dump()
         else:
             sd = s if isinstance(s, dict) else {}
-        
+
         section_id = sd.get("section_id", "")
         title = sd.get("title", "")
         content = sd.get("content", "")[:1000]  # 처음 1000자만
-        
+
         sections_text += f"\n### {i+1}. [{section_id}] {title}\n{content}\n"
         section_summaries.append({"id": section_id, "title": title})
-    
+
     # 계획된 스토리라인 텍스트
     storyline_sections = storylines.get("sections", [])
     planned_text = f"""
@@ -850,7 +850,7 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
 전체 스토리: {storylines.get('overall_narrative', '')}
 도입부 핵심: {storylines.get('opening_hook', '')}
 """
-    
+
     for s in storyline_sections:
         planned_text += f"""
 ### {s.get('eval_item', '')}
@@ -860,11 +860,11 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
 - Win Theme 연결: {s.get('win_theme_connection', '')}
 - 다음 섹션 연결: {s.get('transition_to_next', '')}
 """
-    
+
     planned_text += f"""
 마무리 메시지: {storylines.get('closing_impact', '')}
 """
-    
+
     # 갭 분석 프롬프트
     prompt = f"""## 스토리라인 갭 분석
 
@@ -922,9 +922,9 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
 - 구체적인 섹션명과 내용을 인용
 - 실행 가능한 개선안을 제시
 """
-    
+
     gap_analysis = await claude_generate(prompt, max_tokens=3000, step_name="storyline_gap_analysis")
-    
+
     # GapReport 모델로 변환
     result = GapReport(
         missing_points=gap_analysis.get("missing_points", []),
@@ -934,7 +934,7 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
         overall_assessment=gap_analysis.get("overall_assessment", ""),
         recommended_actions=gap_analysis.get("recommended_actions", []),
     )
-    
+
     # DB 저장: proposal_gap_analyses 테이블에 갭 분석 결과 기록
     await _persist_node_result(
         table="proposal_gap_analyses",
@@ -953,5 +953,5 @@ async def storyline_gap_analysis(state: ProposalState) -> dict:
         },
         log_msg=f"Gap analysis saved: {state.get('project_id')} (status: pending)",
     )
-    
+
     return {"gap_report": result}

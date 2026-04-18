@@ -8,13 +8,11 @@ All database operations are RLS-enforced via the Supabase client.
 import logging
 from datetime import datetime
 from typing import Optional, Tuple, List
-from uuid import UUID
 
 from app.models.comment_schemas import (
     CommentScope,
     CommentResponse,
     AuthorInfo,
-    ReactionSummary,
 )
 
 

@@ -11,12 +11,11 @@
 """
 
 import asyncio
-import os
 import time
 
 import pytest
 
-from tests.conftest import AI_ANALYSIS_TIMEOUT, G2B_API_TIMEOUT, POLL_INTERVAL
+from tests.conftest import AI_ANALYSIS_TIMEOUT, POLL_INTERVAL
 
 
 # ─────────────────────────────────────────────

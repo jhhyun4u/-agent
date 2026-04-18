@@ -232,7 +232,7 @@ async def lifespan(app: FastAPI):
     # §26: WebSocket 실시간 업데이트 - 하트비트 루프 시작
     from app.services.ws_manager import ws_manager
     import asyncio
-    
+
     heartbeat_task = None
     try:
         heartbeat_task = asyncio.create_task(ws_manager.heartbeat_loop())
@@ -241,7 +241,7 @@ async def lifespan(app: FastAPI):
         logger.error(f"[WS] 하트비트 루프 시작 실패: {e}")
 
     yield
-    
+
     # Shutdown: 하트비트 태스크 취소
     if heartbeat_task:
         heartbeat_task.cancel()
@@ -250,7 +250,7 @@ async def lifespan(app: FastAPI):
         except asyncio.CancelledError:
             pass
         logger.info("[WS] WebSocket 하트비트 루프 종료")
-    
+
     logger.info("시스템 종료")
 
 

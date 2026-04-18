@@ -8,7 +8,6 @@
 4. Feedback Loop: 프롬프트 개선
 """
 
-import asyncio
 import pytest
 
 from app.graph.nodes.harness_feedback_loop import (
@@ -120,7 +119,7 @@ class TestHarnessEvaluator:
         assert 0 <= score.clarity <= 1
         assert score.feedback != ""
 
-        print(f"\n평가 결과:")
+        print("\n평가 결과:")
         print(f"  종합: {score.overall:.1%}")
         print(f"  신뢰성: {score.hallucination:.1%}")
         print(f"  설득력: {score.persuasiveness:.1%}")
@@ -181,7 +180,7 @@ Executive Summary (200 단어):
         assert "balanced" in result["scores"]
         assert "creative" in result["scores"]
 
-        print(f"\n생성 결과:")
+        print("\n생성 결과:")
         print(f"  선택: {result['selected_variant']}")
         print(f"  점수: {result['score']:.1%}")
         print(f"  Conservative: {result['scores']['conservative']:.1%}")
@@ -217,7 +216,7 @@ class TestHarnessFeedbackLoop:
         assert analysis.improvement_priority in ["critical", "high", "medium", "low"]
         assert analysis.suggested_changes != ""
 
-        print(f"\n분석 결과:")
+        print("\n분석 결과:")
         print(f"  약점: {analysis.weak_areas}")
         print(f"  우선순위: {analysis.improvement_priority}")
         print(f"  개선안: {analysis.suggested_changes[:100]}...")
@@ -255,7 +254,7 @@ class TestHarnessFeedbackLoop:
         assert improved.reasoning != ""
         assert len(improved.focus_areas) > 0
 
-        print(f"\n프롬프트 개선:")
+        print("\n프롬프트 개선:")
         print(f"  원본 길이: {len(original_prompt)}")
         print(f"  개선 길이: {len(improved.improved)}")
         print(f"  이유: {improved.reasoning}")
@@ -311,7 +310,7 @@ class TestHarnessFeedbackLoop:
         assert summary["iterations"] == 1
         assert summary["initial_score"] == 0.70
 
-        print(f"\n루프 반복 결과:")
+        print("\n루프 반복 결과:")
         print(f"  반복: {result['iteration']}")
         print(f"  최고: {result['best_variant']} ({result['best_score']:.1%})")
         print(f"  약점: {result['weak_areas']}")
@@ -360,7 +359,7 @@ Executive Summary:
         assert feedback_result is not None
         assert "analysis" in feedback_result
 
-        print(f"\n통합 테스트 완료:")
+        print("\n통합 테스트 완료:")
         print(f"  초기 선택: {result['selected_variant']} ({result['score']:.1%})")
         print(f"  피드백 분석: {feedback_result['best_variant']} ({feedback_result['best_score']:.1%})")
 

@@ -75,7 +75,7 @@ async def process_document(document_id: str, org_id: str) -> dict:
         # 청킹
         await _update_doc_status(client, document_id, "chunking")
         chunks = chunk_document(text, doc["doc_type"], doc.get("doc_subtype", ""))
-        
+
         # ✅ 메모리 최적화: 원본 텍스트 정리
         del text
         gc.collect()
@@ -167,7 +167,7 @@ async def process_document(document_id: str, org_id: str) -> dict:
             # Continue even if knowledge indexing fails
 
         chunk_count = len(chunks)
-        
+
         await (
             client.table("intranet_documents")
             .update({

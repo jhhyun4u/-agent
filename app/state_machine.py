@@ -58,7 +58,7 @@ class StateMachine:
             actor_type="user",
             reason="Workflow started by user",
         )
-        
+
         # WebSocket 브로드캐스트 (fire-and-forget)
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.INITIALIZED.value, ProposalStatus.IN_PROGRESS.value))
         return result
@@ -128,7 +128,7 @@ class StateMachine:
             reason="No-Go decision",
             metadata=metadata,
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.ON_HOLD.value))
         return result
@@ -154,7 +154,7 @@ class StateMachine:
             actor_type="user",
             reason="Proposal submitted to client",
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.SUBMITTED.value))
         return result
@@ -180,7 +180,7 @@ class StateMachine:
             actor_type="user",
             reason="Proposal presented to client",
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.SUBMITTED.value, ProposalStatus.PRESENTATION.value))
         return result
@@ -215,7 +215,7 @@ class StateMachine:
             metadata=record_metadata,
             win_result=WinResult.WON.value,
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.PRESENTATION.value, ProposalStatus.CLOSED.value))
         return result
@@ -250,7 +250,7 @@ class StateMachine:
             metadata=record_metadata,
             win_result=WinResult.LOST.value,
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.PRESENTATION.value, ProposalStatus.CLOSED.value))
         return result
@@ -285,7 +285,7 @@ class StateMachine:
             metadata=metadata,
             win_result=WinResult.ABANDONED.value,
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.CLOSED.value))
         return result
@@ -319,7 +319,7 @@ class StateMachine:
             reason=reason or "Proposal held",
             metadata=metadata,
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.ON_HOLD.value))
         return result
@@ -347,7 +347,7 @@ class StateMachine:
             actor_type="user",
             reason="Proposal resumed",
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.ON_HOLD.value, ProposalStatus.WAITING.value))
         return result
@@ -374,7 +374,7 @@ class StateMachine:
             actor_type="system" if not user_id else "user",
             reason="Proposal archived",
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.CLOSED.value, ProposalStatus.ARCHIVED.value))
         return result
@@ -396,7 +396,7 @@ class StateMachine:
             actor_type="cron",
             reason="RFP deadline passed",
         )
-        
+
         # WebSocket 브로드캐스트
         asyncio.create_task(self._broadcast_status_change(ProposalStatus.IN_PROGRESS.value, ProposalStatus.EXPIRED.value))
         return result
@@ -414,7 +414,7 @@ class StateMachine:
             proposal = await client.table("proposals").select(
                 "id, title, team_id, division_id, org_id"
             ).eq("id", self.proposal_id).single().execute()
-            
+
             if proposal.data:
                 data = proposal.data
                 await broadcast_proposal_status(

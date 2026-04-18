@@ -788,7 +788,7 @@ async def analyze_bid_for_proposal(
         raise BidValidationError("유효하지 않은 공고번호 형식입니다.")
 
     client = await get_async_client()
-    
+
     try:
         # DB에서 조회
         result = await client.table("bid_announcements")\
@@ -820,10 +820,10 @@ async def analyze_bid_for_proposal(
                 logger.error(f"[{bid_no}] 레코드 생성 실패 ({type(e).__name__}): {e}")
                 # 실패해도 계속 진행 (폴링으로 복구 가능)
                 pass
-            
+
             if background_tasks:
                 await _queue_bid_analysis(bid_no, background_tasks)
-            
+
             return ok({
                 "status": "pending",
                 "message": "공고를 분석하고 있습니다. 잠시만 기다려주세요..."
@@ -831,7 +831,7 @@ async def analyze_bid_for_proposal(
 
         data = result.data[0]  # limit(1)을 사용하므로 첫 번째 항목 접근
         status = data.get("analysis_status")
-        
+
         if status == "analyzed":
             # ✓ 분석 완료 → 상세 결과 반환
             return ok({
@@ -848,14 +848,14 @@ async def analyze_bid_for_proposal(
                 "rfp_period": data.get("rfp_period"),
                 "analyzed_at": data.get("analysis_completed_at"),
             })
-        
+
         elif status == "analyzing":
             # ⏳ 진행 중 → 클라이언트가 폴링
             return ok({
                 "status": "analyzing",
                 "message": "AI가 공고를 분석하는 중입니다...",
             })
-        
+
         elif status == "failed":
             # ✗ 실패 → 에러 메시지 + 재시도 권유
             return ok({
@@ -863,17 +863,17 @@ async def analyze_bid_for_proposal(
                 "error": data.get("analysis_error", "분석에 실패했습니다."),
                 "message": "분석에 실패했습니다. 다시 시도해주세요.",
             })
-        
+
         else:  # pending or unknown
             # ⧖ 대기 중 → 분석 큐 등록
             if background_tasks:
                 await _queue_bid_analysis(bid_no, background_tasks)
-            
+
             return ok({
                 "status": "pending",
                 "message": "공고를 분석하고 있습니다. 잠시만 기다려주세요...",
             })
-    
+
     except Exception as e:
         logger.error(f"[{bid_no}] 분석 조회 실패: {type(e).__name__}: {e}")
         import traceback
@@ -1791,10 +1791,10 @@ async def _run_fetch_and_analyze(
 
         async with G2BService() as g2b:
             fetcher = BidFetcher(g2b, client)
-            
+
             # Step 1: 신규 공고 수집 (중복 제거 + 첨부파일 다운로드)
             bids = await fetcher.fetch_bids_by_preset(preset)
-            
+
             # Step 2: 사전규격도 수집 (중복 제거)
             try:
                 pre_bids = await fetcher.fetch_pre_bids_by_preset(preset)
@@ -1879,7 +1879,7 @@ async def _analyze_bid_background(bid_no: str) -> None:
             })\
             .eq("bid_no", bid_no)\
             .execute()
-        
+
         # 2) 공고 내용 로드 (G2B 폴백 포함)
         try:
             bid, content = await _load_bid_content(bid_no)
@@ -1887,25 +1887,25 @@ async def _analyze_bid_background(bid_no: str) -> None:
             logger.warning(f"[{bid_no}] 공고 로드 실패 ({type(e).__name__}), 빈 값으로 진행: {e}")
             bid = {"bid_title": "", "agency": "", "budget_amount": None}
             content = ""
-        
+
         # 3) 팀 정보 로드
         teams_info_text, valid_team_names = _load_teams_info()
         logger.info(f"[{bid_no}] 팀 정보 로드: {len(teams_info_text)}자")
-        
+
         # 4) AI 통합 분석 실행
         analysis_result = await _run_unified_analysis(
             bid_no, bid, content, teams_info_text, valid_team_names
         )
-        
+
         md_paths = {}
-        
+
         # 5) RFP 분석 마크다운 생성 및 저장
         if analysis_result.get("rfp_sections"):
             rfp_md = _format_rfp_sections(analysis_result["rfp_sections"])
             rfp_path = await _save_markdown_to_storage(bid_no, "RFP分析", rfp_md)
             if rfp_path:
                 md_paths["md_rfp_analysis_path"] = rfp_path
-        
+
         # 6) 공고문 마크다운 생성 및 저장
         try:
             notice_md = _format_notice_markdown(bid, content)
@@ -1915,7 +1915,7 @@ async def _analyze_bid_background(bid_no: str) -> None:
                     md_paths["md_notice_path"] = notice_path
         except Exception as e:
             logger.warning(f"[{bid_no}] 공고문 마크다운 생성 실패 ({type(e).__name__}): {e}")
-        
+
         # 7) DB에 분석 결과 저장
         end_time = datetime.now(timezone.utc)
         end_time_iso = end_time.isoformat()
@@ -1939,17 +1939,17 @@ async def _analyze_bid_background(bid_no: str) -> None:
             "analysis_error": None,
             **md_paths,  # md_rfp_analysis_path, md_notice_path 등
         }
-        
+
         await client.table("bid_announcements")\
             .update(update_data)\
             .eq("bid_no", bid_no)\
             .execute()
-        
+
         logger.info(
             f"[{bid_no}] ✓ 분석 완료: {analysis_result.get('suitability_score')}점 "
             f"({analysis_result.get('verdict')}), {duration_seconds}초 소요"
         )
-    
+
     except Exception as e:
         logger.error(f"[{bid_no}] ✗ 백그라운드 분석 실패 ({type(e).__name__}): {e}")
 
@@ -1976,9 +1976,9 @@ async def _analyze_bid_background(bid_no: str) -> None:
                 })\
                 .eq("bid_no", bid_no)\
                 .execute()
-            
+
             logger.warning(f"[{bid_no}] 분석 상태 업데이트 완료 (재시도: {retry_count}회)")
-            
+
         except Exception as update_err:
             logger.error(f"[{bid_no}] DB 상태 업데이트 실패 ({type(update_err).__name__}): {update_err}")
 
@@ -1998,7 +1998,7 @@ async def _save_markdown_to_storage(bid_no: str, doc_type: str, content: str) ->
     """
     try:
         client = await get_async_client()
-        
+
         # 파일명 결정
         filename_map = {
             "RFP分析": "RFP分析.md",
@@ -2007,7 +2007,7 @@ async def _save_markdown_to_storage(bid_no: str, doc_type: str, content: str) ->
         }
         filename = filename_map.get(doc_type, f"{doc_type}.md")
         path = f"bids/{bid_no}/{filename}"
-        
+
         # Supabase Storage에 업로드
         await client.storage\
             .from_("documents")\
@@ -2019,10 +2019,10 @@ async def _save_markdown_to_storage(bid_no: str, doc_type: str, content: str) ->
                     "upsert": True,
                 },
             )
-        
+
         logger.info(f"[{bid_no}] ✓ 마크다운 저장: {path}")
         return path
-    
+
     except Exception as e:
         logger.warning(f"[{bid_no}] 마크다운 저장 실패 ({doc_type}): {e}")
         return None
@@ -2036,22 +2036,22 @@ def _format_rfp_sections(sections: list[dict]) -> str:
     Output: 마크다운 문자열
     """
     lines = ["# RFP 분석\n"]
-    
+
     for section in sections:
         label = section.get("label", "섹션")
         value = section.get("value")
         items = section.get("items", [])
-        
+
         lines.append(f"## {label}\n")
-        
+
         if value:
             lines.append(f"{value}\n")
-        
+
         if items:
             for item in items:
                 lines.append(f"- {item}")
             lines.append("")
-    
+
     return "\n".join(lines)
 
 
@@ -2065,16 +2065,16 @@ def _format_notice_markdown(bid: dict, content: str) -> str:
         f"## 공고명\n{bid.get('bid_title', 'N/A')}\n",
         f"## 발주기관\n{bid.get('agency', 'N/A')}\n",
     ]
-    
+
     if bid.get("budget_amount"):
         budget = bid["budget_amount"]
         formatted_budget = f"{budget:,}" if isinstance(budget, int) else str(budget)
         lines.append(f"## 예산금액\n{formatted_budget}원\n")
-    
+
     if content.strip():
         lines.append("## 공고문 내용\n")
         lines.append(content[:5000] + ("..." if len(content) > 5000 else ""))
-    
+
     return "\n".join(lines)
 
 

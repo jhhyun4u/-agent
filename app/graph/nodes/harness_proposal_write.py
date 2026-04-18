@@ -240,7 +240,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
                 # 개선된 프롬프트로 재생성
                 improved_prompt = feedback_result.get("improved_prompt", prompt_template)
 
-                logger.info(f"🔄 프롬프트 개선, 재생성 시작...")
+                logger.info("🔄 프롬프트 개선, 재생성 시작...")
 
                 harness_result_v2 = await harness.generate_section(
                     prompt_template=improved_prompt,
@@ -263,7 +263,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
                     logger.info(f"⚠️  개선 미흡, 초안 유지 ({best_score:.1%})")
 
             else:
-                logger.info(f"➜ 피드백 루프 완료, 계속 진행")
+                logger.info("➜ 피드백 루프 완료, 계속 진행")
 
         except Exception as e:
             logger.warning(f"피드백 루프 실패 (초안 유지): {e}")

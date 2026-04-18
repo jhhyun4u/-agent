@@ -20,7 +20,6 @@ from app.api.response import ok, ok_list
 from app.models.comment_schemas import (
     CommentCreate,
     CommentUpdate,
-    CommentResponse,
     CommentListResponse,
     CommentDetailResponse,
     EmojiReactionCreate,

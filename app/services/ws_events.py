@@ -4,7 +4,6 @@
 """
 
 import logging
-from datetime import datetime
 
 from app.models.ws_schemas import (
     WsMessage,
@@ -38,7 +37,7 @@ async def broadcast_proposal_status(
             new_status=new_status,
             title=title,
         )
-        
+
         # 팀 범위 (이 제안서의 팀멤버)
         if team_id:
             team_msg = WsMessage(
@@ -47,7 +46,7 @@ async def broadcast_proposal_status(
                 data=data.model_dump(),
             )
             await ws_manager.broadcast(f"team:{team_id}", team_msg)
-        
+
         # 본부 범위
         if division_id:
             div_msg = WsMessage(
@@ -56,7 +55,7 @@ async def broadcast_proposal_status(
                 data=data.model_dump(),
             )
             await ws_manager.broadcast(f"division:{division_id}", div_msg)
-        
+
         # 전사 범위
         company_msg = WsMessage(
             type="proposal_status",
@@ -64,7 +63,7 @@ async def broadcast_proposal_status(
             data=data.model_dump(),
         )
         await ws_manager.broadcast(f"company:{org_id}", company_msg)
-        
+
         logger.debug(
             f"[WS] 제안서 상태 변경 브로드캐스트: {proposal_id} "
             f"({old_status} → {new_status})"
@@ -88,7 +87,7 @@ async def broadcast_result_update(
             division_id=division_id,
             org_id=org_id,
         )
-        
+
         # 팀 범위
         if team_id:
             team_msg = WsMessage(
@@ -97,7 +96,7 @@ async def broadcast_result_update(
                 data=data.model_dump(),
             )
             await ws_manager.broadcast(f"team:{team_id}", team_msg)
-        
+
         # 본부 범위
         if division_id:
             div_msg = WsMessage(
@@ -106,7 +105,7 @@ async def broadcast_result_update(
                 data=data.model_dump(),
             )
             await ws_manager.broadcast(f"division:{division_id}", div_msg)
-        
+
         # 전사 범위
         company_msg = WsMessage(
             type="monthly_trends",
@@ -114,7 +113,7 @@ async def broadcast_result_update(
             data=data.model_dump(),
         )
         await ws_manager.broadcast(f"company:{org_id}", company_msg)
-        
+
         logger.debug("[WS] 결과 업데이트 신호 브로드캐스트")
     except Exception as e:
         logger.error(f"[WS] 결과 업데이트 브로드캐스트 실패: {e}")
@@ -135,7 +134,7 @@ async def broadcast_team_performance(
             lost=performance_data.get("lost", 0),
             win_rate=performance_data.get("win_rate", 0.0),
         )
-        
+
         # 팀 범위
         team_msg = WsMessage(
             type="team_performance",
@@ -143,7 +142,7 @@ async def broadcast_team_performance(
             data=data.model_dump(),
         )
         await ws_manager.broadcast(f"team:{team_id}", team_msg)
-        
+
         # 본부 범위 (본부장이 팀별 성과를 본다)
         if division_id:
             div_msg = WsMessage(
@@ -152,7 +151,7 @@ async def broadcast_team_performance(
                 data=data.model_dump(),
             )
             await ws_manager.broadcast(f"division:{division_id}", div_msg)
-        
+
         # 전사 범위
         company_msg = WsMessage(
             type="team_performance",
@@ -160,7 +159,7 @@ async def broadcast_team_performance(
             data=data.model_dump(),
         )
         await ws_manager.broadcast(f"company:{org_id}", company_msg)
-        
+
         logger.debug(f"[WS] 팀 성과 업데이트: {team_id}")
     except Exception as e:
         logger.error(f"[WS] 팀 성과 브로드캐스트 실패: {e}")
@@ -184,13 +183,13 @@ async def broadcast_notification(
             message=message,
             link=link,
         )
-        
+
         msg = WsMessage(
             type="notification",
             channel=f"user:{user_id}",
             data=data.model_dump(),
         )
-        
+
         await ws_manager.broadcast_to_user(user_id, msg)
         logger.debug(f"[WS] 알림 발송: {user_id} ({notification_type})")
     except Exception as e:
@@ -214,7 +213,7 @@ async def broadcast_error(
                 "details": details or {},
             },
         )
-        
+
         await ws_manager.broadcast(channel, msg)
         logger.warning(f"[WS] 에러 메시지 발송: {channel} ({code})")
     except Exception as e:

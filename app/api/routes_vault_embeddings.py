@@ -45,12 +45,12 @@ async def generate_embeddings(
         # Check authorization (admin only for now)
         if current_user.role not in ["admin", "manager"]:
             raise HTTPException(status_code=403, detail="Only admins can generate embeddings")
-        
+
         # Prepare filter
         document_filter = {}
         if section:
             document_filter["section"] = section
-        
+
         # Run embedding generation
         if background_tasks:
             # Run in background
@@ -76,7 +76,7 @@ async def generate_embeddings(
                 "statistics": stats,
                 "section": section
             }
-        
+
     except Exception as e:
         logger.error(f"Error generating embeddings: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Embedding generation failed: {str(e)}")
@@ -101,7 +101,7 @@ async def regenerate_section(
         # Check authorization
         if current_user.role not in ["admin", "manager"]:
             raise HTTPException(status_code=403, detail="Only admins can regenerate embeddings")
-        
+
         if background_tasks:
             background_tasks.add_task(
                 embedding_service.regenerate_embeddings_for_section,
@@ -123,7 +123,7 @@ async def regenerate_section(
                 "section": section,
                 "statistics": stats
             }
-        
+
     except Exception as e:
         logger.error(f"Error regenerating embeddings: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Regeneration failed: {str(e)}")
@@ -146,7 +146,7 @@ async def get_embedding_status(
     try:
         status = await embedding_service.get_embedding_status()
         return status
-        
+
     except Exception as e:
         logger.error(f"Error getting status: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get embedding status")
@@ -172,21 +172,21 @@ async def search_embeddings(
     try:
         if not query or len(query.strip()) == 0:
             raise HTTPException(status_code=400, detail="Query cannot be empty")
-        
+
         results = await embedding_service.search_similar(
             query=query,
             section=section,
             limit=min(limit, 50),  # Cap at 50
             threshold=threshold
         )
-        
+
         return {
             "query": query,
             "section": section,
             "results_count": len(results),
             "results": results
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -210,16 +210,16 @@ async def embed_single_text(
     try:
         if not text or len(text.strip()) == 0:
             raise HTTPException(status_code=400, detail="Text cannot be empty")
-        
+
         embedding = await embedding_service.embed_text(text)
-        
+
         return {
             "text": text[:100] + "..." if len(text) > 100 else text,
             "embedding_dimension": len(embedding),
             "embedding_preview": embedding[:10],  # First 10 dimensions
             "status": "success"
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
