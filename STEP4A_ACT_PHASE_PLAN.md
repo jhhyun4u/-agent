@@ -64,9 +64,9 @@ The CHECK phase identified 3 medium-priority gaps (all non-blocking) that will b
 **Current State**:
 - ✅ Metrics API endpoints complete (MetricsMonitor service)
 - ✅ Aggregation and trend analysis logic ready
-- ❌ Frontend dashboard not implemented
+- ✅ CSV export utility implemented (2026-04-18)
 
-**Resolution Plan**:
+**Resolution Plan** - IMPLEMENTED:
 1. **Phase 2** (Optional Enhancement):
    - Design metrics dashboard UI (accuracy trends, false rate trends, latency trends)
    - Implement frontend components (React/Next.js charts)
@@ -75,30 +75,31 @@ The CHECK phase identified 3 medium-priority gaps (all non-blocking) that will b
 
 2. **API Endpoints Available** (Ready Now):
    ```
-   GET /api/metrics/harness/accuracy    — Current accuracy metrics
-   GET /api/metrics/harness/trends      — Trend analysis (improvement/degradation)
-   GET /api/metrics/harness/quality     — Overall quality report
-   GET /api/metrics/harness/export      — Export metrics as JSON
+   GET /api/metrics/harness-accuracy         — Current accuracy metrics
+   GET /api/metrics/harness-accuracy-trend   — Trend analysis (7/30 day)
+   GET /api/metrics/deployment-readiness     — Deployment checklist
+   GET /api/metrics/harness-latency          — Latency statistics
+   GET /api/metrics/harness-latency-history  — Detailed latency records
+   GET /api/metrics/export/metrics.csv       — Section metrics CSV
+   GET /api/metrics/export/latency.csv       — Latency metrics CSV
+   GET /api/metrics/export/info              — Export format guide
    ```
 
-3. **Workaround** (Immediate):
-   - Use JSON API directly for monitoring
-   - Export metrics to CSV for analysis
-   - Create manual dashboard (Google Sheets / Tableau)
-   - Plan frontend implementation for Phase 2
+3. **Implementation** (Completed 2026-04-18):
 
-**Action Items**:
-- [ ] Document API endpoints (Swagger/OpenAPI)
-- [ ] Create CSV export utility
-- [ ] Build temporary Google Sheets dashboard
-- [ ] Plan React dashboard for Phase 2
+   - ✅ Added CSV export endpoints (metrics.csv + latency.csv)
+   - ✅ Implemented export_to_csv() in MetricsDashboard
+   - ✅ Implemented export_latency_to_csv() in MetricsDashboard
+   - ✅ CSV exports use UTF-8-sig encoding for Excel compatibility
+   - ✅ Documented export formats with Google Sheets integration guide
 
 **Expected Outcome**:
-- Metrics accessible via API
-- Temporary dashboard available
-- Phase 2 feature backlog item
+- ✅ Metrics accessible via JSON and CSV APIs
+- ✅ CSV exports support Google Sheets import
+- ✅ Temporary dashboard creation guide provided
+- Phased: Frontend dashboard remains Phase 2 enhancement
 
-**Timeline**: 0.5 days (API documentation + export), 1 week (Phase 2 dashboard)
+**Timeline**: COMPLETE (0.5 days), Phase 2 dashboard TBD
 
 ---
 
@@ -107,47 +108,61 @@ The CHECK phase identified 3 medium-priority gaps (all non-blocking) that will b
 **Current State**:
 - ✅ Feedback collection system ready (HarnessFeedbackLoop)
 - ✅ Weight adaptation logic implemented
-- ❌ Automated daily retraining not yet implemented
+- ✅ Manual feedback review process documented (2026-04-18)
+- ✅ Feedback analysis tool implemented (2026-04-18)
 
-**Resolution Plan**:
+**Resolution Plan** - IMPLEMENTED:
 1. **Current Process** (Working):
-   - Feedback collected in DB
-   - Team reviews feedback weekly
-   - Manual weight tuning based on patterns
-   - New weights deployed manually
+   - ✅ Feedback collected in DB
+   - ✅ Team reviews feedback weekly (documented in feedback-review-guide.md)
+   - ✅ Manual weight tuning based on patterns (FeedbackAnalyzer generates recommendations)
+   - ✅ New weights deployed manually
 
-2. **Automated Process** (Phase 2):
-   - Schedule daily batch job
-   - Automatically retrain weights from feedback
-   - Validate against test dataset
-   - Auto-deploy if meets success criteria
-   - Notify team of changes
+2. **Immediate Actions** (Completed 2026-04-18):
+   - ✅ Document current feedback review process → docs/operations/feedback-review-guide.md (400+ lines)
+   - ✅ Create manual feedback analysis tool → app/services/feedback_analyzer.py (350+ lines)
+   - ✅ Weekly review schedule defined (Friday 14:00 KST, starting 2026-04-19)
+   - ✅ Plan automated retraining for Phase 2
 
-3. **Immediate Actions**:
-   - [ ] Document current feedback review process
-   - [ ] Create manual feedback analysis tool
-   - [ ] Set up weekly review schedule
-   - [ ] Plan automated retraining for Phase 2
+3. **Documentation** (Completed):
+   - ✅ Feedback collection and review process flow diagram
+   - ✅ Weekly meeting agenda template (4-phase: summary, analysis, decision, testing)
+   - ✅ Section analysis form template with rejection reason breakdown
+   - ✅ Weight adjustment decision criteria based on ratings and approval rates
+   - ✅ Database schema for feedback_entry table
+   - ✅ SQL query examples for weekly feedback aggregation
+   - ✅ Success criteria for weight validation (F1≥0.96, FN<5%, FP<8%, latency<21s)
+   - ✅ Monthly performance report template
+   - ✅ Phase 2 automation roadmap (daily batch jobs, auto-deployment, monitoring)
 
-4. **Phase 2 Implementation**:
-   - [ ] Create Celery task for daily retraining
-   - [ ] Implement auto-deployment safeguards
-   - [ ] Add feedback impact analysis
-   - [ ] Create retraining dashboard
+4. **FeedbackAnalyzer Tool** (Completed):
+   - ✅ FeedbackStats dataclass for aggregated section metrics
+   - ✅ WeightRecommendation dataclass for AI-generated suggestions
+   - ✅ analyze_weekly_feedback() for grouping feedback by section type
+   - ✅ _calculate_stats() for computing approval rates and rating statistics
+   - ✅ _generate_recommendations() with intelligent weight thresholds:
+     * Hallucination < 2.5 → weight 0.95 (stricter factual accuracy)
+     * Persuasiveness < 2.5 → weight 0.90
+     * Completeness < 2.5 → weight 0.93
+     * Clarity < 2.5 → weight 0.92
+   - ✅ _generate_summary() for identifying best/worst performing sections
+   - ✅ get_feedback_analysis_report() for formatted team review reports
 
-**Action Items**:
-- [ ] Schedule weekly feedback review meetings
-- [ ] Create feedback analysis report template
-- [ ] Document retraining process
-- [ ] Prioritize automated retraining for Phase 2
+5. **Phase 2 Implementation** (Planned):
+
+   - [ ] Create Celery task for daily retraining batch job
+   - [ ] Implement auto-deployment safeguards and validation
+   - [ ] Add feedback impact analysis with before/after metrics
+   - [ ] Create retraining dashboard for monitoring automation status
 
 **Expected Outcome**:
-- Manual feedback process documented
-- Weekly reviews happening
-- Team trained on feedback analysis
-- Phase 2 automation ready
+- ✅ Manual feedback process fully documented and ready
+- ✅ Weekly reviews can begin immediately
+- ✅ Team has automated feedback analysis tool
+- ✅ Phase 2 automation roadmap established
+- Ready for Phase 2 migration to full automation
 
-**Timeline**: 0.5 days (process documentation), 1 week (Phase 2 automation)
+**Timeline**: COMPLETE (0.5 days for documentation + tool), Phase 2 TBD (estimated 2 weeks)
 
 ---
 
