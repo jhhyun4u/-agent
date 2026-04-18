@@ -5,6 +5,7 @@ RFP 텍스트를 분석하여 구조화된 분석 결과 생성.
 """
 
 import logging
+import re
 
 from app.graph.state import ComplianceItem, PriceScoringFormula, ProposalState, RFPAnalysis
 from app.services.claude_client import claude_generate
@@ -12,13 +13,97 @@ from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)
 
+# 대형 RFP 처리 설정
+_RFP_HARD_LIMIT = 30_000
+_RFP_EXTRACTION_KEYWORDS = {
+    "평가기준", "평가항목", "심사항목",
+    "과업범위", "사업범위", "업무범위",
+    "자격요건", "필수요건", "참여자격",
+    "기술요건", "기술기준",
+    "제안서양식", "제안서형식",
+    "가격평가", "가격기준",
+}
+
+
+async def _prepare_rfp_text(rfp_raw: str) -> str:
+    """대형 RFP 전처리: 30,000자 초과 시 핵심 섹션 우선 추출.
+
+    2-pass 처리:
+    1. Pass 1: 첫 8,000자로 목차/구조 파악
+    2. Pass 2: 키워드 기반 핵심 섹션 추출 및 재조합
+    """
+    if len(rfp_raw) <= _RFP_HARD_LIMIT:
+        return rfp_raw
+
+    logger.info(f"대형 RFP 감지 ({len(rfp_raw):,}자). 핵심 섹션 추출 시작...")
+
+    # ── Pass 1: 구조 파악 (첫 8,000자) ──
+    initial_text = rfp_raw[:8000]
+    lines = rfp_raw.split("\n")
+
+    # ── Pass 2: 핵심 키워드 기반 섹션 추출 ──
+    sections = []
+    current_section = []
+    current_section_length = 0
+    target_length = _RFP_HARD_LIMIT - len(initial_text) - 500  # 헤더, 마진 예약
+
+    for i, line in enumerate(lines):
+        # 키워드 라인 감지
+        is_keyword_match = any(kw in line for kw in _RFP_EXTRACTION_KEYWORDS)
+
+        if is_keyword_match and current_section:
+            # 현재 섹션 저장
+            section_text = "\n".join(current_section)
+            if len(section_text) > 100:
+                sections.append(section_text)
+            current_section = [line]
+            current_section_length = len(line)
+        else:
+            current_section.append(line)
+            current_section_length += len(line) + 1
+
+        # 섹션 크기 제한 (3000자)
+        if current_section_length > 3000:
+            section_text = "\n".join(current_section)
+            if len(section_text) > 100:
+                sections.append(section_text)
+            current_section = []
+            current_section_length = 0
+
+        # 목표 길이 도달 확인
+        if sum(len(s) for s in sections) >= target_length:
+            break
+
+    # 마지막 섹션
+    if current_section:
+        section_text = "\n".join(current_section)
+        if len(section_text) > 100:
+            sections.append(section_text)
+
+    # 재조합
+    combined = initial_text + "\n\n" + "\n\n".join(sections)
+    result = combined[:_RFP_HARD_LIMIT]
+
+    logger.info(f"대형 RFP 추출 완료: {len(result):,}자 (원본 {len(rfp_raw):,}자에서 {len(result)/len(rfp_raw)*100:.1f}%)")
+    return result
+
 
 async def rfp_analyze(state: ProposalState) -> dict:
     """STEP 1-①: RFP 분석 + Compliance Matrix 초안 생성."""
 
     rfp_raw = state.get("rfp_raw", "")
     if not rfp_raw:
-        return {"current_step": "rfp_analyze_error"}
+        return {
+            "current_step": "rfp_analyze_error",
+            "node_errors": {
+                **state.get("node_errors", {}),
+                "rfp_analyze": {
+                    "error": "rfp_raw가 비어 있어 RFP 분석 수행 불가",
+                    "step": "rfp_analyze",
+                    "hint": "RFP 문서가 정상적으로 파싱되었는지 확인하세요.",
+                },
+            },
+        }
 
     bid_detail = state.get("bid_detail")
     bid_context = ""
@@ -32,12 +117,15 @@ async def rfp_analyze(state: ProposalState) -> dict:
 - 마감일: {bid_detail.deadline}
 """
 
+    # 대형 RFP 전처리 (30,000자 초과 시 핵심 섹션 우선 추출)
+    rfp_processed = await _prepare_rfp_text(rfp_raw)
+
     prompt = f"""다음 RFP 문서를 분석하여 제안전략 수립에 필요한 기초자료를 빠짐없이 추출하세요.
 
 {bid_context}
 
 ## RFP 원문
-{rfp_raw[:30000]}
+{rfp_processed}
 
 ## 분석 요구사항
 1. 사업 유형 판단: 케이스 A (자유양식) vs 케이스 B (지정 서식)
@@ -160,7 +248,15 @@ async def rfp_analyze(state: ProposalState) -> dict:
 
     # 동적 섹션 목록 생성 (케이스 A: 평가항목 기반, 케이스 B: 서식 구조 기반)
     if rfp_analysis.case_type == "B" and rfp_analysis.format_template.get("structure"):
-        sections = list(rfp_analysis.format_template["structure"].keys())
+        structure = rfp_analysis.format_template["structure"]
+        if isinstance(structure, dict):
+            sections = list(structure.keys())
+        elif isinstance(structure, list):
+            sections = [item if isinstance(item, str) else list(item.keys())[0]
+                        for item in structure if item]
+        else:
+            sections = [item.get("item", f"section_{i}")
+                        for i, item in enumerate(rfp_analysis.eval_items, 1)]
     else:
         sections = [item.get("item", f"section_{i}") for i, item in enumerate(rfp_analysis.eval_items, 1)]
 

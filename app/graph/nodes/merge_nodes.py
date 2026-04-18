@@ -41,11 +41,11 @@ def _sync_dynamic_sections(state: ProposalState, storylines: dict) -> dict:
         if sid not in new_order:
             new_order.append(sid)
 
-    # 섹션 유형 자동 분류 갱신
+    # 섹션 유형 자동 분류 갱신 (sid를 title로도 활용)
     section_type_map = state.get("parallel_results", {}).get("_section_type_map", {})
     for sid in new_order:
         if sid not in section_type_map:
-            section_type_map[sid] = classify_section_type(sid)
+            section_type_map[sid] = classify_section_type(sid, sid)
 
     logger.info(f"목차 동기화: {len(existing)}개 → {len(new_order)}개 섹션")
     return {

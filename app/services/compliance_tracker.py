@@ -135,8 +135,13 @@ class ComplianceTracker:
                     ),
                     max_tokens=500,
                 )
-                item.status = result.get("status", "미확인")
-                item.proposal_section = result.get("matching_section", "")
+                # 응답 타입 체크 (dict가 아니면 기본값 설정)
+                if isinstance(result, dict):
+                    item.status = result.get("status", "미확인")
+                    item.proposal_section = result.get("matching_section", "")
+                else:
+                    logger.warning(f"Compliance check 응답 타입 오류: {type(result)}")
+                    item.status = "미확인"
             except Exception as e:
                 logger.warning(f"Compliance 체크 실패 [{item.req_id}]: {e}")
 

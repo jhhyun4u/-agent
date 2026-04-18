@@ -292,9 +292,9 @@ async def proposal_write_next(state: ProposalState) -> dict:
         rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
         case_type = rfp_dict.get("case_type", "A")
 
-    # 섹션 유형 판별
+    # 섹션 유형 판별 (section_id를 title로도 활용하여 한글 키워드 매칭 개선)
     section_type_map = state.get("parallel_results", {}).get("_section_type_map", {})
-    section_type = section_type_map.get(section_id) or classify_section_type(section_id)
+    section_type = section_type_map.get(section_id) or classify_section_type(section_id, section_id)
 
     logger.info(f"섹션 작성: [{index + 1}/{len(sections_to_write)}] {section_id} (유형: {section_type}, 케이스: {case_type})")
 
@@ -797,6 +797,29 @@ async def section_quality_check(state: ProposalState) -> dict:
         },
         log_msg=f"Section diagnosis saved: {state.get('project_id')}/{section_id} (score: {result.overall_score})",
     )
+
+    # Compliance Matrix 자동 업데이트 (비동기 태스크, non-blocking)
+    proposal_id = state.get("project_id", "")
+    proposal_sections = state.get("proposal_sections", [])
+    compliance_matrix = state.get("compliance_matrix", [])
+
+    if proposal_id and proposal_sections and compliance_matrix:
+        try:
+            import asyncio
+            from app.services.compliance_tracker import ComplianceTracker
+
+            async def _auto_update_compliance():
+                """Compliance 자동 갱신 (비동기, 그래프 흐름 중단 없음)"""
+                try:
+                    tracker = ComplianceTracker(proposal_id)
+                    tracker.check_compliance(proposal_sections, compliance_matrix)
+                    logger.debug(f"Compliance auto-update 완료: {proposal_id}")
+                except Exception as e:
+                    logger.warning(f"Compliance auto-update 실패 (무시): {e}")
+
+            asyncio.get_running_loop().create_task(_auto_update_compliance())
+        except Exception as e:
+            logger.warning(f"Compliance auto-update 태스크 생성 실패 (무시): {e}")
 
     return {"diagnosis_result": result}
 

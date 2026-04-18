@@ -51,10 +51,10 @@ async def go_no_go(state: ProposalState) -> dict:
         qual = await score_qualification(rfp_dict, org_id)
         comp = await score_competition(rfp_dict, org_id)
     else:
-        perf = {"score": 0, "is_fatal": False, "required_items": [], "coverage_rate": 0.0,
+        perf = {"score": 15, "is_fatal": False, "required_items": [], "coverage_rate": 0.0,
                 "same_client_wins": 0, "same_domain_win_rate": None, "fatal_reason": None}
-        qual = {"score": 0, "is_fatal": False, "mandatory": [], "preferred": [],
-                "fatal_reason": None, "summary": "Lite 모드 — 자격 검증 스킵"}
+        qual = {"score": 15, "is_fatal": False, "mandatory": [], "preferred": [],
+                "fatal_reason": None, "summary": "Lite 모드 — 자격 검증 스킵 (15점 기본 부여)"}
         comp = {"score": 10, "intensity_level": "medium", "estimated_competitors": 5,
                 "top_competitors": [], "our_win_rate_at_client": None, "rationale": "Lite 모드"}
 
@@ -81,17 +81,24 @@ async def go_no_go(state: ProposalState) -> dict:
         score_tag = "below_threshold"
         fatal_flaw = f"합산 {total}점 (기준: 70점)"
 
+    # Lite 모드 disclaimer 추가
+    score_breakdown = {
+        "similar_performance": perf["score"],
+        "qualification": qual["score"],
+        "competition": comp["score"],
+        "strategic": strategic["score"],
+    }
+    if mode != "full":
+        score_breakdown["lite_mode_disclaimer"] = (
+            "Lite 모드: 축①②③은 실제 DB 조회 없이 중간값(15/15/10) 부여. Full 모드 재검토 권장."
+        )
+
     gng = GoNoGoResult(
         rfp_analysis_ref=f"rfp_{state.get('project_id', '')}",
         positioning=strategic.get("positioning", "defensive"),
         positioning_rationale=strategic.get("positioning_rationale", ""),
         feasibility_score=total,
-        score_breakdown={
-            "similar_performance": perf["score"],
-            "qualification": qual["score"],
-            "competition": comp["score"],
-            "strategic": strategic["score"],
-        },
+        score_breakdown=score_breakdown,
         pros=strategic.get("pros", []),
         risks=strategic.get("risks", []),
         recommendation=recommendation,

@@ -17,6 +17,7 @@
 import logging
 from uuid import UUID
 
+from app.graph.context_helpers import PREV_SECTIONS_CONTENT_CHARS
 from app.graph.nodes.harness_feedback_loop import HarnessFeedbackLoop
 from app.graph.nodes.harness_proposal_node import HarnessProposalGenerator
 from app.graph.state import ProposalState
@@ -27,6 +28,12 @@ from app.prompts.section_prompts import (
     get_section_prompt,
     classify_section_type,
 )
+from app.services.claude_client import claude_generate
+from app.services.accuracy_enhancement_engine import (
+    EnsembleVoter,
+    ConfidenceThresholder,
+)
+from app.services.harness_accuracy_validator import EvaluationMetrics
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +95,8 @@ async def _build_context(
             sec_id = sec.section_id if hasattr(sec, "section_id") else sec.get("section_id")
             sec_title = sec.title if hasattr(sec, "title") else sec.get("title")
             sec_content = (sec.content if hasattr(sec, "content") else sec.get("content")) or ""
-            # 요약 (처음 500자)
-            summary = f"[{sec_id}] {sec_title}\n{sec_content[:500]}..."
+            # 요약 (처음 N자 — context_helpers의 PREV_SECTIONS_CONTENT_CHARS 사용)
+            summary = f"[{sec_id}] {sec_title}\n{sec_content[:PREV_SECTIONS_CONTENT_CHARS]}..."
             summaries.append(summary)
         ctx["previous_sections_summary"] = "\n---\n".join(summaries)
 
@@ -147,9 +154,9 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
         )
         case_type = rfp_dict.get("case_type", "A")
 
-    # 섹션 유형 판별
+    # 섹션 유형 판별 (section_id를 title로도 활용하여 한글 키워드 매칭 개선)
     section_type_map = state.get("parallel_results", {}).get("_section_type_map", {})
-    section_type = section_type_map.get(section_id) or classify_section_type(section_id)
+    section_type = section_type_map.get(section_id) or classify_section_type(section_id, section_id)
 
     logger.info(
         f"🔧 하네스 섹션 작성: [{index + 1}/{len(sections_to_write)}] "
@@ -216,14 +223,72 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
             "error": f"섹션 생성 실패: {e}",
         }
 
-    # ── 선택적 피드백 루프 (score < 0.75) ──
+    # ── STEP 4A Phase 3: 앙상블 투표 적용 (정확도 개선) ──
+    # 1. 변형 점수 및 상세 정보 추출
+    variant_scores = harness_result.get("scores", {})  # {conservative, balanced, creative}
+    variant_details_raw = harness_result.get("details", {})  # {variant: {overall, hallucination, ...}}
+    
+    # 2. variant_details_raw → Dict[str, EvaluationMetrics] 변환
+    variant_details = {}
+    for variant_name, detail in variant_details_raw.items():
+        if isinstance(detail, dict):
+            try:
+                variant_details[variant_name] = EvaluationMetrics(
+                    hallucination=detail.get("hallucination", 0.0),
+                    persuasiveness=detail.get("persuasiveness", 0.5),
+                    completeness=detail.get("completeness", 0.5),
+                    clarity=detail.get("clarity", 0.5),
+                )
+            except Exception as e:
+                logger.warning(f"EvaluationMetrics 변환 실패 [{variant_name}]: {e}")
+                variant_details[variant_name] = EvaluationMetrics(0.0, 0.5, 0.5, 0.5)
+
+    # 3. 앙상블 투표 적용 (3개 변형 모두 있을 경우)
+    ensemble_applied = False
+    ensemble_result = None
+    confidence_result = None
+
+    if variant_scores and len(variant_scores) == 3 and variant_details:
+        try:
+            # 앙상블 투표
+            voter = EnsembleVoter()
+            ensemble_result = voter.vote(variant_scores, variant_details)
+
+            # 신뢰도 추정
+            thresholder = ConfidenceThresholder()
+            confidence_result = thresholder.compute_confidence(variant_scores)
+
+            # 앙상블 점수 사용
+            best_score = ensemble_result.aggregated_score
+            ensemble_applied = True
+
+            logger.info(
+                f"✅ 앙상블 투표 적용: {best_score:.1%} "
+                f"(신뢰: {confidence_result.confidence:.2f}, "
+                f"합의: {confidence_result.agreement_level})"
+            )
+        except Exception as e:
+            logger.warning(f"앙상블 투표 실패, 초기 점수 사용: {e}")
+            best_score = harness_result.get("score", 0.0)
+    else:
+        # Fallback: 기존 argmax 로직
+        logger.debug(f"변형 데이터 불완전 (scores={len(variant_scores)}, details={len(variant_details)}), argmax 사용")
+        best_score = harness_result.get("score", 0.0)
+
+    # ── 선택적 피드백 루프 (신뢰도 기반 트리거 개선) ──
     best_content = harness_result.get("content", "")
-    best_score = harness_result.get("score", 0.0)
     final_score = best_score
     improved = False
+    
+    # 피드백 루프 트리거: 점수 미흡 OR 낮은 신뢰도 + 낮은 점수
+    should_run_feedback_loop = best_score < 0.75
+    if confidence_result and confidence_result.agreement_level == "LOW" and best_score < 0.85:
+        should_run_feedback_loop = True
+        logger.info(f"⚠️ 낮은 신뢰도 감지 ({confidence_result.confidence:.2f}), 피드백 루프 트리거")
 
-    if best_score < 0.75:
-        logger.info(f"⚠️  점수 미흡 ({best_score:.1%}), 피드백 루프 실행...")
+    if should_run_feedback_loop:
+        confidence_val = confidence_result.confidence if confidence_result else "N/A"
+        logger.info(f"⚠️  피드백 루프 실행: 점수={best_score:.1%}, 신뢰={confidence_val}")
 
         feedback_loop = HarnessFeedbackLoop()
 
@@ -267,6 +332,23 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
 
         except Exception as e:
             logger.warning(f"피드백 루프 실패 (초안 유지): {e}")
+
+    # ── 빈 content 감지 및 fallback ──
+    if not best_content or not best_content.strip():
+        logger.error(f"하네스 변형 생성 실패 (빈 content) — 직접 생성 fallback: {section_id}")
+        try:
+            fallback_result = await claude_generate(prompt_template)
+            if isinstance(fallback_result, dict):
+                best_content = fallback_result.get("content", "")
+            else:
+                best_content = str(fallback_result)
+
+            if best_content and best_content.strip():
+                logger.info(f"✓ Fallback으로 섹션 생성 성공: {len(best_content)}자")
+                final_score = 0.5  # Fallback이므로 낮은 점수
+        except Exception as e:
+            logger.error(f"Fallback 생성도 실패: {e}")
+            best_content = f"[섹션 생성 실패] {section_id}\n\n생성 중 오류가 발생했습니다. 수동으로 작성해주세요."
 
     # ── 섹션 생성 ──
     # 하네스 결과에서 content 파싱
@@ -375,9 +457,13 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
         "harness_results": {
             section_id: {
                 "score": final_score,
+                "ensemble_score": ensemble_result.aggregated_score if ensemble_applied and ensemble_result else None,
+                "confidence": confidence_result.confidence if confidence_result else None,
+                "confidence_agreement": confidence_result.agreement_level if confidence_result else None,
                 "variant": harness_result.get("selected_variant"),
                 "improved": improved,
-                "variant_scores": harness_result.get("scores", {}),
+                "variant_scores": variant_scores,
+                "ensemble_applied": ensemble_applied,
             }
         },
     }

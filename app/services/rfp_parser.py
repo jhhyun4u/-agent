@@ -103,7 +103,7 @@ async def parse_rfp(file_path: Path) -> RFPData:
         messages=[
             {
                 "role": "user",
-                "content": RFP_ANALYSIS_PROMPT.format(rfp_text=raw_text[:10000]),
+                "content": RFP_ANALYSIS_PROMPT.format(rfp_text=raw_text[:30000]),
             }
         ],
     )
@@ -212,7 +212,7 @@ async def parse_rfp_text(content: str) -> RFPData:
         system=SYSTEM_PROMPT,
         messages=[{
             "role": "user",
-            "content": RFP_ANALYSIS_PROMPT.format(rfp_text=content[:10000]),
+            "content": RFP_ANALYSIS_PROMPT.format(rfp_text=content[:30000]),
         }],
     )
     data = extract_json_from_response(response.content[0].text)

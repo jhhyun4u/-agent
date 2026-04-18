@@ -65,6 +65,7 @@ from app.api.routes_vault_embeddings import router as vault_embeddings_router
 from app.api.routes_comments import router as comments_router
 from app.api.routes_ws import router as ws_router
 from app.api.routes_phase2_optimization import router as phase2_optimization_router
+from app.api.routes_harness_metrics import router as harness_metrics_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -461,6 +462,10 @@ app.include_router(ws_router)
 # Phase 2: Performance Optimization (Week 2) — Data-Driven Optimization
 # Endpoints: /api/phase2/analyze/*, /api/phase2/cache/*, /api/phase2/optimize/*
 app.include_router(phase2_optimization_router)
+
+# STEP 4A: Harness Metrics Monitoring (Phase 3-4)
+# Endpoints: /api/harness/metrics/record, /api/harness/metrics/phase/*, /api/harness/metrics/report, etc.
+app.include_router(harness_metrics_router)
 
 
 # ── 헬스체크 ──

@@ -26,7 +26,19 @@ def _approval_router(step_key: str, *, reject_label: str = "rejected") -> Callab
 
 # ── 단순 패턴 (팩토리 생성) ──
 
-route_after_rfp_review = _approval_router("rfp")
+def route_after_rfp_review(state: ProposalState) -> str:
+    """STEP 1-① RFP 리뷰 3-way 라우팅.
+
+    - rfp_approved → research_gather (승인)
+    - rfp_rework → rfp_analyze (부분 재분석)
+    - rfp_rejected → rfp_analyze (전체 재분석)
+    """
+    step = state.get("current_step", "")
+    if step == "rfp_approved":
+        return "approved"
+    elif step == "rfp_rework":
+        return "rework"
+    return "rejected"
 route_after_proposal_review = _approval_router("proposal", reject_label="rework")
 route_after_ppt_review = _approval_router("ppt", reject_label="rework")
 route_after_submission_plan_review = _approval_router("submission_plan")

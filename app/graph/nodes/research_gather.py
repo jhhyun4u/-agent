@@ -35,8 +35,8 @@ async def research_gather(state: ProposalState) -> dict:
     hot_buttons = rfp_dict.get("hot_buttons", [])
     eval_items = rfp_dict.get("eval_items", [])
     mandatory_reqs = rfp_dict.get("mandatory_reqs", [])
-    tech_keywords = rfp_dict.get("tech_keywords", [])
-    scope = rfp_dict.get("scope", "")
+    tech_keywords = rfp_dict.get("hot_buttons", [])
+    scope = rfp_dict.get("project_scope", "")
 
     eval_item_names = [item.get("item", "") for item in eval_items if isinstance(item, dict)]
 

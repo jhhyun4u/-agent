@@ -116,6 +116,10 @@ def review_node(step_name: str):
         if step_name == "search":
             return _handle_search_review(state, human_input)
 
+        # STEP 1-①: RFP 리뷰 특수 처리 (3-way: approved/rework/rejected)
+        if step_name == "rfp":
+            return _handle_rfp_review(state, human_input)
+
         # STEP 1-②: Go/No-Go 특수 처리
         if step_name == "go_no_go":
             return _handle_gng_review(state, human_input)
@@ -201,6 +205,62 @@ def _handle_search_review(state, human_input):
             "timestamp": human_input.get("timestamp", ""),
         }],
     }
+
+
+def _handle_rfp_review(state, human_input):
+    """STEP 1-①: RFP 리뷰 3-way 분기.
+
+    - approved/quick_approve: RFP 분석 승인 → research_gather 진행
+    - rework_sections: 특정 섹션 부분 재분석 → rfp_analyze (재작업 대상 지정)
+    - 그 외: 전체 재분석 → rfp_analyze
+    """
+    decision = human_input.get("decision", "approved")
+
+    # 승인 경로
+    if decision == "approved" or human_input.get("quick_approve") or human_input.get("approved"):
+        return {
+            "approval": {"rfp": ApprovalStatus(
+                status="approved",
+                approved_by=human_input.get("approved_by", "user"),
+                approved_at=human_input.get("approved_at", ""),
+            )},
+            "current_step": "rfp_approved",
+            "rework_targets": [],
+        }
+
+    # 부분 재작업 경로
+    elif decision == "rework" or human_input.get("rework_sections"):
+        rework_targets = human_input.get("rework_sections", [])
+        return {
+            "approval": {"rfp": ApprovalStatus(
+                status="rejected",
+                feedback=human_input.get("feedback", "부분 재분석 필요"),
+            )},
+            "current_step": "rfp_rework",
+            "rework_targets": rework_targets,
+            "feedback_history": [{
+                "step": "rfp",
+                "feedback": human_input.get("feedback", "부분 재분석 필요"),
+                "rework_sections": rework_targets,
+                "timestamp": human_input.get("timestamp", ""),
+            }],
+        }
+
+    # 전체 재분석 경로 (기타 거부)
+    else:
+        return {
+            "approval": {"rfp": ApprovalStatus(
+                status="rejected",
+                feedback=human_input.get("feedback", "RFP 재분석 필요"),
+            )},
+            "current_step": "rfp_rejected",
+            "rework_targets": [],
+            "feedback_history": [{
+                "step": "rfp",
+                "feedback": human_input.get("feedback", "RFP 재분석 필요"),
+                "timestamp": human_input.get("timestamp", ""),
+            }],
+        }
 
 
 def _handle_gng_review(state, human_input):
@@ -527,7 +587,7 @@ def _handle_plan_review(state: ProposalState, human_input: dict) -> dict:
         section_type_map = state.get("parallel_results", {}).get("_section_type_map", {})
         for sid in new_order:
             if sid not in section_type_map:
-                section_type_map[sid] = classify_section_type(sid)
+                section_type_map[sid] = classify_section_type(sid, sid)  # sid를 title로도 활용
         result["dynamic_sections"] = new_order
         result["parallel_results"] = {"_section_type_map": section_type_map}
 

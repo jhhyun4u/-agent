@@ -191,7 +191,8 @@ def build_graph(checkpointer=None):
     g.add_edge("rfp_analyze", "review_rfp")
     g.add_conditional_edges("review_rfp", route_after_rfp_review, {
         "approved": "research_gather",
-        "rejected": "rfp_analyze",
+        "rework": "rfp_analyze",    # 부분 재분석 (rework_targets 참조 가능)
+        "rejected": "rfp_analyze",  # 전체 재분석
     })
 
     g.add_edge("research_gather", "go_no_go")

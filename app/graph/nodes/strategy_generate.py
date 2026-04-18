@@ -190,6 +190,19 @@ async def strategy_generate(state: ProposalState) -> dict:
             risk_assessment=alt_data.get("risk_assessment", {}),
         ))
 
+    # 전략 대안 없음 방어: 기본 대안 생성
+    if not alternatives:
+        logger.error("전략 대안 없음 — 기본 대안으로 진행")
+        alternatives = [StrategyAlternative(
+            alt_id="default",
+            ghost_theme="차별화 없음",
+            win_theme="차별화 제안",
+            action_forcing_event="품질·비용 우위",
+            key_messages=["품질 중심의 제안"],
+            price_strategy={},
+            risk_assessment={},
+        )]
+
     # 첫 번째 대안을 기본값으로 설정
     first_alt = alternatives[0] if alternatives else None
 
