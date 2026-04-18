@@ -1,0 +1,609 @@
+{
+  "metadata": {
+    "created": "2026-04-18T00:00:00",
+    "total_test_cases": 50,
+    "description": "STEP 4A Phase 1: 50 섹션 Ground Truth 데이터셋"
+  },
+  "test_cases": {
+    "sec_001": {
+      "id": "sec_001",
+      "section_type": "executive_summary",
+      "content": "본 제안은 고객의 핵심 비즈니스 요구사항을 충족하기 위해 설계된 포괄적인 솔루션입니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.85,
+        "completeness": 0.8,
+        "clarity": 0.9
+      },
+      "expected_score": 0.875
+    },
+    "sec_002": {
+      "id": "sec_002",
+      "section_type": "executive_summary",
+      "content": "우리 팀은 20년 이상의 유사 프로젝트 경험을 보유하고 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.1,
+        "persuasiveness": 0.9,
+        "completeness": 0.75,
+        "clarity": 0.85
+      },
+      "expected_score": 0.85
+    },
+    "sec_003": {
+      "id": "sec_003",
+      "section_type": "executive_summary",
+      "content": "당사의 솔루션은 혁신적이고 효과적이며, 모든 요구사항을 충족할 것입니다.",
+      "ground_truth": {
+        "hallucination": 0.25,
+        "persuasiveness": 0.6,
+        "completeness": 0.5,
+        "clarity": 0.7
+      },
+      "expected_score": 0.6375
+    },
+    "sec_004": {
+      "id": "sec_004",
+      "section_type": "executive_summary",
+      "content": "본 제안은 고객의 핵심 비즈니스 요구사항을 충족하기 위해 설계된 포괄적인 솔루션입니다.",
+      "ground_truth": {
+        "hallucination": 0.15,
+        "persuasiveness": 0.7,
+        "completeness": 0.6,
+        "clarity": 0.75
+      },
+      "expected_score": 0.725
+    },
+    "sec_005": {
+      "id": "sec_005",
+      "section_type": "executive_summary",
+      "content": "우리 팀은 20년 이상의 유사 프로젝트 경험을 보유하고 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.08,
+        "persuasiveness": 0.88,
+        "completeness": 0.85,
+        "clarity": 0.92
+      },
+      "expected_score": 0.8925
+    },
+    "sec_006": {
+      "id": "sec_006",
+      "section_type": "executive_summary",
+      "content": "당사의 솔루션은 혁신적이고 효과적이며, 모든 요구사항을 충족할 것입니다.",
+      "ground_truth": {
+        "hallucination": 0.3,
+        "persuasiveness": 0.55,
+        "completeness": 0.45,
+        "clarity": 0.65
+      },
+      "expected_score": 0.5875
+    },
+    "sec_007": {
+      "id": "sec_007",
+      "section_type": "executive_summary",
+      "content": "본 제안은 고객의 핵심 비즈니스 요구사항을 충족하기 위해 설계된 포괄적인 솔루션입니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.82,
+        "completeness": 0.88,
+        "clarity": 0.9
+      },
+      "expected_score": 0.8875
+    },
+    "sec_008": {
+      "id": "sec_008",
+      "section_type": "executive_summary",
+      "content": "우리 팀은 20년 이상의 유사 프로젝트 경험을 보유하고 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.12,
+        "persuasiveness": 0.78,
+        "completeness": 0.7,
+        "clarity": 0.85
+      },
+      "expected_score": 0.8025
+    },
+    "sec_009": {
+      "id": "sec_009",
+      "section_type": "executive_summary",
+      "content": "당사의 솔루션은 혁신적이고 효과적이며, 모든 요구사항을 충족할 것입니다.",
+      "ground_truth": {
+        "hallucination": 0.08,
+        "persuasiveness": 0.85,
+        "completeness": 0.8,
+        "clarity": 0.9
+      },
+      "expected_score": 0.8675
+    },
+    "sec_010": {
+      "id": "sec_010",
+      "section_type": "executive_summary",
+      "content": "본 제안은 고객의 핵심 비즈니스 요구사항을 충족하기 위해 설계된 포괄적인 솔루션입니다.",
+      "ground_truth": {
+        "hallucination": 0.2,
+        "persuasiveness": 0.65,
+        "completeness": 0.55,
+        "clarity": 0.7
+      },
+      "expected_score": 0.675
+    },
+    "sec_011": {
+      "id": "sec_011",
+      "section_type": "technical_approach",
+      "content": "마이크로서비스 아키텍처 기반의 REST API 설계입니다.",
+      "ground_truth": {
+        "hallucination": 0.03,
+        "persuasiveness": 0.88,
+        "completeness": 0.9,
+        "clarity": 0.92
+      },
+      "expected_score": 0.9175
+    },
+    "sec_012": {
+      "id": "sec_012",
+      "section_type": "technical_approach",
+      "content": "클라우드 기반 솔루션으로 자동 확장을 지원합니다.",
+      "ground_truth": {
+        "hallucination": 0.18,
+        "persuasiveness": 0.7,
+        "completeness": 0.6,
+        "clarity": 0.75
+      },
+      "expected_score": 0.7175
+    },
+    "sec_013": {
+      "id": "sec_013",
+      "section_type": "technical_approach",
+      "content": "Java 17 + Spring Boot, PostgreSQL, Kubernetes를 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.9,
+        "completeness": 0.95,
+        "clarity": 0.93
+      },
+      "expected_score": 0.94
+    },
+    "sec_014": {
+      "id": "sec_014",
+      "section_type": "technical_approach",
+      "content": "마이크로서비스 아키텍처 기반의 REST API 설계입니다.",
+      "ground_truth": {
+        "hallucination": 0.4,
+        "persuasiveness": 0.5,
+        "completeness": 0.4,
+        "clarity": 0.55
+      },
+      "expected_score": 0.5125
+    },
+    "sec_015": {
+      "id": "sec_015",
+      "section_type": "technical_approach",
+      "content": "클라우드 기반 솔루션으로 자동 확장을 지원합니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.85,
+        "completeness": 0.85,
+        "clarity": 0.88
+      },
+      "expected_score": 0.8825
+    },
+    "sec_016": {
+      "id": "sec_016",
+      "section_type": "technical_approach",
+      "content": "Java 17 + Spring Boot, PostgreSQL, Kubernetes를 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.15,
+        "persuasiveness": 0.75,
+        "completeness": 0.7,
+        "clarity": 0.8
+      },
+      "expected_score": 0.775
+    },
+    "sec_017": {
+      "id": "sec_017",
+      "section_type": "technical_approach",
+      "content": "마이크로서비스 아키텍처 기반의 REST API 설계입니다.",
+      "ground_truth": {
+        "hallucination": 0.04,
+        "persuasiveness": 0.89,
+        "completeness": 0.88,
+        "clarity": 0.91
+      },
+      "expected_score": 0.91
+    },
+    "sec_018": {
+      "id": "sec_018",
+      "section_type": "technical_approach",
+      "content": "클라우드 기반 솔루션으로 자동 확장을 지원합니다.",
+      "ground_truth": {
+        "hallucination": 0.22,
+        "persuasiveness": 0.68,
+        "completeness": 0.58,
+        "clarity": 0.72
+      },
+      "expected_score": 0.69
+    },
+    "sec_019": {
+      "id": "sec_019",
+      "section_type": "technical_approach",
+      "content": "Java 17 + Spring Boot, PostgreSQL, Kubernetes를 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.03,
+        "persuasiveness": 0.89,
+        "completeness": 0.91,
+        "clarity": 0.93
+      },
+      "expected_score": 0.925
+    },
+    "sec_020": {
+      "id": "sec_020",
+      "section_type": "technical_approach",
+      "content": "마이크로서비스 아키텍처 기반의 REST API 설계입니다.",
+      "ground_truth": {
+        "hallucination": 0.25,
+        "persuasiveness": 0.7,
+        "completeness": 0.65,
+        "clarity": 0.78
+      },
+      "expected_score": 0.72
+    },
+    "sec_021": {
+      "id": "sec_021",
+      "section_type": "implementation",
+      "content": "12개월 일정의 4개 Phase로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.04,
+        "persuasiveness": 0.87,
+        "completeness": 0.88,
+        "clarity": 0.91
+      },
+      "expected_score": 0.905
+    },
+    "sec_022": {
+      "id": "sec_022",
+      "section_type": "implementation",
+      "content": "2주 스프린트 기반의 Agile 개발 방법론을 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.15,
+        "persuasiveness": 0.7,
+        "completeness": 0.55,
+        "clarity": 0.75
+      },
+      "expected_score": 0.7125
+    },
+    "sec_023": {
+      "id": "sec_023",
+      "section_type": "implementation",
+      "content": "20명의 숙련된 팀으로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.89,
+        "completeness": 0.9,
+        "clarity": 0.93
+      },
+      "expected_score": 0.925
+    },
+    "sec_024": {
+      "id": "sec_024",
+      "section_type": "implementation",
+      "content": "12개월 일정의 4개 Phase로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.18,
+        "persuasiveness": 0.75,
+        "completeness": 0.68,
+        "clarity": 0.82
+      },
+      "expected_score": 0.7675
+    },
+    "sec_025": {
+      "id": "sec_025",
+      "section_type": "implementation",
+      "content": "2주 스프린트 기반의 Agile 개발 방법론을 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.03,
+        "persuasiveness": 0.88,
+        "completeness": 0.87,
+        "clarity": 0.9
+      },
+      "expected_score": 0.905
+    },
+    "sec_026": {
+      "id": "sec_026",
+      "section_type": "implementation",
+      "content": "20명의 숙련된 팀으로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.16,
+        "persuasiveness": 0.74,
+        "completeness": 0.64,
+        "clarity": 0.8
+      },
+      "expected_score": 0.755
+    },
+    "sec_027": {
+      "id": "sec_027",
+      "section_type": "implementation",
+      "content": "12개월 일정의 4개 Phase로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.87,
+        "completeness": 0.88,
+        "clarity": 0.9
+      },
+      "expected_score": 0.9075
+    },
+    "sec_028": {
+      "id": "sec_028",
+      "section_type": "implementation",
+      "content": "2주 스프린트 기반의 Agile 개발 방법론을 사용합니다.",
+      "ground_truth": {
+        "hallucination": 0.2,
+        "persuasiveness": 0.72,
+        "completeness": 0.62,
+        "clarity": 0.78
+      },
+      "expected_score": 0.73
+    },
+    "sec_029": {
+      "id": "sec_029",
+      "section_type": "implementation",
+      "content": "20명의 숙련된 팀으로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.85,
+        "completeness": 0.82,
+        "clarity": 0.88
+      },
+      "expected_score": 0.875
+    },
+    "sec_030": {
+      "id": "sec_030",
+      "section_type": "implementation",
+      "content": "12개월 일정의 4개 Phase로 구성되어 있습니다.",
+      "ground_truth": {
+        "hallucination": 0.08,
+        "persuasiveness": 0.8,
+        "completeness": 0.75,
+        "clarity": 0.85
+      },
+      "expected_score": 0.83
+    },
+    "sec_031": {
+      "id": "sec_031",
+      "section_type": "risks",
+      "content": "요구사항 변경 위험에 대응하기 위해 변경 관리 프로세스를 수립했습니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.86,
+        "completeness": 0.87,
+        "clarity": 0.9
+      },
+      "expected_score": 0.895
+    },
+    "sec_032": {
+      "id": "sec_032",
+      "section_type": "risks",
+      "content": "기술 리스크는 PoC 수행으로 사전에 검증합니다.",
+      "ground_truth": {
+        "hallucination": 0.25,
+        "persuasiveness": 0.6,
+        "completeness": 0.45,
+        "clarity": 0.65
+      },
+      "expected_score": 0.6125
+    },
+    "sec_033": {
+      "id": "sec_033",
+      "section_type": "risks",
+      "content": "일정 지연에 대비하여 15% 버퍼를 확보했습니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.9,
+        "completeness": 0.92,
+        "clarity": 0.93
+      },
+      "expected_score": 0.9325
+    },
+    "sec_034": {
+      "id": "sec_034",
+      "section_type": "risks",
+      "content": "요구사항 변경 위험에 대응하기 위해 변경 관리 프로세스를 수립했습니다.",
+      "ground_truth": {
+        "hallucination": 0.35,
+        "persuasiveness": 0.55,
+        "completeness": 0.5,
+        "clarity": 0.6
+      },
+      "expected_score": 0.575
+    },
+    "sec_035": {
+      "id": "sec_035",
+      "section_type": "risks",
+      "content": "기술 리스크는 PoC 수행으로 사전에 검증합니다.",
+      "ground_truth": {
+        "hallucination": 0.06,
+        "persuasiveness": 0.84,
+        "completeness": 0.82,
+        "clarity": 0.88
+      },
+      "expected_score": 0.87
+    },
+    "sec_036": {
+      "id": "sec_036",
+      "section_type": "risks",
+      "content": "일정 지연에 대비하여 15% 버퍼를 확보했습니다.",
+      "ground_truth": {
+        "hallucination": 0.18,
+        "persuasiveness": 0.72,
+        "completeness": 0.62,
+        "clarity": 0.78
+      },
+      "expected_score": 0.735
+    },
+    "sec_037": {
+      "id": "sec_037",
+      "section_type": "risks",
+      "content": "요구사항 변경 위험에 대응하기 위해 변경 관리 프로세스를 수립했습니다.",
+      "ground_truth": {
+        "hallucination": 0.04,
+        "persuasiveness": 0.88,
+        "completeness": 0.89,
+        "clarity": 0.91
+      },
+      "expected_score": 0.91
+    },
+    "sec_038": {
+      "id": "sec_038",
+      "section_type": "risks",
+      "content": "기술 리스크는 PoC 수행으로 사전에 검증합니다.",
+      "ground_truth": {
+        "hallucination": 0.15,
+        "persuasiveness": 0.75,
+        "completeness": 0.7,
+        "clarity": 0.8
+      },
+      "expected_score": 0.775
+    },
+    "sec_039": {
+      "id": "sec_039",
+      "section_type": "risks",
+      "content": "일정 지연에 대비하여 15% 버퍼를 확보했습니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.89,
+        "completeness": 0.89,
+        "clarity": 0.92
+      },
+      "expected_score": 0.92
+    },
+    "sec_040": {
+      "id": "sec_040",
+      "section_type": "risks",
+      "content": "요구사항 변경 위험에 대응하기 위해 변경 관리 프로세스를 수립했습니다.",
+      "ground_truth": {
+        "hallucination": 0.12,
+        "persuasiveness": 0.78,
+        "completeness": 0.76,
+        "clarity": 0.84
+      },
+      "expected_score": 0.815
+    },
+    "sec_041": {
+      "id": "sec_041",
+      "section_type": "pricing",
+      "content": "총 프로젝트 비용은 $1,507K이고 경쟁사 대비 13% 저가입니다.",
+      "ground_truth": {
+        "hallucination": 0.04,
+        "persuasiveness": 0.87,
+        "completeness": 0.89,
+        "clarity": 0.91
+      },
+      "expected_score": 0.9075
+    },
+    "sec_042": {
+      "id": "sec_042",
+      "section_type": "pricing",
+      "content": "월간 진행률 기반 지불 조건을 제시합니다.",
+      "ground_truth": {
+        "hallucination": 0.2,
+        "persuasiveness": 0.65,
+        "completeness": 0.5,
+        "clarity": 0.7
+      },
+      "expected_score": 0.6625
+    },
+    "sec_043": {
+      "id": "sec_043",
+      "section_type": "pricing",
+      "content": "연간 유지보수 비용은 총 비용의 10%입니다.",
+      "ground_truth": {
+        "hallucination": 0.02,
+        "persuasiveness": 0.92,
+        "completeness": 0.93,
+        "clarity": 0.95
+      },
+      "expected_score": 0.945
+    },
+    "sec_044": {
+      "id": "sec_044",
+      "section_type": "pricing",
+      "content": "총 프로젝트 비용은 $1,507K이고 경쟁사 대비 13% 저가입니다.",
+      "ground_truth": {
+        "hallucination": 0.18,
+        "persuasiveness": 0.72,
+        "completeness": 0.6,
+        "clarity": 0.78
+      },
+      "expected_score": 0.73
+    },
+    "sec_045": {
+      "id": "sec_045",
+      "section_type": "pricing",
+      "content": "월간 진행률 기반 지불 조건을 제시합니다.",
+      "ground_truth": {
+        "hallucination": 0.03,
+        "persuasiveness": 0.86,
+        "completeness": 0.84,
+        "clarity": 0.89
+      },
+      "expected_score": 0.89
+    },
+    "sec_046": {
+      "id": "sec_046",
+      "section_type": "pricing",
+      "content": "연간 유지보수 비용은 총 비용의 10%입니다.",
+      "ground_truth": {
+        "hallucination": 0.01,
+        "persuasiveness": 0.93,
+        "completeness": 0.94,
+        "clarity": 0.96
+      },
+      "expected_score": 0.955
+    },
+    "sec_047": {
+      "id": "sec_047",
+      "section_type": "pricing",
+      "content": "총 프로젝트 비용은 $1,507K이고 경쟁사 대비 13% 저가입니다.",
+      "ground_truth": {
+        "hallucination": 0.2,
+        "persuasiveness": 0.7,
+        "completeness": 0.58,
+        "clarity": 0.72
+      },
+      "expected_score": 0.7
+    },
+    "sec_048": {
+      "id": "sec_048",
+      "section_type": "pricing",
+      "content": "월간 진행률 기반 지불 조건을 제시합니다.",
+      "ground_truth": {
+        "hallucination": 0.05,
+        "persuasiveness": 0.84,
+        "completeness": 0.82,
+        "clarity": 0.87
+      },
+      "expected_score": 0.87
+    },
+    "sec_049": {
+      "id": "sec_049",
+      "section_type": "pricing",
+      "content": "연간 유지보수 비용은 총 비용의 10%입니다.",
+      "ground_truth": {
+        "hallucination": 0.25,
+        "persuasiveness": 0.62,
+        "completeness": 0.52,
+        "clarity": 0.68
+      },
+      "expected_score": 0.6425
+    },
+    "sec_050": {
+      "id": "sec_050",
+      "section_type": "pricing",
+      "content": "총 프로젝트 비용은 $1,507K이고 경쟁사 대비 13% 저가입니다.",
+      "ground_truth": {
+        "hallucination": 0.03,
+        "persuasiveness": 0.88,
+        "completeness": 0.86,
+        "clarity": 0.9
+      },
+      "expected_score": 0.9025
+    }
+  }
+}

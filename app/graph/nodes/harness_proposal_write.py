@@ -34,6 +34,7 @@ from app.services.accuracy_enhancement_engine import (
     ConfidenceThresholder,
 )
 from app.services.harness_accuracy_validator import EvaluationMetrics
+from app.services.ensemble_metrics_monitor import get_global_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -349,6 +350,29 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
         except Exception as e:
             logger.error(f"Fallback 생성도 실패: {e}")
             best_content = f"[섹션 생성 실패] {section_id}\n\n생성 중 오류가 발생했습니다. 수동으로 작성해주세요."
+
+    # ── Phase 4: 메트릭 모니터링 기록 ──
+    try:
+        monitor = get_global_monitor()
+        proposal_id = state.get("project_id", "unknown")
+
+        monitor.record_section(
+            proposal_id=proposal_id,
+            section_id=section_id,
+            confidence=confidence_result.confidence if confidence_result else None,
+            score=final_score,
+            ensemble_applied=ensemble_applied,
+            feedback_triggered=should_run_feedback_loop,
+            feedback_improved=improved,
+        )
+
+        logger.debug(
+            f"📊 모니터링 기록: {section_id} "
+            f"(신뢰: {confidence_result.confidence:.2f if confidence_result else 'N/A'}, "
+            f"점수: {final_score:.1%}, 앙상블: {ensemble_applied})"
+        )
+    except Exception as e:
+        logger.warning(f"모니터링 기록 실패 (계속 진행): {e}")
 
     # ── 섹션 생성 ──
     # 하네스 결과에서 content 파싱

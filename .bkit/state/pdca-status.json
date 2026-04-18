@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-18T06:09:48.855Z",
+  "lastUpdated": "2026-04-18T13:05:45.021Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -115,9 +115,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-17T01:22:06.300Z"
+        "lastUpdated": "2026-04-18T08:39:20.000Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_proposal.py",
+      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_harness_metrics.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -145,9 +145,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-16T23:59:06.644Z"
+        "lastUpdated": "2026-04-18T12:27:03.576Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\scripts\\run-e2e-tests.sh",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\validate_accuracy_improvement.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -235,9 +235,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-28T11:02:59.640Z",
-        "lastUpdated": "2026-04-17T02:09:09.297Z"
+        "lastUpdated": "2026-04-18T12:25:01.493Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\tests\\seed_test_data.py",
+      "lastFile": "C:\\project\\tenopa proposer\\tests\\test_harness_accuracy_e2e.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -295,9 +295,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-28T11:39:11.563Z",
-        "lastUpdated": "2026-04-10T05:14:15.214Z"
+        "lastUpdated": "2026-04-18T07:10:01.677Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\app\\graph\\state.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\graph.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -446,9 +446,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T08:37:57.640Z",
-        "lastUpdated": "2026-04-15T07:22:46.386Z"
+        "lastUpdated": "2026-04-18T11:06:25.839Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\tests\\unit\\test_bid_scorer_unit.py",
+      "lastFile": "c:\\project\\tenopa proposer\\tests\\unit\\test_step4_e2e_fixtures.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -476,9 +476,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T09:30:04.149Z",
-        "lastUpdated": "2026-04-14T06:01:26.106Z"
+        "lastUpdated": "2026-04-18T13:05:19.072Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\app\\graph\\nodes\\evaluation_nodes.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\nodes\\metrics_recorder.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -897,9 +897,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-18T05:20:49.585Z"
+        "lastUpdated": "2026-04-18T13:05:45.013Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_phase2_optimization.py"
+      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_phase4_metrics_integration.py"
     },
     "monitoring": {
       "phase": "do",
@@ -1079,9 +1079,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-18T06:09:48.851Z"
+        "lastUpdated": "2026-04-18T12:41:54.201Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\main.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\metrics_dashboard.py"
     },
     "stores": {
       "phase": "do",
@@ -12947,6 +12947,840 @@
     {
       "timestamp": "2026-04-18T06:09:48.854Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:05:11.198Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:05:23.799Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:05:35.480Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:05:51.183Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:06:05.205Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:06:18.998Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:06:32.050Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:09:04.546Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:09:25.816Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:09:39.077Z",
+      "feature": "graph",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:10:01.694Z",
+      "feature": "graph",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:10:58.160Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:13:23.926Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:13:41.456Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:14:07.274Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:14:31.727Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:15:00.936Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:16:29.745Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:20:13.957Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:21:40.691Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:23:51.623Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:53:16.109Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:53:31.007Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:53:43.253Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:54:13.426Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T07:58:09.188Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:04:13.079Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:04:44.698Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:08:27.250Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:10:40.986Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:11:25.298Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:30:56.778Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:32:10.268Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:32:20.133Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:32:27.098Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:32:31.115Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:33:25.701Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:38:54.275Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:39:20.010Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:39:51.770Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:53:46.797Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:53:59.071Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T08:59:43.032Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:00:04.160Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:00:41.348Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:01:09.771Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:01:47.786Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:02:44.046Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:04:30.556Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:04:39.894Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:04:58.322Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:05:09.066Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:05:28.433Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:05:42.721Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:06:49.755Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:07:00.800Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:07:29.197Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:08:43.273Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:09:07.582Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:09:24.681Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:14:25.200Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:14:54.552Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:39:11.070Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T09:39:55.163Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:00:29.655Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:01:59.149Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:02:15.867Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:02:35.801Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:02:56.757Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:07:00.249Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:07:09.742Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:44:15.906Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:48:29.321Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:49:02.882Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:49:26.530Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:51:07.214Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:54:48.874Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:55:01.734Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:55:53.761Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:56:34.389Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:56:53.779Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:57:12.918Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T10:59:53.163Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:00:02.923Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:01:13.018Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:02:56.972Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:03:06.304Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:04:51.216Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:05:21.234Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:06:25.858Z",
+      "feature": "unit",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:07:54.317Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:17:44.972Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:19:23.322Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:20:36.492Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:20:58.859Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:21:18.474Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:22:50.719Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:24:18.870Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:24:30.278Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:24:43.726Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:27:08.733Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:27:24.626Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:27:39.742Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:27:57.560Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:28:15.301Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:28:30.376Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:28:43.588Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:28:56.105Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:29:11.859Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:32:34.457Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:35:48.680Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:36:02.949Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:38:47.700Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:50:27.541Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:57:37.612Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T11:58:20.693Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:08:54.651Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:11:26.525Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:11:35.414Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:12:12.830Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:12:30.000Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:14:31.842Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:14:42.045Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:17:32.653Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:21:05.128Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:21:28.797Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:23:21.311Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:25:01.507Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:27:03.587Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:40:49.722Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:41:25.986Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:41:54.220Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:42:31.850Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:44:37.375Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T12:44:47.417Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:04:46.971Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:05:02.697Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:05:19.082Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:05:45.021Z",
+      "feature": "integration",
       "phase": "do",
       "action": "updated"
     }

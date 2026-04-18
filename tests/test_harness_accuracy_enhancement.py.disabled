@@ -1,0 +1,404 @@
+"""
+harness_accuracy_enhancement 단위 테스트 (Phase 2)
+
+테스트 범위:
+1. Confidence Thresholding (5개)
+2. Multi-Model Voting (5개)
+3. Cross-Validation (5개)
+4. 통합 Enhancement (5개)
+"""
+
+import pytest
+from app.services.harness_accuracy_enhancement import (
+    ConfidenceThresholdCalculator,
+    ConfidenceLevel,
+    MultiModelVoting,
+    CrossValidationEvaluator,
+    AccuracyEnhancementEngine
+)
+from app.services.harness_accuracy_validator import TestSection, GroundTruthLabel
+from app.services.harness_evaluator import EvaluationScore
+
+
+# ==================== Confidence Threshold Tests ====================
+
+@pytest.fixture
+def confidence_calculator():
+    """ConfidenceThresholdCalculator 인스턴스"""
+    return ConfidenceThresholdCalculator()
+
+
+def test_confidence_extreme_score_high_confidence(confidence_calculator):
+    """극단값(0 또는 1)이면 신뢰도 높음"""
+    # Hallucination 0.0 - 확실한 OK
+    score_extreme = EvaluationScore(
+        overall=0.9,
+        hallucination=0.0,
+        persuasiveness=0.9,
+        completeness=0.95,
+        clarity=0.9
+    )
+
+    result = confidence_calculator.calculate_confidence(
+        score_extreme,
+        "A" * 500  # 충분한 콘텐츠 길이
+    )
+
+    assert result.hallucination_confidence >= 0.8
+    assert result.confidence_level in [ConfidenceLevel.HIGH, ConfidenceLevel.VERY_HIGH]
+    assert not result.should_filter
+
+
+def test_confidence_middle_score_low_confidence(confidence_calculator):
+    """중간값(0.5)이면 신뢰도 낮음"""
+    score_middle = EvaluationScore(
+        overall=0.5,
+        hallucination=0.5,  # 불확실함
+        persuasiveness=0.5,
+        completeness=0.5,
+        clarity=0.5
+    )
+
+    result = confidence_calculator.calculate_confidence(
+        score_middle,
+        "A" * 500
+    )
+
+    assert result.hallucination_confidence < 0.5
+    assert result.confidence_level in [ConfidenceLevel.MEDIUM, ConfidenceLevel.LOW]
+
+
+def test_confidence_short_content_lower_confidence(confidence_calculator):
+    """콘텐츠가 짧으면 신뢰도 낮음"""
+    score_good = EvaluationScore(
+        overall=0.9,
+        hallucination=0.1,
+        persuasiveness=0.9,
+        completeness=0.95,
+        clarity=0.9
+    )
+
+    result = confidence_calculator.calculate_confidence(
+        score_good,
+        "short content"  # 짧은 콘텐츠
+    )
+
+    assert result.should_filter  # 신뢰도 부족으로 필터링
+
+
+def test_confidence_inconsistent_scores_lower_confidence(confidence_calculator):
+    """점수 간 일관성이 없으면 신뢰도 감소"""
+    score_inconsistent = EvaluationScore(
+        overall=0.5,
+        hallucination=0.1,   # OK
+        persuasiveness=0.9,  # Good
+        completeness=0.95,   # Very Good
+        clarity=0.05         # Bad
+    )
+
+    result = confidence_calculator.calculate_confidence(
+        score_inconsistent,
+        "A" * 500
+    )
+
+    # 점수들이 극단값이지만 일관성 없음 -> 신뢰도 부족으로 필터링
+    assert result.should_filter  # 신뢰도 < 0.75이므로 필터링
+
+
+def test_confidence_level_classification(confidence_calculator):
+    """신뢰도 레벨 분류 확인"""
+    very_high_score = EvaluationScore(
+        overall=1.0,
+        hallucination=0.0,
+        persuasiveness=0.0,
+        completeness=0.0,
+        clarity=0.0
+    )
+
+    result = confidence_calculator.calculate_confidence(very_high_score, "A" * 500)
+    assert result.confidence_level == ConfidenceLevel.VERY_HIGH
+
+
+# ==================== Multi-Model Voting Tests ====================
+
+@pytest.fixture
+def multi_model_voting():
+    """MultiModelVoting 인스턴스"""
+    return MultiModelVoting(num_models=3)
+
+
+def test_voting_unanimous_consensus(multi_model_voting):
+    """전체 투표가 일치하면 consensus"""
+    voting_result = multi_model_voting.calculate_voting_result(
+        section_id="test_01",
+        original_score={"hallucination": 0.7},
+        model_predictions=[
+            {"hallucination": 0.6},
+            {"hallucination": 0.7},
+            {"hallucination": 0.8}
+        ]
+    )
+
+    assert voting_result.is_consensus
+    assert voting_result.consensus_strength > 0.67
+    assert voting_result.vote_counts["issue"] == 3
+
+
+def test_voting_split_decision(multi_model_voting):
+    """투표가 엇갈리면 consensus 아님"""
+    voting_result = multi_model_voting.calculate_voting_result(
+        section_id="test_01",
+        original_score={"hallucination": 0.5},
+        model_predictions=[
+            {"hallucination": 0.1},  # no-issue
+            {"hallucination": 0.5},  # borderline
+            {"hallucination": 0.6}   # issue
+        ]
+    )
+
+    assert not voting_result.is_consensus
+    assert voting_result.consensus_strength < 1.0
+
+
+def test_voting_confidence_high_for_unanimous(multi_model_voting):
+    """만장일치면 투표 신뢰도 높음"""
+    voting_result = multi_model_voting.calculate_voting_result(
+        section_id="test_01",
+        original_score={"hallucination": 0.8},
+        model_predictions=[
+            {"hallucination": 0.8},
+            {"hallucination": 0.8},
+            {"hallucination": 0.8}
+        ]
+    )
+
+    assert voting_result.confidence >= 0.95
+    assert voting_result.is_consensus
+
+
+def test_voting_avg_hallucination_score(multi_model_voting):
+    """Hallucination 점수 평균 계산"""
+    voting_result = multi_model_voting.calculate_voting_result(
+        section_id="test_01",
+        original_score={"hallucination": 0.5},
+        model_predictions=[
+            {"hallucination": 0.3},
+            {"hallucination": 0.5},
+            {"hallucination": 0.7}
+        ]
+    )
+
+    expected_avg = (0.3 + 0.5 + 0.7) / 3
+    assert abs(voting_result.predicted_hallucination - expected_avg) < 0.01
+
+
+def test_voting_issue_threshold_applied(multi_model_voting):
+    """Issue 판정 기준(0.3) 적용 확인"""
+    voting_result = multi_model_voting.calculate_voting_result(
+        section_id="test_01",
+        original_score={"hallucination": 0.5},
+        model_predictions=[
+            {"hallucination": 0.29},  # no-issue
+            {"hallucination": 0.30},  # issue
+            {"hallucination": 0.31}   # issue
+        ]
+    )
+
+    assert voting_result.vote_counts["no_issue"] == 1
+    assert voting_result.vote_counts["issue"] == 2
+
+
+# ==================== Cross-Validation Tests ====================
+
+@pytest.fixture
+def cv_evaluator():
+    """CrossValidationEvaluator 인스턴스"""
+    return CrossValidationEvaluator(k=3)
+
+
+def test_cv_split_content_correctly(cv_evaluator):
+    """콘텐츠를 K개 부분으로 올바르게 나누는지 확인"""
+    content = "word1 word2 word3 word4 word5 word6 word7 word8 word9"
+    parts = cv_evaluator._split_content(content, 3)
+
+    assert len(parts) == 3
+    assert all(isinstance(p, str) for p in parts)
+    assert sum(len(p.split()) for p in parts) == len(content.split())
+
+
+def test_cv_aggregate_fold_results(cv_evaluator):
+    """Fold 결과 통합"""
+    fold_results = [
+        {"score": 0.8, "rating": 4},
+        {"score": 0.9, "rating": 5},
+        {"score": 0.7, "rating": 3}
+    ]
+
+    aggregated = cv_evaluator._aggregate_fold_results(fold_results)
+
+    assert "score_mean" in aggregated
+    assert "score_std" in aggregated
+    assert abs(aggregated["score_mean"] - 0.8) < 0.01
+    assert "rating_mean" in aggregated
+
+
+def test_cv_evaluator_empty_results(cv_evaluator):
+    """빈 결과 처리"""
+    aggregated = cv_evaluator._aggregate_fold_results([])
+    assert aggregated == {}
+
+
+def test_cv_single_fold(cv_evaluator):
+    """단일 Fold 처리"""
+    fold_results = [{"score": 0.85}]
+    aggregated = cv_evaluator._aggregate_fold_results(fold_results)
+
+    assert aggregated["score_mean"] == 0.85
+    assert aggregated["score_std"] == 0.0
+
+
+def test_cv_content_preservation(cv_evaluator):
+    """콘텐츠 분할 후 재구성 시 원본 보존"""
+    original_content = "This is a test content with many words to ensure proper splitting"
+    parts = cv_evaluator._split_content(original_content, 3)
+    reconstructed = " ".join(parts)
+
+    # 단어 수는 같아야 함
+    assert len(original_content.split()) == len(reconstructed.split())
+
+
+# ==================== Integration Tests ====================
+
+@pytest.fixture
+def enhancement_engine():
+    """AccuracyEnhancementEngine 인스턴스"""
+    return AccuracyEnhancementEngine()
+
+
+@pytest.mark.asyncio
+async def test_enhancement_filters_low_confidence(enhancement_engine):
+    """신뢰도 낮은 평가는 필터링"""
+    section = TestSection(
+        section_id="test_01",
+        title="Low Confidence Test",
+        content="short",  # 짧은 콘텐츠
+        section_type="executive_summary",
+        ground_truth=GroundTruthLabel(
+            section_id="test_01",
+            hallucination_severity="medium",
+            persuasiveness_level=3,
+            completeness_score=50,
+            clarity_rating=2
+        )
+    )
+
+    score = EvaluationScore(
+        overall=0.5,
+        hallucination=0.5,
+        persuasiveness=0.5,
+        completeness=0.5,
+        clarity=0.5
+    )
+
+    result = await enhancement_engine.enhance_evaluation(section, score)
+
+    assert result.was_filtered
+    assert result.enhancement_applied == "confidence_threshold"
+
+
+@pytest.mark.asyncio
+async def test_enhancement_applies_voting(enhancement_engine):
+    """높은 신뢰도면 투표 적용"""
+    section = TestSection(
+        section_id="test_01",
+        title="High Confidence Test",
+        content="A" * 500,  # 충분한 콘텐츠
+        section_type="executive_summary",
+        ground_truth=GroundTruthLabel(
+            section_id="test_01",
+            hallucination_severity="none",
+            persuasiveness_level=5,
+            completeness_score=95,
+            clarity_rating=5
+        )
+    )
+
+    score = EvaluationScore(
+        overall=0.9,
+        hallucination=0.0,
+        persuasiveness=0.9,
+        completeness=0.95,
+        clarity=0.9
+    )
+
+    alternative_scores = [
+        EvaluationScore(
+            overall=0.85,
+            hallucination=0.05,
+            persuasiveness=0.85,
+            completeness=0.90,
+            clarity=0.85
+        ),
+        EvaluationScore(
+            overall=0.88,
+            hallucination=0.02,
+            persuasiveness=0.88,
+            completeness=0.92,
+            clarity=0.88
+        )
+    ]
+
+    result = await enhancement_engine.enhance_evaluation(
+        section,
+        score,
+        alternative_scores=alternative_scores
+    )
+
+    assert not result.was_filtered
+    assert result.voting_result is not None
+
+
+@pytest.mark.asyncio
+async def test_enhancement_improvement_metrics(enhancement_engine):
+    """개선도 메트릭 계산"""
+    metrics = enhancement_engine.calculate_improvement_metrics(
+        original_precision=0.25,
+        enhanced_precision=0.97,
+        original_false_positive_rate=0.9429,
+        enhanced_false_positive_rate=0.08
+    )
+
+    assert metrics["precision_improvement"] == pytest.approx(0.72, abs=0.01)
+    assert metrics["fpr_reduction"] == pytest.approx(0.8629, abs=0.001)
+    assert metrics["fpr_reduction_percent"] > 90  # 90% 이상 감소
+
+
+@pytest.mark.asyncio
+async def test_enhancement_preserves_original_score(enhancement_engine):
+    """원본 점수 보존"""
+    section = TestSection(
+        section_id="test_01",
+        title="Test",
+        content="A" * 500,
+        section_type="executive_summary",
+        ground_truth=GroundTruthLabel(
+            section_id="test_01",
+            hallucination_severity="none",
+            persuasiveness_level=5,
+            completeness_score=90,
+            clarity_rating=5
+        )
+    )
+
+    original_score = EvaluationScore(
+        overall=0.88,
+        hallucination=0.05,
+        persuasiveness=0.88,
+        completeness=0.90,
+        clarity=0.87
+    )
+
+    result = await enhancement_engine.enhance_evaluation(section, original_score)
+
+    assert result.original_score["hallucination"] == 0.05
+    assert result.original_score["persuasiveness"] == 0.88
