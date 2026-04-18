@@ -42,6 +42,7 @@ async def _upload_file_to_storage(storage_path: str, content: bytes, content_typ
     except Exception as e:
         logger.warning(f"Storage 업로드 실패: {storage_path}: {e}")
 
+from app.services.memory_cache_service import get_memory_cache
 router = APIRouter(prefix="/api/proposals", tags=["proposals"])
 
 
@@ -502,8 +503,36 @@ async def list_proposals(
     scope: my (내 프로젝트), team (팀), division (본부), company (전체).
     scope 미지정 시 기존 동작 (팀 필터).
     C-2: RLS 적용 클라이언트로 사용자 권한 범위만 조회.
+    
+    Task #3: Memory Cache Integration
+    - Caches proposal lists with 5-minute TTL
+    - Cache key includes all filter parameters (status, scope, search, pagination)
     """
+    from app.services.memory_cache_service import MemoryCacheService
+    
     client = rls_client
+    
+    # Task #3: Generate cache key from all filter parameters
+    cache_service = await get_memory_cache()
+    cache_filters = {
+        "user_id": user.id,
+        "status": status,
+        "scope": scope,
+        "search": search,
+        "skip": skip,
+        "limit": limit,
+    }
+    cache_key = MemoryCacheService._make_key(
+        query="proposals_list",
+        filters=cache_filters
+    )
+    
+    # Check memory cache first
+    cached_result = await cache_service.get("proposals", cache_key)
+    if cached_result is not None:
+        logger.info(f"Proposals list cache hit (skip={skip}, limit={limit})")
+        return cached_result
+    
     # Task #2 성능 최적화 (Day 3-4, 2026-04-18):
     # 1. 동적 컬럼 탐지 제거 (-3개 추가 쿼리, ~600ms 개선)
     # 2. 필요한 컬럼만 선택 (-7개 컬럼, ~100KB 데이터)
@@ -596,7 +625,12 @@ async def list_proposals(
             # fit_score is now stored as go_no_go_score in proposals table
             p["fit_score"] = p.get("go_no_go_score")
 
-    return ok_list(data, total=total, offset=skip, limit=limit)
+    # Task #3: Cache the result before returning
+    response = ok_list(data, total=total, offset=skip, limit=limit)
+    await cache_service.set("proposals", cache_key, response, ttl_seconds=300)
+    logger.info(f"Proposals list cached (skip={skip}, limit={limit})")
+    
+    return response
 
 
 @router.get("/{proposal_id}")
@@ -623,6 +657,9 @@ async def update_proposal(
     """프로젝트 정보 수정 (owner_id 등).
 
     현재는 owner_id 업데이트만 지원. 소유자만 수정 가능.
+    
+    Task #3: Cache Invalidation
+    - Clears proposals list cache when proposal is updated
     """
     client = rls_client
 
@@ -647,6 +684,11 @@ async def update_proposal(
 
     if not result.data:
         raise HTTPException(500, "프로젝트 업데이트 실패")
+
+    # Task #3: Invalidate proposals list cache
+    cache_service = await get_memory_cache()
+    await cache_service.clear("proposals")
+    logger.info(f"Proposals list cache cleared (proposal {proposal_id} updated)")
 
     return {"message": "프로젝트 정보 업데이트 완료"}
 

@@ -33,6 +33,7 @@ from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
+from app.services.memory_cache_service import get_memory_cache
 router = APIRouter(prefix="/api/kb", tags=["knowledge-base"])
 
 
@@ -47,19 +48,45 @@ async def kb_search(
     top_k: int = Query(5, ge=1, le=20),
     user: CurrentUser = Depends(get_current_user),
 ):
-    """통합 KB 검색 (시맨틱 + 키워드 하이브리드)."""
+    """통합 KB 검색 (시맨틱 + 키워드 하이브리드).
+    
+    Task #3: Memory Cache Service Integration
+    - Checks in-memory cache before database query
+    - Caches results with 10-minute TTL for repeated searches
+    - Automatically invalidated when KB content is updated
+    """
     from app.services.knowledge_search import unified_search
 
     filters = {}
     if areas:
         filters["areas"] = [a.strip() for a in areas.split(",")]
 
+    # Task #3: Generate cache key from search parameters
+    cache_service = await get_memory_cache()
+    cache_key = MemoryCacheService._make_key(
+        query=q,
+        filters={**filters, "top_k": top_k, "org_id": user.org_id}
+    )
+    
+    # Check memory cache first
+    cached_results = await cache_service.get("kb_search", cache_key)
+    if cached_results is not None:
+        logger.info(f"KB search cache hit: {q} ({len(cached_results)} results)")
+        total = sum(len(v) for v in cached_results.values())
+        return ok({"query": q, "total": total, "results": cached_results})
+    
+    # Cache miss: execute search
     results = await unified_search(
         query=q,
         org_id=user.org_id,
         filters=filters,
         top_k=top_k,
     )
+    
+    # Cache the results with 10-minute TTL
+    await cache_service.set("kb_search", cache_key, results, ttl_seconds=600)
+    logger.info(f"KB search completed and cached: {q}")
+    
     total = sum(len(v) for v in results.values())
     return ok({"query": q, "total": total, "results": results})
 
@@ -141,7 +168,11 @@ async def get_content(content_id: str, user: CurrentUser = Depends(get_current_u
 
 @router.post("/content", status_code=201)
 async def create_content_endpoint(body: ContentCreateBody, user: CurrentUser = Depends(get_current_user)):
-    """콘텐츠 등록."""
+    """콘텐츠 등록.
+    
+    Task #3: Cache Invalidation
+    - Clears KB search cache when new content is added
+    """
     from app.services.content_library import create_content
 
     result = await create_content(
@@ -155,6 +186,12 @@ async def create_content_endpoint(body: ContentCreateBody, user: CurrentUser = D
         tech_area=body.tech_area,
         tags=body.tags,
     )
+    
+    # Task #3: Invalidate KB search cache
+    cache_service = await get_memory_cache()
+    await cache_service.clear("kb_search")
+    logger.info("KB search cache cleared (new content)")
+    
     return ok(result)
 
 
@@ -164,7 +201,11 @@ async def update_content_endpoint(
     body: ContentUpdateBody,
     user: CurrentUser = Depends(get_current_user),
 ):
-    """콘텐츠 수정."""
+    """콘텐츠 수정.
+    
+    Task #3: Cache Invalidation
+    - Clears KB search cache when content is updated
+    """
     from app.services.content_library import update_content
 
     updates = {k: v for k, v in body.model_dump().items() if v is not None}
@@ -172,14 +213,30 @@ async def update_content_endpoint(
         raise TenopAPIError("KB_003", "수정할 필드가 없습니다.", 400)
 
     result = await update_content(content_id, updates)
+    
+    # Task #3: Invalidate KB search cache
+    cache_service = await get_memory_cache()
+    await cache_service.clear("kb_search")
+    logger.info("KB search cache cleared (content updated)")
+    
     return ok(result)
 
 
 @router.delete("/content/{content_id}")
 async def delete_content(content_id: str, user: CurrentUser = Depends(require_role("lead", "admin"))):
-    """콘텐츠 삭제 (archived 처리)."""
+    """콘텐츠 삭제 (archived 처리).
+    
+    Task #3: Cache Invalidation
+    - Clears KB search cache when content is deleted
+    """
     client = await get_async_client()
     await client.table("content_library").update({"status": "archived"}).eq("id", content_id).execute()
+    
+    # Task #3: Invalidate KB search cache
+    cache_service = await get_memory_cache()
+    await cache_service.clear("kb_search")
+    logger.info("KB search cache cleared (content deleted)")
+    
     return ok(None, message="완료")
 
 
@@ -814,6 +871,41 @@ async def kb_health(user: CurrentUser = Depends(get_current_user)):
             result[area] = {"total": 0, "with_embedding": 0, "coverage": 0.0}
 
     return ok(result)
+
+
+@router.get("/cache/stats")
+async def cache_stats(user: CurrentUser = Depends(get_current_user)):
+    """캐시 통계 및 성능 모니터링 (Task #3).
+    
+    Returns:
+        - kb_search: KB 검색 캐시 통계
+        - proposals: 제안서 목록 캐시 통계  
+        - analytics: 분석 캐시 통계
+        - search_results: 검색 결과 캐시 통계
+        - total_entries: 전체 캐시 항목 수
+        - total_hits: 전체 캐시 히트 수
+    """
+    cache_service = await get_memory_cache()
+    stats = await cache_service.get_all_stats()
+    logger.info(f"Cache stats retrieved: {stats['total_entries']} entries, {stats['total_hits']} hits")
+    return ok(stats)
+
+
+@router.post("/cache/clear")
+async def clear_cache(user: CurrentUser = Depends(require_role("admin"))):
+    """모든 캐시 초기화 (Task #3, 관리자만).
+    
+    운영 목적으로 KB 및 제안서 캐시를 즉시 초기화합니다.
+    """
+    cache_service = await get_memory_cache()
+    
+    cleared_caches = {}
+    for cache_name in ["kb_search", "proposals", "analytics", "search_results"]:
+        count = await cache_service.clear(cache_name)
+        cleared_caches[cache_name] = {"entries_cleared": count}
+    
+    logger.info(f"All caches cleared by admin {user.id}: {cleared_caches}")
+    return ok(cleared_caches, message="모든 캐시 초기화 완료")
 
 
 class ReindexRequest(BaseModel):
