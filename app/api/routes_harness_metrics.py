@@ -3,9 +3,12 @@
 from typing import Dict, Optional
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 import logging
+import io
 
 from app.services.ensemble_metrics_monitor import get_global_monitor
+from app.services.metrics_dashboard import MetricsDashboard
 
 logger = logging.getLogger(__name__)
 
@@ -274,3 +277,116 @@ async def get_harness_latency_history(limit: int = 100) -> Dict:
     except Exception as e:
         logger.error(f"Error fetching latency history: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch latency history")
+
+
+@router.get("/export/metrics.csv")
+async def export_metrics_csv():
+    """
+    메트릭을 CSV 형식으로 다운로드
+
+    사용:
+    - GET /api/metrics/export/metrics.csv
+    - 브라우저에서 CSV 파일로 다운로드됨
+    - Google Sheets에 임포트 가능
+    """
+    try:
+        dashboard = MetricsDashboard()
+        filename, csv_bytes = dashboard.export_to_csv()
+
+        return StreamingResponse(
+            iter([csv_bytes]),
+            media_type="text/csv; charset=utf-8",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+    except Exception as e:
+        logger.error(f"Error exporting metrics CSV: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export metrics")
+
+
+@router.get("/export/latency.csv")
+async def export_latency_csv():
+    """
+    레이턴시 메트릭을 CSV 형식으로 다운로드
+
+    사용:
+    - GET /api/metrics/export/latency.csv
+    - 브라우저에서 CSV 파일로 다운로드됨
+    - 레이턴시 분석용 임포트 가능
+    """
+    try:
+        dashboard = MetricsDashboard()
+        filename, csv_bytes = dashboard.export_latency_to_csv()
+
+        return StreamingResponse(
+            iter([csv_bytes]),
+            media_type="text/csv; charset=utf-8",
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
+    except Exception as e:
+        logger.error(f"Error exporting latency CSV: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export latency")
+
+
+@router.get("/export/info")
+async def get_export_info() -> Dict:
+    """
+    사용 가능한 export 형식 및 가이드
+
+    임시 대시보드 생성 방법:
+    1. metrics.csv 다운로드: GET /api/metrics/export/metrics.csv
+    2. latency.csv 다운로드: GET /api/metrics/export/latency.csv
+    3. Google Sheets에서 "파일 > 가져오기"로 CSV 임포트
+    4. 차트/피벗테이블로 시각화
+    """
+    try:
+        monitor = get_global_monitor()
+        latency_stats = monitor.get_latency_statistics()
+
+        return {
+            "export_formats": {
+                "metrics_csv": {
+                    "endpoint": "/api/metrics/export/metrics.csv",
+                    "description": "섹션별 정확도, 신뢰도, 앙상블 적용 메트릭",
+                    "columns": [
+                        "Timestamp",
+                        "Section ID",
+                        "Proposal ID",
+                        "Confidence",
+                        "Score",
+                        "Ensemble Applied",
+                        "Feedback Triggered",
+                        "Feedback Improved",
+                    ]
+                },
+                "latency_csv": {
+                    "endpoint": "/api/metrics/export/latency.csv",
+                    "description": "섹션별 레이턴시 메트릭 (변형 생성, 앙상블 투표, 피드백 루프)",
+                    "columns": [
+                        "Timestamp",
+                        "Section ID",
+                        "Proposal ID",
+                        "Variant Generation (ms)",
+                        "Ensemble Voting (ms)",
+                        "Feedback Loop (ms)",
+                        "Total Section (ms)",
+                    ]
+                }
+            },
+            "temporary_dashboard_guide": {
+                "step_1": "CSV 파일 다운로드 (위 endpoint 사용)",
+                "step_2": "Google Sheets 접속 (sheets.google.com)",
+                "step_3": "'파일' > '가져오기' > 'CSV 파일 업로드' 선택",
+                "step_4": "데이터 > 피벗테이블로 시각화",
+                "step_5": "차트 삽입으로 트렌드 분석",
+            },
+            "production_readiness": {
+                "total_sections_tracked": len(monitor.section_metrics),
+                "total_latency_records": len(monitor.latency_history),
+                "avg_latency_ms": latency_stats.get("avg_total_ms"),
+                "p95_latency_ms": latency_stats.get("p95_total_ms"),
+                "target": "<21s per section",
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error fetching export info: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch export info")

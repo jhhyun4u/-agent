@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-18T13:26:45.097Z",
+  "lastUpdated": "2026-04-18T13:42:43.540Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -115,9 +115,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-18T13:26:45.055Z"
+        "lastUpdated": "2026-04-18T13:42:43.521Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_documents.py",
+      "lastFile": "c:\\project\\tenopa proposer\\app\\api\\routes_harness_metrics.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -1079,9 +1079,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-18T13:18:40.517Z"
+        "lastUpdated": "2026-04-18T13:42:29.652Z"
       },
-      "lastFile": "c:\\project\\tenopa proposer\\app\\services\\ensemble_metrics_monitor.py"
+      "lastFile": "c:\\project\\tenopa proposer\\app\\services\\metrics_dashboard.py"
     },
     "stores": {
       "phase": "do",
@@ -13846,6 +13846,24 @@
     },
     {
       "timestamp": "2026-04-18T13:26:45.067Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:42:12.130Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:42:29.664Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-18T13:42:43.538Z",
       "feature": "api",
       "phase": "do",
       "action": "updated"

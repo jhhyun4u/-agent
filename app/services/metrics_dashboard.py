@@ -6,9 +6,11 @@ STEP 4A Phase 3: Task 6 — Metrics Dashboard
 
 import logging
 import json
+import csv
+import io
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from app.services.ensemble_metrics_monitor import (
     get_global_monitor,
@@ -241,6 +243,86 @@ class MetricsDashboard:
 
         logger.info(f"Detailed export saved: {filepath}")
         return filepath
+
+    def export_to_csv(self) -> Tuple[str, bytes]:
+        """
+        메트릭을 CSV 형식으로 내보내기.
+
+        Returns:
+            (filename, csv_bytes) 튜플
+        """
+        output = io.StringIO()
+        writer = csv.writer(output)
+
+        # 헤더 작성
+        writer.writerow([
+            "Timestamp",
+            "Section ID",
+            "Proposal ID",
+            "Confidence",
+            "Score",
+            "Ensemble Applied",
+            "Feedback Triggered",
+            "Feedback Improved",
+        ])
+
+        # 섹션 메트릭 작성
+        for metric in self.monitor.section_metrics:
+            writer.writerow([
+                metric.get("timestamp", ""),
+                metric.get("section_id", ""),
+                metric.get("proposal_id", ""),
+                metric.get("confidence", ""),
+                metric.get("score", ""),
+                metric.get("ensemble_applied", ""),
+                metric.get("feedback_triggered", ""),
+                metric.get("feedback_improved", ""),
+            ])
+
+        csv_content = output.getvalue()
+        filename = f"metrics_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+
+        logger.info(f"CSV export generated: {filename} ({len(csv_content)} bytes)")
+        return filename, csv_content.encode("utf-8-sig")
+
+    def export_latency_to_csv(self) -> Tuple[str, bytes]:
+        """
+        레이턴시 메트릭을 CSV 형식으로 내보내기.
+
+        Returns:
+            (filename, csv_bytes) 튜플
+        """
+        output = io.StringIO()
+        writer = csv.writer(output)
+
+        # 헤더 작성
+        writer.writerow([
+            "Timestamp",
+            "Section ID",
+            "Proposal ID",
+            "Variant Generation (ms)",
+            "Ensemble Voting (ms)",
+            "Feedback Loop (ms)",
+            "Total Section (ms)",
+        ])
+
+        # 레이턴시 메트릭 작성
+        for metric in self.monitor.latency_history:
+            writer.writerow([
+                metric.get("timestamp", ""),
+                metric.get("section_id", ""),
+                metric.get("proposal_id", ""),
+                metric.get("variant_generation_ms", ""),
+                metric.get("ensemble_voting_ms", ""),
+                metric.get("feedback_loop_ms", ""),
+                metric.get("total_section_ms", ""),
+            ])
+
+        csv_content = output.getvalue()
+        filename = f"latency_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+
+        logger.info(f"Latency CSV export generated: {filename} ({len(csv_content)} bytes)")
+        return filename, csv_content.encode("utf-8-sig")
 
     def generate_text_report(self) -> str:
         """텍스트 형식 리포트 생성."""
