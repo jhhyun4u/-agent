@@ -10,9 +10,11 @@ Proposal Architect — 프로젝트 수주 성공률을 높이는 AI Coworker
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
 import logging
+
+from prometheus_client import generate_latest, REGISTRY
 
 from app.config import settings
 from app.exceptions import TenopAPIError
@@ -490,6 +492,30 @@ async def status():
         "version": "4.0.0",
         "active_sessions": session_manager.get_session_count(),
     }
+
+
+# ── Prometheus 메트릭 엔드포인트 ──
+
+@app.get("/metrics")
+async def metrics():
+    """
+    Prometheus 메트릭 엔드포인트
+    
+    Prometheus의 scrape_configs에서 이 엔드포인트를 수집하도록 설정:
+    
+    ```yaml
+    scrape_configs:
+      - job_name: 'proposal-architect'
+        static_configs:
+          - targets: ['localhost:8000']
+        metrics_path: '/metrics'
+        scrape_interval: 15s
+    ```
+    """
+    return Response(
+        content=generate_latest(REGISTRY),
+        media_type="text/plain; version=0.0.4; charset=utf-8"
+    )
 
 
 if __name__ == "__main__":

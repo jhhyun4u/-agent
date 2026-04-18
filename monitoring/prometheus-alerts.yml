@@ -94,6 +94,60 @@ groups:
           summary: "High HTTP request latency on {{ $labels.instance }}"
           description: "P95 latency is {{ $value | humanize }}s"
 
+      # ════════════════════════════════════════════════════════════════════════════
+      # 캐시 성능 알림 (Phase 2 Week 1)
+      # ════════════════════════════════════════════════════════════════════════════
+
+      - alert: CacheHitRateLow
+        expr: cache_hit_rate{cache_type=~"kb_search|proposals"} < 0.80
+        for: 10m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Low cache hit rate for {{ $labels.cache_type }}"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} (target: >= 80%)"
+
+      - alert: CacheEvictionsHigh
+        expr: rate(cache_evictions_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "High cache eviction rate for {{ $labels.cache_type }}"
+          description: "Eviction rate is {{ $value | humanize }} per second"
+
+      - alert: CacheSizeWarning
+        expr: cache_size_bytes{cache_type=~"kb_search|proposals"} > 104857600  # 100MB
+        for: 10m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Cache size growing for {{ $labels.cache_type }}"
+          description: "Cache size is {{ $value | humanize1024 }}B (monitor for memory issues)"
+
+      - alert: KBSearchLatencyHigh
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{endpoint=~"/api/kb/search.*"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: backend
+        annotations:
+          summary: "High latency on KB search endpoint"
+          description: "P95 latency is {{ $value | humanize }}s (target: < 100ms with cache)"
+
+      - alert: ProposalListLatencyHigh
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{endpoint=~"/api/proposals.*"}[5m])) > 0.3
+        for: 5m
+        labels:
+          severity: warning
+          component: backend
+        annotations:
+          summary: "High latency on proposal list endpoint"
+          description: "P95 latency is {{ $value | humanize }}s (target: < 100ms with cache)"
+
       - alert: BackendDown
         expr: up{job="fastapi-backend"} == 0
         for: 2m

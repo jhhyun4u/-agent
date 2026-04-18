@@ -18,6 +18,17 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
+from app.services.metrics_service import (
+    cache_hits,
+    cache_misses,
+    cache_evictions,
+    cache_expirations,
+    cache_size,
+    cache_items,
+    cache_hit_rate,
+    update_cache_stats,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -112,11 +123,13 @@ class MemoryCacheService:
             Cached value if hit and not expired, None otherwise
         """
         if cache_name not in self._caches:
+            cache_misses.labels(cache_type=cache_name).inc()
             return None
 
         async with self._lock:
             cache = self._caches[cache_name]
             if key not in cache:
+                cache_misses.labels(cache_type=cache_name).inc()
                 return None
 
             entry = cache[key]
@@ -124,11 +137,14 @@ class MemoryCacheService:
             # Check expiration
             if entry.is_expired():
                 del cache[key]
+                cache_expirations.labels(cache_type=cache_name).inc()
+                cache_misses.labels(cache_type=cache_name).inc()
                 logger.debug(f"Cache miss (expired): {cache_name}/{key[:8]}...")
                 return None
 
             # Update access time for LRU
             entry.touch()
+            cache_hits.labels(cache_type=cache_name).inc()
             logger.debug(
                 f"Cache hit: {cache_name}/{key[:8]}... (hits: {entry.hit_count})"
             )
@@ -170,6 +186,7 @@ class MemoryCacheService:
                     key=lambda k: cache[k].accessed_at,
                 )
                 del cache[lru_key]
+                cache_evictions.labels(cache_type=cache_name).inc()
                 logger.debug(f"LRU eviction in '{cache_name}': removed {lru_key[:8]}...")
 
             # Store entry
@@ -180,6 +197,9 @@ class MemoryCacheService:
                 accessed_at=time.time(),
                 ttl_seconds=ttl,
             )
+            
+            # Update cache size metrics
+            _update_cache_metrics(cache_name, cache)
             logger.debug(f"Cache set: {cache_name}/{key[:8]}... (ttl: {ttl}s)")
             return True
 
@@ -316,6 +336,26 @@ class MemoryCacheService:
                 total_size / len(stats) if stats else 0, 1
             ),
         }
+
+
+def _update_cache_metrics(cache_name: str, cache: Dict[str, CacheEntry]) -> None:
+    """Update Prometheus metrics for cache statistics"""
+    entries = list(cache.values())
+    
+    # Calculate cache size in bytes (rough estimate)
+    cache_size_bytes = sum(
+        len(str(e.value).encode()) + len(e.key.encode())
+        for e in entries
+    )
+    
+    # Calculate hit/miss ratio
+    total_hits = sum(e.hit_count for e in entries)
+    hit_rate = total_hits / max(1, len(entries))  # Per-entry hit count average
+    
+    # Update metrics
+    cache_size.labels(cache_type=cache_name).set(cache_size_bytes)
+    cache_items.labels(cache_type=cache_name).set(len(entries))
+    cache_hit_rate.labels(cache_type=cache_name).set(min(hit_rate, 1.0))
 
 
 # Global singleton instance

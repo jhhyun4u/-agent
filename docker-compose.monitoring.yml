@@ -35,6 +35,8 @@ services:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
       - grafana_storage:/var/lib/grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     depends_on:
       - prometheus
     networks:
