@@ -428,8 +428,7 @@ startxref
 class TestSecurity:
     """보안 테스트"""
 
-    @pytest.mark.asyncio
-    async def test_org_isolation_enforcement(self, client, test_user):
+    def test_org_isolation_enforcement(self, client, test_user):
         """org 격리 강제 (RLS 검증)"""
         # 모든 API 엔드포인트가 org_id로 자동 필터링하므로
         # GET /api/documents는 현재 org의 문서만 반환
