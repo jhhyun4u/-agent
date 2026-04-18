@@ -205,7 +205,7 @@ GET /api/documents/{document_id}?chunk_type=body&limit=10
     {
       "id": "uuid",
       "chunk_index": 0,
-      "chunk_type": "title|heading|body|table|image",
+      "chunk_type": "section|slide|article|window",
       "section_title": "string",
       "content": "string",
       "char_count": 500,
@@ -219,7 +219,7 @@ GET /api/documents/{document_id}?chunk_type=body&limit=10
 ```
 
 **필터:**
-- `chunk_type`: title, heading, body, table, image
+- `chunk_type`: section, slide, article, window
 - `limit`, `offset`: 페이지네이션
 
 ---

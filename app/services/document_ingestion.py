@@ -179,6 +179,25 @@ async def process_document(document_id: str, org_id: str) -> dict:
             .execute()
         )
 
+        # ── 프로젝트 메타 자동 시드 (doc_type='실적'일 때) ──
+        # Design 4.1 step 5: "doc_type이 '실적'일 때만 import_project() 호출"
+        if doc.get("doc_type") == "실적" and doc.get("project_id"):
+            try:
+                logger.debug(f"[{org_id}] 프로젝트 메타 시드 시작 (doc_id={document_id})")
+                await import_project(
+                    org_id=org_id,
+                    project_data={
+                        "project_id": doc["project_id"],
+                        "document_id": document_id,
+                        "title": doc.get("filename"),
+                    },
+                    upsert=False
+                )
+                logger.debug(f"[{org_id}] 프로젝트 메타 시드 완료")
+            except Exception as e:
+                # 메타 시드 실패해도 문서 처리는 계속 진행
+                logger.warning(f"프로젝트 메타 시드 실패 [{document_id}]: {e}")
+
         # ✅ 메모리 최적화: 완료 후 청크 정리
         del chunks
         del all_embeddings
