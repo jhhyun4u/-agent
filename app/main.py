@@ -37,6 +37,7 @@ from app.api.routes_intranet import router as intranet_router
 from app.api.routes_documents import router as documents_router
 from app.api.routes_migrations import router as migrations_router
 from app.api.routes_migration_status import router as migration_status_router
+from app.api.routes_migration import router as migration_scheduler_router
 from app.api.routes_analytics import router as analytics_router
 from app.api.routes_qa import router as qa_router
 from app.api.routes_files import router as files_router
@@ -257,6 +258,18 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"[WS] 하트비트 루프 시작 실패: {e}")
 
+    # Phase 5: 정기 문서 마이그레이션 스케줄러 초기화
+    scheduler_service = None
+    try:
+        from app.services.scheduler_service import SchedulerService
+        scheduler_service = SchedulerService(client)
+        await scheduler_service.initialize()
+        logger.info("[Phase 5] 정기 문서 마이그레이션 스케줄러 초기화 완료")
+    except ImportError as e:
+        logger.warning(f"[Phase 5] 스케줄러 모듈 미발견 (무시): {e}")
+    except Exception as e:
+        logger.warning(f"[Phase 5] 스케줄러 초기화 실패 (무시): {e}")
+
     yield
 
     # Shutdown: 최적화 스케줄러 취소
@@ -276,6 +289,14 @@ async def lifespan(app: FastAPI):
         except asyncio.CancelledError:
             pass
         logger.info("[WS] WebSocket 하트비트 루프 종료")
+
+    # Shutdown: 스케줄러 종료
+    if scheduler_service and scheduler_service.scheduler.running:
+        try:
+            scheduler_service.scheduler.shutdown()
+            logger.info("[Phase 5] 정기 문서 마이그레이션 스케줄러 종료")
+        except Exception as e:
+            logger.warning(f"[Phase 5] 스케줄러 종료 중 오류: {e}")
 
     logger.info("시스템 종료")
 
@@ -380,6 +401,9 @@ app.include_router(migrations_router)
 
 # DB 마이그레이션 상태 API (설계 §4.4 — GAP-H3/H4/H5)
 app.include_router(migration_status_router)
+
+# Phase 5: 정기 문서 마이그레이션 스케줄러 (APScheduler + ConcurrentBatchProcessor)
+app.include_router(migration_scheduler_router)
 
 # Phase 4: 분석 대시보드 (§12-13)
 app.include_router(analytics_router)
