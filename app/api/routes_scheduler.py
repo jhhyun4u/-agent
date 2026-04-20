@@ -44,18 +44,25 @@ async def list_schedules(current_user = Depends(get_current_user)):
 async def create_schedule(schedule: ScheduleCreate, current_user = Depends(get_current_user)):
     if current_user.get("role") != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-    
+
     client = await get_async_client()
     service = SchedulerService(client)
-    
+
     schedule_id = await service.add_schedule(
         name=schedule.name,
         cron_expression=schedule.cron_expression,
         source_type=schedule.source_type,
         enabled=schedule.enabled
     )
-    
-    return {"id": schedule_id, "schedule_name": schedule.name, "cron_expression": schedule.cron_expression, "enabled": schedule.enabled}
+
+    return ScheduleResponse(
+        id=schedule_id,
+        schedule_name=schedule.name,
+        cron_expression=schedule.cron_expression,
+        enabled=schedule.enabled,
+        next_run_at=None,
+        last_run_at=None
+    )
 
 @router.post("/schedules/{schedule_id}/trigger")
 async def trigger_migration(schedule_id: str, current_user = Depends(get_current_user)):
@@ -72,12 +79,20 @@ async def trigger_migration(schedule_id: str, current_user = Depends(get_current
 async def get_batch_status(batch_id: str, current_user = Depends(get_current_user)):
     if current_user.get("role") != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-    
+
     client = await get_async_client()
     service = SchedulerService(client)
-    
+
     batch = await service.get_batch_status(batch_id)
     if not batch:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    
-    return batch
+
+    return BatchResponse(
+        id=batch.get("id"),
+        batch_name=batch.get("batch_name"),
+        status=batch.get("status"),
+        started_at=batch.get("started_at"),
+        completed_at=batch.get("completed_at"),
+        processed_documents=batch.get("processed_documents", 0),
+        failed_documents=batch.get("failed_documents", 0)
+    )

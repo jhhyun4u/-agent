@@ -138,6 +138,30 @@ class SchedulerService:
             self.logger.error(f"Get schedules failed: {e}")
             return []
 
+    async def get_batch_status(self, batch_id: str) -> Optional[Dict]:
+        try:
+            result = await self.db.table("migration_batches").select("*").eq("id", batch_id).single().execute()
+            return result.data
+        except Exception as e:
+            self.logger.error(f"Get batch status failed: {e}")
+            return None
+
+    async def get_schedules(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+        try:
+            result = await self.db.table("migration_schedule").select("*").range(offset, offset + limit - 1).execute()
+            return result.data or []
+        except Exception as e:
+            self.logger.error(f"Get schedules failed: {e}")
+            return []
+
+    async def get_batches(self, limit: int = 50, offset: int = 0) -> List[Dict]:
+        try:
+            result = await self.db.table("migration_batches").select("*").range(offset, offset + limit - 1).execute()
+            return result.data or []
+        except Exception as e:
+            self.logger.error(f"Get batches failed: {e}")
+            return []
+
     async def start(self):
         if not self.scheduler.running:
             self.scheduler.start()

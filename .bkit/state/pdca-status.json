@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-20T09:01:35.605Z",
+  "lastUpdated": "2026-04-20T09:19:33.381Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -115,9 +115,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-20T08:50:56.069Z"
+        "lastUpdated": "2026-04-20T09:19:33.376Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_migration.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_scheduler.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -1079,9 +1079,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-20T09:01:35.591Z"
+        "lastUpdated": "2026-04-20T09:19:07.640Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\main.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\scheduler_service.py"
     },
     "stores": {
       "phase": "do",
@@ -14033,6 +14033,48 @@
     {
       "timestamp": "2026-04-20T09:01:35.604Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:07:16.930Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:07:33.249Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:08:15.233Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:08:42.060Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:19:07.648Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:19:20.460Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-20T09:19:33.380Z",
+      "feature": "api",
       "phase": "do",
       "action": "updated"
     }
