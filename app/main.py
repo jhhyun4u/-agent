@@ -290,11 +290,12 @@ async def lifespan(app: FastAPI):
             pass
         logger.info("[WS] WebSocket 하트비트 루프 종료")
 
-    # Shutdown: 스케줄러 종료
+    # Shutdown: 스케줄러 종료 (pending batch jobs 완료 대기)
     if scheduler_service and scheduler_service.scheduler.running:
         try:
-            scheduler_service.scheduler.shutdown()
-            logger.info("[Phase 5] 정기 문서 마이그레이션 스케줄러 종료")
+            # wait=True: pending batch jobs를 완료할 때까지 기다린 후 shutdown
+            scheduler_service.scheduler.shutdown(wait=True)
+            logger.info("[Phase 5] 정기 문서 마이그레이션 스케줄러 종료 (pending jobs 완료)")
         except Exception as e:
             logger.warning(f"[Phase 5] 스케줄러 종료 중 오류: {e}")
 

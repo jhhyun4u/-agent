@@ -433,16 +433,14 @@ class AccuracyEnhancementEngine:
             filtered_results = raw_results  # fallback: 모두 사용
         
         # Step 3: 앙상블 투표 (variant_data 제공 시)
-        ensemble_applied = variant_data is not None and len(variant_data) > 0
-        if ensemble_applied:
-            # variant_data에 기반하여 앙상블 적용
-            # TODO: Phase 3에서 구현 - 현재는 신뢰도 필터링 후 앙상블 투표 통합
-            # ensemble_vote_results = []
-            # for data in variant_data:
-            #     result = self.voter.vote(data['variant_scores'], data['variant_details'])
-            #     ensemble_vote_results.append(result)
-            # filtered_results = [r for r in filtered_results if r passes ensemble validation]
-            pass
+        ensemble_applied = False
+        if variant_data is not None and len(variant_data) > 0:
+            # TODO: Phase 3에서 구현 - 현재는 신뢰도 필터링만 적용
+            # Phase 3에서 다음 로직 추가 예정:
+            # 1. self.voter.vote()로 각 variant의 가중 평균 계산
+            # 2. 앙상블 투표 결과를 filtered_results에 반영
+            # 3. 최종 정확도 재계산
+            logger.debug(f"Ensemble voting placeholder: {len(variant_data)} variants prepared for Phase 3 integration")
         
         # Step 4: 개선된 정확도 계산
         enhanced_metrics = MetricCalculator.calculate_metrics(filtered_results)
@@ -497,7 +495,8 @@ class AccuracyEnhancementEngine:
             # Fallback: try to get from data attribute if available
             try:
                 all_test_cases = getattr(validator.dataset_manager, 'data', [])
-            except:
+            except Exception as e:
+                logger.exception("Failed to fetch test cases from fallback attribute")
                 all_test_cases = []
 
         if not all_test_cases:
