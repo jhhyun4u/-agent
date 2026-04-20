@@ -312,6 +312,145 @@ class TestIntegration:
         # Should accept upload with metadata
         assert response.status_code in [201, 202, 400, 422, 500]
 
+    @pytest.mark.unit
+    @pytest.mark.asyncio
+    async def test_process_document_calls_import_project_with_correct_contract(self):
+        """G-3 fix: process_document가 import_project에 올바른 project_data 전달 검증.
+
+        시나리오:
+        - doc_type="실적", project_id 있음
+        - intranet_projects 조회 결과: legacy_idx + project_name 포함
+        - import_project가 해당 데이터로 호출되는지 확인
+        - 잘못된 키(project_id/document_id/title)로 호출되지 않는지 확인
+        """
+        import uuid
+        from unittest.mock import AsyncMock, MagicMock, call, patch
+
+        doc_id = str(uuid.uuid4())
+        org_id = str(uuid.uuid4())
+        proj_id = str(uuid.uuid4())
+
+        fake_doc = {
+            "id": doc_id,
+            "org_id": org_id,
+            "doc_type": "실적",
+            "project_id": proj_id,
+            "filename": "track_record.pdf",
+            "extracted_text": "실적 보고서 내용 " * 20,  # > 50 chars
+            "storage_path": None,
+        }
+
+        fake_project = {
+            "id": proj_id,
+            "org_id": org_id,
+            "legacy_idx": 42,
+            "project_name": "테스트 수행실적 과제",
+            "client_name": "테스트 발주기관",
+            "keywords": ["AI", "분석"],
+        }
+
+        mock_client = MagicMock()
+
+        # intranet_documents.select().eq().single().execute() → fake_doc
+        doc_execute = AsyncMock(return_value=MagicMock(data=fake_doc))
+        mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute = doc_execute
+
+        # 청킹 결과
+        from app.services.document_chunker import DocumentChunk
+        fake_chunk = DocumentChunk(
+            index=0,
+            chunk_type="section",
+            section_title="섹션",
+            content="테스트 청크 내용입니다.",
+            char_count=12,
+        )
+
+        with (
+            patch(
+                "app.services.document_ingestion.get_async_client",
+                return_value=mock_client,
+            ),
+            patch(
+                "app.services.document_ingestion.chunk_document",
+                return_value=[fake_chunk],
+            ),
+            patch(
+                "app.services.document_ingestion.generate_embeddings_batch",
+                new_callable=AsyncMock,
+                return_value=[[0.1] * 1536],
+            ),
+            patch(
+                "app.services.document_ingestion.get_knowledge_manager",
+                return_value=MagicMock(classify_chunk=AsyncMock(return_value=None)),
+            ),
+        ):
+            # intranet_documents UPDATE (status=completed)
+            mock_client.table.return_value.update.return_value.eq.return_value.execute = AsyncMock(
+                return_value=MagicMock(data=[])
+            )
+            # document_chunks DELETE
+            mock_client.table.return_value.delete.return_value.eq.return_value.execute = AsyncMock(
+                return_value=MagicMock(data=[])
+            )
+            # document_chunks INSERT
+            mock_client.table.return_value.insert.return_value.execute = AsyncMock(
+                return_value=MagicMock(data=[{"id": str(uuid.uuid4())}])
+            )
+            # document_chunks SELECT (for classify)
+            mock_client.table.return_value.select.return_value.eq.return_value.execute = AsyncMock(
+                return_value=MagicMock(data=[])
+            )
+
+            # intranet_projects lookup (G-3 path): second call to .single().execute()
+            proj_execute = AsyncMock(return_value=MagicMock(data=fake_project))
+
+            # Patch import_project to capture call args
+            with patch(
+                "app.services.document_ingestion.import_project",
+                new_callable=AsyncMock,
+            ) as mock_import:
+                # Route the intranet_projects query to return fake_project
+                # We need to intercept the second .single().execute() call
+                call_count = {"n": 0}
+
+                async def single_execute_side_effect():
+                    call_count["n"] += 1
+                    if call_count["n"] == 1:
+                        return MagicMock(data=fake_doc)
+                    return MagicMock(data=fake_project)
+
+                mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute.side_effect = (
+                    single_execute_side_effect
+                )
+
+                from app.services.document_ingestion import process_document
+                result = await process_document(doc_id, org_id)
+
+                # import_project must have been called
+                assert mock_import.called, "import_project가 호출되어야 합니다"
+
+                # Verify correct contract: legacy_idx and project_name present
+                call_kwargs = mock_import.call_args
+                passed_data = call_kwargs.kwargs.get(
+                    "project_data"
+                ) or call_kwargs.args[1]
+
+                assert "legacy_idx" in passed_data, (
+                    "import_project에 legacy_idx가 전달되어야 합니다 (G-3 fix)"
+                )
+                assert "project_name" in passed_data, (
+                    "import_project에 project_name이 전달되어야 합니다 (G-3 fix)"
+                )
+                assert "project_id" not in passed_data, (
+                    "import_project에 잘못된 키 'project_id'가 전달되면 안 됩니다"
+                )
+                assert "document_id" not in passed_data, (
+                    "import_project에 잘못된 키 'document_id'가 전달되면 안 됩니다"
+                )
+                assert "title" not in passed_data, (
+                    "import_project에 잘못된 키 'title'이 전달되면 안 됩니다"
+                )
+
     @pytest.mark.integration
     def test_multiple_documents_concurrent_processing(self, client, sample_pdf_file):
         """동시 처리 테스트

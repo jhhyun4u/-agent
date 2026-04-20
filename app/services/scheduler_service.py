@@ -233,3 +233,24 @@ class SchedulerService:
     async def stop(self):
         if self.scheduler.running:
             self.scheduler.shutdown()
+
+
+# ============================================
+# Dependency Injection
+# ============================================
+
+async def get_scheduler_service(db_client=None) -> SchedulerService:
+    """
+    Dependency injection for SchedulerService
+
+    Args:
+        db_client: Optional Supabase async client (use default if not provided)
+
+    Returns:
+        SchedulerService instance
+    """
+    if db_client is None:
+        from app.utils.supabase_client import get_async_client
+        db_client = await get_async_client()
+
+    return SchedulerService(db_client)

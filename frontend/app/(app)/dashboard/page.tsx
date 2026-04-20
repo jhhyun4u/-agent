@@ -54,7 +54,7 @@ function calcDDay(deadlineIso: string): number {
 function dDayColor(days: number): string {
   if (days <= 3) return "text-red-400";
   if (days <= 14) return "text-yellow-400";
-  return "text-[#8c8c8c]";
+  return "text-[var(--muted)]";
 }
 
 function dDayLabel(days: number): string {
@@ -65,9 +65,9 @@ function dDayLabel(days: number): string {
 
 function statusBadge(status: CalendarItem["status"]): React.ReactNode {
   const map: Record<CalendarItem["status"], { label: string; cls: string }> = {
-    open: { label: "공개", cls: "bg-[#262626] text-[#8c8c8c]" },
+    open: { label: "공개", cls: "bg-[var(--card)] text-[var(--muted)]" },
     submitted: { label: "제출", cls: "bg-blue-500/15 text-blue-400" },
-    won: { label: "수주", cls: "bg-[#3ecf8e]/15 text-[#3ecf8e]" },
+    won: { label: "수주", cls: "bg-[#3ecf8e]/15 text-[var(--accent)]" },
     lost: { label: "낙찰실패", cls: "bg-red-500/15 text-red-400" },
   };
   const { label, cls } = map[status] ?? map.open;
@@ -396,8 +396,8 @@ export default function DashboardPage() {
   return (
     <>
       {/* 상단 헤더 */}
-      <header className="bg-[#111111] border-b border-[#262626] px-6 py-3 shrink-0 flex items-center justify-between">
-        <h1 className="text-sm font-semibold text-[#ededed]">대시보드</h1>
+      <header className="bg-[var(--surface)] border-b border-[var(--border)] px-6 py-3 shrink-0 flex items-center justify-between">
+        <h1 className="text-sm font-semibold text-[var(--text)]">대시보드</h1>
 
         {/* 위젯 설정 + 스코프 탭 */}
         <div className="flex items-center gap-3">
@@ -405,7 +405,7 @@ export default function DashboardPage() {
           <div className="relative">
             <button
               onClick={() => setShowWidgetConfig(!showWidgetConfig)}
-              className="p-1.5 rounded-lg text-[#8c8c8c] hover:text-[#ededed] hover:bg-[#262626] transition-colors"
+              className="p-1.5 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--border)] transition-colors"
               title="위젯 설정"
             >
               <svg
@@ -433,8 +433,8 @@ export default function DashboardPage() {
                   className="fixed inset-0 z-30"
                   onClick={() => setShowWidgetConfig(false)}
                 />
-                <div className="absolute right-0 mt-1.5 w-48 bg-[#1c1c1c] border border-[#262626] rounded-xl shadow-xl z-40 py-2">
-                  <p className="px-3 py-1.5 text-[10px] text-[#8c8c8c] uppercase tracking-wider">
+                <div className="absolute right-0 mt-1.5 w-48 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-xl z-40 py-2">
+                  <p className="px-3 py-1.5 text-[10px] text-[var(--muted)] uppercase tracking-wider">
                     위젯 표시
                   </p>
                   {(
@@ -453,7 +453,7 @@ export default function DashboardPage() {
                     <button
                       key={key}
                       onClick={() => toggleWidget(key)}
-                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#ededed] hover:bg-[#262626] transition-colors"
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[var(--text)] hover:bg-[var(--border)] transition-colors"
                     >
                       <span
                         className={`w-3.5 h-3.5 rounded border flex items-center justify-center text-[9px] ${widgetConfig[key] ? "bg-[#3ecf8e] border-[#3ecf8e] text-[#0f0f0f]" : "border-[#363636]"}`}
@@ -468,7 +468,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          <div className="flex items-center gap-1 bg-[#1c1c1c] rounded-lg p-1 border border-[#262626]">
+          <div className="flex items-center gap-1 bg-[var(--card)] rounded-lg p-1 border border-[var(--border)]">
             {(
               [
                 { key: "team" as Scope, label: "팀" },

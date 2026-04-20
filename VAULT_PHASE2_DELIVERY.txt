@@ -1,0 +1,289 @@
+================================================================================
+VAULT CHAT PHASE 2 — PLANNING & DESIGN DELIVERY
+================================================================================
+
+Date: 2026-04-20
+Status: COMPLETE
+Duration: Single session (3 hours)
+
+================================================================================
+DELIVERABLES (4 Documents)
+================================================================================
+
+1. PLAN DOCUMENT
+   File: docs/01-plan/features/vault-chat-phase2.plan.md
+   Size: 21 KB, 529 lines
+   Content:
+     - Executive summary
+     - Business value (Context, Permission, L10n, Teams Bot)
+     - Detailed requirements (FR1-FR4, NFR1-NFR3)
+     - Feature specifications (FEATURE-2.1 through 2.4)
+     - 2-week implementation timeline
+     - Success criteria (functional, performance, quality)
+     - Risk management (4 major risks with mitigation)
+     - Budget & resource allocation
+     - Approval checklist
+
+2. DESIGN DOCUMENT
+   File: docs/02-design/features/vault-chat-phase2.design.md
+   Size: 46 KB, 1,299 lines
+   Content:
+     - System architecture diagram (7 layers)
+     - 5 detailed data flow diagrams
+     - Complete database schema (new tables, modifications)
+     - Service layer design (4 services with pseudocode)
+     - API endpoint specifications (5 endpoints)
+     - Testing strategy (15 unit + 20 integration + 15 E2E tests)
+     - Performance targets (response times, scalability)
+     - Security & compliance measures
+     - Migration & deployment steps
+     - Monitoring & observability
+     - Full operational documentation
+
+3. SUMMARY DOCUMENT
+   File: VAULT_CHAT_PHASE2_SUMMARY.md
+   Size: 13 KB, 386 lines
+   Content:
+     - Executive summary (1 paragraph)
+     - Phase 1 baseline (what's already working)
+     - Phase 2 scope (4 features, 700 lines code)
+     - Implementation timeline (Week 1 & Week 2)
+     - Success criteria checklist
+     - Resource allocation
+     - Risk management summary
+     - File references & next actions
+     - Deployment checklist
+
+4. QUICK START GUIDE
+   File: VAULT_PHASE2_QUICK_START.md
+   Size: 11 KB, 350 lines
+   Content:
+     - What's being built (overview table)
+     - Key numbers (700 lines, 50 tests, 2 weeks)
+     - Day-by-day implementation checklist
+     - Files to create/modify (6 new, 6 modified)
+     - Setup instructions
+     - Progress tracking template
+     - Test running guide
+     - Review checkpoints
+     - Common pitfalls & learning resources
+     - Completion criteria
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+FEATURES:
+  + Conversation Context Injection (80 lines)
+     - Extract last 6-8 turns from conversation
+     - Inject into Claude prompt
+     - Store context embeddings (optional)
+
+  + Permission-Based Response Filtering (100 lines)
+     - 5-tier role hierarchy (member to admin)
+     - Filter responses based on user role
+     - Audit all denied access attempts
+
+  + Multi-language Support (200 lines)
+     - Auto-detect language (ko, en, zh, ja)
+     - Search in detected language
+     - Save user language preference
+
+  + Teams Channel Bot (370 lines)
+     - Mode 1: Adaptive bot (mention)
+     - Mode 2: Daily digest (scheduled)
+     - Mode 3: RFP auto-recommendation
+
+DATABASE:
+  + New tables: 2 (teams_bot_config, teams_bot_messages)
+  + Modified tables: 4 (vault_messages, vault_documents, vault_conversations, vault_audit_logs)
+  + Migration file: 023_vault_phase2_tables.sql (ready to execute)
+
+API ENDPOINTS:
+  + POST /api/vault/chat (context injection)
+  + GET /api/vault/conversations/{id}/context (history)
+  + POST /api/teams/bot/query (adaptive bot)
+  + GET /api/teams/bot/config/{team_id} (settings)
+  + PUT /api/teams/bot/config/{team_id} (update settings)
+
+TESTS:
+  + 15 unit tests (permission, context, language detection)
+  + 20 integration tests (full workflows)
+  + 15 E2E tests (end-to-end scenarios)
+  + Total: 50 tests covering all new functionality
+
+================================================================================
+ESTIMATED EFFORT
+================================================================================
+
+IMPLEMENTATION:
+  Context Manager:      2 days (80 lines + 8 tests)
+  Permission Filter:    2 days (100 lines + 10 tests)
+  Multi-language:       3 days (200 lines + 8 tests)
+  Teams Bot Service:    3 days (370 lines + 16 tests)
+  E2E Testing:          1 day (15 tests + performance)
+  Total Implementation: 11 days
+
+CHECK & DEPLOYMENT:
+  Validation:           1 day (gap analysis, bugs)
+  Staging Deploy:       2 days (monitoring, prep)
+  Total Check & Deploy: 3 days
+
+TOTAL: 14 days (2 weeks) for 3 engineers + 1 QA
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+IMMEDIATE (2026-04-20):
+  [ ] Team review of planning & design documents
+  [ ] Approval from tech lead & product owner
+  [ ] Environment setup (langdetect, Teams sandbox)
+
+WEEK 1 (2026-04-21 to 2026-04-26):
+  [ ] Context Manager implementation + tests
+  [ ] Permission Filter implementation + tests
+  [ ] Multi-language Handler implementation + tests
+  [ ] DB migration preparation
+  [ ] Code review & integration
+
+WEEK 2 (2026-04-27 to 2026-05-04):
+  [ ] Teams Bot Service implementation + tests
+  [ ] E2E test suite implementation
+  [ ] Performance validation & benchmarking
+  [ ] CHECK Phase (gap analysis, bug fixes)
+  [ ] Staging deployment & 24-hour monitoring
+
+DEPLOYMENT (2026-05-05):
+  [ ] Production deployment
+  [ ] Teams bot activation
+  [ ] Team training & communication
+
+================================================================================
+SUCCESS METRICS
+================================================================================
+
+FUNCTIONAL:
+  - Context: 85%+ accuracy on 3+ turn conversations
+  - Permission: 100% filtering accuracy
+  - L10n: 80%+ quality for 4 languages
+  - Teams: less than 5s response, 98%+ delivery success
+
+PERFORMANCE:
+  - P50: less than 1.5s, P95: less than 3s, P99: less than 5s
+  - Memory: less than 150KB per conversation
+  - Storage: 500GB per month (with 90-day archival)
+  - Throughput: 50+ concurrent users
+
+QUALITY:
+  - Code coverage: greater than or equal to 85%
+  - Test pass rate: 100% (50 out of 50)
+  - Design match: greater than or equal to 95%
+  - Documentation: 100%
+
+================================================================================
+PHASE 1 BASELINE (Already Complete)
+================================================================================
+
+IMPLEMENTATION:
+  - Routes: routes_vault_chat.py (400+ lines)
+  - Services: vault_embedding_service.py (300+ lines)
+  - Context Manager: vault_context_manager.py (80 lines - to be extended)
+  - Validation: vault_validation.py (200+ lines)
+  - Total existing: approximately 2,500 lines
+
+TESTS:
+  - Unit: 10 tests
+  - Integration: 13 tests
+  - E2E: 11 tests
+  - Total: 34 tests (all passing)
+
+DATABASE:
+  - vault_conversations (multi-turn chat)
+  - vault_messages (message history with sources)
+  - vault_documents (knowledge base with embeddings)
+  - vault_audit_logs (access tracking)
+
+FEATURES:
+  + Semantic search (hybrid SQL + vector)
+  + Multi-turn conversations
+  + Embedding generation (OpenAI text-embedding-3-small)
+  + Hallucination validation
+  + RLS security & audit logging
+
+================================================================================
+RESOURCES REQUIRED
+================================================================================
+
+TEAM:
+  - 3 Engineers (240 hours total)
+    * Engineer 1: Context + Permission (Day 1-4)
+    * Engineer 2: L10n + Teams Bot (Day 1-8)
+    * Engineer 3: E2E Tests + Integration (Day 4-9)
+  - 1 QA Lead (40 hours)
+    * Performance validation
+    * Regression testing
+    * Staging monitoring
+
+INFRASTRUCTURE:
+  - Database: no new costs (Supabase handles scaling)
+  - Compute: no new costs (async/await, no new servers)
+  - Cost: plus $200 per month (storage) plus $500 per month (OpenAI embeddings)
+
+EXTERNAL DEPENDENCIES:
+  - langdetect library (language detection)
+  - Teams API (webhook delivery)
+  - OpenAI API (embeddings)
+
+================================================================================
+RISK MITIGATION
+================================================================================
+
+RISK 1: Multi-language Embedding Quality Degradation
+  Impact: Medium (search accuracy)
+  Probability: Medium
+  Mitigation: Week 1 prototyping, benchmark text-embedding-3-small vs large
+
+RISK 2: Teams API Rate Limiting
+  Impact: High (bot unavailable)
+  Probability: High
+  Mitigation: Message queuing, retry logic, rate limit monitoring
+
+RISK 3: Conversation Data Explosion
+  Impact: Medium (cost)
+  Probability: Medium
+  Mitigation: Auto-archival (90-day policy), context window limits
+
+RISK 4: Permission Filter Security Bug
+  Impact: Critical (data exposure)
+  Probability: Low
+  Mitigation: 20 test cases, 2-person code review, security audit
+
+================================================================================
+DOCUMENT CONTROL
+================================================================================
+
+Version: 2.0
+Created: 2026-04-20 20:30 UTC
+Status: READY FOR DEVELOPMENT
+Approval: (Pending)
+
+Files:
+  1. docs/01-plan/features/vault-chat-phase2.plan.md
+  2. docs/02-design/features/vault-chat-phase2.design.md
+  3. VAULT_CHAT_PHASE2_SUMMARY.md
+  4. VAULT_PHASE2_QUICK_START.md
+
+Next Review: 2026-04-27 (Week 1 checkpoint)
+
+================================================================================
+END OF DELIVERY
+================================================================================
+
+Status: PLANNING COMPLETE
+
+Next: READY FOR DEVELOPMENT PHASE
+
+Questions? See VAULT_CHAT_PHASE2_SUMMARY.md or contact tech lead.
+
+Good luck with Phase 2 implementation!

@@ -184,16 +184,28 @@ async def process_document(document_id: str, org_id: str) -> dict:
         if doc.get("doc_type") == "실적" and doc.get("project_id"):
             try:
                 logger.debug(f"[{org_id}] 프로젝트 메타 시드 시작 (doc_id={document_id})")
-                await import_project(
-                    org_id=org_id,
-                    project_data={
-                        "project_id": doc["project_id"],
-                        "document_id": document_id,
-                        "title": doc.get("filename"),
-                    },
-                    upsert=False
+                # G-3 fix: import_project expects legacy_idx + project_name,
+                # not project_id/document_id/title.  Look up the project row first.
+                proj_result = await (
+                    client.table("intranet_projects")
+                    .select("*")
+                    .eq("id", doc["project_id"])
+                    .eq("org_id", org_id)
+                    .single()
+                    .execute()
                 )
-                logger.debug(f"[{org_id}] 프로젝트 메타 시드 완료")
+                if proj_result.data:
+                    await import_project(
+                        org_id=org_id,
+                        project_data=proj_result.data,
+                        upsert=False,
+                    )
+                    logger.debug(f"[{org_id}] 프로젝트 메타 시드 완료")
+                else:
+                    logger.warning(
+                        f"프로젝트 메타 시드 스킵: intranet_projects 미조회 "
+                        f"(project_id={doc['project_id']})"
+                    )
             except Exception as e:
                 # 메타 시드 실패해도 문서 처리는 계속 진행
                 logger.warning(f"프로젝트 메타 시드 실패 [{document_id}]: {e}")

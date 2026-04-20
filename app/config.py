@@ -60,6 +60,9 @@ class Settings(BaseSettings):
     # PostgreSQL 직접 연결 (LangGraph checkpointer용)
     database_url: str = ""  # postgresql://user:pass@host:port/db
 
+    # Redis (캐싱용) — Dashboard KPI + Session
+    redis_url: str = "redis://localhost:6379/0"  # REDIS_URL 환경변수에서 읽음
+
     # Azure AD (Entra ID) — §17 인증 흐름
     azure_ad_tenant_id: str = ""
     azure_ad_client_id: str = ""
@@ -146,6 +149,15 @@ class Settings(BaseSettings):
 
     # OpenAI (임베딩용)
     openai_api_key: str = ""
+
+    # STEP 8: Job Queue (비동기 작업 처리) — §8-0 설정
+    job_queue_enabled: bool = True
+    job_queue_workers: int = 5  # 워커 풀 크기
+    job_queue_max_retries: int = 3  # 최대 재시도 횟수
+    job_queue_timeout_seconds: int = 300  # 작업 타임아웃 (초)
+    job_queue_heartbeat_interval: int = 10  # 워커 하트비트 간격 (초)
+    job_queue_result_ttl_days: int = 7  # 결과 보관 기간 (일)
+    # job_queue_redis_url은 redis_url과 동일 (위에서 정의)
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 

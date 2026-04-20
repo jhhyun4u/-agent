@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from app.models.vault_schemas import DocumentSource
-from app.utils.supabase_client import SupabaseAsyncClient
+from supabase import AsyncClient
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class TeamsBotService:
     3. Matching: Auto-recommend similar projects on new RFP
     """
 
-    def __init__(self, supabase_client: SupabaseAsyncClient):
+    def __init__(self, supabase_client: AsyncClient):
         """
         Initialize Teams Bot Service
 

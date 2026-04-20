@@ -1,14 +1,45 @@
 {
   "version": "1.0",
-  "enabled": false,
+  "enabled": true,
   "teamName": "",
   "feature": "document_ingestion.py",
   "pdcaPhase": "do",
   "orchestrationPattern": "leader",
   "ctoAgent": "opus",
-  "startedAt": "2026-04-20T10:35:47.576Z",
-  "lastUpdated": "2026-04-20T10:40:04.924Z",
-  "teammates": [],
+  "startedAt": "2026-04-20T13:55:37.208Z",
+  "lastUpdated": "2026-04-20T13:58:38.402Z",
+  "teammates": [
+    {
+      "name": "ae50e1b64e994363d",
+      "role": "general-purpose",
+      "model": "sonnet",
+      "status": "spawning",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-04-20T13:55:37.217Z",
+      "lastActivityAt": "2026-04-20T13:55:37.217Z"
+    },
+    {
+      "name": "aaba2744dc649072d",
+      "role": "general-purpose",
+      "model": "sonnet",
+      "status": "completed",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-04-20T13:55:47.862Z",
+      "lastActivityAt": "2026-04-20T13:58:38.380Z"
+    },
+    {
+      "name": "a362e034dcd8b1511",
+      "role": "general-purpose",
+      "model": "sonnet",
+      "status": "spawning",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-04-20T13:55:59.347Z",
+      "lastActivityAt": "2026-04-20T13:55:59.347Z"
+    }
+  ],
   "progress": {
     "totalTasks": 0,
     "completedTasks": 0,

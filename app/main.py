@@ -72,6 +72,9 @@ from app.api.routes_phase2_optimization import router as phase2_optimization_rou
 from app.api.routes_harness_metrics import router as harness_metrics_router
 from app.api.routes_feedback import router as feedback_router
 from app.api.routes_scheduler import router as scheduler_router
+from app.api.routes_dashboard import router as dashboard_router
+from app.api.routes_jobs import router as jobs_router
+from app.api.websocket_jobs import router as websocket_jobs_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -410,6 +413,9 @@ app.include_router(migration_scheduler_router)
 # Phase 4: 분석 대시보드 (§12-13)
 app.include_router(analytics_router)
 
+# Dashboard KPI: /api/dashboard/* (팀/본부/경영진 KPI 메트릭 + 캐싱)
+app.include_router(dashboard_router)
+
 # PSM-16: Q&A 기록 CRUD + 검색
 app.include_router(qa_router)
 
@@ -502,6 +508,11 @@ app.include_router(harness_metrics_router)
 # Phase 5: Scheduler Integration - 정기 문서 마이그레이션
 # Endpoints: /api/scheduler/schedules/*, /api/scheduler/batches/*
 app.include_router(scheduler_router)
+
+# STEP 8: Job Queue - 비동기 작업 처리 (Day 5)
+# Endpoints: /api/jobs/* (REST) + /ws/jobs/* (WebSocket)
+app.include_router(jobs_router, prefix="/api")
+app.include_router(websocket_jobs_router)
 
 
 # ── 헬스체크 ──

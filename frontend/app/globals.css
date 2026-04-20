@@ -10,6 +10,7 @@
   --text: #ededed;
   --muted: #8c8c8c;
   --accent: #3ecf8e;
+  --color-secondary: #6366f1;
   color-scheme: dark;
 }
 
@@ -22,6 +23,7 @@
   --text: #1a202c;
   --muted: #718096;
   --accent: #2b9a6e;
+  --color-secondary: #4f46e5;
   color-scheme: light;
 }
 
