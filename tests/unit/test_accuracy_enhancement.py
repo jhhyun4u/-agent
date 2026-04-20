@@ -9,7 +9,7 @@ Tests cover:
 """
 
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from app.services.accuracy_enhancement_engine import (
     ConfidenceThresholder,

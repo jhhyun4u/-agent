@@ -265,7 +265,7 @@ class EnsembleVoter:
             variant_weights = {name: 1.0 / len(variant_names) for name in variant_names}
         
         # 메트릭별 가중 평균 (기본값은 한 번만 생성)
-        default_metrics = EvaluationMetrics(0, 0, 0, 0)
+        default_metrics = EvaluationMetrics(hallucination=0, persuasiveness=0, completeness=0, clarity=0)
         agg_hallucination = sum(
             variant_details.get(name, default_metrics).hallucination * variant_weights.get(name, 0)
             for name in variant_names
@@ -346,8 +346,19 @@ class CrossValidator:
         
         # 폴드 분할
         fold_size = len(predicted_results) // self.k
+
+        # Early return if fold_size is 0 (fewer results than k)
+        if fold_size == 0:
+            logger.warning(f"CrossValidator: len(predicted_results)={len(predicted_results)} < k={self.k}, cannot create {self.k} folds")
+            return CrossValidationResult(
+                k=self.k,
+                folds=[],
+                mean_accuracy=0.0,
+                stability_score=0.0
+            )
+
         folds = []
-        
+
         for fold_id in range(self.k):
             start_idx = fold_id * fold_size
             if fold_id == self.k - 1:
@@ -436,6 +447,7 @@ class AccuracyEnhancementEngine:
         
         if not filtered_results:
             filtered_results = raw_results  # fallback: 모두 사용
+            confidence_filtered_count = 0  # Reset when falling back to all results
         
         # Step 3: 앙상블 투표 (variant_data 제공 시)
         ensemble_applied = False
@@ -490,19 +502,12 @@ class AccuracyEnhancementEngine:
             EnhancementReport: 개선 효과
         """
         # 50개 섹션에 대해 모두 evaluate
-        # Try different methods to get all test cases
-        all_test_cases = None
+        # Use the primary method for DatasetManager API
         if hasattr(validator.dataset_manager, 'get_all_test_cases'):
             all_test_cases = validator.dataset_manager.get_all_test_cases()
-        elif hasattr(validator.dataset_manager, 'test_cases'):
-            all_test_cases = validator.dataset_manager.test_cases
         else:
-            # Fallback: try to get from data attribute if available
-            try:
-                all_test_cases = getattr(validator.dataset_manager, 'data', [])
-            except Exception as e:
-                logger.exception("Failed to fetch test cases from fallback attribute")
-                all_test_cases = []
+            logger.warning("DatasetManager missing get_all_test_cases() method; dataset API contract undefined")
+            all_test_cases = []
 
         if not all_test_cases:
             logger.warning("No test cases to simulate")

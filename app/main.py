@@ -13,6 +13,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
 import logging
+import asyncio
+import json
+import datetime
 
 from prometheus_client import generate_latest, REGISTRY
 
@@ -72,11 +75,10 @@ from app.api.routes_scheduler import router as scheduler_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
-    import json as _json
-    import datetime as _dt
-
     class _JsonFormatter(logging.Formatter):
         def format(self, record):
+            import json as _json
+            import datetime as _dt
             from app.middleware.request_id import get_request_id
             log_entry = {
                 "timestamp": _dt.datetime.fromtimestamp(record.created, tz=_dt.timezone.utc).isoformat(),
@@ -249,7 +251,6 @@ async def lifespan(app: FastAPI):
 
     # §26: WebSocket 실시간 업데이트 - 하트비트 루프 시작
     from app.services.ws_manager import ws_manager
-    import asyncio
 
     heartbeat_task = None
     try:
@@ -291,7 +292,7 @@ async def lifespan(app: FastAPI):
         logger.info("[WS] WebSocket 하트비트 루프 종료")
 
     # Shutdown: 스케줄러 종료 (pending batch jobs 완료 대기)
-    if scheduler_service and scheduler_service.scheduler.running:
+    if scheduler_service and getattr(scheduler_service, 'scheduler', None) and scheduler_service.scheduler.running:
         try:
             # wait=True: pending batch jobs를 완료할 때까지 기다린 후 shutdown
             scheduler_service.scheduler.shutdown(wait=True)
@@ -366,7 +367,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.error(traceback.format_exc())
     response = JSONResponse(
         status_code=500,
-        content={"error": "Internal server error", "path": str(request.url.path)},
+        content={"error": "Internal server error"},
     )
     return _add_cors_headers(response, request)
 
