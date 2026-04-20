@@ -104,22 +104,86 @@ class SchedulerService:
 
     async def _run_batch(self, batch_id: str):
         try:
+            # Mark batch as processing
             await self.db.table("migration_batches").update({
                 "status": "processing",
                 "started_at": datetime.now(timezone.utc).isoformat()
             }).eq("id", batch_id).execute()
+
+            # Fetch documents to migrate
+            documents = await self._fetch_documents_to_migrate()
+
+            if not documents:
+                self.logger.info(f"No documents to migrate for batch {batch_id}")
+                await self.db.table("migration_batches").update({
+                    "status": "completed",
+                    "completed_at": datetime.now(timezone.utc).isoformat(),
+                    "total_documents": 0,
+                    "processed_documents": 0,
+                    "failed_documents": 0
+                }).eq("id", batch_id).execute()
+                return
+
+            # Process batch with ConcurrentBatchProcessor
+            from app.services.batch_processor import ConcurrentBatchProcessor
+            processor = ConcurrentBatchProcessor(
+                db_client=self.db,
+                num_workers=5,
+                max_retries=3
+            )
+
+            result = await processor.process_batch(documents, batch_id)
+            processor.shutdown()
+
+            # Update batch with results
             await self.db.table("migration_batches").update({
-                "status": "completed",
-                "completed_at": datetime.now(timezone.utc).isoformat()
+                "status": "completed" if result["status"] == "success" else "partial_failed",
+                "completed_at": datetime.now(timezone.utc).isoformat(),
+                "total_documents": len(documents),
+                "processed_documents": result["processed"],
+                "failed_documents": result["failed"]
             }).eq("id", batch_id).execute()
+
+            self.logger.info(
+                f"Batch {batch_id} completed: "
+                f"{result['processed']} processed, {result['failed']} failed"
+            )
+
         except Exception as e:
-            self.logger.error(f"Batch execution failed: {e}")
+            self.logger.error(f"Batch execution failed: {e}", exc_info=True)
             await self.db.table("migration_batches").update({
                 "status": "failed",
                 "error_message": str(e),
                 "completed_at": datetime.now(timezone.utc).isoformat()
             }).eq("id", batch_id).execute()
-            raise
+
+    async def _fetch_documents_to_migrate(self) -> List[Dict]:
+        """Fetch documents modified since last migration"""
+        try:
+            # Get last successful migration timestamp
+            result = await self.db.table("migration_batches").select(
+                "completed_at"
+            ).eq(
+                "status", "completed"
+            ).order(
+                "completed_at", ascending=False
+            ).limit(1).execute()
+
+            sync_since = None
+            if result.data and len(result.data) > 0:
+                sync_since = result.data[0].get("completed_at")
+
+            # TODO: Fetch from intranet API based on sync_since
+            # For now, return empty list (Phase 6 implementation)
+            # In production, call:
+            # documents = await self.intranet.fetch_documents(modified_since=sync_since)
+
+            self.logger.info(f"Fetching documents modified since: {sync_since}")
+            return []  # TODO: Replace with actual intranet API call
+
+        except Exception as e:
+            self.logger.error(f"Failed to fetch documents: {e}", exc_info=True)
+            return []
 
     async def _mark_schedule_run(self, schedule_id: str, batch_id: str):
         try:
