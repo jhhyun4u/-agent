@@ -66,6 +66,8 @@ from app.api.routes_comments import router as comments_router
 from app.api.routes_ws import router as ws_router
 from app.api.routes_phase2_optimization import router as phase2_optimization_router
 from app.api.routes_harness_metrics import router as harness_metrics_router
+from app.api.routes_feedback import router as feedback_router
+from app.api.routes_scheduler import router as scheduler_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -456,6 +458,10 @@ app.include_router(vault_embeddings_router)
 # Comments: /api/proposals/{proposal_id}/comments, /api/comments/{comment_id}/reactions
 app.include_router(comments_router)
 
+# STEP 4A Gap 3: 주간 피드백 분석 & 가중치 조정
+# Feedback: /api/feedback/analyze, /api/feedback/report
+app.include_router(feedback_router)
+
 # Phase 3.1: WebSocket 실시간 업데이트: /api/ws/dashboard
 app.include_router(ws_router)
 
@@ -466,6 +472,10 @@ app.include_router(phase2_optimization_router)
 # STEP 4A: Harness Metrics Monitoring (Phase 3-4)
 # Endpoints: /api/harness/metrics/record, /api/harness/metrics/phase/*, /api/harness/metrics/report, etc.
 app.include_router(harness_metrics_router)
+
+# Phase 5: Scheduler Integration - 정기 문서 마이그레이션
+# Endpoints: /api/scheduler/schedules/*, /api/scheduler/batches/*
+app.include_router(scheduler_router)
 
 
 # ── 헬스체크 ──

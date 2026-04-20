@@ -221,11 +221,17 @@ class EnsembleVoter:
         variant_names = ["conservative", "balanced", "creative"]
         scores = [variant_scores.get(name, 0.5) for name in variant_names]
         
-        # 각 변형의 신뢰도 계산
+        # 각 변형의 신뢰도 계산 (3개 variant 모두를 함께 고려하여 신뢰도 계산)
+        conf_result = self.thresholder.compute_confidence(variant_scores)
+        base_confidence = conf_result.confidence
+
+        # 이상치 가중치 조정을 위한 개별 신뢰도 계산
         confidences = {}
         for name in variant_names:
-            conf_result = self.thresholder.compute_confidence({name: scores[variant_names.index(name)]})
-            confidences[name] = conf_result.confidence
+            # 기본 신뢰도에서 개별 점수의 편차를 반영
+            score_diff = abs(variant_scores.get(name, 0.5) - statistics.mean(scores))
+            variant_confidence = max(0.3, base_confidence - (score_diff * 0.5))
+            confidences[name] = variant_confidence
         
         # 이상치 감지: Z-score > 1.5
         mean_score = statistics.mean(scores)
@@ -430,7 +436,12 @@ class AccuracyEnhancementEngine:
         ensemble_applied = variant_data is not None and len(variant_data) > 0
         if ensemble_applied:
             # variant_data에 기반하여 앙상블 적용
-            # 이 단계는 오프라인 평가용 (Phase 2의 범위)
+            # TODO: Phase 3에서 구현 - 현재는 신뢰도 필터링 후 앙상블 투표 통합
+            # ensemble_vote_results = []
+            # for data in variant_data:
+            #     result = self.voter.vote(data['variant_scores'], data['variant_details'])
+            #     ensemble_vote_results.append(result)
+            # filtered_results = [r for r in filtered_results if r passes ensemble validation]
             pass
         
         # Step 4: 개선된 정확도 계산
@@ -468,16 +479,27 @@ class AccuracyEnhancementEngine:
     ) -> EnhancementReport:
         """
         오프라인 시뮬레이션: 라이브 harness 없이 데이터셋만으로 개선 효과 측정
-        
+
         Args:
             validator: DiagnosisAccuracyValidator 인스턴스 (데이터셋 포함)
-        
+
         Returns:
             EnhancementReport: 개선 효과
         """
         # 50개 섹션에 대해 모두 evaluate
-        all_test_cases = validator.dataset_manager.get_all_test_cases()
-        
+        # Try different methods to get all test cases
+        all_test_cases = None
+        if hasattr(validator.dataset_manager, 'get_all_test_cases'):
+            all_test_cases = validator.dataset_manager.get_all_test_cases()
+        elif hasattr(validator.dataset_manager, 'test_cases'):
+            all_test_cases = validator.dataset_manager.test_cases
+        else:
+            # Fallback: try to get from data attribute if available
+            try:
+                all_test_cases = getattr(validator.dataset_manager, 'data', [])
+            except:
+                all_test_cases = []
+
         if not all_test_cases:
             logger.warning("No test cases to simulate")
             return EnhancementReport(
@@ -514,20 +536,23 @@ class AccuracyEnhancementEngine:
     ) -> List[str]:
         """추천 생성"""
         recommendations = []
-        
+
         if enhanced_accuracy < 0.80:
             recommendations.append("Low accuracy (<0.80) - consider confidence threshold adjustment (try 0.60)")
-        
+
         if enhanced_accuracy >= 0.80 and enhanced_accuracy < 0.90:
             recommendations.append("Good progress - continue with ensemble voting strategy")
-        
+
         if cross_val_result and cross_val_result.stability_score < 0.80:
             recommendations.append(f"Stability score low ({cross_val_result.stability_score:.3f}) - check k-fold variance")
-        
-        if filtered_count > len(cross_val_result.folds[0].test_case_ids) * 0.5 if cross_val_result and cross_val_result.folds else False:
-            recommendations.append(f"High filter rate ({filtered_count}) - consider threshold relaxation")
-        
+
+        # Check if filter rate is too high
+        if cross_val_result and cross_val_result.folds and len(cross_val_result.folds) > 0:
+            first_fold_size = len(cross_val_result.folds[0].test_case_ids)
+            if filtered_count > first_fold_size * 0.5:
+                recommendations.append(f"High filter rate ({filtered_count}) - consider threshold relaxation")
+
         if not recommendations:
             recommendations.append(f"Accuracy improved from {original_accuracy:.3f} to {enhanced_accuracy:.3f}")
-        
+
         return recommendations

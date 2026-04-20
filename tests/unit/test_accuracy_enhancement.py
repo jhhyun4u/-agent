@@ -81,10 +81,10 @@ class TestConfidenceThresholder:
         assert high.agreement_level == "HIGH"
         assert high.confidence >= 0.80
 
-        # Medium agreement (more spread: 0.5, 0.65, 0.75 → std_dev ~0.094 → confidence ~0.812, still too high)
-        # Need 0.65 <= confidence < 0.80 → std_dev between 0.1 and 0.175
+        # Medium agreement: Need 0.65 <= confidence < 0.80 → std_dev between 0.1 and 0.175
+        # [0.50, 0.70, 0.85] → mean=0.683, std_dev ~0.134 → confidence ~0.732 (MEDIUM)
         medium = thresholder.compute_confidence({
-            "conservative": 0.55, "balanced": 0.70, "creative": 0.80
+            "conservative": 0.50, "balanced": 0.70, "creative": 0.85
         })
         assert medium.agreement_level == "MEDIUM"
         assert 0.65 <= medium.confidence < 0.80
