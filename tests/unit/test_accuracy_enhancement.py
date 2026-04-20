@@ -9,8 +9,7 @@ Tests cover:
 """
 
 import pytest
-from unittest.mock import Mock, patch, AsyncMock
-import statistics
+from unittest.mock import Mock, patch
 
 from app.services.accuracy_enhancement_engine import (
     ConfidenceThresholder,
@@ -255,86 +254,125 @@ class TestAccuracyEnhancementEngine:
     """Test AccuracyEnhancementEngine — orchestrator"""
 
     def test_enhancement_engine_simulate(self):
-        """Test: simulate_enhancement() returns EnhancementReport"""
+        """Test: simulate_enhancement() executes actual enhancement on mock validator"""
         engine = AccuracyEnhancementEngine()
-        
-        # Create mock validator
+
+        # Create mock validator with required interface
         validator_mock = Mock(spec=DiagnosisAccuracyValidator)
         validator_mock.dataset_manager = Mock(spec=DatasetManager)
-        validator_mock.dataset_manager.get_statistics = Mock(return_value={
-            "total": 50,
-            "avg_score": 0.8069
-        })
-        
-        # Mock the internal methods
-        with patch.object(engine, 'enhance') as mock_enhance:
-            # Create a realistic EnhancementReport
-            mock_enhance.return_value = EnhancementReport(
-                original_accuracy=0.82,
-                enhanced_accuracy=0.88,
-                improvement=0.06,
-                confidence_filtered_count=3,
-                ensemble_applied=True,
-                cross_validation=CrossValidationResult(
-                    k=5,
-                    folds=[],
-                    mean_precision=0.88,
-                    mean_recall=0.88,
-                    mean_f1=0.88,
-                    std_f1=0.02,
-                    stability_score=0.92
-                ),
-                recommendations=[
-                    "Confidence threshold tuning effective",
-                    "Ensemble voting improved minority classes"
-                ]
+
+        # Mock dataset interface - simulate 10 test cases
+        test_cases = [
+            Mock(
+                id=f"test_{i:02d}",
+                ground_truth=EvaluationMetrics(0.05, 0.80, 0.85, 0.80),
+                expected_score=0.80
+            ) for i in range(10)
+        ]
+        validator_mock.dataset_manager.get_all_test_cases = Mock(return_value=test_cases)
+
+        # Mock evaluate_section to return consistent evaluation results
+        validator_mock.evaluate_section = Mock(
+            return_value=EvaluationResult(
+                test_case_id="test_00",
+                predicted_metrics=EvaluationMetrics(0.05, 0.80, 0.85, 0.80),
+                ground_truth=EvaluationMetrics(0.05, 0.80, 0.85, 0.80),
+                predicted_score=0.80,
+                expected_score=0.80,
+                confidence=0.95
             )
-            
-            report = engine.enhance(validator_mock, [])
-            
-            assert isinstance(report, EnhancementReport)
-            assert report.original_accuracy < report.enhanced_accuracy
-            assert report.improvement > 0
-            assert report.ensemble_applied is True
-            assert len(report.recommendations) > 0
+        )
+
+        # Call actual simulate_enhancement - not mocked
+        report = engine.simulate_enhancement(validator_mock)
+
+        # Verify result structure and actual execution
+        assert isinstance(report, EnhancementReport)
+        assert report.original_accuracy >= 0
+        assert report.enhanced_accuracy >= 0
+        assert isinstance(report.cross_validation, (CrossValidationResult, type(None)))
+        # ensemble_applied should be False (placeholder in Phase 3)
+        assert report.ensemble_applied is False
 
     def test_enhancement_engine_accuracy_improvement(self):
-        """Test: enhance() reports improvement correctly"""
+        """Test: enhance() computes improvement between original and enhanced accuracy"""
         engine = AccuracyEnhancementEngine()
-        
+
+        # Create real evaluation results with high confidence for filtering
+        results = [
+            Mock(
+                test_case_id=f"test_{i:02d}",
+                confidence=0.85,  # Above default threshold 0.65
+                predicted_score=0.80 + (i % 3) * 0.02
+            ) for i in range(10)
+        ]
+
         validator_mock = Mock(spec=DiagnosisAccuracyValidator)
-        validator_mock.dataset_manager = Mock(spec=DatasetManager)
-        
-        with patch.object(engine, 'enhance') as mock_enhance:
-            mock_enhance.return_value = EnhancementReport(
-                original_accuracy=0.82,
-                enhanced_accuracy=0.88,
-                improvement=0.06,
-                confidence_filtered_count=2,
-                ensemble_applied=True,
-                cross_validation=None,
-                recommendations=[]
-            )
-            
-            report = engine.enhance(validator_mock, [])
-            
-            assert report.improvement == pytest.approx(0.06, abs=0.01)
-            assert report.enhanced_accuracy >= 0.88
+
+        # Call actual enhance - not mocked
+        report = engine.enhance(validator_mock, results, variant_data=None)
+
+        # Verify improvement is calculated correctly
+        assert isinstance(report, EnhancementReport)
+        assert report.improvement == pytest.approx(
+            report.enhanced_accuracy - report.original_accuracy,
+            abs=0.01
+        )
+        # ensemble_applied should be False since variant_data is None
+        assert report.ensemble_applied is False
 
 
 # Smoke Test (Can be run standalone)
-@pytest.mark.asyncio
-async def test_smoke_accuracy_enhancement():
-    """Smoke test: Full workflow (if dataset available)"""
-    try:
-        from app.services.harness_accuracy_validator import DiagnosisAccuracyValidator
-        
-        validator = DiagnosisAccuracyValidator("data/test_datasets/harness_test_50_sections.json")
-        engine = AccuracyEnhancementEngine()
-        
-        # This will test the simulate_enhancement method
-        # which should run without errors on the 50-section dataset
-        # (Skipped if dataset not available)
-        
-    except FileNotFoundError:
-        pytest.skip("Test dataset not available")
+def test_smoke_accuracy_enhancement():
+    """Smoke test: Full workflow with mock data"""
+    engine = AccuracyEnhancementEngine()
+
+    # Create full mock validator with all required interfaces
+    validator_mock = Mock(spec=DiagnosisAccuracyValidator)
+    validator_mock.dataset_manager = Mock(spec=DatasetManager)
+
+    # Simulate 50-section dataset
+    test_cases = [
+        Mock(
+            id=f"section_{i:03d}",
+            ground_truth=EvaluationMetrics(
+                hallucination=0.05 + (i % 3) * 0.02,
+                persuasiveness=0.75 + (i % 4) * 0.03,
+                completeness=0.78 + (i % 5) * 0.02,
+                clarity=0.80
+            ),
+            expected_score=0.78 + (i % 5) * 0.02
+        ) for i in range(50)
+    ]
+    validator_mock.dataset_manager.get_all_test_cases = Mock(return_value=test_cases)
+
+    # Mock evaluate_section with varying results
+    call_count = [0]  # Use list to allow mutation in nested function
+    def evaluate_side_effect(*args, **kwargs):
+        idx = call_count[0] % 50
+        call_count[0] += 1
+        return EvaluationResult(
+            test_case_id=test_cases[idx].id,
+            predicted_metrics=EvaluationMetrics(
+                0.05 + (idx % 3) * 0.02,
+                0.75 + (idx % 4) * 0.03,
+                0.78 + (idx % 5) * 0.02,
+                0.80
+            ),
+            ground_truth=test_cases[idx].ground_truth,
+            predicted_score=0.78 + (idx % 5) * 0.02,
+            expected_score=test_cases[idx].expected_score,
+            confidence=0.85 + (idx % 3) * 0.05
+        )
+
+    validator_mock.evaluate_section = Mock(side_effect=evaluate_side_effect)
+
+    # Execute full workflow
+    report = engine.simulate_enhancement(validator_mock)
+
+    # Validate smoke test execution
+    assert isinstance(report, EnhancementReport)
+    assert report.original_accuracy >= 0
+    assert report.enhanced_accuracy >= 0
+    assert report.cross_validation is not None
+    assert len(report.recommendations) > 0

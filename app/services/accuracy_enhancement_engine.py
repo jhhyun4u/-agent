@@ -18,6 +18,13 @@ from app.services.harness_accuracy_validator import (
 
 logger = logging.getLogger(__name__)
 
+# Configuration constants
+SINGLE_VARIANT_CONFIDENCE = 0.9  # Confidence when only 1 variant available
+MAX_STD_DEV_UNIT_RANGE = 0.5    # Maximum std dev for [0, 1] range; math: sqrt(variance({0,0.5,1})) ≈ 0.5
+AGREEMENT_HIGH_THRESHOLD = 0.80
+AGREEMENT_MEDIUM_THRESHOLD = 0.65
+ENSEMBLE_OUTLIER_Z_SCORE_THRESHOLD = 1.5
+
 
 @dataclass
 class ConfidenceResult:
@@ -123,28 +130,26 @@ class ConfidenceThresholder:
     def compute_confidence(self, variant_scores: Dict[str, float]) -> ConfidenceResult:
         """
         변형 점수 간의 차이로부터 신뢰도 계산
-        
+
         Args:
             variant_scores: {"conservative": float, "balanced": float, "creative": float}
-        
+
         Returns:
             ConfidenceResult: 신뢰도 및 판정
+
+        Raises:
+            ValueError: If no variant scores provided (caller must handle empty input)
         """
         scores = list(variant_scores.values())
-        
+
         if not scores:
-            return ConfidenceResult(
-                confidence=0.0,
-                should_accept=False,
-                std_dev=0.0,
-                variance=0.0,
-                agreement_level="LOW"
-            )
+            logger.warning("compute_confidence received empty variant_scores dict - check caller")
+            raise ValueError("variant_scores cannot be empty; provide at least one variant score")
         
         if len(scores) == 1:
             return ConfidenceResult(
-                confidence=0.9,
-                should_accept=True,
+                confidence=SINGLE_VARIANT_CONFIDENCE,
+                should_accept=SINGLE_VARIANT_CONFIDENCE >= self.threshold,
                 std_dev=0.0,
                 variance=0.0,
                 agreement_level="HIGH"
@@ -157,14 +162,13 @@ class ConfidenceThresholder:
         
         # 신뢰도 공식: 1 - (std_dev / max_std)
         # 점수 범위가 0-1이므로 최대 std_dev는 약 0.5 (극단값 0과 1)
-        max_std = 0.5
-        confidence = max(0.0, 1.0 - (std_dev / max_std))
+        confidence = max(0.0, 1.0 - (std_dev / MAX_STD_DEV_UNIT_RANGE))
         confidence = min(1.0, confidence)
         
         # 동의 수준 판정
-        if confidence >= 0.80:
+        if confidence >= AGREEMENT_HIGH_THRESHOLD:
             agreement_level = "HIGH"
-        elif confidence >= 0.65:
+        elif confidence >= AGREEMENT_MEDIUM_THRESHOLD:
             agreement_level = "MEDIUM"
         else:
             agreement_level = "LOW"
@@ -246,7 +250,7 @@ class EnsembleVoter:
             else:
                 z_score = 0.0
             
-            if z_score > 1.5:
+            if z_score > ENSEMBLE_OUTLIER_Z_SCORE_THRESHOLD:
                 outliers.append(name)
                 base_weights[name] = 0.0
             else:
@@ -260,21 +264,22 @@ class EnsembleVoter:
         else:
             variant_weights = {name: 1.0 / len(variant_names) for name in variant_names}
         
-        # 메트릭별 가중 평균
+        # 메트릭별 가중 평균 (기본값은 한 번만 생성)
+        default_metrics = EvaluationMetrics(0, 0, 0, 0)
         agg_hallucination = sum(
-            variant_details.get(name, EvaluationMetrics(0, 0, 0, 0)).hallucination * variant_weights.get(name, 0)
+            variant_details.get(name, default_metrics).hallucination * variant_weights.get(name, 0)
             for name in variant_names
         )
         agg_persuasiveness = sum(
-            variant_details.get(name, EvaluationMetrics(0, 0, 0, 0)).persuasiveness * variant_weights.get(name, 0)
+            variant_details.get(name, default_metrics).persuasiveness * variant_weights.get(name, 0)
             for name in variant_names
         )
         agg_completeness = sum(
-            variant_details.get(name, EvaluationMetrics(0, 0, 0, 0)).completeness * variant_weights.get(name, 0)
+            variant_details.get(name, default_metrics).completeness * variant_weights.get(name, 0)
             for name in variant_names
         )
         agg_clarity = sum(
-            variant_details.get(name, EvaluationMetrics(0, 0, 0, 0)).clarity * variant_weights.get(name, 0)
+            variant_details.get(name, default_metrics).clarity * variant_weights.get(name, 0)
             for name in variant_names
         )
         
@@ -363,11 +368,11 @@ class CrossValidator:
                 metrics=fold_metrics
             ))
         
-        # 폴드별 메트릭 수집
-        precisions = [f.metrics.precision for f in folds if f.metrics.precision > 0]
-        recalls = [f.metrics.recall for f in folds if f.metrics.recall > 0]
-        f1_scores = [f.metrics.f1_score for f in folds if f.metrics.f1_score > 0]
-        
+        # 폴드별 메트릭 수집 (zero values 포함 - legitimate outcomes)
+        precisions = [f.metrics.precision for f in folds if f.metrics.precision is not None]
+        recalls = [f.metrics.recall for f in folds if f.metrics.recall is not None]
+        f1_scores = [f.metrics.f1_score for f in folds if f.metrics.f1_score is not None]
+
         mean_precision = statistics.mean(precisions) if precisions else 0.0
         mean_recall = statistics.mean(recalls) if recalls else 0.0
         mean_f1 = statistics.mean(f1_scores) if f1_scores else 0.0
