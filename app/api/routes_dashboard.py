@@ -179,7 +179,7 @@ async def get_metrics(
     period: str = Query("ytd", description="기간 (ytd/mtd/custom)"),
     custom_start_date: Optional[str] = Query(None, description="커스텀 시작 날짜 (YYYY-MM-DD)"),
     custom_end_date: Optional[str] = Query(None, description="커스텀 종료 날짜 (YYYY-MM-DD)"),
-    current_user: CurrentUser = Depends(get_current_user),
+    current_user: CurrentUser = Depends(require_role("member", "lead", "director", "executive", "admin")),
 ) -> MetricsResponse:
     """
     대시보드 KPI 조회

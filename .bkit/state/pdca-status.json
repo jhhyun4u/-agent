@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-21T12:43:53.788Z",
+  "lastUpdated": "2026-04-21T13:45:56.705Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -118,9 +118,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-21T12:33:23.641Z"
+        "lastUpdated": "2026-04-21T13:45:56.674Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_jobs.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_bids.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -238,9 +238,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-28T11:02:59.640Z",
-        "lastUpdated": "2026-04-21T06:36:47.349Z"
+        "lastUpdated": "2026-04-21T13:25:52.522Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\tests\\test_document_ingestion.py",
+      "lastFile": "C:\\project\\tenopa proposer\\tests\\conftest.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -931,7 +931,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-21T12:28:07.164Z"
+        "lastUpdated": "2026-04-21T13:39:53.118Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_jobs_api.py"
     },
@@ -1113,9 +1113,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-21T12:43:53.775Z"
+        "lastUpdated": "2026-04-21T13:17:26.643Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\job_service.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\models\\proposal_status_validator.py"
     },
     "stores": {
       "phase": "do",
@@ -15326,6 +15326,96 @@
     {
       "timestamp": "2026-04-21T12:43:53.787Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:01:03.353Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:17:26.659Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:19:24.681Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:22:38.526Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:25:52.534Z",
+      "feature": "tests",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:27:34.485Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:34:50.705Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:35:32.036Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:35:37.469Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:36:31.914Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:36:50.395Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:37:25.320Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:38:20.562Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:39:53.133Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T13:45:56.703Z",
+      "feature": "api",
       "phase": "do",
       "action": "updated"
     }

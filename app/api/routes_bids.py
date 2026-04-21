@@ -660,14 +660,47 @@ async def get_monitored_bids(
 
     await _enrich_monitor_data(client, data, user_id)
 
+    # 예산 필터: 항상 적용 (show_all과 무관)
+    # 기준: budget_amount < 30M인 공고는 제외
+    MIN_BUDGET = 30_000_000  # 3천만원
+    filtered_budget = []
+    budget_excluded = 0
+
+    for b in data:
+        budget = b.get("budget_amount", 0)
+
+        # 예산값을 정수로 변환 (string/None/int 모두 처리)
+        try:
+            if budget is None or budget == "" or budget == 0:
+                budget_int = 0
+            else:
+                budget_int = int(budget)
+        except (ValueError, TypeError):
+            budget_int = 0
+
+        # MIN_BUDGET 미만이면 제외
+        if 0 < budget_int < MIN_BUDGET:
+            budget_excluded += 1
+            logger.info(f"예산 제외: {b.get('bid_no')} - budget_amount={budget_int:,}원 (< {MIN_BUDGET:,}원)")
+            continue
+
+        # MIN_BUDGET 이상이거나 budget이 없으면 포함
+        filtered_budget.append(b)
+
+    data = filtered_budget
+    logger.info(f"예산 필터 완료: {budget_excluded}건 제외, {len(data)}건 남음")
+
     if not show_all:
         # 1) proposal_status 필터: "제안포기", "관련없음", "제안결정" 제외
         # 2) 마감일 3일 이내 공고 제외 (제안 작업 시간 확보 어려움)
+        # 3) 예산 3천만원 미만 공고 제외
         hidden = {"제안포기", "관련없음", "제안결정"}
+        MIN_BUDGET = 30_000_000  # 3천만원
         filtered = []
         excluded_count = 0
         status_excluded = 0
         days_excluded = 0
+        budget_excluded = 0
 
         logger.info(f"필터링 시작: show_all={show_all}, 입력 공고={len(data)}건")
 
@@ -695,11 +728,24 @@ async def get_monitored_bids(
                 logger.info(f"제외(2-마감): {bid_no} - days_remaining={days_int}, deadline_date={b.get('deadline_date')}")
                 continue
 
+            # budget_amount 확인 (3천만원 이상이어야 포함)
+            budget = b.get("budget_amount", 0)
+            try:
+                budget_int = int(budget) if budget else 0
+            except (ValueError, TypeError):
+                budget_int = 0
+
+            if budget_int > 0 and budget_int < MIN_BUDGET:
+                excluded_count += 1
+                budget_excluded += 1
+                logger.info(f"제외(3-예산): {bid_no} - budget_amount={budget_int:,}원")
+                continue
+
             filtered.append(b)
 
         data = filtered
         total = len(data)
-        logger.info(f"필터링 완료: 상태 제외 {status_excluded}건, 마감 제외 {days_excluded}건, 최종 표시 {len(data)}건")
+        logger.info(f"필터링 완료: 상태 제외 {status_excluded}건, 마감 제외 {days_excluded}건, 예산 제외 {budget_excluded}건, 최종 표시 {len(data)}건")
 
     return ok_list(data, total=total, offset=offset, limit=per_page)
 

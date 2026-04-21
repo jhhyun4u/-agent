@@ -58,6 +58,96 @@ POLL_INTERVAL = 3.0
 
 
 # ─────────────────────────────────────────────
+# Database Setup & Seeding
+# ─────────────────────────────────────────────
+
+@pytest.fixture
+async def test_db_setup():
+    """Initialize test database with required organizations, teams, and users."""
+    try:
+        client = await get_async_client()
+
+        # Test organization
+        await client.table("organizations").upsert({
+            "id": "test-org-001",
+            "name": "Test Organization",
+            "created_at": datetime.utcnow().isoformat(),
+        }).execute()
+
+        # Test division
+        await client.table("divisions").upsert({
+            "id": "test-div-001",
+            "org_id": "test-org-001",
+            "name": "Test Division",
+            "created_at": datetime.utcnow().isoformat(),
+        }).execute()
+
+        # Test team
+        await client.table("teams").upsert({
+            "id": "test-team-001",
+            "org_id": "test-org-001",
+            "division_id": "test-div-001",
+            "name": "Test Team",
+            "created_at": datetime.utcnow().isoformat(),
+        }).execute()
+
+        # Test users with different roles
+        test_users = [
+            {
+                "id": "test-user-admin",
+                "email": "admin@test.co.kr",
+                "name": "Admin User",
+                "role": "admin",
+                "org_id": "test-org-001",
+                "team_id": "test-team-001",
+                "division_id": "test-div-001",
+                "status": "active",
+                "created_at": datetime.utcnow().isoformat(),
+            },
+            {
+                "id": "test-user-lead",
+                "email": "lead@test.co.kr",
+                "name": "Team Lead",
+                "role": "lead",
+                "org_id": "test-org-001",
+                "team_id": "test-team-001",
+                "division_id": "test-div-001",
+                "status": "active",
+                "created_at": datetime.utcnow().isoformat(),
+            },
+            {
+                "id": "test-user-member",
+                "email": "member@test.co.kr",
+                "name": "Team Member",
+                "role": "member",
+                "org_id": "test-org-001",
+                "team_id": "test-team-001",
+                "division_id": "test-div-001",
+                "status": "active",
+                "created_at": datetime.utcnow().isoformat(),
+            },
+        ]
+
+        for user in test_users:
+            await client.table("users").upsert(user).execute()
+
+        yield
+
+        # Cleanup after test
+        try:
+            await client.table("users").delete().eq("org_id", "test-org-001").execute()
+            await client.table("teams").delete().eq("org_id", "test-org-001").execute()
+            await client.table("divisions").delete().eq("org_id", "test-org-001").execute()
+            await client.table("organizations").delete().eq("id", "test-org-001").execute()
+        except Exception:
+            pass
+
+    except Exception as e:
+        print(f"Warning: Test database setup failed: {e}")
+        yield
+
+
+# ─────────────────────────────────────────────
 # 통합 인증 & 헤더 fixture (함수 scope)
 # ─────────────────────────────────────────────
 

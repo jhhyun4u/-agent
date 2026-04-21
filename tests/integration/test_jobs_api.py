@@ -91,19 +91,28 @@ def mock_job():
 
 
 @pytest.fixture
-def mock_job_service():
+def mock_job_service(mock_job):
     """Mock JobQueueService"""
     service = AsyncMock()
-    service.create_job = AsyncMock()
-    service.get_job = AsyncMock()
-    service.list_jobs = AsyncMock()
-    service.cancel_job = AsyncMock()
-    service.retry_job = AsyncMock()
-    service.delete_job = AsyncMock()
+    service.create_job = AsyncMock(return_value=mock_job)
+    service.get_job = AsyncMock(return_value=mock_job)
+    service.list_jobs = AsyncMock(return_value=(1, [mock_job]))
+    service.cancel_job = AsyncMock(return_value=True)
+    service.retry_job = AsyncMock(return_value=1)
+    service.delete_job = AsyncMock(return_value=None)
     service.get_job_progress = AsyncMock(return_value=0.0)
     service.estimate_completion = AsyncMock(return_value=None)
     service.get_queue_position = AsyncMock(return_value=None)
-    service.get_queue_stats = AsyncMock()
+    service.get_queue_stats = AsyncMock(return_value={
+        "pending": 0,
+        "running": 0,
+        "success": 1,
+        "failed": 0,
+        "cancelled": 0,
+        "total": 1,
+        "avg_duration_seconds": 0.0,
+        "success_rate": 1.0,
+    })
     return service
 
 
@@ -243,7 +252,8 @@ class TestJobsAPI:
         )
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.get_job.return_value = other_user_job
+            # Reset the mock to return other_user_job (which has different created_by)
+            mock_job_service.get_job = AsyncMock(return_value=other_user_job)
 
             response = client.get(
                 f"/api/jobs/{TEST_JOB_ID}",
@@ -314,8 +324,8 @@ class TestJobsAPI:
         from app.services.job_queue_service import JobCancelError
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.get_job.return_value = completed_job
-            mock_job_service.cancel_job.side_effect = JobCancelError()
+            mock_job_service.get_job = AsyncMock(return_value=completed_job)
+            mock_job_service.cancel_job = AsyncMock(side_effect=JobCancelError())
 
             response = client.put(
                 f"/api/jobs/{TEST_JOB_ID}/cancel",
@@ -349,8 +359,8 @@ class TestJobsAPI:
         )
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.get_job.return_value = failed_job
-            mock_job_service.retry_job.return_value = 2  # 2번째 재시도
+            mock_job_service.get_job = AsyncMock(return_value=failed_job)
+            mock_job_service.retry_job = AsyncMock(return_value=2)  # 2번째 재시도
 
             response = client.put(
                 f"/api/jobs/{TEST_JOB_ID}/retry",
@@ -387,8 +397,8 @@ class TestJobsAPI:
         )
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.get_job.return_value = completed_job
-            mock_job_service.delete_job.return_value = None
+            mock_job_service.get_job = AsyncMock(return_value=completed_job)
+            mock_job_service.delete_job = AsyncMock(return_value=None)
 
             response = client.delete(
                 f"/api/jobs/{TEST_JOB_ID}",
@@ -400,6 +410,8 @@ class TestJobsAPI:
     @pytest.mark.asyncio
     async def test_get_stats_admin_only(self, client, admin_headers, mock_job_service):
         """Test: 큐 통계 조회 (Admin only)"""
+        from app.models.auth_schemas import CurrentUser
+
         stats = {
             "pending": 5,
             "running": 2,
@@ -411,8 +423,16 @@ class TestJobsAPI:
             "success_rate": 0.9,
         }
 
-        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.get_queue_stats.return_value = stats
+        admin_user = CurrentUser(
+            id=TEST_ADMIN_ID,
+            email="admin@example.com",
+            role="admin",
+            organization_id=None,
+        )
+
+        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service), \
+             patch("app.api.routes_jobs.get_current_user", return_value=admin_user):
+            mock_job_service.get_queue_stats = AsyncMock(return_value=stats)
 
             response = client.get(
                 "/api/jobs/stats",
@@ -547,8 +567,7 @@ class TestJobsPerformance:
         import time
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
-            mock_job_service.create_job.return_value = mock_job
-
+            # Fixture already has create_job = AsyncMock(return_value=mock_job)
             start = time.time()
             response = client.post(
                 "/api/jobs",
