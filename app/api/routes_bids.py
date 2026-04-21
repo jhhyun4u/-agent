@@ -660,36 +660,6 @@ async def get_monitored_bids(
 
     await _enrich_monitor_data(client, data, user_id)
 
-    # 예산 필터: 항상 적용 (show_all과 무관)
-    # 기준: budget_amount < 30M인 공고는 제외
-    MIN_BUDGET = 30_000_000  # 3천만원
-    filtered_budget = []
-    budget_excluded = 0
-
-    for b in data:
-        budget = b.get("budget_amount", 0)
-
-        # 예산값을 정수로 변환 (string/None/int 모두 처리)
-        try:
-            if budget is None or budget == "" or budget == 0:
-                budget_int = 0
-            else:
-                budget_int = int(budget)
-        except (ValueError, TypeError):
-            budget_int = 0
-
-        # MIN_BUDGET 미만이면 제외
-        if 0 < budget_int < MIN_BUDGET:
-            budget_excluded += 1
-            logger.info(f"예산 제외: {b.get('bid_no')} - budget_amount={budget_int:,}원 (< {MIN_BUDGET:,}원)")
-            continue
-
-        # MIN_BUDGET 이상이거나 budget이 없으면 포함
-        filtered_budget.append(b)
-
-    data = filtered_budget
-    logger.info(f"예산 필터 완료: {budget_excluded}건 제외, {len(data)}건 남음")
-
     if not show_all:
         # 1) proposal_status 필터: "제안포기", "관련없음", "제안결정" 제외
         # 2) 마감일 3일 이내 공고 제외 (제안 작업 시간 확보 어려움)
@@ -1152,7 +1122,9 @@ _MONITOR_BASE_FIELDS = (
 
 
 async def _monitor_my(client, user_id: str, offset: int, per_page: int) -> tuple[list, int]:
-    """my 스코프: 북마크 + 관심분야 매칭 공고"""
+    """my 스코프: 북마크 + 관심분야 매칭 공고 (30M 이상만)"""
+    MIN_BUDGET = 30_000_000
+
     bookmarked = (
         await client.table("bid_bookmarks")
         .select("bid_no")
@@ -1182,6 +1154,7 @@ async def _monitor_my(client, user_id: str, offset: int, per_page: int) -> tuple
             .select(_MONITOR_BASE_FIELDS)
             .or_(or_filter)
             .gte("deadline_date", now_iso)
+            .gte("budget_amount", MIN_BUDGET)  # 필수: 예산 3천만원 이상만
             .order("deadline_date", desc=False)
             .limit(50)
             .execute()
@@ -1193,6 +1166,7 @@ async def _monitor_my(client, user_id: str, offset: int, per_page: int) -> tuple
             await client.table("bid_announcements")
             .select(_MONITOR_BASE_FIELDS)
             .in_("bid_no", list(bookmarked_nos))
+            .gte("budget_amount", MIN_BUDGET)  # 필수: 예산 3천만원 이상만
             .order("days_remaining", desc=False)
             .execute()
         )
@@ -1265,9 +1239,22 @@ async def _monitor_team_or_division(
 
     data = []
     seen_bids: set[str] = set()
+    MIN_BUDGET = 30_000_000
+
     for row in (rec_res.data or []):
         ann = row.get("bid_announcements") or {}
         bid_no = ann.get("bid_no") or row.get("bid_no")
+
+        # 예산 필터: 30M 이상만 포함
+        budget = ann.get("budget_amount", 0)
+        try:
+            budget_int = int(budget) if budget else 0
+        except (ValueError, TypeError):
+            budget_int = 0
+
+        if budget_int > 0 and budget_int < MIN_BUDGET:
+            continue  # 예산 미달 공고 제외
+
         if bid_no in seen_bids:
             continue
         seen_bids.add(bid_no)
@@ -1283,12 +1270,15 @@ async def _monitor_team_or_division(
 
 
 async def _monitor_company(client, offset: int, per_page: int) -> tuple[list, int]:
-    """company 스코프: 전체 마감 전 공고 + AI 추천 점수 병합"""
+    """company 스코프: 전체 마감 전 공고 + AI 추천 점수 병합 (30M 이상만)"""
     now_iso = datetime.now(timezone.utc).isoformat()
+    MIN_BUDGET = 30_000_000
+
     ann_res = (
         await client.table("bid_announcements")
         .select(_MONITOR_BASE_FIELDS, count="exact")
         .gte("deadline_date", now_iso)
+        .gte("budget_amount", MIN_BUDGET)  # 필수: 예산 3천만원 이상만
         .order("deadline_date", desc=False)
         .range(offset, offset + per_page - 1)
         .execute()

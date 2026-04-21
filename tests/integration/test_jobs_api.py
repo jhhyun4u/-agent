@@ -424,10 +424,11 @@ class TestJobsAPI:
         }
 
         admin_user = CurrentUser(
-            id=TEST_ADMIN_ID,
+            id=str(TEST_ADMIN_ID),
             email="admin@example.com",
+            name="Admin User",
             role="admin",
-            organization_id=None,
+            org_id=None,
         )
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service), \
