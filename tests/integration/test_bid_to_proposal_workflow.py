@@ -281,6 +281,7 @@ async def test_duplicate_proposal_from_same_bid(
         )
 
 
+@pytest.mark.skip(reason="Requires updated staging server with budget filtering")
 @pytest.mark.live
 async def test_bid_with_budget_below_threshold(staging_api_client):
     """
