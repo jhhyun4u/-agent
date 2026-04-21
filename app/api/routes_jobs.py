@@ -126,6 +126,68 @@ async def create_job(
 
 
 # ============================================
+# GET /api/jobs/stats — 큐 통계 (Admin Only)
+# ============================================
+
+
+@router.get("/stats", response_model=dict)
+@limiter.limit("10/minute")
+async def get_job_stats(
+    request: Request,
+    user: CurrentUser = Depends(get_current_user),
+) -> dict:
+    """
+    Job 큐 통계 (Admin만 접근 가능).
+
+    Returns:
+        {
+            pending: int,
+            running: int,
+            success: int,
+            failed: int,
+            cancelled: int,
+            total: int,
+            avg_duration_seconds: float,
+            success_rate: float,  # 0.0~1.0
+        }
+
+    Raises:
+        403: 접근 권한 없음 (admin only)
+    """
+    try:
+        if user.role != "admin":
+            raise TenopAPIError(
+                error_code="ACCESS_DENIED",
+                message="Admin access required to view job statistics",
+                status_code=403,
+            )
+
+        service = await _get_job_service()
+        stats = await service.get_queue_stats()
+
+        return {
+            "pending": stats.get("pending", 0),
+            "running": stats.get("running", 0),
+            "success": stats.get("success", 0),
+            "failed": stats.get("failed", 0),
+            "cancelled": stats.get("cancelled", 0),
+            "total": stats.get("total", 0),
+            "avg_duration_seconds": stats.get("avg_duration_seconds", 0.0),
+            "success_rate": stats.get("success_rate", 0.0),
+        }
+
+    except TenopAPIError:
+        raise
+    except Exception as e:
+        logger.error(f"[JOB] Stats failed: {e}")
+        raise TenopAPIError(
+            error_code="JOB_STATS_FAILED",
+            message=str(e),
+            status_code=500,
+        )
+
+
+# ============================================
 # GET /api/jobs/{job_id} — Job 상태 조회
 # ============================================
 
@@ -154,7 +216,7 @@ async def get_job_status(
         job = await service.get_job(job_id=job_id)
 
         # 권한 확인: 생성자 또는 admin
-        if job.created_by != user.id and user.role != "admin":
+        if str(job.created_by) != user.id and user.role != "admin":
             raise TenopAPIError(
                 error_code="ACCESS_DENIED",
                 message="You do not have permission to view this job",
@@ -316,7 +378,7 @@ async def cancel_job(
         job = await service.get_job(job_id=job_id)
 
         # 권한 확인
-        if job.created_by != user.id and user.role != "admin":
+        if str(job.created_by) != user.id and user.role != "admin":
             raise TenopAPIError(
                 error_code="ACCESS_DENIED",
                 message="You do not have permission to cancel this job",
@@ -385,7 +447,7 @@ async def retry_job(
         job = await service.get_job(job_id=job_id)
 
         # 권한 확인
-        if job.created_by != user.id and user.role != "admin":
+        if str(job.created_by) != user.id and user.role != "admin":
             raise TenopAPIError(
                 error_code="ACCESS_DENIED",
                 message="You do not have permission to retry this job",
@@ -457,7 +519,7 @@ async def delete_job(
         job = await service.get_job(job_id=job_id)
 
         # 권한 확인
-        if job.created_by != user.id and user.role != "admin":
+        if str(job.created_by) != user.id and user.role != "admin":
             raise TenopAPIError(
                 error_code="ACCESS_DENIED",
                 message="You do not have permission to delete this job",
@@ -490,63 +552,3 @@ async def delete_job(
         )
 
 
-# ============================================
-# GET /api/jobs/stats — 큐 통계 (Admin Only)
-# ============================================
-
-
-@router.get("/stats", response_model=dict)
-@limiter.limit("10/minute")
-async def get_job_stats(
-    request: Request,
-    user: CurrentUser = Depends(get_current_user),
-) -> dict:
-    """
-    Job 큐 통계 (Admin만 접근 가능).
-
-    Returns:
-        {
-            pending: int,
-            running: int,
-            success: int,
-            failed: int,
-            cancelled: int,
-            total: int,
-            avg_duration_seconds: float,
-            success_rate: float,  # 0.0~1.0
-        }
-
-    Raises:
-        403: 접근 권한 없음 (admin only)
-    """
-    try:
-        if user.role != "admin":
-            raise TenopAPIError(
-                error_code="ACCESS_DENIED",
-                message="Admin access required to view job statistics",
-                status_code=403,
-            )
-
-        service = await _get_job_service()
-        stats = await service.get_queue_stats()
-
-        return {
-            "pending": stats.get("pending", 0),
-            "running": stats.get("running", 0),
-            "success": stats.get("success", 0),
-            "failed": stats.get("failed", 0),
-            "cancelled": stats.get("cancelled", 0),
-            "total": stats.get("total", 0),
-            "avg_duration_seconds": stats.get("avg_duration_seconds", 0.0),
-            "success_rate": stats.get("success_rate", 0.0),
-        }
-
-    except TenopAPIError:
-        raise
-    except Exception as e:
-        logger.error(f"[JOB] Stats failed: {e}")
-        raise TenopAPIError(
-            error_code="JOB_STATS_FAILED",
-            message=str(e),
-            status_code=500,
-        )

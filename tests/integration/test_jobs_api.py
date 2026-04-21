@@ -66,6 +66,44 @@ def admin_headers():
 
 
 @pytest.fixture
+def override_get_current_user():
+    """Override get_current_user dependency with test user"""
+    from app.models.auth_schemas import CurrentUser
+    from app.api.deps import get_current_user
+
+    test_user = CurrentUser(
+        id=str(TEST_USER_ID),
+        email="test@example.com",
+        name="Test User",
+        role="member",
+        org_id=None,
+    )
+
+    app.dependency_overrides[get_current_user] = lambda: test_user
+    yield
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def override_get_admin_user():
+    """Override get_current_user dependency with admin user"""
+    from app.models.auth_schemas import CurrentUser
+    from app.api.deps import get_current_user
+
+    admin_user = CurrentUser(
+        id=str(TEST_ADMIN_ID),
+        email="admin@example.com",
+        name="Admin User",
+        role="admin",
+        org_id=None,
+    )
+
+    app.dependency_overrides[get_current_user] = lambda: admin_user
+    yield
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
 def mock_job():
     """Mock Job 객체"""
     return Job(
@@ -84,7 +122,7 @@ def mock_job():
         started_at=None,
         completed_at=None,
         duration_seconds=None,
-        created_by=TEST_USER_ID,
+        created_by=TEST_USER_ID,  # Keep as UUID - Job model auto-converts strings to UUID
         assigned_worker_id=None,
         tags={},
     )
@@ -195,7 +233,7 @@ class TestJobsAPI:
         assert response.status_code == 422  # Validation error
 
     @pytest.mark.asyncio
-    async def test_get_job_status(self, client, test_user_headers, mock_job_service, mock_job):
+    async def test_get_job_status(self, client, test_user_headers, mock_job_service, mock_job, override_get_current_user):
         """Test: Job 상태 조회"""
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
             mock_job_service.get_job.return_value = mock_job
@@ -281,7 +319,7 @@ class TestJobsAPI:
         assert len(data["items"]) == 1
 
     @pytest.mark.asyncio
-    async def test_cancel_job_success(self, client, test_user_headers, mock_job_service, mock_job):
+    async def test_cancel_job_success(self, client, test_user_headers, mock_job_service, mock_job, override_get_current_user):
         """Test: Job 취소 성공"""
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
             mock_job_service.get_job.return_value = mock_job
@@ -298,7 +336,7 @@ class TestJobsAPI:
         assert data["job_id"] == str(TEST_JOB_ID)
 
     @pytest.mark.asyncio
-    async def test_cancel_job_invalid_state(self, client, test_user_headers, mock_job_service):
+    async def test_cancel_job_invalid_state(self, client, test_user_headers, mock_job_service, override_get_current_user):
         """Test: Job 취소 실패 - 상태 불일치"""
         completed_job = Job(
             id=TEST_JOB_ID,
@@ -335,7 +373,7 @@ class TestJobsAPI:
         assert response.status_code == 409
 
     @pytest.mark.asyncio
-    async def test_retry_job_success(self, client, test_user_headers, mock_job_service):
+    async def test_retry_job_success(self, client, test_user_headers, mock_job_service, override_get_current_user):
         """Test: Job 재시도 성공"""
         failed_job = Job(
             id=TEST_JOB_ID,
@@ -373,7 +411,7 @@ class TestJobsAPI:
         assert data["retry_attempt"] == 2
 
     @pytest.mark.asyncio
-    async def test_delete_completed_job(self, client, test_user_headers, mock_job_service):
+    async def test_delete_completed_job(self, client, test_user_headers, mock_job_service, override_get_current_user):
         """Test: 완료된 Job 삭제"""
         completed_job = Job(
             id=TEST_JOB_ID,
@@ -408,10 +446,8 @@ class TestJobsAPI:
         assert response.status_code == 204
 
     @pytest.mark.asyncio
-    async def test_get_stats_admin_only(self, client, admin_headers, mock_job_service):
+    async def test_get_stats_admin_only(self, client, admin_headers, mock_job_service, override_get_admin_user):
         """Test: 큐 통계 조회 (Admin only)"""
-        from app.models.auth_schemas import CurrentUser
-
         stats = {
             "pending": 5,
             "running": 2,
@@ -423,16 +459,7 @@ class TestJobsAPI:
             "success_rate": 0.9,
         }
 
-        admin_user = CurrentUser(
-            id=str(TEST_ADMIN_ID),
-            email="admin@example.com",
-            name="Admin User",
-            role="admin",
-            org_id=None,
-        )
-
-        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service), \
-             patch("app.api.routes_jobs.get_current_user", return_value=admin_user):
+        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
             mock_job_service.get_queue_stats = AsyncMock(return_value=stats)
 
             response = client.get(
@@ -585,7 +612,7 @@ class TestJobsPerformance:
         assert elapsed < 500, f"Create job took {elapsed}ms (expected < 500ms)"
 
     @pytest.mark.asyncio
-    async def test_list_jobs_performance(self, client, test_user_headers, mock_job_service, mock_job):
+    async def test_list_jobs_performance(self, client, test_user_headers, mock_job_service, mock_job, override_get_current_user):
         """Test: Job 목록 조회 응답 시간 < 100ms"""
         import time
 
