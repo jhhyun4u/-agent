@@ -9,7 +9,7 @@ Job Service — Job CRUD + 상태 관리 (STEP 8)
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List, Tuple
 from uuid import UUID, uuid4
 
@@ -57,7 +57,7 @@ class JobService:
             priority=JobPriority(priority),
             payload=payload,
             created_by=created_by,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
             retries=0,
             max_retries=max_retries,
         )
@@ -126,7 +126,7 @@ class JobService:
         try:
             await self.db.table("jobs").update({
                 "status": "running",
-                "started_at": datetime.utcnow().isoformat(),
+                "started_at": datetime.now(timezone.utc).isoformat(),
                 "assigned_worker_id": worker_id,
             }).eq("id", str(job_id))
 
@@ -145,13 +145,13 @@ class JobService:
                 duration = None
             else:
                 duration = (
-                    datetime.utcnow() - job.started_at
+                    datetime.now(timezone.utc) - job.started_at
                 ).total_seconds()
 
             await self.db.table("jobs").update({
                 "status": "success",
                 "result": result,
-                "completed_at": datetime.utcnow().isoformat(),
+                "completed_at": datetime.now(timezone.utc).isoformat(),
                 "duration_seconds": duration,
             }).eq("id", str(job_id))
 
@@ -173,7 +173,7 @@ class JobService:
                 await self.db.table("jobs").update({
                     "status": "failed",
                     "error": error[:500],  # 처음 500자만 저장
-                    "completed_at": datetime.utcnow().isoformat(),
+                    "completed_at": datetime.now(timezone.utc).isoformat(),
                     "retries": attempt,
                     "duration_seconds": duration,
                 }).eq("id", str(job_id))
@@ -208,7 +208,7 @@ class JobService:
 
             await self.db.table("jobs").update({
                 "status": "cancelled",
-                "completed_at": datetime.utcnow().isoformat(),
+                "completed_at": datetime.now(timezone.utc).isoformat(),
             }).eq("id", str(job_id))
 
             self.logger.info(f"Job {job_id} cancelled")
@@ -264,7 +264,7 @@ class JobService:
                 "type": job.type.value,
                 "status": status,
                 "duration_seconds": duration,
-                "recorded_at": datetime.utcnow().isoformat(),
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
             })
             self.logger.info(f"Metric recorded for job {job_id}")
         except Exception as e:

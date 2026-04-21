@@ -5,7 +5,7 @@ Job CRUD + 상태 관리 핵심 로직
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Tuple
 from uuid import UUID, uuid4
 
@@ -124,7 +124,7 @@ class JobQueueService:
             TenopAPIError: 생성 실패 시
         """
         job_id = uuid4()
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         # Job 객체 생성
         job = Job(
@@ -276,7 +276,7 @@ class JobQueueService:
             TenopAPIError: 상태 변경 실패 시
         """
         try:
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
 
             await self.db.table("jobs").update({
                 "status": JobStatus.RUNNING.value,
@@ -324,9 +324,9 @@ class JobQueueService:
 
             duration = None
             if job.started_at:
-                duration = (datetime.utcnow() - job.started_at).total_seconds()
+                duration = (datetime.now(timezone.utc) - job.started_at).total_seconds()
 
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
 
             # Job 상태 업데이트
             await self.db.table("jobs").update({
@@ -394,7 +394,7 @@ class JobQueueService:
             if not job:
                 raise JobNotFoundError()
 
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
 
             if attempt >= job.max_retries:
                 # 최대 재시도 초과 → FAILED로 변경
@@ -482,7 +482,7 @@ class JobQueueService:
                     message=f"Cannot cancel job in {job.status.value} state"
                 )
 
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
 
             await self.db.table("jobs").update({
                 "status": JobStatus.CANCELLED.value,
@@ -536,7 +536,7 @@ class JobQueueService:
             await self.db.table("job_results").insert({
                 "job_id": str(job_id),
                 "result_data": result,
-                "saved_at": datetime.utcnow().isoformat(),
+                "saved_at": datetime.now(timezone.utc).isoformat(),
             })
         except Exception as e:
             self.logger.warning(f"Failed to save job result for {job_id}: {e}")
@@ -563,7 +563,7 @@ class JobQueueService:
                 "memory_mb": memory_mb,
                 "cpu_percent": cpu_percent,
                 "worker_id": worker_id,
-                "recorded_at": datetime.utcnow().isoformat(),
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
             })
         except Exception as e:
             self.logger.warning(f"Failed to record metric for job {job_id}: {e}")
@@ -580,7 +580,7 @@ class JobQueueService:
                 "job_id": str(job_id),
                 "event_type": event_type.value,
                 "details": details or {},
-                "occurred_at": datetime.utcnow().isoformat(),
+                "occurred_at": datetime.now(timezone.utc).isoformat(),
             })
         except Exception as e:
             self.logger.warning(f"Failed to record event for job {job_id}: {e}")

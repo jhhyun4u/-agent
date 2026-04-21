@@ -15,7 +15,7 @@ Coverage:
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
@@ -80,7 +80,7 @@ def mock_job():
         error=None,
         retries=0,
         max_retries=3,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
         started_at=None,
         completed_at=None,
         duration_seconds=None,
@@ -107,6 +107,32 @@ def mock_job_service():
     return service
 
 
+@pytest.fixture
+def mock_supabase_client():
+    """Mock Supabase async client for proposal queries"""
+    # Mock response
+    mock_response = MagicMock()
+    mock_response.data = {
+        "id": str(TEST_PROPOSAL_ID),
+        "owner_id": str(TEST_USER_ID),
+    }
+
+    # Build the chain: table("proposals").select(...).eq(...).single().execute()
+    mock_query_builder = MagicMock()
+    mock_query_builder.select.return_value = mock_query_builder
+    mock_query_builder.eq.return_value = mock_query_builder
+    mock_query_builder.single.return_value = mock_query_builder
+    mock_query_builder.execute = AsyncMock(return_value=mock_response)
+
+    # table() is async and returns a query builder
+    mock_table = AsyncMock(return_value=mock_query_builder)
+
+    # Create the client with table as AsyncMock
+    client = MagicMock()
+    client.table = mock_table
+    return client
+
+
 # ============================================
 # REST API Tests
 # ============================================
@@ -116,9 +142,13 @@ class TestJobsAPI:
     """Job Queue REST API 테스트"""
 
     @pytest.mark.asyncio
-    async def test_create_job_success(self, client, test_user_headers, mock_job_service, mock_job):
+    async def test_create_job_success(self, client, test_user_headers, mock_job_service, mock_job, mock_supabase_client):
         """Test: Job 생성 성공"""
-        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
+        async def mock_get_client():
+            return mock_supabase_client
+
+        with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service), \
+             patch("app.api.routes_jobs.get_async_client", side_effect=mock_get_client):
             mock_job_service.create_job.return_value = mock_job
 
             response = client.post(
@@ -203,7 +233,7 @@ class TestJobsAPI:
             error=None,
             retries=0,
             max_retries=3,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
             started_at=None,
             completed_at=None,
             duration_seconds=None,
@@ -272,9 +302,9 @@ class TestJobsAPI:
             error=None,
             retries=0,
             max_retries=3,
-            created_at=datetime.utcnow(),
-            started_at=datetime.utcnow(),
-            completed_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            started_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(timezone.utc),
             duration_seconds=10.0,
             created_by=TEST_USER_ID,
             assigned_worker_id=None,
@@ -309,9 +339,9 @@ class TestJobsAPI:
             error="Timeout",
             retries=1,
             max_retries=3,
-            created_at=datetime.utcnow(),
-            started_at=datetime.utcnow(),
-            completed_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            started_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(timezone.utc),
             duration_seconds=60.0,
             created_by=TEST_USER_ID,
             assigned_worker_id="worker-1",
@@ -347,9 +377,9 @@ class TestJobsAPI:
             error=None,
             retries=0,
             max_retries=3,
-            created_at=datetime.utcnow(),
-            started_at=datetime.utcnow(),
-            completed_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            started_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(timezone.utc),
             duration_seconds=10.0,
             created_by=TEST_USER_ID,
             assigned_worker_id=None,
@@ -477,9 +507,9 @@ class TestJobsWebSocket:
             error=None,
             retries=0,
             max_retries=3,
-            created_at=datetime.utcnow(),
-            started_at=datetime.utcnow(),
-            completed_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            started_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(timezone.utc),
             duration_seconds=30.5,
             created_by=TEST_USER_ID,
             assigned_worker_id="worker-1",

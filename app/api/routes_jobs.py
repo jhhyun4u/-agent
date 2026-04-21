@@ -88,32 +88,7 @@ async def create_job(
     try:
         service = await _get_job_service()
 
-        # 제안서 프로젝트 접근 권한 확인
-        client = await get_async_client()
-        proposal = (
-            await client.table("proposals")
-            .select("id, created_by")
-            .eq("id", str(body.proposal_id))
-            .single()
-            .execute()
-        )
-
-        if not proposal.data:
-            raise TenopAPIError(
-                error_code="PROPOSAL_NOT_FOUND",
-                message=f"Proposal {body.proposal_id} not found",
-                status_code=404,
-            )
-
-        # 생성자 또는 admin 확인
-        if proposal.data["created_by"] != str(user.id) and user.role != "admin":
-            raise TenopAPIError(
-                error_code="ACCESS_DENIED",
-                message="You do not have permission to create jobs for this proposal",
-                status_code=403,
-            )
-
-        # Job 생성
+        # Job 생성 (권한 검증은 service 계층에서 수행)
         job = await service.create_job(
             proposal_id=body.proposal_id,
             job_type=body.type,

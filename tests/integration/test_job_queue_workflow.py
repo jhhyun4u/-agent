@@ -16,7 +16,7 @@ Integration Tests: Job Queue Workflow (STEP 8 - Day 3-4)
 import asyncio
 import json
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4, UUID
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -89,7 +89,7 @@ def test_job():
         "created_by": str(uuid4()),
         "retries": 0,
         "max_retries": 3,
-        "created_at": datetime.utcnow().isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -398,7 +398,7 @@ class TestJobQueueWorkflow:
             priority=JobPriority.NORMAL,
             payload={},
             created_by=created_by,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
         )
 
         # JobService mark_job_success 호출
@@ -441,7 +441,7 @@ class TestJobQueuePerformance:
         mock_db.table.return_value.insert = insert_mock
 
         # 100개 job 생성
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
         for i in range(100):
             await job_service.create_job(
                 proposal_id=proposal_id,
@@ -449,7 +449,7 @@ class TestJobQueuePerformance:
                 payload={"index": i},
                 created_by=created_by,
             )
-        elapsed = (datetime.utcnow() - start_time).total_seconds()
+        elapsed = (datetime.now(timezone.utc) - start_time).total_seconds()
 
         assert elapsed < 10  # 10초 이내
         assert insert_mock.call_count == 100

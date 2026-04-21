@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-21T07:25:37.867Z",
+  "lastUpdated": "2026-04-21T12:43:53.788Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -49,7 +49,8 @@
     "live",
     "middleware",
     "dashboards",
-    "performance"
+    "performance",
+    "fixes"
   ],
   "primaryFeature": "document_ingestion.py",
   "features": {
@@ -117,9 +118,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-20T13:00:29.415Z"
+        "lastUpdated": "2026-04-21T12:33:23.641Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\websocket_jobs.py",
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_jobs.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -147,9 +148,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-21T07:12:44.566Z"
+        "lastUpdated": "2026-04-21T12:28:42.163Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\monitor-phase5-staging.sh",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\phase5_checkpoint.sh",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -930,9 +931,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-20T14:03:22.595Z"
+        "lastUpdated": "2026-04-21T12:28:07.164Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_vault_chat_complete_workflow.py"
+      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_jobs_api.py"
     },
     "monitoring": {
       "phase": "do",
@@ -1112,9 +1113,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-21T07:25:37.855Z"
+        "lastUpdated": "2026-04-21T12:43:53.775Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\models\\dashboard_schemas.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\job_service.py"
     },
     "stores": {
       "phase": "do",
@@ -1193,6 +1194,19 @@
         "lastUpdated": "2026-04-20T13:24:16.594Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\tests\\performance\\test_vault_performance.py"
+    },
+    "fixes": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-21T12:27:22.523Z",
+        "lastUpdated": "2026-04-21T12:28:23.603Z"
+      },
+      "lastFile": "C:\\project\\tenopa proposer\\fixes\\fix_test_failures_t2_4_test_data.py"
     }
   },
   "meta": {
@@ -15161,6 +15175,156 @@
     },
     {
       "timestamp": "2026-04-21T07:25:37.865Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T11:20:51.134Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T11:29:33.571Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T11:29:57.112Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:05:42.644Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:06:46.340Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:06:54.655Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:14:52.567Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:15:03.339Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:15:12.814Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:15:20.583Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:16:09.288Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:16:17.105Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:17:40.132Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:24:15.013Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:27:06.512Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:27:22.539Z",
+      "feature": "fixes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:27:53.911Z",
+      "feature": "fixes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:28:07.173Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:28:09.424Z",
+      "feature": "fixes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:28:23.612Z",
+      "feature": "fixes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:28:42.216Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:29:00.899Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:33:23.645Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:43:41.706Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T12:43:53.787Z",
       "feature": "tenopa proposer",
       "phase": "do",
       "action": "updated"
