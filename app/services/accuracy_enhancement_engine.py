@@ -6,14 +6,13 @@ STEP 4A Phase 2: Accuracy Enhancement Engine
 import logging
 import statistics
 from dataclasses import dataclass, field, asdict
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from app.services.harness_accuracy_validator import (
     DiagnosisAccuracyValidator,
     EvaluationMetrics,
     EvaluationResult,
     PerformanceMetrics,
     MetricCalculator,
-    TestCase,
 )
 
 logger = logging.getLogger(__name__)
@@ -353,7 +352,10 @@ class CrossValidator:
             return CrossValidationResult(
                 k=self.k,
                 folds=[],
-                mean_accuracy=0.0,
+                mean_precision=0.0,
+                mean_recall=0.0,
+                mean_f1=0.0,
+                std_f1=0.0,
                 stability_score=0.0
             )
 

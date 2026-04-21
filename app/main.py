@@ -14,8 +14,6 @@ from fastapi.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
 import logging
 import asyncio
-import json
-import datetime
 
 from prometheus_client import generate_latest, REGISTRY
 

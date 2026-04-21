@@ -1,65 +1,14 @@
 {
   "version": "1.0",
-  "enabled": true,
+  "enabled": false,
   "teamName": "",
   "feature": "document_ingestion.py",
   "pdcaPhase": "do",
   "orchestrationPattern": "leader",
   "ctoAgent": "opus",
   "startedAt": "2026-04-20T14:26:10.013Z",
-  "lastUpdated": "2026-04-21T06:36:40.260Z",
-  "teammates": [
-    {
-      "name": "aa580eb25407ddda6",
-      "role": "general-purpose",
-      "model": "sonnet",
-      "status": "spawning",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-20T14:26:10.021Z",
-      "lastActivityAt": "2026-04-20T14:26:10.021Z"
-    },
-    {
-      "name": "a289df9a1c0aecda7",
-      "role": "general-purpose",
-      "model": "sonnet",
-      "status": "completed",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-20T14:26:18.703Z",
-      "lastActivityAt": "2026-04-21T06:36:40.239Z"
-    },
-    {
-      "name": "ade962ab3d2bb8fc6",
-      "role": "general-purpose",
-      "model": "sonnet",
-      "status": "completed",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-20T14:26:24.681Z",
-      "lastActivityAt": "2026-04-21T06:28:03.661Z"
-    },
-    {
-      "name": "a7d006381300d68dd",
-      "role": "bkit:qa-strategist",
-      "model": "sonnet",
-      "status": "completed",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-21T06:22:43.545Z",
-      "lastActivityAt": "2026-04-21T06:25:03.974Z"
-    },
-    {
-      "name": "aadc4672885edd915",
-      "role": "bkit:pdca-iterator",
-      "model": "sonnet",
-      "status": "completed",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-21T06:22:43.577Z",
-      "lastActivityAt": "2026-04-21T06:27:35.775Z"
-    }
-  ],
+  "lastUpdated": "2026-04-21T06:50:46.209Z",
+  "teammates": [],
   "progress": {
     "totalTasks": 0,
     "completedTasks": 0,
