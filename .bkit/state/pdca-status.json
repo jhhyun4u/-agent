@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-21T06:51:02.290Z",
+  "lastUpdated": "2026-04-21T07:12:44.577Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -147,9 +147,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-20T10:11:07.220Z"
+        "lastUpdated": "2026-04-21T07:12:44.566Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\deploy_phase5_staging.bat",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\monitor-phase5-staging.sh",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -15138,6 +15138,12 @@
     {
       "timestamp": "2026-04-21T06:51:02.287Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-21T07:12:44.576Z",
+      "feature": "scripts",
       "phase": "do",
       "action": "updated"
     }
