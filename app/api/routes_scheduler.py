@@ -8,6 +8,13 @@ from app.services.scheduler_service import SchedulerService
 
 router = APIRouter(prefix="/api/scheduler", tags=["scheduler"])
 
+
+@router.get("/health")
+async def scheduler_health():
+    """Scheduler service health check endpoint"""
+    return {"status": "ok", "service": "scheduler"}
+
+
 class ScheduleCreate(BaseModel):
     name: str
     cron_expression: str
