@@ -1,25 +1,14 @@
 {
   "version": "1.0",
-  "enabled": true,
+  "enabled": false,
   "teamName": "",
   "feature": "document_ingestion.py",
   "pdcaPhase": "do",
   "orchestrationPattern": "leader",
   "ctoAgent": "opus",
   "startedAt": "2026-04-21T07:12:09.590Z",
-  "lastUpdated": "2026-04-21T07:12:09.603Z",
-  "teammates": [
-    {
-      "name": "ae5ab4be5ce4f5800",
-      "role": "bkit:gap-detector",
-      "model": "sonnet",
-      "status": "spawning",
-      "currentTask": null,
-      "taskId": null,
-      "startedAt": "2026-04-21T07:12:09.602Z",
-      "lastActivityAt": "2026-04-21T07:12:09.602Z"
-    }
-  ],
+  "lastUpdated": "2026-04-21T07:24:47.087Z",
+  "teammates": [],
   "progress": {
     "totalTasks": 0,
     "completedTasks": 0,

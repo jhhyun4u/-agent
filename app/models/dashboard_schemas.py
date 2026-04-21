@@ -52,7 +52,7 @@ class DashboardTeamMetrics(BaseModel):
     total_won_amount: int = Field(..., description="수주한 총 금액 (원)")
     avg_deal_size: int = Field(..., description="평균 건당 금액 (원)")
     avg_tech_score: float = Field(..., description="평균 기술점수")
-    month_over_month_change: float = Field(..., description="전월 대비 수주율 변화율 (%)")
+    month_over_month_change: float = Field(default=0.0, description="전월 대비 수주율 변화율 (%)")
     positioning_breakdown: List[PositioningBreakdown] = Field(
         default_factory=list, description="포지셔닝별 성공률"
     )

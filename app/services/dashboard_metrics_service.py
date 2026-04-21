@@ -463,3 +463,266 @@ class DashboardMetricsService:
         except Exception as e:
             logger.error(f"Error populating metrics history: {e}")
             raise TenopAPIError("GEN_009", "이력 기록 실패", status_code=500)
+
+    # ========================================
+    # Timeline & Details (설계: 5.2, 5.3)
+    # ========================================
+
+    async def fetch_timeline(
+        self,
+        dashboard_type: str,
+        constraint_id: str,
+        months: int = 12,
+        metric: str = "win_rate"
+    ) -> dict:
+        """
+        월별 이력 조회 (최근 N개월 + 추이)
+
+        Args:
+            dashboard_type: "team" | "department" | "executive"
+            constraint_id: 팀ID / 본부ID / 조직ID
+            months: 조회 개월 수 (1-36, 기본값 12)
+            metric: "win_rate" | "total_amount" | "proposal_count"
+
+        Returns:
+            {
+                "dashboard_type": str,
+                "metric": str,
+                "data": [{month, period_label, win_rate, proposal_count, won_count, total_amount}],
+                "summary": {trend, avg_win_rate, best_month, best_month_value}
+            }
+        """
+        try:
+            client = await self._get_client()
+
+            # 기준 날짜 계산 (최근 N개월)
+            now = datetime.utcnow()
+            start_date = now - timedelta(days=30 * months)
+
+            # dashboard_metrics_history 조회
+            query = client.table("dashboard_metrics_history").select("*")
+
+            if dashboard_type == "team":
+                query = query.eq("team_id", constraint_id)
+            elif dashboard_type == "department":
+                query = query.eq("division_id", constraint_id)
+            elif dashboard_type == "executive":
+                query = query.eq("org_id", constraint_id)
+            else:
+                raise TenopAPIError("VAL_001", "Invalid dashboard_type", status_code=400)
+
+            query = query.gte("period", start_date.date().isoformat())
+            query = query.order("period", desc=False)
+
+            res = await query.execute()
+            history_data = res.data if res.data else []
+
+            if not history_data:
+                # 이력이 없으면 현재 메트릭으로 응답
+                if dashboard_type == "team":
+                    current = await self.get_team_metrics(constraint_id)
+                    current_wr = current.get("win_rate_ytd", 0)
+                elif dashboard_type == "department":
+                    current = await self.get_department_metrics(constraint_id)
+                    current_wr = current.get("win_rate", 0)
+                else:  # executive
+                    current = await self.get_executive_metrics(constraint_id)
+                    current_wr = current.get("metrics", {}).get("overall_win_rate", 0)
+
+                return {
+                    "dashboard_type": dashboard_type,
+                    "metric": metric,
+                    "data": [],
+                    "summary": {
+                        "trend": "flat",
+                        "avg_win_rate": current_wr,
+                        "best_month": None,
+                        "best_month_value": current_wr
+                    }
+                }
+
+            # 응답 데이터 구성
+            timeline_data = []
+            win_rates = []
+
+            for record in history_data:
+                month = record.get("period", "").replace("-01", "")  # YYYY-MM-01 → YYYY-MM
+                win_rate = float(record.get("win_rate", 0)) if record.get("win_rate") else 0
+                proposal_count = int(record.get("total_proposals", 0)) if record.get("total_proposals") else 0
+                won_count = int(record.get("won_count", 0)) if record.get("won_count") else 0
+                total_amount = int(record.get("total_won_amount", 0)) if record.get("total_won_amount") else 0
+
+                timeline_data.append({
+                    "month": month,
+                    "period_label": datetime.fromisoformat(record.get("period", "")).strftime("%b %Y"),
+                    "win_rate": round(win_rate, 1),
+                    "proposal_count": proposal_count,
+                    "won_count": won_count,
+                    "total_amount": total_amount
+                })
+
+                win_rates.append(win_rate)
+
+            # 추이 분석
+            if len(win_rates) > 1:
+                recent_avg = sum(win_rates[-3:]) / 3 if len(win_rates) >= 3 else sum(win_rates[-1:]) / 1
+                older_avg = sum(win_rates[:-3]) / (len(win_rates) - 3) if len(win_rates) > 3 else sum(win_rates[:-1]) / 1
+                if recent_avg > older_avg:
+                    trend = "up"
+                elif recent_avg < older_avg:
+                    trend = "down"
+                else:
+                    trend = "flat"
+            else:
+                trend = "flat"
+
+            best_month_idx = win_rates.index(max(win_rates)) if win_rates else 0
+            best_month = timeline_data[best_month_idx]["month"] if timeline_data else None
+            best_month_value = max(win_rates) if win_rates else 0
+
+            return {
+                "dashboard_type": dashboard_type,
+                "metric": metric,
+                "data": timeline_data,
+                "summary": {
+                    "trend": trend,
+                    "avg_win_rate": round(sum(win_rates) / len(win_rates), 1) if win_rates else 0,
+                    "best_month": best_month,
+                    "best_month_value": round(best_month_value, 1)
+                }
+            }
+
+        except TenopAPIError:
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching timeline for {dashboard_type}/{constraint_id}: {e}")
+            raise TenopAPIError("GEN_010", "타임라인 조회 실패", status_code=500)
+
+    async def fetch_details(
+        self,
+        dashboard_type: str,
+        constraint_id: str,
+        filter_type: str = "team",
+        filter_value: Optional[str] = None,
+        sort_by: str = "win_rate",
+        sort_order: str = "desc",
+        limit: int = 50,
+        offset: int = 0
+    ) -> dict:
+        """
+        상세 데이터 드릴다운 (필터/정렬)
+
+        Args:
+            dashboard_type: "team" | "department" | "executive"
+            constraint_id: 팀ID / 본부ID / 조직ID
+            filter_type: "team" | "region" | "client" | "positioning"
+            filter_value: 필터 값 (선택)
+            sort_by: "win_rate" | "amount" | "date"
+            sort_order: "asc" | "desc"
+            limit: 페이지 크기
+            offset: 페이지 오프셋
+
+        Returns:
+            {
+                "dashboard_type": str,
+                "filter_type": str,
+                "total_count": int,
+                "data": [{team_id, team_name, team_lead, win_rate, total_proposals, won_count, total_won_amount, recent_projects}]
+            }
+        """
+        try:
+            client = await self._get_client()
+
+            # 팀별 상세 데이터 조회 (filter_type이 "team"인 경우만 지원)
+            if filter_type != "team":
+                # 다른 필터 타입은 향후 구현
+                return {
+                    "dashboard_type": dashboard_type,
+                    "filter_type": filter_type,
+                    "total_count": 0,
+                    "data": []
+                }
+
+            # 팀 메트릭 조회
+            if dashboard_type == "department":
+                res = await client.table("mv_dashboard_team") \
+                    .select("*") \
+                    .eq("division_id", constraint_id) \
+                    .execute()
+            elif dashboard_type == "executive":
+                res = await client.table("mv_dashboard_team") \
+                    .select("*") \
+                    .eq("org_id", constraint_id) \
+                    .execute()
+            else:
+                raise TenopAPIError("VAL_002", "Invalid dashboard_type", status_code=400)
+
+            teams_data = res.data if res.data else []
+
+            # 정렬
+            sort_key_map = {
+                "win_rate": "win_rate_ytd",
+                "amount": "total_won_amount",
+                "date": "updated_at"
+            }
+            sort_key = sort_key_map.get(sort_by, "win_rate_ytd")
+            reverse_sort = sort_order == "desc"
+
+            sorted_teams = sorted(
+                teams_data,
+                key=lambda x: float(x.get(sort_key, 0)) if x.get(sort_key) else 0,
+                reverse=reverse_sort
+            )
+
+            # 페이징
+            paginated_teams = sorted_teams[offset:offset+limit]
+
+            # 응답 데이터 구성
+            details_data = []
+            for team in paginated_teams:
+                team_id = str(team.get("team_id", ""))
+
+                # 최근 프로젝트 조회 (최대 5개)
+                projects_res = await client.table("proposals") \
+                    .select("id, title, status, result_amount, result_date") \
+                    .eq("team_id", team_id) \
+                    .in_("status", ["won", "lost"]) \
+                    .order("result_date", desc=True) \
+                    .limit(5) \
+                    .execute()
+
+                recent_projects = [
+                    {
+                        "proposal_id": str(p.get("id", "")),
+                        "title": p.get("title", ""),
+                        "result": "won" if p.get("status") == "won" else "lost",
+                        "amount": int(p.get("result_amount", 0)) if p.get("result_amount") else 0,
+                        "result_date": p.get("result_date", "")
+                    }
+                    for p in (projects_res.data or [])
+                ]
+
+                details_data.append({
+                    "team_id": team_id,
+                    "team_name": team.get("team_name", ""),
+                    "team_lead": team.get("team_lead", ""),
+                    "team_size": int(team.get("team_size", 0)) if team.get("team_size") else 0,
+                    "win_rate": float(team.get("win_rate_ytd", 0)) if team.get("win_rate_ytd") else 0,
+                    "total_proposals": int(team.get("total_proposals", 0)) if team.get("total_proposals") else 0,
+                    "won_count": int(team.get("won_count", 0)) if team.get("won_count") else 0,
+                    "total_won_amount": int(team.get("total_won_amount", 0)) if team.get("total_won_amount") else 0,
+                    "recent_projects": recent_projects
+                })
+
+            return {
+                "dashboard_type": dashboard_type,
+                "filter_type": filter_type,
+                "total_count": len(sorted_teams),
+                "data": details_data
+            }
+
+        except TenopAPIError:
+            raise
+        except Exception as e:
+            logger.error(f"Error fetching details for {dashboard_type}/{constraint_id}: {e}")
+            raise TenopAPIError("GEN_011", "상세 데이터 조회 실패", status_code=500)

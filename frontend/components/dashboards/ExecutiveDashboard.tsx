@@ -13,7 +13,6 @@ import { useMemo } from "react";
 import {
   BarChart,
   Bar,
-  DoughnutChart,
   LineChart,
   Line,
   XAxis,
