@@ -19,6 +19,7 @@ from app.graph.context_helpers import (
 from app.prompts.strategy import (
     COMPETITIVE_ANALYSIS_FRAMEWORK,
     POSITIONING_STRATEGY_MATRIX,
+    POSITIONING_TACTICAL_ALTERNATIVES,
     STRATEGY_GENERATE_PROMPT,
     STRATEGY_RESEARCH_FRAMEWORK,
 )
@@ -132,6 +133,31 @@ async def strategy_generate(state: ProposalState) -> dict:
         logger.debug(f"프롬프트 레지스트리 조회 실패 (무시): {e}")
         reg_text = ""
 
+    # v3.3: 포지셔닝별 전술적 대안 가이드
+    tactical_alternatives = POSITIONING_TACTICAL_ALTERNATIVES.get(positioning, POSITIONING_TACTICAL_ALTERNATIVES.get("defensive"))
+    tactical_guidance = f"""
+## 포지셔닝별 전술적 대안 가이드
+
+### {positioning.upper()} 포지셔닝 내 2가지 전술적 변형
+
+당신이 생성할 2개의 alternatives는 같은 {positioning} 포지셔닝 내에서의 서로 다른 전술적 접근입니다.
+
+**대안 A: {tactical_alternatives['alternative_a']['name']}**
+- 개념: {tactical_alternatives['alternative_a']['concept']}
+- 핵심 강점: {', '.join(tactical_alternatives['alternative_a']['key_focus'])}
+- Ghost Theme 각도: {tactical_alternatives['alternative_a']['ghost_theme_angle']}
+- Win Theme 포커스: {tactical_alternatives['alternative_a']['win_theme_focus']}
+- 가격 전략: {tactical_alternatives['alternative_a']['price_approach']}
+
+**대안 B: {tactical_alternatives['alternative_b']['name']}**
+- 개념: {tactical_alternatives['alternative_b']['concept']}
+- 핵심 강점: {', '.join(tactical_alternatives['alternative_b']['key_focus'])}
+- Ghost Theme 각도: {tactical_alternatives['alternative_b']['ghost_theme_angle']}
+- Win Theme 포커스: {tactical_alternatives['alternative_b']['win_theme_focus']}
+- 가격 전략: {tactical_alternatives['alternative_b']['price_approach']}
+
+"""
+
     prompt = (reg_text or STRATEGY_GENERATE_PROMPT).format(
         rfp_summary=rfp_summary,
         positioning=positioning,
@@ -151,6 +177,9 @@ async def strategy_generate(state: ProposalState) -> dict:
         strategy_research_framework=STRATEGY_RESEARCH_FRAMEWORK,
     )
 
+    # 포지셔닝별 전술 가이드를 프롬프트 앞에 추가
+    prompt = tactical_guidance + prompt
+
     # 과거 전략 참조 추가 (C-2)
     if past_strategy_text:
         prompt += past_strategy_text
@@ -159,7 +188,7 @@ async def strategy_generate(state: ProposalState) -> dict:
     if pricing_strategy_context:
         prompt += f"\n\n{pricing_strategy_context}\n위 시장 데이터를 price_strategy 설정 시 참고하세요."
 
-    result = await claude_generate(prompt, max_tokens=8000, step_name="strategy_generate")
+    result = await claude_generate(prompt, max_tokens=10000, step_name="strategy_generate")
 
     # DEBUG: 상세 로깅
     import json as _json

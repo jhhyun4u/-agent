@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-22T00:34:45.647Z",
+  "lastUpdated": "2026-04-22T01:49:02.915Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -148,9 +148,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-22T00:28:47.779Z"
+        "lastUpdated": "2026-04-22T01:38:14.393Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\deploy_phase5_production.sh",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\debug_claude_step2_response.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -479,7 +479,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T09:30:04.149Z",
-        "lastUpdated": "2026-04-22T00:34:45.594Z"
+        "lastUpdated": "2026-04-22T01:36:37.438Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\nodes\\strategy_generate.py",
       "stateMachine": {
@@ -689,7 +689,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-30T02:43:45.778Z",
-        "lastUpdated": "2026-04-22T00:14:03.209Z"
+        "lastUpdated": "2026-04-22T01:42:29.333Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\app\\prompts\\strategy.py",
       "stateMachine": {
@@ -1113,9 +1113,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-21T13:17:26.643Z"
+        "lastUpdated": "2026-04-22T01:49:02.909Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\models\\proposal_status_validator.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\claude_client.py"
     },
     "stores": {
       "phase": "do",
@@ -15788,6 +15788,108 @@
     {
       "timestamp": "2026-04-22T00:34:45.630Z",
       "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:04:02.217Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:26:39.988Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:27:00.327Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:27:07.821Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:27:24.129Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:30:18.280Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:30:51.368Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:31:03.642Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:34:16.668Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:34:45.859Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:36:37.452Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:36:51.064Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:38:14.399Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:39:36.152Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:42:03.313Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:42:29.338Z",
+      "feature": "prompts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:49:02.914Z",
+      "feature": "tenopa proposer",
       "phase": "do",
       "action": "updated"
     }

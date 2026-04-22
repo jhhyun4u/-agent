@@ -243,17 +243,75 @@ def _parse_json_response(text: str) -> dict:
     # 코드블록 제거
     cleaned = text.strip()
     if cleaned.startswith("```"):
+        # 마크다운 코드블록에서 JSON 추출
+        # ```json ... ``` 또는 ``` ... ``` 형식 모두 지원
         lines = cleaned.split("\n")
-        # 첫 줄(```json)과 마지막 줄(```) 제거
-        start = 1
-        end = len(lines) - 1 if lines[-1].strip() == "```" else len(lines)
-        cleaned = "\n".join(lines[start:end])
+        start = 1  # 첫 줄(```json 또는 ```) 스킵
+
+        # 마지막 ``` 찾기 (없으면 마지막 줄 사용)
+        end = len(lines)
+        for i in range(len(lines) - 1, start - 1, -1):
+            if lines[i].strip() == "```":
+                end = i
+                break
+
+        # 빈 줄 제거 (앞뒤)
+        content_lines = lines[start:end]
+        while content_lines and not content_lines[0].strip():
+            content_lines = content_lines[1:]
+        while content_lines and not content_lines[-1].strip():
+            content_lines = content_lines[:-1]
+
+        cleaned = "\n".join(content_lines)
 
     try:
         return json.loads(cleaned)
-    except json.JSONDecodeError:
-        # JSON 파싱 실패 시 텍스트 응답 반환
-        logger.warning(f"JSON 파싱 실패, 텍스트 응답 반환: {cleaned[:200]}...")
+    except json.JSONDecodeError as e:
+        # 불완전한 JSON 복구 시도 (v3.4: 끝에 누락된 괄호/따옴표 추가)
+        logger.debug(f"JSON 파싱 초기 실패: {str(e)[:100]}")
+
+        temp = cleaned.rstrip()
+
+        # 끝에 따옴표가 열려있는지 확인 (문자열이 종료되지 않은 경우)
+        # 역슬래시로 이스케이프된 따옴표 제외
+        quote_count = 0
+        i = 0
+        while i < len(temp):
+            if temp[i] == '"' and (i == 0 or temp[i-1] != '\\'):
+                quote_count += 1
+            i += 1
+
+        # 따옴표가 홀수개면 닫기 따옴표 추가
+        if quote_count % 2 == 1:
+            temp += '"'
+            logger.debug("끝에 따옴표 추가")
+
+        # 끝에 누락된 ] 또는 }} 추가 시도 (최대 10번)
+        for attempt in range(10):
+            open_braces = temp.count('{')
+            close_braces = temp.count('}')
+            open_brackets = temp.count('[')
+            close_brackets = temp.count(']')
+
+            if open_braces == close_braces and open_brackets == close_brackets:
+                # 균형잡혔으면 파싱 시도
+                try:
+                    result = json.loads(temp)
+                    logger.info(f"JSON 복구 성공 (attempt {attempt+1})")
+                    return result
+                except json.JSONDecodeError:
+                    break
+
+            # 부족한 닫기 추가 (우선순위: 대괄호 > 중괄호)
+            if open_brackets > close_brackets:
+                temp += "]"
+            elif open_braces > close_braces:
+                temp += "}"
+            else:
+                break
+
+        # 복구 실패 시 텍스트 응답 반환
+        logger.warning(f"JSON 파싱 실패 (복구 불가, attempt {attempt+1}), 텍스트 응답 반환: {cleaned[:200]}...")
         return {"text": text, "_parse_error": True}
 
 

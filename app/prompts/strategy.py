@@ -34,6 +34,69 @@ POSITIONING_STRATEGY_MATRIX = {
 }
 
 
+# v3.3: 포지셔닝별 전술적 대안 프레임워크
+# STEP 2가 생성할 대안들은 포지셔닝 내에서의 전술적 변형입니다.
+POSITIONING_TACTICAL_ALTERNATIVES = {
+    "defensive": {
+        "description": "수성 포지셔닝 내 2가지 전술적 변형",
+        "alternative_a": {
+            "name": "Trusted Legacy",
+            "concept": "과거 성공과 신뢰도를 최대로 강조",
+            "key_focus": ["과거 수행실적 강조", "기관과의 관계 깊이", "연속성 및 안정성", "리스크 최소화"],
+            "ghost_theme_angle": "새로운 팀의 미검증 경험 vs 우리의 증명된 노하우",
+            "win_theme_focus": "정부기관/대형기관 40+건 수행실적, 누적 SLA 달성률 99.98%, 평가 신뢰도 #1",
+            "price_approach": "신뢰프리미엄 (높은 낙찰률)",
+        },
+        "alternative_b": {
+            "name": "Proven Excellence",
+            "concept": "운영 우수성과 품질 우수 메트릭을 강조",
+            "key_focus": ["품질 메트릭 (99.95%+ SLA)", "자격증 및 인증", "운영 효율성", "프로세스 성숙도"],
+            "ghost_theme_angle": "경쟁사의 높은 초기 구축비용 vs 우리의 TCO 최적화",
+            "win_theme_focus": "5년 운영 우수성 증명, 자동화로 인력 30% 절감, ISO 인증 및 정부기관 선호도",
+            "price_approach": "효율성프리미엄 (적정 낙찰률)",
+        },
+    },
+    "offensive": {
+        "description": "공격 포지셔닝 내 2가지 전술적 변형",
+        "alternative_a": {
+            "name": "Aggressive Innovation",
+            "concept": "기술 혁신을 공격적으로 리드",
+            "key_focus": ["최신 기술 도입", "차별화된 방법론", "혁신적 인력 구성", "성능 향상 극대화"],
+            "ghost_theme_angle": "경쟁사의 매너리즘과 보수성 vs 우리의 혁신과 도전 정신",
+            "win_theme_focus": "마이크로서비스 아키텍처 5건+, 클라우드 네이티브 전환 3년 경험, 성능 50% 향상 증명",
+            "price_approach": "혁신프리미엄 (경쟁가격으로 진입)",
+        },
+        "alternative_b": {
+            "name": "Smart Innovation",
+            "concept": "신중한 혁신 (검증된 부분 + 차별화 부분 조화)",
+            "key_focus": ["검증된 기술 + 신규 기술 균형", "계산된 리스크 취하기", "학습 곡선 최소화", "단계적 전환"],
+            "ghost_theme_angle": "경쟁사의 보수적 접근 vs 우리의 균형잡힌 혁신",
+            "win_theme_focus": "3년 클라우드 경험 + 단계적 마이그레이션 방법론, 위험 30% 감소, 초기 비용 효율성",
+            "price_approach": "경쟁력프리미엄 (합리적 낙찰률)",
+        },
+    },
+    "adjacent": {
+        "description": "인접 포지셔닝 내 2가지 전술적 변형",
+        "alternative_a": {
+            "name": "Experience Transfer",
+            "concept": "인접 분야 전문성의 자연스러운 확장을 강조",
+            "key_focus": ["관련 분야 실적 전이", "도메인 지식의 신속한 습득", "팀의 학습 곡선 최소화", "기존 성공 사례"],
+            "ghost_theme_angle": "이 분야의 미경험 팀 vs 관련 분야 깊은 전문성을 가진 우리",
+            "win_theme_focus": "비슷한 기술 스택 5건, 도메인 이해도 3년, 업계 트렌드 선도 경험",
+            "price_approach": "확장프리미엄 (기존 실적 대비 합리적 가격)",
+        },
+        "alternative_b": {
+            "name": "Synergy Play",
+            "concept": "두 분야의 시너지로 독특한 가치 창출",
+            "key_focus": ["두 분야의 융합 역량", "타 분야의 best practice 도입", "경쟁사 대비 독특한 가치", "혁신적 통합 설계"],
+            "ghost_theme_angle": "한 분야 전문가 vs 두 분야 경험으로 만든 독특한 해법을 제시하는 우리",
+            "win_theme_focus": "2개 분야 경험 5+년, 통합 설계로 비용 20% 절감, 업계 사례 3건 성공 증명",
+            "price_approach": "가치프리미엄 (차별화 기반 가격)",
+        },
+    },
+}
+
+
 # v3.2: 경쟁분석 프레임워크 (ProposalForge #4)
 COMPETITIVE_ANALYSIS_FRAMEWORK = """
 ## 경쟁분석 프레임워크
@@ -74,56 +137,72 @@ Phase → Task → Output 구조:
 """
 
 
-# 전략 수립 메인 프롬프트 (v2: 간소화, JSON-ONLY 강제)
-STRATEGY_GENERATE_PROMPT = """## MANDATORY: JSON-ONLY OUTPUT
+# 전략 수립 메인 프롬프트 (v3: 포지셔닝별 전술적 대안 생성)
+# STEP 2는 Go/No-Go에서 결정된 포지셔닝을 입력받아, 그 포지셔닝 내에서 2+ 전술적 변형을 제시합니다.
+STRATEGY_GENERATE_PROMPT = """## MANDATORY: PURE JSON OUTPUT — NO MARKDOWN
 
-당신의 모든 응답은 다음 형식의 VALID JSON으로만 구성되어야 합니다.
-다른 텍스트, 설명, 마크다운 코드블록 없음. 순수 JSON만 출력하세요.
+응답은 {를 시작으로 } 로 끝나는 VALID JSON만 출력하세요.
+- 마크다운 코드블록 NO
+- 다른 설명 NO
+- 순수 JSON ONLY
 
-## REQUIRED STRUCTURE: 2+ ALTERNATIVES (A_OFFENSIVE, B_DEFENSIVE)
+마지막 줄에 반드시 }} 를 출력하세요 (이중 중괄호).
+```json``` 로 시작하지 말 것. { 로 시작할 것.
+
+## POSITIONING 고정: {positioning}
+
+Go/No-Go 단계에서 이미 포지셔닝이 결정되었습니다.
+당신의 역할: {positioning} 전략 내에서 2+ 전술적 변형(alternatives)을 제시하는 것입니다.
+(예: 공격형이면 "적극공격" vs "신중공격", 수성형이면 "신뢰강화" vs "안정성강조" 등)
+
+주의: alternatives 배열에 반드시 2개 이상의 완전한 객체를 포함하세요. 1개만 있으면 검증 실패합니다.
+
+## REQUIRED STRUCTURE: {positioning} 포지셔닝 내 2+ ALTERNATIVES
 
 {{
   "positioning": "{positioning}",
-  "positioning_rationale": "상세 근거 (최소 200자)",
+  "positioning_rationale": "근거 (200자)",
   "alternatives": [
     {{
-      "alt_id": "A_OFFENSIVE",
-      "ghost_theme": "경쟁사 약점 부각 (최소 50자)",
-      "win_theme": "우리의 승리 포인트 — 역량 + 성과 (최소 150자)",
-      "action_forcing_event": "의사결정 강제 사건 (최소 30자)",
-      "key_messages": ["메시지1 (50~100자)", "메시지2", "메시지3", "메시지4"],
-      "price_strategy": {{"approach": "innovation_premium", "target_ratio": 0.88, "rationale": "..."}},
-      "risk_assessment": {{"key_risks": ["리스크1", "리스크2"], "mitigation": ["대응1", "대응2"]}}
+      "alt_id": "A_Approach1",
+      "alt_name": "첫번째전술",
+      "ghost_theme": "경쟁사약점 (50자)",
+      "win_theme": "우리승점 (150자)",
+      "action_forcing_event": "강제사건 (30자)",
+      "key_messages": ["메시지1", "메시지2", "메시지3", "메시지4"],
+      "price_strategy": {{"approach": "premium", "target_ratio": 0.88, "rationale": "가격근거"}},
+      "risk_assessment": {{"key_risks": ["위험1"], "mitigation": ["대응1"]}}
     }},
     {{
-      "alt_id": "B_DEFENSIVE",
-      "ghost_theme": "경쟁사 약점 부각 (다른 각도)",
-      "win_theme": "우리의 안정성·신뢰도 (최소 150자)",
-      "action_forcing_event": "다른 의사결정 강제 요인",
+      "alt_id": "B_Approach2",
+      "alt_name": "두번째전술",
+      "ghost_theme": "경쟁사약점2 (50자)",
+      "win_theme": "우리승점2 (150자)",
+      "action_forcing_event": "강제사건2 (30자)",
       "key_messages": ["메시지1", "메시지2", "메시지3", "메시지4"],
-      "price_strategy": {{"approach": "stability_premium", "target_ratio": 0.92, "rationale": "..."}},
-      "risk_assessment": {{"key_risks": ["리스크1"], "mitigation": ["대응1"]}}
+      "price_strategy": {{"approach": "stability", "target_ratio": 0.92, "rationale": "가격근거"}},
+      "risk_assessment": {{"key_risks": ["위험1"], "mitigation": ["대응1"]}}
     }}
   ],
-  "focus_areas": [{{"area": "영역", "weight": 30, "strategy": "접근법"}}],
-  "competitor_analysis": {{"swot_matrix": [...], "scenarios": {{"best_case": "...", "base_case": "...", "worst_case": "..."}}}},
-  "research_framework": {{"research_questions": [...], "methodology_rationale": [...]}}
+  "focus_areas": [{{"area": "핵심", "weight": 50, "strategy": "전략"}}],
+  "competitor_analysis": {{"swot_matrix": [], "scenarios": {{"best_case": "우리우위", "base_case": "균형", "worst_case": "경쟁강화"}}}},
+  "research_framework": {{"research_questions": ["Q1"], "methodology_rationale": ["근거"]}}
 }}
 
 ---
 
-## CONTEXT (Formatting above must be exact)
+## CONTEXT
 
 RFP 분석 요약: {rfp_summary}
 
-Go/No-Go 결과:
+Go/No-Go 결과 (포지셔닝 이미 결정됨):
 - 포지셔닝: {positioning} ({positioning_label})
 - 판정 근거: {positioning_rationale}
 - 핵심 승부수: {strategic_focus}
 - 강점: {pros}
 - 리스크: {risks}
 
-포지셔닝 전략 가이드: {positioning_guide}
+포지셔닝 가이드: {positioning_guide}
 
 자사 역량: {capabilities_text}
 
@@ -137,14 +216,22 @@ Go/No-Go 결과:
 
 {strategy_research_framework}
 
-## CRITICAL REQUIREMENT
+## FINAL CRITICAL REQUIREMENT
 
-**반드시 2개 이상의 완전한 alternatives 포함. 1개만 제시하면 검증 실패.**
+[최고 우선순위] alternatives 배열에 2+ 대안 포함:
 
-각 대안:
-- alt_id: "A_OFFENSIVE" 또는 "B_DEFENSIVE" (명확한 포지셔닝)
-- win_theme: 최소 150자 (역량 + 구체적 성과)
-- key_messages: 최소 4개 (각 50~100자)
-- price_strategy: approach + target_ratio (offensive: 0.88, defensive: 0.92)
-- risk_assessment: 리스크 + 대응책
+1. alt_id: "A_[전술1이름]" 형식
+2. alt_id: "B_[전술2이름]" 형식
+
+1개만 있으면 자동 검증 실패. 반드시 2개 이상 완전한 객체를 배열에 포함하세요.
+
+각 대안 필수 필드:
+- alt_id: A_ 또는 B_로 시작 (e.g., "A_Aggressive_Innovation")
+- alt_name: 전술 이름 (e.g., "Aggressive Innovation (공격적 혁신)")
+- ghost_theme: 경쟁사 약점 (최소 50자)
+- win_theme: 우리 승리 포인트 (최소 150자)
+- action_forcing_event: 의사결정 강제 (최소 30자)
+- key_messages: 배열, 4개 메시지 (각 50~100자)
+- price_strategy: {{approach: "...", target_ratio: 0.XX, rationale: "..."}}
+- risk_assessment: {{key_risks: [...], mitigation: [...]}}
 """
