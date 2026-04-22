@@ -161,6 +161,21 @@ async def strategy_generate(state: ProposalState) -> dict:
 
     result = await claude_generate(prompt, max_tokens=8000, step_name="strategy_generate")
 
+    # DEBUG: 상세 로깅
+    import json as _json
+    logger.info(f"STEP 2 Claude 응답 키: {list(result.keys())}")
+    logger.info(f"STEP 2 alternatives 키 존재: {'alternatives' in result}")
+    logger.info(f"STEP 2 alternatives 값: {result.get('alternatives')}")
+    logger.info(f"STEP 2 alternatives 개수: {len(result.get('alternatives', []))}")
+
+    if result.get("_parse_error"):
+        logger.warning(f"STEP 2 JSON 파싱 오류! 원본 응답 (처음 1000자):")
+        logger.warning(result.get('text', '')[:1000])
+    else:
+        # JSON 전체 출력 (파싱이 성공한 경우)
+        result_str = _json.dumps(result, ensure_ascii=False, default=str, indent=2)
+        logger.info(f"STEP 2 완전한 Claude JSON 응답:\n{result_str[:2000]}")
+
     # 프롬프트 사용 기록
     if proposal_id:
         try:

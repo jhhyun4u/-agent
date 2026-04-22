@@ -413,10 +413,22 @@ async def create_from_bid(
         # 워크플로 시작 실패해도 제안은 생성됨 (로깅만 수행)
         logger.warning(f"[from-bid] 워크플로 시작 실패 (무시): {wf_e}")
 
+    # 실제 DB 상태 조회 (StateMachine 전환 반영됨)
+    actual_status = "initialized"
+    actual_source_bid_no = body.bid_no
+    try:
+        prop_result = await client.table("proposals").select("status, source_bid_no").eq("id", proposal_id).maybe_single().execute()
+        if prop_result.data:
+            actual_status = prop_result.data.get("status", "initialized")
+            actual_source_bid_no = prop_result.data.get("source_bid_no", body.bid_no)
+    except Exception as e:
+        logger.warning(f"[from-bid] 실제 상태 조회 실패: {e}")
+
     return {
         "proposal_id": proposal_id,
         "title": title,
-        "status": "initialized",
+        "status": actual_status,
+        "source_bid_no": actual_source_bid_no,
         "entry_point": "from_bid",
         "bid_no": body.bid_no,
         "workflow_started": True,
@@ -450,7 +462,7 @@ async def record_bid_decision(
     # bid_announcements에서 공고 조회
     response = await client.table("bid_announcements").select(
         "id, bid_no, bid_title"
-    ).eq("bid_no", body.bid_no).single().execute()
+    ).eq("bid_no", body.bid_no).maybe_single().execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Bid not found")
 
@@ -537,7 +549,7 @@ async def list_proposals(
     # 1. 동적 컬럼 탐지 제거 (-3개 추가 쿼리, ~600ms 개선)
     # 2. 필요한 컬럼만 선택 (-7개 컬럼, ~100KB 데이터)
     # 3. idx_proposals_created_at_desc 인덱스로 정렬 성능 10배 향상
-    select_cols = "id, title, status, owner_id, team_id, created_at, updated_at, current_phase, positioning, bid_amount, decision_date, go_decision"
+    select_cols = "id, title, status, owner_id, team_id, created_at, updated_at, current_phase, positioning, bid_amount, decision_date, go_decision, source_bid_no"
 
     query = client.table("proposals").select(
         select_cols

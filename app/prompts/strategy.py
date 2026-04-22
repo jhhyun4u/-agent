@@ -74,94 +74,77 @@ Phase → Task → Output 구조:
 """
 
 
-# 전략 수립 메인 프롬프트
-STRATEGY_GENERATE_PROMPT = """다음 RFP와 Go/No-Go 결과를 바탕으로 제안 전략을 수립하세요.
+# 전략 수립 메인 프롬프트 (v2: 간소화, JSON-ONLY 강제)
+STRATEGY_GENERATE_PROMPT = """## MANDATORY: JSON-ONLY OUTPUT
 
-## RFP 분석 요약
-{rfp_summary}
+당신의 모든 응답은 다음 형식의 VALID JSON으로만 구성되어야 합니다.
+다른 텍스트, 설명, 마크다운 코드블록 없음. 순수 JSON만 출력하세요.
 
-## Go/No-Go 결과
-포지셔닝: {positioning} ({positioning_label})
-판정 근거: {positioning_rationale}
-핵심 승부수: {strategic_focus}
-강점: {pros}
-리스크: {risks}
+## REQUIRED STRUCTURE: 2+ ALTERNATIVES (A_OFFENSIVE, B_DEFENSIVE)
 
-## 포지셔닝 전략 가이드
-{positioning_guide}
+{{
+  "positioning": "{positioning}",
+  "positioning_rationale": "상세 근거 (최소 200자)",
+  "alternatives": [
+    {{
+      "alt_id": "A_OFFENSIVE",
+      "ghost_theme": "경쟁사 약점 부각 (최소 50자)",
+      "win_theme": "우리의 승리 포인트 — 역량 + 성과 (최소 150자)",
+      "action_forcing_event": "의사결정 강제 사건 (최소 30자)",
+      "key_messages": ["메시지1 (50~100자)", "메시지2", "메시지3", "메시지4"],
+      "price_strategy": {{"approach": "innovation_premium", "target_ratio": 0.88, "rationale": "..."}},
+      "risk_assessment": {{"key_risks": ["리스크1", "리스크2"], "mitigation": ["대응1", "대응2"]}}
+    }},
+    {{
+      "alt_id": "B_DEFENSIVE",
+      "ghost_theme": "경쟁사 약점 부각 (다른 각도)",
+      "win_theme": "우리의 안정성·신뢰도 (최소 150자)",
+      "action_forcing_event": "다른 의사결정 강제 요인",
+      "key_messages": ["메시지1", "메시지2", "메시지3", "메시지4"],
+      "price_strategy": {{"approach": "stability_premium", "target_ratio": 0.92, "rationale": "..."}},
+      "risk_assessment": {{"key_risks": ["리스크1"], "mitigation": ["대응1"]}}
+    }}
+  ],
+  "focus_areas": [{{"area": "영역", "weight": 30, "strategy": "접근법"}}],
+  "competitor_analysis": {{"swot_matrix": [...], "scenarios": {{"best_case": "...", "base_case": "...", "worst_case": "..."}}}},
+  "research_framework": {{"research_questions": [...], "methodology_rationale": [...]}}
+}}
 
-## 자사 역량
-{capabilities_text}
+---
 
-## 사전조사 리서치 브리프
-{research_brief}
+## CONTEXT (Formatting above must be exact)
 
-## 발주기관 인텔리전스
-{client_intel_text}
+RFP 분석 요약: {rfp_summary}
 
-## 경쟁 환경
-{competitor_text}
+Go/No-Go 결과:
+- 포지셔닝: {positioning} ({positioning_label})
+- 판정 근거: {positioning_rationale}
+- 핵심 승부수: {strategic_focus}
+- 강점: {pros}
+- 리스크: {risks}
 
-## 경쟁사 대전 기록 (과거 입찰 전적)
-{competitor_history_text}
+포지셔닝 전략 가이드: {positioning_guide}
 
-## 과거 교훈 (동일 발주기관/유사 사업에서 얻은 교훈)
-{lessons_text}
+자사 역량: {capabilities_text}
+
+발주기관 인텔리전스: {client_intel_text}
+
+경쟁 환경: {competitor_text}
+
+과거 교훈: {lessons_text}
 
 {competitive_analysis_framework}
 
 {strategy_research_framework}
 
-## 지시사항
-1. Win Theme 구조: "우리는 [X역량/경험]이기 때문에 [Y성과]를 가장 잘 할 수 있다"
-   - 핵심 승부수를 Win Theme의 중심축으로 구체화하세요
-   - 각 Win Theme에 supporting evidence 최소 2개 (리서치 근거 데이터 우선 활용)
-2. Ghost Theme: 경쟁사 약점을 간접적으로 부각하는 메시지
-3. Action Forcing Event: 발주기관이 "반드시 우리를 선택해야 하는" 결정적 이유
-4. 핵심 메시지 3~5개 (평가위원 머릿속에 남길 키워드)
-5. 가격 전략: 포지셔닝에 맞는 가격 접근법
-6. **반드시 2가지 이상의 전략 대안(Alternative)을 제시하세요**
+## CRITICAL REQUIREMENT
 
-## 출력 형식 (JSON)
-{{
-  "positioning": "{positioning}",
-  "positioning_rationale": "상세 근거",
-  "alternatives": [
-    {{
-      "alt_id": "A",
-      "ghost_theme": "Ghost Theme",
-      "win_theme": "Win Theme",
-      "action_forcing_event": "결정적 이유",
-      "key_messages": ["메시지1", "메시지2", "메시지3"],
-      "price_strategy": {{
-        "approach": "가격 접근법",
-        "target_ratio": 0.95,
-        "rationale": "가격 전략 근거"
-      }},
-      "risk_assessment": {{
-        "key_risks": ["리스크1"],
-        "mitigation": ["대응"]
-      }}
-    }}
-  ],
-  "focus_areas": [
-    {{
-      "area": "집중 영역",
-      "weight": 30,
-      "strategy": "접근법"
-    }}
-  ],
-  "competitor_analysis": {{
-    "swot_matrix": [...],
-    "scenarios": {{
-      "best_case": "...",
-      "base_case": "...",
-      "worst_case": "..."
-    }}
-  }},
-  "research_framework": {{
-    "research_questions": [...],
-    "methodology_rationale": [...]
-  }}
-}}
+**반드시 2개 이상의 완전한 alternatives 포함. 1개만 제시하면 검증 실패.**
+
+각 대안:
+- alt_id: "A_OFFENSIVE" 또는 "B_DEFENSIVE" (명확한 포지셔닝)
+- win_theme: 최소 150자 (역량 + 구체적 성과)
+- key_messages: 최소 4개 (각 50~100자)
+- price_strategy: approach + target_ratio (offensive: 0.88, defensive: 0.92)
+- risk_assessment: 리스크 + 대응책
 """

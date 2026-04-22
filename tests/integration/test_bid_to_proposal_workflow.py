@@ -99,8 +99,8 @@ async def test_go_decision_full_flow(
     if isinstance(detail, dict) and "data" in detail:
         detail = detail["data"]
 
-    assert detail.get("status") == "initialized", (
-        f"초기 status 불일치: {detail.get('status')}"
+    assert detail.get("status") == "in_progress", (
+        f"workflow 시작 후 status 불일치: {detail.get('status')} (in_progress 기대)"
     )
     assert detail.get("go_decision") is True, (
         f"go_decision 불일치: {detail.get('go_decision')}"

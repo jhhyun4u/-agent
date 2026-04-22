@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-04-22T09:34:15.100393",
+  "project_id": "2519d988-e229-4cf1-821c-5c60e4856783",
+  "rfp_title": "정부 클라우드 플랫폼 마이그레이션 및 운영 구축",
+  "positioning": "offensive",
+  "validation_findings": {
+    "json_format_valid": false,
+    "win_theme_quality": "",
+    "ghost_theme_present": false,
+    "afe_uniqueness": "good",
+    "key_messages_clarity": "",
+    "price_strategy_valid": false,
+    "competitor_analysis_depth": 0,
+    "research_framework_present": false,
+    "alternatives_differentiated": false,
+    "performance_metrics": {
+      "alternative_count": 0,
+      "avg_win_theme_length": 0,
+      "avg_key_messages_per_alt": 0
+    },
+    "issues": [
+      "대안 1개만 제시 (2개 이상 필요)",
+      "Win Theme 너무 짧음 (6자)",
+      "Key Messages 부족 (1개)",
+      "Price Strategy 0/1개만 정의",
+      "검증 오류: 'Strategy' object has no attribute 'research_framework'"
+    ],
+    "validation_score": 12.5
+  },
+  "performance_metrics": {
+    "alternative_count": 0,
+    "avg_win_theme_length": 0,
+    "avg_key_messages_per_alt": 0
+  },
+  "passed": false
+}
