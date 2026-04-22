@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-22T01:49:02.915Z",
+  "lastUpdated": "2026-04-22T01:59:50.349Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -148,9 +148,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-22T01:38:14.393Z"
+        "lastUpdated": "2026-04-22T01:57:41.987Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\debug_claude_step2_response.py",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\debug_raw_claude_response.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -479,7 +479,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T09:30:04.149Z",
-        "lastUpdated": "2026-04-22T01:36:37.438Z"
+        "lastUpdated": "2026-04-22T01:59:50.339Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\nodes\\strategy_generate.py",
       "stateMachine": {
@@ -15890,6 +15890,30 @@
     {
       "timestamp": "2026-04-22T01:49:02.914Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:56:02.285Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:57:33.437Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:57:41.993Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-22T01:59:50.347Z",
+      "feature": "nodes",
       "phase": "do",
       "action": "updated"
     }
