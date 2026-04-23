@@ -298,12 +298,17 @@ class TestAccuracyEnhancementEngine:
         """Test: enhance() computes improvement between original and enhanced accuracy"""
         engine = AccuracyEnhancementEngine()
 
+        ground_truth = EvaluationMetrics(hallucination=0.05, persuasiveness=0.80, completeness=0.80, clarity=0.85)
+
         # Create real evaluation results with high confidence for filtering
         results = [
-            Mock(
+            Mock(spec=EvaluationResult,
                 test_case_id=f"test_{i:02d}",
                 confidence=0.85,  # Above default threshold 0.65
-                predicted_score=0.80 + (i % 3) * 0.02
+                predicted_score=0.80 + (i % 3) * 0.02,
+                expected_score=0.80,  # Required for MetricCalculator
+                ground_truth=ground_truth,
+                predicted_metrics=EvaluationMetrics(hallucination=0.05, persuasiveness=0.80, completeness=0.80, clarity=0.85)
             ) for i in range(10)
         ]
 
@@ -332,8 +337,9 @@ def test_smoke_accuracy_enhancement():
     validator_mock.dataset_manager = Mock(spec=DatasetManager)
 
     # Simulate 50-section dataset
+    from app.services.harness_accuracy_validator import TestCase
     test_cases = [
-        Mock(
+        Mock(spec=TestCase,
             id=f"section_{i:03d}",
             ground_truth=EvaluationMetrics(
                 hallucination=0.05 + (i % 3) * 0.02,

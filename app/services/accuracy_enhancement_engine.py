@@ -23,6 +23,8 @@ MAX_STD_DEV_UNIT_RANGE = 0.5    # Maximum std dev for [0, 1] range; math: sqrt(v
 AGREEMENT_HIGH_THRESHOLD = 0.80
 AGREEMENT_MEDIUM_THRESHOLD = 0.65
 ENSEMBLE_OUTLIER_Z_SCORE_THRESHOLD = 1.5
+MIN_VARIANT_CONFIDENCE = 0.3    # Minimum confidence floor for individual variant weighting
+SCORE_DIFF_PENALTY = 0.5        # Penalty factor for variant scores deviating from mean in ensemble voting
 
 
 @dataclass
@@ -233,7 +235,7 @@ class EnsembleVoter:
         for name in variant_names:
             # 기본 신뢰도에서 개별 점수의 편차를 반영
             score_diff = abs(variant_scores.get(name, 0.5) - statistics.mean(scores))
-            variant_confidence = max(0.3, base_confidence - (score_diff * 0.5))
+            variant_confidence = max(MIN_VARIANT_CONFIDENCE, base_confidence - (score_diff * SCORE_DIFF_PENALTY))
             confidences[name] = variant_confidence
         
         # 이상치 감지: Z-score > 1.5
@@ -454,12 +456,12 @@ class AccuracyEnhancementEngine:
         # Step 3: 앙상블 투표 (variant_data 제공 시)
         ensemble_applied = False
         if variant_data is not None and len(variant_data) > 0:
+            logger.warning(f"Ensemble voting requested but not yet implemented (Phase 3). Ignoring {len(variant_data)} variants; using confidence-filtered results only.")
             # TODO: Phase 3에서 구현 - 현재는 신뢰도 필터링만 적용
             # Phase 3에서 다음 로직 추가 예정:
             # 1. self.voter.vote()로 각 variant의 가중 평균 계산
             # 2. 앙상블 투표 결과를 filtered_results에 반영
             # 3. 최종 정확도 재계산
-            logger.debug(f"Ensemble voting placeholder: {len(variant_data)} variants prepared for Phase 3 integration")
         
         # Step 4: 개선된 정확도 계산
         enhanced_metrics = MetricCalculator.calculate_metrics(filtered_results)

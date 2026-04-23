@@ -104,9 +104,13 @@ else:
 logger = logging.getLogger(__name__)
 
 
-async def _init_supabase_rpc(client):
-    """Initialize Supabase RPC calls for stale proposals and cache cleanup"""
+async def _mark_stale_proposals(client):
+    """Mark proposals with running status for longer than timeout as stale"""
     await client.rpc("mark_stale_running_proposals").execute()
+
+
+async def _cleanup_g2b_cache(client):
+    """Clean up expired G2B cache entries"""
     await client.rpc("cleanup_expired_g2b_cache").execute()
 
 
@@ -149,11 +153,9 @@ async def lifespan(app: FastAPI):
 
     await _safe_startup_task("DB 스키마 확인", _init_database_schema())
 
-    # Supabase 초기화 (stale proposals + cache cleanup)
-    await _safe_startup_task(
-        "Supabase 초기화",
-        _init_supabase_rpc(client),
-    )
+    # Supabase 초기화 (stale proposals + cache cleanup) — decoupled for independence
+    await _safe_startup_task("Stale proposals 마킹", _mark_stale_proposals(client))
+    await _safe_startup_task("G2B 캐시 정리", _cleanup_g2b_cache(client))
 
     # Storage 버킷 자동 생성
     for bucket_name in [settings.storage_bucket_proposals, settings.storage_bucket_attachments]:
@@ -364,11 +366,18 @@ async def tenop_api_error_handler(request: Request, exc: TenopAPIError):
 async def global_exception_handler(request: Request, exc: Exception):
     """미처리 예외 → 500 + 로그 출력 (디버깅용)"""
     import traceback
-    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}")
-    logger.error(traceback.format_exc())
+    from app.middleware.request_id import get_request_id
+
+    request_id = get_request_id()
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {type(exc).__name__}", extra={"request_id": request_id})
+    if settings.log_level == "DEBUG":
+        logger.debug(f"Full traceback: {traceback.format_exc()}", extra={"request_id": request_id})
+    else:
+        logger.warning(f"Exception type {type(exc).__name__} in request {request_id} — enable DEBUG logging for full traceback", extra={"request_id": request_id})
+
     response = JSONResponse(
         status_code=500,
-        content={"error": "Internal server error"},
+        content={"error": "Internal server error", "request_id": request_id},
     )
     return _add_cors_headers(response, request)
 
@@ -595,4 +604,5 @@ async def metrics():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    host = "127.0.0.1" if not settings.dev_mode else "0.0.0.0"
+    uvicorn.run("app.main:app", host=host, port=8000, reload=settings.dev_mode)
