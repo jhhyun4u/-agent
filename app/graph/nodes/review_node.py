@@ -456,11 +456,47 @@ def _extract_budget(state) -> int:
     return 0
 
 
+def _build_wiki_review_guidance(wiki_suggestions: list) -> str:
+    """Wiki 제안 기반 리뷰 가이드 문구 생성.
+
+    사용자가 wiki 제안을 쉽게 이해하고 선택할 수 있도록 가이드.
+    """
+    if not wiki_suggestions:
+        return ""
+
+    guidance_lines = [
+        "📚 Wiki 제안 활용",
+        "다음 템플릿들을 이 섹션에 적용할 수 있습니다:",
+    ]
+
+    for i, suggestion in enumerate(wiki_suggestions, 1):
+        wiki_id = suggestion.get("wiki_id", "")
+        title = suggestion.get("template_name", "템플릿")
+        confidence = suggestion.get("confidence_score", 0)
+        confidence_pct = int(confidence * 100)
+
+        guidance_lines.append(
+            f"{i}. [{confidence_pct}% 신뢰도] {title} (ID: {wiki_id})"
+        )
+
+    guidance_lines.extend([
+        "",
+        "💡 Tips:",
+        "- 신뢰도가 높을수록 더 적합한 템플릿입니다",
+        "- 선택하면 자동으로 +15% 신뢰도 부스트가 적용됩니다",
+        "- 선택하지 않아도 섹션을 승인할 수 있습니다",
+    ])
+
+    return "\n".join(guidance_lines)
+
+
 def review_section_node(state: ProposalState) -> dict:
     """섹션별 리뷰 게이트: 방금 작성된 섹션 1개를 사람이 검토.
 
     승인 → 다음 섹션 또는 자가진단.
     반려 → 같은 섹션 재작성 (피드백 포함).
+
+    v4.0: Wiki 제안 통합 — 리뷰 시 wiki suggestions 표시, 사용자가 선택 가능
     """
     from app.graph.nodes.proposal_nodes import _get_sections_to_write
 
@@ -480,7 +516,11 @@ def review_section_node(state: ProposalState) -> dict:
         current_section if isinstance(current_section, dict) else {}
     )
 
-    human_input = interrupt({
+    # Wiki 제안 컨텍스트
+    wiki_suggestions = state.get("current_wiki_suggestions", [])
+    wiki_guidance = _build_wiki_review_guidance(wiki_suggestions) if wiki_suggestions else ""
+
+    interrupt_data = {
         "step": "section",
         "section_id": current_section_id,
         "section_index": index,
@@ -496,9 +536,32 @@ def review_section_node(state: ProposalState) -> dict:
             s.section_id if hasattr(s, "section_id") else s.get("section_id", "")
             for s in state.get("proposal_sections", [])
         ],
-    })
+    }
+
+    # Wiki 제안이 있으면 리뷰 데이터에 포함
+    if wiki_suggestions:
+        interrupt_data.update({
+            "wiki_suggestions": wiki_suggestions,
+            "wiki_guidance": wiki_guidance,
+            "wiki_suggestion_enabled": True,
+        })
+
+    human_input = interrupt(interrupt_data)
 
     if human_input.get("approved") or human_input.get("quick_approve"):
+        # Wiki 제안 선택 처리 (v4.0)
+        selected_wiki_id = human_input.get("selected_wiki_suggestion_id")
+        section_updates = {}
+
+        if selected_wiki_id and current_section:
+            # 선택된 wiki suggestion 저장
+            section_updates["wiki_suggestion_id"] = selected_wiki_id
+            section_updates["wiki_suggestion_accepted"] = True
+            # 현재 섹션 업데이트 (상태에 반영)
+            if hasattr(current_section, "wiki_suggestion_id"):
+                current_section.wiki_suggestion_id = selected_wiki_id
+                current_section.wiki_suggestion_accepted = True
+
         # 승인된 섹션 → content_library 자동 등록 (자가학습 루프)
         if current_section:
             try:
@@ -512,10 +575,12 @@ def review_section_node(state: ProposalState) -> dict:
                 "current_section_index": new_index,
                 "current_step": "sections_complete",
                 "rework_targets": [],
+                **section_updates,
             }
         return {
             "current_section_index": new_index,
             "current_step": "section_approved",
+            **section_updates,
         }
 
     # 반려 → 피드백 기록, 같은 인덱스 유지
@@ -525,6 +590,8 @@ def review_section_node(state: ProposalState) -> dict:
         "feedback": human_input.get("feedback", ""),
         "comments": human_input.get("comments", {}),
         "timestamp": human_input.get("timestamp", ""),
+        "wiki_suggestion_reviewed": bool(wiki_suggestions),
+        "selected_wiki_id": human_input.get("selected_wiki_suggestion_id"),
     }
     return {
         "feedback_history": [feedback_entry],

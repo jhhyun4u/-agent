@@ -65,6 +65,7 @@ from app.graph.nodes.proposal_nodes import (
     self_review_with_auto_improve,
     section_quality_check, storyline_gap_analysis,
 )
+from app.graph.nodes.wiki_suggestion_node import wiki_suggestion_node
 from app.graph.nodes.harness_proposal_write import harness_proposal_write_next
 from app.graph.nodes.ppt_nodes import (
     presentation_strategy, ppt_toc, ppt_visual_brief, ppt_storyboard_node,
@@ -124,9 +125,10 @@ def build_graph(checkpointer=None):
     g.add_node("plan_merge", plan_merge)
     g.add_node("review_plan", review_node("plan"))
 
-    # 4A: 제안서 작성 (v4.0: 섹션별 완결 루프 + 갭 분석 + Harness Engineering)
+    # 4A: 제안서 작성 (v4.0: 섹션별 완결 루프 + 갭 분석 + Harness Engineering + Wiki Suggestions)
     g.add_node("proposal_start_gate", proposal_start_gate)
     g.add_node("proposal_write_next", track_tokens("proposal_write_next")(harness_proposal_write_next))
+    g.add_node("wiki_suggestion_node", track_tokens("wiki_suggestion_node")(wiki_suggestion_node))
     g.add_node("section_quality_check", track_tokens("section_quality_check")(section_quality_check))
     g.add_node("review_section", review_section_node)
     g.add_node("self_review", track_tokens("self_review")(self_review_with_auto_improve))
@@ -228,10 +230,11 @@ def build_graph(checkpointer=None):
         "rework_bid_plan": "bid_plan",
     })
 
-    # STEP 4A: 섹션별 작성 → 진단 → HITL 리뷰 루프
+    # STEP 4A: 섹션별 작성 → Wiki 제안 → 진단 → HITL 리뷰 루프 (v4.0: wiki integration)
     g.add_edge("proposal_start_gate", "proposal_write_next")
-    g.add_edge("proposal_write_next", "section_quality_check")  # 자동 진단 (AI)
-    g.add_edge("section_quality_check", "review_section")  # HITL 리뷰 (진단결과 포함)
+    g.add_edge("proposal_write_next", "wiki_suggestion_node")  # 섹션 작성 후 wiki 제안 수집
+    g.add_edge("wiki_suggestion_node", "section_quality_check")  # 제안 포함 진단 (AI)
+    g.add_edge("section_quality_check", "review_section")  # HITL 리뷰 (진단결과+wiki 포함)
     g.add_conditional_edges("review_section", route_after_section_review, {
         "next_section": "proposal_write_next",  # 다음 섹션으로
         "all_done": "self_review",  # 모든 섹션 완성 → 자가진단

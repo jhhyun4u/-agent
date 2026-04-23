@@ -1,385 +1,239 @@
-# Phase 5 Scheduler Integration — Deployment Checklist
+# Phase 5 Scheduler Integration — Production Deployment Checklist
 
-**Project:** tenopa proposer  
-**Phase:** 5 - Scheduler Integration  
-**Environment:** Staging  
-**Deployment Date:** 2026-04-21  
-**Status:** READY FOR DEPLOYMENT ✅
+**Project:** tenopa proposer
+**Phase:** 5 — Scheduler Integration (정기 문서 마이그레이션 자동화)
+**Environment:** Production
+**Deployment Date:** 2026-04-25 (Saturday)
+**Deployment Lead:** @jhhyun4u (hyunjaeho@tenopa.co.kr)
+**Risk Level:** LOW (staging validated for 17h with zero P1/P2 incidents)
+**Rollback Window:** ≤ 10 minutes
 
 ---
 
-## Pre-Deployment (Local Environment)
+## Deployment Timeline (UTC)
 
-- [x] All 24 unit tests passing
-- [x] Database migration SQL created (006_scheduler_integration.sql)
-- [x] SchedulerService implemented (236 lines)
-- [x] ConcurrentBatchProcessor implemented (222 lines)
-- [x] API routes defined (6 endpoints)
-- [x] App integration complete (main.py updated)
-- [x] Scheduler initialization in lifespan
-- [x] Scheduler shutdown in lifespan
-- [x] Error handling comprehensive
-- [x] Logging in place
-- [x] Validation script created and passing
+| Window          | Phase                                  | Duration | Owner           |
+|-----------------|----------------------------------------|----------|-----------------|
+| 05:45 – 06:00   | Deployment bridge opens, roll-call     | 15 min   | Deploy Lead     |
+| 06:00 – 07:00   | Pre-flight checklist (Section A)       | 60 min   | Deploy Lead     |
+| 07:00 – 07:30   | DB migration (Section B)               | 30 min   | DBA             |
+| 07:30 – 08:00   | Migration verification (Section C)     | 30 min   | Deploy Lead     |
+| 08:00 – 08:40   | Code deploy — Blue/Green (Section D)   | 40 min   | SRE             |
+| 08:40 – 09:00   | Smoke tests + traffic cutover (Sec. E) | 20 min   | QA + SRE        |
+| 09:00 – 09:00+72h | Monitoring (see PHASE5_DEPLOYMENT_MONITORING.md) | 72 h | Rotation      |
 
-## Staging Deployment Steps
+**Freeze window:** 2026-04-25 05:00 – 2026-04-26 00:00 UTC. No unrelated merges to `master`.
 
-### Step 1: Backup Staging Database
-- [ ] Log into Supabase Dashboard
-- [ ] Navigate to Database > Backups
-- [ ] Click "Create backup"
-- [ ] Wait for backup to complete (typically 2-5 minutes)
-- [ ] Note backup filename for reference
+---
 
-**Alternative (Command Line):**
-```bash
-pg_dump --format custom -f staging_backup_$(date +%Y%m%d_%H%M%S).bak [DATABASE_URL]
-```
+## Section A — Pre-Flight Checklist (2026-04-25 06:00 UTC)
 
-### Step 2: Apply Database Migration
-Execute SQL from: `database/migrations/006_scheduler_integration.sql`
+Complete every item before 07:00 UTC. ANY `NO-GO` answer aborts the deployment and triggers reschedule.
 
-**Option A: Supabase SQL Editor**
-- [ ] Go to Supabase Dashboard > SQL Editor
-- [ ] Click "New Query"
-- [ ] Copy entire contents of 006_scheduler_integration.sql
-- [ ] Paste into SQL editor
-- [ ] Click "Run"
-- [ ] Verify: "migration completed" appears at bottom
-- [ ] Check that no errors are shown
+### A.1 Team & Communication
+- [ ] **06:00** — Deployment bridge (Teams channel `#tenopa-deploy`) active
+- [ ] **06:00** — Deploy Lead, DBA, SRE, QA, On-call acknowledged in roll-call
+- [ ] **06:05** — PagerDuty on-call rotation confirmed for next 72h
+- [ ] **06:05** — Rollback decision-maker designated (Deploy Lead)
+- [ ] **06:10** — Stakeholder announcement posted (#tenopa-general)
 
-**Option B: Command Line**
-```bash
-psql -h [HOST] -U [USER] -d [DATABASE] \
-  -f database/migrations/006_scheduler_integration.sql
-```
+### A.2 Source of Truth Verification
+- [ ] **06:10** — `master` branch HEAD commit recorded: `___________________`
+- [ ] **06:10** — Staging deployed commit matches `master` HEAD (see `.bkit/runtime/deployment-status.json`)
+- [ ] **06:15** — No merge conflicts between `master` and `release/phase5-prod`
+- [ ] **06:15** — Release tag created: `v-phase5-prod-2026-04-25`
 
-### Step 3: Verify Database Schema Created
-Execute verification query:
+### A.3 Artifact Verification
+- [ ] **06:15** — Migration SQL exists: `database/migrations/006_scheduler_integration.sql`
+- [ ] **06:15** — `app/services/scheduler_service.py` (236 lines) present on release branch
+- [ ] **06:15** — `app/services/concurrent_batch_processor.py` (222 lines) present
+- [ ] **06:15** — `app/api/routes_scheduler.py` with 5 endpoints present
+- [ ] **06:20** — Docker image built and pushed: `ecr://tenopa-proposer:phase5-2026-04-25`
+- [ ] **06:20** — Image digest recorded: `sha256:___________________`
+
+### A.4 Test Gate (Local/CI)
+- [ ] **06:20** — CI pipeline green on release commit (GitHub Actions all green)
+- [ ] **06:25** — `uv run pytest tests/test_scheduler_integration.py -v` → 24/24 PASS
+- [ ] **06:25** — `uv run pytest tests/integration/ -k scheduler -v` → all PASS
+- [ ] **06:30** — Static analysis (ruff, mypy) clean on release branch
+- [ ] **06:30** — Security scan (Semgrep + Trivy) — 0 CRITICAL, 0 HIGH
+
+### A.5 Infrastructure Readiness
+- [ ] **06:30** — Production DB healthy (Supabase dashboard → Health: green)
+- [ ] **06:35** — Production API healthy (last 24h error rate < 0.5%)
+- [ ] **06:35** — Redis reachable from production VPC
+- [ ] **06:35** — Azure AD (Entra ID) status page — operational
+- [ ] **06:40** — Railway/Render deploy pipeline idle (no queued deploys)
+- [ ] **06:40** — DNS TTL for `api.tenopa.co.kr` ≤ 300s (for fast cutover)
+
+### A.6 Backup & Rollback Prep
+- [ ] **06:40** — Fresh Supabase backup triggered; backup ID: `___________________`
+- [ ] **06:45** — Backup verified (file size > 100 MB, no errors)
+- [ ] **06:45** — Rollback SQL file reviewed: `database/migrations/006_scheduler_integration_rollback.sql`
+- [ ] **06:50** — Previous stable image digest archived: `sha256:___________________`
+- [ ] **06:50** — Rollback runbook reviewed by Deploy Lead (Section G below)
+
+### A.7 Final GO/NO-GO
+- [ ] **06:55** — All Section A items checked
+- [ ] **06:55** — Go/No-Go poll executed (see `PHASE5_DEPLOYMENT_DECISION_MATRIX.md`)
+- [ ] **07:00** — **GO** recorded in deployment log; proceed to Section B
+- [ ] **07:00** — **NO-GO** → halt, reschedule, postmortem entry in `docs/04-report/`
+
+---
+
+## Section B — Database Migration (07:00 – 07:30 UTC)
+
+### B.1 Pre-Migration Snapshot
+- [ ] **07:00** — Connect to production DB via Supabase SQL Editor (via SSO)
+- [ ] **07:00** — Confirm connection target: `production` (NOT staging)
+- [ ] **07:02** — Capture current schema snapshot:
+      `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name;`
+- [ ] **07:02** — Row counts recorded for pre-existing scheduler-adjacent tables (if any)
+
+### B.2 Apply Migration 006_scheduler_integration.sql
+- [ ] **07:05** — Open `database/migrations/006_scheduler_integration.sql`
+- [ ] **07:05** — Wrap in transaction block (`BEGIN; ... COMMIT;`) — already done in file
+- [ ] **07:10** — Execute migration
+- [ ] **07:12** — Verify success message: `migration completed`
+- [ ] **07:12** — No ERROR-level output in SQL result pane
+
+### B.3 Tables Created Verification
+- [ ] **07:15** — `migration_schedules` exists with 11 columns
+- [ ] **07:15** — `migration_batches` exists with 9 columns
+- [ ] **07:15** — `migration_logs` exists with 7 columns
+
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
-AND table_name LIKE 'migration%';
+SELECT table_name, column_name, data_type
+FROM information_schema.columns
+WHERE table_name IN ('migration_schedules','migration_batches','migration_logs')
+ORDER BY table_name, ordinal_position;
 ```
 
-Expected output:
-```
-migration_schedules
-migration_batches
-migration_logs
-```
+### B.4 RLS & Indexes
+- [ ] **07:20** — RLS enabled on all 3 new tables
+- [ ] **07:20** — Service-role policy attached (application access)
+- [ ] **07:22** — Indexes created: `idx_migration_schedules_active`, `idx_migration_batches_schedule_id`, `idx_migration_logs_batch_id`
 
-- [ ] migration_schedules table exists
-- [ ] migration_batches table exists
-- [ ] migration_logs table exists
-
-### Step 4: Verify Indices Created
-Execute index verification query:
-```sql
-SELECT indexname 
-FROM pg_indexes 
-WHERE schemaname = 'public' 
-AND tablename LIKE 'migration%';
-```
-
-Expected indices (8 total):
-- idx_migration_schedules_enabled ✓
-- idx_migration_schedules_created ✓
-- idx_migration_batches_schedule ✓
-- idx_migration_batches_status ✓
-- idx_migration_batches_created ✓
-- idx_migration_logs_batch ✓
-- idx_migration_logs_status ✓
-- idx_migration_logs_document ✓
-
-- [ ] All 8 indices created
-
-### Step 5: Deploy Application Code
-
-**Option A: Git Push (Recommended)**
-```bash
-cd /path/to/project
-git add .
-git commit -m "feat: Phase 5 Scheduler Integration staging deployment"
-git push origin main
-```
-- [ ] Code pushed to main
-- [ ] Staging deployment triggered automatically
-- [ ] Monitor deployment logs
-
-**Option B: Manual Deployment**
-```bash
-# Copy files to staging server
-rsync -av app/ database/ tests/ [staging_server]:/app/
-
-# On staging server
-ssh [staging_server]
-cd /app
-uv sync
-supervisorctl restart api
-```
-
-- [ ] Code copied to staging
-- [ ] Dependencies installed (uv sync)
-- [ ] Application restarted
-- [ ] Service running without errors
-
-### Step 6: Verify Scheduler Initialization
-Check application logs for initialization message:
-
-```
-[Phase 5] 정기 문서 마이그레이션 스케줄러 초기화 완료
-```
-
-**View Logs:**
-- [ ] Railway: `railway logs --follow`
-- [ ] Render: `render logs`
-- [ ] SSH: `ssh [server] "tail -f /var/log/app.log | grep -i scheduler"`
-
-**Success:** Scheduler started without errors
-
-### Step 7: Run Local Unit Tests
-```bash
-cd /path/to/project
-pytest tests/test_scheduler_integration.py -v --tb=short
-```
-
-- [ ] 24/24 tests PASSING
-- [ ] No failures or critical errors
-- [ ] Duration: ~6-10 seconds
-
-### Step 8: Run Staging Integration Tests
-From staging environment or via remote:
-
-```bash
-pytest tests/test_scheduler_integration_check.py -v
-```
-
-- [ ] All integration tests passing
-- [ ] No database connection errors
-- [ ] All endpoints responding
-
-### Step 9: Manual API Endpoint Testing
-
-**9a. Create Schedule**
-```bash
-curl -X POST https://staging-api.yourdomain.com/api/migration/schedules \
-  -H "Authorization: Bearer [YOUR_TOKEN]" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Staging Test Schedule",
-    "cron_expression": "0 8 * * *",
-    "source_type": "intranet",
-    "enabled": true
-  }'
-```
-- [ ] Response: 200 OK
-- [ ] Response contains schedule_id
-- [ ] Note the schedule_id for next tests
-
-**9b. Get Schedules**
-```bash
-curl -X GET https://staging-api.yourdomain.com/api/migration/schedules \
-  -H "Authorization: Bearer [YOUR_TOKEN]"
-```
-- [ ] Response: 200 OK
-- [ ] Response contains list of schedules
-- [ ] Test schedule appears in list
-
-**9c. Trigger Migration**
-```bash
-curl -X POST https://staging-api.yourdomain.com/api/migration/trigger/[SCHEDULE_ID] \
-  -H "Authorization: Bearer [YOUR_TOKEN]"
-```
-- [ ] Response: 200 OK
-- [ ] Response contains batch_id
-
-**9d. Get Batch Status**
-```bash
-curl -X GET https://staging-api.yourdomain.com/api/migration/batches/[BATCH_ID] \
-  -H "Authorization: Bearer [YOUR_TOKEN]"
-```
-- [ ] Response: 200 OK
-- [ ] Response shows batch details
-- [ ] Status is "completed" or "processing"
-
-**9e. Get Batches List**
-```bash
-curl -X GET https://staging-api.yourdomain.com/api/migration/batches \
-  -H "Authorization: Bearer [YOUR_TOKEN]"
-```
-- [ ] Response: 200 OK
-- [ ] Response contains batch list
-
-### Step 10: Performance Testing
-
-**Load Test (100 documents):**
-```bash
-python scripts/load_test_scheduler.py --documents=100 --workers=5
-```
-
-- [ ] Processing completes in < 30 seconds
-- [ ] All 100 documents processed
-- [ ] Error rate < 1%
-- [ ] No timeouts or hangs
-
-### Step 11: Monitoring & Alerts Setup
-
-**Metrics to Monitor (30 minutes continuous):**
-- [ ] Scheduler startup time: _____ seconds (target: < 2s)
-- [ ] API response time: _____ ms (target: < 200ms)
-- [ ] Error rate: ______ % (target: < 0.1%)
-- [ ] Batch processing time: _____ seconds (target: < 30s)
-- [ ] Worker utilization: ______ % (target: 80-90%)
-
-**Log Monitoring:**
-```bash
-tail -f [app_logs] | grep -E "Scheduler|Batch|Migration|error"
-```
-
-- [ ] No ERROR level logs
-- [ ] No CRITICAL level logs
-- [ ] INFO logs showing operations
-
-**Alert Thresholds:**
-- [ ] Set alert if Scheduler fails to initialize
-- [ ] Set alert if API response time > 500ms
-- [ ] Set alert if batch processing > 60s
-- [ ] Set alert if error rate > 1%
+### B.5 Rollback Dry-Run (Disaster Readiness)
+- [ ] **07:25** — Rollback SQL file opened in separate window (NOT executed)
+- [ ] **07:27** — DBA confirms rollback procedure visually
+- [ ] **07:28** — `COMMIT` is final; migration locked in
 
 ---
 
-## Success Criteria Verification
+## Section C — Migration Verification (07:30 – 08:00 UTC)
 
-### Critical (Must Pass)
-- [x] All 24 unit tests passing
-- [ ] Database migration applied successfully
-- [ ] Scheduler initializes on startup
-- [ ] All 6 API endpoints responding correctly
-- [ ] Batch creation works end-to-end
-- [ ] Error handling functional
-
-### Important (Should Pass)
-- [ ] 100+ documents processed in < 30 seconds
-- [ ] Concurrent workers executing (5 threads)
-- [ ] Retry logic functioning correctly
-- [ ] Database records persisting
-- [ ] Logging capturing operations
-
-### Nice to Have
-- [ ] Performance < 20 seconds for 100 docs
-- [ ] Graceful error degradation
-- [ ] Full SLA compliance
+- [ ] **07:30** — Smoke query: `INSERT INTO migration_schedules (...) VALUES (...) RETURNING id;` → succeeds under service role
+- [ ] **07:32** — Immediately `DELETE FROM migration_schedules WHERE id = <just_inserted>;` → clean test row
+- [ ] **07:35** — Verify no existing API calls are breaking (grep last 10 min of logs for 5xx)
+- [ ] **07:40** — Capture baseline metrics (pre-code-deploy):
+  - Error rate (1m avg): `____%`
+  - p95 latency: `____ ms`
+  - Active DB connections: `____`
+  - Redis hit rate: `____%`
+- [ ] **07:50** — Baseline recorded in `PHASE5_DEPLOYMENT_MONITORING.md`
+- [ ] **08:00** — DB checkpoint — GO/NO-GO for code deploy
 
 ---
 
-## Post-Deployment
+## Section D — Blue/Green Code Deploy (08:00 – 08:40 UTC)
 
-### Documentation
-- [ ] Update deployment report
-- [ ] Document any issues found
-- [ ] Record actual metrics achieved
-- [ ] Note any anomalies
+### D.1 Deploy GREEN Environment
+- [ ] **08:00** — Trigger deploy to GREEN slot with image `ecr://tenopa-proposer:phase5-2026-04-25`
+- [ ] **08:05** — GREEN container healthy (`GET /health` → 200)
+- [ ] **08:05** — Scheduler lifecycle hooks booted (look for log: `SchedulerService started` / `APScheduler initialized`)
+- [ ] **08:10** — GREEN connects to production DB successfully
+- [ ] **08:10** — GREEN reads `migration_schedules` — returns 0 rows (expected, empty table)
 
-### If All Checks Pass ✅
-- [ ] Close staging deployment task
-- [ ] Update project status to "staging validated"
-- [ ] Schedule production deployment for 2026-04-25
-- [ ] Plan ACT phase (minimal, already tested)
+### D.2 Scheduler Endpoint Verification (GREEN, pre-traffic)
+Call each endpoint against GREEN directly (internal URL, bypass LB):
 
-### If Issues Found ⚠️
-- [ ] Document issue in detail
-- [ ] Create bug fix commits
-- [ ] Re-run tests to verify fixes
-- [ ] Return to Step 7 (re-test)
-- [ ] Do NOT proceed to production until resolved
+- [ ] **08:15** — `GET /api/scheduler/health` → 200 OK, `{"status":"healthy"}`
+- [ ] **08:17** — `GET /api/scheduler/schedules` → 200 OK, `[]`
+- [ ] **08:20** — `POST /api/scheduler/schedules` with valid payload → 201 Created
+- [ ] **08:22** — `POST /api/scheduler/schedules/{id}/trigger` → 202 Accepted, batch_id returned
+- [ ] **08:25** — `GET /api/scheduler/batches/{batch_id}` → 200 OK, status field present
+- [ ] **08:27** — Cleanup: delete the test schedule created in step 3
 
----
-
-## Rollback Plan (If Needed)
-
-### Stop Application Gracefully
-```bash
-# Application will stop picking up new schedules
-systemctl stop api
-# or: supervisorctl stop api
-```
-
-### Backup Data (If Needed)
-```sql
-SELECT * FROM migration_schedules INTO OUTFILE 'schedules_backup.csv';
-SELECT * FROM migration_batches INTO OUTFILE 'batches_backup.csv';
-SELECT * FROM migration_logs INTO OUTFILE 'logs_backup.csv';
-```
-
-### Remove Tables
-```sql
-DROP TABLE IF EXISTS migration_logs;
-DROP TABLE IF EXISTS migration_batches;
-DROP TABLE IF EXISTS migration_schedules;
-```
-
-### Revert Code
-```bash
-git revert [commit_hash]
-git push origin main
-# Or manually restore previous version
-```
-
-### Restart Application
-```bash
-systemctl start api
-# or: supervisorctl start api
-```
-
-### Verify Rollback
-```bash
-tail -f /var/log/app.log
-# Look for initialization without scheduler
-```
+### D.3 Traffic Cutover (Blue → Green)
+- [ ] **08:30** — Load balancer weight: BLUE 100% / GREEN 0%
+- [ ] **08:32** — Shift to BLUE 50% / GREEN 50%
+- [ ] **08:34** — Monitor error rate for 2 min — must stay < 1.0%
+- [ ] **08:36** — Shift to BLUE 0% / GREEN 100%
+- [ ] **08:38** — Monitor error rate for 2 min — must stay < 1.0%
+- [ ] **08:40** — Cutover complete; BLUE kept warm for 72h as rollback target
 
 ---
 
-## Contact & Escalation
+## Section E — Production Smoke Tests (08:40 – 09:00 UTC)
 
-| Issue | Contact | Action |
-|-------|---------|--------|
-| Database problems | Database admin | Restore from backup if needed |
-| API not responding | Backend team | Check logs, restart service |
-| Scheduler not initializing | Backend team | Check logs for errors |
-| Performance issues | Performance team | Review load, check indices |
-| General questions | #tenopa-technical | Slack channel |
+Execute against public URL `https://api.tenopa.co.kr`:
 
----
-
-## Sign-Off
-
-**Deployment Executed By:** _________________  
-**Date:** _________________  
-**Time Started:** _________________  
-**Time Completed:** _________________  
-
-**All Success Criteria Met:** ☐ YES ☐ NO  
-**Ready for Production:** ☐ YES ☐ NO  
-
-**Notes:**
-```
-[Space for deployment notes]
-```
+- [ ] **08:40** — `GET /api/scheduler/health` → 200 OK within 500ms
+- [ ] **08:42** — `GET /api/scheduler/schedules` → 200 OK, JSON array
+- [ ] **08:44** — Create + trigger + read batch full lifecycle → all PASS
+- [ ] **08:48** — Unrelated critical endpoints still healthy:
+  - `GET /api/proposal/list` → 200
+  - `GET /api/users/me` → 200
+  - `POST /api/workflow/start` (dry-run) → 200
+- [ ] **08:52** — Sentry dashboard — no new issues since 08:00 UTC
+- [ ] **08:55** — Log stream clean — no ERROR bursts
+- [ ] **09:00** — Deploy Lead announces "Phase 5 production deploy COMPLETE"
+- [ ] **09:00** — Handoff to 72h monitoring rotation (see `PHASE5_DEPLOYMENT_MONITORING.md`)
 
 ---
 
-**Reference Documents:**
-- Staging Deployment Guide: `docs/operations/phase5-staging-deployment-guide.md`
-- Deployment Ready Report: `docs/operations/phase5-staging-deployment-ready.md`
-- Deployment Script (Unix): `scripts/deploy_phase5_staging.sh`
-- Deployment Script (Windows): `scripts/deploy_phase5_staging.bat`
-- Validation Script: `scripts/validate_phase5_staging.py`
-- Test Suite: `tests/test_scheduler_integration.py`
+## Section F — Post-Deploy Handoff
+
+- [ ] **09:05** — Deploy log archived at `docs/04-report/phase5-production-deploy-log.md`
+- [ ] **09:10** — Memory entry updated: `MEMORY.md` — Phase 5 production deployment complete
+- [ ] **09:15** — Staging environment aligned with prod (optional re-deploy)
+- [ ] **09:30** — Stakeholder announcement: deployment success + monitoring link
+- [ ] **10:00** — First hourly checkpoint posted (see monitoring doc)
 
 ---
 
-**Status:** STAGING DEPLOYMENT READY ✅  
-**Date Prepared:** 2026-04-20  
-**Next Milestone:** Production Deployment (2026-04-25)
+## Section G — Rollback Procedure (emergency only)
+
+**Trigger criteria:** See `PHASE5_DEPLOYMENT_DECISION_MATRIX.md` Section "Rollback Triggers".
+
+### G.1 Code Rollback (BLUE still warm)
+1. Switch LB weight: GREEN 0% / BLUE 100% (single API call, < 30s)
+2. Verify `GET /api/scheduler/health` now returns 404 (endpoint removed in BLUE) — expected
+3. Confirm overall error rate returns to pre-deploy baseline within 5 min
+4. **Total time: ≤ 5 minutes**
+
+### G.2 DB Rollback (only if migration caused issue)
+1. Execute `database/migrations/006_scheduler_integration_rollback.sql`
+2. Verify tables dropped: `migration_schedules`, `migration_batches`, `migration_logs`
+3. **Total time: ≤ 5 minutes**
+4. If rollback SQL fails → restore from Supabase backup ID captured in A.6
+
+### G.3 Post-Rollback
+- [ ] Incident log opened in `docs/04-report/incidents/`
+- [ ] Sentry issues triaged
+- [ ] Reschedule decision within 24h
+- [ ] Stakeholder announcement: deployment rolled back + next steps
+
+---
+
+## Owners
+
+| Role            | Primary            | Backup            |
+|-----------------|--------------------|-------------------|
+| Deploy Lead     | @jhhyun4u          | TBD               |
+| DBA             | TBD                | TBD               |
+| SRE             | TBD                | TBD               |
+| QA              | TBD                | TBD               |
+| On-call (72h)   | PagerDuty rotation | Escalation policy |
+
+---
+
+## Related Documents
+
+- `PHASE5_PREDEPLOYMENT_VALIDATION.md` — Detailed validation evidence
+- `PHASE5_DEPLOYMENT_MONITORING.md` — 72h monitoring plan
+- `PHASE5_DEPLOYMENT_DECISION_MATRIX.md` — GO/NO-GO criteria
+- `docs/02-design/features/phase5-scheduler-integration.design.md` — Design spec
+- `docs/01-plan/features/phase5-scheduler-integration.plan.md` — Implementation plan
+- `database/migrations/006_scheduler_integration.sql` — Applied migration
