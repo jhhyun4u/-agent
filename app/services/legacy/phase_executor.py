@@ -18,7 +18,7 @@ from app.services.hwpx_builder import build_hwpx
 from app.services.pptx_builder import build_pptx
 from app.services.g2b_service import G2BService
 from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
-from app.services.phase_prompts import PHASE2_SYSTEM, PHASE2_USER, PHASE3_SYSTEM, PHASE3_USER, PHASE4_SYSTEM, PHASE4_USER, PHASE5_SYSTEM, PHASE5_USER
+from app.services.legacy.phase_prompts import PHASE2_SYSTEM, PHASE2_USER, PHASE3_SYSTEM, PHASE3_USER, PHASE4_SYSTEM, PHASE4_USER, PHASE5_SYSTEM, PHASE5_USER
 from app.utils.claude_utils import extract_json_from_response
 from app.services.template_service import get_template_toc
 from app.utils.edge_functions import notify_proposal_complete
