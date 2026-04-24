@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from app.api.deps import get_current_user
 from app.utils.supabase_client import get_async_client
-from app.services.scheduler_service import SchedulerService
+from app.services.domains.operations.scheduler_service import SchedulerService
 
 router = APIRouter(prefix="/api/scheduler", tags=["scheduler"])
 

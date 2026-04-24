@@ -356,7 +356,7 @@ class TestIntegration:
         mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute = doc_execute
 
         # 청킹 결과
-        from app.services.document_chunker import Chunk
+        from app.services.domains.proposal.document_chunker import Chunk
         fake_chunk = Chunk(
             index=0,
             chunk_type="section",
@@ -404,7 +404,7 @@ class TestIntegration:
             # G-3 fix verification: Code inspection approach
             # Verify the implementation is correct by inspecting the source code
             import inspect
-            from app.services.document_ingestion import process_document
+            from app.services.domains.proposal.document_ingestion import process_document
 
             source = inspect.getsource(process_document)
 

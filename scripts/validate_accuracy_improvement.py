@@ -31,8 +31,8 @@ import json
 import statistics
 from dataclasses import asdict
 
-from app.services.accuracy_enhancement_engine import EnsembleVoter, ConfidenceThresholder
-from app.services.harness_accuracy_validator import DiagnosisAccuracyValidator, EvaluationMetrics
+from app.services.domains.proposal.accuracy_enhancement_engine import EnsembleVoter, ConfidenceThresholder
+from app.services.domains.proposal.harness_accuracy_validator import DiagnosisAccuracyValidator, EvaluationMetrics
 
 
 async def load_test_dataset() -> list[dict]:

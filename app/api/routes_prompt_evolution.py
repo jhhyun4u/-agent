@@ -190,7 +190,7 @@ async def list_prompts(
 @router.get("/categories")
 async def get_categories(user=Depends(require_role("admin"))):
     """카테고리별 프롬프트 목록 + 메타데이터."""
-    from app.services.prompt_categories import get_categories_with_prompts
+    from app.services.domains.proposal.prompt_categories import get_categories_with_prompts
 
     return ok(await get_categories_with_prompts())
 
@@ -201,7 +201,7 @@ async def get_worst_performers(
     user=Depends(require_role("admin")),
 ):
     """수정율/품질 기준 워스트 프롬프트."""
-    from app.services.prompt_categories import get_worst_performers
+    from app.services.domains.proposal.prompt_categories import get_worst_performers
 
     return ok(await get_worst_performers(limit))
 
@@ -209,7 +209,7 @@ async def get_worst_performers(
 @router.get("/simulation-quota")
 async def get_simulation_quota(user=Depends(require_role("admin"))):
     """현재 사용자의 일일 시뮬레이션 잔여 한도."""
-    from app.services.prompt_simulator import get_quota_info
+    from app.services.domains.proposal.prompt_simulator import get_quota_info
 
     return ok(await get_quota_info(user.id))
 
@@ -220,7 +220,7 @@ async def get_simulation_quota(user=Depends(require_role("admin"))):
 @router.get("/learning-dashboard")
 async def get_learning_dashboard(user=Depends(require_role("admin"))):
     """학습 대시보드 전체 데이터."""
-    from app.services.prompt_analyzer import run_batch_analysis
+    from app.services.domains.proposal.prompt_analyzer import run_batch_analysis
 
     top_needs = await run_batch_analysis(top_n=5)
 
@@ -326,7 +326,7 @@ async def get_learning_dashboard(user=Depends(require_role("admin"))):
 @router.get("/workflow-map")
 async def get_workflow_map(user=Depends(require_role("admin"))):
     """워크플로 맵 데이터."""
-    from app.services.prompt_categories import PROMPT_NODE_USAGE
+    from app.services.domains.proposal.prompt_categories import PROMPT_NODE_USAGE
 
     # 노드별 프롬프트 그룹핑
     node_prompts: dict[str, list[str]] = {}
@@ -382,7 +382,7 @@ class EditActionRequest(BaseModel):
 @router.post("/edit-action")
 async def record_edit_action(body: EditActionRequest, user=Depends(get_current_user)):
     """사람의 편집 행동 기록."""
-    from app.services.human_edit_tracker import record_action
+    from app.services.domains.proposal.human_edit_tracker import record_action
 
     await record_action(
         proposal_id=body.proposal_id,
@@ -413,7 +413,7 @@ async def start_experiment_endpoint(
     user=Depends(get_current_user),
 ):
     """A/B 실험 시작."""
-    from app.services.prompt_evolution import start_experiment
+    from app.services.domains.proposal.prompt_evolution import start_experiment
 
     exp_id = await start_experiment(
         prompt_id=body.prompt_id,
@@ -450,7 +450,7 @@ async def evaluate_experiment_endpoint(
     user=Depends(get_current_user),
 ):
     """실험 결과 평가."""
-    from app.services.prompt_evolution import evaluate_experiment
+    from app.services.domains.proposal.prompt_evolution import evaluate_experiment
 
     result = await evaluate_experiment(experiment_id)
     return ok(result)
@@ -462,7 +462,7 @@ async def promote_endpoint(
     user=Depends(get_current_user),
 ):
     """후보 승격."""
-    from app.services.prompt_evolution import promote_candidate
+    from app.services.domains.proposal.prompt_evolution import promote_candidate
 
     result = await promote_candidate(experiment_id)
     return ok(result)
@@ -474,7 +474,7 @@ async def rollback_endpoint(
     user=Depends(get_current_user),
 ):
     """실험 롤백."""
-    from app.services.prompt_evolution import rollback_experiment
+    from app.services.domains.proposal.prompt_evolution import rollback_experiment
 
     result = await rollback_experiment(experiment_id)
     return ok(result)
@@ -488,7 +488,7 @@ async def rollback_endpoint(
 @router.get("/{prompt_id}/analysis")
 async def get_prompt_analysis(prompt_id: str, user=Depends(require_role("admin"))):
     """개별 프롬프트 심층 패턴 분석."""
-    from app.services.prompt_analyzer import analyze_prompt, _prompt_id_to_label
+    from app.services.domains.proposal.prompt_analyzer import analyze_prompt, _prompt_id_to_label
 
     result = await analyze_prompt(prompt_id, days=90)
     result["label"] = _prompt_id_to_label(prompt_id)
@@ -498,7 +498,7 @@ async def get_prompt_analysis(prompt_id: str, user=Depends(require_role("admin")
 @router.post("/{prompt_id}/run-analysis")
 async def run_prompt_analysis(prompt_id: str, user=Depends(require_role("admin"))):
     """온디맨드 패턴 분석 실행 (결과 갱신)."""
-    from app.services.prompt_analyzer import analyze_prompt, _prompt_id_to_label
+    from app.services.domains.proposal.prompt_analyzer import analyze_prompt, _prompt_id_to_label
 
     result = await analyze_prompt(prompt_id, days=90)
     result["label"] = _prompt_id_to_label(prompt_id)
@@ -537,7 +537,7 @@ async def get_effectiveness(
     user=Depends(get_current_user),
 ):
     """프롬프트 성과 메트릭."""
-    from app.services.prompt_tracker import compute_effectiveness
+    from app.services.domains.proposal.prompt_tracker import compute_effectiveness
 
     metrics = await compute_effectiveness(prompt_id, version)
     return ok(metrics)
@@ -552,7 +552,7 @@ class CandidateRequest(BaseModel):
 @router.post("/{prompt_id}/suggest-improvement")
 async def suggest_improvement(prompt_id: str, user=Depends(get_current_user)):
     """AI 개선 제안 (오프라인 분석)."""
-    from app.services.prompt_evolution import suggest_improvements
+    from app.services.domains.proposal.prompt_evolution import suggest_improvements
 
     result = await suggest_improvements(prompt_id)
     return ok(result)
@@ -565,7 +565,7 @@ async def create_candidate_endpoint(
     user=Depends(get_current_user),
 ):
     """후보 프롬프트 등록."""
-    from app.services.prompt_evolution import create_candidate
+    from app.services.domains.proposal.prompt_evolution import create_candidate
 
     version = await create_candidate(prompt_id, body.text, body.reason)
     if version is None:
@@ -611,7 +611,7 @@ async def simulate_prompt(
     user=Depends(require_role("admin")),
 ):
     """프롬프트 시뮬레이션 실행."""
-    from app.services.prompt_simulator import (
+    from app.services.domains.proposal.prompt_simulator import (
         SimulationRequest, check_quota, run_simulation,
     )
 
@@ -639,7 +639,7 @@ async def simulate_compare(
     user=Depends(require_role("admin")),
 ):
     """A vs B 비교 시뮬레이션."""
-    from app.services.prompt_simulator import check_quota, run_comparison
+    from app.services.domains.proposal.prompt_simulator import check_quota, run_comparison
 
     user_id = user.id
     allowed, _ = await check_quota(user_id)
@@ -665,7 +665,7 @@ async def get_simulations(
     user=Depends(require_role("admin")),
 ):
     """시뮬레이션 이력 조회."""
-    from app.services.prompt_simulator import get_simulation_history
+    from app.services.domains.proposal.prompt_simulator import get_simulation_history
 
     simulations = await get_simulation_history(prompt_id, limit)
     return ok({"simulations": simulations})

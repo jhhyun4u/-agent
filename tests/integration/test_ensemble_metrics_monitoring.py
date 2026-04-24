@@ -12,7 +12,7 @@ import json
 import pytest
 from pathlib import Path
 
-from app.services.ensemble_metrics_monitor import (
+from app.services.domains.proposal.ensemble_metrics_monitor import (
     EnsembleMetricsMonitor,
     ConfidenceDistribution,
     FeedbackLoopMetrics,
@@ -20,7 +20,7 @@ from app.services.ensemble_metrics_monitor import (
     get_global_monitor,
     reset_monitor,
 )
-from app.services.metrics_dashboard import MetricsDashboard
+from app.services.domains.vault.metrics_dashboard import MetricsDashboard
 
 
 class TestMetricsCollection:

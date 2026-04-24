@@ -1,6 +1,6 @@
 """HWPX 빌더 간단 테스트 스크립트"""
 from pathlib import Path
-from app.services.hwpx_builder import build_hwpx
+from app.services.tools.hwpx_builder import build_hwpx
 
 # 테스트용 섹션 데이터
 sections = {

@@ -29,7 +29,7 @@ from app.models.user_schemas import (
     UserCreateWithPassword,
     UserUpdate,
 )
-from app.services.audit_service import log_action
+from app.services.core.audit_service import log_action
 from app.services import user_account_service
 from app.utils.supabase_client import get_async_client
 
@@ -366,7 +366,7 @@ async def deactivate_user_endpoint(
     user: CurrentUser = Depends(require_role("admin")),
 ):
     """사용자 비활성화 (admin only)"""
-    from app.services.auth_service import deactivate_user
+    from app.services.core.auth_service import deactivate_user
     result = await deactivate_user(user_id, reason="관리자에 의한 비활성화")
     return ok({"user": result}, message="사용자가 비활성화되었습니다.")
 
@@ -389,7 +389,7 @@ async def delete_user_endpoint(
         raise ResourceNotFoundError("사용자")
 
     await client.table("users").delete().eq("id", user_id).execute()
-    from app.services.audit_service import log_action
+    from app.services.core.audit_service import log_action
     await log_action(user.id, "delete", "user", user_id, {"deleted_name": res.data.get("name", "")})
     return ok(None, message="사용자가 삭제되었습니다.")
 

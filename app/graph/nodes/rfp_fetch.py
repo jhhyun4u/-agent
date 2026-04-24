@@ -24,7 +24,7 @@ async def rfp_fetch(state: ProposalState) -> dict:
     proposal_id = state.get("proposal_id", "")
 
     # 1) G2B 공고 상세 자동 수집
-    from app.services.g2b_service import get_bid_detail
+    from app.services.domains.bidding.g2b_service import get_bid_detail
     try:
         detail = await get_bid_detail(bid_no)
     except Exception as e:
@@ -67,7 +67,7 @@ async def rfp_fetch(state: ProposalState) -> dict:
             continue
 
         # 파일 다운로드
-        from app.services.rfp_parser import download_file_from_url
+        from app.services.domains.proposal.rfp_parser import download_file_from_url
         file_bytes, content_type = await download_file_from_url(url)
 
         if not file_bytes:
@@ -85,7 +85,7 @@ async def rfp_fetch(state: ProposalState) -> dict:
         # 텍스트 추출 (첫 번째 문서형 파일에서만)
         if not auto_rfp_text and file_type in ("pdf", "hwp", "hwpx", "docx"):
             try:
-                from app.services.rfp_parser import parse_rfp_from_url
+                from app.services.domains.proposal.rfp_parser import parse_rfp_from_url
                 auto_rfp_text = await parse_rfp_from_url(url, file_type)
             except Exception as e:
                 logger.debug(f"첨부파일 자동 파싱 실패 (무시): {e}")

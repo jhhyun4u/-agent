@@ -36,7 +36,7 @@ async def submit_bid(
     _access=Depends(require_project_access),
 ):
     """투찰 담당자가 나라장터에 실제 투찰한 가격을 기록."""
-    from app.services.bid_handoff import get_bid_submission_status, record_bid_submission
+    from app.services.domains.bidding.bid_handoff import get_bid_submission_status, record_bid_submission
 
     # 중복 투찰 방어
     status = await get_bid_submission_status(proposal_id)
@@ -59,7 +59,7 @@ async def submit_bid(
     # 비동기 알림
     async def _notify():
         try:
-            from app.services.notification_service import notify_bid_submitted
+            from app.services.core.notification_service import notify_bid_submitted
             await notify_bid_submitted(
                 proposal_id=proposal_id,
                 submitted_price=body.submitted_price,
@@ -80,7 +80,7 @@ async def verify_bid(
     _role=Depends(require_role("lead")),
 ):
     """투찰 완료 확인 (팀장 이상)."""
-    from app.services.bid_handoff import verify_bid_submission
+    from app.services.domains.bidding.bid_handoff import verify_bid_submission
 
     try:
         return ok(await verify_bid_submission(
@@ -99,7 +99,7 @@ async def get_bid_status(
     _access=Depends(require_project_access),
 ):
     """투찰 상태 조회."""
-    from app.services.bid_handoff import get_bid_submission_status
+    from app.services.domains.bidding.bid_handoff import get_bid_submission_status
 
     status = await get_bid_submission_status(proposal_id)
     if not status:
@@ -114,7 +114,7 @@ async def get_price_history(
     _access=Depends(require_project_access),
 ):
     """가격 변경 이력 조회."""
-    from app.services.bid_handoff import get_bid_price_history
+    from app.services.domains.bidding.bid_handoff import get_bid_price_history
 
     return ok(await get_bid_price_history(proposal_id))
 
@@ -137,7 +137,7 @@ async def adjust_bid_price(
     _role=Depends(require_role("lead")),
 ):
     """워크플로 완료 후 가격 조정 — 사유 필수."""
-    from app.services.bidding_stream import update_bid_price_post_workflow
+    from app.services.domains.bidding.bidding_stream import update_bid_price_post_workflow
 
     return ok(await update_bid_price_post_workflow(
         proposal_id=proposal_id,
@@ -155,6 +155,6 @@ async def get_bidding_workspace(
     _access=Depends(require_project_access),
 ):
     """통합 비딩 대시보드."""
-    from app.services.bidding_stream import get_bidding_workspace
+    from app.services.domains.bidding.bidding_stream import get_bidding_workspace
 
     return ok(await get_bidding_workspace(proposal_id))

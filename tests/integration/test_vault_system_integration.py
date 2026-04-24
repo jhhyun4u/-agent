@@ -24,9 +24,9 @@ from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
 from typing import Dict, Any, List
 
-from app.services.vault_context_manager import VaultContextManager
-from app.services.vault_permission_filter import VaultPermissionFilter
-from app.services.vault_multilang_handler import VaultMultiLangHandler
+from app.services.domains.vault.vault_context_manager import VaultContextManager
+from app.services.domains.vault.vault_permission_filter import VaultPermissionFilter
+from app.services.domains.vault.vault_multilang_handler import VaultMultiLangHandler
 
 
 # ============================================================================

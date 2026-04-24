@@ -24,7 +24,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.services.g2b_service import G2BService
+from app.services.domains.bidding.g2b_service import G2BService
 from scripts.bid_scoring import (
     MIN_DAYS_BEFORE_DEADLINE,
     SERVICE_TYPES,

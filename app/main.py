@@ -165,7 +165,7 @@ async def lifespan(app: FastAPI):
         )
 
     # Session management
-    from app.services.session_manager import session_manager
+    from app.services.core.session_manager import session_manager
 
     async def _load_sessions():
         loaded = await session_manager.startup_load()
@@ -194,12 +194,12 @@ async def lifespan(app: FastAPI):
         await _safe_startup_task("Dev mock user 생성", _create_dev_user())
 
     # §25-2: G2B 정기 모니터링 스케줄러
-    from app.services.scheduled_monitor import setup_scheduler
+    from app.services.domains.bidding.scheduled_monitor import setup_scheduler
     setup_scheduler()
 
     # 공고 자동 정리 (마감 경과 + days_remaining 갱신)
     async def _cleanup_bids():
-        from app.services.bid_cleanup import cleanup_expired_bids
+        from app.services.domains.bidding.bid_cleanup import cleanup_expired_bids
         cleaned = await cleanup_expired_bids()
         logger.info(f"공고 자동 정리 완료: {cleaned}")
 
@@ -216,7 +216,7 @@ async def lifespan(app: FastAPI):
 
     # 프롬프트 레지스트리 동기화 (코드 → DB)
     async def _sync_prompts():
-        from app.services.prompt_registry import sync_all_prompts
+        from app.services.domains.proposal.prompt_registry import sync_all_prompts
         sync_result = await sync_all_prompts()
         logger.info(f"프롬프트 레지스트리 동기화: {sync_result}")
 
@@ -244,7 +244,7 @@ async def lifespan(app: FastAPI):
     # Phase 2 Week 2: Performance Optimization - 정기 최적화 스케줄러 (5분 간격)
     optimization_task = None
     try:
-        from app.services.optimization_scheduler import start_optimization_scheduler
+        from app.services.domains.operations.optimization_scheduler import start_optimization_scheduler
         optimization_task = asyncio.create_task(start_optimization_scheduler())
         logger.info("[Phase 2] 성능 최적화 스케줄러 시작 (5분 간격)")
     except ImportError as e:
@@ -253,7 +253,7 @@ async def lifespan(app: FastAPI):
         logger.warning(f"[Phase 2] 최적화 스케줄러 시작 실패 (무시): {e}")
 
     # §26: WebSocket 실시간 업데이트 - 하트비트 루프 시작
-    from app.services.ws_manager import ws_manager
+    from app.services.core.ws_manager import ws_manager
 
     heartbeat_task = None
     try:
@@ -265,7 +265,7 @@ async def lifespan(app: FastAPI):
     # Phase 5: 정기 문서 마이그레이션 스케줄러 초기화
     scheduler_service = None
     try:
-        from app.services.scheduler_service import SchedulerService
+        from app.services.domains.operations.scheduler_service import SchedulerService
         scheduler_service = SchedulerService(client)
         await scheduler_service.initialize()
         logger.info("[Phase 5] 정기 문서 마이그레이션 스케줄러 초기화 완료")
@@ -570,7 +570,7 @@ async def health_check():
 @app.get("/status")
 async def status():
     """세션 현황"""
-    from app.services.session_manager import session_manager
+    from app.services.core.session_manager import session_manager
     return {
         "status": "operational",
         "version": "4.0.0",

@@ -28,7 +28,7 @@ async def get_streams(
     _access=Depends(require_project_access),
 ):
     """3개 스트림 통합 상태 조회."""
-    from app.services.stream_orchestrator import get_streams_status
+    from app.services.core.stream_orchestrator import get_streams_status
 
     return await get_streams_status(proposal_id)
 
@@ -41,7 +41,7 @@ async def get_single_stream(
     _access=Depends(require_project_access),
 ):
     """단일 스트림 상세 조회."""
-    from app.services.stream_orchestrator import get_streams_status
+    from app.services.core.stream_orchestrator import get_streams_status
 
     result = await get_streams_status(proposal_id)
     for s in result["streams"]:
@@ -64,7 +64,7 @@ async def final_submit(
     _role=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """최종 제출 게이트 — 3개 스트림 모두 completed + lead 이상."""
-    from app.services.stream_orchestrator import mark_final_submission
+    from app.services.core.stream_orchestrator import mark_final_submission
 
     result = await mark_final_submission(proposal_id, user.id)
     return FinalSubmitResponse(**result)

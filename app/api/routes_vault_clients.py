@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user
 from app.models.user_schemas import UserInDB
-from app.services.vault_client_service import VaultClientService
+from app.services.domains.vault.vault_client_service import VaultClientService
 
 logger = logging.getLogger(__name__)
 

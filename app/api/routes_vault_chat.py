@@ -32,14 +32,14 @@ from app.models.vault_schemas import (
     DocumentSource,
 )
 from app.utils.supabase_client import get_async_client
-from app.services.vault_query_router import vault_router
-from app.services.vault_validation import HallucinationValidator
-from app.services.vault_cache_service import VaultCacheService
-from app.services.vault_context_manager import VaultContextManager
-from app.services.vault_citation_service import VaultCitationService
+from app.services.domains.vault.vault_query_router import vault_router
+from app.services.domains.vault.vault_validation import HallucinationValidator
+from app.services.domains.vault.vault_cache_service import VaultCacheService
+from app.services.domains.vault.vault_context_manager import VaultContextManager
+from app.services.domains.vault.vault_citation_service import VaultCitationService
 from app.services.vault_handlers.completed_projects import CompletedProjectsHandler
 from app.services.vault_handlers.government_guidelines import GovernmentGuidelinesHandler
-from app.services.claude_client import claude_generate, claude_generate_streaming
+from app.services.core.claude_client import claude_generate, claude_generate_streaming
 
 logger = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ from datetime import datetime
 # 프로젝트 루트를 path에 추가
 sys.path.insert(0, ".")
 
-from app.services.g2b_service import G2BService
+from app.services.domains.bidding.g2b_service import G2BService
 
 
 async def test_search(keyword: str, budget_min: int = 0):

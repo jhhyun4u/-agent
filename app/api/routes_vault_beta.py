@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
-from app.services.beta_metrics_tracker import (
+from app.services.domains.bidding.beta_metrics_tracker import (
     BetaMetricsTracker,
     SessionMetrics,
     FeedbackRecord,

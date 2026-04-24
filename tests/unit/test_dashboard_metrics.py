@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime
 from decimal import Decimal
 
-from app.services.dashboard_metrics_service import DashboardMetricsService
+from app.services.domains.operations.dashboard_metrics_service import DashboardMetricsService
 from app.exceptions import TenopAPIError
 
 

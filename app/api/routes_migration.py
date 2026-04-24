@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException, status
 
 from app.api.deps import get_current_user
 from app.models.auth_schemas import CurrentUser
-from app.services.scheduler_service import SchedulerService, get_scheduler_service
+from app.services.domains.operations.scheduler_service import SchedulerService, get_scheduler_service
 from app.utils.supabase_client import get_async_client
 
 router = APIRouter(prefix="/api/migration", tags=["migration"])

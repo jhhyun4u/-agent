@@ -17,16 +17,16 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from app.config import settings
-from app.services.session_manager import session_manager
+from app.services.core.session_manager import session_manager
 from app.models.phase_schemas import Phase1Artifact, Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.services.legacy.phase_executor import PhaseExecutor
-from app.services.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
+from app.services.domains.bidding.bid_calculator import BidCalculator, PersonnelInput, ProcurementMethod, parse_budget_string
 from app.exceptions import (
     FileSizeExceededError, FileFormatError, FileNotFoundError_,
     InvalidRequestError, ConflictError, InternalServiceError, PropNotFoundError,
     ResourceNotFoundError,
 )
-from app.services.template_service import get_available_templates, get_template_toc, clear_toc_cache
+from app.services.tools.template_service import get_available_templates, get_template_toc, clear_toc_cache
 from app.api.deps import get_current_user
 
 logger = logging.getLogger(__name__)

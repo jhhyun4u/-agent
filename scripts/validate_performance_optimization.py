@@ -104,7 +104,7 @@ class PerformanceValidator:
         logger.info("TEST 2: KB Search - WITH TASK #3 CACHE")
         logger.info("=" * 80)
         
-        from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+        from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
         
         latencies = []
         iterations = 100
@@ -212,7 +212,7 @@ class PerformanceValidator:
         logger.info("TEST 4: Proposals List - WITH TASK #3 CACHE")
         logger.info("=" * 80)
         
-        from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+        from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
         
         latencies = []
         iterations = 100
@@ -271,7 +271,7 @@ class PerformanceValidator:
         logger.info("TEST 5: Concurrent Load Test (10 simultaneous users)")
         logger.info("=" * 80)
         
-        from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+        from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
         
         cache = await get_memory_cache()
         concurrent_users = 10

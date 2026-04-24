@@ -11,7 +11,7 @@
 import asyncio
 import time
 import pytest
-from app.services.document_ingestion import (
+from app.services.domains.proposal.document_ingestion import (
     EMBEDDING_BATCH_SIZE,
     INSERT_BATCH_SIZE,
     MAX_CONCURRENT_DOCUMENTS,

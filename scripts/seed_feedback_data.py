@@ -156,7 +156,7 @@ async def seed_feedback_data():
         print(f"✅ 피드백 데이터 생성 완료: {inserted}개")
 
         # 분석 결과 출력
-        from app.services.feedback_analyzer import FeedbackAnalyzer
+        from app.services.domains.proposal.feedback_analyzer import FeedbackAnalyzer
 
         analyzer = FeedbackAnalyzer()
         analysis = analyzer.analyze_weekly_feedback(response.data)

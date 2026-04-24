@@ -34,7 +34,7 @@ from app.models.performance_schemas import (
     CompanyPerformance, PerformanceTrends, MyProjectsDashboard, TeamDashboard,
 )
 from app.models.schemas import ProposalResultCreate, ProposalResultUpdate, LessonCreate
-from app.services.ws_events import broadcast_result_update
+from app.services.core.ws_events import broadcast_result_update
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -143,7 +143,7 @@ async def register_proposal_result(
 
     # KB 환류 트리거
     try:
-        from app.services.kb_updater import trigger_kb_update
+        from app.services.domains.proposal.kb_updater import trigger_kb_update
         await trigger_kb_update(proposal_id, body.result)
     except Exception:
         logger.warning("KB 환류 트리거 실패 (무시)")
@@ -275,7 +275,7 @@ async def create_lesson(
 
     # 벡터 임베딩 생성 (비동기, 실패 무시)
     try:
-        from app.services.kb_updater import generate_lesson_embedding
+        from app.services.domains.proposal.kb_updater import generate_lesson_embedding
         await generate_lesson_embedding(lesson_id, body.title, body.description)
     except Exception:
         logger.warning(f"교훈 임베딩 생성 실패 (무시): {lesson_id}")

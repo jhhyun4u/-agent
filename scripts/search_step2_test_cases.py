@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 sys.path.insert(0, '/c/project/tenopa proposer')
 
 from app.config import settings
-from app.services.g2b_service import G2BService
+from app.services.domains.bidding.g2b_service import G2BService
 
 
 async def search_test_cases():

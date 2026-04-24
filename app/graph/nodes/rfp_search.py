@@ -7,7 +7,7 @@ G2B 공고 검색 + AI 적합도 평가 + 추천 리스트 생성 (최대 5건).
 import logging
 
 from app.graph.state import ProposalState, RfpRecommendation
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ async def rfp_search(state: ProposalState) -> dict:
     mode = state.get("mode", "full")
 
     # G2B 공고 검색
-    from app.services.g2b_service import search_bids
+    from app.services.domains.bidding.g2b_service import search_bids
     raw_results = await search_bids(
         keywords=search_keywords,
         budget_min=query_params.get("budget_min"),

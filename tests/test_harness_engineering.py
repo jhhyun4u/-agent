@@ -16,8 +16,8 @@ from app.graph.nodes.harness_feedback_loop import (
     HarnessPromptRefiner,
 )
 from app.graph.nodes.harness_proposal_node import HarnessProposalGenerator
-from app.services.claude_client import claude_generate_multiple_variants
-from app.services.harness_evaluator import SectionEvaluator, EvaluationScore
+from app.services.core.claude_client import claude_generate_multiple_variants
+from app.services.domains.proposal.harness_evaluator import SectionEvaluator, EvaluationScore
 
 
 class TestHarnessGenerator:

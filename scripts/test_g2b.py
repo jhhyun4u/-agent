@@ -23,7 +23,7 @@ async def test_bid_search():
     print("[1] 입찰공고 검색 (G2BService.search_bid_announcements)")
     print("=" * 60)
 
-    from app.services.g2b_service import G2BService
+    from app.services.domains.bidding.g2b_service import G2BService
 
     async with G2BService() as svc:
         results = await svc.search_bid_announcements("시스템", num_of_rows=100)
@@ -47,7 +47,7 @@ async def test_bid_results():
     print("[2] 낙찰결과 조회 (G2BService.get_bid_results)")
     print("=" * 60)
 
-    from app.services.g2b_service import G2BService
+    from app.services.domains.bidding.g2b_service import G2BService
 
     async with G2BService() as svc:
         results = await svc.get_bid_results("정보", num_of_rows=5, date_range_days=7)
@@ -69,7 +69,7 @@ async def test_standalone_wrapper():
     print("[3] search_bids 래퍼 (LangGraph 노드용)")
     print("=" * 60)
 
-    from app.services.g2b_service import search_bids
+    from app.services.domains.bidding.g2b_service import search_bids
 
     bids = await search_bids("용역")
     print(f"  결과: {len(bids)}건\n")
@@ -87,7 +87,7 @@ async def test_bid_detail(bid_no: str):
     print(f"[4] 공고 상세 조회: {bid_no}")
     print("=" * 60)
 
-    from app.services.g2b_service import get_bid_detail
+    from app.services.domains.bidding.g2b_service import get_bid_detail
 
     detail = await get_bid_detail(bid_no)
     print(f"  공고명: {detail.get('project_name', 'N/A')}")

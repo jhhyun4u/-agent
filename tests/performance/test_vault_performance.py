@@ -14,7 +14,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 from statistics import mean, median, stdev
 
-from app.services.vault_performance_optimizer import (
+from app.services.domains.vault.vault_performance_optimizer import (
     VaultPerformanceOptimizer,
     get_optimizer
 )

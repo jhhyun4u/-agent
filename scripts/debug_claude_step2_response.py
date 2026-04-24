@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/..")
 
 import asyncio
 import json
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 
 async def test_raw_response():
     """Call Claude directly and print raw response"""

@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.config import settings
 
 

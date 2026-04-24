@@ -11,7 +11,7 @@ import pytest
 from datetime import datetime
 from typing import Dict, List
 
-from app.services.feedback_analyzer import (
+from app.services.domains.proposal.feedback_analyzer import (
     FeedbackAnalyzer,
     FeedbackStats,
     WeightRecommendation,

@@ -8,8 +8,8 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import logging
 
-from app.services.query_analyzer import get_query_analyzer, QueryAnalyzer
-from app.services.cache_ttl_optimizer import get_cache_ttl_optimizer, CacheTTLOptimizer, CacheTTLMetrics
+from app.services.core.query_analyzer import get_query_analyzer, QueryAnalyzer
+from app.services.core.cache_ttl_optimizer import get_cache_ttl_optimizer, CacheTTLOptimizer, CacheTTLMetrics
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -143,7 +143,7 @@ async def optimize_cache_ttl():
         optimizer = await get_cache_ttl_optimizer()
         
         # 캐시 메트릭 수집 (Memory Cache Service에서)
-        from app.services.memory_cache_service import get_memory_cache
+        from app.services.core.memory_cache_service import get_memory_cache
         cache_service = await get_memory_cache()
         
         # 각 캐시별 메트릭 구성
@@ -281,7 +281,7 @@ async def run_full_optimization_cycle():
         # 2. 캐시 TTL 최적화
         optimizer = await get_cache_ttl_optimizer()
         
-        from app.services.memory_cache_service import get_memory_cache
+        from app.services.core.memory_cache_service import get_memory_cache
         cache_service = await get_memory_cache()
         
         # 캐시 메트릭 구성
@@ -332,7 +332,7 @@ async def get_scheduler_status():
     - 마지막 실행 시간
     - 최근 에러
     """
-    from app.services.optimization_scheduler import get_optimization_status
+    from app.services.domains.operations.optimization_scheduler import get_optimization_status
     return await get_optimization_status()
 
 
@@ -343,7 +343,7 @@ async def reset_scheduler_stats():
     
     테스트 목적으로 실행 통계를 초기화함
     """
-    from app.services.optimization_scheduler import reset_optimization_stats
+    from app.services.domains.operations.optimization_scheduler import reset_optimization_stats
     await reset_optimization_stats()
     return {
         "timestamp": datetime.now().isoformat(),

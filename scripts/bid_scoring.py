@@ -30,7 +30,7 @@ def load_profile() -> dict:
         import asyncio
         import sys
         sys.path.insert(0, str(PROJECT_ROOT))
-        from app.services.bid_scoring_service import BidScoringService
+        from app.services.domains.bidding.bid_scoring_service import BidScoringService
         from app.utils.supabase_client import get_async_client
 
         async def _load_from_db():

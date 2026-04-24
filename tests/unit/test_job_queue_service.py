@@ -18,7 +18,7 @@ from app.models.job_queue_schemas import (
     JobType,
     JobPriority,
 )
-from app.services.job_queue_service import (
+from app.services.domains.bidding.job_queue_service import (
     JobQueueService,
     JobNotFoundError,
     JobCancelError,

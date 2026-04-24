@@ -12,7 +12,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Query, UploadFile
 from app.api.deps import get_current_user, require_role
 from app.config import settings
 from app.exceptions import InvalidRequestError, ResourceNotFoundError
-from app.services.document_ingestion import (
+from app.services.domains.proposal.document_ingestion import (
     compute_file_hash,
     import_project,
     process_document,

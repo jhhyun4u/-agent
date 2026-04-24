@@ -16,8 +16,8 @@ and AI runtime state (Layer 3: ai_task_status).
 
 from typing import Optional
 import asyncio
-from app.services.state_validator import StateValidator, ProposalStatus, WinResult
-from app.services.ws_events import broadcast_proposal_status
+from app.services.domains.proposal.state_validator import StateValidator, ProposalStatus, WinResult
+from app.services.core.ws_events import broadcast_proposal_status
 
 
 class StateMachine:

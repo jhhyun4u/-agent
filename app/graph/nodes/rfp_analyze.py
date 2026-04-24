@@ -8,7 +8,7 @@ import logging
 import re
 
 from app.graph.state import ComplianceItem, PriceScoringFormula, ProposalState, RFPAnalysis
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)

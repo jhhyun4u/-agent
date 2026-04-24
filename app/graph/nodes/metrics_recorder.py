@@ -6,7 +6,7 @@ Phase 4: Proposal Completion Metrics Recorder
 
 import logging
 from app.graph.state import ProposalState
-from app.services.ensemble_metrics_monitor import get_global_monitor
+from app.services.domains.proposal.ensemble_metrics_monitor import get_global_monitor
 
 logger = logging.getLogger(__name__)
 

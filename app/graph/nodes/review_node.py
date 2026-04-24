@@ -814,7 +814,7 @@ def _handle_bid_plan_review(state: ProposalState, human_input: dict) -> dict:
                 budget = 0
                 if rfp:
                     rfp_d = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
-                    from app.services.bid_calculator import parse_budget_string
+                    from app.services.domains.bidding.bid_calculator import parse_budget_string
                     budget = parse_budget_string(rfp_d.get("budget", "")) or 0
                 if budget > 0:
                     constraint["bid_ratio"] = round(override_price / budget * 100, 2)
@@ -887,7 +887,7 @@ def _fire_bid_confirmation(state: ProposalState, updates: dict, human_input: dic
 
     async def _persist():
         try:
-            from app.services.bid_handoff import persist_bid_confirmation
+            from app.services.domains.bidding.bid_handoff import persist_bid_confirmation
             await persist_bid_confirmation(
                 proposal_id=proposal_id,
                 bid_price=bid_price,
@@ -903,7 +903,7 @@ def _fire_bid_confirmation(state: ProposalState, updates: dict, human_input: dic
             logging.getLogger(__name__).warning(f"bid_plan DB persist 실패: {e}")
 
         try:
-            from app.services.notification_service import notify_bid_confirmed
+            from app.services.core.notification_service import notify_bid_confirmed
             team_id = state.get("team_id", "")
             await notify_bid_confirmed(
                 proposal_id=proposal_id,
@@ -931,7 +931,7 @@ def _fire_stream_initialization(state: ProposalState) -> None:
 
     async def _init():
         try:
-            from app.services.stream_orchestrator import initialize_streams
+            from app.services.core.stream_orchestrator import initialize_streams
             await initialize_streams(proposal_id)
         except Exception as e:
             logger.warning(f"3-Stream 초기화 실패: {e}")
@@ -944,7 +944,7 @@ def _fire_stream_initialization(state: ProposalState) -> None:
                 rfp_dict = rfp.model_dump() if hasattr(rfp, "model_dump") else (rfp if isinstance(rfp, dict) else {})
             rfp_raw = state.get("rfp_raw", "")
             if rfp_raw or rfp_dict:
-                from app.services.submission_docs_service import extract_checklist_from_rfp
+                from app.services.domains.bidding.submission_docs_service import extract_checklist_from_rfp
                 await extract_checklist_from_rfp(proposal_id, rfp_raw, rfp_dict)
         except Exception as e:
             logger.warning(f"제출서류 자동 추출 실패 (무시): {e}")

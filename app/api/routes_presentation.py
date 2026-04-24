@@ -21,9 +21,9 @@ from app.api.deps import get_current_user
 from app.api.response import ok, ok_list
 from app.models.phase_schemas import Phase2Artifact, Phase3Artifact, Phase4Artifact
 from app.models.schemas import RFPData
-from app.services.presentation_generator import generate_presentation_slides
-from app.services.presentation_pptx_builder import build_presentation_pptx
-from app.services.session_manager import session_manager
+from app.services.tools.presentation_generator import generate_presentation_slides
+from app.services.tools.presentation_pptx_builder import build_presentation_pptx
+from app.services.core.session_manager import session_manager
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

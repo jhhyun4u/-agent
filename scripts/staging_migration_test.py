@@ -28,7 +28,7 @@ async def test_scheduler_initialization():
 
     try:
         from app.utils.supabase_client import get_async_client
-        from app.services.scheduler_service import SchedulerService
+        from app.services.domains.operations.scheduler_service import SchedulerService
 
         client = await get_async_client()
         scheduler = SchedulerService(client)
@@ -52,7 +52,7 @@ async def test_schedule_creation():
 
     try:
         from app.utils.supabase_client import get_async_client
-        from app.services.scheduler_service import SchedulerService
+        from app.services.domains.operations.scheduler_service import SchedulerService
 
         client = await get_async_client()
         scheduler = SchedulerService(client)
@@ -85,7 +85,7 @@ async def test_batch_creation_and_processing(schedule_id):
 
     try:
         from app.utils.supabase_client import get_async_client
-        from app.services.scheduler_service import SchedulerService
+        from app.services.domains.operations.scheduler_service import SchedulerService
 
         client = await get_async_client()
         scheduler = SchedulerService(client)
@@ -119,7 +119,7 @@ async def test_concurrent_batch_processor():
 
     try:
         from app.utils.supabase_client import get_async_client
-        from app.services.batch_processor import ConcurrentBatchProcessor
+        from app.services.domains.bidding.batch_processor import ConcurrentBatchProcessor
 
         client = await get_async_client()
         processor = ConcurrentBatchProcessor(client, num_workers=3, max_retries=2)

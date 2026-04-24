@@ -404,7 +404,7 @@ async def test_cache_hit_performance(
     mock_dashboard_service,
 ):
     """캐싱 성능: 2번째 호출이 더 빠름"""
-    from app.services.cache_manager import get_cache_manager
+    from app.services.core.cache_manager import get_cache_manager
     import time
 
     cache_mgr = get_cache_manager()

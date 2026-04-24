@@ -13,9 +13,9 @@ import asyncio
 from datetime import datetime
 from unittest.mock import Mock, patch, AsyncMock
 
-from app.services.query_analyzer import QueryAnalyzer, QueryStats, IndexRecommendation
-from app.services.cache_ttl_optimizer import CacheTTLOptimizer, CacheTTLMetrics
-from app.services.optimization_scheduler import (
+from app.services.core.query_analyzer import QueryAnalyzer, QueryStats, IndexRecommendation
+from app.services.core.cache_ttl_optimizer import CacheTTLOptimizer, CacheTTLMetrics
+from app.services.domains.operations.optimization_scheduler import (
     start_optimization_scheduler,
     get_optimization_status,
     reset_optimization_stats,

@@ -7,7 +7,7 @@ Q&A 기록 검색 가능 저장 서비스 (PSM-16)
 
 import logging
 
-from app.services.embedding_service import generate_embedding
+from app.services.domains.vault.embedding_service import generate_embedding
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -119,7 +119,7 @@ async def _save_qa_lesson_summary(
 
         # 교훈 임베딩 생성
         if result.data:
-            from app.services.kb_updater import generate_lesson_embedding
+            from app.services.domains.proposal.kb_updater import generate_lesson_embedding
             lesson = result.data[0]
             await generate_lesson_embedding(
                 lesson["id"],

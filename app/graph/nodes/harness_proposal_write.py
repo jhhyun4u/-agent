@@ -29,24 +29,24 @@ from app.prompts.section_prompts import (
     get_section_prompt,
     classify_section_type,
 )
-from app.services.claude_client import claude_generate
-from app.services.accuracy_enhancement_engine import (
+from app.services.core.claude_client import claude_generate
+from app.services.domains.proposal.accuracy_enhancement_engine import (
     EnsembleVoter,
     ConfidenceThresholder,
 )
-from app.services.harness_accuracy_validator import EvaluationMetrics
-from app.services.ensemble_metrics_monitor import get_global_monitor
+from app.services.domains.proposal.harness_accuracy_validator import EvaluationMetrics
+from app.services.domains.proposal.ensemble_metrics_monitor import get_global_monitor
 
 logger = logging.getLogger(__name__)
 
 # 의존성 (기존 proposal_nodes에서 복사)
 try:
-    from app.services.prompt_registry import prompt_registry
+    from app.services.domains.proposal.prompt_registry import prompt_registry
 except ImportError:
     prompt_registry = None
 
 try:
-    from app.services.prompt_tracker import prompt_tracker
+    from app.services.domains.proposal.prompt_tracker import prompt_tracker
 except ImportError:
     prompt_tracker = None
 
@@ -460,7 +460,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
 
     # ── KB 자동 축적 ──
     try:
-        from app.services.content_library import auto_register_section
+        from app.services.domains.proposal.content_library import auto_register_section
 
         await auto_register_section(
             org_id=state.get("org_id", ""),
@@ -477,7 +477,7 @@ async def harness_proposal_write_next(state: ProposalState) -> dict:
 
     # ── 버전 관리 (선택사항) ──
     try:
-        from app.services.version_manager import execute_node_and_create_version
+        from app.services.core.version_manager import execute_node_and_create_version
 
         sections_data = [
             s.model_dump() if hasattr(s, "model_dump") else s for s in existing_sections

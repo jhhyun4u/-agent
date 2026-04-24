@@ -189,7 +189,7 @@ class CompletedProjectsHandler:
         """
 
         try:
-            from app.services.vault_embedding_service import EmbeddingService
+            from app.services.domains.vault.vault_embedding_service import EmbeddingService
 
             embedding_service = EmbeddingService()
 

@@ -7,7 +7,7 @@ scheduled_monitor.setup_scheduler() 안의 'monthly_migration' 잡을 사용.
 """
 
 import logging
-from app.services.migration_service import MigrationService
+from app.services.domains.operations.migration_service import MigrationService
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

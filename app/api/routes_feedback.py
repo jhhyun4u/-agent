@@ -13,7 +13,7 @@ from pydantic import BaseModel
 
 from app.api.deps import get_current_user, require_role
 from app.models.auth_schemas import CurrentUser
-from app.services.feedback_analyzer import FeedbackAnalyzer
+from app.services.domains.proposal.feedback_analyzer import FeedbackAnalyzer
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

@@ -44,12 +44,12 @@ from app.models.bid_schemas import (
     TeamBidProfileCreate,
 )
 from app.prompts.bid_review import UNIFIED_ANALYSIS_USER, build_unified_analysis_system
-from app.services.bid_attachment_store import download_bid_attachments
-from app.services.bid_fetcher import BidFetcher
-from app.services.bid_pipeline import get_all_pipeline_status, get_pipeline_status, run_pipeline
-from app.services.bid_recommender import BidRecommender
-from app.services.claude_client import _get_client as _get_claude_client
-from app.services.g2b_service import G2BService
+from app.services.domains.bidding.bid_attachment_store import download_bid_attachments
+from app.services.domains.bidding.bid_fetcher import BidFetcher
+from app.services.domains.bidding.bid_pipeline import get_all_pipeline_status, get_pipeline_status, run_pipeline
+from app.services.domains.bidding.bid_recommender import BidRecommender
+from app.services.core.claude_client import _get_client as _get_claude_client
+from app.services.domains.bidding.g2b_service import G2BService
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

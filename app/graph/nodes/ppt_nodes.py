@@ -20,7 +20,7 @@ from app.prompts.ppt_pipeline import (
     PPT_VISUAL_BRIEF_USER,
 )
 from app.prompts.proposal_prompts import PRESENTATION_STRATEGY_PROMPT
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
 
 logger = logging.getLogger(__name__)

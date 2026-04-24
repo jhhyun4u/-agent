@@ -26,7 +26,7 @@ from app.models.migration_schemas import (
     BatchListResponse,
     MigrationTriggerResponse,
 )
-from app.services.migration_service import MigrationService
+from app.services.domains.operations.migration_service import MigrationService
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

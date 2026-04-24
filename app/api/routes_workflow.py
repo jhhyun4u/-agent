@@ -27,7 +27,7 @@ from app.middleware.rate_limit import limiter
 from app.exceptions import PropNotFoundError, WFAlreadyRunningError, WFResumeValidationError
 from app.models.auth_schemas import CurrentUser
 from app.state_machine import StateMachine
-from app.services.state_validator import ProposalStatus
+from app.services.domains.proposal.state_validator import ProposalStatus
 from app.models.workflow_schemas import (
     AiActionResponse, AiStatusResponse, GotoResponse, ImpactResponse,
     SectionLockResponse, SectionUnlockResponse,
@@ -558,7 +558,7 @@ async def lock_section(
     user: CurrentUser = Depends(get_current_user),
 ):
     """섹션 편집 잠금 획득."""
-    from app.services.section_lock import acquire_lock
+    from app.services.domains.proposal.section_lock import acquire_lock
 
     return await acquire_lock(proposal_id, section_id, user.id)
 
@@ -570,7 +570,7 @@ async def unlock_section(
     user: CurrentUser = Depends(get_current_user),
 ):
     """섹션 편집 잠금 해제."""
-    from app.services.section_lock import release_lock
+    from app.services.domains.proposal.section_lock import release_lock
 
     released = await release_lock(proposal_id, section_id, user.id)
     return {"released": released}
@@ -582,7 +582,7 @@ async def list_section_locks(
     user: CurrentUser = Depends(get_current_user),
 ):
     """제안서의 모든 활성 잠금 목록."""
-    from app.services.section_lock import get_locks
+    from app.services.domains.proposal.section_lock import get_locks
 
     locks = await get_locks(proposal_id)
     return {"locks": locks}
@@ -598,7 +598,7 @@ async def get_ai_status(
     _access=Depends(require_project_access),
 ):
     """AI 작업 상태 조회."""
-    from app.services.ai_status_manager import ai_status_manager
+    from app.services.domains.proposal.ai_status_manager import ai_status_manager
 
     return ai_status_manager.get_composite_status(proposal_id)
 
@@ -616,7 +616,7 @@ async def abort_ai_task(
 ):
     """AI 작업 중단 (paused 상태로 전환, 완료 서브태스크 보존)."""
     from app.middleware.request_id import get_request_id
-    from app.services.ai_status_manager import ai_status_manager
+    from app.services.domains.proposal.ai_status_manager import ai_status_manager
 
     rid = get_request_id()
     result = ai_status_manager.abort_task(proposal_id)
@@ -643,7 +643,7 @@ async def retry_ai_task(
     _access=Depends(require_project_access),
 ):
     """중단된 AI 작업 재시도 — 현재 STEP을 처음부터 재실행."""
-    from app.services.ai_status_manager import ai_status_manager
+    from app.services.domains.proposal.ai_status_manager import ai_status_manager
 
     status = ai_status_manager.get_composite_status(proposal_id)
     if status["status"] not in ("paused", "error", "no_response"):
@@ -841,7 +841,7 @@ async def _get_streams_status_safe(proposal_id: str) -> dict | None:
     자동 복구: Go 결정 이후인데 스트림 레코드가 없으면 자동 초기화.
     """
     try:
-        from app.services.stream_orchestrator import get_streams_status, initialize_streams
+        from app.services.core.stream_orchestrator import get_streams_status, initialize_streams
         result = await get_streams_status(proposal_id)
 
         # 자동 복구: Go 통과 후인데 스트림이 모두 not_started이면 초기화 재시도

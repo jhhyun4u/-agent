@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, get_current_user_team
 from app.models.user_schemas import UserInDB
-from app.services.vault_step_search import VaultStepSearch
+from app.services.domains.vault.vault_step_search import VaultStepSearch
 
 logger = logging.getLogger(__name__)
 

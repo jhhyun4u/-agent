@@ -33,7 +33,7 @@ from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
 
-from app.services.memory_cache_service import get_memory_cache
+from app.services.core.memory_cache_service import get_memory_cache
 router = APIRouter(prefix="/api/kb", tags=["knowledge-base"])
 
 
@@ -55,7 +55,7 @@ async def kb_search(
     - Caches results with 10-minute TTL for repeated searches
     - Automatically invalidated when KB content is updated
     """
-    from app.services.knowledge_search import unified_search
+    from app.services.domains.vault.knowledge_search import unified_search
 
     filters = {}
     if areas:
@@ -173,7 +173,7 @@ async def create_content_endpoint(body: ContentCreateBody, user: CurrentUser = D
     Task #3: Cache Invalidation
     - Clears KB search cache when new content is added
     """
-    from app.services.content_library import create_content
+    from app.services.domains.proposal.content_library import create_content
 
     result = await create_content(
         org_id=user.org_id,
@@ -206,7 +206,7 @@ async def update_content_endpoint(
     Task #3: Cache Invalidation
     - Clears KB search cache when content is updated
     """
-    from app.services.content_library import update_content
+    from app.services.domains.proposal.content_library import update_content
 
     updates = {k: v for k, v in body.model_dump().items() if v is not None}
     if not updates:
@@ -246,7 +246,7 @@ async def approve_content_endpoint(
     user: CurrentUser = Depends(require_role("lead", "director", "admin")),
 ):
     """콘텐츠 승인 (draft → published)."""
-    from app.services.content_library import approve_content
+    from app.services.domains.proposal.content_library import approve_content
 
     result = await approve_content(content_id, user.id)
     return ok(result)
@@ -316,7 +316,7 @@ async def get_client(client_id: str, user: CurrentUser = Depends(get_current_use
 @router.post("/clients", status_code=201)
 async def create_client(body: ClientCreateBody, user: CurrentUser = Depends(get_current_user)):
     """발주기관 등록."""
-    from app.services.embedding_service import embedding_text_for_client, generate_embedding
+    from app.services.domains.vault.embedding_service import embedding_text_for_client, generate_embedding
 
     embed_text = embedding_text_for_client(body.client_name, body.client_type or "", body.notes or "")
     embedding = await generate_embedding(embed_text)
@@ -415,7 +415,7 @@ async def get_competitor(competitor_id: str, user: CurrentUser = Depends(get_cur
 @router.post("/competitors", status_code=201)
 async def create_competitor(body: CompetitorCreateBody, user: CurrentUser = Depends(get_current_user)):
     """경쟁사 등록."""
-    from app.services.embedding_service import embedding_text_for_competitor, generate_embedding
+    from app.services.domains.vault.embedding_service import embedding_text_for_competitor, generate_embedding
 
     embed_text = embedding_text_for_competitor(body.company_name, body.primary_area or "", body.strengths or "")
     embedding = await generate_embedding(embed_text)
@@ -510,7 +510,7 @@ async def get_lesson(lesson_id: str, user: CurrentUser = Depends(get_current_use
 @router.post("/lessons", status_code=201)
 async def create_lesson(body: LessonCreateBody, user: CurrentUser = Depends(get_current_user)):
     """교훈 등록."""
-    from app.services.embedding_service import embedding_text_for_lesson, generate_embedding
+    from app.services.domains.vault.embedding_service import embedding_text_for_lesson, generate_embedding
 
     embed_text = embedding_text_for_lesson(
         body.strategy_summary or "", body.effective_points or "",
@@ -574,7 +574,7 @@ async def submit_retrospect(
     )
 
     # 교훈 등록 (재사용)
-    from app.services.embedding_service import embedding_text_for_lesson, generate_embedding
+    from app.services.domains.vault.embedding_service import embedding_text_for_lesson, generate_embedding
 
     embed_text = embedding_text_for_lesson(
         body.strategy_summary, body.effective_points,
@@ -915,7 +915,7 @@ class ReindexRequest(BaseModel):
 @router.post("/reindex")
 async def kb_reindex(body: ReindexRequest, user: CurrentUser = Depends(require_role("admin"))):
     """임베딩 없는 레코드에 배치 임베딩 생성 (D-2)."""
-    from app.services.embedding_service import batch_reindex
+    from app.services.domains.vault.embedding_service import batch_reindex
     result = await batch_reindex(
         areas=body.areas,
         org_id=user.org_id,

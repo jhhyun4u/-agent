@@ -334,7 +334,7 @@ async def find_similar_cases(
 ) -> str:
     """RFP 사업명 기반 유사 과거 사례 시맨틱 검색 → 텍스트 반환."""
     try:
-        from app.services.knowledge_search import unified_search
+        from app.services.domains.vault.knowledge_search import unified_search
         results = await unified_search(
             query=f"{project_name} {client_name}",
             org_id=org_id,
@@ -475,7 +475,7 @@ async def score_similar_performance(
     # ── Step 1: AI 파싱으로 요건 구조화 ──
     parsed_reqs: list[dict] = []
     try:
-        from app.services.claude_client import claude_generate
+        from app.services.core.claude_client import claude_generate
         parse_prompt = (
             "다음 유사실적 요건을 JSON 배열로 구조화하세요.\n"
             "각 요건: {\"raw_text\": str, \"period_years\": int, "
@@ -647,7 +647,7 @@ async def score_qualification(
     # ── Step 1: AI 파싱으로 mandatory/preferred 분류 ──
     classified: dict = {"mandatory": [], "preferred": []}
     try:
-        from app.services.claude_client import claude_generate
+        from app.services.core.claude_client import claude_generate
         classify_prompt = (
             "다음 자격 요건을 mandatory(필수 참가자격)와 preferred(가점/우대)로 분류하세요.\n"
             "mandatory 판단 기준: '필수', '참가자격', '등록 업체', '보유 업체', '면허' 포함\n"

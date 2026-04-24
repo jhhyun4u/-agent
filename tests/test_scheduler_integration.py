@@ -21,8 +21,8 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from app.services.scheduler_service import SchedulerService
-from app.services.batch_processor import ConcurrentBatchProcessor
+from app.services.domains.operations.scheduler_service import SchedulerService
+from app.services.domains.bidding.batch_processor import ConcurrentBatchProcessor
 
 
 # Fixtures

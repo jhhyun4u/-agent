@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 async def collect(domain: str, keyword: str, from_year: int, to_year: int, max_pages: int):
-    from app.services.g2b_service import G2BService, fetch_and_store_bid_result
+    from app.services.domains.bidding.g2b_service import G2BService, fetch_and_store_bid_result
 
     total_found = 0
     total_stored = 0

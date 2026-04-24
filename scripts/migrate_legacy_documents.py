@@ -22,8 +22,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.config import settings
 from app.utils.supabase_client import get_async_supabase_client
-from app.services.migration_service import MigrationService
-from app.services.notification_service import NotificationService
+from app.services.domains.operations.migration_service import MigrationService
+from app.services.core.notification_service import NotificationService
 
 
 logging.basicConfig(

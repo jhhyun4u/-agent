@@ -16,12 +16,12 @@ import pytest
 from unittest.mock import Mock, patch, AsyncMock
 import asyncio
 
-from app.services.accuracy_enhancement_engine import (
+from app.services.domains.proposal.accuracy_enhancement_engine import (
     EnsembleVoter,
     ConfidenceThresholder,
     EvaluationMetrics,
 )
-from app.services.harness_accuracy_validator import (
+from app.services.domains.proposal.harness_accuracy_validator import (
     DiagnosisAccuracyValidator,
 )
 from app.graph.state import ProposalState

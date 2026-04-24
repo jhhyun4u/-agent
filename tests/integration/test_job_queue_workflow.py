@@ -23,10 +23,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from app.models.job_queue_schemas import (
     Job, JobStatus, JobType, JobPriority, JobEventType
 )
-from app.services.queue_manager import QueueManager
-from app.services.job_service import JobService
-from app.services.worker_pool import WorkerPool
-from app.services.job_executor import JobExecutor
+from app.services.domains.bidding.queue_manager import QueueManager
+from app.services.domains.bidding.job_service import JobService
+from app.services.domains.bidding.worker_pool import WorkerPool
+from app.services.domains.bidding.job_executor import JobExecutor
 
 
 # ============================================

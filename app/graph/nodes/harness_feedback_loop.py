@@ -17,7 +17,7 @@
 import logging
 from dataclasses import dataclass
 
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 
 logger = logging.getLogger(__name__)
 

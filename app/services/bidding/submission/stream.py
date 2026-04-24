@@ -93,7 +93,7 @@ async def update_bid_price_post_workflow(
     }).execute()
 
     # Stream 2 진행률 갱신
-    from app.services.stream_orchestrator import update_stream_progress
+    from app.services.core.stream_orchestrator import update_stream_progress
     await update_stream_progress(
         proposal_id, "bidding",
         current_phase="price_adjusted",

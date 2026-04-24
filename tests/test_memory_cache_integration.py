@@ -12,7 +12,7 @@ import asyncio
 import pytest
 from unittest.mock import AsyncMock, patch
 
-from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
 
 
 class TestMemoryCacheIntegration:

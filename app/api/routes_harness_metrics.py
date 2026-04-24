@@ -7,8 +7,8 @@ from fastapi.responses import StreamingResponse
 import logging
 import io
 
-from app.services.ensemble_metrics_monitor import get_global_monitor
-from app.services.metrics_dashboard import MetricsDashboard
+from app.services.domains.proposal.ensemble_metrics_monitor import get_global_monitor
+from app.services.domains.vault.metrics_dashboard import MetricsDashboard
 
 logger = logging.getLogger(__name__)
 

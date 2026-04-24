@@ -37,7 +37,7 @@ from app.models.knowledge_schemas import (
     SharingRequest,
     SharingResponse,
 )
-from app.services.knowledge_manager import get_knowledge_manager
+from app.services.domains.vault.knowledge_manager import get_knowledge_manager
 
 logger = logging.getLogger(__name__)
 

@@ -16,8 +16,8 @@ import logging
 from typing import Any
 
 from app.graph.state import ProposalState
-from app.services.claude_client import claude_generate_multiple_variants
-from app.services.harness_evaluator import SectionEvaluator
+from app.services.core.claude_client import claude_generate_multiple_variants
+from app.services.domains.proposal.harness_evaluator import SectionEvaluator
 
 logger = logging.getLogger(__name__)
 

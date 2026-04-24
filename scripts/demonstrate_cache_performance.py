@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 async def demonstrate_kb_search_cache():
     """Demonstrate KB search cache behavior"""
-    from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+    from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
     
     logger.info("=" * 80)
     logger.info("KB SEARCH CACHE DEMONSTRATION")
@@ -111,7 +111,7 @@ async def demonstrate_kb_search_cache():
 
 async def demonstrate_proposals_cache():
     """Demonstrate proposals list cache behavior"""
-    from app.services.memory_cache_service import get_memory_cache, MemoryCacheService
+    from app.services.core.memory_cache_service import get_memory_cache, MemoryCacheService
     
     logger.info("\n" + "=" * 80)
     logger.info("PROPOSALS LIST CACHE DEMONSTRATION")
@@ -165,7 +165,7 @@ async def demonstrate_proposals_cache():
 
 async def demonstrate_cache_statistics():
     """Demonstrate cache monitoring and statistics"""
-    from app.services.memory_cache_service import get_memory_cache
+    from app.services.core.memory_cache_service import get_memory_cache
     
     logger.info("\n" + "=" * 80)
     logger.info("CACHE STATISTICS & MONITORING")

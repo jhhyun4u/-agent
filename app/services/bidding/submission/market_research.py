@@ -194,7 +194,7 @@ async def _crawl_bid_results(
     date_range_days: int = 365,
 ) -> int:
     """G2B 낙찰결과 검색 → market_price_data 저장. 저장된 건수 반환."""
-    from app.services.g2b_service import G2BService, _map_evaluation_method
+    from app.services.domains.bidding.g2b_service import G2BService, _map_evaluation_method
 
     stored = 0
     client = await get_async_client()

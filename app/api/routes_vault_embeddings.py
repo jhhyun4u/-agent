@@ -9,7 +9,7 @@ from typing import Optional
 
 from app.api.deps import get_current_user
 from app.models.auth_schemas import CurrentUser
-from app.services.vault_embedding_service import EmbeddingService
+from app.services.domains.vault.vault_embedding_service import EmbeddingService
 
 logger = logging.getLogger(__name__)
 

@@ -76,7 +76,7 @@ class MonitorReport:
 
 async def check_search_exists() -> CheckResult:
     """L1: 3개 키워드로 검색, 1개 이상 결과 반환 시 PASS."""
-    from app.services.g2b_service import G2BService
+    from app.services.domains.bidding.g2b_service import G2BService
 
     result = CheckResult(level=1, status="FAIL", title="검색 결과 존재")
     details = []
@@ -137,7 +137,7 @@ async def check_result_accuracy(search_results: list[dict] | None = None) -> Che
 
     # L1 결과 재사용 or 새로 검색
     if not search_results:
-        from app.services.g2b_service import G2BService
+        from app.services.domains.bidding.g2b_service import G2BService
         try:
             async with G2BService() as svc:
                 search_results = await svc.search_bid_announcements("시스템", num_of_rows=20)
@@ -194,7 +194,7 @@ async def check_result_accuracy(search_results: list[dict] | None = None) -> Che
 async def check_ai_quality(search_results: list[dict] | None = None) -> CheckResult:
     """L3: 2~3건으로 자격판정 + 점수 테스트."""
     from app.models.bid_schemas import BidAnnouncement, TeamBidProfile
-    from app.services.bid_recommender import BidRecommender
+    from app.services.domains.bidding.bid_recommender import BidRecommender
 
     result = CheckResult(level=3, status="FAIL", title="AI 추천 품질")
     t0 = time.monotonic()
@@ -211,7 +211,7 @@ async def check_ai_quality(search_results: list[dict] | None = None) -> CheckRes
 
     # 검색 결과에서 2~3건 추출
     if not search_results:
-        from app.services.g2b_service import G2BService
+        from app.services.domains.bidding.g2b_service import G2BService
         try:
             async with G2BService() as svc:
                 search_results = await svc.search_bid_announcements("시스템", num_of_rows=10)
@@ -292,8 +292,8 @@ async def check_ai_quality(search_results: list[dict] | None = None) -> CheckRes
 
 async def check_e2e_pipeline() -> CheckResult:
     """L4: 검색→필터→상세→정규화 전 과정 (DB upsert 제외)."""
-    from app.services.bid_fetcher import BidFetcher
-    from app.services.g2b_service import G2BService
+    from app.services.domains.bidding.bid_fetcher import BidFetcher
+    from app.services.domains.bidding.g2b_service import G2BService
 
     result = CheckResult(level=4, status="FAIL", title="E2E 파이프라인")
     t0 = time.monotonic()
@@ -496,7 +496,7 @@ async def main():
             report.results.append(r)
             # L2/L3 용으로 검색 결과 보관
             if r.status != "FAIL":
-                from app.services.g2b_service import G2BService
+                from app.services.domains.bidding.g2b_service import G2BService
                 async with G2BService() as svc:
                     l1_search_results = await svc.search_bid_announcements(
                         "시스템", num_of_rows=20

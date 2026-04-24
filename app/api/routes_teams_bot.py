@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field, validator
 
 from app.api.deps import get_current_user, require_role, require_project_access
-from app.services.teams_bot_service import TeamsBotService, BotMode
+from app.services.domains.operations.teams_bot_service import TeamsBotService, BotMode
 from app.utils.supabase_client import get_supabase_async_client, SupabaseAsyncClient
 
 logger = logging.getLogger(__name__)

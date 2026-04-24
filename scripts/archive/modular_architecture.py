@@ -105,7 +105,7 @@ class RFPReviewModule(ProposalModule):
     async def _analyze_rfp(self, rfp_content: str) -> Dict[str, Any]:
         """RFP 문서 분석"""
         # 기존 RFP 파싱 로직 활용
-        from app.services.rfp_parser import parse_rfp_text
+        from app.services.domains.proposal.rfp_parser import parse_rfp_text
         rfp_data = await parse_rfp_text(rfp_content)
 
         return {

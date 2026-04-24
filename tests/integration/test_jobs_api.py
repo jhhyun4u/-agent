@@ -253,7 +253,7 @@ class TestJobsAPI:
     @pytest.mark.asyncio
     async def test_get_job_not_found(self, client, test_user_headers, mock_job_service):
         """Test: Job 조회 실패 - Job not found"""
-        from app.services.job_queue_service import JobNotFoundError
+        from app.services.domains.bidding.job_queue_service import JobNotFoundError
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
             mock_job_service.get_job.side_effect = JobNotFoundError()
@@ -359,7 +359,7 @@ class TestJobsAPI:
             tags={},
         )
 
-        from app.services.job_queue_service import JobCancelError
+        from app.services.domains.bidding.job_queue_service import JobCancelError
 
         with patch("app.api.routes_jobs._get_job_service", return_value=mock_job_service):
             mock_job_service.get_job = AsyncMock(return_value=completed_job)
@@ -522,7 +522,7 @@ class TestJobsWebSocket:
     @pytest.mark.asyncio
     async def test_websocket_job_not_found(self, client, mock_job_service):
         """Test: WebSocket Job not found"""
-        from app.services.job_queue_service import JobNotFoundError
+        from app.services.domains.bidding.job_queue_service import JobNotFoundError
 
         with patch("app.api.websocket_jobs._authenticate_ws_token") as mock_auth:
             with patch("app.api.websocket_jobs.JobQueueService", return_value=mock_job_service):

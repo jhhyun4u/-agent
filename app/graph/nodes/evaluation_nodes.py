@@ -13,7 +13,7 @@ import logging
 import statistics
 
 from app.graph.state import ProposalState
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 
 logger = logging.getLogger(__name__)
 
@@ -556,7 +556,7 @@ def _fire_kb_update(proposal_id: str, result: str, state: ProposalState) -> None
     """수주/패찰 결과를 KB에 반영 (fire-and-forget)."""
     async def _update():
         try:
-            from app.services.kb_updater import update_from_result
+            from app.services.domains.proposal.kb_updater import update_from_result
             await update_from_result(proposal_id, result, state)
         except Exception as e:
             logger.warning(f"KB 업데이트 실패 (무시): {e}")

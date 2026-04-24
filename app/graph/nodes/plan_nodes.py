@@ -23,9 +23,9 @@ from app.prompts.plan import (
     # NOTE: PLAN_PRICE_PROMPT and BUDGET_DETAIL_FRAMEWORK removed (v4.0 - pricing moved to STEP 4B)
 )
 from app.prompts.step8a import CUSTOMER_INTELLIGENCE_PROMPT
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
-from app.services.version_manager import execute_node_and_create_version
+from app.services.core.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -188,7 +188,7 @@ async def plan_story(state: ProposalState) -> dict:
 
     # KB 유사 콘텐츠 보강 (C-4)
     try:
-        from app.services.content_library import suggest_content_for_section
+        from app.services.domains.proposal.content_library import suggest_content_for_section
         rfp_dict_for_kb = rfp_to_dict(rfp) if rfp else {}
         suggestions = await suggest_content_for_section(
             section_topic=rfp_dict_for_kb.get("project_name", ""),

@@ -235,7 +235,7 @@ async def save_artifact(
 
         # Phase C: 사람 수정 추적
         try:
-            from app.services.human_edit_tracker import record_action
+            from app.services.domains.proposal.human_edit_tracker import record_action
             old_html = state.get("_edited_html", "")
             if not old_html:
                 # 섹션 content를 이전 버전으로 사용
@@ -315,7 +315,7 @@ async def regenerate_section(
 
     from app.api.routes_workflow import _get_graph
     from app.prompts.section_prompts import classify_section_type, get_section_prompt
-    from app.services.claude_client import claude_generate
+    from app.services.core.claude_client import claude_generate
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -398,7 +398,7 @@ async def regenerate_section(
 
         # Phase C: 재생성 추적
         try:
-            from app.services.human_edit_tracker import record_action
+            from app.services.domains.proposal.human_edit_tracker import record_action
             await record_action(
                 proposal_id=proposal_id,
                 section_id=section_id,
@@ -458,7 +458,7 @@ async def ai_assist(
     _access=Depends(require_project_access),
 ):
     """에디터에서 선택한 텍스트에 대한 AI 개선 제안 (§12-4-2)."""
-    from app.services.claude_client import claude_generate
+    from app.services.core.claude_client import claude_generate
 
     mode_prompts = {
         "improve": "다음 텍스트를 품질, 명확성, 설득력 면에서 개선하세요.",
@@ -512,7 +512,7 @@ async def download_docx(
     Phase 3-2: ?version=N 쿼리 파라미터 지원 (없으면 최신)
     """
     from app.api.routes_workflow import _get_graph
-    from app.services.docx_builder import build_docx
+    from app.services.tools.docx_builder import build_docx
     from app.utils.supabase_client import get_async_client
 
     graph = await _get_graph()
@@ -593,7 +593,7 @@ async def download_hwpx(
     from pathlib import Path
 
     from app.api.routes_workflow import _get_graph
-    from app.services.hwpx_service import build_proposal_hwpx_async
+    from app.services.tools.hwpx_service import build_proposal_hwpx_async
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -677,7 +677,7 @@ async def download_pptx(
         import tempfile
         from pathlib import Path
 
-        from app.services.presentation_pptx_builder import build_presentation_pptx
+        from app.services.tools.presentation_pptx_builder import build_presentation_pptx
 
         output_path = Path(tempfile.gettempdir()) / f"tenopa_{proposal_id}" / "presentation.pptx"
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -685,7 +685,7 @@ async def download_pptx(
         pptx_bytes = output_path.read_bytes()
     elif slides:
         # 폴백: 경량 빌더
-        from app.services.pptx_builder import build_pptx
+        from app.services.tools.pptx_builder import build_pptx
 
         slide_dicts = [s.model_dump() if hasattr(s, "model_dump") else s for s in slides]
         pres_dict = pres_strategy.model_dump() if hasattr(pres_strategy, "model_dump") else pres_strategy
@@ -722,7 +722,7 @@ async def download_cost_sheet(
     """산출내역서 DOCX 다운로드 — bid_plan + plan_price 데이터 기반."""
     from app.api.routes_workflow import _get_graph
     from app.config import settings
-    from app.services.cost_sheet_builder import build_cost_sheet
+    from app.services.domains.proposal.cost_sheet_builder import build_cost_sheet
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -862,7 +862,7 @@ async def generate_cost_sheet(
     _access=Depends(require_project_access),
 ):
     """편집된 산출내역서 데이터로 DOCX 생성·다운로드."""
-    from app.services.cost_sheet_builder import build_cost_sheet
+    from app.services.domains.proposal.cost_sheet_builder import build_cost_sheet
 
     # 편집된 데이터에서 합계 재계산
     labor_total = sum(
@@ -958,7 +958,7 @@ async def run_compliance_check(
 ):
     """Compliance Matrix AI 체크 실행."""
     from app.api.routes_workflow import _get_graph
-    from app.services.compliance_tracker import ComplianceTracker
+    from app.services.domains.proposal.compliance_tracker import ComplianceTracker
 
     graph = await _get_graph()
     config = {"configurable": {"thread_id": proposal_id}}
@@ -1061,7 +1061,7 @@ async def validate_node_move(
             "downstream_impact": list[str]
         }
     """
-    from app.services.version_manager import validate_move_and_resolve_versions
+    from app.services.core.version_manager import validate_move_and_resolve_versions
 
     try:
         target_node = data.get("target_node")
@@ -1123,7 +1123,7 @@ async def check_node_move(
         }
     """
     from app.api.routes_workflow import _get_graph
-    from app.services.version_manager import check_node_move_feasibility
+    from app.services.core.version_manager import check_node_move_feasibility
 
     try:
         # Get current state (Issue #2 fix: use _get_graph with checkpointer)
@@ -1189,7 +1189,7 @@ async def move_to_node(
 
     from app.api.routes_workflow import _get_graph
     from app.exceptions import TenopAPIError
-    from app.services.version_manager import validate_move_and_resolve_versions
+    from app.services.core.version_manager import validate_move_and_resolve_versions
 
     # Issue #2 fix: use _get_graph with checkpointer
     graph = await _get_graph()

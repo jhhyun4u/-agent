@@ -1,0 +1,463 @@
+"""
+Claude API 클라이언트 (§16 프롬프트 설계 원칙)
+
+Anthropic API 래퍼:
+- Prompt Caching 지원
+- 토큰 사용량 추적
+- 구조화 출력 (JSON 파싱)
+- 재시도 로직 (지수 백오프)
+"""
+
+import json
+import logging
+from contextvars import ContextVar
+from typing import Any
+
+import anthropic
+from anthropic.types import Message
+
+from app.config import settings
+from app.prompts.trustworthiness import TRUSTWORTHINESS_RULES
+
+logger = logging.getLogger(__name__)
+
+_client: anthropic.AsyncAnthropic | None = None
+
+# ── ContextVar: 노드별 토큰 사용량 수집 ──
+_current_call_usage: ContextVar[list[dict]] = ContextVar("_current_call_usage", default=[])
+
+
+def reset_usage_context() -> list[dict]:
+    """ContextVar를 새 리스트로 리셋. 데코레이터에서 노드 시작 시 호출."""
+    fresh: list[dict] = []
+    _current_call_usage.set(fresh)
+    return fresh
+
+
+def get_accumulated_usage() -> list[dict]:
+    """현재 노드 실행 중 누적된 API 호출 기록 반환."""
+    try:
+        return _current_call_usage.get()
+    except LookupError:
+        return []
+
+# 모든 Claude 호출에 적용되는 공통 시스템 프롬프트
+# TRUSTWORTHINESS_RULES (§16-3-1)를 별도 모듈에서 임포트
+
+COMMON_SYSTEM_RULES = f"""당신은 20년 경력의 한국 정부 용역 제안서 작성 전문가이자, 공공기관 제안 평가위원 출신입니다.
+한국어로 작성하며, 공공기관 제안서 형식과 관행을 따릅니다.
+구체적 근거(수치·사례·도표)를 반드시 포함하며, 추상적 미사여구는 사용하지 않습니다.
+
+{TRUSTWORTHINESS_RULES}"""
+
+
+def _get_client() -> anthropic.AsyncAnthropic:
+    global _client
+    if _client is None:
+        _client = anthropic.AsyncAnthropic(
+            api_key=settings.anthropic_api_key,
+            max_retries=settings.max_retries,
+        )
+    return _client
+
+
+async def claude_generate(
+    prompt: str,
+    system_prompt: str = "",
+    model: str | None = None,
+    max_tokens: int | None = None,
+    temperature: float = 0.3,
+    cache_system: bool = True,
+    response_format: str = "json",
+    step_name: str = "",
+) -> dict[str, Any]:
+    """Claude API 호출 — JSON 응답 파싱.
+
+    Args:
+        prompt: 사용자 메시지 (단계별 프롬프트)
+        system_prompt: 시스템 프롬프트 (COMMON_CONTEXT + TRUSTWORTHINESS_RULES)
+        model: 모델 override (기본: settings.claude_model)
+        max_tokens: 최대 출력 토큰
+        temperature: 생성 온도
+        cache_system: 시스템 프롬프트 Prompt Caching 활성화
+        response_format: "json" | "text"
+        step_name: Pre-Flight Check용 노드 이름 (빈 문자열이면 검사 스킵)
+
+    Returns:
+        파싱된 JSON dict 또는 {"text": str}
+    """
+    # ── Pre-Flight Check ──
+    from app.services.tools.preflight_check import check_prompt
+    preflight = check_prompt(prompt, step_name=step_name)
+    if preflight.errors:
+        logger.warning(
+            "[PreFlight] step=%s ERRORS=%s (tokens=~%d, empty=%.0f%%)",
+            step_name or "unknown", preflight.errors,
+            preflight.estimated_tokens, preflight.empty_ratio * 100,
+        )
+    elif preflight.warnings:
+        logger.info(
+            "[PreFlight] step=%s warnings=%s (tokens=~%d)",
+            step_name or "unknown", preflight.warnings, preflight.estimated_tokens,
+        )
+
+    client = _get_client()
+    model = model or settings.claude_model
+    max_tokens = max_tokens or settings.max_output_tokens
+
+    # 시스템 프롬프트 구성 (Prompt Caching)
+    # 공통 규칙 + 호출자 시스템 프롬프트 결합
+    combined_system = COMMON_SYSTEM_RULES
+    if system_prompt:
+        combined_system = f"{COMMON_SYSTEM_RULES}\n\n{system_prompt}"
+
+    system_content = []
+    block = {"type": "text", "text": combined_system}  # type: ignore
+    if cache_system and settings.enable_prompt_caching:
+        block["cache_control"] = {"type": "ephemeral"}  # type: ignore
+    system_content.append(block)
+
+    # 메시지 구성
+    messages = [{"role": "user", "content": prompt}]
+
+    create_kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+        "messages": messages,
+        "system": system_content,
+    }
+
+    try:
+        response = await client.messages.create(**create_kwargs)  # type: ignore
+
+        # 토큰 사용량 로깅
+        usage = response.usage
+        if settings.log_token_usage:
+            logger.info(
+                f"Claude API: input={usage.input_tokens}, output={usage.output_tokens}, "
+                f"cache_read={getattr(usage, 'cache_read_input_tokens', 0)}, "
+                f"cache_create={getattr(usage, 'cache_creation_input_tokens', 0)}"
+            )
+
+        # ContextVar에 사용량 적재 (track_tokens 데코레이터에서 수집)
+        try:
+            _current_call_usage.get().append({
+                "input_tokens": usage.input_tokens,
+                "output_tokens": usage.output_tokens,
+                "cache_read_input_tokens": getattr(usage, "cache_read_input_tokens", 0),
+                "cache_creation_input_tokens": getattr(usage, "cache_creation_input_tokens", 0),
+                "model": model,
+            })
+        except LookupError:
+            pass
+
+        # 응답 텍스트 추출
+        text = response.content[0].text if response.content else ""
+
+        # JSON 파싱
+        if response_format == "json":
+            return _parse_json_response(text)
+
+        return {
+            "text": text,
+            "token_usage": {
+                "input_tokens": usage.input_tokens,
+                "output_tokens": usage.output_tokens,
+                "cached_tokens": getattr(usage, "cache_read_input_tokens", 0),
+            },
+        }
+
+    except anthropic.RateLimitError as e:
+        logger.warning(f"Claude API Rate Limit: {e}")
+        from app.exceptions import RateLimitError
+        raise RateLimitError("Claude API 요청 한도 초과: 잠시 후 다시 시도하세요.")
+    except anthropic.AuthenticationError as e:
+        logger.error(f"Claude API 인증 오류: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError("Claude API 인증 오류: API 키를 확인하세요.")
+    except anthropic.APIConnectionError as e:
+        logger.error(f"Claude API 연결 실패: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError("Claude API 서버에 연결할 수 없습니다.")
+    except anthropic.APITimeoutError as e:
+        logger.error(f"Claude API 타임아웃: {e}")
+        from app.exceptions import AITimeoutError
+        raise AITimeoutError(step=step_name or "unknown")
+    except anthropic.APIError as e:
+        logger.error(f"Claude API 오류: {e}")
+        from app.exceptions import AIServiceError
+        raise AIServiceError(f"Claude API 오류: {e.message}")
+
+
+async def claude_generate_streaming(
+    prompt: str,
+    system_prompt: str = "",
+    model: str | None = None,
+    max_tokens: int | None = None,
+):
+    """Claude API 스트리밍 호출 — SSE 이벤트 생성기."""
+    client = _get_client()
+    model = model or settings.claude_model
+    max_tokens = max_tokens or settings.max_output_tokens
+
+    combined_system = COMMON_SYSTEM_RULES
+    if system_prompt:
+        combined_system = f"{COMMON_SYSTEM_RULES}\n\n{system_prompt}"
+
+    system_content = [{"type": "text", "text": combined_system}]
+
+    stream_kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}],
+        "system": system_content,
+    }
+
+    try:
+        async with client.messages.stream(**stream_kwargs) as stream:  # type: ignore
+            async for text in stream.text_stream:
+                yield text
+    except anthropic.RateLimitError as e:
+        logger.warning(f"Claude 스트리밍 Rate Limit: {e}")
+        yield "\n[ERROR:RATE_LIMIT] Claude API 요청 한도 초과"
+    except anthropic.APIConnectionError as e:
+        logger.error(f"Claude 스트리밍 연결 실패: {e}")
+        yield "\n[ERROR:CONNECTION] Claude API 서버 연결 실패"
+    except anthropic.APITimeoutError as e:
+        logger.error(f"Claude 스트리밍 타임아웃: {e}")
+        yield "\n[ERROR:TIMEOUT] Claude API 응답 시간 초과"
+    except anthropic.APIError as e:
+        logger.error(f"Claude 스트리밍 API 오류: {e}")
+        yield f"\n[ERROR:API] Claude API 오류: {e.message}"
+    except Exception as e:
+        logger.error(f"Claude 스트리밍 예외: {e}", exc_info=True)
+        yield "\n[ERROR:UNKNOWN] 스트리밍 중 오류 발생"
+
+
+def _parse_json_response(text: str) -> dict:
+    """Claude 응답에서 JSON 추출 및 파싱.
+
+    코드블록(```json ... ```) 또는 순수 JSON 모두 지원.
+    """
+    # 코드블록 제거
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        # 마크다운 코드블록에서 JSON 추출
+        # ```json ... ``` 또는 ``` ... ``` 형식 모두 지원
+        lines = cleaned.split("\n")
+        start = 1  # 첫 줄(```json 또는 ```) 스킵
+
+        # 마지막 ``` 찾기 (없으면 마지막 줄 사용)
+        end = len(lines)
+        for i in range(len(lines) - 1, start - 1, -1):
+            if lines[i].strip() == "```":
+                end = i
+                break
+
+        # 빈 줄 제거 (앞뒤)
+        content_lines = lines[start:end]
+        while content_lines and not content_lines[0].strip():
+            content_lines = content_lines[1:]
+        while content_lines and not content_lines[-1].strip():
+            content_lines = content_lines[:-1]
+
+        cleaned = "\n".join(content_lines)
+
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        # 불완전한 JSON 복구 시도 (v3.4: 끝에 누락된 괄호/따옴표 추가)
+        logger.debug(f"JSON 파싱 초기 실패: {str(e)[:100]}")
+
+        temp = cleaned.rstrip()
+
+        # 끝에 따옴표가 열려있는지 확인 (문자열이 종료되지 않은 경우)
+        # 역슬래시로 이스케이프된 따옴표 제외
+        quote_count = 0
+        i = 0
+        while i < len(temp):
+            if temp[i] == '"' and (i == 0 or temp[i-1] != '\\'):
+                quote_count += 1
+            i += 1
+
+        # 따옴표가 홀수개면 닫기 따옴표 추가
+        if quote_count % 2 == 1:
+            temp += '"'
+            logger.debug("끝에 따옴표 추가")
+
+        # 끝에 누락된 ] 또는 }} 추가 시도 (최대 10번)
+        for attempt in range(10):
+            open_braces = temp.count('{')
+            close_braces = temp.count('}')
+            open_brackets = temp.count('[')
+            close_brackets = temp.count(']')
+
+            if open_braces == close_braces and open_brackets == close_brackets:
+                # 균형잡혔으면 파싱 시도
+                try:
+                    result = json.loads(temp)
+                    logger.info(f"JSON 복구 성공 (attempt {attempt+1})")
+                    return result
+                except json.JSONDecodeError:
+                    break
+
+            # 부족한 닫기 추가 (우선순위: 대괄호 > 중괄호)
+            if open_brackets > close_brackets:
+                temp += "]"
+            elif open_braces > close_braces:
+                temp += "}"
+            else:
+                break
+
+        # 복구 실패 시 텍스트 응답 반환
+        logger.warning(f"JSON 파싱 실패 (복구 불가, attempt {attempt+1}), 텍스트 응답 반환: {cleaned[:200]}...")
+        return {"text": text, "_parse_error": True}
+
+
+class ClaudeClient:
+    """Anthropic Claude API 래퍼 클래스 (master_projects_chat_service 호환)."""
+
+    def __init__(self):
+        self._client = _get_client()
+
+    async def create_message(
+        self,
+        system: str,
+        messages: list[dict],
+        model: str = "claude-opus-4-6",
+        max_tokens: int = 1500,
+        **kwargs
+    ) -> "Message":
+        """Anthropic API를 호출하여 메시지 생성.
+
+        Returns:
+            Message 객체 (content[0].text 형식)
+        """
+        response = await self._client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+            **kwargs
+        )
+        return response
+
+
+async def claude_generate_multiple_variants(
+    base_prompt: str,
+    system_prompt: str = "",
+    section_type: str = "proposal",
+    model: str | None = None,
+    max_tokens: int | None = None,
+    variant_configs: dict[str, dict] | None = None,
+    step_name: str = "",
+) -> list[dict[str, Any]]:
+    """Claude API로 프롬프트 변형 3개 병렬 생성 (Harness Engineering).
+    
+    전략: Conservative(보수적), Balanced(균형), Creative(창의적)
+    각 변형은 다른 온도와 지시문으로 생성되어 다양성 확보.
+    
+    Args:
+        base_prompt: 기본 프롬프트 (template 형식, {variant_hint} 치환 가능)
+        system_prompt: 시스템 프롬프트
+        section_type: 섹션 타입 (harness_evaluator에서 평가용)
+        model: 모델 override
+        max_tokens: 최대 출력 토큰
+        variant_configs: 변형별 설정 override
+        step_name: 노드 이름 (로깅용)
+    
+    Returns:
+        [{"variant": str, "content": str, "temperature": float, "tokens": dict}] × 3
+    """
+    import asyncio
+
+    # 기본 variant 설정
+    default_configs = {
+        "conservative": {
+            "temperature": 0.1,
+            "hint": "명확하고 검증된 논거만 사용하여 신뢰성을 최우선으로. 추상적 표현 최소화.",
+        },
+        "balanced": {
+            "temperature": 0.3,
+            "hint": "신뢰성과 설득력의 균형. 적절한 수사와 함께 근거 제시.",
+        },
+        "creative": {
+            "temperature": 0.7,
+            "hint": "창의적 표현과 스토리텔링으로 임팩트 강화. 여전히 사실 기반 유지.",
+        },
+    }
+
+    # 사용자 설정이 있으면 병합
+    if variant_configs:
+        for key, config in variant_configs.items():
+            if key in default_configs:
+                default_configs[key].update(config)
+
+    # 프롬프트 생성 태스크
+    async def generate_variant(variant_name: str, config: dict) -> dict[str, Any]:
+        try:
+            # 템플릿 변수 치환
+            prompt = base_prompt
+            if "{variant_hint}" in prompt:
+                prompt = prompt.replace("{variant_hint}", config["hint"])
+
+            result = await claude_generate(
+                prompt=prompt,
+                system_prompt=system_prompt,
+                model=model,
+                max_tokens=max_tokens,
+                temperature=config["temperature"],
+                response_format="json",
+                step_name=f"{step_name}_{variant_name}" if step_name else variant_name,
+            )
+
+            # 결과 추출
+            content = ""
+            if isinstance(result, dict):
+                if "content" in result:
+                    content = result["content"]
+                elif "text" in result:
+                    content = result["text"]
+                else:
+                    content = json.dumps(result, ensure_ascii=False)
+            else:
+                content = str(result)
+
+            tokens_info = {}
+            if isinstance(result, dict) and "token_usage" in result:
+                tokens_info = result["token_usage"]
+
+            return {
+                "variant": variant_name,
+                "content": content,
+                "temperature": config["temperature"],
+                "tokens": tokens_info,
+                "section_type": section_type,
+            }
+
+        except Exception as e:
+            logger.error(f"Variant 생성 실패 [{variant_name}]: {e}")
+            return {
+                "variant": variant_name,
+                "content": "",
+                "temperature": config["temperature"],
+                "tokens": {},
+                "section_type": section_type,
+                "error": str(e),
+            }
+
+    # 3개 변형 병렬 실행
+    tasks = [
+        generate_variant(name, config) for name, config in default_configs.items()
+    ]
+
+    results = await asyncio.gather(*tasks)
+
+    # 순서 보장: conservative → balanced → creative
+    variant_order = ["conservative", "balanced", "creative"]
+    results_ordered = sorted(
+        results, key=lambda x: variant_order.index(x["variant"])
+    )
+
+    return results_ordered

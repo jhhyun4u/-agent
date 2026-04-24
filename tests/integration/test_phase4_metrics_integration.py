@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from app.graph.state import ProposalState
 from app.models.schemas import ProposalSection
-from app.services.ensemble_metrics_monitor import (
+from app.services.domains.proposal.ensemble_metrics_monitor import (
     get_global_monitor,
     reset_monitor,
 )

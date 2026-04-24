@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-24T05:06:23.155Z",
+  "lastUpdated": "2026-04-24T06:37:41.306Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -149,9 +149,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-22T01:57:41.987Z"
+        "lastUpdated": "2026-04-24T06:37:41.299Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\debug_raw_claude_response.py",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\reorganize_services.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -16000,6 +16000,18 @@
     {
       "timestamp": "2026-04-24T05:06:23.154Z",
       "feature": "legacy",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T06:35:39.330Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T06:37:41.304Z",
+      "feature": "scripts",
       "phase": "do",
       "action": "updated"
     }

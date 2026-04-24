@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.main import app
-from app.services.feedback_analyzer import FeedbackAnalyzer
+from app.services.domains.proposal.feedback_analyzer import FeedbackAnalyzer
 
 client = TestClient(app)
 

@@ -20,8 +20,8 @@ from fastapi import APIRouter, Depends, Query, Body, BackgroundTasks
 
 from app.api.deps import get_current_user
 from app.exceptions import G2BExternalError, G2BServiceError, InternalServiceError, TenopAPIError
-from app.services.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
-from app.services.bid_analysis_service import generate_bid_analysis_documents
+from app.services.domains.bidding.g2b_service import G2BService, fetch_and_store_bid_result, bulk_sync_bid_results
+from app.services.domains.bidding.bid_analysis_service import generate_bid_analysis_documents
 from app.utils.supabase_client import get_async_client
 
 
@@ -659,7 +659,7 @@ async def monitor_diagnostics(current_user=Depends(get_current_user)):
 @router.post("/monitor/trigger")
 async def trigger_monitor(current_user=Depends(get_current_user)):
     """모니터링 수동 실행 (디버깅용)."""
-    from app.services.scheduled_monitor import daily_g2b_monitor
+    from app.services.domains.bidding.scheduled_monitor import daily_g2b_monitor
     try:
         result = await daily_g2b_monitor()
         return {"status": "ok", "result": result}

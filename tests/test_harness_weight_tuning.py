@@ -10,7 +10,7 @@ harness_weight_tuning 단위 테스트 (Phase 3)
 """
 
 import pytest
-from app.services.harness_weight_tuning import (
+from app.services.domains.proposal.harness_weight_tuning import (
     WeightTuningEngine,
     SectionType,
     SectionTypeWeights,
@@ -18,8 +18,8 @@ from app.services.harness_weight_tuning import (
     FeedbackEntry,
     SectionRule
 )
-from app.services.harness_accuracy_validator import TestSection, GroundTruthLabel
-from app.services.harness_evaluator import EvaluationScore
+from app.services.domains.proposal.harness_accuracy_validator import TestSection, GroundTruthLabel
+from app.services.domains.proposal.harness_evaluator import EvaluationScore
 
 
 # ==================== Grid Search Tests ====================

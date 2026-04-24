@@ -19,7 +19,7 @@ from app.graph.context_helpers import (
     score_qualification,
     score_similar_performance,
 )
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_tracker
 
 logger = logging.getLogger(__name__)
@@ -153,7 +153,7 @@ async def _ai_strategic_assessment(
     # 가격경쟁력 시장 분석
     pricing_context = ""
     try:
-        from app.services.bid_calculator import parse_budget_string
+        from app.services.domains.bidding.bid_calculator import parse_budget_string
         from app.services.pricing import PricingEngine, QuickEstimateRequest
 
         budget_str = rfp_dict.get("budget", "")

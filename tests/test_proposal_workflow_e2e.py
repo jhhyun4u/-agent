@@ -282,7 +282,7 @@ class TestProposalWorkflowE2E:
     async def test_harness_evaluates_variants(self):
         """Test that harness evaluates 3 variants."""
         from app.graph.nodes.harness_proposal_node import HarnessProposalGenerator
-        from app.services.harness_evaluator import SectionEvaluator
+        from app.services.domains.proposal.harness_evaluator import SectionEvaluator
 
         generator = HarnessProposalGenerator()
         evaluator = SectionEvaluator()
@@ -515,7 +515,7 @@ class TestProposalWorkflowPerformance:
     @pytest.mark.asyncio
     async def test_harness_parallel_performance(self):
         """Verify harness achieves parallel performance."""
-        from app.services.claude_client import claude_generate_multiple_variants
+        from app.services.core.claude_client import claude_generate_multiple_variants
 
         # Test parallel generation performance
         import time

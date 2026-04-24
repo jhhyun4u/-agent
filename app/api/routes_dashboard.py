@@ -28,8 +28,8 @@ from app.models.dashboard_schemas import (
     MetricsResponse,
     ErrorResponse,
 )
-from app.services.dashboard_metrics_service import DashboardMetricsService
-from app.services.cache_manager import get_cache_manager
+from app.services.domains.operations.dashboard_metrics_service import DashboardMetricsService
+from app.services.core.cache_manager import get_cache_manager
 from app.exceptions import TenopAPIError
 
 logger = logging.getLogger(__name__)

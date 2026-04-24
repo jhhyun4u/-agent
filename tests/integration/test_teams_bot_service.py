@@ -10,13 +10,13 @@ from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime
 from typing import List, Dict, Any
 
-from app.services.teams_bot_service import (
+from app.services.domains.operations.teams_bot_service import (
     TeamsBotService,
     TeamsBotConfig,
     BotMode,
     BotMessage
 )
-from app.services.teams_webhook_manager import TeamsWebhookManager
+from app.services.domains.operations.teams_webhook_manager import TeamsWebhookManager
 from app.models.vault_schemas import DocumentSource
 
 

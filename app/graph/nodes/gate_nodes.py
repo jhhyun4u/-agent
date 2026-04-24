@@ -63,12 +63,12 @@ def stream1_complete_hook(state: ProposalState) -> dict:
 
     async def _mark():
         try:
-            from app.services.stream_orchestrator import update_stream_progress
+            from app.services.core.stream_orchestrator import update_stream_progress
             await update_stream_progress(proposal_id, "proposal", status="completed", current_phase="workflow_done")
         except Exception as e:
             logger.warning(f"Stream 1 완료 갱신 실패: {e}")
         try:
-            from app.services.submission_docs_service import link_stream1_artifacts
+            from app.services.domains.bidding.submission_docs_service import link_stream1_artifacts
             await link_stream1_artifacts(proposal_id)
         except Exception as e:
             logger.warning(f"산출물 자동 연결 실패: {e}")

@@ -164,7 +164,7 @@ def test_compliance_tracker_type_check():
     - AttributeError 발생하지 않음
     - ComplianceItem 리스트 반환
     """
-    from app.services.compliance_tracker import ComplianceTracker
+    from app.services.domains.proposal.compliance_tracker import ComplianceTracker
     from app.graph.state import RFPAnalysis
 
     # ComplianceTracker는 static method 사용 - 초기화 불필요

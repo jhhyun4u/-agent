@@ -36,7 +36,7 @@ from app.models.admin_schemas import (
     SystemStatsResponse, DivisionDashboardResponse, ExecutiveDashboardResponse,
     ReopenResponse, ProposalVersionsResponse, TimeTravelResponse,
 )
-from app.services.audit_service import log_action
+from app.services.core.audit_service import log_action
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
@@ -577,8 +577,8 @@ async def health_run(
     """검증 수동 실행 (관리자 전용)"""
     await require_role(current_user, "admin")
 
-    from app.services.health_checker import HealthCheckRunner
-    from app.services.alert_manager import AlertManager
+    from app.services.core.health_checker import HealthCheckRunner
+    from app.services.core.alert_manager import AlertManager
 
     runner = HealthCheckRunner()
     alerter = AlertManager()

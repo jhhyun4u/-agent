@@ -10,7 +10,7 @@ from fastapi import APIRouter, WebSocketException
 from starlette.websockets import WebSocket
 
 from app.models.ws_schemas import WsMessage, WsSubscribeMessage
-from app.services.ws_manager import ws_manager
+from app.services.core.ws_manager import ws_manager
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

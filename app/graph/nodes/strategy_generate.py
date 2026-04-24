@@ -23,9 +23,9 @@ from app.prompts.strategy import (
     STRATEGY_GENERATE_PROMPT,
     STRATEGY_RESEARCH_FRAMEWORK,
 )
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
-from app.services.version_manager import execute_node_and_create_version
+from app.services.core.version_manager import execute_node_and_create_version
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +93,7 @@ async def strategy_generate(state: ProposalState) -> dict:
     # 가격전략 시장 데이터 (PricingEngine 연동)
     pricing_strategy_context = ""
     try:
-        from app.services.bid_calculator import parse_budget_string
+        from app.services.domains.bidding.bid_calculator import parse_budget_string
         from app.services.pricing import PricingEngine, QuickEstimateRequest
 
         budget_str = rfp_dict.get("budget", "")
@@ -267,7 +267,7 @@ async def strategy_generate(state: ProposalState) -> dict:
 
     # KB 자동 축적 (A-3: 전략 결과)
     try:
-        from app.services.kb_updater import save_strategy_to_kb
+        from app.services.domains.proposal.kb_updater import save_strategy_to_kb
         await save_strategy_to_kb(
             org_id=state.get("org_id", ""),
             proposal_id=state.get("project_id", ""),

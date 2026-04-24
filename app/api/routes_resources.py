@@ -24,7 +24,7 @@ from app.exceptions import (
 )
 from app.utils.file_utils import validate_extension
 from app.utils.pagination import PageParams
-from app.services.asset_extractor import extract_sections_from_asset
+from app.services.domains.proposal.asset_extractor import extract_sections_from_asset
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

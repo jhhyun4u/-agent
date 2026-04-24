@@ -13,7 +13,7 @@ from typing import Optional
 import aiohttp
 
 from app.models.bid_schemas import BidAnnouncement, SearchPreset
-from app.services.g2b_service import G2BService
+from app.services.domains.bidding.g2b_service import G2BService
 
 logger = logging.getLogger(__name__)
 

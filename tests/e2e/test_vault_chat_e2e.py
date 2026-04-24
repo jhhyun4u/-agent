@@ -12,8 +12,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from typing import List
 
 from app.models.vault_schemas import ChatMessage, DocumentSource, VaultDocument
-from app.services.teams_bot_service import TeamsBotService, TeamsBotConfig
-from app.services.teams_webhook_manager import TeamsWebhookManager
+from app.services.domains.operations.teams_bot_service import TeamsBotService, TeamsBotConfig
+from app.services.domains.operations.teams_webhook_manager import TeamsWebhookManager
 
 
 # ============================================================================

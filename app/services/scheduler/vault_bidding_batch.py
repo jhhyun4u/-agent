@@ -9,7 +9,7 @@ from datetime import datetime, time
 from typing import Optional, Dict, Any
 from uuid import UUID
 
-from app.services.g2b_bidding_collector import G2BBiddingCollector
+from app.services.domains.bidding.g2b_bidding_collector import G2BBiddingCollector
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

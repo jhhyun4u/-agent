@@ -26,7 +26,7 @@ from starlette.websockets import WebSocket
 
 from app.models.auth_schemas import CurrentUser
 from app.models.job_queue_schemas import JobStatus
-from app.services.job_queue_service import JobQueueService, JobNotFoundError
+from app.services.domains.bidding.job_queue_service import JobQueueService, JobNotFoundError
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)

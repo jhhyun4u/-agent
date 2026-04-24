@@ -9,9 +9,9 @@ import functools
 import logging
 import time
 
-from app.services.claude_client import get_accumulated_usage, reset_usage_context
-from app.services.token_manager import check_budget
-from app.services.token_pricing import summarize_usage
+from app.services.core.claude_client import get_accumulated_usage, reset_usage_context
+from app.services.core.token_manager import check_budget
+from app.services.core.token_pricing import summarize_usage
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ def track_tokens(node_name: str):
                     )
                     # MON-05: 에러 알림 (Phase B)
                     try:
-                        from app.services.notification_service import notify_agent_error
+                        from app.services.core.notification_service import notify_agent_error
                         await notify_agent_error(proposal_id, node_name, str(exc)[:200])
                     except ImportError:
                         pass

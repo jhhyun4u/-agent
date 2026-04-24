@@ -370,7 +370,7 @@ class StrategyPlanningEngine:
             CompetitorProfile 목록
         """
         try:
-            from app.services.g2b_service import G2BService
+            from app.services.domains.bidding.g2b_service import G2BService
 
             async with G2BService() as g2b_service:
                 # RFP 정보 추출

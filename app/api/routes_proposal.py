@@ -42,7 +42,7 @@ async def _upload_file_to_storage(storage_path: str, content: bytes, content_typ
     except Exception as e:
         logger.warning(f"Storage 업로드 실패: {storage_path}: {e}")
 
-from app.services.memory_cache_service import get_memory_cache
+from app.services.core.memory_cache_service import get_memory_cache
 router = APIRouter(prefix="/api/proposals", tags=["proposals"])
 
 
@@ -101,13 +101,13 @@ async def create_from_rfp(
 
     if filename.endswith(".pdf"):
         try:
-            from app.services.rfp_parser import parse_rfp_bytes
+            from app.services.domains.proposal.rfp_parser import parse_rfp_bytes
             rfp_text = await parse_rfp_bytes(content, "pdf")
         except Exception:
             rfp_text = content.decode("utf-8", errors="replace")
     elif filename.endswith((".hwp", ".hwpx")):
         try:
-            from app.services.rfp_parser import parse_rfp_bytes
+            from app.services.domains.proposal.rfp_parser import parse_rfp_bytes
             rfp_text = await parse_rfp_bytes(content, filename.split(".")[-1])
         except Exception:
             rfp_text = "[HWP 파싱 실패 — 원본 업로드됨]"
@@ -520,7 +520,7 @@ async def list_proposals(
     - Caches proposal lists with 5-minute TTL
     - Cache key includes all filter parameters (status, scope, search, pagination)
     """
-    from app.services.memory_cache_service import MemoryCacheService
+    from app.services.core.memory_cache_service import MemoryCacheService
     
     client = rls_client
     
@@ -774,7 +774,7 @@ async def start_proposal_with_members(
             "members_added": int
         }
     """
-    from app.services.workflow_timer import WorkflowTimer
+    from app.services.core.workflow_timer import WorkflowTimer
 
     try:
         result = await WorkflowTimer.start_workflow(proposal_id, body.participants)
@@ -810,7 +810,7 @@ async def track_proposal_tokens(
             "total_cost_formatted": str (e.g., "$4.26")
         }
     """
-    from app.services.workflow_timer import WorkflowTimer
+    from app.services.core.workflow_timer import WorkflowTimer
 
     try:
         result = await WorkflowTimer.track_token_usage(
@@ -885,7 +885,7 @@ async def get_workflow_stats(
             "members": list
         }
     """
-    from app.services.workflow_timer import WorkflowTimer
+    from app.services.core.workflow_timer import WorkflowTimer
 
     try:
         result = await WorkflowTimer.get_workflow_stats(proposal_id)

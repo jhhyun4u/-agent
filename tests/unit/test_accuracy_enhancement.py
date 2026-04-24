@@ -11,7 +11,7 @@ Tests cover:
 import pytest
 from unittest.mock import Mock
 
-from app.services.accuracy_enhancement_engine import (
+from app.services.domains.proposal.accuracy_enhancement_engine import (
     ConfidenceThresholder,
     ConfidenceResult,
     EnsembleVoter,
@@ -21,7 +21,7 @@ from app.services.accuracy_enhancement_engine import (
     AccuracyEnhancementEngine,
     EnhancementReport,
 )
-from app.services.harness_accuracy_validator import (
+from app.services.domains.proposal.harness_accuracy_validator import (
     EvaluationMetrics,
     EvaluationResult,
     PerformanceMetrics,
@@ -337,7 +337,7 @@ def test_smoke_accuracy_enhancement():
     validator_mock.dataset_manager = Mock(spec=DatasetManager)
 
     # Simulate 50-section dataset
-    from app.services.harness_accuracy_validator import TestCase
+    from app.services.domains.proposal.harness_accuracy_validator import TestCase
     test_cases = [
         Mock(spec=TestCase,
             id=f"section_{i:03d}",

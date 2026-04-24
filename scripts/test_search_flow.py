@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.config import settings
 
 
@@ -92,7 +92,7 @@ def _format_bids(bids: list[dict]) -> str:
 
 async def test_with_live_g2b(keyword: str):
     """G2B 실제 API 호출 시도."""
-    from app.services.g2b_service import search_bids
+    from app.services.domains.bidding.g2b_service import search_bids
     print(f"\n[G2B Live] '{keyword}' 검색 중...")
     results = await search_bids(keywords=keyword)
     if results:

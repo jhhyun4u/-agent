@@ -9,7 +9,7 @@ v4.0: Path B 제출서류 경로 노드 (3B, 5B, 6B)
 import logging
 
 from app.graph.state import ProposalState
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 
 logger = logging.getLogger(__name__)
 

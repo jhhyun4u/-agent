@@ -1,7 +1,7 @@
 import pytest
-from app.services.harness_accuracy_validator import DiagnosisAccuracyValidator
-from app.services.harness_accuracy_enhancement import AccuracyEnhancementEngine
-from app.services.harness_weight_tuner import WeightTuningEngine
+from app.services.domains.proposal.harness_accuracy_validator import DiagnosisAccuracyValidator
+from app.services.domains.proposal.harness_accuracy_enhancement import AccuracyEnhancementEngine
+from app.services.domains.proposal.harness_weight_tuner import WeightTuningEngine
 
 
 @pytest.fixture
@@ -95,7 +95,7 @@ class TestE2EHarnessAccuracyWorkflow:
 
     def test_feedback_integration_no_feedback(self, weight_tuner):
         """피드백 부족 시 가중치 유지"""
-        from app.services.harness_weight_tuner import WeightConfig
+        from app.services.domains.proposal.harness_weight_tuner import WeightConfig
 
         feedback_list = [{"user_decision": "approved"}] * 30  # < 50
         current_weights = WeightConfig()
@@ -106,7 +106,7 @@ class TestE2EHarnessAccuracyWorkflow:
 
     def test_section_specific_rules_application(self, weight_tuner):
         """섹션별 규칙 적용"""
-        from app.services.harness_weight_tuner import WeightConfig
+        from app.services.domains.proposal.harness_weight_tuner import WeightConfig
 
         general_weights = WeightConfig()
 

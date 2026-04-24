@@ -52,7 +52,7 @@ async def list_submission_docs(
     _access=Depends(require_project_access),
 ):
     """제출서류 체크리스트 조회."""
-    from app.services.submission_docs_service import get_checklist
+    from app.services.domains.bidding.submission_docs_service import get_checklist
 
     items = await get_checklist(proposal_id)
     return ok_list(items, total=len(items))
@@ -65,7 +65,7 @@ async def extract_submission_docs(
     _access=Depends(require_project_access),
 ):
     """AI로 RFP에서 제출서류 목록 추출."""
-    from app.services.submission_docs_service import extract_checklist_from_rfp
+    from app.services.domains.bidding.submission_docs_service import extract_checklist_from_rfp
     from app.utils.supabase_client import get_async_client
 
     client = await get_async_client()
@@ -116,7 +116,7 @@ async def add_submission_doc(
     _access=Depends(require_project_access),
 ):
     """수동 서류 추가."""
-    from app.services.submission_docs_service import add_document
+    from app.services.domains.bidding.submission_docs_service import add_document
 
     return ok(await add_document(proposal_id, body.model_dump(exclude_none=True)))
 
@@ -130,7 +130,7 @@ async def update_submission_doc(
     _access=Depends(require_project_access),
 ):
     """상태/담당 변경."""
-    from app.services.submission_docs_service import update_document_status
+    from app.services.domains.bidding.submission_docs_service import update_document_status
 
     data = body.model_dump(exclude_none=True)
     if not data:
@@ -146,7 +146,7 @@ async def delete_submission_doc(
     _access=Depends(require_project_access),
 ):
     """서류 삭제."""
-    from app.services.submission_docs_service import delete_document
+    from app.services.domains.bidding.submission_docs_service import delete_document
 
     deleted = await delete_document(doc_id, proposal_id=proposal_id)
     if not deleted:
@@ -163,7 +163,7 @@ async def upload_submission_doc(
     _access=Depends(require_project_access),
 ):
     """파일 업로드 — Supabase Storage (크기/이름/타입 검증 포함)."""
-    from app.services.submission_docs_service import upload_document
+    from app.services.domains.bidding.submission_docs_service import upload_document
     from app.utils.supabase_client import get_async_client
 
     # 통합 검증 (파일명 살균 + 확장자 + 크기 50MB)
@@ -204,7 +204,7 @@ async def verify_submission_doc(
     _access=Depends(require_project_access),
 ):
     """검증 완료."""
-    from app.services.submission_docs_service import verify_document
+    from app.services.domains.bidding.submission_docs_service import verify_document
 
     return ok(await verify_document(doc_id, user.id, proposal_id=proposal_id))
 
@@ -217,7 +217,7 @@ async def confirm_original(
     _access=Depends(require_project_access),
 ):
     """원본 서류 준비 완료 확인 (파일 업로드 없이 verified 처리)."""
-    from app.services.submission_docs_service import confirm_original_document
+    from app.services.domains.bidding.submission_docs_service import confirm_original_document
 
     try:
         return ok(await confirm_original_document(doc_id, user.id, proposal_id=proposal_id))
@@ -232,7 +232,7 @@ async def download_copy_bundle(
     _access=Depends(require_project_access),
 ):
     """사본 서류 묶음 다운로드 (PDF 병합 또는 ZIP)."""
-    from app.services.submission_docs_service import build_copy_bundle
+    from app.services.domains.bidding.submission_docs_service import build_copy_bundle
 
     try:
         data, content_type = await build_copy_bundle(proposal_id)
@@ -255,7 +255,7 @@ async def check_readiness(
     _access=Depends(require_project_access),
 ):
     """사전 제출 점검."""
-    from app.services.submission_docs_service import check_documents_ready
+    from app.services.domains.bidding.submission_docs_service import check_documents_ready
 
     return ok(await check_documents_ready(proposal_id))
 
@@ -268,7 +268,7 @@ async def list_org_templates(
     user: CurrentUser = Depends(get_current_user),
 ):
     """조직 공통 서류 목록."""
-    from app.services.submission_docs_service import get_org_templates
+    from app.services.domains.bidding.submission_docs_service import get_org_templates
 
     items = await get_org_templates(org_id)
     return ok_list(items, total=len(items))
@@ -282,7 +282,7 @@ async def upsert_org_template(
     _role=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """공통 서류 등록/갱신."""
-    from app.services.submission_docs_service import upsert_org_template
+    from app.services.domains.bidding.submission_docs_service import upsert_org_template
 
     return ok(await upsert_org_template(org_id, body.model_dump(exclude_none=True), user.id))
 
@@ -295,7 +295,7 @@ async def delete_org_template(
     _role=Depends(require_role("lead", "director", "executive", "admin")),
 ):
     """공통 서류 삭제."""
-    from app.services.submission_docs_service import delete_org_template
+    from app.services.domains.bidding.submission_docs_service import delete_org_template
 
     deleted = await delete_org_template(template_id)
     if not deleted:

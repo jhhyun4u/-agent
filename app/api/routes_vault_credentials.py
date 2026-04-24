@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from app.api.deps import get_current_user, get_current_user_team
 from app.models.user_schemas import UserInDB
-from app.services.vault_credential_service import VaultCredentialService
+from app.services.domains.vault.vault_credential_service import VaultCredentialService
 
 logger = logging.getLogger(__name__)
 

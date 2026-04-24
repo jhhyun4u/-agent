@@ -42,7 +42,7 @@ async def bid_plan(state: ProposalState) -> dict:
     # 예산 파싱 (한 번만 수행)
     budget_val = None
     try:
-        from app.services.bid_calculator import parse_budget_string
+        from app.services.domains.bidding.bid_calculator import parse_budget_string
         budget_val = parse_budget_string(budget_str) if budget_str else None
     except Exception as e:
         logger.debug(f"예산 파싱 실패 (무시): {e}")
@@ -51,7 +51,7 @@ async def bid_plan(state: ProposalState) -> dict:
     market_research = {}
     if budget_val and budget_val > 0:
         try:
-            from app.services.bid_market_research import ensure_market_data
+            from app.services.domains.bidding.bid_market_research import ensure_market_data
             market_research = await ensure_market_data(
                 domain=domain,
                 evaluation_method=eval_method,

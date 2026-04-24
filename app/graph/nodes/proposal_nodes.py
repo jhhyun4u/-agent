@@ -26,7 +26,7 @@ from app.prompts.section_prompts import (
     get_section_prompt,
 )
 from app.prompts.strategy import POSITIONING_STRATEGY_MATRIX
-from app.services.claude_client import claude_generate
+from app.services.core.claude_client import claude_generate
 from app.services import prompt_registry, prompt_tracker
 # NOTE: version_manager import moved to function level to avoid supabase hang on import
 
@@ -225,7 +225,7 @@ async def _build_context(state: ProposalState, section_id: str, section_type: st
     # 유사 콘텐츠 자동 추천 (C-3)
     reference_content = ""
     try:
-        from app.services.content_library import suggest_content_for_section
+        from app.services.domains.proposal.content_library import suggest_content_for_section
         suggestions = await suggest_content_for_section(
             section_topic=f"{section_id} {section_type}",
             org_id=state.get("org_id", ""),
@@ -383,7 +383,7 @@ async def proposal_write_next(state: ProposalState) -> dict:
 
     # KB 자동 축적 (A-1: fire-and-forget)
     try:
-        from app.services.content_library import auto_register_section
+        from app.services.domains.proposal.content_library import auto_register_section
         await auto_register_section(
             org_id=state.get("org_id", ""),
             proposal_id=state.get("project_id", ""),
@@ -411,7 +411,7 @@ async def proposal_write_next(state: ProposalState) -> dict:
 
     # Phase 1: Create artifact version for proposal_sections
     try:
-        from app.services.version_manager import execute_node_and_create_version
+        from app.services.core.version_manager import execute_node_and_create_version
 
         sections_data = [
             s.model_dump() if hasattr(s, "model_dump") else s
@@ -806,7 +806,7 @@ async def section_quality_check(state: ProposalState) -> dict:
     if proposal_id and proposal_sections and compliance_matrix:
         try:
             import asyncio
-            from app.services.compliance_tracker import ComplianceTracker
+            from app.services.domains.proposal.compliance_tracker import ComplianceTracker
 
             async def _auto_update_compliance():
                 """Compliance 자동 갱신 (비동기, 그래프 흐름 중단 없음)"""

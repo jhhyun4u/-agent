@@ -12,8 +12,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from app.models.phase_schemas import Phase2Artifact, Phase3Artifact, Phase4Artifact
-from app.services.presentation_generator import generate_presentation_slides
-from app.services.presentation_pptx_builder import build_presentation_pptx
+from app.services.tools.presentation_generator import generate_presentation_slides
+from app.services.tools.presentation_pptx_builder import build_presentation_pptx
 
 # ── 가상 RFP 데이터 ────────────────────────────────────────────────────────────
 

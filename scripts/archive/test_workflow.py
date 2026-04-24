@@ -5,8 +5,8 @@ from datetime import datetime
 
 from app.models.schemas import ProjectInput
 from app.services.proposal_generator import generate_proposal_from_input
-from app.services.docx_builder import build_docx
-from app.services.pptx_builder import build_pptx
+from app.services.tools.docx_builder import build_docx
+from app.services.tools.pptx_builder import build_pptx
 
 
 async def test_full_workflow():

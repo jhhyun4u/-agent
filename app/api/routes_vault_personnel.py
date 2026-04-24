@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, get_current_user_team
 from app.models.user_schemas import UserInDB
-from app.services.vault_personnel_service import VaultPersonnelService
+from app.services.domains.vault.vault_personnel_service import VaultPersonnelService
 
 logger = logging.getLogger(__name__)
 

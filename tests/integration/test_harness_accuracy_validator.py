@@ -6,7 +6,7 @@ STEP 4A Phase 1: Harness Accuracy Validator Integration Tests
 import pytest
 import json
 from pathlib import Path
-from app.services.harness_accuracy_validator import (
+from app.services.domains.proposal.harness_accuracy_validator import (
     DiagnosisAccuracyValidator,
     DatasetManager,
     EvaluationMetrics,

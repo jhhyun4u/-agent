@@ -16,7 +16,7 @@ from pydantic import BaseModel
 from app.api.deps import get_current_user
 from app.models.auth_schemas import CurrentUser
 from app.utils.supabase_client import get_async_client
-from app.services.master_projects_chat_service import MasterProjectsChatService
+from app.services.domains.vault.master_projects_chat_service import MasterProjectsChatService
 
 router = APIRouter(prefix="/api/master-projects", tags=["master-projects"])
 

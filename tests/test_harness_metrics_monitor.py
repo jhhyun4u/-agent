@@ -12,7 +12,7 @@ harness_metrics_monitor 단위 테스트 (Phase 4)
 
 import pytest
 from datetime import datetime, timedelta
-from app.services.harness_metrics_monitor import (
+from app.services.domains.proposal.harness_metrics_monitor import (
     MetricsMonitoringService,
     MetricSnapshot,
     MetricsAggregation,
