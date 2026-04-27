@@ -58,7 +58,7 @@ from app.api.routes_public import router as public_router
 from app.api.routes_calendar import router as calendar_router
 from app.api.routes_v31 import router as v31_router
 from app.api.routes_presentation import router as presentation_router
-from app.api.routes_bids import router as bids_router
+from app.api.bids import router as bids_router
 from app.api.routes_step8a import router as step8a_router
 from app.api.routes_step8_review import router as step8_review_router
 from app.api.routes_knowledge import router as knowledge_router

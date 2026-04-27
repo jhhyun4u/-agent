@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-24T06:37:41.306Z",
+  "lastUpdated": "2026-04-24T07:30:09.114Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -51,7 +51,8 @@
     "dashboards",
     "performance",
     "fixes",
-    "legacy"
+    "legacy",
+    "bids"
   ],
   "primaryFeature": "document_ingestion.py",
   "features": {
@@ -149,9 +150,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:48:37.612Z",
-        "lastUpdated": "2026-04-24T06:37:41.299Z"
+        "lastUpdated": "2026-04-24T07:19:28.779Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\scripts\\reorganize_services.py",
+      "lastFile": "C:\\project\\tenopa proposer\\scripts\\split_routes_bids.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -1114,9 +1115,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-23T10:39:59.894Z"
+        "lastUpdated": "2026-04-24T07:30:09.100Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\services\\accuracy_enhancement_engine.py"
+      "lastFile": "C:\\project\\tenopa proposer\\app\\main.py"
     },
     "stores": {
       "phase": "do",
@@ -1221,6 +1222,19 @@
         "lastUpdated": "2026-04-24T05:06:23.147Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\app\\services\\legacy\\phase_executor.py"
+    },
+    "bids": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-24T07:16:02.008Z",
+        "lastUpdated": "2026-04-24T07:26:12.388Z"
+      },
+      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\bids\\__init__.py"
     }
   },
   "meta": {
@@ -16012,6 +16026,54 @@
     {
       "timestamp": "2026-04-24T06:37:41.304Z",
       "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:14:47.356Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:16:02.014Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:19:28.789Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:23:55.448Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:24:30.272Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:25:24.469Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:26:12.395Z",
+      "feature": "bids",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-24T07:30:09.112Z",
+      "feature": "tenopa proposer",
       "phase": "do",
       "action": "updated"
     }
