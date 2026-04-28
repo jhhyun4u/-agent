@@ -32,6 +32,7 @@ import {
 import GuidedTour, { TOUR_DASHBOARD } from "@/components/GuidedTour";
 import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import TodayActionHub from "@/components/TodayActionHub";
 
 // ── 타입 ──────────────────────────────────────────────────────────────
 
@@ -494,6 +495,11 @@ export default function DashboardPage() {
 
       {/* 스크롤 본문 */}
       <main className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        {/* ── 오늘 할 일 허브 (최상단 고정) ── */}
+        {widgetConfig.action && (
+          <TodayActionHub proposals={proposals} calItems={calItems} />
+        )}
+
         {/* ── 권한 오류 메시지 ── */}
         {scopeError && scopeError.scope === scope && (
           <div className="bg-[#1c1c1c] border border-red-500/20 rounded-2xl p-4 flex items-start gap-3">
@@ -699,88 +705,6 @@ export default function DashboardPage() {
           )}
 
         {/* ── 오늘 할 일 ── */}
-        {widgetConfig.action && actionItems.length > 0 && (
-          <div className="bg-[#1c1c1c] border border-[#3ecf8e]/20 rounded-2xl p-5">
-            <h2 className="text-sm font-semibold text-[#ededed] mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e] animate-pulse" />
-              지금 해야 할 것
-            </h2>
-            <div className="space-y-2">
-              {actionItems.map((action) => {
-                if (action.type === "calendar") {
-                  const { item, days } = action;
-                  const urgent = days <= 3;
-                  return (
-                    <div
-                      key={`cal-${item.id}`}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626]"
-                    >
-                      <span
-                        className={`shrink-0 text-xs font-bold w-10 text-center ${
-                          urgent ? "text-red-400" : "text-yellow-400"
-                        }`}
-                      >
-                        {dDayLabel(days)}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-[#ededed] truncate">
-                          {item.title}
-                        </p>
-                        <p className="text-xs text-[#8c8c8c] mt-0.5">
-                          {item.agency ? `${item.agency} · ` : ""}제안서 미생성
-                        </p>
-                      </div>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => router.push("/proposals/new")}
-                        className="shrink-0"
-                      >
-                        지금 시작
-                      </Button>
-                    </div>
-                  );
-                }
-
-                const { item } = action;
-                const isProcessing = item.status === "in_progress";
-                return (
-                  <div
-                    key={`prop-${item.id}`}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#111111] border border-[#262626]"
-                  >
-                    <span
-                      className={`shrink-0 text-xs font-bold w-10 text-center ${
-                        isProcessing ? "text-blue-400" : "text-[#8c8c8c]"
-                      }`}
-                    >
-                      {isProcessing ? "생성중" : "대기"}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[#ededed] truncate">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-[#8c8c8c] mt-0.5">
-                        {isProcessing
-                          ? `Phase ${item.phases_completed + 1} 진행 중`
-                          : "생성 시작 전"}
-                      </p>
-                    </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => router.push(`/proposals/${item.id}`)}
-                      className="shrink-0"
-                    >
-                      {isProcessing ? "확인" : "시작"}
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* ── 파이프라인 뷰 ── */}
         {widgetConfig.pipeline && (
           <div className="bg-[#1c1c1c] border border-[#262626] rounded-2xl p-5">

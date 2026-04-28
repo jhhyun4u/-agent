@@ -34,6 +34,7 @@ import WorkflowResumeBanner from "@/components/WorkflowResumeBanner";
 import GuidedTour, { TOUR_PROPOSAL_DETAIL } from "@/components/GuidedTour";
 import ProjectContextHeader from "@/components/ProjectContextHeader";
 import FileHubPanel from "@/components/FileHubPanel";
+import WorkflowStepIndicator from "@/components/WorkflowStepIndicator";
 import ProjectDocumentsPanel from "@/components/ProjectDocumentsPanel";
 
 // Lazy load STEP 8 Review Page
@@ -403,6 +404,15 @@ export default function ProposalDetailPage() {
         onNewVersion={handleNewVersion}
         rightPanelOpen={rightPanelOpen}
         onToggleRightPanel={() => setRightPanelOpen((o) => !o)}
+      />
+
+      {/* 워크플로 스텝 인디케이터 */}
+      <WorkflowStepIndicator
+        workflowState={workflowState}
+        phasesCompleted={status.phases_completed ?? 0}
+        onStepClick={(step) => {
+          document.getElementById("workflow-panel")?.scrollIntoView({ behavior: "smooth" });
+        }}
       />
 
       {/* 워크플로 재진입 요약 배너 */}
