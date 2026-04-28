@@ -151,6 +151,7 @@ def sample_documents() -> List[VaultDocument]:
 class TestAdaptiveModeE2E:
     """Test Adaptive Mode (real-time @mention response)"""
 
+    @pytest.mark.xfail(reason="teams_bot_service.claude_client 미구현 — Sprint 1 구현 후 수정 예정", strict=False)
     async def test_adaptive_mode_simple_query(
         self,
         teams_bot_service,

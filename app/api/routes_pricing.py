@@ -20,12 +20,12 @@ from app.api.deps import get_current_user
 from app.api.response import ok, ok_list
 from app.exceptions import TenopAPIError
 from app.models.auth_schemas import CurrentUser
-from app.services.pricing import (
+from app.services.bidding.pricing import (
     PricingEngine,
     PricingSimulationRequest,
     QuickEstimateRequest,
 )
-from app.services.pricing.sensitivity import SensitivityAnalyzer
+from app.services.bidding.pricing.sensitivity import SensitivityAnalyzer
 from app.utils.supabase_client import get_async_client
 
 logger = logging.getLogger(__name__)
