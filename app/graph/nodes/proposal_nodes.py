@@ -776,6 +776,11 @@ async def section_quality_check(state: ProposalState) -> dict:
         recommendation=diagnosis.get("recommendation", "rework"),
     )
 
+    # LLM-Wiki 부스트: wiki 제안이 선택된 경우 신뢰도 +15%, 최대 100
+    wiki_suggestion_id = section_dict.get("wiki_suggestion_id")
+    if wiki_suggestion_id:
+        result.overall_score = min(100.0, float(result.overall_score) * 1.15)
+
     # DB 저장: section_diagnostics 테이블에 진단 결과 기록
     await _persist_node_result(
         table="section_diagnostics",
@@ -794,6 +799,7 @@ async def section_quality_check(state: ProposalState) -> dict:
             "issues": result.issues,
             "recommendation": result.recommendation,
             "diagnosed_by": state.get("created_by"),
+            "wiki_suggestion_id": wiki_suggestion_id,
         },
         log_msg=f"Section diagnosis saved: {state.get('project_id')}/{section_id} (score: {result.overall_score})",
     )

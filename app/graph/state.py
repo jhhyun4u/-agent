@@ -159,6 +159,9 @@ class ProposalSection(BaseModel):
     case_type: Literal["A", "B"]
     template_structure: Optional[dict] = None
     self_review_score: Optional[dict] = None
+    wiki_suggestion_id: Optional[str] = None
+    wiki_suggestions: list = []
+    wiki_suggestion_accepted: Optional[bool] = None
 
 
 class ProposalPlan(BaseModel):

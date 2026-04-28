@@ -2,6 +2,19 @@
 import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 from app.graph.state import ProposalSection, ProposalState
+from app.services.llm_wiki.hybrid_search import WikiSearchResult
+
+
+def _make_wiki_result(wiki_id: str, title: str, final_score: float, rank: int = 1) -> WikiSearchResult:
+    return WikiSearchResult(
+        section_id=wiki_id,
+        title=title,
+        content=f"Content for {title}",
+        keyword_score=final_score,
+        semantic_score=final_score,
+        rank=rank,
+        final_score=final_score,
+    )
 
 
 @pytest.mark.asyncio
@@ -35,11 +48,11 @@ class TestLLMWikiE2EWorkflow:
 
         with patch("app.services.llm_wiki.hybrid_search.HybridSearch") as mock_search_class:
             with patch("app.services.wiki_embedding_cache.get_wiki_cache") as mock_get_cache:
-                # Wiki suggestions returned
+                # Wiki suggestions returned as WikiSearchResult objects
                 mock_search = AsyncMock()
                 mock_search.search.return_value = [
-                    {"wiki_id": "w1", "template_name": "Team Template", "confidence_score": 0.9},
-                    {"wiki_id": "w2", "template_name": "Capability Template", "confidence_score": 0.8},
+                    _make_wiki_result("w1", "Team Template", final_score=0.9, rank=1),
+                    _make_wiki_result("w2", "Capability Template", final_score=0.8, rank=2),
                 ]
                 mock_search_class.return_value = mock_search
 
@@ -57,7 +70,7 @@ class TestLLMWikiE2EWorkflow:
                 # Verify wiki suggestions returned
                 assert "current_wiki_suggestions" in result
                 assert len(result["current_wiki_suggestions"]) == 2
-                assert result["current_wiki_suggestions"][0]["confidence_score"] == 0.9
+                assert result["current_wiki_suggestions"][0]["final_score"] == pytest.approx(0.9)
 
     async def test_wiki_suggestion_boosts_diagnosis_score(self):
         """Wiki suggestion selection boosts diagnosis confidence score."""
@@ -308,8 +321,8 @@ class TestLLMWikiE2EWorkflow:
                 mock_search = AsyncMock()
                 # Mock returns 2 suggestions to test filtering
                 mock_search.search.return_value = [
-                    {"wiki_id": "w1", "template_name": "Template", "confidence_score": 0.85},
-                    {"wiki_id": "w2", "template_name": "Template2", "confidence_score": 0.75}
+                    _make_wiki_result("w1", "Template", final_score=0.85, rank=1),
+                    _make_wiki_result("w2", "Template2", final_score=0.75, rank=2),
                 ]
                 mock_search_class.return_value = mock_search
 
@@ -325,7 +338,7 @@ class TestLLMWikiE2EWorkflow:
                 result1 = await wiki_suggestion_node(state1)
                 # Both suggestions should pass the 0.7 threshold
                 assert len(result1["current_wiki_suggestions"]) == 2
-                assert result1["current_wiki_suggestions"][0]["confidence_score"] >= 0.7
+                assert result1["current_wiki_suggestions"][0]["final_score"] >= 0.7
                 # Verify cache is being used (get was called)
                 assert mock_cache.get.called
 
