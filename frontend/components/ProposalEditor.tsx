@@ -23,6 +23,8 @@ interface ProposalEditorProps {
   onUpdate: (html: string) => void;
   /** 에디터 내용이 변경될 때 즉시 호출 (debounce 전) */
   onChange?: () => void;
+  /** 텍스트 선택 시 호출 — 선택 텍스트와 위치 rect 전달 */
+  onSelectionChange?: (text: string, rect: DOMRect | null) => void;
   className?: string;
 }
 
@@ -30,9 +32,12 @@ export default function ProposalEditor({
   content,
   onUpdate,
   onChange,
+  onSelectionChange,
   className = "",
 }: ProposalEditorProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectionCbRef = useRef(onSelectionChange);
+  selectionCbRef.current = onSelectionChange;
 
   const editor = useEditor({
     extensions: [
@@ -66,6 +71,23 @@ export default function ProposalEditor({
       debounceRef.current = setTimeout(() => {
         onUpdate(ed.getHTML());
       }, 3000);
+    },
+    onSelectionUpdate({ editor: ed }) {
+      const { from, to } = ed.state.selection;
+      if (from === to) {
+        selectionCbRef.current?.("", null);
+        return;
+      }
+      const selectedText = ed.state.doc.textBetween(from, to, " ");
+      if (selectedText.trim().length < 5) {
+        selectionCbRef.current?.("", null);
+        return;
+      }
+      const domSel = window.getSelection();
+      const rect = domSel && domSel.rangeCount > 0
+        ? domSel.getRangeAt(0).getBoundingClientRect()
+        : null;
+      selectionCbRef.current?.(selectedText, rect);
     },
   });
 

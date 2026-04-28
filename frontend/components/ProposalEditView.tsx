@@ -12,13 +12,14 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import KeyboardShortcutsGuide from "@/components/KeyboardShortcutsGuide";
 import Breadcrumb from "@/components/Breadcrumb";
-import { api, type ComplianceItem, type SectionLock } from "@/lib/api";
+import { api, type ComplianceItem, type SectionLock, type SectionDiagnostic } from "@/lib/api";
 import EditorTocPanel, { type TocSection } from "@/components/EditorTocPanel";
 import EditorAiPanel, {
   type StrategyCheck,
   type KbReference,
   type ChangeEntry,
 } from "@/components/EditorAiPanel";
+import EditorInlineToolbar, { type InlineAiMode } from "@/components/EditorInlineToolbar";
 
 const ProposalEditor = dynamic(() => import("@/components/ProposalEditor"), {
   ssr: false,
@@ -60,6 +61,14 @@ export default function ProposalEditView({
   const [changes, setChanges] = useState<ChangeEntry[]>([]);
   const [sectionLocks, setSectionLocks] = useState<SectionLock[]>([]);
 
+  // 섹션 진단 데이터
+  const [sectionDiagnostics, setSectionDiagnostics] = useState<SectionDiagnostic[]>([]);
+
+  // 인라인 AI 툴바 상태
+  const [selText, setSelText] = useState("");
+  const [selRect, setSelRect] = useState<DOMRect | null>(null);
+  const [inlineLoading, setInlineLoading] = useState(false);
+
   // BroadcastChannel for cross-window sync
   const channelRef = useRef<BroadcastChannel | null>(null);
   useEffect(() => {
@@ -73,9 +82,10 @@ export default function ProposalEditView({
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [proposalArtifact, complianceData] = await Promise.allSettled([
+      const [proposalArtifact, complianceData, diagData] = await Promise.allSettled([
         api.artifacts.get(id, "proposal"),
         api.artifacts.getCompliance(id),
+        api.artifacts.getDiagnostics(id),
       ]);
 
       if (proposalArtifact.status === "fulfilled") {
@@ -116,6 +126,10 @@ export default function ProposalEditView({
 
       if (complianceData.status === "fulfilled") {
         setComplianceItems(complianceData.value.items);
+      }
+
+      if (diagData.status === "fulfilled") {
+        setSectionDiagnostics(diagData.value.diagnostics ?? []);
       }
     } catch {
       // 데이터 없으면 빈 상태로 시작
@@ -262,6 +276,26 @@ export default function ProposalEditView({
     window.open(url, "_blank");
   }
 
+  // ── 인라인 AI 툴바 ───────────────────────────────────────────────
+  async function handleInlineAction(mode: InlineAiMode) {
+    if (!selText || inlineLoading) return;
+    setInlineLoading(true);
+    try {
+      const res = await api.artifacts.aiAssist(id, selText, mode, content.slice(0, 2000));
+      if (res.suggestion) {
+        // AI 패널에 결과 반영 (onApplySuggestion 대신 content 교체)
+        const replaced = content.replace(selText, res.suggestion);
+        if (replaced !== content) setContent(replaced);
+      }
+    } catch {
+      // silent
+    } finally {
+      setInlineLoading(false);
+      setSelText("");
+      setSelRect(null);
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-[#8c8c8c] text-sm">
@@ -273,6 +307,17 @@ export default function ProposalEditView({
 
   return (
     <div className="h-screen bg-[#0f0f0f] text-[#ededed] flex flex-col overflow-hidden">
+      {/* 인라인 AI 툴바 (텍스트 선택 시 플로팅) */}
+      {selRect && selText && (
+        <EditorInlineToolbar
+          rect={selRect}
+          selectedText={selText}
+          loading={inlineLoading}
+          onAction={handleInlineAction}
+          onClose={() => { setSelText(""); setSelRect(null); }}
+        />
+      )}
+
       {/* 헤더 */}
       <header className="bg-[#111111] border-b border-[#262626] px-4 py-2 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
@@ -322,6 +367,7 @@ export default function ProposalEditView({
             activeSection={activeSection}
             onSectionClick={handleSectionClick}
             complianceItems={complianceItems}
+            sectionDiagnostics={sectionDiagnostics}
           />
         </aside>
 
@@ -338,6 +384,7 @@ export default function ProposalEditView({
                 activeSection={activeSection}
                 onSectionClick={handleSectionClick}
                 complianceItems={complianceItems}
+                sectionDiagnostics={sectionDiagnostics}
               />
             )}
             {mobilePanel === "editor" && (
@@ -345,6 +392,7 @@ export default function ProposalEditView({
                 content={content}
                 onUpdate={handleContentUpdate}
                 onChange={() => setIsDirty(true)}
+                onSelectionChange={(text, rect) => { setSelText(text); setSelRect(rect); }}
               />
             )}
             {mobilePanel === "ai" && (
@@ -367,6 +415,7 @@ export default function ProposalEditView({
               content={content}
               onUpdate={handleContentUpdate}
               onChange={() => setIsDirty(true)}
+              onSelectionChange={(text, rect) => { setSelText(text); setSelRect(rect); }}
             />
           </div>
         </main>
