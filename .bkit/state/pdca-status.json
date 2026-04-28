@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "lastUpdated": "2026-04-24T07:30:09.114Z",
+  "lastUpdated": "2026-04-28T07:05:18.650Z",
   "activeFeatures": [
     "document_ingestion.py",
     "api",
@@ -52,7 +52,9 @@
     "performance",
     "fixes",
     "legacy",
-    "bids"
+    "bids",
+    "llm_wiki",
+    "proposal"
   ],
   "primaryFeature": "document_ingestion.py",
   "features": {
@@ -120,9 +122,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-27T06:47:36.753Z",
-        "lastUpdated": "2026-04-24T05:03:09.651Z"
+        "lastUpdated": "2026-04-28T06:59:02.510Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\api\\routes_v31.py",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\api\\routes_section_library.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -300,9 +302,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-28T11:39:11.563Z",
-        "lastUpdated": "2026-04-18T07:10:01.677Z"
+        "lastUpdated": "2026-04-28T03:22:47.292Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\graph.py",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\graph\\state.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -330,9 +332,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T04:44:33.723Z",
-        "lastUpdated": "2026-04-20T13:27:18.881Z"
+        "lastUpdated": "2026-04-28T04:06:18.151Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\tests\\e2e\\test_vault_chat_e2e.py",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\tests\\e2e\\test_vault_chat_e2e.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -360,9 +362,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T08:05:36.810Z",
-        "lastUpdated": "2026-04-20T13:01:50.785Z"
+        "lastUpdated": "2026-04-28T07:05:18.645Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\frontend\\lib\\hooks\\useDashboard.ts",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\frontend\\components\\EditorAiPanel.tsx",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -390,9 +392,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T08:07:09.082Z",
-        "lastUpdated": "2026-04-20T11:18:19.148Z"
+        "lastUpdated": "2026-04-28T06:12:36.643Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\frontend\\app\\(app)\\dashboard\\page.tsx",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\frontend\\app\\(app)\\dashboard\\page.tsx",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -481,9 +483,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-29T09:30:04.149Z",
-        "lastUpdated": "2026-04-22T01:59:50.339Z"
+        "lastUpdated": "2026-04-28T03:21:45.006Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\graph\\nodes\\strategy_generate.py",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\graph\\nodes\\proposal_nodes.py",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -903,9 +905,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-30T23:30:15.169Z",
-        "lastUpdated": "2026-04-14T07:48:00.279Z"
+        "lastUpdated": "2026-04-28T06:13:07.746Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\-agent-master\\frontend\\app\\(app)\\proposals\\[id]\\page.tsx",
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\frontend\\app\\(app)\\proposals\\[id]\\page.tsx",
       "stateMachine": {
         "currentState": "do",
         "previousState": null,
@@ -933,9 +935,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-02T01:30:51.230Z",
-        "lastUpdated": "2026-04-21T23:22:20.026Z"
+        "lastUpdated": "2026-04-28T03:19:26.431Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\tests\\integration\\test_bid_to_proposal_workflow.py"
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\tests\\integration\\test_llm_wiki_e2e.py"
     },
     "monitoring": {
       "phase": "do",
@@ -1115,9 +1117,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-04-16T07:50:43.618Z",
-        "lastUpdated": "2026-04-24T07:30:09.100Z"
+        "lastUpdated": "2026-04-28T07:00:00.742Z"
       },
-      "lastFile": "C:\\project\\tenopa proposer\\app\\main.py"
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\main.py"
     },
     "stores": {
       "phase": "do",
@@ -1235,6 +1237,32 @@
         "lastUpdated": "2026-04-24T07:26:12.388Z"
       },
       "lastFile": "C:\\project\\tenopa proposer\\app\\api\\bids\\__init__.py"
+    },
+    "llm_wiki": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-28T01:56:56.782Z",
+        "lastUpdated": "2026-04-28T01:57:10.863Z"
+      },
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\services\\llm_wiki\\embedding_service.py"
+    },
+    "proposal": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-28T06:58:46.775Z",
+        "lastUpdated": "2026-04-28T07:00:19.999Z"
+      },
+      "lastFile": "C:\\Users\\현재호\\OneDrive - 테크노베이션파트너스\\바탕 화면\\tenopa proposer\\app\\services\\domains\\proposal\\kb_updater.py"
     }
   },
   "meta": {
@@ -16074,6 +16102,300 @@
     {
       "timestamp": "2026-04-24T07:30:09.112Z",
       "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:56:50.384Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:56:56.794Z",
+      "feature": "llm_wiki",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:57:02.361Z",
+      "feature": "llm_wiki",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:57:06.768Z",
+      "feature": "llm_wiki",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:57:10.876Z",
+      "feature": "llm_wiki",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T01:57:20.417Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:18:56.064Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:19:03.870Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:19:10.862Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:19:19.893Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:19:26.439Z",
+      "feature": "integration",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:20:21.944Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:21:45.014Z",
+      "feature": "nodes",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:22:47.297Z",
+      "feature": "graph",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:51:04.195Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T03:55:57.075Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T04:06:18.156Z",
+      "feature": "e2e",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:08:29.628Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:09:01.380Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:10:02.988Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:11:39.517Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:12:36.649Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:12:53.259Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:13:07.761Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:31:19.084Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:31:34.404Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:31:55.936Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:32:11.484Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:32:26.787Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:32:34.944Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:32:49.600Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:32:56.090Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:33:19.476Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:33:44.291Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:34:13.431Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:34:21.602Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:58:46.783Z",
+      "feature": "proposal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:59:02.515Z",
+      "feature": "api",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T06:59:36.192Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:00:00.749Z",
+      "feature": "tenopa proposer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:00:20.003Z",
+      "feature": "proposal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:01:13.481Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:01:56.861Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:02:55.457Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:03:05.360Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:03:19.123Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:03:49.240Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:05:11.452Z",
+      "feature": "frontend",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-28T07:05:18.650Z",
+      "feature": "frontend",
       "phase": "do",
       "action": "updated"
     }
