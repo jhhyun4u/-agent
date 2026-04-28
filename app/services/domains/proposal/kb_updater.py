@@ -43,6 +43,19 @@ async def _trigger_kb_update_impl(proposal_id: str, result: str) -> None:
 
     if result == "won":
         await _update_capabilities_on_win(client, p)
+        # 성공 섹션 라이브러리 자동 추출 (비동기, 실패 무시)
+        try:
+            from app.services.domains.proposal.success_section_library import (
+                extract_and_register_won_sections,
+            )
+            org_id = p.get("org_id", "")
+            if org_id:
+                import asyncio
+                asyncio.create_task(
+                    extract_and_register_won_sections(proposal_id, org_id)
+                )
+        except Exception as e:
+            logger.warning(f"성공 섹션 라이브러리 추출 실패 (무시): {e}")
     elif result == "lost":
         await _update_competitors_on_loss(client, proposal_id, p)
 

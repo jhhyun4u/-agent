@@ -4029,3 +4029,54 @@ export const documentsApi = {
     return request("DELETE", `/documents/${documentId}`);
   },
 };
+
+// ── 성공 섹션 라이브러리 API ────────────────────────────────────────────────
+
+export interface WinningSection {
+  id: string;
+  title: string;
+  preview: string;
+  study_type: string | null;
+  section_category: string | null;
+  client_type: string | null;
+  quality_score: number | null;
+  is_winning: boolean;
+  won_count: number;
+  tags: string[];
+  diagnosis_score: number | null;
+}
+
+export interface SectionLibraryStats {
+  total_sections: number;
+  winning_sections: number;
+  avg_quality_score: number;
+  study_type_distribution: Record<string, number>;
+  section_category_distribution: Record<string, number>;
+}
+
+export const sectionLibraryApi = {
+  recommend(params: {
+    section_title: string;
+    section_category?: string;
+    study_type?: string;
+    top_k?: number;
+  }): Promise<{ data: WinningSection[] }> {
+    const qs = new URLSearchParams({ section_title: params.section_title });
+    if (params.section_category) qs.set("section_category", params.section_category);
+    if (params.study_type) qs.set("study_type", params.study_type);
+    if (params.top_k) qs.set("top_k", String(params.top_k));
+    return request("GET", `/section-library/recommend?${qs}`);
+  },
+
+  getContent(contentId: string): Promise<{ data: { content_id: string; body: string } }> {
+    return request("GET", `/section-library/content/${contentId}`);
+  },
+
+  extractWon(proposalId: string): Promise<{ data: { extracted: number } }> {
+    return request("POST", `/section-library/extract/${proposalId}`);
+  },
+
+  getStats(): Promise<{ data: SectionLibraryStats }> {
+    return request("GET", `/section-library/stats`);
+  },
+};

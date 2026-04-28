@@ -13,6 +13,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { api, type ComplianceItem } from "@/lib/api";
 import AiSuggestionDiff from "@/components/AiSuggestionDiff";
+import SectionLibraryPanel from "@/components/SectionLibraryPanel";
 
 // ── 타입 ──
 
@@ -87,6 +88,9 @@ export default function EditorAiPanel({
   // AI 응답 대기 경과 시간
   const [aiElapsed, setAiElapsed] = useState(0);
   const aiTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 패널 탭: AI 어시스턴트 vs 성공 섹션 라이브러리
+  const [activeTab, setActiveTab] = useState<"ai" | "library">("ai");
 
   // 타이머 정리
   useEffect(() => {
@@ -165,6 +169,43 @@ export default function EditorAiPanel({
 
   return (
     <div className={`flex flex-col h-full overflow-hidden ${className}`}>
+      {/* 탭 바 */}
+      <div className="flex border-b border-[#262626] shrink-0">
+        <button
+          onClick={() => setActiveTab("ai")}
+          className={`flex-1 py-2 text-[10px] font-medium transition-colors ${
+            activeTab === "ai"
+              ? "text-[#ededed] border-b-2 border-[#3ecf8e]"
+              : "text-[#5c5c5c] hover:text-[#8c8c8c]"
+          }`}
+        >
+          AI 어시스턴트
+        </button>
+        <button
+          onClick={() => setActiveTab("library")}
+          className={`flex-1 py-2 text-[10px] font-medium transition-colors flex items-center justify-center gap-1 ${
+            activeTab === "library"
+              ? "text-[#ededed] border-b-2 border-[#3ecf8e]"
+              : "text-[#5c5c5c] hover:text-[#8c8c8c]"
+          }`}
+        >
+          <span>성공 섹션</span>
+          <span className="text-[8px] text-[#3ecf8e] bg-[#3ecf8e]/10 px-1 py-0.5 rounded-full">NEW</span>
+        </button>
+      </div>
+
+      {/* 성공 섹션 라이브러리 탭 */}
+      {activeTab === "library" && (
+        <div className="flex-1 overflow-hidden">
+          <SectionLibraryPanel
+            sectionTitle={activeSectionId ?? ""}
+            onInsert={(content) => onApplySuggestion?.(content)}
+          />
+        </div>
+      )}
+
+      {/* AI 어시스턴트 탭 */}
+      {activeTab === "ai" && (<>
       <div className="flex-1 overflow-y-auto space-y-4">
         {/* 요건 충족률 게이지 */}
         <section>
@@ -369,6 +410,7 @@ export default function EditorAiPanel({
           <p className="text-[10px] text-[#3ecf8e]">{regenResult}</p>
         )}
       </div>
+      </>)} {/* end activeTab === "ai" */}
     </div>
   );
 }

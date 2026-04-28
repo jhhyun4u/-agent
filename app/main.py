@@ -73,6 +73,7 @@ from app.api.routes_scheduler import router as scheduler_router
 from app.api.routes_dashboard import router as dashboard_router
 from app.api.routes_jobs import router as jobs_router
 from app.api.websocket_jobs import router as websocket_jobs_router
+from app.api.routes_section_library import router as section_library_router
 
 # OPS-03: 구조화 로깅 (JSON 포맷)
 if settings.log_format == "json":
@@ -520,6 +521,7 @@ app.include_router(scheduler_router)
 # Endpoints: /api/jobs/* (REST) + /ws/jobs/* (WebSocket)
 app.include_router(jobs_router, prefix="/api")
 app.include_router(websocket_jobs_router)
+app.include_router(section_library_router)
 
 
 # ── 헬스체크 ──
